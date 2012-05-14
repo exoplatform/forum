@@ -1,0 +1,181 @@
+.UIForumPortlet .UITopicPoll {
+	margin: 10px 0px;
+}
+
+.UIForumPortlet .UITopicPoll .UITabPane {
+	height: auto;
+}
+
+.UIForumPortlet .UITopicPoll .UITabContentContainer {
+	border: none;
+}
+
+.UIForumPortlet .UITopicPoll .UITabPane .UITabContentContainer .UITabContent {
+	border: none;
+	padding: 0px;
+	background: none;
+}
+
+.UIForumPortlet .UITopicPoll .ForumToolbar .Lable {
+	float: left;
+	font-size: 12px;
+	line-height: 23px;
+	margin: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .ForumToolbar .Icon {
+	float: right;
+	padding-left: 23px;
+	line-height: 20px;
+	margin: 3px 10px 0px 10px;
+}
+
+.UIForumPortlet .UITopicPoll .ForumToolbar .DownArrow1Icon {
+	width: 16px;
+	height: 26px;
+	margin: 0px 14px 0px 3px;
+	padding: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .ForumToolbar .ForumSeparatorLine {
+	float: right;
+	margin: 4px 4px 0px 4px;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer {
+	background: #F7F7F7;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .PollTime {
+	background: url('background/BgPollTitle1x20.gif') repeat-x;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	display: block;
+	margin: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .UIFormTabPane {
+	background: #FFFFFF;
+	border: 1px solid #D2D2D2;
+	margin: 10px;
+	padding: 10px;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
+	border: 1px solid #d2d2d2;
+	padding: 10px 15px;
+	margin: 0px auto 10px auto;
+	background: white;
+}
+/* Fix only IE7 */
+*+html .UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
+	min-width: 300px;
+	overflow-y: hidden;
+	overflow-x: auto;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .UIFormTabPane .PollQuestion {
+	font-weight: bold;
+	line-height: 20px;
+	margin: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .UIForm .HorizontalLayout {
+	border: none;
+}
+
+.UIForumPortlet .UITopicPoll .UIForm .HorizontalLayout .UIFormGrid td.FieldLabel {
+	text-align: left;
+	line-height: 22px;
+	padding: 2px;
+}
+
+.UIForumPortlet .UITopicPoll .UIForm .HorizontalLayout .UIFormGrid td.FieldComponent {
+	padding: 4px 0px 0px 15px;
+	line-height: 20px;
+}
+
+/******************************** ViewPollForm *******************************/
+.UIForumPortlet .UITopicPoll .ViewPollForm {
+	padding: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .UIGrid .Number {
+	text-align: center;
+}
+
+.UIForumPortlet .UITopicPoll .UIFormTabPane .TotalVotes {
+	font-weight: bold;
+	text-align: right;
+	line-height: 22px;
+	display: block;
+}
+
+.UIForumPortlet .UITopicPoll .UIFormTabPane .Chart {
+	float: left;
+	height: 14px;
+}
+
+.UIForumPortlet .UITopicPoll .UIFormTabPane .Percen {
+	padding: 0px;
+	margin: 0px;
+	border: none;
+	background: none;
+	height: auto;
+	width: 96%;
+}
+
+.UIForumPortlet .UITopicPoll .UIFormTabPane .Percentage {
+	float: right;
+	width: 28px;
+	padding: 0px;
+	margin: 0px 0px 0px 2px;
+	border: none;
+	background: none;
+	line-height: 20px;
+	height: auto;
+}
+
+.UIForumPortlet .UITopicPoll .UIFormTabPane .BackgroudColor {
+	padding: 2px 0px 0px 0px;
+	margin: 0px;
+	background: none;
+	border: none;
+	width: 100%;
+	height: auto;
+}
+
+.UIForumPortlet .UITopicPoll .ViewPollForm .UIAction {
+	padding: 0px;
+}
+
+.UIForumPortlet .UITopicPoll .TopicPollContainer .UIFormGrid .PollForm {
+	white-space: normal;
+}
+
+.UIForumPortlet .UITopicPoll .ViewPollForm .TitlePercentage {
+	width: 35%;
+}
+
+.UIForumPortlet .UITopicPoll .ViewPollForm .TitleVotes {
+	width: 100px;
+}
+
+.UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
+	left: -5px;
+	top: 20px;
+}
+
+*+html .UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
+	top: 0px;
+}
+
+/***** Fix alone Chrome******/
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
+		left: -5px;
+		top: 0px;
+	}
+}

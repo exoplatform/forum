@@ -1,0 +1,19 @@
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	def rcontext = _ctx.getRequestContext();
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.ks.KSUtils', '/forumResources/javascript/');
+	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/forumResources/javascript/');
+	jsmanager.importJavascript('eXo.answer.UIAnswersPortlet','/answer/javascript/');
+%>
+<div id="$uicomponent.id" class="UIAnswersPortlet UIFAQPortlet">
+	<%
+		List children = uicomponent.getChildren() ;
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+			}
+		}
+	%>
+</div>

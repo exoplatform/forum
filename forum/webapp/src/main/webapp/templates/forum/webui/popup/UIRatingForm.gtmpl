@@ -1,0 +1,29 @@
+<%
+	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.initVote('$uicomponent.id', 5) ;") ;
+%>
+	<% uiform.begin() %>
+<div class="UIRatingForm">
+	<div class="VoteFormContainer">
+		<div class="RatingInfoContainer">
+			<div class="OptionsContainer ClearFix">
+				<%	
+				int i = 0; 
+				while(i < 5) {
+					String number = String.valueOf(i+1) ;
+					String onclick = uicomponent.event("VoteTopic", number);
+					String title = _ctx.appRes("UIRatingForm.title.rank" + number); 
+				%>
+				<div class="NormalVote" onclick="$onclick" title="$title"><span></span></div>
+			 <% i = i + 1;
+				 } %>
+				
+			</div>
+		</div>
+			
+		<div class="UIAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></a>
+    </div>	
+	</div>
+</div>
+<%uiform.end()%>

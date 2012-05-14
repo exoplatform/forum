@@ -1,0 +1,75 @@
+<%
+	import org.exoplatform.forum.webui.UIForumPageIterator;	
+	import org.exoplatform.web.application.JavascriptManager;
+	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
+	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
+	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
+%>
+<div class="UIBanIPForumManagerForm">
+	<% uiform.begin() %>	
+	<%  
+		String forumId = uicomponent.forumId.replaceAll("/",".") ;
+		String linkOp = uicomponent.event("OpenPosts", "OBJIP");
+	%>
+	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
+		<div style="width:400px; margin:auto;">
+			<div class="UIQuickSearchForm ClearFix" style="padding:10px 0px;">
+				<div style="float:left;">
+					<label for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</label>
+					<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
+				</div>
+
+			</div>
+			<table class="UIGrid" width="100%">
+				<tbody>
+					<tr>
+					  <th align="center" style="width: 200px;text-align:center;">IP</th>
+						<th>&nbsp;</th>
+					</tr>	
+					<tr style="background:#edf3ee">
+						<td class="FieldLabel">
+  						<table border="0" width="100%">
+  						  <tbody>
+  						    <tr>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
+    							</tr>
+  						  </tbody>
+  						</table>
+						</td>
+						<td class="FieldLabel" align="center">
+							<a href="<%=uicomponent.event("AddIp")%>">[<%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%>]</a>
+						</td>
+					</tr>
+				<%
+					String color = "#ffffff";
+					String[] ips = uicomponent.getListIpBan();
+					for(int i = 0; i < ips.length; ++i){
+						if(i%2 == 0) color = "#edf3ee";
+						else color = "#ffffff";
+						String ip = ips[i];
+						String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
+				%>
+					<tr style="background:$color" class="IpBanItem">
+						<td class="FieldLabel">$ip</td>
+						<td class="FieldLabel" align="center">[<a href="<%=uicomponent.event("OpenPosts", ip)%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Posts")%></a>]&nbsp;[<a style="color:red;" href="$unBanLink">X</a>]</td>
+					</tr>
+				<%}%>
+				</tbody>
+			</table>
+		</div>
+		<div style="overflow:auto; width:400px;" class="ClearFix">
+		<% 
+			uicomponent.renderChild(UIForumPageIterator.class) ;
+		%>
+
+		</div>
+
+	</div>
+	<div class="UIAction">
+    <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+  </div>
+	<% uiform.end() %>	
+</div>

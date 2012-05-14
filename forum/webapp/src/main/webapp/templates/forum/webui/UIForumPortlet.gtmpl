@@ -1,0 +1,62 @@
+<%  
+	if(uicomponent.forumSpDeleted) {
+%>
+<div class="UIForumPortlet" id="$uicomponent.id">
+	<div style="padding: 20px"><%=_ctx.appRes("UIForumPortlet.msg.forum-space-deleted").replace("{0}", uicomponent.spaceDisplayName);%></div>
+</div>
+<%
+		return; 
+	} 
+%>
+
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.forum.service.UserProfile;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.ks.KSUtils', '/forumResources/javascript/');
+	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/forumResources/javascript/');
+	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
+	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/');
+	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	if(userProfile.getUserRole() <= 2){
+		jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.forum.ForumSendNotification','/forum/javascript/') ;
+		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
+	}
+	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
+%>
+
+<% 
+	String []importJsTagCode = uicomponent.getImportJSTagCode();
+	String url = "Scripts.";
+	for (int i = 0; i < importJsTagCode.length; i++) {
+		jsmanager.importJavascript(url+importJsTagCode[i], '/forumResources/syntaxhighlighter/');
+	}
+%>
+
+<div class="UIForumPortlet" id="$uicomponent.id">
+	<div class="ParentMaskLayer" id="ForumPortlet">
+		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
+	</div>
+	<%
+		List children = uicomponent.getChildren() ;
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+			}
+		}
+	
+	jsmanager.addJavascript(
+	  'eXo.forum.ForumSendNotification.initParam("'
+		+ _ctx.appRes("UIForumPortlet.label.Notification") +  '", "'
+		+ _ctx.appRes("UIForumPortlet.type.message") + '", "'
+		+ _ctx.appRes("UIForumPortlet.type.post") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.titeName") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.from") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.briefContent") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.GoDirectly") + '");') ;
+	%>
+	<div><span></span></div>
+</div>

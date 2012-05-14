@@ -1,0 +1,82 @@
+<%
+	import org.exoplatform.faq.service.Watch ;
+%>
+
+<div class="UIWatchManager">
+		<% uiform.begin() %>
+		<div class="UIForm">
+ 			<div class="UIHorizontalLayout">
+ 				<div class="UIPermissionManager">
+ 					<div class="UIPermissionInfo">
+ 						<table class="UIGrid">
+ 							<thead>
+ 								<tr>
+	 								<th><%= _ctx.appRes("UIWatchManager.label.user"); %></th>
+	 								<th><%= _ctx.appRes("UIWatchManager.label.email"); %></th>
+	 								<th style="width:85px;"><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
+ 								</tr>
+ 							</thead>
+ 							<tbody>
+ 							<% 
+	 							String categoryId = uicomponent.getCategoryID() ;
+	 							List watchs = uicomponent.getListWatch() ;
+	 							String user = "";
+	 							String email = "";
+	 							String total = "";
+	 							String linkDelete = "";
+	 							String linkEdit = "";
+	 							if(watchs.size() > 0){
+	 								for(Watch watch : watchs ) {
+	 									user = watch.getUser() ;
+	 									email = watch.getEmails() ;
+	 									total = user + " (" + email + ")" ;
+ 										linkEdit = uicomponent.event("EditEmail", user);
+ 										linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", user);
+	 							 %>
+		 								<tr>
+		 									<td>$user</td>
+		 									<td>
+		 										<% 
+		 										for(String str : email.split(",")){%>
+		 											<div>$str</div>
+		 									<%}
+		 										%>
+		 									</td>
+		 									<td>
+		 										<%		 										
+						 							String linkCurrent = uicomponent.event("OpenCategory", categoryId)
+						 						%>
+	 											<a onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="LinkWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="EditWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="DeleteWatchIcon ActionIcon"><span></span></a>
+		 									</td>
+		 								</tr>
+	 								<% 
+	 									}
+	 								} else {
+	 									   %>
+		 							<tr class="EvenRow">
+										<td class="Tdbox" colspan="3" align="center"><%= _ctx.appRes("UIWatchManager.title.no-matches"); %></td>
+		  						</tr>
+								<%}%>
+ 							</tbody>
+ 						</table>
+ 						<% 
+ 							long totalPages = uicomponent.getTotalpages("LIST_EMAILS_WATCH") ;
+					    if(totalPages > 1) {
+					   %>
+ 							<div style="overflow:auto;" class="ClearFix">
+								<% uicomponent.renderChild(uicomponent.LIST_EMAILS_WATCH) ; %>
+
+							</div>
+					<% } %>
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+		 <div class="UIAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("EditEmail", uicomponent.ADD);%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIWatchManager.title.add-watch");%></a>
+    </div>
+		<%uiform.end()%>
+</div>

@@ -1,0 +1,134 @@
+<%	
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
+	import org.exoplatform.ks.common.user.CommonContact;
+	import org.exoplatform.forum.service.Utils;
+%>
+<div class="UIViewMemberProfile">
+<% uiform.begin() %>
+<%	
+	UserProfile userProfileViewer = uiform.getUserProfileViewer() ;
+	UserProfile userProfile = uiform.getUserProfile() ;
+	String shortDateFormat = userProfile.getShortDateFormat() ;
+	shortDateFormat += ", " + userProfile.getTimeFormat();
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	
+	String userName = userProfileViewer.getUserId() ;
+	long totalPost = userProfileViewer.getTotalPost();
+	
+	CommonContact contact = uiform.getContact(userName) ;
+	fullName = uiform.getScreenName(userName);
+	String location = "" ;
+	String fullName = "";
+	boolean isCity = false;
+	String birthDay = contact.getBirthday() ;
+	if(!ForumUtils.isEmpty(contact.getCity())) {isCity = true; location = contact.getCity();}
+	if(!ForumUtils.isEmpty(contact.getCountry())) {
+		if(isCity)location = location + ", ";
+		location = location + contact.getCountry() ;
+	}
+	if(ForumUtils.isEmpty(fullName) || fullName.equals(userName)) {
+		String str = contact.getFirstName();
+		if(!ForumUtils.isEmpty(str)) fullName = str;
+		str = contact.getLastName(); 
+		if(!ForumUtils.isEmpty(str)) fullName = fullName + " " + str ;
+	}
+	String createdDate = "";
+	if(userProfileViewer.getJoinedDate() != null){
+		createdDate = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getJoinedDate(), shortDateFormat, setTime) ;
+	}
+	String userSmile = "OfflineIcon";
+	String titleSmile = "Offline" ;
+	if(uicomponent.isOnline(userName)) {
+		 userSmile = "OnlineIcon";
+		 titleSmile = "Online";
+	}
+	userName = (userName.contains(Utils.DELETED))?userName.substring(0, userName.indexOf(Utils.DELETED)):userName;
+%>
+	<div class="ViewMemberProfileContainer">
+		<div class="TitleBar">
+			<div class="TitleIcon">
+				<%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" title="${userName}'s $titleSmile">$fullName</span>
+			</div>
+		</div>
+		<div class="ViewContainer">
+			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td class="MemberContainer">
+							<div class="MemberContent">
+							<%	
+								String userTitle = userProfileViewer.getUserTitle();
+								if(userProfileViewer.getIsDisplayAvatar()) {
+								%>
+								<img src="<%=uiform.getAvatarUrl()%>" class="ImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+								<% } %>
+								<div class="Rank">$userTitle</div>
+								<div class="InfoMember">
+									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $createdDate</div>
+									<%if(totalPost > 0) {
+											String lastPostDateOfUser = "" ;
+											if(userProfileViewer.getLastPostDate() != null){
+												lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getLastPostDate(), shortDateFormat, setTime) ;
+											}
+									%>
+									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
+									<% } else {%>
+									<div><strong>$userName</strong> <%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+									<% } 
+											String lastLoginUser = "" ;
+											if(userProfileViewer.getLastLoginDate() != null){
+												lastLoginUser = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getLastLoginDate(), shortDateFormat, setTime) ;
+											}
+										if(!ForumUtils.isEmpty(lastLoginUser)) {
+									%>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
+									<% } %>
+								</div>
+							</div>
+						</td>
+						<td class="ProfileContainer">
+							<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
+								<tbody>
+								<% 
+									String email; 
+									String website = "" ;
+									if (contact.getEmailAddress() != null) {
+									  email = contact.getEmailAddress() ;
+									  email = "<a href=\"mailto:"+ email +"\">"+ email +"</a>" ;
+									}
+									if (contact.getWebSite() != null) {
+                    String []websites = ForumUtils.splitForForum(contact.getWebSite()) ;
+                    for (int i = 0; i < websites.length; ++i) {
+                      website += "<a href=\"" + websites[i] +"\" onclick=\"window.open(this.href); return false;\">"+ websites[i] +"</a> " ;
+                    }
+                  }
+									String []labels = uiform.getLabelProfile();	
+									String []contents = [userName, contact.getFirstName() , contact.getLastName(), birthDay, contact.getGender(), email,
+										contact.getJob(), location, contact.getHomePhone(), contact.getWorkPhone(), website]; 
+									int i = 0 ;
+									for(label in labels) {
+										String content = contents[i];
+										if(content == null) content = "";
+										i++ ;
+								%>
+									<tr>
+										<td class="Label">$label:</td>
+										<td class="LabelProfile"><span>$content</span></td>
+									</tr>
+								<%} %>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="UIAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+    </div>
+<%uiform.end()%>
+</div>

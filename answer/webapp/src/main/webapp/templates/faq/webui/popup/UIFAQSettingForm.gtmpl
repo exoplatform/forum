@@ -1,0 +1,188 @@
+<% 
+	import org.exoplatform.faq.service.Category;
+	uiform.initSettingForm();
+%>
+<div class="UIFAQSettingForm">
+	<% uiform.begin() %>
+		
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">
+				
+				<div class="WorkingArea">
+					 <div class="UIHorizontalTabs">
+						 <div class="LeftHorizontalTabs">
+							 <div class="RightHorizontalTabs">
+								 <div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+										<%String classCss = "SelectedTab" ; 
+										int i_ = 0;
+										for(tabconten in uiform.getChildren()){ 
+											if(tabconten.id.indexOf("Tab") < 0) continue;
+											String link = "javascript:void(0);";
+											if(uiform.getIsSelected(i_)) classCss = "SelectedTab" ;
+											else {
+												classCss = "NormalTab" ;
+												link = uicomponent.event("SelectTab",""+i_) ;
+											}
+										%>	
+										<div class="UITab NormalTabStyle">
+											<div class="$classCss">
+												<div class="LeftTab">
+													<div class="RightTab">
+														<div onclick="$link">
+															<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									<%	 ++i_;
+										} %>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="UIForm">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+								<div class="TabContentContainer">
+								<% 
+									String display =	"block";
+									int j_ = 0;
+									for(tabconten in uiform.getChildren()){
+										if(tabconten.id.indexOf("Tab") < 0) continue;
+										if(uiform.getIsSelected(j_))display =	"block";
+										else display = "none";
+								%>
+									<div style="display:$display;" id="UITabContent" class="UITabContent">
+									<% if(tabconten.id.equals(uiform.SELECT_CATEGORY_TAB)) { %>
+
+											<div class="TitleMoveThreads"><%=uiform.getLabel("SelectCategory")%>: </div>
+											<!-- View interface -->
+											<div class="HorizontalLayout">
+												<%
+												List listCate = uicomponent.listCate;
+												Stack<String> stackCateid = new Stack<String>() ;
+										    StringBuffer stringBuffer = new StringBuffer() ;
+										    int n = listCate.size() ;
+										    int i = 0 ;
+										    int id = 0 ;
+										   %>
+											   <!-- ===================================== view all subcategories of root category ==================================== -->
+											   <%
+											   if(uicomponent.listCate != null && !uicomponent.listCate.isEmpty()){
+											   	for(cate in uicomponent.listCate) {
+											   		String cateId = cate.getCategory().getId();
+											   		stackCateid.push(cateId) ;
+											    	id ++ ;
+											    	i ++ ;
+											      if(i == 1) {%>
+												      <div class="FAQDomNode">
+																<div id="FAQCate$i" class="FAQCate ClearFix">
+																	<div class="Icon CategoryIcon" onclick="eXo.answer.UIAnswersPortlet.checkedNode(this);">
+																		<%tabconten.renderChild(cateId);%>
+																 	</div>
+																	<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+																</div>
+																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											  	<%
+										      	} else if(i > 1) {
+											        int sub = cate.getDeft() - listCate.get(i - 2).getDeft() ;
+											        if(sub == 0) {%>
+											        		</div>
+											        	</div>
+												      <div class="FAQDomNode">
+											        	<div class="FAQCate ClearFix">
+											        			<div class="Icon CategoryIcon" onclick="eXo.answer.UIAnswersPortlet.checkedNode(this);">
+																			<%tabconten.renderChild(cateId);%>
+																		</div>
+																		<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+																</div>
+																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+																
+											    <%
+											        } else if(sub > 0) {%>
+													      <div class="FAQDomNode">
+																	<div class="FAQCate ClearFix">
+															    	<div id="FAQCate$i">
+															    		<div class="Icon CategoryIcon" onclick="eXo.answer.UIAnswersPortlet.checkedNode(this);">
+																				<%tabconten.renderChild(cateId);%>
+																			</div>
+															    		<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')"> <%= cate.getCategory().getName();%></label>
+															    	</div>
+															    </div>
+																  <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											    <%
+											        } else {%>
+											     		<%for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
+												    				</div>
+												    			</div>
+											     		<%}%>
+												      <div class="FAQDomNode">
+															 <div class="FAQCate ClearFix">
+															 	 <div class="Icon CategoryIcon" onclick="eXo.answer.UIAnswersPortlet.checkedNode(this);">
+																		<%tabconten.renderChild(cateId);%>
+																 </div>
+																 <label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+															 </div>
+															 <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											     <%
+											        }
+											      }
+											    }%>
+											    	</div>
+											    </div>
+											    <%
+											    for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+											    		</div>
+											    	</div>
+											  	<%
+											    }%>
+											<%}%>
+											</div>
+										
+
+									<% } else if(tabconten.id.equals(uiform.EDIT_TEMPLATE_TAB)) {%>
+											<div class="EditTempLateContent">
+												<div class="LabelContent"><label for="<%=uiform.FIELD_TEMPLATE_TEXTARE%>"><%=uiform.getLabel(uiform.FIELD_TEMPLATE_TEXTARE);%>:</label></div>
+												<div class="TextAreContent">
+													<%uiform.renderField(tabconten.getChildById(uiform.FIELD_TEMPLATE_TEXTARE)) ;%>
+												</div>
+											</div>
+									<% } else {%>
+											<div class="EditTempLateContent">
+												<div class="TextContent ClearFix">
+													<div class="FloatLeft"><label for="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"><%=uiform.getLabel(uiform.FIELD_USEAJAX_CHECKBOX);%>:&nbsp; &nbsp;</label></div>
+													<div class="FloatLeft" style="padding-top:3px">
+                            <%tabconten.renderChild(uiform.FIELD_USEAJAX_CHECKBOX);%>
+													</div>
+												</div>
+											</div>
+									<% } %>
+									</div>
+							<% ++j_;} %>
+
+									<div id="viewerSettingMsg" style="display:none;"><%=_ctx.appRes("UIViewerSettingForm.label.NotCheckParentInput"); %></div>
+									 <div class="UIAction">
+                  <%for(action in uicomponent.getActions()) { 
+													String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+													String link = uicomponent.event(action) ;
+											%>
+                    <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+                     <%}%>
+                 </div>
+									
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+		</div>	
+	</div>
+	<%uiform.end()%>
+</div>

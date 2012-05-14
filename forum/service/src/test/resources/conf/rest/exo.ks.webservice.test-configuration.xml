@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
+	xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+  <!-- Requrement for test -->
+  <component>
+      <type>org.exoplatform.services.rest.impl.RequestHandlerImpl</type>
+   </component>
+   <component>
+      <type>org.exoplatform.services.rest.impl.RequestDispatcher</type>
+   </component>
+  <component>
+      <type>org.exoplatform.services.rest.impl.ResourceBinder</type>
+   </component>
+  <!-- custominze service to test -->
+   
+  <component>
+  	<type>org.exoplatform.forum.service.ws.ForumWebservice</type>
+  </component>
+  
+   <remove-configuration>org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer</remove-configuration>
+  
+</configuration>

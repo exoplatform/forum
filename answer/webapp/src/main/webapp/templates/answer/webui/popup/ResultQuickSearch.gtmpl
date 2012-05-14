@@ -1,0 +1,87 @@
+<% 
+	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.answer.webui.FAQUtils;
+%>
+<div class="ResultQuickSearch">
+		<% uiform.begin() %>
+		<div class="UIForm">
+					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultQuickSearch.title.result"); %></div>
+ 					<div class="UIHorizontalLayout">
+ 							<div class="UIPermissionManager">
+ 								<div class="UIPermissionInfo">
+ 									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
+ 										<thead>
+ 											<tr>
+ 												<th class="IconContainer">&nbsp;</th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
+ 												<th class="DateContainer"><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
+ 												<th class="PreviewContainer"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
+ 											</tr>
+ 										</thead>
+ 										<tbody>
+ 										<% 
+ 										List searchResults = uicomponent.getSearchResults() ; 
+ 										if(searchResults != null && searchResults.size() > 0){
+ 											for(result in searchResults) {
+												String Id = result.getId();
+												String name = result.getName() ;
+						 						String date = FAQUtils.getShortDateFormat(result.getCreatedDate());
+						 						String icon = result.getIcon() ;
+						 						String categoryLink = uicomponent.event("OpenCategory",Id);
+						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
+ 										 %>
+ 											<tr class="EvenRow">
+ 												<td><div class="$icon"><span></span></div></td>
+ 												<%
+ 												String title = name;
+												if(name.length()>90) {
+													title = FAQUtils.getTitle(title) ; 
+													name = FAQUtils.getSubString(name, 90);
+ 												}%>
+ 												
+ 												<% if(result.getType().equals("faqCategory")) {
+ 												 %>
+ 												 	<td class="text"><a href="$categoryLink" title="$title">$name</a></td>
+ 												 	<td>$date</td>
+ 													<td>
+ 														<div onclick="$categoryLink"><div class="FAQViewIcon"></div></div>
+ 													</td>	
+ 													<% } else { %>
+ 													<td class="text"><a href="$linkQuestion" title="$title">$name</a></td>
+ 												 	<td>$date</td>
+ 													<td>
+ 														<div onclick="$linkQuestion"><div class="FAQViewIcon"></div></div>
+ 													</td>
+ 													<% } %>
+ 											</tr>
+ 											<% 
+ 												}
+ 											} else {
+ 										 %>
+ 										 <tr class="EvenRow">
+												<td class="Tdbox" colspan="4">
+													<div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div>
+												</td>
+			  							</tr>
+										<% } %> 
+ 									</tbody>
+ 								</table>
+ 								<% 
+ 								long totalPages = uicomponent.getTotalpages("LIST_RESULT_SEARCH") ;
+					       if(totalPages > 1) {
+					       %>
+ 								<div style="overflow:auto;" class="ClearFix">
+									<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
+								</div>
+								<% } %>
+ 						</div>
+ 					</div>
+ 				</div>
+ 		</div>
+ 	
+		 <div class="UIAction">
+	      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
+	    </div>
+		<%uiform.end()%>
+</div>

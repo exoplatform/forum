@@ -1,0 +1,29 @@
+<%
+  import org.exoplatform.web.application.JavascriptManager;
+
+  def rcontext = _ctx.getRequestContext();
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.importJavascript('eXo.ks.KSUtils', '/forumResources/javascript/');
+  jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/forumResources/javascript/');
+  jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
+
+  jsmanager.importJavascript('eXo.answer.UIAnswersPortlet','/answer/javascript/');
+  jsmanager.addCustomizedOnLoadScript('eXo.answer.UIAnswersPortlet.loadActionScroll();');
+  jsmanager.addOnResizeJavascript('eXo.answer.UIAnswersPortlet.reSizeImages');
+%>
+<div class="UIAnswersPortlet" id="$uicomponent.id">
+  <div class="ParentMaskLayer">
+    <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
+  </div>
+  <%
+    List children = uicomponent.getChildren() ;
+    for(component in children) {
+      if(component.isRendered()){
+        uicomponent.renderChild(component.getClass()) ; 
+      }
+    }
+  %>
+</div>
+<%
+  jsmanager.addJavascript("setTimeout('eXo.answer.UIAnswersPortlet.init(\""+uicomponent.id+"\")', 500);");
+%>

@@ -1,0 +1,48 @@
+<div class="FAQUIDeleteQuestionForm">
+	<% uiform.begin() %>
+		<div class="FAQUIDeleteQuestionContent">
+			<div class="QuestionLabel">
+				<%=_ctx.appRes("UIDeleteQuestion.label.reallyDeleteQuestion")%>
+			</div>
+			<%
+			String author = uicomponent.getAuthor() ;
+			String email = uicomponent.getEmail() ;
+			String content = uicomponent.getQuestion() ;
+			%>
+			<table>
+				<tr>
+					<td class="FieldLabel"> 
+						<p><%=_ctx.appRes("UIDeleteQuestion.label.Author")%>:</p>
+					</td>
+					<td><p>$author</p></td>
+				</tr>
+				<tr>
+					<td class="FieldLabel">
+						<p><%=_ctx.appRes("UIDeleteQuestion.label.Email")%>:</p>
+					</td>
+					<td>
+						<p>$email</p>
+					</td>
+				</tr>
+				<tr>
+					<td  class="FieldLabel">
+						<p><%=_ctx.appRes("UIDeleteQuestion.label.Question")%>:</p>
+					</td>
+					<td>
+						<p>$content</p>
+					</td>
+				</tr>
+			</table>
+			
+		</div>
+		
+		<div class="UIAction">
+    <% for(action in uicomponent.getActions()) { 
+	        	 String actionLabel = _ctx.appRes("UIDeleteQuestion.action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
+	<%uiform.end()%>
+</div>

@@ -1,0 +1,107 @@
+.UIForumPortlet .UIViewPost {
+	margin: 10px auto;
+	width: 96%;
+}
+
+* html .UIForumPortlet .UIViewPost {
+	margin: 10px auto;
+	width: 94%;
+}
+
+.UIViewPost .ViewContainer {
+	border: 1px solid #c7c7c7;
+	background: #f7f7f7;
+	box-shadow: inset 1px 1px #fff, inset -1px -1px #fff;
+	padding: 10px;
+}
+
+.UIViewPost .ViewTopicContent {
+	border: 1px solid white;
+	padding: 10px;
+}
+
+.UIViewPost .PostViewTitle {
+	border-bottom: 1px solid #d8d8d8;
+	padding-bottom: 5px;
+}
+
+.UIViewPost .PostViewIcon {
+	line-height: 20px;
+	padding-left: 20px;
+	margin: 0px;
+}
+
+.UIViewPost .PostTime {
+	padding: 2px 0px 5px 20px;
+	border-bottom: 1px solid #D8D8D8;
+	display: block;
+}
+
+.UIViewPost .PostContent {
+	min-height: 100px;
+}
+
+.UIViewPost a {
+	color: blue;
+}
+
+.UIViewPost .AttachmentTitle {
+	background: #e7e7e7 url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif') no-repeat 3px center;
+	padding-left: 20px;
+	line-height: 25px;
+	white-space: nowrap;
+	margin: 0px;
+}
+
+.UIViewPost .AttachmentBox {
+	float: left;
+	padding: 10px;
+}
+
+.UIViewPost .LabelBox {
+	float: left;
+}
+
+.UIViewPost .Image {
+	float: left;
+	margin: 0px 10px 0px 0px;
+}
+
+.UIViewPost .AttachmentIcon {
+	height: 20px;
+	width: auto;
+	display: block;
+	padding-left: 20px;
+}
+
+.UIViewPost .AttachmentLabel {
+	color: #1555b5;
+	line-height: 20px;
+	font-weight: bold;
+	float: left;
+}
+
+.UIViewPost .AttachmentInfo {
+	float: right;
+}
+
+.UIViewPost .Action {
+	padding-top: 50px;
+}
+
+.UIViewPost .Action .Icon {
+	float: left;
+	color: #1555b5;
+	padding-left: 20px;
+	line-height: 20px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.UIViewPost .Size {
+	padding-left: 20px;
+}
+
+.UIViewTopic {
+	min-height: 450px;
+}

@@ -1,0 +1,45 @@
+<div class="UIFormForum UIAutoPruneSettingForm">
+	<% uiform.begin() %>
+	<% uiform.setInitForm(); 
+		String topicsPruned = uiform.getTopicOld();
+	%>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<div class="LabelContent"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Note");%></div>
+				<table class="UIFormGrid">
+					<tbody>						
+						<tr>
+							<td><label class="Label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></label></td>
+							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %></td>
+							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %></td>
+						</tr>
+						<tr>
+							<td><label class="Label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></label></td>
+							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %></td>
+							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %></td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<div class="UIAction TextAlignLeft">
+                  <span class="ActionButton LightBlueStyle">
+                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
+                  </span>
+                </div>
+								<div class="Lightheight">$topicsPruned <%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="UIAction">
+    <% for(action in uicomponent.getActions()) { 
+		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		 String onclick = "onclick=\""+uicomponent.event(action) + "\"";
+		 if(action.indexOf("ResetField") >= 0) onclick="onclick=\"eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')\"";
+	%>
+      <a href="javascript:void(0);" $onclick class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
+	<%uiform.end()%>
+</div>

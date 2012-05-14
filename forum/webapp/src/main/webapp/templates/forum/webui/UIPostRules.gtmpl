@@ -1,0 +1,42 @@
+<%	
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.ks.common.UserHelper ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isBan = userProfile.getIsBanned() ;
+	boolean isNotLogin= UserHelper.isAnonim();
+	String you = _ctx.appRes("UIPostRules.label.You") ;
+	String can = _ctx.appRes("UIPostRules.label.can") ;
+	String canNot = _ctx.appRes("UIPostRules.label.canNot") ;
+	String canCreatThread = can, canPost = can;
+	
+	if(userProfile.getUserRole() == UserProfile.ADMIN) {
+		if(!uicomponent.isCanCreateNewThread()) {
+			canCreatThread = canNot;
+		}
+		if(!uicomponent.isCanAddPost()){
+			canPost = canNot;
+		}
+	} else if(isBan || isNotLogin) {
+		canCreatThread = canNot;
+		canPost = canNot;
+	} else{
+		if(!uicomponent.isCanCreateNewThread()) {
+			canCreatThread = canNot;
+		}
+		if(!uicomponent.isCanAddPost()){
+			canPost = canNot;
+		}
+	}
+%>
+<div id="$uicomponent.id" class="UIPostRules ForumCategory">
+	<div class="ForumToolbar ForumActionToolbar ClearFix">
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<h6 class="Title"><%=_ctx.appRes("UIPostRules.label.PostRules")%></h6>
+	</div>		
+	<ul class="ContentContainer TxtRules">
+		<li>$you <strong>$canCreatThread</strong> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></li>
+	</ul>
+</div>

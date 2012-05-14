@@ -1,0 +1,459 @@
+<%  
+  import org.exoplatform.faq.service.CategoryInfo;
+  import org.exoplatform.faq.service.Utils;
+  import org.exoplatform.web.application.JavascriptManager;
+  
+  def rcontext = _ctx.getRequestContext();
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.createLink('UIFAQPortlet','"+uicomponent.useAjax+"');") ;
+%>
+<div class="FAQViewerContainer" id="$uicomponent.id">
+  <%  
+  CategoryInfo cateInfo = uicomponent.getCategoryInfo();
+  if(cateInfo != null) {
+    List subCategoryInfos = cateInfo.getSubCateInfos();
+    List questionCates = cateInfo.getQuestionInfos();
+    
+    String path = cateInfo.getPath();
+    if(path == null || path.length() == 0){
+      path = Utils.CATEGORY_HOME;
+    }
+    String []ids = path.split("/");
+    List navPath = cateInfo.getPathName();
+    navPath = uicomponent.arrangeList(navPath);
+    if(navPath.size() > 1) {
+    %>
+      <div class="FAQViewerBar ClearFix">
+        <%
+        int i = 0;
+        String link = ids[0], viewName;
+        String url;
+        for(pathName in navPath) {
+          if(pathName.equals(Utils.CATEGORY_HOME)){ 
+            pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
+            link = Utils.CATEGORY_HOME;
+          }
+          viewName = pathName;
+          if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
+            viewName = org.exoplatform.answer.webui.FAQUtils.getSubString(pathName, 40);
+          }
+          if(pathName.indexOf("<img") >= 0){
+            pathName = "";
+          }
+          if(i < ids.length && i > 0)
+            link = link + "/" + ids[i];
+          if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+            String style="";
+            if(uicomponent.isInSpace() && link.equals(Utils.CATEGORY_HOME)) {
+              url = "javaScript:void(0)";
+              style = "cursor: default;";
+            } else {
+              url = uicomponent.url("ChangePath", link);
+            }
+            if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
+        %>
+          <a class="ActionLink" href="$url" style="$style" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><label>$viewName</label></a>
+            <%} else { %>
+          <a style="$style" class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> <span class="arrow"></span> 
+            <%} %>
+        <%} else { %>
+          <span title="$pathName">$viewName</span>
+        <%}
+        ++i;
+        }%>
+      </div>
+    <%}%> 
+  
+  <div class="FAQAnswerInfo">
+    <%for(questionCate in questionCates) { 
+        String question_ =  questionCate.getQuestion();
+        question_ = question_.replaceAll("<br/>", " ");
+        question_ = uicomponent.render(question_);
+        String id_ = questionCate.getId();
+    %>
+    <ul class="FAQViewerQuestionContent"> 
+      <li class="FAQViewerIcon"><a class="ActionLinkFAQ" href="#${id_}" name="name${id_}">$question_</a></li>
+    </ul> 
+    <%  } %>
+    
+    <% 
+    for(categoryInfo in subCategoryInfos){ 
+      String categoryName = categoryInfo.getName();
+      List questionInfos = categoryInfo.getQuestionInfos();
+      List subCategories = categoryInfo.getSubCateInfos();
+    %>
+    
+      <div class="FAQContainerQuest">
+        <h2 class="FAQViewerIcon">
+          <a class="TitleActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
+          <%if(!subCategories.isEmpty()) {%>
+            <span>[</span>
+          <%} 
+            int j = 0;
+            for(subCategory in subCategories) { 
+              String subCateName = subCategory.getName();
+              String subPath = subCategory.getPath();
+          %>
+            <a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+          <%  if(j != (subCategories.size-1)) {%>
+            <span> | </span>
+          <%  }
+              ++j;
+            } 
+            if(!subCategories.isEmpty()) {
+          %>
+            <span>]</span>
+          <% } %>
+        </h2>
+        <ul>
+          <%for(questionInfo in questionInfos) { 
+              String question = questionInfo.getQuestion();
+              question = uicomponent.render(question);
+              String id = questionInfo.getId();
+              
+          %>
+          <li><a class="FAQViewer" href="#${id}">$question</a></li>       
+          <% 
+          } %>
+        </ul>
+      </div>
+    
+    <% } %>
+    
+  </div>
+  
+  <div class="FAQAnswerContainer FAQViewerQuestionContent ClearFix">
+  <%for(questionCate in questionCates) { 
+      String question_ =  questionCate.getQuestion();
+      question_ = uicomponent.render(question_);
+      String id_ = questionCate.getId();
+      List answers_ = questionCate.getAnswers();
+      String questionDetail_ = uicomponent.render(questionCate.getDetail());
+      
+  %>
+    <div class="FAQAnswerIcon"><h4 name="$id_">$question_</h4>
+	    <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+	            <div class="TextDetailStyle">$questionDetail_</div>
+	      <% } %>
+    </div>
+    <div class="Answer">
+      <ul>
+      <%for(answer in answers_){ 
+          answer = uicomponent.render(answer);
+      %>
+        <li><div class="TextStyle">${answer}</div></li>
+      <%} %>
+      </ul>
+    </div>
+    <div class="ClearFix BackTopIconContainer">
+      <a class="BackTopIcon" href="#name${id_}"> </a>
+    </div>
+  <% } %>
+  </div>
+  
+  <%for(categoryInfo in subCategoryInfos) { 
+      String categoryName = categoryInfo.getName();
+      List questionInfos = categoryInfo.getQuestionInfos();
+      String id = categoryInfo.getId();
+  %>
+  <h2 class="FAQAnswerbar">
+    $categoryName
+  </h2>
+  <div class="FAQAnswerContainer">
+    <%for(questionInfo in questionInfos) {
+        String question = questionInfo.getQuestion();
+        question = uicomponent.render(question);
+        List answers = questionInfo.getAnswers();
+        String qsId = questionInfo.getId();
+        String questionDetail_ = uicomponent.render(questionInfo.getDetail());
+    %>
+    <div class="QuestionContent">
+      
+      <div class="FAQAnswerIcon">
+      	<h4 name="${qsId}">$question</h4>
+	      <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+	            <div class="TextDetailStyle">$questionDetail_</div>
+	      <% } %>
+      </div>
+      <div class="Answer">
+        <ul>
+        <%for(answer in answers){ 
+            answer = uicomponent.render(answer);
+        %>
+          <li><div class="TextStyle">${answer}</div></li>
+        <%} %>
+        </ul>
+      </div>
+    </div>
+    <%} %>
+    <div class="ClearFix BackTopIconContainer">
+      <a class="BackTopIcon" href="#${id}"> </a>
+    </div>
+  </div>
+  <% } %>
+  <% } else {
+   link = Utils.CATEGORY_HOME; 
+  %>
+    <a class="ActionLink" style="color:red;" href="<%=uicomponent.event("ChangePath", link);%>" >
+      <%=_ctx.appRes("UIBreadcumbs.label.backToHome") %>
+    </a>
+<% } %>
+</div>
+
+<style type="text/css">
+.UIFAQPortlet {
+  padding: 5px;
+  background: #fff;
+  font-family: Verdana,Tahoma,Arial,Helvetica,sans-serif;
+}
+
+.UIFAQPortlet hr {
+  border: solid #CCCCCC;
+  border-width:1px 0 0;
+  clear:both;
+  height:0;
+}
+
+.UIFAQPortlet h1 {
+  font-size:20px;
+}
+
+.UIFAQPortlet h2 {
+  font-size:18px;
+}
+
+.UIFAQPortlet h3 {
+  font-size:16px;
+}
+
+.UIFAQPortlet h4 {
+  font-size:14px;
+}
+
+.UIFAQPortlet h5 {
+  font-size:12px;
+}
+
+.UIFAQPortlet .FAQAnswerInfo {
+  padding: 15px 0 0;
+}
+
+.UIFAQPortlet .FAQViewerBar {
+  padding: 4px 0px 14px 10px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.UIFAQPortlet .FAQViewerBar .arrow {
+  margin: 1px 5px 0px 8px;
+  background: url(/faq/skin/DefaultSkin/webui/background/ArrowBreadcumb.gif) no-repeat left center;
+  width: 5px;
+  height: 16px;
+}
+
+.UIFAQPortlet .FAQViewerBar span {
+  color: #066eb7;
+  display: block;
+  float: left;
+}
+
+.UIFAQPortlet .FAQViewerBar a {
+  color: #4c4c4c
+  cursor: pointer;
+  display: block;
+  float: left;
+}
+
+.UIFAQPortlet .FAQViewerBar .FAQBarLableNormal {
+  color: #4c4c4c;
+}
+
+.UIFAQPortlet .FAQViewerBar .FAQBarLableHiline {
+  font-weight: bold;
+  color: #066eb7;
+}
+
+.UIFAQPortlet .FAQViewerContainer {
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerContainerQuest{
+  padding-bottom: 10px;
+}
+
+.UIFAQPortlet ul{
+  list-style-type:none;
+  margin:0;
+  padding: 10px 0px;
+}
+
+.UIFAQPortlet .FAQViewerContainer h2.FAQViewerIcon {
+  border-bottom: 1px solid #bfbfbf;
+  margin: 0px;
+  padding-bottom: 10px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a {
+  color: #4d4d4d;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
+  font-weight: bold;
+}
+
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableLink {
+  color: #0B51BB;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewer {
+  color:#066eb7;
+  font-size:12px;
+  line-height:20px;
+  text-decoration:none;
+  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 5px;
+  padding-left: 14px;
+}
+
+.UIFAQPortlet .FAQViewerContainer ul li a:hover{
+  text-decoration: underline;
+}
+
+.UIFAQPortlet ul li a:hover{
+  color: #ff6603;
+  text-decoration: underline;
+}
+
+.UIFAQPortlet .FAQAnswerbar {
+  border-bottom:1px solid #bfbfbf;
+  margin:4px 25px 20px;
+  padding-bottom:10px;
+  font-size: 18px;
+  font-weight: normal;
+  color: #4d4d4d;
+}
+
+.UIFAQPortlet .FAQAnswerContainer {
+  margin:4px 25px 0px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer .Answer{
+  padding-left: 20px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer .TextStyle p {
+	line-height: 22px;
+	color: #4c4c4c;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerQuestionContent .TextDetailStyle p {
+  margin: 0px;
+  color: #4c4c4c;
+  font-style: italic;
+  padding-top: 5px;
+  font-weight: normal;
+}
+
+.UIFAQPortlet .FAQAnswerContainer .QuestionContent{
+  padding-top: 6px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer ul li{
+  margin: 0px;
+  list-style-type:none;
+}
+
+.UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li{
+  list-style-type: square;
+  line-height: 20px;
+	color: #4c4c4c;
+	margin-left: 14px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li ul li{
+  list-style-type: disc;
+  background: none;
+  padding: 0px;
+  margin-left:14px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon {
+  font-weight: bold;
+  background-color: #f8f8f8;
+  padding: 10px 20px;
+  border-radius: 3px;
+}
+
+.UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon h4 {
+  color: #066eb7;
+  margin: 0px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.UIFAQPortlet .BackTopIconContainer {
+  height: 18px;
+}
+
+.UIFAQPortlet .BackTopIcon {
+  background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
+  width: 21px; height: 18px;
+  float: right;
+  display: block;
+}
+
+.UIFAQPortlet .FAQViewerQuestionContent {
+	padding: 4px 0 0;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQContainerQuest{
+  padding:0px 25px;
+}
+
+.UIFAQPortlet p {
+  margin: 1px 0px;
+}
+
+.UIFAQPortlet h {
+  margin: 1px 0px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .TitleActionLink {
+  font-size: 18px;
+}
+
+.FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ {
+  margin-left: 25px;
+  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 4px;
+  padding-left: 14px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink {
+  color: #066EB7;
+  font-size: 12px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink:hover {
+  text-decoration: underline;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon span {
+  color: #066EB7;
+  font-size: 12px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle {
+  color: #4c4c4c;
+  font-weight: normal;
+  font-style: italic;
+  padding: 8px 0px 0px 0px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle p {
+  margin: 0px;
+}
+
+</style>

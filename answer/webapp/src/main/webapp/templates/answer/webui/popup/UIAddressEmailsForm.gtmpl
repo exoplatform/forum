@@ -1,0 +1,75 @@
+<div class="UIAddressEmailsForm">
+<%
+import org.exoplatform.services.organization.User;
+ uiform.begin() 
+ def rcontext = _ctx.getRequestContext() ;
+ rcontext.getJavascriptManager().addJavascript('eXo.ks.CheckBox.init("'+uiform.id+'") ;') ;
+ %>
+<div class="UIInsertAddress">
+  <div class="InsertAddressContainer">
+  	<!-- ======================================= search user ======================================================= -->
+	<div class="SearchContent">
+		<div class="ClearFix">
+			<div class="AddressLabel"><label for="<%=uicomponent.USER_SEARCH%>"><%=_ctx.appRes("UIAddressEmailsForm.label.user-search") %> :</label></div>
+			<div class="InputLabel"><% uiform.renderField(uiform.USER_SEARCH) %></div>
+			<div class="SearchIcon" onclick="<%=uicomponent.event("Search")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"><span></span></div>
+		</div>
+		
+		<div class="ClearFix">
+		  <div class="AddressLabel"><label for="<%=uicomponent.USER_GROUP%>"><%=_ctx.appRes("UIAddressEmailsForm.label.addresses-from-group") %> :</label></div>
+		  <div class="InputLabel"><% uiform.renderField(uiform.USER_GROUP) %></div>
+		</div>
+	</div>
+
+	<!-- ======================================= view all users ======================================================= -->
+    <div class="AddressContainer">
+      <div class="ListAddress">
+
+        <table cellspacing="0" border="0" cellpadding="0" id="UIListUsers" class="UIGrid">
+            <thead>
+              <tr>
+                <th class="CheckBoxLabel"><input type="checkbox" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
+                <th>
+                  <div class="BlueDownArrowIcon">
+                    <div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.name") %></div>
+                  </div>
+                </th>
+                <th class="EmailLabel">
+                  <div class="BlueDownArrowIcon">
+                    <div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.email") %></div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <%
+                for (User user : uicomponent.getUsers()) {
+									checkboxField = uicomponent.getChildById(user.getUserName());
+              %>
+	                <tr>
+					  <td>
+	                    <%
+	                    if (checkboxField != null) { uicomponent.renderField(checkboxField); }
+	                    %>
+	                  </td>
+	                  <td class="text"><%=user.getFullName()%></td>
+	                  <td class="text"><%=(user.getEmail() != null ? user.getEmail() : "")%></td>
+	                </tr>
+              <%}%>
+          </tbody>
+        </table>
+		
+			<%_ctx.include("app:/templates/answer/webui/UIPageIterator.gtmpl");%>     
+	
+      </div>
+      
+    </div>
+
+  </div>
+  <div class="UIAction">
+	<a href="javascript:void(0);" onclick="<%=uicomponent.event("Add")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddressEmailsForm.label.add-address") %></a>
+	<a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddressEmailsForm.label.cancel") %></a>
+</div>
+ </div>
+<% uiform.end() %>
+</div>

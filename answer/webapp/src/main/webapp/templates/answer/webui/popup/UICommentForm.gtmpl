@@ -1,0 +1,61 @@
+<div class="UIResponse $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table>
+					<tbody>
+						<tr>
+							<td class="FieldLabel">
+								<p><label for="<%=uicomponent.TITLE_USERNAME%>"><%=_ctx.appRes("UICommentForm.title.Author")%>:</label></p>
+							</td>
+							<td>
+								<p><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Language")%>: </p>
+							</td>
+							<td>
+								<p><%=uicomponent.languageSelected%></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Question")%>: </p>
+							</td>
+							<td>
+								<p><%=uicomponent.questionContent%></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Detail")%>: </p>
+							</td>
+							<td>
+								<p class="QuestionDetail">
+									<span><%=uicomponent.getQuestionDetail();%></span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Comment")%>: </p>
+							</td>
+							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="UIAction">
+      <% for(action in uicomponent.getActions()) { 
+		        	 String actionLabel = _ctx.appRes("UICommentForm.action." + action); 
+		           String link = uicomponent.event(action) ;
+		        %>
+      <a href="javascript:void(0);"  onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
+		</div>
+	<%uiform.end()%>
+</div>
