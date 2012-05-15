@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.exoplatform.ks</groupId>
+    <groupId>org.exoplatform.forum</groupId>
     <artifactId>exo.forum.demo</artifactId>
     <version>4.0.0-SNAPSHOT</version>
   </parent>
@@ -12,18 +12,18 @@
   <description>KS Demo EAR for GateIn</description>
   <dependencies>
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
+      <groupId>org.exoplatform.forum</groupId>
       <artifactId>exo.forum.demo.config</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
+      <groupId>org.exoplatform.forum</groupId>
       <artifactId>exo.forum.demo.rest-forumdemo</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
+      <groupId>org.exoplatform.forum</groupId>
       <artifactId>exo.forum.demo.webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
@@ -40,17 +40,17 @@
           <displayName>forumdemo</displayName>
           <modules>
             <jarModule>
-              <groupId>org.exoplatform.ks</groupId>
+              <groupId>org.exoplatform.forum</groupId>
               <artifactId>exo.forum.demo.config</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
-              <groupId>org.exoplatform.ks</groupId>
+              <groupId>org.exoplatform.forum</groupId>
               <artifactId>exo.forum.demo.webapp</artifactId>
               <contextRoot>forumdemo</contextRoot>
             </webModule>
             <webModule>
-              <groupId>org.exoplatform.ks</groupId>
+              <groupId>org.exoplatform.forum</groupId>
               <artifactId>exo.forum.demo.rest-forumdemo</artifactId>
               <contextRoot>rest-forumdemo</contextRoot>
             </webModule>
