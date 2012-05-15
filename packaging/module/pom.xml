@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
   <name>eXo KS Portal Packaging Module</name>
   <properties>
-    <exobuild.name>ks</exobuild.name>
+    <exobuild.name>forum</exobuild.name>
     <exobuild.type>module</exobuild.type>
   </properties>
   <build>

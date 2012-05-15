@@ -126,7 +126,7 @@
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
               <artifactId>exo.forum.extension.webapp</artifactId>
-              <contextRoot>ks</contextRoot>
+              <contextRoot>forum</contextRoot>
               <bundleFileName>forum-extension.war</bundleFileName>
             </webModule>
             <jarModule>
