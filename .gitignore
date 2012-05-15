@@ -10,11 +10,11 @@
 *.jar
 *.rar
 *.tar
-*.zip
 *.war
 *.ear
 *.sar
 *.class
+*.exe
 
 # Maven 
 target
@@ -32,6 +32,8 @@ target
 
 # OS
 .DS_Store
+Thumbs.db
+ehthumbs.db
 
 # Misc
 *.swp
