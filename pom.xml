@@ -453,7 +453,7 @@
     <module>poll</module>
     <module>forum</module>
     <module>answer</module>
-
+    <module>forum-gadgets</module>
     <module>forum-extension</module>
     <module>forum-web</module>
 

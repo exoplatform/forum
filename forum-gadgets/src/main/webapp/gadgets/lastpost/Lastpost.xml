@@ -5,12 +5,12 @@
 		directory_title="Last post"
 		title_url="http://www.exoplatform.org"
 		description="Last post."
-		thumbnail="/forumResources/gadgets/lastpost/skin/thumb.png">
-		<Locale messages="/forumResources/gadgets/lastpost/locale/default.xml" />
-		<Locale lang="ar" messages="/forumResources/gadgets/lastpost/locale/ar.xml" language_direction="rtl"/>
-		<Locale lang="fr" messages="/forumResources/gadgets/lastpost/locale/fr.xml" />
-		<Locale lang="vi" messages="/forumResources/gadgets/lastpost/locale/vi.xml" />
-		<Locale lang="it" messages="/forumResources/gadgets/lastpost/locale/it.xml" />
+		thumbnail="skin/thumb.png">
+		<Locale messages="locale/default.xml" />
+		<Locale lang="ar" messages="locale/ar.xml" language_direction="rtl"/>
+		<Locale lang="fr" messages="locale/fr.xml" />
+		<Locale lang="vi" messages="locale/vi.xml" />
+		<Locale lang="it" messages="locale/it.xml" />
 		<Require feature="setprefs"/>
 		<Require feature="dynamic-height"/>
 	</ModulePrefs>

@@ -174,7 +174,7 @@ eXoLastpostGadget.prototype.render = function (data) {
 		var item = data[i];
 		var time = time = DateTimeFormater.format(new Date(item.createdDate.time));
 		html += '<div class="PostItem">';
-		html += '<a href="' + item.link + '" target="_blank">' + eXoLastpostGadget.truncateMessage(item.message, 100) + '</a>';
+		html += '<a href="' + document.getElementById("ShowAll").href + '/topic/' + item.link + '" target="_blank">' + eXoLastpostGadget.truncateMessage(item.message, 100) + '</a>';
 		html += '</div>';
 		html += '<div class="DateTime">' + time + '</div>';
 	}

@@ -48,10 +48,11 @@ function getProduct(version) {
   product.addDependencies(FORUM.component.rendering);
   product.addDependencies(FORUM.component.bbcode);
   product.addDependencies(FORUM.application.common);
+  product.addDependencies(FORUM.application.forumGadgets);
   product.addDependencies(FORUM.answer);
   product.addDependencies(FORUM.forum);
   product.addDependencies(FORUM.poll);
-  product.addDependencies(FORUM.web.forumResources);  
+  product.addDependencies(FORUM.web.forumResources);
   product.addDependencies(FORUM.extension.webapp);
 
   // FORUM demo

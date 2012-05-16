@@ -47,6 +47,8 @@ function getModule(params) {
   module.application = {};
   module.application.common = new Project("org.exoplatform.forum", "exo.forum.application.common", "jar", module.version).
     addDependency(new Project("org.exoplatform.forum", "exo.forum.component.upgrade", "jar",  module.version));
+  module.application.forumGadgets = new Project("org.exoplatform.forum", "exo.forum.gadgets", "war", module.version);
+  module.application.forumGadgets.deployName = "forum-gadgets";
 
   // FORUM
   module.forum = new Project("org.exoplatform.forum", "exo.forum.webapp", "war", module.version).

@@ -15,9 +15,14 @@ function init() {
   });
 }
 
+function getForumURL() {
+	var host = "http://" + top.location.host + parent.eXo.env.portal.context + "/" + parent.eXo.env.portal.portalName + "/forum";
+	return host;
+};
+
 function createPollDiv() {
   var prefs = new gadgets.Prefs();
-  var forumURL = window.location.protocol + "//" + window.location.host + "/portal/intranet/forum";
+  var forumURL = getForumURL();
   document.getElementById("createpoll").innerHTML = prefs.getMsg("createPoll") + " <a target='_parent' href='" + forumURL + "'>forums</a>";
   adjustHeight();  
 }
@@ -78,7 +83,7 @@ function showPoll(data, isVoteAgain){
       if(haveTopic){
           var prefs = new gadgets.Prefs();
           var topicId= pollId.replace("poll","topic");
-          var topicURL = window.location.protocol + "//" + window.location.host + "/portal/intranet/forum/topic/" + topicId;
+          var topicURL = getForumURL() + "/topic/" + topicId;
           html.push('<h4><a  target="_parent" class="Question" title = "' + prefs.getMsg('discuss') + '" target ="_parent" href="'+ topicURL + '">' + question + '</a></h4>');
         discussUrl = "<a class='Discuss' title='" + prefs.getMsg("discuss") + "'  target='_parent'  href='"+ topicURL + "'>" + prefs.getMsg("discuss") + "</a>";
       }
@@ -100,7 +105,6 @@ function showPoll(data, isVoteAgain){
         html.push("</form>");
       if(haveTopic){
           html.push(discussUrl);
-        //document.getElementById("createpoll").innerHTML = prefs.getMsg('createPoll') + ' <a target="_parent" href="' + forumURL + '">forums</a>';
       }
     $('#poll').html(html.join(''));
   }else{
@@ -128,7 +132,7 @@ function showResult(data){
   if(haveTopic){
       var prefs = new gadgets.Prefs();
     var topicId= pollId.replace("poll","topic");
-      var topicURL = window.location.protocol + "//" + window.location.host + "/portal/intranet/forum/topic/" + topicId;
+      var topicURL = window.location.protocol + "//" + window.location.host + "/forumdemo/classic/forum/topic/" + topicId;
     tbl.push('<h4><a class="Question" title = "' + prefs.getMsg('discuss') + '"  target="_parent"  href="'+ topicURL + '">' + question + '</a></h4>');
     discussUrl = '<a class="Discuss" title = "' + prefs.getMsg('discuss') + '"  target="_parent"  href="'+ topicURL + '">' + prefs.getMsg('discuss') + '</a>';
   }
