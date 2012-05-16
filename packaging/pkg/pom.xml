@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>ks.packaging.module</artifactId>
+      <artifactId>forum.packaging.module</artifactId>
       <version>${project.version}</version>
       <type>js</type>
     </dependency>

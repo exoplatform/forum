@@ -7,14 +7,14 @@ function getProduct(version) {
   product.name = "eXoPortal" ;
   product.portalwar = "portal.war" ;
   product.codeRepo = "portal" ;//module in modules/portal/module.js
-  product.serverPluginVersion = "${org.exoplatform.portal.version}"; // CHANGED for KS to match portal version. It was ${project.version}
+  product.serverPluginVersion = "${org.exoplatform.portal.version}"; // CHANGED for FORUM to match portal version. It was ${project.version}
 
   var kernel = Module.GetModule("kernel") ;
   var core = Module.GetModule("core") ;
   var ws = Module.GetModule("ws", {kernel : kernel, core : core});
   var eXoJcr = Module.GetModule("jcr", {kernel : kernel, core : core, ws : ws}) ;
   var portal = Module.GetModule("portal", {kernel : kernel, ws:ws, core : core, eXoJcr : eXoJcr});
-  var ks = Module.GetModule("ks", {portal:portal, ws:ws});
+  var FORUM = Module.GetModule("forum", {portal:portal, ws:ws});
   
   product.addDependencies(portal.portlet.exoadmin) ;
   product.addDependencies(portal.portlet.web) ;
@@ -27,7 +27,7 @@ function getProduct(version) {
 
   product.addDependencies(portal.web.portal);
   
-  // Portal extension starter required by KS etension
+  // Portal extension starter required by FORUM etension
   portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
   portal.starter.deployName = "starter";
   //product.addDependencies(portal.starter);
@@ -36,44 +36,44 @@ function getProduct(version) {
   portal.fck.deployName = "fck";
   product.addDependencies(portal.fck);
   
-  //cometd (requried for KS)
-  product.addDependencies(ks.comet.cometd);
+  //cometd (requried for FORUM)
+  product.addDependencies(FORUM.comet.cometd);
   
-  product.addDependencies(ks.webuiExt);
+  product.addDependencies(FORUM.webuiExt);
    
-  // KS extension
-  product.addDependencies(ks.commons.extension);//commons-extension in platform
-  product.addDependencies(ks.component.upgrade);
-  product.addDependencies(ks.component.common);
-  product.addDependencies(ks.component.rendering);
-  product.addDependencies(ks.component.bbcode);
-  product.addDependencies(ks.application.common);
-  product.addDependencies(ks.answer);
-  product.addDependencies(ks.forum);
-  product.addDependencies(ks.poll);
-  product.addDependencies(ks.web.forumResources);  
-  product.addDependencies(ks.extension.webapp);
+  // FORUM extension
+  product.addDependencies(FORUM.commons.extension);//commons-extension in platform
+  product.addDependencies(FORUM.component.upgrade);
+  product.addDependencies(FORUM.component.common);
+  product.addDependencies(FORUM.component.rendering);
+  product.addDependencies(FORUM.component.bbcode);
+  product.addDependencies(FORUM.application.common);
+  product.addDependencies(FORUM.answer);
+  product.addDependencies(FORUM.forum);
+  product.addDependencies(FORUM.poll);
+  product.addDependencies(FORUM.web.forumResources);  
+  product.addDependencies(FORUM.extension.webapp);
 
-  // KS demo
-  product.addDependencies(ks.demo.portal);
-  product.addDependencies(ks.demo.cometd);
-  product.addDependencies(ks.demo.rest);
+  // FORUM demo
+  product.addDependencies(FORUM.demo.portal);
+  product.addDependencies(FORUM.demo.cometd);
+  product.addDependencies(FORUM.demo.rest);
   
   product.addDependencies(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
   
-  product.addServerPatch("tomcat", ks.server.tomcat.patch) ;
-  //product.addServerPatch("jboss",  ks.server.jboss.patch) ;
-  product.addServerPatch("jbossear",  ks.server.jboss.patchear) ;
+  product.addServerPatch("tomcat", FORUM.server.tomcat.patch) ;
+  //product.addServerPatch("jboss",  FORUM.server.jboss.patch) ;
+  product.addServerPatch("jbossear",  FORUM.server.jboss.patchear) ;
 
   /* cleanup duplicated lib */
   product.removeDependency(new Project("commons-httpclient", "commons-httpclient", "jar", "3.0"));
   product.removeDependency(new Project("commons-collections", "commons-collections", "jar", "3.1"));
   product.removeDependency(new Project("commons-collections", "commons-collections", "jar", "3.2"));
-  product.removeDependency(new Project("commons-lang", "commons-lang", "jar", "2.3")); // exclusion added by KS. lib dir un tomcat contains versions 2.3 and 2.4. Keeping the newest.
+  product.removeDependency(new Project("commons-lang", "commons-lang", "jar", "2.3")); // exclusion added by FORUM. lib dir un tomcat contains versions 2.3 and 2.4. Keeping the newest.
   product.removeDependency(new Project("org.apache.poi", "poi", "jar", "3.0.2-FINAL"));
   product.removeDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.0.2-FINAL"));
 
-  product.module = ks ;
+  product.module = FORUM ;
   product.dependencyModule = [ kernel, core, ws, eXoJcr];
 
   return product ;
