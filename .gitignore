@@ -24,6 +24,7 @@ target
 *.iws
 *.ipr
 .idea/
+*bin/
 
 # eclipse project file
 .settings/
