@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum</artifactId>
-  <version>4.0.0-SNAPSHOT</version>
+  <version>4.0.0.Alpha1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Knowledge Suite</name>
   <description>eXo Forum is a suite of collaborative applications oriented to discussion. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
@@ -36,9 +36,9 @@
     <org.exoplatform.exopackage.version>1.1.4</org.exoplatform.exopackage.version>
     <org.chromattic.version>1.1.2</org.chromattic.version>
     <!--commons dependencies -->
-    <org.exoplatform.commons.version>1.1.8</org.exoplatform.commons.version>
+    <org.exoplatform.commons.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.commons.version>
     <!-- eXo extended service -->
-    <org.exoplatform.social.version>4.0.0-SNAPSHOT</org.exoplatform.social.version>
+    <org.exoplatform.social.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.social.version>
     <!-- 3rd parties -->
     <org.codehaus.swizzle.version>1.6.1</org.codehaus.swizzle.version>
     <com.xpn.xwiki.platform.plugins.version>1.0</com.xpn.xwiki.platform.plugins.version>
@@ -376,12 +376,6 @@
         <artifactId>exo.social.component.core</artifactId>
         <version>${org.exoplatform.social.version}</version>
         <scope>provided</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.exoplatform.doc</groupId>
-            <artifactId>doc-style</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
