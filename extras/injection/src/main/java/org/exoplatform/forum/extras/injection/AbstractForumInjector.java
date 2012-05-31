@@ -252,6 +252,10 @@ public abstract class AbstractForumInjector extends DataInjector {
       cat.setOwner(reader.string(Utils.EXO_OWNER));
       cat.setCategoryName(reader.string(Utils.EXO_NAME));
       
+      cat.setViewer(reader.strings(Utils.EXO_VIEWER));
+      cat.setCreateTopicRole(reader.strings(Utils.EXO_CREATE_TOPIC_ROLE));
+      cat.setPoster(reader.strings(Utils.EXO_POSTER));
+      
       return cat;
     }
     
@@ -274,6 +278,7 @@ public abstract class AbstractForumInjector extends DataInjector {
       forum.setPath(forumNode.getPath());
       forum.setOwner(reader.string(Utils.EXO_OWNER));
       forum.setForumName(reader.string(Utils.EXO_NAME));
+      forum.setViewer(reader.strings(Utils.EXO_VIEWER));
 
       return forum;
     }
@@ -318,6 +323,8 @@ public abstract class AbstractForumInjector extends DataInjector {
       topicNew.setId(topicNode.getName());
       topicNew.setPath(topicNode.getPath());
       topicNew.setTopicName(reader.string(Utils.EXO_NAME));
+      
+      topicNew.setCanView(reader.strings(Utils.EXO_CAN_VIEW, new String[] {}));
       return topicNew;
     }
     
@@ -343,6 +350,7 @@ public abstract class AbstractForumInjector extends DataInjector {
       if (post.getNumberAttach() > 0) {
         post.setAttachments(JCRDataStorage.getAttachmentsByNode(postNode));
       }
+      post.setUserPrivate(reader.strings(Utils.EXO_USER_PRIVATE));
       return post;
     }
     return null;

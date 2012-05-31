@@ -55,6 +55,10 @@
   </component>
 
   <component>
+    <type>org.exoplatform.forum.extras.injection.MembershipInjector</type>
+  </component>
+  
+  <component>
     <type>org.exoplatform.forum.extras.injection.AttachmentInjector</type>
   </component>
 

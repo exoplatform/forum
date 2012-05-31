@@ -54,6 +54,7 @@ public class InjectorTestCase extends AbstractKernelTest {
   private ForumInjector forumInjector;
   private TopicInjector topicInjector;
   private PostInjector postInjector;
+  private MembershipInjector membershipInjector;
   private AttachmentInjector attachmentInjector;
   
   
@@ -77,6 +78,7 @@ public class InjectorTestCase extends AbstractKernelTest {
     forumInjector = (ForumInjector) getContainer().getComponentInstanceOfType(ForumInjector.class);
     topicInjector = (TopicInjector) getContainer().getComponentInstanceOfType(TopicInjector.class);
     postInjector = (PostInjector) getContainer().getComponentInstanceOfType(PostInjector.class);
+    membershipInjector = (MembershipInjector) getContainer().getComponentInstanceOfType(MembershipInjector.class);
     attachmentInjector = (AttachmentInjector) getContainer().getComponentInstanceOfType(AttachmentInjector.class);
     
     //
@@ -84,6 +86,7 @@ public class InjectorTestCase extends AbstractKernelTest {
     forumService = (ForumService) getContainer().getComponentInstanceOfType(ForumService.class);
     
     
+    assertNotNull(membershipInjector);
     assertNotNull(profileInjector);
     assertNotNull(attachmentInjector);
     assertNotNull(topicInjector);
@@ -179,6 +182,14 @@ public class InjectorTestCase extends AbstractKernelTest {
   
   public void testPrefixAttachment() throws Exception {
     performAttachmentTest("foo", "bar", "forum", "topic", "post");
+  }
+  
+  public void testDefaultMembership() throws Exception {
+    performMembershipTest(null, null, null, null);
+  }
+  
+  public void testPrefixMembership() throws Exception {
+    performMembershipTest("foo", "bar", "forum", "topic");
   }
   
   private void performProfileTest(String prefix) throws Exception {
@@ -758,6 +769,158 @@ public class InjectorTestCase extends AbstractKernelTest {
     cleanProfile(userBaseName, 3);
     cleanTopic(topicBaseName, 1);
     cleanPost(postBaseName, 5);
+    
+  }
+  
+  private void performMembershipTest(String userPrefix, String catPrefix, String forumPrefix, String topicPrefix) throws Exception {
+
+    //
+    String userBaseName = (userPrefix == null ? "bench.user" : userPrefix);
+    String catBaseName = (catPrefix == null ? "bench.cat" : catPrefix);
+    String forumBaseName = (forumPrefix == null ? "bench.forum" : forumPrefix);
+    String topicBaseName = (topicPrefix == null ? "bench.topic" : topicPrefix);
+    assertClean(userBaseName, catBaseName, forumBaseName);
+
+    //profile
+    params.put("number", "3");
+    if (userPrefix != null) {
+      params.put("prefix", userPrefix);      
+    }
+    
+    profileInjector.inject(params);
+    
+    assertNotNull(organizationService.getUserHandler().findUserByName(userBaseName + "0"));
+    assertNotNull(organizationService.getUserHandler().findUserByName(userBaseName + "1"));
+    assertNotNull(organizationService.getUserHandler().findUserByName(userBaseName + "2"));
+   
+
+    //category
+    params.clear();
+    params.put("number", "1");
+    params.put("fromUser", "0");
+    params.put("toUser", "2");
+    if (userPrefix != null) {
+      params.put("userPrefix", userBaseName);
+    }
+    if (catPrefix != null) {
+      params.put("catPrefix", catPrefix);
+    }
+    
+    categoryInjector.inject(params);
+
+    //
+    assertEquals(3, categoryInjector.categoryNumber(catBaseName));
+    
+    assertNotNull(categoryInjector.getCategoryByName(catBaseName + "0"));
+    assertNotNull(categoryInjector.getCategoryByName(catBaseName + "1"));
+    assertNotNull(categoryInjector.getCategoryByName(catBaseName + "2"));
+    
+    //membership => fail by type wrong
+    params.clear();
+    params.put("type", "");
+    params.put("toType", "2");
+    params.put("fromUser", "0");
+    params.put("toUser", "2");
+    if (userPrefix != null) {
+      params.put("userPrefix", userBaseName);
+    }
+    if (catPrefix != null) {
+      params.put("typePrefix", catPrefix);
+    }
+    assertEquals(0, categoryInjector.getCategoryByName(catBaseName + "2").getViewer().length);
+    membershipInjector.inject(params);
+    
+    // 
+    params.clear();
+    params.put("type", "category");
+    params.put("toType", "2");
+    params.put("fromUser", "0");
+    params.put("toUser", "2");
+    if (userPrefix != null) {
+      params.put("userPrefix", userBaseName);
+    }
+    if (catPrefix != null) {
+      params.put("typePrefix", catPrefix);
+    }
+    membershipInjector.inject(params);
+    assertEquals(3, categoryInjector.getCategoryByName(catBaseName + "2").getViewer().length);
+    
+    //forum
+    params.clear();
+    params.put("number", "1");
+    params.put("toCat", "1");
+    
+    if (catPrefix != null) {
+      params.put("catPrefix", catPrefix);
+    }
+    if (forumPrefix != null) {
+      params.put("forumPrefix", forumPrefix);
+    }
+    
+    forumInjector.inject(params);
+
+    assertEquals(1, forumInjector.forumNumber(forumBaseName));
+    
+    assertNotNull(forumInjector.getForumByName(forumBaseName + "0"));
+    
+    // membership
+    params.clear();
+    params.put("type", "forum");
+    params.put("toType", "0");
+    params.put("fromUser", "0");
+    params.put("toUser", "2");
+    if (userPrefix != null) {
+      params.put("userPrefix", userBaseName);
+    }
+    if (forumPrefix != null) {
+      params.put("typePrefix", forumPrefix);
+    }
+    membershipInjector.inject(params);
+    assertEquals(3, forumInjector.getForumByName(forumBaseName + "0").getViewer().length);
+
+    
+    //topic
+    params.clear();
+    params.put("number", "1");
+    params.put("fromUser", "1");
+    params.put("toUser", "1");
+    params.put("toForum", "0");
+    
+    if (topicPrefix != null) {
+      params.put("topicPrefix", topicPrefix);
+    }
+    if (userPrefix != null) {
+      params.put("userPrefix", userPrefix);
+    }
+
+    if (forumPrefix != null) {
+      params.put("forumPrefix", forumPrefix);
+    }
+    
+    topicInjector.inject(params);
+    
+    assertEquals(1, topicInjector.topicNumber(topicBaseName));
+    assertNotNull(topicInjector.getTopicByName(topicBaseName + "0"));
+
+    // membership
+    params.clear();
+    params.put("type", "topic");
+    params.put("toType", "0");
+    params.put("fromUser", "0");
+    params.put("toUser", "2");
+    if (userPrefix != null) {
+      params.put("userPrefix", userBaseName);
+    }
+    if (topicPrefix != null) {
+      params.put("typePrefix", topicPrefix);
+    }
+    membershipInjector.inject(params);
+    assertEquals(3, topicInjector.getTopicByName(topicBaseName + "0").getCanView().length);
+
+    //
+    cleanForum(forumBaseName, 1);
+    cleanProfile(userBaseName, 3);
+    cleanTopic(topicBaseName, 1);
     
   }
   

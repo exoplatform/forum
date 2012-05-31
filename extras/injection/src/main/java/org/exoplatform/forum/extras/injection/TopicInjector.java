@@ -94,7 +94,7 @@ public class TopicInjector extends AbstractForumInjector {
         topicNew.setModifiedDate(new Date());
         topicNew.setLastPostBy(owner);
         topicNew.setLastPostDate(new Date());
-        topicNew.setDescription(topicName + " description");
+        topicNew.setDescription(lorem.getParagraphs());
         topicNew.setPostCount(0);
         topicNew.setViewCount(0);
         topicNew.setIsNotifyWhenAddPost("");
