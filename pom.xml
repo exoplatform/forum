@@ -659,7 +659,7 @@
     <module>gadgets</module>
     <module>extension</module>
     <module>extras</module>
-    <module>web</module>
+    <module>forumResources</module>
 
     <module>forumdemo</module>
     <module>docs</module>

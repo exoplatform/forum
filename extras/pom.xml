@@ -29,7 +29,7 @@
   </parent>
  
   <groupId>org.exoplatform.forum</groupId>
-  <artifactId>exo.forum.extras</artifactId>
+  <artifactId>exo-forum-extras</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Extras</name>
   <description>eXo Forum Extras</description>

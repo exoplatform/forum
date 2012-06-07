@@ -6,7 +6,7 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.forum.gadgets</artifactId>
+  <artifactId>exo-forum-gadgets</artifactId>
   <packaging>war</packaging>
   <name>eXo Forum gadgets</name>
   <description>eXo Forum gadgets</description>

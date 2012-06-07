@@ -7,7 +7,7 @@
     <version>4.0.0.Alpha1-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
-  <artifactId>exo.forum.server.jboss.patch-ear</artifactId>
+  <artifactId>exo-forum-server-jboss-patch-ear</artifactId>
   <!--version>${project.version}</version-->
   <packaging>jar</packaging>
   <name>eXo KS Jboss Server</name>

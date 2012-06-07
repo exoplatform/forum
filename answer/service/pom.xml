@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo.answer</artifactId>
+    <artifactId>exo-answer</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.answer.service</artifactId>
+  <artifactId>exo-answer-service</artifactId>
   <packaging>jar</packaging>
   <name>eXo KS FAQ service</name>
   <dependencies>
@@ -82,13 +82,13 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo.forum.application.common</artifactId>
+      <artifactId>exo-forum-application-common</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo.forum.component.bbcode</artifactId>
+      <artifactId>exo-forum-component-bbcode</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -110,7 +110,7 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo.forum.component.common</artifactId>
+      <artifactId>exo-forum-component-common</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

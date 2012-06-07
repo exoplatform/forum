@@ -6,10 +6,10 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.forum.demo</artifactId>
+  <artifactId>exo-forum-demo</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Demo Portal</name>
-  <description>eXo KS Demo Portal</description>
+  <name>eXo Forum Demo Portal</name>
+  <description>eXo Forum Demo Portal</description>
   <modules>
     <module>config</module>
     <module>war</module>

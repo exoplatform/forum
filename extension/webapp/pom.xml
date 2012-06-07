@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo.forum.extension</artifactId>
+    <artifactId>exo-forum-extension</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.forum.extension.webapp</artifactId>
+  <artifactId>exo-forum-extension-webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS Extension configuration war</name>
   <build>

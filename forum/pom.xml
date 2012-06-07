@@ -6,7 +6,7 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.forum</artifactId>
+  <artifactId>exo-forum</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Forum</name>
   <modules>

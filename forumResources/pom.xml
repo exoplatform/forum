@@ -6,10 +6,10 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.forum.web</artifactId>
-  <packaging>pom</packaging>
-  <name>eXo KS Web projects</name>
-  <modules>
-    <module>forumResources</module>
-  </modules>
+  <artifactId>exo-forum-forumResources</artifactId>
+  <packaging>war</packaging>
+  <name>eXo KS web resources</name>
+  <build>
+    <finalName>forumResources</finalName>
+  </build>
 </project>
