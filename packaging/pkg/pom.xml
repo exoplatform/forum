@@ -805,7 +805,7 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-web-forumResources</artifactId>
+      <artifactId>exo-forum-forumResources</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
