@@ -6,9 +6,9 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-packaging</artifactId>
+  <artifactId>forum-packaging</artifactId>
   <packaging>pom</packaging>
-  <name>eXo Forum Packaging</name>   
+  <name>Forum Packaging</name>   
 
   <modules>
     <module>module</module>

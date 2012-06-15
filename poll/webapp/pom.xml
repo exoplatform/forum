@@ -3,28 +3,28 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-poll</artifactId>
+    <artifactId>forum-poll</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-poll-webapp</artifactId>
+  <artifactId>forum-poll-webapp</artifactId>
   <packaging>war</packaging>
-  <name>eXo KS Poll application</name>
+  <name>Forum Poll application</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-service</artifactId>
+      <artifactId>forum-poll-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-rendering</artifactId>
+      <artifactId>forum-component-rendering</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-application-common</artifactId>
+      <artifactId>forum-application-common</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

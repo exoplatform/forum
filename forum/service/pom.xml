@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum</artifactId>
+    <artifactId>forum-forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-service</artifactId>
+  <artifactId>forum-forum-service</artifactId>
   <packaging>jar</packaging>
-  <name>eXo KS Forum service</name>
+  <name>Forum Forum service</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
@@ -72,17 +72,17 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-application-common</artifactId>
+      <artifactId>forum-application-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-common</artifactId>
+      <artifactId>forum-component-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-bbcode</artifactId>
+      <artifactId>forum-component-bbcode</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

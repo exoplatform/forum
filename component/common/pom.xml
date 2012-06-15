@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-component</artifactId>
+    <artifactId>forum-component</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-component-common</artifactId>
-  <name>eXo KS Common components</name>
+  <artifactId>forum-component-common</artifactId>
+  <name>Forum Common components</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>

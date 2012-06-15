@@ -3,70 +3,70 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-extension</artifactId>
+    <artifactId>forum-extension</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-extension-ear</artifactId>
+  <artifactId>forum-extension-ear</artifactId>
   <packaging>ear</packaging>
-  <name>eXo Forum Extension configuration ear</name>
+  <name>Forum Extension configuration ear</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-extension-config</artifactId>
+      <artifactId>forum-extension-config</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-rendering</artifactId>
+      <artifactId>forum-component-rendering</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-application-common</artifactId>
+      <artifactId>forum-application-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-service</artifactId>
+      <artifactId>forum-answer-service</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-webapp</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-service</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-webapp</artifactId>
+      <artifactId>forum-answer-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-service</artifactId>
+      <artifactId>forum-forum-service</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-webapp</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-forumResources</artifactId>
+      <artifactId>forum-forum-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-extension-webapp</artifactId>
+      <artifactId>forum-poll-service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-poll-webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-forumResources</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-extension-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
@@ -88,56 +88,56 @@
           <modules>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-extension-config</artifactId>
+              <artifactId>forum-extension-config</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-extension-webapp</artifactId>
+              <artifactId>forum-extension-webapp</artifactId>
               <contextRoot>forum</contextRoot>
               <bundleFileName>forum-extension.war</bundleFileName>
             </webModule>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-application-common</artifactId>
+              <artifactId>forum-application-common</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-answer-service</artifactId>
+              <artifactId>forum-answer-service</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-answer-webapp</artifactId>
+              <artifactId>forum-answer-webapp</artifactId>
               <contextRoot>answer</contextRoot>
               <bundleFileName>answer.war</bundleFileName>
             </webModule>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-service</artifactId>
+              <artifactId>forum-forum-service</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-webapp</artifactId>
+              <artifactId>forum-forum-webapp</artifactId>
               <contextRoot>forum</contextRoot>
               <bundleFileName>forum.war</bundleFileName>
             </webModule>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-poll-service</artifactId>
+              <artifactId>forum-poll-service</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-poll-webapp</artifactId>
+              <artifactId>forum-poll-webapp</artifactId>
               <contextRoot>poll</contextRoot>
               <bundleFileName>poll.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-forumResources</artifactId>
+              <artifactId>forum-forumResources</artifactId>
               <contextRoot>forumResources</contextRoot>
               <bundleFileName>forumResources.war</bundleFileName>
             </webModule>

@@ -7,10 +7,10 @@
     <version>4.0.0.Alpha1-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
-  <artifactId>exo-forum-server-tomcat-patch</artifactId>
+  <artifactId>forum-server-tomcat-patch</artifactId>
   <!--version>${project.version}</version-->
   <packaging>jar</packaging>
-  <name>eXo KS Tomcat Server</name>
+  <name>Forum Tomcat Server</name>
   <description>eXo Tomcat Server</description>
   <url>http://www.exoplatform.org</url>
   <dependencies>

@@ -6,9 +6,9 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-forumResources</artifactId>
+  <artifactId>forum-forumResources</artifactId>
   <packaging>war</packaging>
-  <name>eXo KS web resources</name>
+  <name>Forum web resources</name>
   <build>
     <finalName>forumResources</finalName>
   </build>

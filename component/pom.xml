@@ -6,9 +6,9 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-component</artifactId>
+  <artifactId>forum-component</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Components</name>
+  <name>Forum Components</name>
   <modules>
     <module>common</module>
     <module>rendering</module>

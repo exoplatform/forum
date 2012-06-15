@@ -7,16 +7,16 @@
 
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-extras</artifactId>
+    <artifactId>forum-extras</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.exoplatform.forum</groupId>
-  <artifactId>exo-forum-extras-injection</artifactId>
+  <artifactId>forum-extras-injection</artifactId>
   <version>4.0.0.Alpha1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>eXo Forum Injectors</name>
-  <description>eXo Forum Injectors</description>
+  <name>Forum Injectors</name>
+  <description>Forum Injectors</description>
 
   <dependencies>
 
@@ -124,14 +124,14 @@
     
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-service</artifactId>
+      <artifactId>forum-answer-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-service</artifactId>
+      <artifactId>forum-forum-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -139,14 +139,14 @@
   
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-bbcode</artifactId>
+      <artifactId>forum-component-bbcode</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-service</artifactId>
+      <artifactId>forum-poll-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

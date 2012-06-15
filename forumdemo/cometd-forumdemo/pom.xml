@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-demo</artifactId>
+    <artifactId>forum-demo</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-demo-cometd-war</artifactId>
+  <artifactId>forum-demo-cometd-war</artifactId>
   <packaging>war</packaging>
-  <name>eXo Forum Demo Comet WebApp</name>
+  <name>Forum Demo Comet WebApp</name>
   <build>
     <finalName>cometd.forum.emo</finalName>
   </build>

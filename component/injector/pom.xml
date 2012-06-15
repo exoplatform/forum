@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-component</artifactId>
+    <artifactId>forum-component</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-component-injector</artifactId>
-  <name>eXo KS Data Injector</name>
+  <artifactId>forum-component-injector</artifactId>
+  <name>Forum Data Injector</name>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -35,13 +35,13 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-service</artifactId>
+      <artifactId>forum-answer-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-service</artifactId>
+      <artifactId>forum-forum-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

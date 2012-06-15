@@ -6,9 +6,9 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-poll</artifactId>
+  <artifactId>forum-poll</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Poll</name>
+  <name>Forum Poll</name>
   <modules>
     <module>service</module>
     <module>webapp</module>

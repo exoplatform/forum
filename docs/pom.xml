@@ -7,10 +7,10 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-docs</artifactId>
+  <artifactId>forum-docs</artifactId>
   <packaging>pom</packaging>
 
-  <name>KS documentation</name>
+  <name>Forum documentation</name>
 
   <properties>
     <wikbook.source>${project.build.directory}/wikbook-src</wikbook.source>

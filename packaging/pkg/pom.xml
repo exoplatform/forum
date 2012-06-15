@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-packaging</artifactId>
+    <artifactId>forum-packaging</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-packaging-assembly</artifactId>
+  <artifactId>forum-packaging-assembly</artifactId>
   <packaging>pom</packaging>
-  <name>eXo Forum Packaging Assemblies</name>
+  <name>Forum Packaging Assemblies</name>
   <properties>
     <gatein.working.dir>${basedir}/target</gatein.working.dir>
   </properties>
@@ -622,123 +622,123 @@
    
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-upgrade</artifactId>
+      <artifactId>forum-component-upgrade</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-server-tomcat-patch</artifactId>
+      <artifactId>forum-server-tomcat-patch</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-rest-forumdemo</artifactId>
+      <artifactId>forum-demo-rest-forumdemo</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-service</artifactId>
+      <artifactId>forum-poll-service</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-service</artifactId>
+      <artifactId>forum-forum-service</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-application-common</artifactId>
+      <artifactId>forum-application-common</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-forumResources</artifactId>
+      <artifactId>forum-forumResources</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-bbcode</artifactId>
+      <artifactId>forum-component-bbcode</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-rendering</artifactId>
+      <artifactId>forum-component-rendering</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-common</artifactId>
+      <artifactId>forum-component-common</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-cometd-war</artifactId>
+      <artifactId>forum-demo-cometd-war</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-extension-webapp</artifactId>
+      <artifactId>forum-extension-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-poll-webapp</artifactId>
+      <artifactId>forum-poll-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-service</artifactId>
+      <artifactId>forum-answer-service</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-webapp</artifactId>
+      <artifactId>forum-forum-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-config</artifactId>
+      <artifactId>forum-demo-config</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-answer-webapp</artifactId>
+      <artifactId>forum-answer-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-webapp</artifactId>
+      <artifactId>forum-demo-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-gadgets</artifactId>
+      <artifactId>forum-gadgets</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-injector</artifactId>
+      <artifactId>forum-component-injector</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
     </dependency>

@@ -3,28 +3,28 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-demo</artifactId>
+    <artifactId>forum-demo</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-demo-ear</artifactId>
+  <artifactId>forum-demo-ear</artifactId>
   <packaging>ear</packaging>
-  <name>eXo Forum Demo Portal ear</name>
+  <name>Forum Demo Portal ear</name>
   <description>KS Demo EAR for GateIn</description>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-config</artifactId>
+      <artifactId>forum-demo-config</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-rest-forumdemo</artifactId>
+      <artifactId>forum-demo-rest-forumdemo</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-demo-webapp</artifactId>
+      <artifactId>forum-demo-webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
@@ -41,17 +41,17 @@
           <modules>
             <jarModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-demo-config</artifactId>
+              <artifactId>forum-demo-config</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-demo-webapp</artifactId>
+              <artifactId>forum-demo-webapp</artifactId>
               <contextRoot>forumdemo</contextRoot>
             </webModule>
             <webModule>
               <groupId>org.exoplatform.forum</groupId>
-              <artifactId>exo-forum-demo-rest-forumdemo</artifactId>
+              <artifactId>forum-demo-rest-forumdemo</artifactId>
               <contextRoot>rest-forumdemo</contextRoot>
             </webModule>
           </modules>

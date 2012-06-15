@@ -29,10 +29,10 @@
   </parent>
  
   <groupId>org.exoplatform.forum</groupId>
-  <artifactId>exo-forum-extras</artifactId>
+  <artifactId>forum-extras</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Extras</name>
-  <description>eXo Forum Extras</description>
+  <name>Forum Extras</name>
+  <description>Forum Extras</description>
 
   <modules>
     <module>injection</module>

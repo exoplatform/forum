@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-application</artifactId>
+    <artifactId>forum-application</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>exo-forum-application-common</artifactId>
+  <artifactId>forum-application-common</artifactId>
   <packaging>jar</packaging>
-  <name>eXo KS Applications commons</name>
+  <name>Forum Applications commons</name>
   <dependencies>
     <!-- added by us -->
     <dependency>
@@ -19,12 +19,12 @@
     <!-- platform provided -->
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-rendering</artifactId>
+      <artifactId>forum-component-rendering</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-common</artifactId>
+      <artifactId>forum-component-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

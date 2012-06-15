@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-packaging</artifactId>
+    <artifactId>forum-packaging</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
   <artifactId>portal.packaging.product</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Portal Packaging Product</name>
+  <name>Forum Portal Packaging Product</name>
   <properties>
     <exobuild.name>portal</exobuild.name>
     <exobuild.type>product</exobuild.type>

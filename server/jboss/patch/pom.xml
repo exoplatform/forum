@@ -7,10 +7,10 @@
     <version>4.0.0.Alpha1-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
-  <artifactId>exo-forum-server-jboss-patch</artifactId>
+  <artifactId>forum-server-jboss-patch</artifactId>
   <!--version>${project.version}</version-->
   <packaging>jar</packaging>
-  <name>eXo KS Jboss Server</name>
+  <name>Forum Jboss Server</name>
   <description>eXo Jboss Server</description>
   <url>http://www.exoplatform.org</url>
   <dependencies>

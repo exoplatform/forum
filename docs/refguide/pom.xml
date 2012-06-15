@@ -4,15 +4,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>exo-forum-docs</artifactId>
+    <artifactId>forum-docs</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
   
-  <artifactId>exo-forum-docs-refguide</artifactId>
+  <artifactId>forum-docs-refguide</artifactId>
   <packaging>jar</packaging>
 
 
-  <name>eXo Knowledge reference guide</name>
+  <name>Forum reference guide</name>
 
   <properties>
     <wikbook.version>0.9.37</wikbook.version>

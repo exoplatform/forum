@@ -10,7 +10,7 @@
 
   <artifactId>selenium</artifactId>
   <packaging>jar</packaging>
-  <name>Selenium Sniff Test for selenium</name>
+  <name>Forum Selenium Sniff Test for selenium</name>
   <description>Automated UI tests for selenium</description>
 
   <properties>
