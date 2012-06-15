@@ -14,6 +14,11 @@
   </component>
   
   <component>
+    <key>org.exoplatform.wiki.rendering.RenderingService</key>
+    <type>org.exoplatform.wiki.rendering.impl.RenderingServiceImpl</type>    
+  </component>
+  
+  <component>
     <key>org.exoplatform.forum.service.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>    
   </component>

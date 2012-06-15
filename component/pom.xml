@@ -16,6 +16,5 @@
     <module>statistics</module>
     <module>injector</module>
     <module>upgrade</module>
-    <module>macro</module>
   </modules>
 </project>

@@ -34,9 +34,9 @@ function getModule(params) {
   module.component = {};
   module.component.common = new Project("org.exoplatform.forum", "exo-forum-component-common", "jar", module.version).
                             addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui", "jar", commonsVersion));
-  module.component.rendering = new Project("org.exoplatform.forum", "exo-forum-component-rendering", "jar", module.version).
-                            addDependency(new Project("org.exoplatform.forum", "exo-forum-component-macro-iframe", "jar", module.version)).
-                            addDependency(new Project("org.exoplatform.forum", "exo-forum-component-macro-jira", "jar", module.version));
+
+  module.component.rendering = new Project("org.exoplatform.forum", "exo-forum-component-rendering", "jar", module.version);
+
   module.component.bbcode = new Project("org.exoplatform.forum", "exo-forum-component-bbcode", "jar", module.version);
 
   module.component.upgrade = new Project("org.exoplatform.commons", "exo.platform.commons.component.upgrade", "jar", commonsVersion).
@@ -74,7 +74,8 @@ function getModule(params) {
   module.web = {}
   module.web.forumResources = 
     new Project("org.exoplatform.forum", "exo-forum-forumResources", "war", module.version) ;
-
+  module.web.forumResources.deployName = "forumResources";
+  
   // FORUM extension for tomcat
   module.extension = {};
   module.extension.webapp = 
@@ -107,7 +108,39 @@ function getModule(params) {
   module.demo.rest =
     new Project("org.exoplatform.forum", "exo-forum-demo-rest-forumdemo", "war", module.version).
     addDependency(ws.frameworks.servlet);
-  module.extension.deployName = "rest-forumdemo"; 
+  module.demo.rest.deployName = "rest-forumdemo"; 
+  
+  //xwiki-rendering
+  module.component.bbcode. 
+    addDependency(new Project("org.exoplatform.wiki", "wiki-renderer", "jar", "${org.exoplatform.wiki.version}")).
+    addDependency(new Project("org.exoplatform.wiki", "wiki-macros-iframe", "jar", "${org.exoplatform.wiki.version}")).
+    addDependency(new Project("com.google.gwt", "gwt-servlet", "jar",  "${gwt.version}")).
+    addDependency(new Project("com.google.gwt", "gwt-user", "jar",  "${gwt.version}")).
+    addDependency(new Project("javax.validation", "validation-api", "jar",  "${javax.validation.version}")).
+    addDependency(new Project("org.python", "jython-standalone", "jar",  "${jython-standalone.version}")).
+    addDependency(new Project("pygments", "pygments", "jar",  "${pygments.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-configuration-api", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-context", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-component-api", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-component-default", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-properties", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-xml", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-script", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.commons", "xwiki-commons-legacy-component", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-api", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-syntax-wikimodel", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-syntax-xwiki2", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-syntax-xhtml", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-transformation-macro", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-transformation-icon", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-toc", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-box", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-message", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.platform", "xwiki-platform-rendering-macro-code", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.platform", "xwiki-platform-model", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.platform", "xwiki-platform-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.wikimodel", "org.wikimodel.wem", "jar",  "${org.wikimodel.version}"));
+  
    
   return module;
 }

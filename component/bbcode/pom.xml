@@ -40,14 +40,20 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>exo-forum-component-rendering</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.exoplatform.wiki</groupId>
+      <artifactId>wiki-renderer</artifactId>
+      <version>${org.exoplatform.wiki.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>exo-forum-component-common</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>exo-forum-component-rendering</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
