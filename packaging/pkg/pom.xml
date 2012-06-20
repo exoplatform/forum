@@ -201,6 +201,17 @@
       <version>${org.exoplatform.commons.version}</version>
       <type>war</type>
     </dependency>
+      <dependency>
+          <groupId>org.exoplatform.commons</groupId>
+          <artifactId>commons-extension-webapp</artifactId>
+          <version>${org.exoplatform.commons.version}</version>
+          <type>war</type>
+      </dependency>
+      <dependency>
+          <groupId>org.exoplatform.commons</groupId>
+          <artifactId>commons-webui-component</artifactId>
+          <version>${org.exoplatform.commons.version}</version>
+      </dependency>
 
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
