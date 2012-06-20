@@ -32,7 +32,7 @@ function getProduct(version) {
   portal.starter.deployName = "starter";
   //product.addDependencies(portal.starter);
   
-  portal.fck = new Project("org.exoplatform.commons", "exo.platform.commons.fck", "war", "${org.exoplatform.commons.version}");
+  portal.fck = new Project("org.exoplatform.commons", "commons-fck", "war", "${org.exoplatform.commons.version}");
   portal.fck.deployName = "fck";
   product.addDependencies(portal.fck);
   
@@ -60,7 +60,7 @@ function getProduct(version) {
   product.addDependencies(FORUM.demo.cometd);
   product.addDependencies(FORUM.demo.rest);
   
-  product.addDependencies(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
+  product.addDependencies(new Project("org.exoplatform.commons", "commons-component-common", "jar", "${org.exoplatform.commons.version}"));
   
   product.addServerPatch("tomcat", FORUM.server.tomcat.patch) ;
   //product.addServerPatch("jboss",  FORUM.server.jboss.patch) ;

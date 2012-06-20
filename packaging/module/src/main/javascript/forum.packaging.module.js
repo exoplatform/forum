@@ -15,32 +15,32 @@ function getModule(params) {
 
   module.commons = {};
   module.commons.extension = 
-    new Project("org.exoplatform.commons", "exo.platform.commons.extension.webapp", "war", commonsVersion);
+    new Project("org.exoplatform.commons", "commons-extension-webapp", "war", commonsVersion);
   module.commons.extension.deployName = "commons-extension";
   
   module.comet = {};
   module.comet.cometd =
-    new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", commonsVersion).
+    new Project("org.exoplatform.commons", "commons-comet-webapp", "war", commonsVersion).
     addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "${org.mortbay.jetty.cometd-bayeux.version}")).
     addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "${org.mortbay.jetty.jetty-util.version}")).
     addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "${org.mortbay.jetty.cometd-api.version}")).
-    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", commonsVersion));
+    addDependency(new Project("org.exoplatform.commons", "commons-comet-service", "jar", commonsVersion));
   module.comet.cometd.deployName = "cometd";
   
-  module.webuiExt = new Project("org.exoplatform.commons", "exo.platform.commons.webui.ext", "jar", commonsVersion);
+  module.webuiExt = new Project("org.exoplatform.commons", "commons-webui-ext", "jar", commonsVersion);
 
   
   // FORUM components
   module.component = {};
   module.component.common = new Project("org.exoplatform.forum", "forum-component-common", "jar", module.version).
-                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui", "jar", commonsVersion));
+                            addDependency(new Project("org.exoplatform.commons", "commons-webui-component", "jar", commonsVersion));
 
   module.component.rendering = new Project("org.exoplatform.forum", "forum-component-rendering", "jar", module.version);
 
   module.component.bbcode = new Project("org.exoplatform.forum", "forum-component-bbcode", "jar", module.version);
 
-  module.component.upgrade = new Project("org.exoplatform.commons", "exo.platform.commons.component.upgrade", "jar", commonsVersion).
-    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component.product", "jar", commonsVersion));
+  module.component.upgrade = new Project("org.exoplatform.commons", "commons-component-upgrade", "jar", commonsVersion).
+    addDependency(new Project("org.exoplatform.commons", "commons-component-product", "jar", commonsVersion));
 
   
   // FORUM application common
