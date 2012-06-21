@@ -939,7 +939,31 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Code macro depends on -->
+      <dependency>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-wysiwyg-client</artifactId>
+          <version>${org.xwiki.platform.version}</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>commons-io</groupId>
+                  <artifactId>commons-io</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+
+    <!-- google gwt depends on-->
+      <dependency>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-servlet</artifactId>
+          <version>${gwt.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-user</artifactId>
+          <version>${gwt.version}</version>
+      </dependency>
+
+      <!-- Code macro depends on -->
     <dependency>
       <groupId>org.python</groupId>
       <artifactId>jython-standalone</artifactId>
