@@ -197,7 +197,7 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
-      <artifactId>exo.platform.commons.extension.webapp</artifactId>
+      <artifactId>commons-extension-webapp</artifactId>
       <version>${org.exoplatform.commons.version}</version>
       <type>war</type>
     </dependency>

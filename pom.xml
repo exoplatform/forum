@@ -201,12 +201,12 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.commons</groupId>
-        <artifactId>exo.platform.commons.comet.service</artifactId>
+        <artifactId>commons-comet-service</artifactId>
         <version>${org.exoplatform.commons.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.commons</groupId>
-        <artifactId>exo.platform.commons.comet.webapp</artifactId>
+        <artifactId>commons-comet-webapp</artifactId>
         <version>${org.exoplatform.commons.version}</version>
       </dependency>
       <dependency>
@@ -358,7 +358,7 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.commons</groupId>
-        <artifactId>exo.platform.commons.testing</artifactId>
+        <artifactId>commons-testing</artifactId>
         <version>${org.exoplatform.commons.version}</version>
       </dependency>
       <dependency>
