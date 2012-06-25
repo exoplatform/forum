@@ -10,21 +10,21 @@
   <artifactId>forum</artifactId>
   <version>4.0.0.Alpha1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>eXo Knowledge Suite</name>
-  <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
+  <name>eXo Forum</name>
+  <description>eXo Forum manages forum, answer and poll.</description>
   <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   <scm>
-   <connection>scm:git:git://github.com/exoplatform/ks.git</connection>
-   <developerConnection>scm:git:git@github.com:exoplatform/ks.git</developerConnection>
-   <url>http://fisheye.exoplatform.org/browse/ks</url>
+   <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
+   <developerConnection>scm:git:git@github.com:exoplatform/forum.git</developerConnection>
+   <url>http://fisheye.exoplatform.org/browse/forum</url>
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>https://jira.exoplatform.org/browse/KS</url>
+    <url>https://jira.exoplatform.org/browse/FORUM</url>
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>https://ci.exoplatform.org/job/ks-2.2.x-ci/</url>
+    <url>https://ci.exoplatform.org/job/forum-master-ci/</url>
   </ciManagement>
   <properties>
     <org.exoplatform.kernel.version>2.3.7-GA</org.exoplatform.kernel.version>
