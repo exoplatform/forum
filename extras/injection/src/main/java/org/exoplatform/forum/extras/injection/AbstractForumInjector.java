@@ -26,7 +26,7 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;
-import org.exoplatform.forum.extras.injection.utils.NameGenerator;
+import org.exoplatform.forum.extras.injection.utils.ExoNameGenerator;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -125,7 +125,7 @@ public abstract class AbstractForumInjector extends DataInjector {
   protected final Random random;
 
   /** . */
-  protected NameGenerator nameGenerator;
+  protected ExoNameGenerator exoNameGenerator;
 
   /** . */
   protected LoremIpsum4J lorem;
@@ -139,7 +139,7 @@ public abstract class AbstractForumInjector extends DataInjector {
 
     //
     this.userHandler = organizationService.getUserHandler();
-    this.nameGenerator = new NameGenerator();
+    this.exoNameGenerator = new ExoNameGenerator();
     this.random = new Random();
     this.lorem = new LoremIpsum4J();
 

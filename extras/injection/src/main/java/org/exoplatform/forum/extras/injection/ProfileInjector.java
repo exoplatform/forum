@@ -46,8 +46,8 @@ public class ProfileInjector extends AbstractForumInjector {
       String username = userName();
       User user = userHandler.createUserInstance(username);
       user.setEmail(username + "@" + DOMAIN);
-      user.setFirstName(nameGenerator.compose(3));
-      user.setLastName(nameGenerator.compose(4));
+      user.setFirstName(exoNameGenerator.compose(3));
+      user.setLastName(exoNameGenerator.compose(4));
       user.setPassword(PASSWORD);
 
       try {
