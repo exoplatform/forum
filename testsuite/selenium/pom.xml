@@ -4,13 +4,13 @@
 
   <parent>
     <groupId>org.exoplatform.forum</groupId>
-    <artifactId>forum-platform-testsuite</artifactId>
+    <artifactId>forum-testsuite</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>selenium</artifactId>
+  <artifactId>forum-testsuite-selenium</artifactId>
   <packaging>jar</packaging>
-  <name>Forum Selenium Sniff Test for selenium</name>
+  <name>Forum selenium sniff test for selenium</name>
   <description>Automated UI tests for selenium</description>
 
   <properties>

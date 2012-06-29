@@ -6,9 +6,9 @@
     <artifactId>forum</artifactId>
     <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
-  <artifactId>forum-platform-testsuite</artifactId>
+  <artifactId>forum-testsuite</artifactId>
   <packaging>pom</packaging>
-  <name>Forum Platform - Tests</name>
+  <name>Forum - Tests</name>
   <modules>
     <module>selenium</module>
   </modules>
