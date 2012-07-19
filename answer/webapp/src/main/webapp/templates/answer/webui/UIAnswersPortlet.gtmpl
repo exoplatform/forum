@@ -3,7 +3,7 @@
 
   def rcontext = _ctx.getRequestContext();
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
+  jsmanager.addOnResizeJavascript('function(){eXo.forum.ForumUtils.setMaskLayer("'+uicomponent.id+'");}');
 
   jsmanager.addCustomizedOnLoadScript('eXo.answer.UIAnswersPortlet.loadActionScroll();');
   jsmanager.addOnResizeJavascript('eXo.answer.UIAnswersPortlet.reSizeImages');

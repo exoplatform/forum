@@ -279,7 +279,7 @@
                         <% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
                         <div class="LastPostInfos">
                           <span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
-                          <a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
+                          <a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
                           <div class="UIPopupInfoMenu">
                             <div class="UIPopupInfoContent">
                               <div class="Arrow"><span></span></div>

@@ -208,7 +208,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
     }
     renderHTMLAttributes(w);
     w.write("/>");
-    w.write("<div class='CalendarIcons' lang='" + getLang() + "' fistweekday='" + getFirstDayOfWeek() + "' format='" + getFormatStyle() + "' onclick='eXo.ks.UIDateTimePicker.init(this,");
+    w.write("<div class='CalendarIcons' lang='" + getLang() + "' fistweekday='" + getFirstDayOfWeek() + "' format='" + getFormatStyle() + "' onclick='eXo.forum.UIDateTimePicker.init(this,");
     w.write(String.valueOf(isDisplayTime_) + ");' title='" + titleShowCalendar + "'><span></span></div>");
   }
 }

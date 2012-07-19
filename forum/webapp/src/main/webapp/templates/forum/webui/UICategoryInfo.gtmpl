@@ -44,9 +44,9 @@
 							%>
 								<div class="FloatLeft">
 									<% if(t != size){ %>
-									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">${userView}</a><span>,</span>
+									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">${userView}</a><span>,</span>
 									<% } else {%>
-									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">${userView}</a>
+									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">${userView}</a>
 									<% } %>					
 									<div class="UIPopupInfoMenu">
                     <div class="UIPopupInfoContent">
@@ -94,7 +94,7 @@
 					 		</div>
 							<div class="text" style="padding-bottom:5px;">
 								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
-								<a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$viewNewMember</a>
+								<a href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewNewMember</a>
 								<div class="UIPopupInfoMenu">
                   <div class="UIPopupInfoContent">
                     <div class="Arrow"><span></span></div>

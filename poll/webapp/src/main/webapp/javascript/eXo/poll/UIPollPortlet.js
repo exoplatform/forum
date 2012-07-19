@@ -1,59 +1,55 @@
-if(!eXo.poll){
-	eXo.poll = {} ;
-}
-function UIPollPortlet() {};
+;(function($, window, document) {
+  
+  function UIPollPortlet() {
+    this.obj = null;
+    this.event = null;
+    this.wait = false;
+  };
 
-function UIPollPortlet() {
-	this.obj = null;
-	this.event = null;
-	this.wait = false;
-};
+  UIPollPortlet.prototype.OpenPrivateField = function(elm) {
+    if(elm === 'DivCheckBox') elm = findId(elm);
+    if (elm.exists()) {
+      var parent = elm.parents('.OptionField');
+      var childs = parent.find('div.Display');
+      var input = elm.find('input.checkbox:first');
+      if (input.exists()) {
+        for(var i = 0; i < childs.length; i++) {
+          if(input.attr('checked')) childs.eq(i).css('display', 'none');
+          else childs.eq(i).css('display', 'block');
+        }
+      }
+    }
+  };
 
-UIPollPortlet.prototype.OpenPrivateField = function(elm) {
-	if(elm === "DivCheckBox") {
-		elm = document.getElementById(elm);
-	}
-	if(elm){
-		var DOMUtil = eXo.core.DOMUtil;
-		var parent = DOMUtil.findAncestorByClass(elm,"OptionField") ;
-		var childs = DOMUtil.findDescendantsByClass(parent, "div", "Display");
-		var input = DOMUtil.findFirstDescendantByClass(elm, "input", "checkbox");
-		if(input){
-			for(var i=0; i < childs.length; i++) {
-				if(input.checked) {
-					childs[i].style.display = "none";
-				} else {
-					childs[i].style.display = "block";
-				}
-			}
-		}
-	}
-};
+  UIPollPortlet.prototype.OverButton = function(object) {
+    if($(object).attr('class').indexOf('Action') > 0){
+      var str = '';
+      for(var i = 0; i < $(object).attr('class').length - 6; i++) {
+        str = str + $(object).attr('class').charAt(i);
+      }
+      $(object).attr('class', str);
+    } else {
+      $(object).attr('class', $(object).attr('class') + 'Action');
+  }
+  };
 
-UIPollPortlet.prototype.OverButton = function(oject) {
-	if(oject.className.indexOf("Action") > 0){
-		var Srt = "";
-		for(var i=0; i<oject.className.length - 6; i++) {
-			Srt = Srt + oject.className.charAt(i);
-		}
-		oject.className = Srt;
-	}	else oject.className = oject.className + "Action";
-};
+  UIPollPortlet.prototype.expandCollapse = function(obj) {
+    var forumToolbar = $(obj).parents('.ForumToolbar');
+    var contentContainer = forumToolbar.next('div');
+    if(contentContainer.css('display') != 'none') {
+      contentContainer.css('display', 'none');
+      $(obj).attr('class', 'IconRight ExpandButton').attr('title', $(obj).attr('expand'));
+      forumToolbar.css('borderBottom', 'solid 1px #b7b7b7');
+    } else {
+      contentContainer.css('display', 'block');
+      $(obj).attr('class', 'IconRight CollapseButton').attr('title', $(obj).attr('collapse'));
+      forumToolbar.css('borderBottom', 'none');
+    }
+  };
 
-UIPollPortlet.prototype.expandCollapse = function(obj) {
-	var forumToolbar = eXo.core.DOMUtil.findAncestorByClass(obj,"ForumToolbar") ;
-	var contentContainer = eXo.core.DOMUtil.findNextElementByTagName(forumToolbar,"div") ;
-	if(contentContainer.style.display != "none") {
-		contentContainer.style.display = "none" ;
-		obj.className = "IconRight ExpandButton" ;
-		obj.setAttribute("title",obj.getAttribute("expand")) ;
-		forumToolbar.style.borderBottom = "solid 1px #b7b7b7";
-	} else {
-		contentContainer.style.display = "block" ;
-		obj.className = "IconRight CollapseButton" ;
-		obj.setAttribute("title", obj.getAttribute("collapse")) ;
-		forumToolbar.style.borderBottom = "none";
-	}
-} ;
+  // Expose
+  window.eXo = eXo || {};
+  window.eXo.poll = eXo.poll || {} ;
+  window.eXo.poll.UIPollPortlet = new UIPollPortlet();
 
-eXo.poll.UIPollPortlet = new UIPollPortlet() ;
+})(gj, window, document);

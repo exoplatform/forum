@@ -97,8 +97,9 @@
         String linkQuestion = "" ;
         
         for(question in listQuestion) {
-          String qId = question.getPath();
-          linkQuestion=uicomponent.event("OpenQuestion", qId);
+          String questionId = question.getId();
+          String questionPath = question.getPath();
+          linkQuestion=uicomponent.event("OpenQuestion", questionPath);
           String questionIcon = "" ;
           String colorViewQuestion = "";
           if(!question.isActivated() || !question.isApproved()) colorViewQuestion = "gray";
@@ -108,10 +109,10 @@
             questionIcon = "NotResponse" ;
           }
           
-          if(!uicomponent.getQuestionView().equals(qId)){
+          if(!uicomponent.getQuestionView().equals(questionPath)){
             questionContent = question.getQuestion();
       %>
-            <div class="QuestionContainer ClearFix oncontextmenu" id="$qId">
+            <div class="QuestionContainer ClearFix oncontextmenu" id="$questionId">
       
 <!-- style for Questions -->
               <div class="NormalQuest ClearFix">
@@ -170,13 +171,13 @@
                                   String lockFunction = "" ;
                                   if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
                                     if(canEditQuestion){
-                                      linkView = uicomponent.event(viewAction, qId+"/true");
+                                      linkView = uicomponent.event(viewAction, questionPath+"/true");
                                     } else {
                                       linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
                                       lockFunction = "LockFunction" ;
                                     }
                                   } else {
-                                    linkView = uicomponent.event(viewAction, qId);
+                                    linkView = uicomponent.event(viewAction, questionPath);
                                   }
                                   String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
                               %>
@@ -189,7 +190,7 @@
                               <%if(uicomponent.currentUser_ != null) {
                                   if(!canEditQuestion && uicomponent.currentUser_.equals(question.getAuthor())){
                                     String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
-                                    String linkView = uicomponent.event("EditQuestion", qId);
+                                    String linkView = uicomponent.event("EditQuestion", questionPath);
                                   %>  
                                     <div class="MenuItem">
                                       <a class="ItemIcon Edit" href="$linkView">$itemLabelView</a>
@@ -244,7 +245,7 @@
           %>          
             <div class="QuestionSelect">
                   
-                    <div class="QuestionContainer ClearFix" id="$qId">
+                    <div class="QuestionContainer ClearFix" id="$questionId">
                       
                         <% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
                           <div class="ImgProfile">
@@ -311,13 +312,13 @@
                                   String SendToFriend = "SendToFriend";
                                   if((!question.isApproved() || !question.isActivated())){
                                     if(canEditQuestion) {
-                                      link = uicomponent.event("SendQuestion",qId+"/true");
+                                      link = uicomponent.event("SendQuestion",questionPath+"/true");
                                     } else {
                                       link = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
                                       SendToFriend = "LockSendToFriend" ;
                                     }
                                   } else {
-                                    link = uicomponent.event("SendQuestion",qId);
+                                    link = uicomponent.event("SendQuestion",questionPath);
                                   }
                                   %>
                                   <a class="$SendToFriend" href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
@@ -328,15 +329,15 @@
                                   if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
                               %>
                                
-                                  <a class="MoveQuestion" onclick="<%=uicomponent.event("MoveQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>">
+                                  <a class="MoveQuestion" onclick="<%=uicomponent.event("MoveQuestion", questionPath);%>" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>">
                                     <span></span>
                                   </a>
                                 
-                                  <a class="Delete" onclick="<%=uicomponent.event("DeleteQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>">
+                                  <a class="Delete" onclick="<%=uicomponent.event("DeleteQuestion", questionPath);%>" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>">
                                     <span></span>
                                   </a>
                                
-                                  <a class="Edit" onclick="<%=uicomponent.event("EditQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>">
+                                  <a class="Edit" onclick="<%=uicomponent.event("EditQuestion", questionPath);%>" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>">
                                     <span></span>
                                   </a>
                               <%  }
@@ -524,13 +525,13 @@
                                                 String lockFunction = "" ;
                                                 if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
                                                   if(canEditQuestion){
-                                                    linkView = uicomponent.event(viewAction, qId+"/true");
+                                                    linkView = uicomponent.event(viewAction, questionPath+"/true");
                                                   } else {
                                                     linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend")+"');" ;
                                                     lockFunction = "LockFunction" ;
                                                   }
                                                 } else {
-                                                  linkView = uicomponent.event(viewAction, qId);
+                                                  linkView = uicomponent.event(viewAction, questionPath);
                                                 }
                                                 String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);                                                       
                                             %>
@@ -543,7 +544,7 @@
                                             %>                                                    
                                             <%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
                                                 String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
-                                                String linkView = uicomponent.event("EditQuestion", qId);                                       
+                                                String linkView = uicomponent.event("EditQuestion", questionPath);                                       
                                             %>
                                               <div onclick="$linkView" class="MenuItem">
                                                 <a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
@@ -631,11 +632,11 @@
                                             String downloadAtt = uicomponent.event("DownloadAttach");
                                           if(fileName.length() > 60){
                                           %>
-                                            <a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage'); if(eXo.ks.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+                                            <a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.isIE()) {$downloadAtt ; } return false;" href="javaScript:void(0);">
                                               <span><%=FAQUtils.getSubString(fileName, 60);%></span>
                                             </a>
                                           <%}else{%>
-                                            <a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.ks.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+                                            <a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.isIE()) {$downloadAtt ; } return false;" href="javaScript:void(0);">
                                               <span>$fileName</span>
                                             </a>
                                           <%}%>
@@ -652,11 +653,11 @@
                                     <%
                                     if(fileName.length() > 60){
                                     %>
-                                      <a title="$fileName" class="AttachmentLabel" onclick="if(eXo.ks.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                      <a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
                                         <%=FAQUtils.getSubString(fileName, 60);%>
                                       </a>
                                     <%}else{%>
-                                      <a class="AttachmentLabel" onclick="if(eXo.ks.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                      <a class="AttachmentLabel" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
                                         $fileName
                                       </a>
                                     <%}%>

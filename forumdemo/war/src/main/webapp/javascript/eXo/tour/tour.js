@@ -1,5 +1,5 @@
-if (!eXo.ks)
-  eXo.ks = {};
+if (!eXo.forum)
+  eXo.forum = {};
 
 function Tour() {
   childBts = null;
@@ -7,32 +7,31 @@ function Tour() {
 };
 
 Tour.prototype.init = function() {
-  this.parent_ = document.getElementById('UIKSGuidedTour');
-  this.childBts = eXo.core.DOMUtil.findDescendantsByClass(this.parent_, 'li', 'Button');
+  this.parent_ = gj('#UIKSGuidedTour');
+  this.childBts = this.parent_.find('li.Button');
 };
 
 Tour.prototype.showContent = function(obj) {
-  var t = eXo.ks.Tour.t;
-  var childBts = eXo.ks.Tour.childBts;
-  var parent_ = eXo.ks.Tour.parent_;
-  var childContents = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'ContentTour');
+  var t = eXo.forum.Tour.t;
+  var childBts = eXo.forum.Tour.childBts;
+  var parent_ = eXo.forum.Tour.parent_;
+  var childContents = parent_.find('div.ContentTour');
   for ( var i = 0; i < childBts.length; i++) {
     var child = childBts[i];
     if (child === obj) {
       child.className = "Button HightLineButton";
-      childContents[i].style.display = "block";
+      childContents.eq(i).show();
       t = i;
     } else {
       child.className = "Button NormalButton";
-      childContents[i].style.display = "none";
+      childContents.eq(i).hide();
     }
   }
 };
 
 Tour.prototype.onMouseOverButton = function(obj) {
-  var t = eXo.ks.Tour.t;
-  var childBts = eXo.ks.Tour.childBts;
-  var parent_ = eXo.ks.Tour.parent_;
+  var t = eXo.forum.Tour.t;
+  var childBts = eXo.forum.Tour.childBts;
   for ( var i = 0; i < childBts.length; i++) {
     var child = childBts[i];
     if (child.className != "Button HightLineButton") {
@@ -46,15 +45,14 @@ Tour.prototype.onMouseOverButton = function(obj) {
 };
 
 Tour.prototype.onMouseOutButton = function(obj) {
-  var t = eXo.ks.Tour.t;
-  var childBts = eXo.ks.Tour.childBts;
-  var parent_ = eXo.ks.Tour.parent_;
+  var t = eXo.forum.Tour.t;
+  var childBts = eXo.forum.Tour.childBts;
   for ( var i = 0; i < childBts.length; i++) {
-    var child = childBts[i];
-    if (child.className != "Button HightLineButton" && i != t) {
-      child.className = "Button NormalButton";
+    var child = childBts.eq(i);
+    if (!child.hasClass('Button HightLineButton') && i != t) {
+      child.attr('class', 'Button NormalButton');
     }
   }
 };
 
-eXo.ks.Tour = new Tour();
+eXo.forum.Tour = new Tour();

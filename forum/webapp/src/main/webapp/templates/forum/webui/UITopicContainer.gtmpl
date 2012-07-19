@@ -14,7 +14,7 @@
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
-  jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
+  jsmanager.addJavascript("eXo.forum.CheckBoxManager.init('UITopicContent') ;") ;
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInForum');") ;
@@ -171,7 +171,7 @@
               
               </div>
             <% if(isShowMenu && canEdit) { %> 
-              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);" >
+              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
 
                 <div class="StatusIcon ToolIcon">
                   <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.ForumTools");%></a>
@@ -452,7 +452,7 @@
                     
                       <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
                       <div class="PopupSelectCategory">
-                        <a class="PostBy" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$viewTopicBy</a>
+                        <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewTopicBy</a>
                         <div class="UIPopupInfoMenu">
                           <div class="UIPopupInfoContent">
                             <div class="Arrow"><span></span></div>
@@ -506,7 +506,7 @@
                     <div class="PostInfos LastPostInfos">
                       <span><%=_ctx.appRes("UITopicContainer.label.by");%></span> 
                       <% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
-                      <a class="PostBy" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
+                      <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
 
                       <div class="UIPopupInfoMenu LastPostCategory">
                         <div class="UIPopupInfoContent">

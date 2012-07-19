@@ -1,293 +1,196 @@
-/**
- * Search Ip Ban using REST service
- * 
- */
-
-if (!eXo.forum) {
-	 eXo.forum = {};
-}
-
-function AjaxHandler(callbackObject, action) {
-  this.LOADING_STATE = 'LOADING';
-  this.SUCCESS_STATE = 'SUCCESS';
-  this.ERROR_STATE = 'ERROR';
-  this.TIMEOUT_STATE = 'TIMEOUT';
-  this.action = action;
-  if (callbackObject &&
-      callbackObject._ajaxUpdate) {
-    this.callbackObject = callbackObject;
-  } else {
-    this.callbackObject = false;
-  }
-}
-
-AjaxHandler.prototype.onLoading = function(requestObj) {
-//  window.console.info('[' + this.handler.action + '] ' + this.handler.LOADING_STATE);
-  if (!this.handler.callbackObject) return;
-  this.handler.callbackObject._ajaxUpdate(this.handler, this.handler.LOADING_STATE, requestObj, this.handler.action);
-};
-
-AjaxHandler.prototype.onSuccess = function(requestObj) {
-//  window.console.info('[' + this.handler.action + '] ' + this.handler.SUCCESS_STATE);
-  if (!this.handler.callbackObject) return;
-  this.handler.callbackObject._ajaxUpdate(this.handler, this.handler.SUCCESS_STATE, requestObj, this.handler.action);
-};
-
-AjaxHandler.prototype.onError = function(requestObj) {
-//  window.console.info('[' + this.handler.action + '] ' + this.handler.ERROR_STATE);
-  if (!this.handler.callbackObject) return;
-  this.handler.callbackObject._ajaxUpdate(this.handler, this.handler.ERROR_STATE, requestObj, this.handler.action);
-};
-
-AjaxHandler.prototype.onTimeout = function(requestObj) {
-//  window.console.info('[' + this.handler.action + '] ' + this.handler.TIMEOUT_STATE);
-  if (!this.handler.callbackObject) return;
-  this.handler.callbackObject._ajaxUpdate(this.handler, this.handler.TIMEOUT_STATE, requestObj, this.handler.action);
-};
-
-function SearchTagName() {
-	this.searchTagNameNode = null;
-	this.uiGridNode = null;
-  this.SEARCH_IP_BAN = 'Search tag name ajax action';
-  this.data = null;
-}
-
-SearchTagName.prototype.init = function(userName) {
-	var DOMUtil = eXo.core.DOMUtil;
-	this.parentNode = document.getElementById('searchTagName');
-	if(!this.parentNode) return;
-	this.parentNode.style.visibility = "hidden";
-	var searchInputId =  this.parentNode.getAttribute("inputId");
-	this.searchTagNameNode = document.getElementById(searchInputId);
-	if (!this.searchTagNameNode) {
-		return;
-	}
-	this.searchTagNameNode.value = "";
-  this.searchTagNameNode.onkeydown = this.searchIpBanWrapper;
-  this.searchTagNameNode.onclick = this.submitInput;
-  var buttonSearch = document.getElementById('ButtonSearch');
-  if(buttonSearch){buttonSearch.onclick = this.submitInput;}
-};
-
-SearchTagName.prototype.submitInput = function(event) {
-	var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value)
-	if(eXo.forum.webservice.SearchTagName.parentNode.style.visibility === "hidden" && str.trim().length === 0) {
-		eXo.forum.webservice.SearchTagName.searchTagName('onclickForm');
-	}
-};
-
-SearchTagName.prototype.searchIpBanWrapper = function(event) {
-	var key = eXo.core.Keyboard.getKeynum(event);
-	if(key == 13){
-		var object = eXo.forum.webservice.SearchTagName;
-		var str = String(object.searchTagNameNode.value);
-		if(object.parentNode.style.visibility === "visible"){
-			object.searchTagNameNode.focus();
-			object.parentNode.style.visibility = "hidden";
-			object.searchTagName(' ');
-		} else if(str.trim().length > 0){
-			var linkSubmit = String(object.parentNode.getAttribute('linkSubmit'));
-			linkSubmit = linkSubmit.replace("javascript:", "");
-			eval(linkSubmit);
-		}
-		return;
-	}
-	if(key == 38 || key == 40){
-		var DOMUtil = eXo.core.DOMUtil;
-		var items = DOMUtil.findDescendantsByClass(this.parentNode, "div", "TagNameItem");
-		if(items && items.length > 0) {
-			var itemSl =  DOMUtil.findFirstDescendantByClass(this.parentNode, "div", "Selected");
-			if(itemSl) {
-				var t = items.length;
-				for (var i = 0; i < t; i++) {
-	        if(items[i] === itemSl){
-	        	items[i].className = "TagNameItem";
-	        	if(i == 0 && key == 38) {
-	        		eXo.forum.webservice.SearchTagName.setValueInput(items[t-1]);
-	        	}else if(i == (t-1) && key == 40){
-	        		eXo.forum.webservice.SearchTagName.setValueInput(items[0]);
-	        	} else if(key == 38){
-	        		eXo.forum.webservice.SearchTagName.setValueInput(items[i-1]);
-	        	} else if(key == 40) {
-	        		eXo.forum.webservice.SearchTagName.setValueInput(items[i+1]);
-	        	}
-	        }
+;(function($, window, document) {
+  var SearchTagName = {
+    key : {
+      ENTER : 13,
+      UP : 38,
+      DOWN : 40,
+      SPACE : 32,
+      BACK : 8
+    },
+    jInputSearch : null,
+    data : null,
+    jparent : null,
+    jcontainer : null,
+    request : null,
+    data : {},
+    lastkey : '',
+    init : function() {
+      var jparent = $('#AddTagId');
+      if (jparent.exists()) {
+        SearchTagName.jparent = jparent;
+        SearchTagName.jcontainer = jparent.findId('#searchTagName');
+        SearchTagName.jcontainer.hide();
+        SearchTagName.jInputSearch = jparent.findId(SearchTagName.jcontainer.attr('inputId'));
+        SearchTagName.lastkey = '';
+        if (SearchTagName.jInputSearch.exists()) {
+          SearchTagName.jInputSearch.val('');
+          SearchTagName.jInputSearch.on('keydown', SearchTagName.searchIpBanWrapper);
+          SearchTagName.jInputSearch.on('click', SearchTagName.submitInput);
+          var buttonSearch = $('#ButtonSearch');
+          if (buttonSearch.exists()) {
+            buttonSearch.on('click', SearchTagName.submitInput);
+          }
         }
-			} else {
-				eXo.forum.webservice.SearchTagName.setValueInput(items[0]);
-			}
-		}
-	}else if(key > 40 || key == 8) {
-		var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value)
-		if(key == 8 && (str.trim().length === 0 ||str.trim().length === 1)){
-			eXo.forum.webservice.SearchTagName.searchTagName('onclickForm');
-		} else {
-			window.setTimeout(eXo.forum.webservice.SearchTagName.searchIpBanTimeout, 50);
-		}
-	}
-};
-
-SearchTagName.prototype.setValueInput = function(elm) {
-	elm.className = "TagNameItem Selected";
-	var str = String(this.searchTagNameNode.value);
-	str = str.substring(0, str.lastIndexOf(" "));
-	var value = String(elm.innerHTML);
-	value = value.substring(0, value.indexOf(" "));
-	if(str.length == 0) str = value ;
-	else str = str + " " + value;
-	this.searchTagNameNode.value = str;
-};
-
-SearchTagName.prototype.searchIpBanTimeout = function() {
-	eXo.forum.webservice.SearchTagName.searchTagName(eXo.forum.webservice.SearchTagName.searchTagNameNode.value);
-};
-
-SearchTagName.prototype.searchTagName = function(keyword) {
-	// Get data from service, url: /ks/forum/filterTagNameForum/{strTagName}/
-	keyword = String(keyword);
-	var strs = keyword.split(" ");
-	if(strs.length >= 1)keyword = strs[strs.length-1];
-	keyword = keyword || ' ';
-	var userAndTopicId = this.parentNode.getAttribute("userAndTopicId");
-	var restPath = this.parentNode.getAttribute("restPath");
-	if(userAndTopicId){
-		var url = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
-		this.url_ = url;
-	  var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
-	  this.ajaxWrapper(handler, url, 'GET');
-	}
-}
-
-SearchTagName.prototype._ajaxUpdate = function(ajaxHandler, state, requestObject, action) {
-  switch (state) {
-    case ajaxHandler.LOADING_STATE:
-      break;
-    case ajaxHandler.SUCCESS_STATE:
-      if (action == this.STORE_DATA_AJAX_ACTION) {
+      }
+    },
+    submitInput : function(event) {
+      var str = String(SearchTagName.jInputSearch.val());
+      if (SearchTagName.jcontainer.css('visibility') === 'hidden' && str.trim().length === 0) {
+        SearchTagName.searchTagName('onclickForm');
+      }
+    },
+    searchIpBanWrapper : function(event) {
+      var key = eXo.forum.ForumUtils.getKeynum(event);
+      var KEY = SearchTagName.key;
+      if (key == KEY.ENTER) {
+        var str = String(SearchTagName.jInputSearch.val()).trim();
+        if (SearchTagName.jcontainer.css('visibility') === 'visible') {
+          SearchTagName.jInputSearch[0].focus();
+          SearchTagName.jcontainer.hide();
+          SearchTagName.searchTagName(' ');
+        } else if (str.length > 0) {
+          eval(String(SearchTagName.jcontainer.attr('linkSubmit')).replace('javascript:', ''));
+        }
         return;
       }
-      var _data;
-      if (requestObject.responseText) {
-        try {
-          _data = eXo.core.JSON.parse(requestObject.responseText);
-//          window.console.dir(_data);
-        } catch (e) {
-//          window.console.error('JSON parser exception');
+      if (key == KEY.UP || key == KEY.DOWN) {
+        var items = SearchTagName.jparent.find('div.TagNameItem');
+        if (items.exists()) {
+          var itemSl = SearchTagName.jparent.find('div.Selected:first');
+          if (itemSl.exists()) {
+            var t = items.length;
+            for ( var i = 0; i < t; i++) {
+              if (items.eq(i)[0] === itemSl[0]) {
+                itemSl.removeClass('Selected');
+                if (i == 0 && key == KEY.UP) {
+                  SearchTagName.setValueInput(items.eq(t - 1));
+                } else if (i == (t - 1) && key == KEY.DOWN) {
+                  SearchTagName.setValueInput(items.eq(0));
+                } else if (key == KEY.UP) {
+                  SearchTagName.setValueInput(items.eq(i - 1));
+                } else if (key == KEY.DOWN) {
+                  SearchTagName.setValueInput(items.eq(i + 1));
+                }
+              }
+            }
+          } else {
+            SearchTagName.setValueInput(items.eq(0));
+          }
+        }
+      } else if (key > KEY.DOWN || key == KEY.BACK || key == KEY.SPACE) {
+        var str = String(SearchTagName.jInputSearch.val());
+        if ((key == KEY.BACK || key == KEY.SPACE) && (str.trim().length == 0 || str.length == 1)) {
+          SearchTagName.searchTagName('onclickForm');
+        } else {
+          window.setTimeout(SearchTagName.searchIpBanTimeout, 100);
         }
       }
-      if (_data) {
-        this.data = _data;
-        if (action == this.SEARCH_IP_BAN) {
-          this.updateIpBanList();
+    },
+    setValueInput : function(elm) {
+      elm.addClass('Selected');
+      var str = String(SearchTagName.jInputSearch.val());
+      str = str.substring(0, str.lastIndexOf(" "));
+      var value = String(elm.html());
+      value = value.substring(0, value.indexOf(" "));
+      if (str.length == 0)
+        str = value;
+      else
+        str = str + " " + value;
+      SearchTagName.jInputSearch.val(str);
+    },
+    searchIpBanTimeout : function() {
+      SearchTagName.searchTagName(SearchTagName.jInputSearch.val());
+    },
+    searchTagName : function(keyword) {
+      // Get data from service, url: /ks/forum/filterTagNameForum/{strTagName}/
+      keyword = String(keyword);
+      var strs = keyword.split(" ");
+      if (strs.length >= 1)
+        keyword = strs[strs.length - 1];
+      keyword = keyword || '';
+      if (keyword === SearchTagName.lastkey) {
+        return;
+      }
+      if (keyword.trim().length > 0) {
+        var userAndTopicId = SearchTagName.jcontainer.attr("userAndTopicId");
+        var restPath = SearchTagName.jcontainer.attr("restPath");
+        if (userAndTopicId) {
+          var url = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
+          SearchTagName.request = $.getJSON(url);
+          setTimeout(SearchTagName.processing, 200);
+          SearchTagName.lastkey = keyword;
+        }
+      } else {
+        SearchTagName.jcontainer.hide();
+        SearchTagName.lastkey = '';
+        SearchTagName.jcontainer.css('visibility', 'hidden');
+      }
+    },
+    processing : function() {
+      var txt = String(SearchTagName.request.responseText);
+      if (txt != 'undefined' && txt.trim().length > 0) {
+        SearchTagName.data = eXo.core.JSON.parse(txt);
+        if (SearchTagName.data.jsonList) {
+          SearchTagName.updateIpBanList();
         }
       }
-      break;
-    case ajaxHandler.ERROR_STATE:
-      break;
-    case ajaxHandler.TIMEOUT_STATE:
-      break;
-    default:
-      break;
-  }
-};
-
-SearchTagName.prototype.updateIpBanList = function() {
-	var DOMUtil = eXo.core.DOMUtil;
-	// Remove all old items
-	var oldTagNameList = DOMUtil.findDescendantsByClass(this.parentNode, 'div', 'TagNameItem');
-	for(var i=0; i < oldTagNameList.length; i++) {
-		DOMUtil.removeElement(oldTagNameList[i]);		
-	}
-	// Fill up with new list
-	var t = 0;
-	var length_ = this.data.jsonList.length ;
-	for(var i=0; i < length_; i++) {
-		this.parentNode.appendChild(this.buildItemNode(this.data.jsonList[i].ip));
-		t = 1;
-	}
-	if(t==1) this.parentNode.style.visibility = "visible";
-	else this.parentNode.style.visibility = "hidden";
-};
-
-SearchTagName.prototype.buildItemNode = function(ip) {
-	var itemNode = document.createElement('div');
-	itemNode.className = 'TagNameItem';
-	itemNode.innerHTML = ip;
-	ip = ip.substring(0, ip.indexOf(' '));
-	this.searchTagNameNode;
-	itemNode.onclick = function() {
-		var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value);
-		str = str.substring(0, str.lastIndexOf(' '))
-		if(str.length == 0) str = ip ;
-		else str = str + " " + ip;
-		eXo.forum.webservice.SearchTagName.searchTagNameNode.value = str;
-		eXo.forum.webservice.SearchTagName.searchTagNameNode.focus();
-		eXo.forum.webservice.SearchTagName.parentNode.style.visibility = "hidden";
-		eXo.forum.webservice.SearchTagName.searchTagName(' ');
-	}
-	itemNode.onmouseover = eXo.forum.webservice.SearchTagName.mouseEvent(this, true);
-	itemNode.onfocus = eXo.forum.webservice.SearchTagName.mouseEvent(this, true);
-  itemNode.onmouseout = eXo.forum.webservice.SearchTagName.mouseEvent(this, false);
-  itemNode.onblur = eXo.forum.webservice.SearchTagName.mouseEvent(this, false);
-	return itemNode;
-};
-
-
-SearchTagName.prototype.mouseEvent = function(elm, isOv) {
-  if (isOv) {
-    if (elm.className === 'TagNameItem') {
-      elm.className = 'TagNameItem OverItem';
-    } else {
-      elm.className = 'TagNameItem OverItem Slect';
+    },
+    updateIpBanList : function() {
+      // Remove all old items
+      SearchTagName.jcontainer.find('.TagNameItem').remove();
+      // Fill up with new list
+      var t = 0;
+      var length_ = SearchTagName.data.jsonList.length;
+      for ( var i = 0; i < length_; i++) {
+        SearchTagName.jcontainer.append(SearchTagName.buildItemNode(SearchTagName.data.jsonList[i].ip));
+        t = 1;
+      }
+      if (t == 1) {
+        SearchTagName.jcontainer.css('visibility', 'visible');
+        SearchTagName.jcontainer.show(300);
+      } else {
+        SearchTagName.jcontainer.hide(300);
+        SearchTagName.jcontainer.css('visibility', 'hidden');
+      }
+    },
+    buildItemNode : function(ip) {
+      var itemNode = $('<div></div>').addClass('TagNameItem').html(ip);
+      itemNode.on('click', function(event) {
+        var vl = ip.substring(0, ip.indexOf(' '));
+        var str = String(SearchTagName.jInputSearch.val());
+        str = str.substring(0, str.lastIndexOf(' '))
+        if (str.length == 0)
+          str = vl;
+        else
+          str += ' ' + vl;
+        SearchTagName.jInputSearch.val(str);
+        SearchTagName.jInputSearch.focus();
+        SearchTagName.jcontainer.hide();
+        SearchTagName.searchTagName(' ');
+      });
+      itemNode.on('mouseover', SearchTagName.mouseOveEvent);
+      itemNode.on('focus', SearchTagName.mouseOveEvent);
+      itemNode.on('mouseout', SearchTagName.mouseOutEvent);
+      itemNode.on('blur', SearchTagName.mouseOutEvent);
+      return itemNode;
+    },
+    mouseOveEvent : function() {
+      if ($(this).hasClass('Selected')) {
+        $(this).attr('class', 'TagNameItem OverItem Slect');
+      } else {
+        $(this).attr('class', 'TagNameItem OverItem');
+      }
+    },
+    mouseOutEvent : function() {
+      if ($(this).hasClass('Slect')) {
+        $(this).attr('class', 'TagNameItem Selected');
+      } else {
+        $(this).attr('class', 'TagNameItem');
+      }
     }
-  } else {
-    if (elm.className === 'TagNameItem OverItem') {
-    	elm.className = 'TagNameItem';
-    } else {
-    	elm.className = 'TagNameItem Selected';
-    }
-  }
-};
-
-SearchTagName.prototype.ajaxProcessOverwrite = function(manualMode, ajaxRequest) {
-  if (ajaxRequest.request == null) return ;
-  ajaxRequest.request.open(ajaxRequest.method, ajaxRequest.url, true) ;   
-  if (!manualMode) {
-    if (ajaxRequest.method == "POST") {
-      ajaxRequest.request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8") ;
-    } else {
-      ajaxRequest.request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8") ;
-    }
-  } else {
-    ajaxRequest.request.setRequestHeader("Content-Type", "text/xml;charset=UTF-8") ;
-  }
+  };
   
-  if (ajaxRequest.timeout > 0) setTimeout(ajaxRequest.onTimeoutInternal, ajaxRequest.timeout) ;
-  
-  ajaxRequest.request.send(ajaxRequest.queryString) ;
-};
-
-/**
- * 
- * @param {AjaxRequest} ajaxRequest
- * @param {Object} handler
- */
-SearchTagName.prototype.initAjaxRequest = function(ajaxRequest, handler) {
-  ajaxRequest.onSuccess = handler.onSuccess ;
-  ajaxRequest.onLoading = handler.onLoading ;
-  ajaxRequest.onTimeout = handler.onTimeout ;
-  ajaxRequest.onError = handler.onError ;
-  ajaxRequest.callBack = handler.callBack ;
-  ajaxRequest.handler = handler;
-  this.currentRequest = ajaxRequest ;
-};
-
-SearchTagName.prototype.ajaxWrapper =function(handler, url, method, data) {
-  var request = new eXo.portal.AjaxRequest(method, url, data);
-  this.initAjaxRequest(request, handler);
-  this.ajaxProcessOverwrite(true, request);
-//  request.process() ;
-};
-
-eXo.forum.webservice = eXo.forum.webservice || {};
-eXo.forum.webservice.SearchTagName = new SearchTagName();
+  window.eXo.forum = window.eXo.forum || {};
+  window.eXo.forum.webservice = window.eXo.forum.webservice || {};
+  window.eXo.forum.webservice.SearchTagName = SearchTagName;
+})(gj, window, document);

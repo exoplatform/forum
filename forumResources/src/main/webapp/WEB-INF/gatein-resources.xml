@@ -21,37 +21,71 @@
       <module>base</module>
     </depends>
   </module>
-
+  
   <module>
-    <name>KSBrowser</name>
+    <name>ForumUtils</name>
     <script>
-      <name>eXo.ks.Browser</name>
-      <path>/javascript/eXo/ks/Browser.js</path>
+      <name>eXo.forum.ForumUtils</name>
+      <path>/javascript/eXo/forum/ForumUtils.js</path>
     </script>
     <depends>
-      <module>webui</module>
+      <module>ForumPlugins</module>
+    </depends>
+    <depends>
+      <module>base</module>
     </depends>
   </module>
 
   <module>
-    <name>Keyboard</name>
+    <name>ForumPlugins</name>
     <script>
-      <name>eXo.core.Keyboard</name>
-      <path>/javascript/eXo/core/Keyboard.js</path>
+      <name>eXo.forum.ForumPlugins</name>
+      <path>/javascript/eXo/forum/ForumPlugins.js</path>
     </script>
     <depends>
-      <module>KSBrowser</module>
+      <module>base</module>
     </depends>
   </module>
 
   <module>
-    <name>maskLayerControl</name>
+    <name>EventManager</name>
     <script>
-      <name>eXo.ks.MaskLayerControl</name>
-      <path>/javascript/eXo/ks/MaskLayerControl.js</path>
+      <name>eXo.forum.EventManager</name>
+      <path>/javascript/eXo/forum/EventManager.js</path>
     </script>
     <depends>
-      <module>DOMUtil</module>
+      <module>ForumUtils</module>
+    </depends>
+    <depends>
+      <module>base</module>
+    </depends>
+  </module>
+
+  <module>
+    <name>UIContextMenu</name>
+    <script>
+      <name>eXo.forum.UIContextMenu</name>
+      <path>/javascript/eXo/forum/UIContextMenu.js</path>
+    </script>
+    <depends>
+      <module>EventManager</module>
+    </depends>
+    <depends>
+      <module>base</module>
+    </depends>
+  </module>
+
+  <module>
+    <name>CheckBoxManager</name>
+    <script>
+      <name>eXo.forum.CheckBox</name>
+      <path>/javascript/eXo/forum/CheckBoxManager.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+    </depends>
+    <depends>
+      <module>base</module>
     </depends>
   </module>
 
@@ -61,16 +95,10 @@
       <module>maskLayerControl</module>
     </depends>
     <depends>
-      <module>KSUtils</module>
-    </depends>
-    <depends>
-      <module>KSPopupSelectCategory</module>
-    </depends>
-    <depends>
       <module>Keyboard</module>
     </depends>
     <depends>
-      <module>KSBrowser</module>
+      <module>ForumUtils</module>
     </depends>
     <depends>
       <module>DOMUtil</module>
@@ -87,41 +115,24 @@
   </module>
 
   <module>
-    <name>KSPopupSelectCategory</name>
+    <name>MaskLayerControl</name>
     <script>
-      <name>eXo.ks.UIPopupSelectCategory</name>
-      <path>/javascript/eXo/ks/UIPopupSelectCategory.js</path>
+      <name>eXo.forum.MaskLayerControl</name>
+      <path>/javascript/eXo/forum/MaskLayerControl.js</path>
     </script>
     <depends>
-      <module>DOMUtil</module>
-    </depends>
-  </module>
-
-  <module>
-    <name>KSUtils</name>
-    <script>
-      <name>eXo.ks.KSUtils</name>
-      <path>/javascript/eXo/ks/KSUtils.js</path>
-    </script>
-    <depends>
-      <module>KSPopupSelectCategory</module>
-    </depends>
-    <depends>
-      <module>DOMUtil</module>
-    </depends>
-    <depends>
-      <module>base</module>
+      <module>ForumUtils</module>
     </depends>
   </module>
 
   <module>
     <name>sliderControl</name>
     <script>
-      <name>eXo.ks.UISliderControl</name>
-      <path>/javascript/eXo/ks/UISliderControl.js</path>
+      <name>eXo.webui.UISliderControl</name>
+      <path>/javascript/eXo/forum/UISliderControl.js</path>
     </script>
     <depends>
-      <module>DOMUtil</module>
+      <module>ForumUtils</module>
     </depends>
     <depends>
       <module>base</module>
@@ -131,11 +142,11 @@
   <module>
     <name>dateTimePicker</name>
     <script>
-      <name>eXo.ks.UIDateTimePicker</name>
-      <path>/javascript/eXo/ks/UIDateTimePicker.js</path>
+      <name>eXo.forum.UIDateTimePicker</name>
+      <path>/javascript/eXo/forum/UIDateTimePicker.js</path>
     </script>
     <depends>
-      <module>DOMUtil</module>
+      <module>ForumUtils</module>
     </depends>
     <depends>
       <module>KSBrowser</module>

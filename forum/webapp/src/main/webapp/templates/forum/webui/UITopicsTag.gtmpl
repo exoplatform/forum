@@ -13,7 +13,7 @@
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicsTag') ;") ;
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicsTag') ;") ;
-  jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
+  jsmanager.addJavascript("eXo.forum.CheckBoxManager.init('UITopicContent') ;") ;
 %>
 <% uiform.begin() %>
 <%
@@ -37,7 +37,7 @@
       <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
       <h6 class="Title"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:<strong>$tagName_</strong></h6>
       <% if(isShowMenu){ %>
-      <div class="ToolbarActionsTag DefaultStyle" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">
+      <div class="ToolbarActionsTag DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
         <a class="StatusIcon ToolIcon"><%=_ctx.appRes("UITopicsTag.label.ManageTag");%></a>
         <% /*Begin Popup Menu*/ %>
         <div class="UIPopupCategory">
@@ -158,7 +158,7 @@
                   <span class="Text StickyIcon FL"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
                 <% } %>
                   <a onclick="$link; return false;" href="$url" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
-                  <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;" onkeydown="event.cancelBubble=true;">
+                  <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent CancelEvent" style="display:none; left:80px;">
                   </div>
                 </div>
                     <% ++rCNB; %>
@@ -184,7 +184,7 @@
                   $approved
                 </div>
                 <% String screemNamePost =  uicomponent.getScreenName(topicBy);%>
-                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
+                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
                   <div class="UIPopupInfoMenu">
                     <div class="UIPopupInfoContent">
                       <div class="Arrow"><span></span></div>
@@ -233,7 +233,7 @@
                   <a class="RightArrowIcon" title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>" href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"></a>
                   <%=_ctx.appRes("UITopicContainer.label.by");%>
                   <% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
-                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
+                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
                   <div class="UIPopupInfoMenu LastPostCategory">
                     <div class="UIPopupInfoContent">
                       <div class="Arrow"><span></span></div>

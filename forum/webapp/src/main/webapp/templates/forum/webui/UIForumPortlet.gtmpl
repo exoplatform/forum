@@ -15,12 +15,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	
-	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
-	UserProfile userProfile = uicomponent.getUserProfile() ;
-	if(userProfile.getUserRole() <= 2){
-		jsmanager.loadScriptResource("ForumSendNotification");
-		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
-	}
+	jsmanager.addOnResizeJavascript('function(){eXo.forum.ForumUtils.setMaskLayer("'+uicomponent.id+'");}');
 	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
 %>
 
@@ -36,15 +31,20 @@
 			}
 		}
 	
-	jsmanager.addJavascript(
-	  'eXo.forum.ForumSendNotification.initParam("'
-		+ _ctx.appRes("UIForumPortlet.label.Notification") +  '", "'
-		+ _ctx.appRes("UIForumPortlet.type.message") + '", "'
-		+ _ctx.appRes("UIForumPortlet.type.post") + '", "'
-		+ _ctx.appRes("UIForumPortlet.label.titeName") + '", "'
-		+ _ctx.appRes("UIForumPortlet.label.from") + '", "'
-		+ _ctx.appRes("UIForumPortlet.label.briefContent") + '", "'
-		+ _ctx.appRes("UIForumPortlet.label.GoDirectly") + '");') ;
+  UserProfile userProfile = uicomponent.getUserProfile() ;
+	if(userProfile.getUserRole() <= 2){
+		jsmanager.loadScriptResource("ForumSendNotification");
+		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
+    jsmanager.addJavascript(
+      'eXo.forum.ForumSendNotification.initParam("'
+      + _ctx.appRes("UIForumPortlet.label.Notification") +  '", "'
+      + _ctx.appRes("UIForumPortlet.type.message") + '", "'
+      + _ctx.appRes("UIForumPortlet.type.post") + '", "'
+      + _ctx.appRes("UIForumPortlet.label.titeName") + '", "'
+      + _ctx.appRes("UIForumPortlet.label.from") + '", "'
+      + _ctx.appRes("UIForumPortlet.label.briefContent") + '", "'
+      + _ctx.appRes("UIForumPortlet.label.GoDirectly") + '");') ;
+  }
 	%>
 	<div><span></span></div>
 </div>

@@ -43,12 +43,9 @@
   <module>
     <name>tour</name>
     <script>
-      <name>eXo.ks.Tour</name>
+      <name>eXo.forum.Tour</name>
       <path>/javascript/eXo/tour/tour.js</path>
     </script>
-    <depends>
-      <module>DOMUtil</module>
-    </depends>
     <depends>
       <module>base</module>
     </depends>

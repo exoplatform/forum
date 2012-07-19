@@ -1,5 +1,5 @@
-@import	url('/forumResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
-@import	url('/forumResources/skin/Stylesheet.css');
+@import url('/forumResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import url('/forumResources/skin/Stylesheet.css');
 @import url('skinIcons/16x16/Stylesheet.css');
 @import url('skinIcons/24x24/Stylesheet.css');
 @import url('popup/Stylesheet.css');
@@ -38,6 +38,23 @@
 
 .UIForumPortlet .FloatLeft {
 	float: left;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #C6C6C6;
+	border-radius: 2px 2px 2px 2px;
+	box-shadow: 1px 3px 5px #BDBDCE;
+	position: absolute;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .MenuItem {
+	padding: 0px 10px;
+	min-width: 100px;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .MenuItem:hover {
+	background: #EAEAEA;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .FixHeight {
@@ -202,10 +219,10 @@
 	background: #FFFFFF;
 	border: 1px solid #787878;
 	box-shadow: 1px 1px 2px #787878;
-	left: -85px;
+	left: 0px;
 	margin-top: 8px;
 	position: absolute;
-	top: 15px;
+	top: -5px;
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .LineMenu {
@@ -304,7 +321,8 @@
 	padding: 0px;
 }
 
-.UIForumPortlet .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar {
+.UIForumPortlet .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar
+	{
 	float: none;
 }
 
@@ -414,12 +432,14 @@
 
 .UIForumPortlet .TagContainer .ScrollButtons {
 	display: none;
-	float: left;Lef
-	width: 24px;
+	float: left;
+	Lef width: 24px;
 	height: 24px;
 	padding: 0px 0px 0px 0px;
 	margin: 0px 0px 0px 0px;
-	background: url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueDownArrow.gif) no-repeat right center;
+	background:
+		url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueDownArrow.gif)
+		no-repeat right center;
 }
 
 *+html .UIForumPortlet .TagContainer .ScrollButtons {
@@ -441,7 +461,8 @@
 }
 
 .UIForumPortlet  .DisableScrollRightButton {
-	background: url('background/DisableScrollRightButton.gif') no-repeat left;
+	background: url('background/DisableScrollRightButton.gif') no-repeat
+		left;
 	cursor: pointer;
 	float: left;
 	height: 15px;
@@ -469,7 +490,8 @@
 }
 
 .UIForumPortlet .HighlightScrollRightButton {
-	background: url('background/HighlightScrollRightButton.gif') no-repeat left;
+	background: url('background/HighlightScrollRightButton.gif') no-repeat
+		left;
 	cursor: pointer;
 	float: left;
 	height: 15px;
@@ -478,7 +500,8 @@
 }
 
 .UIForumPortlet .HighlightScrollLeftButton {
-	background: url('background/HighlightScrollLeftButton.gif') no-repeat left;
+	background: url('background/HighlightScrollLeftButton.gif') no-repeat
+		left;
 	cursor: pointer;
 	float: left;
 	height: 15px;
@@ -495,9 +518,9 @@
 	left: 30px;
 }
 
-
 .UIForumPortlet .Refresh {
-	background: transparent url(background/refresh.png) no-repeat center bottom;
+	background: transparent url(background/refresh.png) no-repeat center
+		bottom;
 	float: left;
 	margin-top: 16px;
 	height: 16px;
@@ -582,15 +605,18 @@
 	font-weight: normal;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddLinkToBookIcon {
+.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddLinkToBookIcon
+	{
 	background-position: 5px center;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddWatchingIcon {
+.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddWatchingIcon
+	{
 	background-position: 5px center;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .ForumRSSFeed {
+.UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .ForumRSSFeed
+	{
 	background-position: 5px center;
 }
 

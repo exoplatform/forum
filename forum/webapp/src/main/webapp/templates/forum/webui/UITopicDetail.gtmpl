@@ -122,7 +122,7 @@
             <span class="UntagIcon FL" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
           </li>
         <%} %>
-          <li class="ScrollButtons" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">
+          <li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
                   <% /*Begin Popup Menu*/ %>
             <div class="UIPopupCategory" style="display: none;">
               <ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
@@ -134,7 +134,7 @@
       <% if(uicomponent.maxPage > 1) { %>
       <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
         <% /*Begin Popup Menu*/ %>
-        <div id="goPage1" class="UIPopupCategory" style="display:none">
+        <div id="goPage1" class="UIPopupCategory CancelEvent" style="display:none">
           <ul class="UIRightClickPopupMenu" style="display:block;">
             <li>
               <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
@@ -152,7 +152,7 @@
   <div class="PostsInThreadContainer ImageContentContainer">
     <div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
             <% if(isShowMenu && canEdit) { %> 
-              <div class="ContentAction DefaultStyle" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">
+              <div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
                     <div class="StatusIcon ModerationIcon">
                       <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.Moderation");%></a>
                     </div>
@@ -222,7 +222,7 @@
                 <% /*End Popup Menu*/ %>
               </div>
             <% if((canEdit && isShowMenu) || isUserCreatedTopic) { %> 
-              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">                
+              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">                
                   <div class="StatusIcon ToolIcon">
                     <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></a>
                   </div>
@@ -333,7 +333,7 @@
                 <div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
                       <a id="ButtonSearch" class="StatusIcon TagIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
                   <% /*Begin Popup Menu*/ %>
-                      <div id="AddTagId" class="UIPopupCategory" style="display:none;">
+                      <div id="AddTagId" class="UIPopupCategory CancelEvent" style="display:none;">
                         <ul class="UIRightClickPopupMenu ClearFix BlockAddTag">
                           <li>
                             <% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
@@ -459,8 +459,8 @@
                    titleSmile = "Online";
                 }
             %>
-                  <div class="ContentAction MemberName ClearFix" onclick="eXo.ks.KSUtils.showUserMenu(this, event)">
-                    <div  class="FL"><h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
+                  <div class="ContentAction MemberName ClearFix">
+                    <div  class="FL" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event)"><h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
                     <div class="UIPopupInfoMenu">
                        <div class="UIPopupInfoContent">
                           <div class="Arrow"><span></span></div>
@@ -488,8 +488,8 @@
                 <% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
                   if(isDisplayAvatar) {
                 %>
-                <div class="ContentAction ClearFix" onclick="eXo.ks.KSUtils.showUserMenu(this, event)">
-                  <div class="ImgAvatarBorder FL">
+                <div class="ContentAction ClearFix">
+                  <div class="ImgAvatarBorder FL" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event)">
                     <img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
                   </div>
                   <div class="UIPopupInfoMenu">
@@ -634,17 +634,17 @@
                     %>
                       <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
                       <div class="LabelBox">
-                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
+                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
                         <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
                         <div class="Action">
                           <a class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></a>
-                            <a class="Icon Download" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
+                            <a class="Icon Download" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
                         </div>
                       </div>
                   <% }else { 
                         String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
                   %>
-                      <a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
+                      <a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
                       <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
                   <% } %>
                   </div>
@@ -752,7 +752,7 @@
     <% if(uicomponent.maxPage > 1) { %>
     <div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon ClearFix" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
       <% /*Begin Popup Menu*/ %>
-        <div id="goPage2" class="UIPopupCategory" style="display:none;">
+        <div id="goPage2" class="UIPopupCategory CancelEvent" style="display:none;">
           <ul class="UIRightClickPopupMenu" style="display:block;">
             <li>
               <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>

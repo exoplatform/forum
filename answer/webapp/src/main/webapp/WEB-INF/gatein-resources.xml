@@ -50,13 +50,39 @@
   </module>
 
   <module>
+    <name>DragDrop</name>
+    <script>
+      <name>eXo.answer.DragDrop</name>
+      <path>/javascript/eXo/answer/DragDrop.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+    </depends>
+  </module>
+
+  <module>
     <name>answersPortlet</name>
     <script>
       <name>eXo.answer.UIAnswersPortlet</name>
       <path>/javascript/eXo/answer/UIAnswersPortlet.js</path>
     </script>
     <depends>
+      <module>DragDrop</module>
+    </depends>
+    <depends>
       <module>forumResources</module>
+    </depends>
+    <depends>
+      <module>MaskLayerControl</module>
+    </depends>
+    <depends>
+      <module>UIContextMenu</module>
+    </depends>
+    <depends>
+      <module>CheckBoxManager</module>
+    </depends>
+    <depends>
+      <module>EventManager</module>
     </depends>
     <depends>
       <module>navigation</module>
