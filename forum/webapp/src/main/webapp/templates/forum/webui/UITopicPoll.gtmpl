@@ -44,7 +44,7 @@
 		
 	<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
 		<span class="ForumSeparatorLine"></span>
-		<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
+		<div class="ContentAction DefaultStyle" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);" >
 			<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></a>
 			<% /*Begin Popup Menu*/ %>
 			<div class="UIPopupCategory" style="display:none;">

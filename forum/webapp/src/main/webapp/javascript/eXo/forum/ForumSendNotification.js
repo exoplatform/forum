@@ -1,3 +1,7 @@
+if (!eXo.forum) {
+	 eXo.forum = {};
+}
+
 function ForumSendNotification() {
 	this.notification="Notification" ;
 	this.message="message";
@@ -20,9 +24,6 @@ ForumSendNotification.prototype.initParam = function (notification, message, pos
 };
 
 ForumSendNotification.prototype.init = function(eXoUser, eXoToken, contextName){
-	if (!eXo.core.Cometd) {
-		eXo.require('eXo.core.Cometd');
-	}
 	if(String(eXoToken) != ''){
 		if (!eXo.core.Cometd.isConnected()) {
 		eXo.core.Cometd.url = '/' + contextName + '/cometd' ;	

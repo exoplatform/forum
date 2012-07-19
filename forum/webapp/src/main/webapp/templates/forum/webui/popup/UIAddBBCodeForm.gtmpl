@@ -1,3 +1,9 @@
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsManager = rcontext.getJavascriptManager();
+	jsManager.loadScriptResource("forumResources-syntaxhighlighter");
+%>
 <div class="UIAddBBCodeForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
@@ -148,10 +154,4 @@
       <%}%>
     </div>
 	<%uiform.end()%>
-<%
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('Scripts.shLoadConfig', '/forumResources/syntaxhighlighter/');
-%>
 </div>

@@ -1,3 +1,7 @@
+if (!eXo.ks) {
+	eXo.ks = {};
+}
+
 UIDateTimePicker = function(calendarId) {
 	this.calendarId = calendarId ;
 	this.dateField = null ;
@@ -82,8 +86,8 @@ UIDateTimePicker.prototype.show = function() {
 	var x = 0 ; 
 	//var y = this.dateField.offsetHeight ;
 	var y = fieldDateTime.offsetHeight ;
-	if(eXo.core.Browser.getBrowserType() == "ie")	{
-		x = -(eXo.core.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
+	if(eXo.ks.Browser.getBrowserType() == "ie")	{
+		x = -(eXo.ks.Browser.findPosX(this.dateField) - eXo.ks.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
 	}
 	with (clndr.firstChild.style) {
 		display = 'block' ;
@@ -99,11 +103,11 @@ UIDateTimePicker.prototype.show = function() {
 		var event = evt || window.event;
 		event.cancelBubble = true;
 		drag.style.position = "absolute";
-		if(eXo.core.Browser.isIE7()) drag.style.height = calendar.offsetHeight + "px";
+		if(eXo.ks.Browser.isIE7()) drag.style.height = calendar.offsetHeight + "px";
 		drag.style.width = innerWidth + "px";
 		eXo.core.DragDrop.init(null, drag, component, event);
 	}
-	if(eXo.core.Browser.isIE6()) clndr.getElementsByTagName("iframe")[0].style.height=drag.parentNode.offsetHeight + "px";
+	if(eXo.ks.Browser.isIE6()) clndr.getElementsByTagName("iframe")[0].style.height=drag.parentNode.offsetHeight + "px";
 };
 
 UIDateTimePicker.prototype.hide = function() {

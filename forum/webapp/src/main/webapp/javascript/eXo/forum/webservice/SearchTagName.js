@@ -3,9 +3,9 @@
  * 
  */
 
-eXo.require("eXo.core.JSON");
-eXo.require("eXo.core.Keyboard");
-
+if (!eXo.forum) {
+	 eXo.forum = {};
+}
 
 function AjaxHandler(callbackObject, action) {
   this.LOADING_STATE = 'LOADING';

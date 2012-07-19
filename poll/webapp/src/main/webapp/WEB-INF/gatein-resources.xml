@@ -20,10 +20,9 @@
 
 -->
 
-<gatein-resources
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2 http://www.gatein.org/xml/ns/gatein_resources_1_2"
-    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
+<gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
+		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
 
   <portlet-skin>
     <application-name>poll</application-name>
@@ -32,13 +31,25 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
-  
-  <javascript>
-    <param>
-      <js-module>eXo.poll.UIPollPortlet</js-module>
-      <js-path>/javascript/eXo/poll/UIPollPortlet.js</js-path>
-      <js-priority>50</js-priority>
-    </param>
-  </javascript>
-  
+
+  <portlet>
+    <name>PollPortlet</name>
+    <module>
+      <depends>
+        <module>pollPortlet</module>
+      </depends>
+    </module>
+  </portlet>
+
+  <module>
+    <name>pollPortlet</name>
+    <script>
+      <name>eXo.poll.UIPollPortlet</name>
+      <path>/javascript/eXo/poll/UIPollPortlet.js</path>
+    </script>
+    <depends>
+      <module>forumResources</module>
+    </depends>
+  </module>
+
 </gatein-resources>

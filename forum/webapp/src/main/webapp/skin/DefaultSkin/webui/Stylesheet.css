@@ -1,4 +1,5 @@
-@import	url('/ksResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import	url('/forumResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import	url('/forumResources/skin/Stylesheet.css');
 @import url('skinIcons/16x16/Stylesheet.css');
 @import url('skinIcons/24x24/Stylesheet.css');
 @import url('popup/Stylesheet.css');
@@ -124,7 +125,7 @@
 
 /**************************** UIForumPortlet ForumToolBar *********************************/
 .UIForumPortlet .NormalButtomBT {
-	background: url('background/buttons/NormalButtonForum.png') repeat-x top;
+	background: url('background/buttons/NormalButtonForum.gif') repeat-x top;
 	padding: 0px 5px;
 	border-radius: 10px;
 	border: 1px solid #acacac;
@@ -194,6 +195,17 @@
 	float: left;
 	margin-top: 0;
 	border: none;
+	background: none;
+}
+
+.UIPopupCategory .UIRightClickPopupMenu {
+	background: #FFFFFF;
+	border: 1px solid #787878;
+	box-shadow: 1px 1px 2px #787878;
+	left: -85px;
+	margin-top: 8px;
+	position: absolute;
+	top: 15px;
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .LineMenu {

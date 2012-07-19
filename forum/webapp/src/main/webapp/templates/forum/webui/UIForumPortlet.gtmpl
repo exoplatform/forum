@@ -14,26 +14,14 @@
 	import org.exoplatform.forum.service.UserProfile;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('eXo.ks.KSUtils', '/forumResources/javascript/');
-	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/forumResources/javascript/');
-	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
-	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/');
+	
 	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	if(userProfile.getUserRole() <= 2){
-		jsmanager.importJavascript('eXo.core.JSON') ;
-		jsmanager.importJavascript('eXo.forum.ForumSendNotification','/forum/javascript/') ;
+		jsmanager.loadScriptResource("ForumSendNotification");
 		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
 	}
 	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
-%>
-
-<% 
-	String []importJsTagCode = uicomponent.getImportJSTagCode();
-	String url = "Scripts.";
-	for (int i = 0; i < importJsTagCode.length; i++) {
-		jsmanager.importJavascript(url+importJsTagCode[i], '/forumResources/syntaxhighlighter/');
-	}
 %>
 
 <div class="UIForumPortlet" id="$uicomponent.id">

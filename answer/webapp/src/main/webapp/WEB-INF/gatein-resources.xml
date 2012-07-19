@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<gatein-resources
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2 http://www.gatein.org/xml/ns/gatein_resources_1_2"
-    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
+
+<gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
+		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
 
   <portlet-skin>
     <application-name>answer</application-name>
@@ -11,7 +11,7 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
-  
+
   <portlet-skin>
     <application-name>faq</application-name>
     <portlet-name>FAQPortlet</portlet-name>
@@ -19,13 +19,48 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
-  
-  <javascript>
-    <param>
-      <js-module>eXo.answer.UIAnswersPortlet</js-module>
-      <js-path>/javascript/eXo/answer/UIAnswersPortlet.js</js-path>
-      <js-priority>20</js-priority>
-    </param>
-  </javascript>
-  
+
+  <portlet>
+    <name>AnswersPortlet</name>
+    <module>
+      <depends>
+        <module>answersPortlet</module>
+      </depends>
+    </module>
+  </portlet>
+
+  <portlet>
+    <name>FAQPortlet</name>
+    <module>
+      <depends>
+        <module>fAQPortlet</module>
+      </depends>
+    </module>
+  </portlet>
+
+  <module>
+    <name>fAQPortlet</name>
+    <script>
+      <name>eXo.faq.UIFaqPortlet</name>
+      <path>/javascript/eXo/faq/UIFaqPortlet.js</path>
+    </script>
+    <depends>
+      <module>forumResources</module>
+    </depends>
+  </module>
+
+  <module>
+    <name>answersPortlet</name>
+    <script>
+      <name>eXo.answer.UIAnswersPortlet</name>
+      <path>/javascript/eXo/answer/UIAnswersPortlet.js</path>
+    </script>
+    <depends>
+      <module>forumResources</module>
+    </depends>
+    <depends>
+      <module>navigation</module>
+    </depends>
+  </module>
+
 </gatein-resources>

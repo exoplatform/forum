@@ -2,8 +2,6 @@ if(!eXo.answer){
 	eXo.answer = {} ;
 }
 
-eXo.require("eXo.core.Browser"); 
-
 function UIAnswersPortlet() {
   this.viewImage = true;
   this.scrollManagerLoaded = false;
@@ -22,14 +20,6 @@ UIAnswersPortlet.prototype.init = function (portletId) {
   }
 };
 
-UIAnswersPortlet.prototype.disableContextMenu = function (component) {
-	var KSUtils = eXo.ks.KSUtils;
-	var oncontextmenus = KSUtils.findDescendantsByClass(component, "oncontextmenu");
-	for ( var i = 0; i < oncontextmenus.length; i++) {
-		KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
-	}
-};
-
 UIAnswersPortlet.prototype.updateContainersHeight = function (elm) {
   if(elm) {
     var ansCt = eXo.core.DOMUtil.findFirstDescendantByClass(elm, "div", "CategoriesContainer");
@@ -42,34 +32,12 @@ UIAnswersPortlet.prototype.updateContainersHeight = function (elm) {
   }
 };
 
-UIAnswersPortlet.prototype.checkedNode = function (elm) {
-  var input = elm.getElementsByTagName("input")[0];
-  var DOMUtil = eXo.core.DOMUtil;
-  var parentNode = DOMUtil.findAncestorByClass(input, "FAQDomNode");
-  var ancestorNode = DOMUtil.findAncestorByClass(parentNode, "FAQDomNode");
-  if (ancestorNode) {
-    firstInput = DOMUtil.findFirstDescendantByClass(ancestorNode, "input", "checkbox");
-    if (input.checked && firstInput.checked === false) {
-      var msg = document.getElementById('viewerSettingMsg');
-      if (msg) {
-        alert(msg.innerHTML);
-      } else {
-        alert('You need to check on parent or ancestor of this category first!');
-      }
-      input.checked = false;
-      input.disabled = true;
-    }
-  }
-
-  var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "FAQChildNodeContainer");
-  if (containerChild) {
-    var checkboxes = containerChild.getElementsByTagName("input");
-    for (var i = 0; i < checkboxes.length; ++i) {
-      checkboxes[i].checked = input.checked;
-      if (!input.checked) checkboxes[i].disabled = true;
-      else checkboxes[i].disabled = false;
-    }
-  }
+UIAnswersPortlet.prototype.disableContextMenu = function (component) {
+	var KSUtils = eXo.ks.KSUtils;
+	var oncontextmenus = KSUtils.findDescendantsByClass(component, "oncontextmenu");
+	for ( var i = 0; i < oncontextmenus.length; i++) {
+		KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
+	}
 };
 
 UIAnswersPortlet.prototype.selectCateInfor = function (number) {
@@ -113,7 +81,7 @@ UIAnswersPortlet.prototype.checkAction = function () {
 };
 
 UIAnswersPortlet.prototype.checkCustomView = function (isNotSpace, hileTitle, showTitle) {
-  var cookie = eXo.core.Browser.getCookie("FAQCustomView");
+  var cookie = eXo.ks.Browser.getCookie("FAQCustomView");
   cookie = (cookie == "none" || cookie == "" && isNotSpace == "false") ? "none" : "";
   document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
   var buttomView = document.getElementById('FAQCustomView');
@@ -125,7 +93,7 @@ UIAnswersPortlet.prototype.checkCustomView = function (isNotSpace, hileTitle, sh
     title.title = hileTitle;
     cookie = "block";
   }
-  eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+  eXo.ks.Browser.setCookie("FAQCustomView", cookie, 1);
 };
 
 UIAnswersPortlet.prototype.changeCustomView = function (change, hileTitle, showTitle) {
@@ -144,7 +112,7 @@ UIAnswersPortlet.prototype.changeCustomView = function (change, hileTitle, showT
     title.title = hileTitle;
     cookie = "block";
   }
-  eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+  eXo.ks.Browser.setCookie("FAQCustomView", cookie, 1);
   var uiNav = eXo.answer.UIAnswersPortlet;
   if (typeof (uiNav.initActionScroll) == "function") uiNav.initActionScroll();
   if (typeof (uiNav.initBreadCumbScroll) == "function") uiNav.initBreadCumbScroll();
@@ -172,7 +140,7 @@ UIAnswersPortlet.prototype.jumToQuestion = function (id) {
   var obj = document.getElementById(id);
   if (obj) {
     var viewContent = eXo.core.DOMUtil.findAncestorByClass(obj, "ViewQuestionContent");
-    var scroll = eXo.core.Browser.findPosYInContainer(obj, viewContent);
+    var scroll = eXo.ks.Browser.findPosYInContainer(obj, viewContent);
     viewContent.scrollTop = scroll;
   }
 };
@@ -197,17 +165,6 @@ UIAnswersPortlet.prototype.viewDivById = function (id) {
   }
 };
 
-UIAnswersPortlet.prototype.treeView = function (id) {
-  var obj = document.getElementById(id);
-  if (obj) {
-    if (obj.style.display == '' || obj.style.display === "none") {
-      obj.style.display = "block";
-    } else {
-      obj.style.display = "none";
-    }
-  }
-};
-
 UIAnswersPortlet.prototype.FAQViewAllBranch = function (ids) {
   var arrayId = new Array;
   arrayId = ids.split("/");
@@ -220,7 +177,7 @@ UIAnswersPortlet.prototype.FAQViewAllBranch = function (ids) {
 };
 
 UIAnswersPortlet.prototype.hidePicture = function () {
-  eXo.core.Browser.onScrollCallback.remove('MaskLayerControl');
+  eXo.ks.Browser.onScrollCallback.remove('MaskLayerControl');
   var maskContent = eXo.core.UIMaskLayer.object;
   var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer");
   if (maskContent) eXo.core.DOMUtil.removeElement(maskContent);
@@ -247,7 +204,7 @@ UIAnswersPortlet.prototype.getImageSize = function (imageNode) {
 
 UIAnswersPortlet.prototype.showFullScreen = function (imageNode, containerNode) {
   var imageSize = this.getImageSize(imageNode);
-  var widthMax = eXo.core.Browser.getBrowserWidth();
+  var widthMax = eXo.ks.Browser.getBrowserWidth();
   if ((imageSize.width + 40) > widthMax) {
     containerNode.style.width = widthMax + "px";
     imageNode.width = (widthMax - 40);
@@ -257,7 +214,7 @@ UIAnswersPortlet.prototype.showFullScreen = function (imageNode, containerNode) 
 
 UIAnswersPortlet.prototype.showMenu = function (obj, evt) {
   var menu = eXo.core.DOMUtil.findFirstDescendantByClass(obj, "div", "UIRightClickPopupMenu");
-  eXo.webui.UIPopupSelectCategory.show(obj, evt);
+  eXo.ks.UIPopupSelectCategory.show(obj, evt);
   var top = menu.offsetHeight;
   menu.style.top = -(top + 20) + "px";
 };
@@ -303,7 +260,7 @@ UIAnswersPortlet.prototype.printPreview = function (obj) {
   FAQContainer.appendChild(printActions);
   dummyPortlet.appendChild(FAQContainer);
   if (isIE) {
-    var displayElms = DOMUtil.getElemementsByClass(dummyPortlet, "DisablePrint");
+    var displayElms = DOMUtil.findDescendantsByClass(dummyPortlet, "DisablePrint");
     var i = displayElms.length;
     while (i--) {
       displayElms[i].style.display = "none";
@@ -401,20 +358,10 @@ UIAnswersPortlet.prototype.closePrint = function () {
   this.viewImage = true;
 };
 
-DOMUtil.prototype.getElemementsByClass = function (root, clazz) {
-  var list = [];
-  var elements = root.getElementsByTagName("*");
-  var i = elements.length;
-  while (i--) {
-    if (eXo.core.DOMUtil.hasClass(elements[i], clazz)) list.push(elements[i]);
-  }
-  return list;
-}
-
 ScrollManager.prototype.answerLoadItems = function (elementClass, clean) {
   if (clean) this.cleanElements();
   this.elements.clear();
-  this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass).reverse());
+  this.elements.pushAll(eXo.ks.KSUtils.findDescendantsByClass(this.mainContainer, elementClass).reverse());
 };
 
 UIAnswersPortlet.prototype.loadActionScroll = function () {
@@ -449,7 +396,7 @@ UIAnswersPortlet.prototype.loadScroll = function (scrollname, container, callbac
   var uiNav = eXo.answer.UIAnswersPortlet;
   var controlButtonContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer");
   if (container && controlButtonContainer) {
-    uiNav.scrollMgr[scrollname] = eXo.portal.UIPortalControl.newScrollManager(scrollname);
+    uiNav.scrollMgr[scrollname] = new ScrollManager(scrollname);
     uiNav.scrollMgr[scrollname].initFunction = callback;
     uiNav.scrollMgr[scrollname].mainContainer = controlButtonContainer;
     uiNav.scrollMgr[scrollname].answerLoadItems("ControlButton");
@@ -569,7 +516,7 @@ UIAnswersPortlet.prototype.initContextMenu = function (id) {
 };
 
 UIAnswersPortlet.prototype.setSelectboxOnchange = function (fid) {
-  if (!eXo.core.Browser.isFF()) return;
+  if (!eXo.ks.Browser.isFF()) return;
   var form = document.getElementById(fid);
   var select = eXo.core.DOMUtil.findFirstDescendantByClass(form, "select", "selectbox");
   if (select) {
@@ -602,7 +549,7 @@ UIAnswersPortlet.prototype.openDiscussLink = function (link) {
 UIAnswersPortlet.prototype.executeLink = function (evt) {
   var onclickAction = String(this.getAttribute("actions"));
   eval(onclickAction);
-  eXo.core.EventManager.cancelEvent(evt);
+  eXo.ks.EventManager.cancelEvent(evt);
   return false;
 };
 
@@ -654,7 +601,7 @@ UIAnswersPortlet.prototype.submitOnKey = function (event) {
       var link = String(searchLinkElm.href);
       link = link.replace("javascript:", "");
       eval(link);
-      eXo.core.EventManager.cancelEvent(event);
+      eXo.ks.EventManager.cancelEvent(event);
       return false;
     }
   }
@@ -678,7 +625,7 @@ eXo.answer.DragDrop = {
   },
   attach: function (evt) {
     evt = evt || window.event;
-    if (eXo.core.EventManager.getMouseButton(evt) == 2) return;
+    if (eXo.ks.EventManager.getMouseButton(evt) == 2) return;
     var dnd = eXo.answer.DragDrop;
     var dragObject = this.cloneNode(true);
     dragObject.className = "FAQDnDCategory";
@@ -729,8 +676,8 @@ eXo.answer.DragDrop = {
   onDrag: function (evt) {
     var dnd = eXo.answer.DragDrop;
     var dragObject = dnd.dragObject;
-    dragObject.style.left = eXo.core.Browser.findMouseXInPage(evt) + 2 + "px";
-    dragObject.style.top = eXo.core.Browser.findMouseYInPage(evt) + 2 + "px";
+    dragObject.style.left = eXo.ks.Browser.findMouseXInPage(evt) + 2 + "px";
+    dragObject.style.top = eXo.ks.Browser.findMouseYInPage(evt) + 2 + "px";
     if (dnd.dragCallback) {
       var target = dnd.findTarget(evt);
       dnd.dragCallback(dragObject, target);
@@ -759,7 +706,7 @@ eXo.answer.DragDrop = {
     var targetClass = eXo.answer.DragDrop.targetClass;
     var i = targetClass.length;
     while (i--) {
-      var target = eXo.core.EventManager.getEventTargetByClass(evt, targetClass[i]);
+      var target = eXo.ks.EventManager.getEventTargetByClass(evt, targetClass[i]);
       if (target) return target;
     }
   },

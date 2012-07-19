@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.web.application.JavascriptManager;
 	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
-	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
+  jsManager.loadScriptResource("SearchIpBan");
 	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
 %>
 <div class="UIBanIPForumManagerForm">

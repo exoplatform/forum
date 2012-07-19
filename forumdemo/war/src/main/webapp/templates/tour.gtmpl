@@ -7,17 +7,19 @@
   PortalURL nodeURL = nodeurl();
   NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
   String registerUri = nodeURL.setResource(resource).toString();
+  _ctx.getRequestContext().getJavascriptManager().loadScriptResource("tour");
+  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.ks.Tour.init();");
 %>
 <div class="UIKSGuidedTour ClearFix" id="UIKSGuidedTour">
 
 	<ul class="LeftKSGuidedTour">
-		<li class="Button HightLineButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
+		<li class="Button HightLineButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
 			<h5>Quick Overview</h5>
 		</li>
-		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
+		<li class="Button NormalButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
 			<h5>Publish Expertise</h5>
 		</li>
-		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
+		<li class="Button NormalButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
 			<h5>Forge Knowledge</h5>
 		</li>
 		<li class="SignUpButton">
@@ -116,42 +118,3 @@
 	</div>
 	
 </div>
-<script type="text/javascript">
- 	var parent_ = document.getElementById('UIKSGuidedTour');
-	var childBts = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'li', 'Button');
- 	var t = 0;
-	function showContent(obj) {
- 		var childContents = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'ContentTour');
- 		for(var i=0; i<childBts.length; i++) {
- 			var child = childBts[i];
- 			if(child === obj) {
- 				child.className = "Button HightLineButton";
- 				childContents[i].style.display = "block";
- 				t = i;
- 			} else {
- 				child.className = "Button NormalButton";
- 				childContents[i].style.display = "none";
- 			}
- 		}
-	}
-	function onMouseOverButton(obj) {
-		for(var i=0; i<childBts.length; i++) {
- 			var child = childBts[i];
- 			if(child.className != "Button HightLineButton"){
-	 			if(child === obj) {
-	 				child.className = "Button OverButton";
-	 			} else if(i != t){
-	 				child.className = "Button NormalButton";
-	 			}
- 			}
- 		}
-	}
-	function onMouseOutButton(obj) {
-		for(var i=0; i<childBts.length; i++) {
- 			var child = childBts[i];
- 			if(child.className != "Button HightLineButton" && i != t){
- 				child.className = "Button NormalButton";
- 			}
- 		}
-	}
-</script>

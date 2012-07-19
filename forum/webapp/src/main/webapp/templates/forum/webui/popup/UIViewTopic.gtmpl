@@ -14,7 +14,7 @@
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
-	jsmanager.importJavascript('Scripts.shLoadConfig', '/forumResources/syntaxhighlighter/');
+	jsmanager.loadScriptResource("forumResources-syntaxhighlighter");
 %>
 <div class="UIViewTopic UITopicDetail" id="SizeImage">
 	<% uiform.begin() %>
@@ -174,18 +174,18 @@
 										%>
 											<a href="#" class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
 						 					<div class="LabelBox">
-						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" title="$titleFile">$fileName</a>
+						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" title="$titleFile">$fileName</a>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						 						<div class="Action">
 						 							<a href="#" class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>
-													<a class="Icon Download" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
+													<a class="Icon Download" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
 						 						</div>
 						 					</div>
 									<% }else { 
 												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
 									%>
 										<div class="LabelBox">
-											<a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+											<a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
 												$fileName
 											</a>
 											<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>

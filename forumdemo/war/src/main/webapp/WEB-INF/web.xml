@@ -124,6 +124,16 @@
 
   <filter-mapping>
     <filter-name>ResourceRequestFilter</filter-name>
+    <url-pattern>*.eot</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>ResourceRequestFilter</filter-name>
+    <url-pattern>*.ttf</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>ResourceRequestFilter</filter-name>
     <url-pattern>/javascript/*</url-pattern>
   </filter-mapping>
 
@@ -291,6 +301,14 @@
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.ttf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.eot</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

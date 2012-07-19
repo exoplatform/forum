@@ -631,11 +631,11 @@
                                             String downloadAtt = uicomponent.event("DownloadAttach");
                                           if(fileName.length() > 60){
                                           %>
-                                            <a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+                                            <a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage'); if(eXo.ks.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
                                               <span><%=FAQUtils.getSubString(fileName, 60);%></span>
                                             </a>
                                           <%}else{%>
-                                            <a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+                                            <a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.ks.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
                                               <span>$fileName</span>
                                             </a>
                                           <%}%>
@@ -652,11 +652,11 @@
                                     <%
                                     if(fileName.length() > 60){
                                     %>
-                                      <a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                      <a title="$fileName" class="AttachmentLabel" onclick="if(eXo.ks.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
                                         <%=FAQUtils.getSubString(fileName, 60);%>
                                       </a>
                                     <%}else{%>
-                                      <a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                      <a class="AttachmentLabel" onclick="if(eXo.ks.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
                                         $fileName
                                       </a>
                                     <%}%>

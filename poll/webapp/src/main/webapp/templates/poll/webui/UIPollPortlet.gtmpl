@@ -2,9 +2,6 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('eXo.ks.KSUtils', '/forumResources/javascript/');
-	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/forumResources/javascript/');
-	jsmanager.importJavascript('eXo.poll.UIPollPortlet', '/poll/javascript/');
 	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
 %>
 

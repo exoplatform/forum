@@ -1,3 +1,4 @@
+@import	url('../syntaxhighlighter/Styles/SyntaxHighlighter.css');
 /**************************** UIPopupInfoMenu *********************************/
 
 .UIPopupInfoMenu ul,li {
@@ -82,3 +83,4 @@
 	-webkit-user-select: none;
 	-o-user-select: none;
 }
+

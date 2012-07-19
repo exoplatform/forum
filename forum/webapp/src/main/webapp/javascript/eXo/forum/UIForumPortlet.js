@@ -1,3 +1,7 @@
+if (!eXo.forum) {
+	 eXo.forum = {};
+}
+
 function UIForumPortlet() {
 	this.obj = null;
 	this.event = null;
@@ -443,7 +447,7 @@ UIForumPortlet.prototype.setEnableInput = function() {
 
 
 UIForumPortlet.prototype.hidePicture = function() {
-  eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
+  eXo.ks.Browser.onScrollCallback.remove('MaskLayerControl') ;
   var maskContent = eXo.core.UIMaskLayer.object ;
   var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
   if (maskContent) eXo.core.DOMUtil.removeElement(maskContent) ;
@@ -452,20 +456,6 @@ UIForumPortlet.prototype.hidePicture = function() {
 
 UIForumPortlet.prototype.showPicture = function(src) {
   eXo.ks.MaskLayerControl.showPicture(src);
-	/*
-  var containerNode = document.createElement('div') ;
-  var imageNode = document.createElement('img') ;
-  imageNode.src = src ;
-  imageNode.setAttribute('alt', 'Click to close') ;
-  containerNode.appendChild(imageNode) ;
-  containerNode.setAttribute('title', 'Click to close') ;
-  containerNode.setAttribute('style', 'text-align:center;') ;
-  containerNode.setAttribute('align', 'center') ;
-  containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
-	this.showFullScreen(imageNode,containerNode);
-  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
-	*/
 };
 
 UIForumPortlet.prototype.getImageSize = function(imageNode){
@@ -482,7 +472,7 @@ UIForumPortlet.prototype.getImageSize = function(imageNode){
 
 UIForumPortlet.prototype.showFullScreen = function(imageNode, containerNode){
 	var imageSize = this.getImageSize(imageNode);
-	var widthMax = eXo.core.Browser.getBrowserWidth();
+	var widthMax = eXo.ks.Browser.getBrowserWidth();
 	if((imageSize.width+40) > widthMax){
 		containerNode.style.width = widthMax + "px";
 		imageNode.width = (widthMax - 40);
@@ -581,7 +571,7 @@ UIForumPortlet.prototype.reSizeImages = function() {
 };
 
 UIForumPortlet.prototype.reSizeImagesInMessageForm = function() {
-	if(eXo.core.Browser.isIE6())
+	if(eXo.ks.Browser.isIE6())
 		setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "UIViewPrivateMessageForm")', 800);
 	else setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
 };
@@ -690,7 +680,7 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 };
 
 UIForumPortlet.prototype.ReloadImage = function() {
-	if(eXo.core.Browser.isIE6()) {
+	if(eXo.ks.Browser.isIE6()) {
 		var aImage = document.getElementsByTagName("img");
 		var length = aImage.length;
 		for (var i = 0; i < length; ++ i) {
@@ -722,7 +712,7 @@ UIForumPortlet.prototype.loadScroll = function(e) {
 	var uiNav = eXo.forum.UIForumPortlet ;
   var container = document.getElementById("UIForumActionBar") ;
   if(container) {
-    uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
+    uiNav.scrollMgr = new ScrollManager("UIForumActionBar") ;
     uiNav.scrollMgr.initFunction = uiNav.initScroll ;
     uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
     uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
@@ -748,7 +738,7 @@ UIForumPortlet.prototype.initScroll = function() {
   if(!uiNav.scrollManagerLoaded) uiNav.loadScroll() ;
   var elements = uiNav.scrollMgr.elements ;
   uiNav.scrollMgr.init() ;
-	if(eXo.core.Browser.isIE6()) uiNav.scrollMgr.arrowsContainer.setAttribute("space",35);
+	if(eXo.ks.Browser.isIE6()) uiNav.scrollMgr.arrowsContainer.setAttribute("space",35);
   uiNav.scrollMgr.checkAvailableSpace() ;
   uiNav.scrollMgr.renderElements() ;
 } ;
@@ -766,7 +756,7 @@ UIForumPortlet.prototype.loadTagScroll = function() {
   var uiNav = eXo.forum.UIForumPortlet ;
   var container = document.getElementById("TagContainer") ;
   if(container) {
-    uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("TagContainer") ;
+    uiNav.tagScrollMgr = new ScrollManager("TagContainer") ;
     uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
     uiNav.tagScrollMgr.mainContainer = container ;
     uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "li", "ScrollButtons") ;
@@ -871,7 +861,7 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 UIForumPortlet.prototype.executeLink = function(evt) {
   var onclickAction = String(this.getAttribute("rel")) ;
 	eval(onclickAction) ;
-	eXo.core.EventManager.cancelEvent(evt);
+  eXo.ks.EventManager.cancelEvent(evt);
 	return false;
 } ;
 
@@ -991,7 +981,7 @@ UIForumPortlet.prototype.submitOnKey = function(event){
 			var link = String(searchLinkElm.href) ;
 			link = link.replace("javascript:", "");
 			eval(link);
-			eXo.core.EventManager.cancelEvent(event);
+      eXo.ks.EventManager.cancelEvent(event);
 			return false;
 		}
 	}

@@ -57,8 +57,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang

@@ -5,7 +5,7 @@
 /*
 eXo.core.UIMaskLayer.createMask = function(blockContainerId, object, opacity, position) {
 	try {
-		var Browser = eXo.core.Browser ;
+		var Browser = eXo.ks.Browser ;
 		var blockContainer = document.getElementById(blockContainerId) ;
 		var maskLayer = document.createElement("div") ;
 		
@@ -62,6 +62,10 @@ eXo.core.UIMaskLayer.createMask = function(blockContainerId, object, opacity, po
 	return maskLayer ;
 };
 */
+if (!eXo.ks) {
+	eXo.ks = {};
+}
+
 function MaskLayerControl() {
   this.domUtil = eXo.core.DOMUtil ;
 }
@@ -124,7 +128,7 @@ MaskLayerControl.prototype.scrollHandler = function() {
 } ;
 
 MaskLayerControl.prototype.hidePicture = function() {
-  eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
+  eXo.ks.Browser.onScrollCallback.remove('MaskLayerControl') ;
   var maskContent = eXo.core.UIMaskLayer.object ;
   var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
   if (maskContent) maskContent.parentNode.removeChild(maskContent) ;
@@ -139,5 +143,4 @@ MaskLayerControl.prototype.getImageSize = function(img) {
 	return {"height":imgNode.height,"width":imgNode.width};
 };
 
-if (!eXo.ks) eXo.ks = {} ;
 eXo.ks.MaskLayerControl = new MaskLayerControl() ;

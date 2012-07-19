@@ -27,8 +27,6 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.ks.common.NotifyInfo;
 
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
-
 /**
  * Created by The eXo Platform SARL.
  * <p>

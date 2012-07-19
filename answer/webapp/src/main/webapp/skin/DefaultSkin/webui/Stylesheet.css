@@ -1,3 +1,5 @@
+@import	url('/forumResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import	url('/forumResources/skin/Stylesheet.css');
 @import url('UIMoveCategoryForm/Stylesheet.css');
 @import url('popup/Stylesheet.css');
 

@@ -1,11 +1,12 @@
+if (!eXo.forum) {
+	 eXo.forum = {};
+}
+
 function ForumTotalJob() {
-  
+
 } ;
 
 ForumTotalJob.prototype.init = function(eXoUser, eXoToken, contextName){
-	if (!eXo.core.Cometd) {
-		eXo.require('eXo.core.Cometd');
-	}
   if(String(eXoToken) != ''){
 	  if (!eXo.core.Cometd.isConnected()) {
 		eXo.core.Cometd.url = '/' + contextName + '/cometd' ;  

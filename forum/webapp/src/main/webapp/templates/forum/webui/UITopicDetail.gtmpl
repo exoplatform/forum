@@ -18,10 +18,12 @@
   
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/') ;
-  jsmanager.importJavascript('Scripts.shLoadConfig', '/forumResources/syntaxhighlighter/');
+
+  jsmanager.loadScriptResource("forumResources-syntaxhighlighter");
+  jsmanager.loadScriptResource("SearchTagName");
+
   jsmanager.addJavascript('eXo.forum.webservice.SearchTagName.init();') ;
-  
+
   jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
   jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
@@ -120,7 +122,7 @@
             <span class="UntagIcon FL" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
           </li>
         <%} %>
-          <li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+          <li class="ScrollButtons" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">
                   <% /*Begin Popup Menu*/ %>
             <div class="UIPopupCategory" style="display: none;">
               <ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
@@ -150,7 +152,7 @@
   <div class="PostsInThreadContainer ImageContentContainer">
     <div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
             <% if(isShowMenu && canEdit) { %> 
-              <div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+              <div class="ContentAction DefaultStyle" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">
                     <div class="StatusIcon ModerationIcon">
                       <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.Moderation");%></a>
                     </div>
@@ -220,7 +222,7 @@
                 <% /*End Popup Menu*/ %>
               </div>
             <% if((canEdit && isShowMenu) || isUserCreatedTopic) { %> 
-              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">                
+              <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.ks.UIPopupSelectCategory.show(this, event);">                
                   <div class="StatusIcon ToolIcon">
                     <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></a>
                   </div>
@@ -632,17 +634,17 @@
                     %>
                       <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
                       <div class="LabelBox">
-                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
+                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
                         <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
                         <div class="Action">
                           <a class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></a>
-                            <a class="Icon Download" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
+                            <a class="Icon Download" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
                         </div>
                       </div>
                   <% }else { 
                         String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
                   %>
-                      <a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
+                      <a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.ks.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
                       <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
                   <% } %>
                   </div>

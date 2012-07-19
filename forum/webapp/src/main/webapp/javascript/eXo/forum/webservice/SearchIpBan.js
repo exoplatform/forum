@@ -3,7 +3,9 @@
  * 
  */
 
-eXo.require("eXo.core.JSON");
+if (!eXo.forum) {
+	 eXo.forum = {};
+}
 
 function AjaxHandler(callbackObject, action) {
   this.LOADING_STATE = 'LOADING';

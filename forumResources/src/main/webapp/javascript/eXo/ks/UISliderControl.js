@@ -3,15 +3,15 @@ function UISliderControl(){
 };
 
 UISliderControl.prototype.findMouseRelativeX = function(cont,evt){
-	var mouseX = eXo.core.Browser.findMouseXInPage(evt);
-	var contX = eXo.core.Browser.findPosX(cont);
-	if(!eXo.core.Browser.isFF() && document.getElementById("UIControlWorkspace")) 
+	var mouseX = eXo.ks.Browser.findMouseXInPage(evt);
+	var contX = eXo.ks.Browser.findPosX(cont);
+	if(!eXo.ks.Browser.isFF() && document.getElementById("UIControlWorkspace")) 
 		mouseX += document.getElementById("UIControlWorkspace").offsetWidth;
 	return (mouseX - contX);
 };
 
 UISliderControl.prototype.start = function(obj,evt){
-	var Browser = eXo.core.Browser;
+	var Browser = eXo.ks.Browser;
 	this.object = eXo.core.DOMUtil.findFirstDescendantByClass(obj,"div","SliderPointer") ;
 	this.container = obj;
 	this.inputField = eXo.core.DOMUtil.findDescendantsByTagName(obj.parentNode,"input")[0] ;
@@ -25,7 +25,7 @@ UISliderControl.prototype.start = function(obj,evt){
 };
 
 UISliderControl.prototype.execute = function(evt){
-	var Browser = eXo.core.Browser;
+	var Browser = eXo.ks.Browser;
 	var obj = eXo.webui.UISliderControl.object;
 	var cont = eXo.webui.UISliderControl.container;
 	var inputField = eXo.webui.UISliderControl.inputField;

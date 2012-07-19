@@ -56,5 +56,10 @@
       <version>${org.jboss.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+    </dependency>
   </dependencies>
 </project>

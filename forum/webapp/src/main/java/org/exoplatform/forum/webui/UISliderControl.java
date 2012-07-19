@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.io.Writer;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.web.application.JavascriptManager;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
 
@@ -36,7 +37,8 @@ public class UISliderControl extends UIFormInputBase<String> {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    context.getJavascriptManager().importJavascript("eXo.ks.UISliderControl", "/forumResources/javascript/");
+    JavascriptManager jsmanager = context.getJavascriptManager();
+    jsmanager.loadScriptResource("sliderControl");
     Writer w = context.getWriter();
     w.write("<div class=\"UISliderControl\">");
     w.write("<div class=\"SliderContainer\" onmousedown=\"eXo.webui.UISliderControl.start(this,event);\" onkeydown=\"eXo.webui.UISliderControl.start(this,event);\" unselectable=\"on\">");
