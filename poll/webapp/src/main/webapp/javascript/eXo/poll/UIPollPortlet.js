@@ -7,30 +7,19 @@
   };
 
   UIPollPortlet.prototype.OpenPrivateField = function(elm) {
-    if(elm === 'DivCheckBox') elm = findId(elm);
-    if (elm.exists()) {
-      var parent = elm.parents('.OptionField');
+    var jelm = findId(elm) || $(elm);
+    if (jelm.exists()) {
+      var parent = jelm.parents('.OptionField');
       var childs = parent.find('div.Display');
-      var input = elm.find('input.checkbox:first');
+      var input = jelm.find('input.checkbox:first');
       if (input.exists()) {
-        for(var i = 0; i < childs.length; i++) {
-          if(input.attr('checked')) childs.eq(i).css('display', 'none');
-          else childs.eq(i).css('display', 'block');
+        if(input.attr('checked')){
+          childs.hide();
+        } else {
+          childs.show();
         }
       }
     }
-  };
-
-  UIPollPortlet.prototype.OverButton = function(object) {
-    if($(object).attr('class').indexOf('Action') > 0){
-      var str = '';
-      for(var i = 0; i < $(object).attr('class').length - 6; i++) {
-        str = str + $(object).attr('class').charAt(i);
-      }
-      $(object).attr('class', str);
-    } else {
-      $(object).attr('class', $(object).attr('class') + 'Action');
-  }
   };
 
   UIPollPortlet.prototype.expandCollapse = function(obj) {

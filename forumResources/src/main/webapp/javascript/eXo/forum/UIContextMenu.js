@@ -43,10 +43,11 @@
       return null;
     },
     setPosition : function(context, jobj, evt) {
-      var evt = evt || window.event;
+      evt = evt || window.event;
+      var event = $.event.fix(evt);
       var Browser = eXo.core.Browser;
-      var X = Browser.findMouseRelativeX(context, evt, false) || 2;
-      var Y = Browser.findMouseRelativeY(context, evt) + 6 || 2;
+      var X = Browser.findMouseRelativeX(context, event, false) || 2;
+      var Y = Browser.findMouseRelativeY(context, event) + 6 || 2;
       jobj.css('position', 'absolute').show();
       jobj.css('left', X + 'px');
       jobj.css('top', Y + 'px');
@@ -55,14 +56,18 @@
       eXo.forum.ForumUtils.hideElements();
       var context = $(this);
       var jmenu = UIContextMenu.getMenu(context, evt);
-      if (!jmenu.exists()) {
-        return;
+      if (jmenu && jmenu.exists()) {
+        var parent = context.parents('.PORTLET-FRAGMENT');
+        if(parent.exists()) {
+          parent.css('position', 'relative');
+        } else {
+          parent = context;
+          parent.parent.css('position', 'relative');
+        }
+        UIContextMenu.setPosition(parent, jmenu, evt);
+        eXo.forum.ForumUtils.addhideElement(jmenu);
+        eXo.forum.ForumUtils.cancelEvent(evt);
       }
-      context.parent().css('position', 'relative');
-      UIContextMenu.setPosition(context, jmenu, evt);
-      eXo.forum.ForumUtils.addhideElement(jmenu);
-      eXo.forum.ForumUtils.cancelEvent(evt);
-      return false;
     }
   };
   

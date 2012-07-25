@@ -281,8 +281,7 @@
     expandCollapse : function(obj) {
       var jobject = $(obj)
       var forumToolbar = jobject.parents(".ForumToolbar");
-      var contentContainer = forumToolbar.next();
-      
+      var contentContainer = forumToolbar.next('div');
       if (contentContainer.css('display') != "none") {
         contentContainer.hide();
         jobject.addClass('ExpandButton').removeClass('CollapseButton');

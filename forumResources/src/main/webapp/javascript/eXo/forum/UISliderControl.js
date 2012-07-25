@@ -12,7 +12,7 @@
     this.object = $(obj).find('div.SliderPointer').eq(0)[0];
     this.parent = $(obj).parent();
     this.inputField = this.parent.find('input').eq(0)[0];
-    var mouseX = eXo.core.Browser.findMouseRelativeX(obj, evt);
+    var mouseX = eXo.core.Browser.findMouseRelativeX(obj, $.event.fix(evt));
     var props = eXo.webui.UISliderControl.getValue(mouseX);
     $(this.object).css('width', props[0] + 'px');
     $(this.inputField).val(props[1] * 5);
@@ -24,7 +24,7 @@
   UISliderControl.prototype.execute = function(evt) {
     var UISliderControl = eXo.webui.UISliderControl;
     var cont = UISliderControl.container;
-    var mouseX = eXo.core.Browser.findMouseRelativeX(cont, evt);
+    var mouseX = eXo.core.Browser.findMouseRelativeX(cont, $.event.fix(evt));
     var props = UISliderControl.getValue(mouseX);
     $(UISliderControl.object).css('width', props[0] + 'px');
     $(UISliderControl.inputField).val(String(props[1] * 5));

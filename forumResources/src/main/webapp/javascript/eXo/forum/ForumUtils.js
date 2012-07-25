@@ -81,16 +81,17 @@
     },
     
     // show users menu
-    showUserMenu : function(obj, event) {
-      var event = event || window.event;
+    showUserMenu : function(obj, evt) {
+      var event = evt || window.event;
+      event = $.event.fix(event);
       var jobj = $(obj);
       var jPopup = jobj.find(".UIPopupInfoMenu");
       if (!jPopup.exists()) {
         return;
       }
+      ForumUtils.hideElements();
       var uiPopup = jPopup.find(".UIPopupInfoContent");
       uiPopup.on('click', ForumUtils.cancelEvent);
-      ForumUtils.hideElements();
       jPopup.css('visibility', 'inherit').css('display', 'inline');
       if (ForumUtils.isChrome()) {
         jPopup.css('float', 'right');
@@ -98,10 +99,10 @@
       var Browser = eXo.core.Browser;
       var X = Browser.findMouseRelativeX(jPopup, event, false);
       var Y = Browser.findMouseRelativeY(jPopup, event);
-      ForumUtils.cancelEvent(event);
       uiPopup.css('left', (X - 37) + 'px');
       uiPopup.css('top', (Y + 5) + 'px');
       ForumUtils.addhideElement(jPopup);
+      ForumUtils.cancelEvent(evt);
     }
   };
   

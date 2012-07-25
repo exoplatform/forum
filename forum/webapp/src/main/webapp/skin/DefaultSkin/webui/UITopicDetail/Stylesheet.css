@@ -439,6 +439,12 @@
 	min-width: 164px;
 }
 
+.UITopicDetail .BloclPopupIP .MenuItem .ItemIcon {
+	padding: 0px;
+	top: 8px;
+	left: 125px;
+}
+
 .UITopicDetail .PostViewContainer .UIPopupCategory {
 	position: relative;
 }

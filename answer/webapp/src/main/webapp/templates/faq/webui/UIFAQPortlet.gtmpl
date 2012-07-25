@@ -3,6 +3,7 @@
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript('eXo.faq.UIFaqPortlet.focusQuestion();') ;
 %>
 <div id="$uicomponent.id" class="UIAnswersPortlet UIFAQPortlet">
 	<%

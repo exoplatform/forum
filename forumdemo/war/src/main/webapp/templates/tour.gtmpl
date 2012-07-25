@@ -8,18 +8,18 @@
   NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
   String registerUri = nodeURL.setResource(resource).toString();
   _ctx.getRequestContext().getJavascriptManager().loadScriptResource("tour");
-  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.ks.Tour.init();");
+  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.forum.Tour.init();");
 %>
 <div class="UIKSGuidedTour ClearFix" id="UIKSGuidedTour">
 
 	<ul class="LeftKSGuidedTour">
-		<li class="Button HightLineButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
+		<li class="Button HightLineButton">
 			<h5>Quick Overview</h5>
 		</li>
-		<li class="Button NormalButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
+		<li class="Button NormalButton">
 			<h5>Publish Expertise</h5>
 		</li>
-		<li class="Button NormalButton" onclick="eXo.ks.Tour.showContent(this)" onmouseover="eXo.ks.Tour.onMouseOverButton(this)" onfocus="eXo.ks.Tour.onMouseOverButton(this)" onmouseout="eXo.ks.Tour.onMouseOutButton(this)" onblur="eXo.ks.Tour.onMouseOutButton(this)">
+		<li class="Button NormalButton">
 			<h5>Forge Knowledge</h5>
 		</li>
 		<li class="SignUpButton">

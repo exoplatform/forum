@@ -13,6 +13,7 @@
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.addJavascript('eXo.answer.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
   jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
+  jsmanager.addCustomizedOnLoadScript('eXo.answer.UIAnswersPortlet.loadActionScroll();');
   String cateId = uicomponent.getCategoryId();
   uicomponent.setIsModerators(); //reset permission
   boolean canEditQuestion = uicomponent.getCanEditQuestion();
@@ -42,20 +43,20 @@
 				          
 				      <!--  Begin popup menu  -->
 				        <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();" onblur="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();">
-				          <div class="UIRightClickPopupMenu UIContextMenuContainer">
+				          <ul class="UIRightClickPopupMenu UIContextMenuContainer">
 				           
 				              <%
 				                String[] actionTollbar = uicomponent.getMenuCateManager();
 				                for(String action in actionTollbar) {
 				                  if(action.equals("DeleteCategory") && uicomponent.isCategoryHome()) continue; 
 				              %>
-				                  <div onmousedown="<%=uicomponent.event(action, cateId);%>" onkeydown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
+				                  <li onmousedown="<%=uicomponent.event(action, cateId);%>" onkeydown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
 				                    <a class="ItemIcon $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
-				                  </div>
+				                  </li>
 				              <%
 				                }%>
 				          
-				          </div>
+				          </ul>
 			          </div>
 				      <!--  End popup menu  -->
 		       </div>
@@ -112,7 +113,7 @@
           if(!uicomponent.getQuestionView().equals(questionPath)){
             questionContent = question.getQuestion();
       %>
-            <div class="QuestionContainer ClearFix oncontextmenu" id="$questionId">
+            <div class="QuestionContainer ClearFix disableContextMenu" id="$questionId">
       
 <!-- style for Questions -->
               <div class="NormalQuest ClearFix">
@@ -134,7 +135,7 @@
                   questionContent = FAQUtils.getSubString(questionContent, 140);
                 }
                 %>
-                	<h5 class="QuestionContextMenu" id="UIContextPopupMenu$questionIndex">
+                	<h5 class="oncontextmenu" id="UIContextPopupMenu$questionIndex">
 	                  <a class="Questions" href="$linkQuestion">$questionContent</a>
                 	</h5>
                   <div class="ClearFix">
@@ -157,7 +158,7 @@
               
                   <!-- action of this question -->
                   <div class="UIFAQPopupCategory" id="UIPopupMenu$questionIndex" style="display:none;">
-                    <div class="UIRightClickPopupMenu UIContextMenuContainer">                         
+                    <ul class="UIRightClickPopupMenu UIContextMenuContainer">                         
                               <%
                                 String iconView = "" ;
                                 for(viewAction in questionActions) {      
@@ -181,9 +182,9 @@
                                   }
                                   String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
                               %>
-                                  <div class="MenuItem $lockFunction">
+                                  <li class="MenuItem $lockFunction">
                                     <a class="ItemIcon $iconView" href="$linkView">$itemLabelView</a>
-                                  </div>                                
+                                  </li>                                
                               <%}%>
                               
                                
@@ -192,20 +193,20 @@
                                     String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
                                     String linkView = uicomponent.event("EditQuestion", questionPath);
                                   %>  
-                                    <div class="MenuItem">
+                                    <li class="MenuItem">
                                       <a class="ItemIcon Edit" href="$linkView">$itemLabelView</a>
-                                    </div>
+                                    </li>
                                   <%  
                                   }
                                   if(uicomponent.isDiscussForum()) {
                                     String pathDiscuss = question.getTopicIdDiscuss();
                                     if(pathDiscuss == null || pathDiscuss.length() <= 0){
                               %>
-                                    <div class="MenuItem">
+                                    <li class="MenuItem">
                                       <div title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
                                         <a class="ItemIcon DiscussForum" href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
                                       </div>
-                                    </div>
+                                    </li>
                               <%  
                                     } 
                                   }
@@ -221,13 +222,13 @@
                                       }
                                     }
                               %>
-                                    <div class="MenuItem">
+                                    <li class="MenuItem">
                                       <a class="ItemIcon DiscussForum" onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
-                                    </div>
+                                    </li>
                               <%  } 
                                 } 
                               %>
-                    </div>
+                    </ul>
                   </div>
 
                   <!-- finish action of this question -->
@@ -490,8 +491,8 @@
                           </div>
                          
                           <div class="QuestionContent">
-                              <div class="LeftQuestionContainer oncontextmenu">
-                                <div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)">
+                              <div class="LeftQuestionContainer disableContextMenu">
+                                <div class="oncontextmenu" id="UIContextPopupQuestion$questionIndex">
                                  	<!-- question content -->
 	                                    <a class="QuestionName" href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion;">
 	                                      $questionContent
@@ -500,68 +501,45 @@
                                 
                                 <!-- action of this question -->
                                 <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionIndex" style="display:none;">
-                                  <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-                                    <div>
-              
-                                      <div class="TopLeftRightClickPopupMenu">
-                                        <div class="TopRightRightClickPopupMenu">
-                                          <div class="TopCenterRightClickPopupMenu"><span></span></div>
-                                          <div class="RightClickCustomItem" style="display:none;"><span></span></div>
-                                        </div>
-                                      </div>
-                                      
-                                      <div class="MiddleLeftRightClickPopupMenu">
-                                        <div class="MiddleRightRightClickPopupMenu">
-                                          <div class="UIRightPopupMenuContainer">
-                                            <%
-                                              String iconView = "" ;
-                                              for(viewAction in questionActions) {
-                                                if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;
-                                                if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
-                                                  iconView = viewAction.replace("Question", "");
-                                                else
-                                                  iconView = viewAction ;
-                                                String linkView = "";
-                                                String lockFunction = "" ;
-                                                if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-                                                  if(canEditQuestion){
-                                                    linkView = uicomponent.event(viewAction, questionPath+"/true");
-                                                  } else {
-                                                    linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend")+"');" ;
-                                                    lockFunction = "LockFunction" ;
-                                                  }
-                                                } else {
-                                                  linkView = uicomponent.event(viewAction, questionPath);
-                                                }
-                                                String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);                                                       
-                                            %>
+                                  <ul class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+                                    <%
+                                      String iconView = "" ;
+                                      for(viewAction in questionActions) {
+                                        if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;
+                                        if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+                                          iconView = viewAction.replace("Question", "");
+                                        else
+                                          iconView = viewAction ;
+                                        String linkView = "";
+                                        String lockFunction = "" ;
+                                        if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+                                          if(canEditQuestion){
+                                            linkView = uicomponent.event(viewAction, questionPath+"/true");
+                                          } else {
+                                            linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend")+"');" ;
+                                            lockFunction = "LockFunction" ;
+                                          }
+                                        } else {
+                                          linkView = uicomponent.event(viewAction, questionPath);
+                                        }
+                                        String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);                                                       
+                                    %>
 
-                                                <div onclick="$linkView" class="MenuItem $lockFunction">
-                                                  <a class="ItemIcon $iconView" href="javascript:void(0);">$itemLabelView</a>
-                                                </div>
-                                            <%
-                                              }
-                                            %>                                                    
-                                            <%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
-                                                String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
-                                                String linkView = uicomponent.event("EditQuestion", questionPath);                                       
-                                            %>
-                                              <div onclick="$linkView" class="MenuItem">
-                                                <a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
-                                              </div>
-                                            <%}%>
-                                          </div>
-                                        </div>
-                                      </div>
-                                            
-                                      <div class="BottomLeftRightClickPopupMenu">
-                                        <div class="BottomRightRightClickPopupMenu">
-                                          <div class="BottomCenterRightClickPopupMenu"><span></span></div>
-                                        </div>
-                                      </div>
-                                      
-                                    </div>
-                                  </div>
+                                        <li onclick="$linkView" class="MenuItem $lockFunction">
+                                          <a class="ItemIcon $iconView" href="javascript:void(0);">$itemLabelView</a>
+                                        </li>
+                                    <%
+                                      }
+                                    %>                                                    
+                                    <%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
+                                        String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
+                                        String linkView = uicomponent.event("EditQuestion", questionPath);                                       
+                                    %>
+                                      <li onclick="$linkView" class="MenuItem">
+                                        <a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
+                                      </li>
+                                    <%}%>
+                                  </ul>
                                 </div>
                                 <!-- finish action of this question -->
                                 

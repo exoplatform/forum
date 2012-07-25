@@ -42,13 +42,25 @@
   };
   
   UIFaqPortlet.prototype.treeView = function (id) {
-    var obj = find(id);
+    var obj = findId(id);
     if (obj.exists()) {
-      if (obj.css('display') == '' || obj.css('display') === 'none') obj.css('display', 'block');
-      else obj.css('display', 'none');
+      if (obj.css('display') == '' || obj.css('display') === 'none') obj.show();
+      else obj.hide();
     }
   };
-  
+
+  UIFaqPortlet.prototype.focusQuestion = function () {
+    var as = $('a[href^="#Question"]');
+    as.on('click', function () {
+      var href = String(this.href);
+      href = href.substring(href.indexOf('#')+1);
+      var elm = $('*[name="' + href + '"]');
+      if(elm.exists()) {
+        elm.parent()[0].scrollIntoView(true);
+      }
+    });
+  };
+
   // Expose
   window.eXo = eXo || {};
   window.eXo.faq = eXo.faq || {} ;

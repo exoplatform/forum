@@ -1,58 +1,37 @@
-if (!eXo.forum)
-  eXo.forum = {};
-
-function Tour() {
-  childBts = null;
-  t = 0;
-};
-
-Tour.prototype.init = function() {
-  this.parent_ = gj('#UIKSGuidedTour');
-  this.childBts = this.parent_.find('li.Button');
-};
-
-Tour.prototype.showContent = function(obj) {
-  var t = eXo.forum.Tour.t;
-  var childBts = eXo.forum.Tour.childBts;
-  var parent_ = eXo.forum.Tour.parent_;
-  var childContents = parent_.find('div.ContentTour');
-  for ( var i = 0; i < childBts.length; i++) {
-    var child = childBts[i];
-    if (child === obj) {
-      child.className = "Button HightLineButton";
-      childContents.eq(i).show();
-      t = i;
-    } else {
-      child.className = "Button NormalButton";
-      childContents.eq(i).hide();
-    }
-  }
-};
-
-Tour.prototype.onMouseOverButton = function(obj) {
-  var t = eXo.forum.Tour.t;
-  var childBts = eXo.forum.Tour.childBts;
-  for ( var i = 0; i < childBts.length; i++) {
-    var child = childBts[i];
-    if (child.className != "Button HightLineButton") {
-      if (child === obj) {
-        child.className = "Button OverButton";
-      } else if (i != t) {
-        child.className = "Button NormalButton";
+;(function($, window, document) {
+  
+  var Tour = {
+    buttons : null,
+    contents : null,
+    init : function() {
+      Tour.buttons = $('#UIKSGuidedTour li.Button');
+      Tour.contents = $('#UIKSGuidedTour div.ContentTour');
+      Tour.buttons.on('click', Tour.click);
+      Tour.buttons.on('mouseover', Tour.over);
+      Tour.buttons.on('mouseout', Tour.out);
+    },
+    click : function() {
+      var button = $(this);
+      Tour.buttons.addClass('NormalButton')
+          .removeClass('OverButton').removeClass('HightLineButton');
+      button.addClass('HightLineButton').removeClass('NormalButton');
+      Tour.contents.hide().eq(button.index()).show();
+    },
+    over : function() {
+      var button = $(this);
+      if(!button.hasClass('HightLineButton')) {
+        button.addClass('OverButton').removeClass('NormalButton');
+      }
+    },
+    out : function() {
+      var button = $(this);
+      if(!button.hasClass('HightLineButton')) {
+        button.addClass('NormalButton').removeClass('OverButton');
       }
     }
-  }
-};
-
-Tour.prototype.onMouseOutButton = function(obj) {
-  var t = eXo.forum.Tour.t;
-  var childBts = eXo.forum.Tour.childBts;
-  for ( var i = 0; i < childBts.length; i++) {
-    var child = childBts.eq(i);
-    if (!child.hasClass('Button HightLineButton') && i != t) {
-      child.attr('class', 'Button NormalButton');
-    }
-  }
-};
-
-eXo.forum.Tour = new Tour();
+  };
+  
+  window.eXo = window.eXo || {};
+  window.eXo.forum = window.eXo.forum || {};
+  window.eXo.forum.Tour = Tour;
+})(gj, window, document);

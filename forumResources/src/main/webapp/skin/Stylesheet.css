@@ -58,7 +58,7 @@
   color: black;
 }
 
-.UIPopupInfoMenu .UIPopupInfoContent .ItemIcon:hover {
+.UIPopupInfoMenu .UIPopupInfoContent .MenuItem:hover {
   background-color: #DEE4F2;
 }
 

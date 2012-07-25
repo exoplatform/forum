@@ -4,7 +4,8 @@
 }
 
 *+html .UIForumPortlet {
-	height: 470px;
+	_height: 300px;
+	min-height: 300px;
 }
 
 .UIMaskWorkspace .UIForumPortlet {

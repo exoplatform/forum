@@ -29,30 +29,28 @@
         <% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
           
           <div class="ContentAction ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-            <div class="DefaultStyle Forum" onmouseover="eXo.poll.UIPollPortlet.OverButton(this)" onmouseout="eXo.poll.UIPollPortlet.OverButton(this)">
+            <div class="DefaultStyle">
                  <%=_ctx.appRes("UIPoll.label.MoreAction");%>
             </div>
             
             <% /*Begin Popup Menu*/ %>
-              <div style="position:relative;">
-                <div class="UIPopupCategory" style="display:none;">
-					<ul class="UIRightClickPopupMenu" style="display:block; left:58px; top:-15px;">
-                          
-						<li class="MenuItem" onclick="<%=uicomponent.event("EditPoll")%>">
-							<a class="ItemIcon EditPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.EditPoll"); %></a>
-						</li>
-						<li class="MenuItem" onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
-							<% if(poll.getIsClosed() || isTimeOut){ %>
-							  <a class="ItemIcon OpenPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
-							<% } else { %>
-							  <a class="ItemIcon ClosePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
-							<% } %>
-						</li>
-						<li class="MenuItem" onclick="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
-							 <a class="ItemIcon DeletePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.RemovePoll"); %></a>
-						</li>
-					</ul>
-                </div>
+              <div class="UIPopupCategory" style="display:none;">
+								<ul class="UIRightClickPopupMenu" style="display:block;">
+			                          
+									<li class="MenuItem" onclick="<%=uicomponent.event("EditPoll")%>">
+										<a class="ItemIcon EditPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.EditPoll"); %></a>
+									</li>
+									<li class="MenuItem" onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
+										<% if(poll.getIsClosed() || isTimeOut){ %>
+										  <a class="ItemIcon OpenPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
+										<% } else { %>
+										  <a class="ItemIcon ClosePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
+										<% } %>
+									</li>
+									<li class="MenuItem" onclick="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
+										 <a class="ItemIcon DeletePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.RemovePoll"); %></a>
+									</li>
+								</ul>
               </div>
             <% /*End Popup Menu*/ %>
 

@@ -246,7 +246,7 @@
 
 .UIFAQPortlet .FAQViewerBar .arrow {
   margin: 1px 5px 0px 8px;
-  background: url(/faq/skin/DefaultSkin/webui/background/ArrowBreadcumb.gif) no-repeat left center;
+  background: url(/answer/skin/DefaultSkin/webui/background/ArrowBreadcumb.gif) no-repeat left center;
   width: 5px;
   height: 16px;
 }
@@ -314,7 +314,7 @@
   font-size:12px;
   line-height:20px;
   text-decoration:none;
-  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 5px;
+  background: url('/answer/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 5px;
   padding-left: 14px;
 }
 
@@ -399,7 +399,7 @@
 }
 
 .UIFAQPortlet .BackTopIcon {
-  background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
+  background: url('/answer/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
   width: 21px; height: 18px;
   float: right;
   display: block;
@@ -427,7 +427,7 @@
 
 .FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ {
   margin-left: 25px;
-  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 4px;
+  background: url('/answer/skin/DefaultSkin/webui/background/IconFAQViewer1.gif') no-repeat left 4px;
   padding-left: 14px;
 }
 

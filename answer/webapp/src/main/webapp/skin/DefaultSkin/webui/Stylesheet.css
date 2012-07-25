@@ -47,45 +47,29 @@
 }
 
 /******************************************** UIRightClickPopupMenu ****************************************/
-.UIAnswersPortlet .AnswerToolbar .UIPopupCategory {
-	left: 0px;
+.UIAnswersPortlet .UIRightClickPopupMenu {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #C6C6C6;
+	border-radius: 2px 2px 2px 2px;
+	box-shadow: 1px 3px 5px #BDBDCE;
 	position: absolute;
-	top: 24px;
-	width: auto;
-	z-index: 100;
-}
-
-.UIAnswersPortlet .AnswerToolbar .UIRightClickPopupMenu {
-	width:175px;
-	min-width:190px;
 	white-space: nowrap;
 }
 
-.UIAnswersPortlet .UICategories .UIRightClickPopupMenu {
-	font-weight: normal;
-}
-
-.UIAnswersPortlet .AnswerToolbar .UIRightClickPopupMenu .LineMenu {
-	width:150px;
-	margin: 4px auto;
-	border-top: solid 1px #7b7b7b;
-}
-
-.UIAnswersPortlet .UIRightClickPopupMenu .MenuItem a {
-	padding: 4px 10px 4px 25px;
-}
-
-.UIAnswersPortlet .QuestionContainer .UIRightClickPopupMenu .MenuItem .ItemIcon {
-	float: none;
+.UIAnswersPortlet .UIRightClickPopupMenu .MenuItem {
+	padding: 0px 10px;
 	height: auto;
 }
 
-.UIAnswersPortlet .UIRightClickPopupMenu .IconItem {
+.UIAnswersPortlet .UIRightClickPopupMenu .MenuItem .ItemIcon {
+  padding: 0px;
+  padding-left: 26px;
+  line-height: 24px;
 	cursor: pointer;
-	display: block;
-	line-height: 20px;
-	white-space: nowrap;
-	width: auto;
+}
+
+.UIAnswersPortlet .UIRightClickPopupMenu .MenuItem:hover {
+	background: #EAEAEA;
 }
 
 /******************************************** UIBreadcumbs ****************************************/
@@ -248,7 +232,7 @@
 	background: #fff;
 }
 
-.UIAnswersPortlet .UIQuestions .PrintAction {
+.UIAnswersPortlet .PrintAction {
 	display: none;
 }
 
@@ -1102,6 +1086,15 @@
 	height: 50px;
 }
 
+.UIAnswersPortlet .ResponseItemContainer .ResponseItemContainerLeft {
+	float:left;
+	width: 120px;
+}
+
+.UIAnswersPortlet #UIPrintAllQuestions .ResponseItemContainer .ResponseItemContainerRight {
+	margin: 0 0 0 120px;
+}
+
 .UIAnswersPortlet .ResponseItemContainer .ResponseItemContainerRight {
 	margin: 0px 150px 0px 70px;
 	padding-bottom: 5px;
@@ -1493,7 +1486,7 @@
 }
 
 .UIAnswersPortlet .AnswerToolbar .AddCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -58px;
+	background: url('background/FAQPortlet.gif') no-repeat left -57px;
 }
 
 .UIAnswersPortlet .AnswerToolbar .ShowQuestions {
@@ -1509,11 +1502,11 @@
 }
 
 .UIAnswersPortlet .FAQRSS {
-	background: url('background/FAQPortlet.gif') no-repeat left -143px;
+	background: url('background/FAQPortlet.gif') no-repeat left -142px;
 }
 
 .UIAnswersPortlet .MenuItem .FAQRSS {
-	background: url('background/FAQPortlet.gif') no-repeat left -143px;
+	background: url('background/FAQPortlet.gif') no-repeat left -142px;
 }
 
 .UIAnswersPortlet .CategoryManager {
@@ -1575,11 +1568,11 @@
 }
 
 .UIAnswersPortlet .MoveCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -305px;
+	background: url('background/FAQPortlet.gif') no-repeat left -303px;
 }
 
 .UIAnswersPortlet .MenuItem .MoveCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -305px;
+	background: url('background/FAQPortlet.gif') no-repeat left -303px;
 }
 
 .UIAnswersPortlet .AddNewQuestion {
@@ -1603,7 +1596,7 @@
 }
 
 .UIAnswersPortlet .Watch {
-	background: url('background/FAQPortlet.gif') no-repeat left -393px;
+	background: url('background/FAQPortlet.gif') no-repeat left -391px;
 }
 
 .UIAnswersPortlet .AddWatchIcon {
@@ -1611,7 +1604,7 @@
 }
 
 .UIAnswersPortlet .MenuItem .Watch {
-	background: url('background/FAQPortlet.gif') no-repeat left -393px;
+	background: url('background/FAQPortlet.gif') no-repeat left -391px;
 }
 
 .UIAnswersPortlet .EditSubCategory {
@@ -2314,21 +2307,6 @@
 	white-space:nowrap;
 }
 
-.UIAnswersPortlet .ParentMaskLayer {
-	position:relative ;
-	z-index:0;
-}
-
-.UIAnswersPortlet .ParentMaskLayer .KSMaskLayer {
-	left:0px;	top:0px;
-	z-index:5;
-	position:absolute ;
-	visibility:visible;
-	background:url('background/Point1x1.png') no-repeat top center ;
-	user-select: none;
-}
-
-
 /* Fix KS-2244*/
 .UIAnswersPortlet .ResizeButton {
 	background:url('background/ResizeBtn.gif') no-repeat scroll left top;
@@ -2532,10 +2510,3 @@
 	text-align: center;
 	width: 90%;
 }
-
-
-
-
-
-
-

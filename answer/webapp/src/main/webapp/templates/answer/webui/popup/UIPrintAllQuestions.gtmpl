@@ -439,7 +439,7 @@
 	           String link = uicomponent.event(action) ;
 	        %>
       <a href="javascript:void(0);" onclick="window.print();" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link; gj('#UIAnswersPopupWindow').hide(); gj('#UIWorkingWorkspace').show();" class="ActionButton LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

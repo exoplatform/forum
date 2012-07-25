@@ -196,86 +196,44 @@ ul, li {
 	width:230px;
 }
 
-.UIPollPortlet .MenuPollId .MenuItem {
-	background: #EEFFF0;
-	height:24px;
-	line-height:24px;
-	opacity:0.9;
-	padding:5px 0 5px 10px;
-	cursor:pointer;
-}
-
-.UIPollPortlet .MenuPollId .MenuItem a{
-	color:#3E3E3E; 
-}
-
-.UIPollPortlet .MenuPollId .MenuItem a:hover{
-	color:#058EE6; 
-}
-
-/******************************	OverButton	***************************************/
-.UIPollPortlet .ForumToolbar .ContentAction {
-	padding: 2px 0px 0px 0px; 
-	margin: 0px;
-	float: right;
-	cursor:pointer;
-}
-
-.UIPollPortlet .ButtonHeadBar .CenterOverButton {
-	padding-right: 5px;
-}
-
-.UIPollPortlet .ButtonHeadBar {
-	float:right; 
-	text-align:left; 
-	margin: 0px;
-	white-space:nowrap;
-	padding: 2px 3px 0px 0px; 
-	cursor:pointer;
-}
-
-*+html .UIPollPortlet .ButtonHeadBar {
-	width:90px; 
-}
-
-.UIPollPortlet .Forum {
-	background:none;
-}
-
-.UIPollPortlet .ForumAction {
-	color: #058ee6;
-}
-
-/*ForumBarAction*/
-.UIPollPortlet .ForumBar {
-	background:none;
-	float:left;
-	line-height:23px;
-	margin:3px 3px 0px 3px; 
-}
-
-.UIPollPortlet .ForumBarAction {
-	float:left;
-	line-height:23px;
-	margin:3px 3px 0px 3px;
+.UIPollPortlet .ContentAction .DefaultStyle {
 	cursor: pointer;
 }
 
+/******************************************** UIRightClickPopupMenu ****************************************/
 .UIPollPortlet .UIPopupCategory {
+	left: 0px;
 	position: relative;
+	top: auto;
 	width: auto;
+	z-index: 4;
 	float: left;
+	margin-top: 0;
 	border: none;
 	background: none;
 }
 
 .UIPollPortlet .UIRightClickPopupMenu {
-	background: #FFFFFF;
-	border: 1px solid #787878;
-	box-shadow: 1px 1px 2px #787878;
-	left: -85px;
-	margin-top: 8px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #C6C6C6;
+	border-radius: 2px 2px 2px 2px;
+	box-shadow: 1px 3px 5px #BDBDCE;
 	position: absolute;
-	top: 15px;
+	white-space: nowrap;
 }
-/******************************	End OverButton	***************************************/
+
+.UIPollPortlet .UIRightClickPopupMenu .MenuItem {
+	padding: 0px 10px;
+	height: auto;
+}
+
+.UIPollPortlet .UIRightClickPopupMenu .MenuItem .ItemIcon {
+  padding: 0px;
+  padding-left: 26px;
+  line-height: 24px;
+	cursor: pointer;
+}
+
+.UIPollPortlet .UIRightClickPopupMenu .MenuItem:hover {
+	background: #EAEAEA;
+}

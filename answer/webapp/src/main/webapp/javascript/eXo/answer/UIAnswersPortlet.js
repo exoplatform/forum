@@ -32,7 +32,7 @@
   };
   
   UIAnswersPortlet.prototype.disableContextMenu = function (id) {
-    var oncontextmenus = findId(id + ' .oncontextmenu');
+    var oncontextmenus = findId(id + ' .disableContextMenu');
     for (var i = 0; i < oncontextmenus.length; i++) {
       oncontextmenus.eq(i).on('contextmenu', function() {
         return false;
@@ -165,24 +165,24 @@
     var printArea = answerContainer.find('div.QuestionSelect:first');
     printArea = printArea.clone();
     
-    var dummyPortlet = $(document.createElement('div')).addClass('UIAnswersPortlet UIPrintPreview');
-    var FAQContainer = $(document.createElement('div')).addClass('AnswersContainer');
-    var FAQContent   = $(document.createElement('div')).addClass('FAQContent');
-    var printActions = $(document.createElement('div')).addClass('UIAction')
-                                                       .css('display', 'block');
+    var dummyPortlet = $('<div></div>').addClass('UIAnswersPortlet UIPrintPreview');
+    var FAQContainer = $('<div></div>').addClass('AnswersContainer');
+    var FAQContent   = $('<div></div>').addClass('FAQContent');
+    var printActions = $('<div></div>').addClass('UIAction')
+                                       .css('display', 'block');
     var printActionInApp = answerContainer.find('div.PrintAction:first');
-    var cancelAction = $(document.createElement('a')).addClass('ActionButton LightBlueStyle')
-                                                     .attr('href', 'javascript:void(0);')
-                                                     .html(printActionInApp.attr('title'));
-    var printAction = $(document.createElement('a')).addClass('ActionButton LightBlueStyle')
-                                                    .html(printActionInApp.html());
+    var cancelAction = $('<a></a>').addClass('ActionButton LightBlueStyle')
+                                   .attr('href', 'javascript:void(0);')
+                                   .html(printActionInApp.attr('title'));
+    var printAction = $('<a></a>').addClass('ActionButton LightBlueStyle')
+                                  .html(printActionInApp.html());
   
     printActions.append(printAction);
     printActions.append(cancelAction);
   
     if (!$.browser.msie) {
-      var cssContent = $(document.createElement('div')).html('<style type="text/css">.DisablePrint{display:none;}</style>')
-                                                       .css('display', 'block');
+      var cssContent = $('<div></div>').html('<style type="text/css">.DisablePrint{display:none;}</style>')
+                                       .css('display', 'block');
       FAQContent.append(cssContent);
     }
     FAQContent.append(printArea);
@@ -190,33 +190,24 @@
     FAQContainer.append(printActions);
     dummyPortlet.append(FAQContainer);
     if ($.browser.msie) {
-      var displayElms = dummyPortlet.find('.DisablePrint');
-      var i = displayElms.length;
-      while (i--) {
-        displayElms.eq(i).css('display', 'none');
-      }
+      dummyPortlet.find('.DisablePrint').hide();
     }
     dummyPortlet = this.removeLink(dummyPortlet);
     dummyPortlet.css('width', '98.5%');
     this.removeLink(dummyPortlet).insertBefore(uiPortalApplication);
-    uiPortalApplication.css('display', 'none');
+    uiPortalApplication.hide();
     $(window).scrollTop(0).scrollLeft(0);
   
-    cancelAction.on('click', function () {
-      eXo.answer.UIAnswersPortlet.closePrint();
-    });
-    printAction.on('click', function () {
-      window.print();
-    });
+    cancelAction.on('click', eXo.answer.UIAnswersPortlet.closePrint);
+    printAction.on('click', window.print);
   
     this.viewImage = false;
   };
   
   UIAnswersPortlet.prototype.printAll = function (obj) {
-    var uiPortalApplication = $('#UIPortalApplication');
-    var container = $(document.createElement('div')).addClass('UIAnswersPortlet');
+    var container = $('<div></div>').addClass('UIAnswersPortlet');
     if (typeof (obj) == 'string') obj = findId(obj);
-    uiPortalApplication.css('display', 'none');
+    $('#UIWorkingWorkspace').hide();
     container.append(obj.clone());
     $('body').append(container);
   };
@@ -224,31 +215,19 @@
   // Remove UIAnswersPortlet.prototype.closePrintAll function.
   
   UIAnswersPortlet.prototype.removeLink = function (rootNode) {
-    var links = rootNode.find('a');
-    var len = links.length;
-    for (var i = 0; i < len; i++) {
-      links.eq(i).attr('href', 'javascript:void(0);');
-      if (links.eq(i).attr('onclick') != undefined) links.eq(i).attr('onclick', 'javascript:void(0);');
-    }
-    
-    var contextAnchors = rootNode.find('div[onmousedown]');
-    i = contextAnchors.length;
-    while (i--) {
-      contextAnchors.eq(i).attr('onmousedown', null);
-      contextAnchors.eq(i).attr('onkeydown', null);
-    }
-    
-    contextAnchors = rootNode.find('div[onmouseover]');
-    i = contextAnchors.length;
-    while (i--) {
-      contextAnchors.eq(i).attr('onmouseover', null);
-      contextAnchors.eq(i).attr('onmouseout', null);
-      contextAnchors.eq(i).attr('onfocus', null);
-      contextAnchors.eq(i).attr('onblur', null);
-    }
-  
+    rootNode.find('a').attr('href', 'javascript:void(0);');
+    rootNode.find('a[onclick]').removeAttr('onclick');
+
+    rootNode.find('div[onmousedown]')
+            .removeAttr('onmousedown')
+            .removeAttr('onkeydown');
+
+    rootNode.find('div[onmouseover]')
+            .removeAttr('onmouseover')
+            .removeAttr('onmouseout');
+
     contextAnchors = rootNode.find('div[onclick]');
-    i = contextAnchors.length;
+    var i = contextAnchors.length;
     while (i--) {
       if (contextAnchors.eq(i).hasClass('ActionButton')) continue;
       if (contextAnchors.eq(i).attr('onclick') != undefined) contextAnchors.eq(i).attr('onclick', 'javascript:void(0);');
@@ -289,10 +268,12 @@
   UIAnswersPortlet.prototype.initBreadcumbScroll = function () {
     if ($('#UIPortalApplication').css('display') == 'none') return;
     var uiNav = eXo.answer.UIAnswersPortlet;
-    uiNav.scrollMgr['UIBreadcumbs'].init();
-    uiNav.scrollMgr['UIBreadcumbs'].checkAvailableSpace();
-    if (uiNav.scrollMgr['UIBreadcumbs'].arrowsContainer) {
-    uiNav.scrollMgr['UIBreadcumbs'].renderElements();
+    if(uiNav.scrollMgr['UIBreadcumbs'] != undefined) {
+      uiNav.scrollMgr['UIBreadcumbs'].init();
+      uiNav.scrollMgr['UIBreadcumbs'].checkAvailableSpace();
+      if (uiNav.scrollMgr['UIBreadcumbs'].arrowsContainer) {
+        uiNav.scrollMgr['UIBreadcumbs'].renderElements();
+      }
     }
   };
 
@@ -324,9 +305,13 @@
   UIAnswersPortlet.prototype.initActionScroll = function () {
     if ($('#UIPortalApplication').css('display') == 'none') return;
     var uiNav = eXo.answer.UIAnswersPortlet;
-    uiNav.scrollMgr['UIQuestions'].init();
-    uiNav.scrollMgr['UIQuestions'].checkAvailableSpace();
-    uiNav.scrollMgr['UIQuestions'].renderElements();
+    if(uiNav.scrollMgr['UIQuestions'] != undefined) {
+      uiNav.scrollMgr['UIQuestions'].init();
+      uiNav.scrollMgr['UIQuestions'].checkAvailableSpace();
+      uiNav.scrollMgr['UIQuestions'].renderElements();
+    } else {
+      uiNav.loadActionScroll();
+    }
   };
   
   UIAnswersPortlet.prototype.onClickSlidebarButton = function () {
@@ -389,9 +374,9 @@
       this.disableContextMenu(id);
       var uiContextMenu = eXo.forum.UIContextMenu;
       if (!uiContextMenu.classNames) {
-        uiContextMenu.classNames = new Array("FAQCategory", "QuestionContextMenu");
-	  } else {
-        uiContextMenu.classNames.push("FAQCategory");
+        uiContextMenu.classNames = new Array("oncontextmenu", "QuestionContextMenu");
+    } else {
+        uiContextMenu.classNames.push("oncontextmenu");
         uiContextMenu.classNames.push("QuestionContextMenu");
       }
       uiContextMenu.setContainer(cont.eq(0));
