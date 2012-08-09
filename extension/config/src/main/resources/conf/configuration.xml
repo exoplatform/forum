@@ -73,6 +73,12 @@
                   <string>ks</string>
                 </value>
                 <value>
+                  <string>forum-extension</string>
+                </value>
+                <value>
+                  <string>forum-gadgets</string>
+                </value>
+                <value>
                   <string>fck</string>
                 </value>
               </collection>
