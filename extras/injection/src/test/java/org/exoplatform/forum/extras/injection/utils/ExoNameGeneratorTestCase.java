@@ -28,9 +28,16 @@ public class ExoNameGeneratorTestCase extends TestCase {
 
   public void testNameGenerator() throws Exception {
     ExoNameGenerator exoNameGenerator = new ExoNameGenerator();
-    assertTrue(exoNameGenerator.compose(4).length() > 4);
-    assertTrue(exoNameGenerator.compose(3).length() > 3);
-    assertTrue(exoNameGenerator.compose(2).length() > 2);
-    assertTrue(exoNameGenerator.compose(1).length() > 1);
+    String name = "";
+    for(int i = 0; i < 100; i++){
+      name = exoNameGenerator.compose(4);
+      assertTrue("expect the length of name must larger or equal 4 but \"" + name + "\".length() is " + name.length(),name.length() >= 4);
+      name = exoNameGenerator.compose(3);
+      assertTrue("expect the length of name must larger or equal 3 but \"" + name + "\".length() is " + name.length(),name.length() >= 3);
+      name = exoNameGenerator.compose(2);
+      assertTrue("expect the length of name must larger or equal 2 but \"" + name + "\".length() is " + name.length(),name.length() >= 2);
+      name = exoNameGenerator.compose(1);
+      assertTrue("expect the length of name must larger or equal 1 but \"" + name + "\".length() is " + name.length(),name.length() >= 1);
+    }
   }
 }
