@@ -60,7 +60,7 @@ public class CategoryInjector extends AbstractForumInjector {
         String owner = userBase + i;
         String categoryName = categoryName();
 
-        Category cat = new Category(categoryName);
+        Category cat = new Category();
         cat.setOwner(owner);
         cat.setCategoryName(categoryName);
         cat.setCategoryOrder(i);
