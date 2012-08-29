@@ -5,6 +5,7 @@
     event : null,
     wait : false,
     id : 'UIForumPortlet',
+    Browser : eXo.core.Browser,
     
     init : function(id) {
       UIForumPortlet.id = id;
@@ -12,8 +13,8 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', eXo.forum.ForumUtils.returnFalse);
       }
-      eXo.core.Browser.addOnResizeCallback(id, UIForumPortlet.resizeCallback)
-      eXo.core.Browser.init();
+      UIForumPortlet.Browser.addOnResizeCallback(id, UIForumPortlet.resizeCallback)
+      UIForumPortlet.Browser.init();
     },
     
     resizeCallback : function() {

@@ -6448,7 +6448,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           } else {
             Node categoryHome = getCategoryHome(sProvider);
             categoryHome.getSession().exportSystemView(nodePath, bos, false, false);
-            categoryHome.getSession().logout();
             return null;
           }
         } else {
@@ -6644,7 +6643,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void updateTopicAccess(String userId, String topicId){
     SessionProvider sysSession = CommonUtils.createSystemProvider();
     try {
-      Node profile = getUserProfileHome(sysSession).getNode(userId);
+      Node profileHome = getUserProfileHome(sysSession);
+      if (!profileHome.hasNode(userId)) {
+        return;
+      }
+      Node profile = profileHome.getNode(userId);
       List<String> values = new ArrayList<String>();
       if (profile.hasProperty(EXO_READ_TOPIC)) {
         values = Utils.valuesToList(profile.getProperty(EXO_READ_TOPIC).getValues());
@@ -6667,7 +6670,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profile.setProperty(EXO_READ_TOPIC, values.toArray(new String[values.size()]));
       profile.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to update user %s acess for topic %s", userId, topicId), e);
+      logDebug(String.format("Failed to update user %s acess for topic %s", userId, topicId), e);
     }
   }
 

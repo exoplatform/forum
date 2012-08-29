@@ -18,7 +18,7 @@ package org.exoplatform.ks.common.webui;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 /**
@@ -35,8 +35,8 @@ public class UIPopupAction extends AbstractPopupAction {
   }
 
   protected void afterProcessRender(WebuiRequestContext context) {
-    String parentId = ((UIComponent) this.getParent()).getId();
+    String portletId = this.getAncestorOfType(UIPortletApplication.class).getId();
       context.getJavascriptManager()
-      .addOnLoadJavascript("function(){eXo.forum.ForumUtils.setMaskLayer('" + parentId + "');}");
+      .addJavascript("eXo.forum.ForumUtils.setMaskLayer('" + portletId + "');");
   }
  }

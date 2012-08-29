@@ -14,8 +14,6 @@
 	import org.exoplatform.forum.service.UserProfile;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	
-	jsmanager.addOnResizeJavascript('function(){eXo.forum.ForumUtils.setMaskLayer("'+uicomponent.id+'");}');
 	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
 %>
 
