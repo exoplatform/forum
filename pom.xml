@@ -28,11 +28,11 @@
   </ciManagement>
   <properties>
       
-    <org.exoplatform.kernel.version>2.3.9-GA-SNAPSHOT</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.4.9-GA-SNAPSHOT</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.2.9-GA-SNAPSHOT</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.14.9-GA-SNAPSHOT</org.exoplatform.jcr.version>
-    <org.exoplatform.portal.version>3.3.0-GA</org.exoplatform.portal.version>
+    <org.exoplatform.kernel.version>2.3.6-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.4.6-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.2.6-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.14.6-GA</org.exoplatform.jcr.version>
+    <org.exoplatform.portal.version>3.4.0.M01</org.exoplatform.portal.version>
     <org.exoplatform.webos.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.webos.version>
     <org.exoplatform.commons.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.commons.version>
     <org.exoplatform.gwtframework.version>1.1.2</org.exoplatform.gwtframework.version>
@@ -119,7 +119,7 @@
     <html-parser.version>1.6</html-parser.version>
     <com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
     <org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
-    <commons-pool.version>1.2</commons-pool.version>
+    <commons-pool.version>1.5.5</commons-pool.version>
     <asm.version>1.5.3</asm.version>
     <antlr.version>2.7.6rc1</antlr.version>
     <jcr.version>1.0</jcr.version>
@@ -129,8 +129,8 @@
     <commons-lang.version>2.6</commons-lang.version>
     <org.gatein.pc.version>2.3.2-GA</org.gatein.pc.version>
     <org.gatein.shindig.version>2.0.2-CP01</org.gatein.shindig.version>
-    <org.gatein.wsrp.version>2.1.0-GA</org.gatein.wsrp.version>
-    <org.gatein.wci.version>2.2.0-Beta01</org.gatein.wci.version>
+    <org.gatein.wsrp.version>2.2.0-Beta04</org.gatein.wsrp.version>
+    <org.gatein.wci.version>2.2.0-Beta02</org.gatein.wci.version>
     <org.reflext.version>1.1.0</org.reflext.version>
     <xerces.version>2.9.1</xerces.version>
     <org.hsqldb.version>2.0.0</org.hsqldb.version>
