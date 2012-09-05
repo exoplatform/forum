@@ -310,6 +310,7 @@
       <version>${org.exoplatform.portal.version}</version>
       <type>war</type>
     </dependency>
+    
 
     <dependency>
       <groupId>org.exoplatform.tool</groupId>
@@ -459,6 +460,19 @@
       <version>${selenium-java-client-driver.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.gatein.web</groupId>
+      <artifactId>redirect</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+      <type>jar</type>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.gatein.portal.portlet</groupId>
+      <artifactId>redirect</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+      <type>war</type>
+    </dependency>
 
     <dependency>
       <groupId>org.gatein.shindig</groupId>
