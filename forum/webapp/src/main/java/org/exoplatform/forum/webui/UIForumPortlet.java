@@ -812,15 +812,16 @@ public class UIForumPortlet extends UIPortletApplication {
           }
         }
         if (forum == null) {
+          path = path.substring(path.lastIndexOf(ForumUtils.SLASH) + 1);
           forum = (Forum) this.forumService.getObjectNameById(path, Utils.FORUM);
           if (forum == null && path.equals(getForumIdOfSpace())) {
             forum = forumService.getForum(this.categorySpId, path);
-          }
-          if(forum == null) {
-            forumSpDeleted = true;
-            removeAllChildPorletView();
-            log.info("The forum in space " + spaceDisplayName + " no longer exists.");
-            return;
+            if(forum == null) {
+              forumSpDeleted = true;
+              removeAllChildPorletView();
+              log.info("The forum in space " + spaceDisplayName + " no longer exists.");
+              return;
+            }
           }
         }
         if (cateId == null) {
