@@ -1,10 +1,11 @@
 package org.exoplatform.forum.service.cache.model;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.RepositoryService;
+import java.io.Serializable;
 
 import javax.jcr.RepositoryException;
-import java.io.Serializable;
+
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.jcr.RepositoryService;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>

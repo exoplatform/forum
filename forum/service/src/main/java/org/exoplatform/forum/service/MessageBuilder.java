@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
 /**

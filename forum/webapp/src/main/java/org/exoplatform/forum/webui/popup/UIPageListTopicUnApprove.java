@@ -20,24 +20,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.forum.common.TransformHTML;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.ks.common.TransformHTML;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**

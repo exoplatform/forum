@@ -1,10 +1,10 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.cache.model.CachedData;
-
 import java.util.Arrays;
 import java.util.Date;
+
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.cache.model.CachedData;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>

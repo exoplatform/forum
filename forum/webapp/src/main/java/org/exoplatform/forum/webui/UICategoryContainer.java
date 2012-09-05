@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 

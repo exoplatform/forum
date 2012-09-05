@@ -19,6 +19,8 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 
 import org.apache.commons.io.FileUtils;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.PropertyReader;
 import org.exoplatform.forum.service.CacheUserProfile;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -37,8 +39,6 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 

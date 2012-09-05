@@ -7,7 +7,7 @@ h1. Init data {anchor:id=KSref.InitDataConfiguration.InitData}
 
 The Init data plug-in is used to define the default data in the _.xml_ file. It includes nodes (node of jcr). 
 
-When the _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ component is initialized, the _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ component will be get and the function _addConfig_ is called. Then, the _/ks-extension/jcr/repository-configuration.xml_ file is loaded and the component _org.exoplatform.ks.common.jcr.KSDataLocation_ will be initialized. Next, the _setLocation_ function is called, setting up the workspace and repository for KS. After that, the _addPlugin_ function will be run, generating the DataLocation (some parent nodes) for eXo Knowledge.
+When the _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ component is initialized, the _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ component will be get and the function _addConfig_ is called. Then, the _/ks-extension/jcr/repository-configuration.xml_ file is loaded and the component _org.exoplatform.forum.common.jcr.KSDataLocation_ will be initialized. Next, the _setLocation_ function is called, setting up the workspace and repository for KS. After that, the _addPlugin_ function will be run, generating the DataLocation (some parent nodes) for eXo Knowledge.
 
 h1. Configuration {anchor:id=KSref.InitDataConfiguration.Configuration} 
 
@@ -47,15 +47,15 @@ h2. Initialize workspace name and repository name in _storage-configuration.xml_
 
 In details:
 
-Once the _{{{war:/ks-extension/jcr/repository-configuration.xml}}}_ file has been initialized, the server will load the _storage\-configuration.xml_ file, and the _setLocation_ function in the _org.exoplatform.ks.common.conf.DataLocationPlugin_ component will run.
+Once the _{{{war:/ks-extension/jcr/repository-configuration.xml}}}_ file has been initialized, the server will load the _storage\-configuration.xml_ file, and the _setLocation_ function in the _org.exoplatform.forum.common.conf.DataLocationPlugin_ component will run.
 
 {code:xml}
 <external-component-plugins>
-  <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>
+  <target-component>org.exoplatform.forum.common.jcr.KSDataLocation</target-component>
   <component-plugin>
     <name>ks.data.location</name>
     <set-method>setLocation</set-method>
-    <type>org.exoplatform.ks.common.conf.DataLocationPlugin</type>
+    <type>org.exoplatform.forum.common.conf.DataLocationPlugin</type>
     <init-params>
       <value-param>
         <name>repository</name>

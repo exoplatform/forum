@@ -17,7 +17,7 @@
 package org.exoplatform.poll.service;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.common.conf.ManagedPlugin;
+import org.exoplatform.forum.common.conf.ManagedPlugin;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;

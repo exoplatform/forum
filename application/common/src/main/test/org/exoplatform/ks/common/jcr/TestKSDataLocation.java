@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.common.jcr;
+package org.exoplatform.forum.common.jcr;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ import javax.jcr.Node;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
+import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 

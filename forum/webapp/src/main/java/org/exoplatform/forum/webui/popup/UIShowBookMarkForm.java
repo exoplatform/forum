@@ -20,20 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS

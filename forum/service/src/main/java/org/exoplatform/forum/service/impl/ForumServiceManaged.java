@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.common.conf.ManagedPlugin;
+import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.user.ContactProvider;
 import org.exoplatform.forum.service.DataStorage;
-import org.exoplatform.ks.common.conf.ManagedPlugin;
-import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.management.ManagementAware;
 import org.exoplatform.management.ManagementContext;
 import org.exoplatform.management.annotations.Managed;

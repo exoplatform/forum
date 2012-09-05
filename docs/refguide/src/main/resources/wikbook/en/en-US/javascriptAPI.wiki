@@ -5,6 +5,6 @@ h2. Forum Overrideable Components
  - org.exoplatform.forum.service.ForumStatisticsService;
  - org.exoplatform.services.scheduler.JobSchedulerService;
 h2. Answer Overrideable Components
- - org.exoplatform.ks.common.jcr.KSDataLocation;
+ - org.exoplatform.forum.common.jcr.KSDataLocation;
  - org.exoplatform.container.configuration.ConfigurationManager;
 

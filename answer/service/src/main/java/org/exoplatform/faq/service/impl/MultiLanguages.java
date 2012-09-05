@@ -31,7 +31,7 @@ import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQNodeTypes;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.ks.common.jcr.PropertyReader;
+import org.exoplatform.forum.common.jcr.PropertyReader;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

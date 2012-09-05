@@ -22,8 +22,8 @@ import java.util.List;
 import javax.portlet.PortletMode;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.security.ConversationState;

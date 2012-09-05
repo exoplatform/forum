@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.jcr.ItemExistsException;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.BaseDataForm;
 import org.exoplatform.forum.webui.UIForumContainer;
@@ -30,7 +31,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
-import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

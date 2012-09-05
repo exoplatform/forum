@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 
 /**
  * Created by The eXo Platform SARL

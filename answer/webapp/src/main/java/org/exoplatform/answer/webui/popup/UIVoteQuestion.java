@@ -29,7 +29,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;

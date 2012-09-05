@@ -1,12 +1,12 @@
 package org.exoplatform.forum.service.cache.model;
 
+import java.io.Serializable;
+
 import org.exoplatform.forum.service.cache.loader.CacheLoader;
 import org.exoplatform.forum.service.cache.loader.ServiceContext;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.future.FutureExoCache;
-
-import java.io.Serializable;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>

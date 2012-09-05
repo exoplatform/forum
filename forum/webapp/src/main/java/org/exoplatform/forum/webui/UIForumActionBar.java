@@ -18,6 +18,8 @@ package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIAutoPruneForm;
@@ -36,8 +38,6 @@ import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
 import org.exoplatform.forum.webui.popup.UISortSettingForm;
 import org.exoplatform.forum.webui.popup.UITopicTypeManagerForm;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

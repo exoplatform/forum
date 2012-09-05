@@ -23,6 +23,7 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumLinkPortlet;
 import org.exoplatform.forum.service.Category;
@@ -30,7 +31,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;

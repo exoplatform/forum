@@ -17,14 +17,14 @@
     <component-plugin>
       <name>ForumDataInjector</name>
       <set-method>addInjector</set-method>
-      <type>org.exoplatform.ks.bench.ForumDataInjector</type>
+      <type>org.exoplatform.forum.bench.ForumDataInjector</type>
       <description>inject data for Forum</description>
     </component-plugin>
     
     <component-plugin>
       <name>AnswerDataInjector</name>
       <set-method>addInjector</set-method>
-      <type>org.exoplatform.ks.bench.AnswerDataInjector</type>
+      <type>org.exoplatform.forum.bench.AnswerDataInjector</type>
       <description>inject data for Answer</description>
     </component-plugin>
 

@@ -17,8 +17,8 @@
 package org.exoplatform.forum.service;
 
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.forum.common.conf.ManagedPlugin;
 import org.exoplatform.forum.service.conf.ForumInitialData;
-import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;

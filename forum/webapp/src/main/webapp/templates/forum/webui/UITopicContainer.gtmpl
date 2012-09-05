@@ -8,7 +8,7 @@
   import org.exoplatform.forum.webui.UICategory ;
   import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
   import org.exoplatform.forum.webui.UITopicContainer ; 
-  import org.exoplatform.ks.common.UserHelper; 
+  import org.exoplatform.forum.common.UserHelper; 
   import org.exoplatform.web.application.JavascriptManager;
   
   def rcontext = _ctx.getRequestContext() ;

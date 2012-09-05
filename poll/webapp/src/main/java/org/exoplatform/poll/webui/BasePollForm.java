@@ -17,7 +17,7 @@
 package org.exoplatform.poll.webui;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.core.UIComponent;
 

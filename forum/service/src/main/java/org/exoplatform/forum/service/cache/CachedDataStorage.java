@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
@@ -63,8 +65,6 @@ import org.exoplatform.forum.service.cache.model.selector.CategoryIdSelector;
 import org.exoplatform.forum.service.cache.model.selector.ForumPathSelector;
 import org.exoplatform.forum.service.cache.model.selector.ScopeCacheSelector;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
-import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.cache.CacheService;

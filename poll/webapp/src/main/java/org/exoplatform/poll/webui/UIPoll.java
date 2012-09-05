@@ -24,9 +24,9 @@ import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollNodeTypes;

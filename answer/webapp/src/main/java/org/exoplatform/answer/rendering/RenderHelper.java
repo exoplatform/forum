@@ -20,9 +20,9 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
-import org.exoplatform.ks.rendering.MarkupRenderingService;
-import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
+import org.exoplatform.forum.bbcode.core.BBCodeRenderer;
+import org.exoplatform.forum.rendering.MarkupRenderingService;
+import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

@@ -27,7 +27,7 @@ import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.ks.common.image.ResizeImageService;
+import org.exoplatform.forum.common.image.ResizeImageService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;

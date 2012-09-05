@@ -1,11 +1,11 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import java.util.Arrays;
+import java.util.Date;
+
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.cache.model.CachedData;
-
-import java.util.Arrays;
-import java.util.Date;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>

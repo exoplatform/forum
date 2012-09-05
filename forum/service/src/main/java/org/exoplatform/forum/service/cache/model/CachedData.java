@@ -1,7 +1,5 @@
 package org.exoplatform.forum.service.cache.model;
 
-import org.exoplatform.forum.service.Post;
-
 import java.io.Serializable;
 
 /**

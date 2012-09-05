@@ -24,8 +24,8 @@ import java.util.Map;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.ObjectPageList;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.webui.popup.UIPollForm;

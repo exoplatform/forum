@@ -19,9 +19,9 @@ package org.exoplatform.forum.info;
 import javax.portlet.PortletSession;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.popup.UIQuickReplyForm;
-import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;

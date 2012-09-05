@@ -47,15 +47,17 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
-import org.exoplatform.ks.bbcode.core.BBCodeServiceImpl;
-import org.exoplatform.ks.common.CommonUtils;
-import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.forum.bbcode.core.BBCodeServiceImpl;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.NotifyInfo;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
+
+import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
 /**
  * Created by The eXo Platform SARL

@@ -22,13 +22,13 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.UIGroupSelector;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.webui.popup.UIGroupSelector;
-import org.exoplatform.ks.common.webui.BaseUIForm;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.ks.common.webui.UIUserSelect;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
@@ -198,6 +198,7 @@ public class BaseForumForm extends BaseUIForm {
     uiUserSelector.setShowSearchUser(true);
     uiUserSelector.setShowSearchGroup(false);
     uiUserSelector.setPermisionType(id);
+    uiUserSelector.setSpaceGroupId(getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
     uiPopupWindow.setUIComponent(uiUserSelector);
     uiPopupWindow.setShow(true);
     uiPopupWindow.setWindowSize(740, 400);

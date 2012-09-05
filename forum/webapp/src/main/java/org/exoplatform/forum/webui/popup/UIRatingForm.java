@@ -19,27 +19,21 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.UIBreadcumbs;
-import org.exoplatform.forum.webui.UICategoryContainer;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL

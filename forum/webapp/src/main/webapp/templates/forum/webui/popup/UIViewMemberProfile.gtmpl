@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
-	import org.exoplatform.ks.common.user.CommonContact;
+	import org.exoplatform.forum.common.user.CommonContact;
 	import org.exoplatform.forum.service.Utils;
 %>
 <div class="UIViewMemberProfile">

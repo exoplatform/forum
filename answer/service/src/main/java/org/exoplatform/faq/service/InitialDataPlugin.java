@@ -29,7 +29,7 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ks.common.conf.ManagedPlugin;
+import org.exoplatform.forum.common.conf.ManagedPlugin;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;

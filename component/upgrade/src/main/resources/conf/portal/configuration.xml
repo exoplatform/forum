@@ -8,7 +8,7 @@
     <component-plugin>
       <name>UpgradeForumPlugin</name>
       <set-method>addUpgradePlugin</set-method>
-      <type>org.exoplatform.ks.upgrade.UpgradeForumPlugin</type>
+      <type>org.exoplatform.forum.upgrade.UpgradeForumPlugin</type>
       <description>eXo Forum Upgrade Plugin</description>
       <init-params>
         <value-param>
@@ -21,7 +21,7 @@
     <component-plugin>
       <name>UpgradeAnswerPlugin</name>
       <set-method>addUpgradePlugin</set-method>
-      <type>org.exoplatform.ks.upgrade.UpgradeAnswerPlugin</type>
+      <type>org.exoplatform.forum.upgrade.UpgradeAnswerPlugin</type>
       <description>eXo Answer Upgrade Plugin</description>
       <init-params>
         <value-param>

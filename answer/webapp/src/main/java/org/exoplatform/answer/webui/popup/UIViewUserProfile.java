@@ -18,9 +18,9 @@ package org.exoplatform.answer.webui.popup;
 
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.common.user.CommonContact;
-import org.exoplatform.ks.common.user.ContactProvider;
-import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.user.CommonContact;
+import org.exoplatform.forum.common.user.ContactProvider;
+import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

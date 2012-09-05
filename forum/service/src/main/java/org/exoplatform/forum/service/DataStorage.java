@@ -26,8 +26,8 @@ import java.util.Map;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;

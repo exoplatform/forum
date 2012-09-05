@@ -29,7 +29,7 @@ import java.util.Map;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.ks.bbcode.api.BBCode;
+import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.services.organization.User;
 
 /**

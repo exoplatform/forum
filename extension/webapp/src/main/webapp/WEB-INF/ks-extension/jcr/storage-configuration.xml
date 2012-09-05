@@ -5,11 +5,11 @@
   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
   
   <external-component-plugins>
-    <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>
+    <target-component>org.exoplatform.forum.common.jcr.KSDataLocation</target-component>
     <component-plugin>
       <name>ks.data.location</name>
       <set-method>setLocation</set-method>
-      <type>org.exoplatform.ks.common.conf.DataLocationPlugin</type>
+      <type>org.exoplatform.forum.common.conf.DataLocationPlugin</type>
       <init-params>
         <value-param>
           <name>workspace</name>

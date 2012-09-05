@@ -17,7 +17,7 @@ For example, to add a Forum to a space of the Social application and keep new ac
   <component-plugin>
     <name>ForumEventListener</name>
     <set-method>addListenerPlugin</set-method>
-    <type>org.exoplatform.ks.ext.impl.ForumSpaceActivityPublisher</type>
+    <type>org.exoplatform.forum.ext.impl.ForumSpaceActivityPublisher</type>
   </component-plugin>
 </external-component-plugins>
 {code}
@@ -87,7 +87,7 @@ public class ABCActivityPublisher extends ForumEventListener {
     <set-method>addListenerPlugin</set-method>
     <type>{package}.{class name}</type>
   <!-- example
-  <type>org.exoplatform.ks.ext.impl.ABCActivityPublisher</type>
+  <type>org.exoplatform.forum.ext.impl.ABCActivityPublisher</type>
   -->
   </component-plugin>
 </external-component-plugins>
@@ -110,7 +110,7 @@ For example, to add Answers to a space of the Social application and keep new ac
   <component-plugin>
     <name>AnswerEventListener</name>
     <set-method>addListenerPlugin</set-method>
-    <type>org.exoplatform.ks.ext.impl.AnswersSpaceActivityPublisher</type>
+    <type>org.exoplatform.forum.ext.impl.AnswersSpaceActivityPublisher</type>
   </component-plugin>
 </external-component-plugins>
 {code}
@@ -171,7 +171,7 @@ public class ABCActivityPublisher extends AnswerEventListener {
     <set-method>addListenerPlugin</set-method>
     <type>{package}.{class name}</type>
   <!-- example
-  <type>org.exoplatform.ks.ext.impl.ABCActivityPublisher</type>
+  <type>org.exoplatform.forum.ext.impl.ABCActivityPublisher</type>
   -->
   </component-plugin>
 </external-component-plugins>
@@ -187,19 +187,19 @@ For example, to register BBCodeRenderer, do as follows:
 
 {code:xml}
 <external-component-plugins>
-  <target-component>org.exoplatform.ks.rendering.MarkupRenderingService</target-component>
+  <target-component>org.exoplatform.forum.rendering.MarkupRenderingService</target-component>
   <component-plugin>
     <name>BBCodeRenderer</name>
     <set-method>registerRenderer</set-method>
-    <type>org.exoplatform.ks.rendering.spi.RendererPlugin</type>
+    <type>org.exoplatform.forum.rendering.spi.RendererPlugin</type>
     <description>BBCode renderer</description>
     <init-params>
       <object-param>
         <name>renderer</name>
         <description>Extended BBCodeRenderer</description>
-        <object type="org.exoplatform.ks.bbcode.core.BBCodeRenderer">
+        <object type="org.exoplatform.forum.bbcode.core.BBCodeRenderer">
           <field name="bbCodeProvider">
-            <object type="org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider"/>
+            <object type="org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider"/>
           </field>
         </object>
       </object-param>

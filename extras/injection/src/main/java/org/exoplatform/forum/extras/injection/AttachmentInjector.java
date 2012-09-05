@@ -18,7 +18,6 @@ package org.exoplatform.forum.extras.injection;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;

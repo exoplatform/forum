@@ -23,7 +23,7 @@ import java.util.List;
 import javax.jcr.Node;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.forum.common.NotifyInfo;
 
 /**
  * Created by The eXo Platform SAS

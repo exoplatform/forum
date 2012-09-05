@@ -5,8 +5,8 @@
   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
   <component>
-    <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
-    <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
+    <key>org.exoplatform.forum.common.jcr.KSDataLocation</key>
+    <type>org.exoplatform.forum.common.jcr.KSDataLocation</type>
     <description>Holds JCR storage location for KS data</description>
     <init-params>
       <value-param>
@@ -18,13 +18,13 @@
   </component>
 
   <component>
-    <key>org.exoplatform.ks.common.image.ResizeImageService</key>
-    <type>org.exoplatform.ks.common.image.impl.ResizeImageServiceImpl</type>
+    <key>org.exoplatform.forum.common.image.ResizeImageService</key>
+    <type>org.exoplatform.forum.common.image.impl.ResizeImageServiceImpl</type>
   </component>
 
   <component>
-    <key>org.exoplatform.ks.rendering.MarkupRenderingService</key>
-    <type>org.exoplatform.ks.rendering.MarkupRenderingService</type>
+    <key>org.exoplatform.forum.rendering.MarkupRenderingService</key>
+    <type>org.exoplatform.forum.rendering.MarkupRenderingService</type>
   </component>
 
 

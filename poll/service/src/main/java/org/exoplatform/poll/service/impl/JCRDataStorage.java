@@ -33,9 +33,9 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.PropertyReader;
-import org.exoplatform.ks.common.jcr.SessionManager;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.PropertyReader;
+import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.InitialDefaultDataPlugin;
 import org.exoplatform.poll.service.Poll;

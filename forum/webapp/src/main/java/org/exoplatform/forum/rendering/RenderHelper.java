@@ -17,10 +17,9 @@
 package org.exoplatform.forum.rendering;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
+import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.ks.rendering.MarkupRenderingService;
-import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
-import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

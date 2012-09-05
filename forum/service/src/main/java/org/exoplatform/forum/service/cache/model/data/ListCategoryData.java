@@ -1,9 +1,9 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import java.util.List;
+
 import org.exoplatform.forum.service.cache.model.AbstractListData;
 import org.exoplatform.forum.service.cache.model.key.CategoryKey;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>

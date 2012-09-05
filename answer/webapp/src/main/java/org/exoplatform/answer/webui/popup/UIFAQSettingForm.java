@@ -25,7 +25,7 @@ import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;

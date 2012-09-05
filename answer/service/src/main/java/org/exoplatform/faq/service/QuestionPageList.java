@@ -28,9 +28,9 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.faq.service.impl.JCRDataStorage;
-import org.exoplatform.ks.common.CommonUtils;
-import org.exoplatform.ks.common.jcr.PropertyReader;
-import org.exoplatform.ks.common.jcr.SessionManager;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.jcr.PropertyReader;
+import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

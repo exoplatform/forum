@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
@@ -35,8 +37,6 @@ import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
-import org.exoplatform.ks.common.CommonUtils;
-import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

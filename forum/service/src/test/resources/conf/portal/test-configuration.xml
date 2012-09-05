@@ -34,8 +34,8 @@
   </component>
 
 	<component>
-    <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
-    <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
+    <key>org.exoplatform.forum.common.jcr.KSDataLocation</key>
+    <type>org.exoplatform.forum.common.jcr.KSDataLocation</type>
     <description>Holds JCR storage location for KS data</description>
     <init-params>
       <value-param>
@@ -140,11 +140,11 @@
   
 
   <external-component-plugins>
-    <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>
+    <target-component>org.exoplatform.forum.common.jcr.KSDataLocation</target-component>
     <component-plugin>
       <name>ks.data.location</name>
       <set-method>setLocation</set-method>
-      <type>org.exoplatform.ks.common.conf.DataLocationPlugin</type>
+      <type>org.exoplatform.forum.common.conf.DataLocationPlugin</type>
       <init-params>
         <value-param>
           <name>workspace</name>

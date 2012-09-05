@@ -17,10 +17,10 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;

@@ -1,7 +1,7 @@
 <%	
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.answer.webui.FAQUtils;
-	import org.exoplatform.ks.common.user.CommonContact;
+	import org.exoplatform.forum.common.user.CommonContact;
 %>
 <div class="UIViewUserProfile $uicomponent.id">
 <% uiform.begin() %>

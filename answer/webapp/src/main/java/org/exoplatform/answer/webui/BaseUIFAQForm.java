@@ -18,7 +18,7 @@ package org.exoplatform.answer.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.core.UIComponent;
 
 /**

@@ -31,6 +31,11 @@ import javax.xml.namespace.QName;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -46,11 +51,6 @@ import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
-import org.exoplatform.ks.common.CommonUtils;
-import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.OrganizationService;
@@ -146,6 +146,8 @@ public class UIForumPortlet extends UIPortletApplication {
   private String       categorySpId        = "";
 
   private String       forumSpId           = null;
+
+  private String       spaceGroupId        = null;
 
   protected String       spaceDisplayName  = null;
 
@@ -251,18 +253,20 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public String getForumIdOfSpace() {
+    
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences pref = pcontext.getRequest().getPreferences();
     if (pref.getValue("SPACE_URL", null) != null && ForumUtils.isEmpty(forumSpId)) {
       String url = pref.getValue("SPACE_URL", null);
       SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
       Space space = sService.getSpaceByUrl(url);
+      spaceGroupId = space.getGroupId();
       forumSpId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
       spaceDisplayName = space.getDisplayName();
       try {
         OrganizationService service = (OrganizationService) PortalContainer.getInstance()
                                                                            .getComponentInstanceOfType(OrganizationService.class);
-        String parentGrId = service.getGroupHandler().findGroupById(space.getGroupId()).getParentId();
+        String parentGrId = service.getGroupHandler().findGroupById(spaceGroupId).getParentId();
         categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
       } catch (Exception e) {
         if (log.isDebugEnabled()){
@@ -451,6 +455,9 @@ public class UIForumPortlet extends UIPortletApplication {
     return dayForumNewPost;
   }
 
+  public String getSpaceGroupId() {
+    return spaceGroupId;
+  }
   public void cancelAction() throws Exception {
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
     UIPopupAction popupAction = getChild(UIPopupAction.class);
@@ -531,7 +538,8 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public String getUserToken() throws Exception {
     try {
-      ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
+      ContinuationService continuation = (ContinuationService) PortalContainer.getInstance()
+                                                                         .getComponentInstanceOfType(ContinuationService.class);
       return continuation.getUserToken(userProfile.getUserId());
     } catch (Exception e) {
       log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);

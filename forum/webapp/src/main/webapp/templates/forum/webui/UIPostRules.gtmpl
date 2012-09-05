@@ -1,6 +1,6 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.ks.common.UserHelper ;
+	import org.exoplatform.forum.common.UserHelper ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isBan = userProfile.getIsBanned() ;
 	boolean isNotLogin= UserHelper.isAnonim();

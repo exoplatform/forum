@@ -10,19 +10,19 @@ h2. Default BBCode data {anchor:id=KSref.BBCodeConfiguration.DefaultBBCodeData}
 
 The default BBCode data is configured in the _bbcodes-configuration.xml_ file.
 
-In particular, at runtime of BBCode Service, the BBCode plug-in component is called. Then, the _bbcodes-configuration.xml_ file will be executed, and the component-plugin named _registerBBCodePlugin_ will be referred to _org.exoplatform.ks.bbcode.spi.BBCodePlugin_ to execute some objects that will generate default data. 
+In particular, at runtime of BBCode Service, the BBCode plug-in component is called. Then, the _bbcodes-configuration.xml_ file will be executed, and the component-plugin named _registerBBCodePlugin_ will be referred to _org.exoplatform.forum.bbcode.spi.BBCodePlugin_ to execute some objects that will generate default data. 
 
 {code:xml}
 <component-plugin>
   <name>forum.default.bbcodes</name>
   <set-method>registerBBCodePlugin</set-method>
-  <type>org.exoplatform.ks.bbcode.spi.BBCodePlugin</type>
+  <type>org.exoplatform.forum.bbcode.spi.BBCodePlugin</type>
   <description>default supported BBCodes</description>
   <init-params>
     <object-param>
       <name>I</name>
       <description>set text in italic</description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>I</string>
         </field>
@@ -47,7 +47,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>B</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>B</string>
         </field>
@@ -72,7 +72,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>U</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>U</string>
         </field>
@@ -97,7 +97,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>COLOR</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>COLOR</string>
         </field>
@@ -122,7 +122,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>SIZE</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>SIZE</string>
         </field>
@@ -147,7 +147,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>FONT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>FONT</string>
         </field>
@@ -172,7 +172,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>HIGHLIGHT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>HIGHLIGHT</string>
         </field>
@@ -197,7 +197,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>LEFT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>LEFT</string>
         </field>
@@ -222,7 +222,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>RIGHT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>RIGHT</string>
         </field>
@@ -247,7 +247,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>CENTER</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>CENTER</string>
         </field>
@@ -272,7 +272,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>JUSTIFY</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>JUSTIFY</string>
         </field>
@@ -297,7 +297,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>EMAIL</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>EMAIL</string>
         </field>
@@ -322,7 +322,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>EMAIL-OPT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>EMAIL</string>
         </field>
@@ -347,7 +347,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>URL</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>URL</string>
         </field>
@@ -372,7 +372,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>URL-OPT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>URL</string>
         </field>
@@ -397,7 +397,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>GOTO</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>GOTO</string>
         </field>
@@ -422,7 +422,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>LIST</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>LIST</string>
         </field>
@@ -447,7 +447,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>LIST-OPT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>LIST</string>
         </field>
@@ -472,7 +472,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>IMG</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>IMG</string>
         </field>
@@ -497,7 +497,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>QUOTE</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>QUOTE</string>
         </field>
@@ -522,7 +522,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>QUOTE-OPT</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>QUOTE</string>
         </field>
@@ -547,7 +547,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>CODE</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>CODE</string>
         </field>
@@ -572,7 +572,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>CSS</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>CSS</string>
         </field>
@@ -597,7 +597,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
     <object-param>
       <name>SLIDESHARE</name>
       <description></description>
-      <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+      <object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
         <field name="tagName">
           <string>SLIDESHARE</string>
         </field>
@@ -635,11 +635,11 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
 
 * In which,
 || Name || Set method || Type || Description ||
-| *forum.default.bbcodes* | registerBBCodePlugin | org.exoplatform.ks.bbcode. spi.BBCodePlugin | Define formats for data displayed on UI. |
+| *forum.default.bbcodes* | registerBBCodePlugin | org.exoplatform.forum.bbcode. spi.BBCodePlugin | Define formats for data displayed on UI. |
 
-- The BBCode array is defined by the _org.exoplatform.ks.bbcode.spi.BBCodeData_ object as below:
+- The BBCode array is defined by the _org.exoplatform.forum.bbcode.spi.BBCodeData_ object as below:
 {code:xml}
-<object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+<object type="org.exoplatform.forum.bbcode.spi.BBCodeData">
   <field name="tagName">
     <string>I</string>
   </field>

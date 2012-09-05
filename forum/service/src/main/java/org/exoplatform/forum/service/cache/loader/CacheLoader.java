@@ -17,10 +17,10 @@
 
 package org.exoplatform.forum.service.cache.loader;
 
+import java.io.Serializable;
+
 import org.exoplatform.forum.service.cache.model.ScopeCacheKey;
 import org.exoplatform.services.cache.future.Loader;
-
-import java.io.Serializable;
 
 /**
  * Used by FutureCache to execute the ServiceContext.
