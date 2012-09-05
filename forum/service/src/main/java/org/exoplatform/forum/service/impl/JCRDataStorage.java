@@ -7432,10 +7432,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void updateLastLoginDate(String userId) throws Exception {
-    SessionProvider sysProvider = CommonUtils.createSystemProvider();
-    Node userProfileHome = getUserProfileHome(sysProvider);
-    userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime());
-    userProfileHome.save();
+    sessionManager.openSession();
+    try {
+      Node userProfileHome = getUserProfileHome();
+      if (userProfileHome.hasNode(userId)) {
+        userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime());
+        userProfileHome.save();
+      }
+    } finally {
+      sessionManager.closeSession();
+    }
   }
 
   //get all categories for user can view.
