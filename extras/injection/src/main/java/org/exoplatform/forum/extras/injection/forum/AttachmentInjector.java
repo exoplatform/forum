@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.extras.injection;
+package org.exoplatform.forum.extras.injection.forum;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -29,6 +28,7 @@ import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;
 
 /**
  * @author <a href="mailto:thanhvc@exoplatform.com">Thanh Vu</a>
@@ -62,7 +62,10 @@ public class AttachmentInjector extends AbstractForumInjector {
     int fromPost = param(params, FROM_POST);
     int toPost = param(params, TO_POST);
     int byteSize = param(params, BYTE_SIZE);
-    
+    if (byteSize < 0 || byteSize > 99) {
+      getLog().info("ByteSize is invalid with '" + byteSize + "' wrong. Please set it exactly in range 0 - 99 (words). Aborting injection ..." );
+      return;
+    }
     lorem = new LoremIpsum4J();
 
     init(null, null, null, null, postPrefix, byteSize);

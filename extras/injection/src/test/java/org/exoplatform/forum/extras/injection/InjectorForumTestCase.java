@@ -21,29 +21,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.exoplatform.component.test.AbstractKernelTest;
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.extras.injection.forum.AttachmentInjector;
+import org.exoplatform.forum.extras.injection.forum.CategoryInjector;
+import org.exoplatform.forum.extras.injection.forum.ForumInjector;
+import org.exoplatform.forum.extras.injection.forum.MembershipInjector;
+import org.exoplatform.forum.extras.injection.forum.PostInjector;
+import org.exoplatform.forum.extras.injection.forum.ProfileInjector;
+import org.exoplatform.forum.extras.injection.forum.TopicInjector;
 import org.exoplatform.services.organization.OrganizationService;
 
 /**
  * @author <a href="mailto:thanhvc@exoplatform.com">Thanh Vu</a>
  * @version $Revision$
  */
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.core.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml")
-})
-public class InjectorTestCase extends AbstractKernelTest {
+public class InjectorForumTestCase extends BaseTestCase {
 
   private OrganizationService organizationService;
   private ForumService forumService;
@@ -70,7 +65,7 @@ public class InjectorTestCase extends AbstractKernelTest {
   public void setUp() throws Exception {
 
     //
-    begin();
+    super.begin();
     
     //
     profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
@@ -133,7 +128,7 @@ public class InjectorTestCase extends AbstractKernelTest {
     }
     
     //
-    end();
+    super.tearDown();
   }
   
   public void testDefaultProfile() throws Exception {
@@ -762,7 +757,43 @@ public class InjectorTestCase extends AbstractKernelTest {
     assertEquals(4, attachmentInjector.getPostByName(postBaseName + "3").getAttachments().size());
     assertEquals(4, attachmentInjector.getPostByName(postBaseName + "4").getAttachments().size());
     
+    //invalid ByteSize out of range 0-99 = 101
+    params.clear();
+    params.put("number", "2");
+    if (postPrefix != null) {
+      params.put("postPrefix", postPrefix);
+    }
     
+    params.put("fromPost", "0");
+    params.put("toPost", "4");
+    params.put("byteSize", "101");
+    
+    attachmentInjector.inject(params);
+    
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "0").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "1").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "2").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "3").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "4").getAttachments().size());
+    
+    //invalid ByteSize out of range 0-99 = -1
+    params.clear();
+    params.put("number", "2");
+    if (postPrefix != null) {
+      params.put("postPrefix", postPrefix);
+    }
+    
+    params.put("fromPost", "0");
+    params.put("toPost", "4");
+    params.put("byteSize", "-1");
+    
+    attachmentInjector.inject(params);
+    
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "0").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "1").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "2").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "3").getAttachments().size());
+    assertEquals(4, attachmentInjector.getPostByName(postBaseName + "4").getAttachments().size());
     
     //
     cleanForum(forumBaseName, 1);

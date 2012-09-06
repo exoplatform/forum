@@ -1,4 +1,4 @@
-package org.exoplatform.forum.extras.injection;
+package org.exoplatform.forum.extras.injection.forum;
 
 import java.util.Arrays;
 import java.util.HashMap;

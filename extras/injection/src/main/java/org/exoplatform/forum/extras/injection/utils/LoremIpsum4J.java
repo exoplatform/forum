@@ -114,7 +114,7 @@ public class LoremIpsum4J {
 
   public String getWords(int amount, int startIndex) {
 
-    if (startIndex < 0 || startIndex > 49) {
+    if (startIndex < 0 || startIndex > 99) {
 
       throw new IndexOutOfBoundsException("startIndex must be >= 0 and < 50");
 
@@ -126,7 +126,7 @@ public class LoremIpsum4J {
 
     for (int i = 0; i < amount; i++) {
 
-      if (word == 50) {
+      if (word == 100) {
 
         word = 0;
 

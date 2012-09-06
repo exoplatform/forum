@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.forum.extras.injection;
+package org.exoplatform.forum.extras.injection.forum;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -24,10 +24,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.common.jcr.KSDataLocation;
-import org.exoplatform.forum.common.jcr.PropertyReader;
-import org.exoplatform.forum.extras.injection.utils.ExoNameGenerator;
-import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -35,6 +31,10 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.PropertyReader;
+import org.exoplatform.forum.extras.injection.utils.ExoNameGenerator;
+import org.exoplatform.forum.extras.injection.utils.LoremIpsum4J;
 import org.exoplatform.services.bench.DataInjector;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
@@ -194,7 +194,7 @@ public abstract class AbstractForumInjector extends DataInjector {
   public void reject(HashMap<String, String> stringStringHashMap) throws Exception {
   }
 
-  protected int userNumber(String base) throws Exception {
+  public int userNumber(String base) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getUserProfilesLocation()).append("/element(*,");
     sb.append(Utils.USER_PROFILES_TYPE).append(")[jcr:like(exo:userId, '%").append(base).append("%')]");
@@ -202,7 +202,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return (int)forumService.search(sb.toString()).getSize();
   }
   
-  protected int categoryNumber(String base) throws Exception {
+  public int categoryNumber(String base) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("/element(*,");
     sb.append(Utils.EXO_FORUM_CATEGORY).append(")[jcr:like(exo:name, '%").append(base).append("%')]");
@@ -210,7 +210,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return (int)forumService.search(sb.toString()).getSize();
   }
   
-  protected int forumNumber(String base) throws Exception {
+  public int forumNumber(String base) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_FORUM).append(")[jcr:like(exo:name, '%").append(base).append("%')]");
@@ -220,7 +220,7 @@ public abstract class AbstractForumInjector extends DataInjector {
   }
   
   
-  protected int topicNumber(String base) throws Exception {
+  public int topicNumber(String base) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_TOPIC).append(")[jcr:like(exo:name, '%").append(base).append("%')]");
@@ -229,7 +229,7 @@ public abstract class AbstractForumInjector extends DataInjector {
 
   }
   
-  protected int postNumber(String base) throws Exception {
+  public int postNumber(String base) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_POST).append(")[jcr:like(exo:name, '%").append(base).append("%')]");
@@ -238,7 +238,7 @@ public abstract class AbstractForumInjector extends DataInjector {
 
   }
 
-  protected Category getCategoryByName(String catName) throws Exception {
+  public Category getCategoryByName(String catName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("/element(*,");
     sb.append(Utils.EXO_FORUM_CATEGORY).append(")[jcr:like(exo:name, '%").append(catName).append("%')]");
@@ -263,7 +263,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Forum getForumByName(String forumName) throws Exception {
+  public Forum getForumByName(String forumName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_FORUM).append(")[jcr:like(exo:name, '%").append(forumName).append("%')]");
@@ -287,7 +287,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Category getCategoryByForumName(String forumName) throws Exception {
+  public Category getCategoryByForumName(String forumName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_FORUM).append(")[jcr:like(exo:name, '%").append(forumName).append("%')]");
@@ -309,7 +309,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Topic getTopicByName(String topicName) throws Exception {
+  public Topic getTopicByName(String topicName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_TOPIC).append(")[jcr:like(exo:name, '%").append(topicName).append("%')]");
@@ -332,7 +332,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Post getPostByName(String postName) throws Exception {
+  public Post getPostByName(String postName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_POST).append(")[jcr:like(exo:name, '%").append(postName).append("%')]");
@@ -345,6 +345,7 @@ public abstract class AbstractForumInjector extends DataInjector {
       PropertyReader reader = new PropertyReader(postNode);
       post.setId(postNode.getName());
       post.setPath(postNode.getPath());
+      post.setMessage(reader.string(Utils.EXO_MESSAGE));
       post.setName(reader.string(Utils.EXO_NAME));
       post.setNumberAttach(reader.l(Utils.EXO_NUMBER_ATTACH));
       if (post.getNumberAttach() > 0) {
@@ -356,7 +357,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Topic getTopicByPostName(String postName) throws Exception {
+  public Topic getTopicByPostName(String postName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_POST).append(")[jcr:like(exo:name, '%").append(postName).append("%')]");
@@ -380,7 +381,7 @@ public abstract class AbstractForumInjector extends DataInjector {
     return null;
   }
   
-  protected Forum getForumByTopicName(String topicName) throws Exception {
+  public Forum getForumByTopicName(String topicName) throws Exception {
     StringBuffer sb = new StringBuffer(Utils.JCR_ROOT);
     sb.append("/").append(locator.getForumCategoriesLocation()).append("//element(*,");
     sb.append(Utils.EXO_TOPIC).append(")[jcr:like(exo:name, '%").append(topicName).append("%')]");
