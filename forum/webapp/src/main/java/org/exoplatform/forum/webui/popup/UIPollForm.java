@@ -46,6 +46,7 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -96,7 +97,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     timeOut.addValidator(PositiveNumberFormatValidator.class);
     UICheckBoxInput VoteAgain = new UICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false);
     UICheckBoxInput MultiVote = new UICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX, FIELD_MULTIVOTE_CHECKBOX, false);
-    addUIFormInput(question);
+    addUIFormInput(question.addValidator(MandatoryValidator.class));
     addUIFormInput(timeOut);
     addUIFormInput(VoteAgain);
     addUIFormInput(MultiVote);
@@ -107,6 +108,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     if (uiFormMultiValue != null)
       removeChildById(FIELD_OPTIONS);
     uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null);
+    uiFormMultiValue.addValidator(MandatoryValidator.class);
     uiFormMultiValue.setId(FIELD_OPTIONS);
     uiFormMultiValue.setName(FIELD_OPTIONS);
     uiFormMultiValue.setType(UIFormStringInput.class);
