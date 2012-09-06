@@ -32,15 +32,18 @@
 			        String rowCssClass = "OddRow" ;
 			        if(even) rowCssClass = "EvenRow" ;
 			        even = !even ;
-							even = !even ;
-			        	key = "" ;
-				        if(uicomponent.isSelectMemberShip()){
-				        		 key = user + ":" +  uicomponent.getCurrentGroup().getId() ;
-				        } else if(uicomponent.isSelectUser()){
-				        	key = user ;
-				        } else if(uicomponent.isSelectGroup()){
-				        	key = uicomponent.getCurrentGroup().getId()+"/"+user ;
-				        }
+			        key = "" ;
+							if(uicomponent.isSelectMemberShip()){
+								key = user + ":" + uicomponent.getCurrentGroup().getId() ;
+							} else if(uicomponent.isSelectUser()){
+								key = user ;
+							} else if(uicomponent.isSelectGroup()){
+								if (_ctx.appRes(uicomponent.id + ".label.selectThisGroup").equals(user)) {
+									key = uicomponent.getCurrentGroup().getId();
+								} else {
+									key = uicomponent.getCurrentGroup().getId() + "/" + user;
+								}
+							} 
 		      %>
 				     <div class="$rowCssClass">
 				        	<a class="ItemIcon" href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>
