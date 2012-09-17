@@ -1,8 +1,6 @@
 <% 
-  import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.submitSearch('"+uiform.id+"');") ;
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+  requireJS.addScripts("eXo.answer.UIAnswersPortlet.submitSearch('"+uiform.id+"');");
 %>
 
 <div class="UIQuickSeach ClearFix">

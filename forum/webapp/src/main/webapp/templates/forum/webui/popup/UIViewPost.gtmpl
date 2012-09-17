@@ -1,19 +1,18 @@
 <%
-  import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.loadScriptResource("forumResources-syntaxhighlighter");
-	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
-	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
-	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
+  String []scripts = [
+	         "eXo.forum.UIForumPortlet.ReloadImage();",
+	         "eXo.forum.UIForumPortlet.reSizeImgViewPost();"
+         ];
+  ForumUtils.addScripts(null, null, scripts);
+  ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  
 	Post post = uicomponent.getPostView(); 
 	String title = post.getName();	
-	//String message = uicomponent.getReplaceByBBCode(post.getMessage());
 	String message = uicomponent.renderPost(post);
 	String classIcon = post.getIcon() ;
 	UserProfile userProfile = uicomponent.getUserProfile();

@@ -1,26 +1,24 @@
 ;(function($, window, document) {
-  
   var UIForumPortlet = {
     obj : null,
     event : null,
     wait : false,
     id : 'UIForumPortlet',
-    Browser : eXo.core.Browser,
-    
+
     init : function(id) {
       UIForumPortlet.id = id;
       var jportlet = findId(id);
       if (jportlet.exists()) {
-        jportlet.find('.oncontextmenu').on('contextmenu', eXo.forum.ForumUtils.returnFalse);
+        jportlet.find('.oncontextmenu').on('contextmenu', utils.ForumUtils.returnFalse);
+        jportlet.find('.UserMenuInfo').on('click', utils.ForumUtils.showUserMenu);
       }
-      UIForumPortlet.Browser.addOnResizeCallback(id, UIForumPortlet.resizeCallback)
-      UIForumPortlet.Browser.init();
+      utils.ForumUtils.onResize(UIForumPortlet.resizeCallback);
     },
-    
+
     resizeCallback : function() {
-      eXo.forum.ForumUtils.setMaskLayer(UIForumPortlet.id);
+      utils.ForumUtils.setMaskLayer(UIForumPortlet.id);
     },
-    
+
     selectItem : function(obj) {
       var jobj = $(obj);
       var tr = jobj.parents('tr');
@@ -71,7 +69,7 @@
         }
       }
     },
-    
+
     numberIsCheckedForum : function(formName, checkAllName, multiAns, onlyAns, notChecked) {
       var total = 0;
       var form = document.forms[formName];
@@ -93,13 +91,13 @@
         return false;
       }
     },
-    
+
     checkedPost : function(elm) {
       if (elm) {
         UIForumPortlet.setChecked(elm.checked);
       }
     },
-    
+
     setChecked : function(isChecked) {
       var divChecked = $('#divChecked');
       if (divChecked.exists()) {
@@ -111,7 +109,7 @@
           divChecked.attr("checked", (check - 1));
       }
     },
-    
+
     OneChecked : function(formName) {
       var form = document.forms[formName];
       if (form) {
@@ -124,7 +122,7 @@
       }
       return false;
     },
-    
+
     numberIsChecked : function(formName, checkAllName, multiAns, onlyAns, notChecked) {
       var divChecked = $('#divChecked');
       var total = 0;
@@ -139,7 +137,7 @@
         return false;
       }
     },
-    
+
     checkAll : function(obj) {
       var table = $(obj).parents('table');
       var tbody = table.find('tbody');
@@ -162,7 +160,7 @@
         }
       }
     },
-    
+
     checkAction : function(obj, evt) {
       UIForumPortlet.showPopup(obj, evt);
       var uiCategory = $('UICategory');
@@ -204,7 +202,7 @@
         }
       }
     },
-    
+
     visibleAction : function(id) {
       var parent = findId(id);
       var addCategory = parent.find('div.AddCategory:first');
@@ -234,7 +232,7 @@
         }
       }
     },
-    
+
     checkActionTopic : function(obj, evt) {
       UIForumPortlet.showPopup(obj, evt);
       var parentMenu = $("#ModerationMenu");
@@ -261,7 +259,7 @@
             var parentIt = menuItem.parents(".MenuItem");
             menuItem.attr("tmpClass", parentIt.attr('class'));
             parentIt.attr('class', "DisableMenuItem");
-            parentIt.on('click', eXo.forum.ForumUtils.cancelEvent);
+            parentIt.on('click', utils.ForumUtils.cancelEvent);
           }
         }
       } else {
@@ -278,7 +276,7 @@
         }
       }
     },
-    
+
     expandCollapse : function(obj) {
       var jobject = $(obj)
       var forumToolbar = jobject.parents(".ForumToolbar");
@@ -295,7 +293,7 @@
         forumToolbar.css('border-bottom', 'none');
       }
     },
-    
+
     showTreeNode : function(obj, isShow) {
       if (isShow === "false")
         return;
@@ -319,11 +317,11 @@
         }
       }
     },
-    
+
     checkedNode : function(elm) {
       var jelm = $(elm);
       var jinput = jelm.find('input:first');
-      
+
       var parentNode = jinput.parents('.Node');
       var containerChild = parentNode.find('div.ChildNodeContainer:first');
       if (containerChild.exists()) {
@@ -336,7 +334,7 @@
         }
       }
     },
-    
+
     checkedChildNode : function(elm) {
       var input = $(elm).find('input:first');
       if (input.exists()) {
@@ -347,7 +345,7 @@
         }
       }
     },
-    
+
     initVote : function(voteId, rate) {
       var vote = findId(voteId);
       vote.attr('rate', rate);
@@ -362,10 +360,10 @@
       }
       vote.on('mouseover', UIForumPortlet.parentOverVote);
       vote.on('blur', UIForumPortlet.parentOverVote);
-      optsContainer.on('mouseover', eXo.forum.ForumUtils.cancelEvent);
-      optsContainer.on('blur', eXo.forum.ForumUtils.cancelEvent);
+      optsContainer.on('mouseover', utils.ForumUtils.cancelEvent);
+      optsContainer.on('blur', utils.ForumUtils.cancelEvent);
     },
-    
+
     parentOverVote : function(event) {
       var optsCon = $(this).find('div.OptionsContainer:first');
       var opts = optsCon.children('div');
@@ -377,7 +375,7 @@
           opts.eq(j).addClass('NormalVote').removeClass('RatedVote');
       }
     },
-    
+
     overVote : function(event) {
       var optsCon = $(this).parents('div.OptionsContainer:first');
       var opts = optsCon.children('div');
@@ -393,20 +391,20 @@
         opts.eq(i).attr('class', 'OverVote');
       }
     },
-    
+
     showPopup : function(elm, e) {
       var strs = [ '#goPageBottom', '#SearchForm', '.CancelEvent' ];
       for ( var t = 0; t < strs.length; t++) {
         var jelm = $(strs[t]);
         if (jelm.exists()) {
-          jelm.on('click', eXo.forum.ForumUtils.cancelEvent);
+          jelm.on('click', utils.ForumUtils.cancelEvent);
         }
       }
       eXo.webui.UIPopupSelectCategory.show(elm, e);
-      eXo.forum.ForumUtils.cancelEvent(e);
-      eXo.forum.ForumUtils.addhideElement($(elm).find('div.UIPopupCategory'));
+      utils.ForumUtils.cancelEvent(e);
+      utils.ForumUtils.addhideElement($(elm).find('div.UIPopupCategory'));
     },
-    
+
     goLastPost : function(idLastPost) {
       var isDesktop = $('#UIPageDesktop');
       if (!isDesktop.exists()) {
@@ -425,7 +423,7 @@
         }
       }
     },
-    
+
     setEnableInput : function() {
       var parend = $("#ForumUserBan");
       if (parend.exists()) {
@@ -451,18 +449,18 @@
         }
       }
     },
-    
+
     hidePicture : function() {
       eXo.core.Browser.onScrollCallback.remove('MaskLayerControl');
       $(eXo.core.UIMaskLayer.object).remove();
       $("#MaskLayer").remove();
       $("subMaskLayer").remove();
     },
-    
+
     showPicture : function(src) {
-      eXo.forum.MaskLayerControl.showPicture(src);
+      maskLayer.MaskLayerControl.showPicture(src);
     },
-    
+
     getImageSize : function(imageNode) {
       var tmp = $(imageNode.cloneNode(true));
       tmp.css('visibility', 'hidden');
@@ -474,7 +472,7 @@
       $(tmp).remove();
       return size;
     },
-    
+
     showFullScreen : function(imageNode, containerNode) {
       var imageSize = UIForumPortlet.getImageSize(imageNode);
       var widthMax = $(document.documentElement).outerWidth(true);
@@ -484,7 +482,7 @@
         imageNode.width(widthMax - 40);
       }
     },
-    
+
     setDisableTexarea : function() {
       var objCmdElm = $('#moderationOptions');
       var input = objCmdElm.find('input.checkbox');
@@ -495,7 +493,7 @@
         }
       }
     },
-    
+
     onClickDisableTexarea : function() {
       var objCmdElm = $('#moderationOptions');
       var input = objCmdElm.find('input.checkbox');
@@ -513,7 +511,7 @@
         }
       }
     },
-    
+
     setDisableInfo : function() {
       var strs = new Array("#CanPost", "#CanView");
       for ( var i = 0; i < strs.length; i++) {
@@ -526,7 +524,7 @@
         }
       }
     },
-    
+
     setShowInfo : function(elm) {
       var info = $($(elm).attr('id') + "Info");
       if (elm.val() === '') {
@@ -535,7 +533,7 @@
         info.hide();
       }
     },
-    
+
     controlWorkSpace : function() {
       var slidebar = $('#ControlWorkspaceSlidebar');
       if (slidebar.exists()) {
@@ -563,14 +561,14 @@
     reSizeImages : function() {
       setTimeout('eXo.forum.UIForumPortlet.setSizeImages(225, "UITopicDetail")', 500);
     },
-    
+
     reSizeImagesInMessageForm : function() {
       if (eXo.core.Browser.isIE6())
         setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "UIViewPrivateMessageForm")', 800);
       else
         setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
     },
-    
+
     setSizeImages : function(delta, classParant) {
       var parent_ = findId(classParant);
       var imageContentContainer = parent_.find('div.ImageContentContainer:first');
@@ -605,11 +603,11 @@
         }
       }
     },
-    
+
     showImage : function() {
       UIForumPortlet.showPicture($(this).attr('src'));
     },
-    
+
     resetFielForm : function(idElm) {
       var elm = findId(idElm);
       elm.find("input:checkbox").val('false');
@@ -619,10 +617,9 @@
       }
       elm.find("textarea").val('');
     },
-    
+
     RightClickBookMark : function(elmId) {
       var ancestor = findId(elmId);
-      
       var popupContents = ancestor.find('ul.ClickPopupContent');
       if (!popupContents.exists())
         return;
@@ -669,7 +666,7 @@
         popupContent.html(popupContainer.html());
       }
     },
-    
+
     ReloadImage : function() {
       if (eXo.core.Browser.isIE6()) {
         var aImage = document.getElementsByTagName("img");
@@ -680,8 +677,9 @@
             aImage[i].width = 590 + "px";
         }
       }
+      utils.ForumUtils.onResize('eXo.forum.UIForumPortlet.reSizeImages');
     },
-    
+
     shareLink : function(obj) {
       var shareLinkContainer = $("#popupShareLink");
       if (shareLinkContainer.css('display') != "none")
@@ -689,27 +687,27 @@
       else
         shareLinkContainer.show();
     },
-    
+
     closeShareLink : function(obj) {
       $(obj).parents('.UIPopupWindow').hide();
     },
-    
+
     loadScroll : function(e) {
       var uiNav = eXo.forum.UIForumPortlet;
       var container = $("#UIForumActionBar");
       if (container.exists()) {
-        uiNav.scrollMgr = new ScrollManager("UIForumActionBar");
+        uiNav.scrollMgr = new navigation.ScrollManager("UIForumActionBar");
         uiNav.scrollMgr.initFunction = uiNav.initScroll;
         uiNav.scrollMgr.mainContainer = container.find('td.ControlButtonContainer:first')[0];
         uiNav.scrollMgr.arrowsContainer = container.find('div.ScrollButtons:first')[0];
         uiNav.scrollMgr.loadElements("ControlButton", true);
-        
+
         var button = $(uiNav.scrollMgr.arrowsContainer).find('div');
         if (button.length >= 2) {
           uiNav.scrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
           uiNav.scrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
         }
-        
+
         uiNav.scrollManagerLoaded = true;
         uiNav.initScroll();
         var lastButton = $('#OpenBookMarkSp');
@@ -718,7 +716,7 @@
         }
       }
     },
-    
+
     initScroll : function() {
       var uiNav = UIForumPortlet;
       if (!uiNav.scrollManagerLoaded)
@@ -730,29 +728,35 @@
       uiNav.scrollMgr.checkAvailableSpace();
       uiNav.scrollMgr.renderElements();
     },
-    
+
     loadTagScroll : function() {
       var uiNav = eXo.forum.UIForumPortlet;
       var container = $("#TagContainer");
       if (container) {
-        uiNav.tagScrollMgr = new ScrollManager("TagContainer");
+        uiNav.tagScrollMgr = new navigation.ScrollManager("TagContainer");
         uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll;
         uiNav.tagScrollMgr.mainContainer = container[0];
         uiNav.tagScrollMgr.arrowsContainer = container.find('li.ScrollButtons')[0];
-        uiNav.tagScrollMgr.loadItems("MenuItem", true);
-        
+
+        uiNav.tagScrollMgr.cleanElements();
+        uiNav.tagScrollMgr.elements.clear();
+        var items = $(uiNav.tagScrollMgr.mainContainer).find('li.' + "MenuItem");
+        for ( var i = 0; i < items.length; i++) {
+          uiNav.tagScrollMgr.elements.push(items[i]);
+        }
+
         var button = $(uiNav.tagScrollMgr.arrowsContainer).find('div');
         if (button.length >= 2) {
           uiNav.tagScrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
           uiNav.tagScrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
         }
-        
+
         uiNav.scrollManagerLoaded = true;
         uiNav.initTagScroll();
-        
+
       }
     },
-    
+
     initTagScroll : function() {
       var uiNav = UIForumPortlet;
       var elements = uiNav.tagScrollMgr.elements;
@@ -762,9 +766,9 @@
       uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
       uiNav.tagScrollMgr.init();
       uiNav.tagScrollMgr.checkAvailableSpace();
-      
+
       removeChildren(menu);
-      
+
       jarrowsContainer.on('mouseover', over);
       jarrowsContainer.on('focus', over);
       jarrowsContainer.on('mouseout', out);
@@ -780,28 +784,28 @@
           jarrowsContainer.show();
         }
       }
-      
+
       setPosition(menu);
       function removeChildren(cont) {
         $(cont).find('div.MenuTagContainer:first').remove();
       }
-      
+
       function setPosition(menu) {
         var uiPopupCategory = $(menu).parents('.UIPopupCategory');
         uiPopupCategory.show();
         uiPopupCategory.attr('style', 'top:24px; left:-400px;');
         uiPopupCategory.hide();
       }
-      
+
       function over() {
         $(this).addClass('ScrollButtonsOver');
       }
-      
+
       function out() {
         $(this).removeClass('ScrollButtonsOver');
       }
     },
-    
+
     setTagContainerWidth : function(container) {
       var nodes = $(container.parentNode).find('div');
       var width = 0;
@@ -832,14 +836,14 @@
         return w;
       }
     },
-    
+
     executeLink : function(evt) {
       var onclickAction = String($(this).attr("rel"));
       eval(onclickAction);
-      eXo.forum.ForumUtils.cancelEvent(evt);
+      utils.ForumUtils.cancelEvent(evt);
       return false;
     },
-    
+
     createLink : function(cpId, isAjax) {
       if (!isAjax || isAjax === 'false') {
         var isM = document.getElementById("SetMode");
@@ -850,18 +854,14 @@
       }
       UIForumPortlet.addLink(cpId, "ActionLink");
     },
-    
+
     addLink : function(cpId, clazzAction) {
-      var comp = document.getElementById(cpId);
-      var uiCategoryTitle = $(comp).find('a.' + clazzAction);
-      var i = uiCategoryTitle.length;
-      if (!i || (i <= 0))
-        return;
-      while (i--) {
-        uiCategoryTitle.eq(i).on('click', UIForumPortlet.executeLink);
+      var links = findId(cpId).find('a.' + clazzAction);
+      if (links.exists()) {
+        links.on('click', UIForumPortlet.executeLink);
       }
     },
-    
+
     setAutoScrollTable : function(idroot, idParent, idChild) {
       var rootEl = document.getElementById(idroot);
       var grid = document.getElementById(idChild);
@@ -888,10 +888,10 @@
         tableContent.style.height = "auto";
       }
     },
-    
+
     initContextMenu : function(id) {
       var cont = document.getElementById(id);
-      var uiContextMenu = eXo.forum.UIContextMenu;
+      var uiContextMenu = contextMenu.UIContextMenu;
       if (!uiContextMenu.classNames)
         uiContextMenu.classNames = new Array("ActionLink");
       else
@@ -899,21 +899,21 @@
       uiContextMenu.setContainer(cont);
       uiContextMenu.setup();
     },
-    
+
     showBBCodeHelp : function(id, isIn) {
       var parentElm = document.getElementById(id);
       var popupHelp = document.getElementById(id + "ID");
       if (parentElm) {
         if (isIn == "true") {
           popupHelp.style.display = "block";
-          var contentHelp = popupHelp.find('div.ContentHelp:first')[0];
+          var contentHelp = $(popupHelp).find('div.ContentHelp:first')[0];
           contentHelp.style.height = "auto";
           var l = String(contentHelp.innerHTML).length;
           if (l < 100) {
-            contentHelp.style.width = (l * 4) + "px"
+            contentHelp.style.width = (l * 4) + "px";
             contentHelp.style.height = "45px";
           } else {
-            contentHelp.style.width = "400px"
+            contentHelp.style.width = "400px";
             if (l > 150) {
               contentHelp.style.height = "auto";
             } else {
@@ -943,39 +943,31 @@
         }
       }
     },
-    
+
     submitSearch : function(id) {
       var parentElm = document.getElementById(id);
       if (parentElm) {
         parentElm.onkeydown = UIForumPortlet.submitOnKey;
       }
     },
-    
+
     submitOnKey : function(event) {
-      var key = eXo.forum.ForumUtils.getKeynum(event);
+      var key = utils.ForumUtils.getKeynum(event);
       if (key == 13) {
         var searchLinkElm = $(this).find('a.SearchLink');
         if (searchLinkElm.exists()) {
           var link = String(searchLinkElm.attr('href')).replace("javascript:", "");
           eval(link);
-          eXo.forum.ForumUtils.cancelEvent(event);
+          utils.ForumUtils.cancelEvent(event);
           return false;
         }
       }
     }
   };
-  
-  ScrollManager.prototype.loadItems = function(elementClass, clean) {
-    if (clean)
-      this.cleanElements();
-    this.elements.clear();
-    var items = $(this.mainContainer).find('li.' + elementClass);
-    for ( var i = 0; i < items.length; i++) {
-      this.elements.push(items[i]);
-    }
-  };
-  
+
   window.eXo = window.eXo || {};
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
 })(gj, window, document);
+
+_module.UIForumPortlet = eXo.forum.UIForumPortlet;

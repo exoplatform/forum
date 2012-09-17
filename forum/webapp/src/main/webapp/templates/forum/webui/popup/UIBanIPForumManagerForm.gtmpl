@@ -1,16 +1,11 @@
 <%
-	import org.exoplatform.forum.webui.UIForumPageIterator;	
-	import org.exoplatform.web.application.JavascriptManager;
-	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
-  jsManager.loadScriptResource("SearchIpBan");
-	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
+	import org.exoplatform.forum.ForumUtils;
+	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.SearchIpBan.init();");
+	String forumId = uicomponent.forumId.replaceAll("/",".") ;
+	String linkOp = uicomponent.event("OpenPosts", "OBJIP");
 %>
 <div class="UIBanIPForumManagerForm">
 	<% uiform.begin() %>	
-	<%  
-		String forumId = uicomponent.forumId.replaceAll("/",".") ;
-		String linkOp = uicomponent.event("OpenPosts", "OBJIP");
-	%>
 	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
 		<div style="width:400px; margin:auto;">
 			<div class="UIQuickSearchForm ClearFix" style="padding:10px 0px;">

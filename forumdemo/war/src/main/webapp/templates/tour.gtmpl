@@ -7,8 +7,8 @@
   PortalURL nodeURL = nodeurl();
   NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
   String registerUri = nodeURL.setResource(resource).toString();
-  _ctx.getRequestContext().getJavascriptManager().loadScriptResource("tour");
-  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.forum.Tour.init();");
+  def rcontext = _ctx.getRequestContext() ;
+  rcontext.getJavascriptManager().require("SHARED/tour", "forum").addScripts("forum.Tour.init();");
 %>
 <div class="UIKSGuidedTour ClearFix" id="UIKSGuidedTour">
 

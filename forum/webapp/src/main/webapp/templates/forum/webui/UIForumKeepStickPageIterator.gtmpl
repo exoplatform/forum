@@ -1,6 +1,4 @@
 <%
-	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
-	 
 	List totals = uicomponent.getInfoPage() ; 
 	int pageSelected = uicomponent.getPageSelect() ;
 	int max_page = totals.get(3) ;

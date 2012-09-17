@@ -2,9 +2,6 @@
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 %>
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>

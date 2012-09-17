@@ -1,10 +1,6 @@
 <%
-	import org.exoplatform.web.application.JavascriptManager;
-	
-	
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnLoadJavascript('eXo.answer.UIAnswersPortlet.FAQChangeHeightToAuto');
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+  requireJS.addScripts("eXo.answer.UIAnswersPortlet.FAQChangeHeightToAuto();");
 %>
 
 <div class="FAQUIQuestionManagerForm $uicomponent.id" style="height:auto;" id="Parent$uicomponent.id">

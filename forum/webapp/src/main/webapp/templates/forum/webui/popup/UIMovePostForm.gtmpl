@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Category ;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.ForumServiceUtils ;
-	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.UserProfile;
 %>

@@ -9,12 +9,12 @@
         var len = checkboxes.length ;
         for(var i = 1 ; i < len ; i ++) {
           checkboxes.eq(i).on('click', this.check);
-          eXo.forum.CheckBoxManager.checkItem(checkboxes.eq(i));
+          checkBoxManager.CheckBoxManager.checkItem(checkboxes.eq(i));
         }
       }
     },
     check : function(){
-      eXo.forum.CheckBoxManager.checkItem(this);
+      checkBoxManager.CheckBoxManager.checkItem(this);
       var row = $(this).parents('tr');
       if (this.checked) {
         row.addClass('SelectedItem');

@@ -4,11 +4,7 @@
 	import org.exoplatform.forum.service.Utils;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ; 
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setEnableInput();");
-
+  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setEnableInput();");
 %>
 <div class="UIModeratorManagementForm">
 	<% uiform.begin() %>

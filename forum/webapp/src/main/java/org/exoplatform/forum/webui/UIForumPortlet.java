@@ -536,7 +536,7 @@ public class UIForumPortlet extends UIPortletApplication {
     return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
   }
 
-  public String getUserToken() throws Exception {
+  public String getUserToken() {
     try {
       ContinuationService continuation = (ContinuationService) PortalContainer.getInstance()
                                                                          .getComponentInstanceOfType(ContinuationService.class);
@@ -545,6 +545,24 @@ public class UIForumPortlet extends UIPortletApplication {
       log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);
     }
     return ForumUtils.EMPTY_STR;
+  }
+
+  protected void initSendNotification() {
+    if(getUserProfile().getUserRole() <=2 ) {
+      StringBuilder init = new StringBuilder("forumNotify.ForumSendNotification.init('");
+      init.append(userProfile.getUserId()).append("', '")
+          .append(getUserToken()).append("', '")
+          .append(getCometdContextName()).append("');");
+      StringBuilder initParam = new StringBuilder("forumNotify.ForumSendNotification.initParam('");
+      initParam.append(WebUIUtils.getLabel(getId(), "Notification")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "message")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "post")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "titeName")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "from")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "briefContent")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("');");
+      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { init.toString(), initParam.toString() });
+    }
   }
 
   private boolean isArrayNotNull(String[] strs) {

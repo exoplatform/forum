@@ -1,5 +1,4 @@
 <%
-  import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.forum.service.UserProfile;
   import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
@@ -8,13 +7,14 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
-	
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
-	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
-	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
-	jsmanager.loadScriptResource("forumResources-syntaxhighlighter");
+
+	//add JavaScript
+  String []scripts = [
+            "eXo.forum.UIForumPortlet.reSizeImgViewTopic();",
+            "eXo.forum.UIForumPortlet.ReloadImage();"
+            ];
+  ForumUtils.addScripts(null, null, scripts);
+  ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
 %>
 <div class="UIViewTopic UITopicDetail" id="SizeImage">
 	<% uiform.begin() %>

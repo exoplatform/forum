@@ -2,7 +2,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnResizeJavascript('function(){eXo.forum.ForumUtils.setMaskLayer("'+uicomponent.id+'");}');
+	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.UIPollPortlet.init('"+uicomponent.id+"');");
 %>
 
 <div class="UIPollPortlet" id="$uicomponent.id">

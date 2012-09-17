@@ -1,7 +1,5 @@
 <% 
 	import org.exoplatform.forum.TimeConvertUtils;
-	import org.exoplatform.web.application.JavascriptManager;
-	JavascriptManager jsManager = _ctx.getRequestContext().getJavascriptManager();
 %>
 <div class="UIBBCodeManagerForm UIAutoPruneForm">
 	<% uiform.begin() %>
@@ -94,7 +92,9 @@
 			</table>
 		</div>
 	</div>
-	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('AutoPruneContainer', 'TableContent','UIGrid');") ; %>
+	<% 
+	 org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('AutoPruneContainer', 'TableContent','UIGrid');");
+	%>
 	<div class="UIAction">
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></a>
     </div>

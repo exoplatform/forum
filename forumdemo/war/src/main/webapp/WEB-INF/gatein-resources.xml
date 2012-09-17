@@ -47,7 +47,8 @@
       <path>/javascript/eXo/tour/tour.js</path>
     </script>
     <depends>
-      <module>base</module>
+      <module>jquery</module>
+      <as>$</as>
     </depends>
   </module>
 	

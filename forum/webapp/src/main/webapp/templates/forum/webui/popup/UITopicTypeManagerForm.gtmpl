@@ -1,7 +1,3 @@
-<% 
-	import org.exoplatform.web.application.JavascriptManager;
-	def jsManager = _ctx.getRequestContext().getJavascriptManager() 
-%>
 <div class="UIBBCodeManagerForm UITopicTypeManagerForm">
 	<% uiform.begin() %>
 	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
@@ -47,7 +43,9 @@
 				</tbody>
 			</table>
 		</div>
-	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');") ; %>
+	<%
+    org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');");
+	%>
 		<div class="UIAction">
   <% for(action in uicomponent.getActions()) { 
 		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 

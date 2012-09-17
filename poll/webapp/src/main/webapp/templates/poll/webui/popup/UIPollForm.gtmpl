@@ -2,7 +2,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.poll.UIPollPortlet.OpenPrivateField('DivCheckBox');") ;
+	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.UIPollPortlet.privateField('DivCheckBox');");
 %>
 
 <div class="UIAddPollForm">
@@ -43,7 +43,7 @@
 						<tr>
 							<td class="FieldLabel" style="width:auto;"><label for="<%=uicomponent.FIELD_PUBLIC_DATA_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX)%>:</label></td>
 							<td class="FieldComponent">
-								<div id="DivCheckBox" onclick="eXo.poll.UIPollPortlet.OpenPrivateField(this)"><% uiform.renderChild(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX) %></div>
+								<div id="DivCheckBox"><% uiform.renderChild(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX) %></div>
 							</td>
 						</tr>
 						<tr height="26px">

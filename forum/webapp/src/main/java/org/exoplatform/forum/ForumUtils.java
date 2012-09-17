@@ -50,6 +50,7 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.space.SpaceUtils;
+import org.exoplatform.web.application.RequireJS;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
@@ -607,5 +608,18 @@ public class ForumUtils {
       builder.append("<span title='").append(strs[i]).append("'>").append(getSubString(strs[i], 15)).append("</span>");
     }
     return builder.toString();
+  }
+  
+  static public void addScripts(String module, String alias, String... scripts) {
+    PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    RequireJS requireJS;
+    if (!isEmpty(module)) {
+      requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+    } else {
+      requireJS = pContext.getJavascriptManager().getRequireJS();
+    }
+    for (int i = 0; i < scripts.length; i++) {
+      requireJS.addScripts(scripts[i]);
+    }
   }
 }

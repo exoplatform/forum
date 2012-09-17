@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Post; 
 	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.TimeConvertUtils ;
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;

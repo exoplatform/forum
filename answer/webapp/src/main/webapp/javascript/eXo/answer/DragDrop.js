@@ -7,13 +7,13 @@
     init : function(compid) {
       var comp = findId(compid);
       comp.find('div.FAQCategory').on('mousedown', this.attach);
-      comp.on('selectstart', eXo.forum.ForumUtils.returnFalse);
-      comp.on('dragstart', eXo.forum.ForumUtils.returnFalse);
+      comp.on('selectstart', utils.ForumUtils.returnFalse);
+      comp.on('dragstart', utils.ForumUtils.returnFalse);
     },
     
     attach : function(evt) {
       evt = evt || window.event;
-      if (eXo.forum.EventManager.getMouseButton(evt) == 2) return;
+      if (eventManager.EventManager.getMouseButton(evt) == 2) return;
       var dnd = eXo.answer.DragDrop;
       var dragObject = this.cloneNode(true);
       $(dragObject).attr('class', 'FAQDnDCategory')
@@ -97,7 +97,7 @@
       if (targetClass) {
         var i = targetClass.length;
         while (i--) {
-          var target = eXo.forum.EventManager.getEventTargetByClass(evt, targetClass[i]);
+          var target = eventManager.EventManager.getEventTargetByClass(evt, targetClass[i]);
           if (target) return target;
         }
       }
@@ -149,3 +149,4 @@
   window.eXo.answer = eXo.answer || {} ;
   window.eXo.answer.DragDrop = DragDrop;
 })(gj, window, document);
+_module.DragDrop = eXo.answer.DragDrop;

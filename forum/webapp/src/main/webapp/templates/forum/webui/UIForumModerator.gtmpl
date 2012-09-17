@@ -24,9 +24,9 @@
 				<%
 					if(i == moderators.size()) {
 				%>
-						<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">${userView}</a>
+						<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a>
 				<%}else {%> 
-					<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">${userView}</a><span>,</span>
+					<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a><span>,</span>
 				<%}%>
 				
 						<div class="UIPopupInfoMenu">

@@ -1,55 +1,22 @@
-;(function($, window, document) {
+var FaqPortlet = {};
+(function(faq, $, window, document) {
   
-  function UIFaqPortlet() {};
-  
-  UIFaqPortlet.prototype.executeLink = function (evt) {
+  faq.executeLink = function (evt) {
     var onclickAction = String(this.getAttribute('actions'));
     $.globalEval(onclickAction);
-    eXo.forum.ForumUtils.cancelEvent(evt);
+    utils.ForumUtils.cancelEvent(evt);
     return false;
   };
   
-  UIFaqPortlet.prototype.createLink = function (cpId, isAjax) {
+  faq.createLink = function (cpId, isAjax) {
     if (!isAjax || isAjax === 'false') return;
     var comp = findId(cpId);
-    comp.find('a.ActionLink').on('click', this.executeLink);
-  };
-  
-  UIFaqPortlet.prototype.checkedNode = function (elm) {
-    var input = $(elm).find('input');
-    var parentNode = input.parents('.FAQDomNode');
-    var ancestorNode = parentNode.parents('.FAQDomNode');
-    if (ancestorNode.exists()) {
-      firstInput = ancestorNode.find('input.checkbox:first');
-      if (input.attr('checked') && !firstInput.attr('checked')) {
-        var msg = $('#viewerSettingMsg');
-        if (msg.exists()) alert(msg.html());
-        else alert('You need to check on parent or ancestor of this category first!');
-        input.attr('checked', false);
-        input.attr('disabled', true);
-      }
-    }
-  
-    var containerChild = parentNode.find('div.FAQChildNodeContainer');
-    if (containerChild.exists()) {
-      var checkboxes = containerChild.find('input');
-      for (var i = 0; i < checkboxes.length; ++i) {
-        checkboxes.eq(i).attr('checked', input.attr('checked'));
-        if (!input.attr('checked')) checkboxes.eq(i).attr('disabled', true);
-        else checkboxes.eq(i).attr('disabled', false);
-      }
+    if (comp.exists()) {
+      comp.find('a.ActionLink').on('click', faq.executeLink);
     }
   };
   
-  UIFaqPortlet.prototype.treeView = function (id) {
-    var obj = findId(id);
-    if (obj.exists()) {
-      if (obj.css('display') == '' || obj.css('display') === 'none') obj.show();
-      else obj.hide();
-    }
-  };
-
-  UIFaqPortlet.prototype.focusQuestion = function () {
+  faq.focusQuestion = function () {
     var as = $('a[href^="#Question"]');
     as.on('click', function () {
       var href = String(this.href);
@@ -60,10 +27,6 @@
       }
     });
   };
+})(FaqPortlet, gj, window, document);
 
-  // Expose
-  window.eXo = eXo || {};
-  window.eXo.faq = eXo.faq || {} ;
-  window.eXo.faq.UIFaqPortlet = new UIFaqPortlet();
-
-})(gj, window, document);
+_module.FaqPortlet = FaqPortlet;

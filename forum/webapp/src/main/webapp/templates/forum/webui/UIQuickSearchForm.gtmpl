@@ -1,8 +1,7 @@
 <% 
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('"+uiform.id+"');") ;
+	import org.exoplatform.forum.ForumUtils;
+  String [] scripts = ["eXo.forum.UIForumPortlet.submitSearch('"+uicomponent.id+"') ;"];
+  ForumUtils.addScripts(null, null, scripts);
 %>
 <div class="UIQuickSearchForm">
   <% uiform.begin() %>  

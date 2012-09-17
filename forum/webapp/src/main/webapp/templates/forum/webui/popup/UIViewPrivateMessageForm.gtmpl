@@ -27,8 +27,7 @@
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
     </div>
 <%
-	def rcontext = _ctx.getRequestContext() ;
-	rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
+  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
 %>
 <%uiform.end()%>
 </div>

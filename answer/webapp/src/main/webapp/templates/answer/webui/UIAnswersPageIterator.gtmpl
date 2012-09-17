@@ -1,6 +1,4 @@
-<%import org.exoplatform.answer.webui.UIAnswersPageIterator ;
-	import org.exoplatform.faq.service.JCRPageList ;
-	 
+<%	 
 	List totals = uicomponent.getInfoPage() ; 
 	if(totals != null){
 		long max_page = totals.get(3) ;

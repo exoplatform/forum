@@ -589,7 +589,7 @@
 }
 
 .UIForumPortlet .BntPostReply:hover {
-	background: url('background/buttons/BntHoverStyle.gif') repeat-x top;
+	/*background: url('background/buttons/BntHoverStyle.gif') repeat-x top;*/
 }
 
 .UIForumPortlet .ImgAvatarBorder {

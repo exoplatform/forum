@@ -1,5 +1,4 @@
 <%	
-	import org.exoplatform.forum.service.ForumLinkData ;
 	import org.exoplatform.forum.service.Utils ;
 %>
 

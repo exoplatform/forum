@@ -1,35 +1,15 @@
 <%  
-  import org.exoplatform.forum.webui.UIPostRules ;
-  import org.exoplatform.forum.webui.UIForumLinks ;
-  import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
   import org.exoplatform.forum.service.Tag;
   import org.exoplatform.forum.service.Post ;
   import org.exoplatform.forum.service.Topic ;
   import org.exoplatform.forum.service.Forum ;
+  import org.exoplatform.forum.service.UserProfile ;
   import org.exoplatform.forum.common.UserHelper; 
-  import org.exoplatform.services.jcr.ext.common.SessionProvider;
+  import org.exoplatform.forum.common.user.CommonContact;
   import org.exoplatform.forum.ForumUtils;
   import org.exoplatform.forum.TimeConvertUtils;
-  import org.exoplatform.forum.service.UserProfile ;
-  import org.exoplatform.forum.service.ForumServiceUtils;
-  import org.exoplatform.forum.common.user.CommonContact;
-  import org.exoplatform.web.application.JavascriptManager;
-  import org.exoplatform.forum.ForumSessionUtils;
+  import org.exoplatform.forum.webui.UIPostRules ;
   
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-
-  jsmanager.loadScriptResource("forumResources-syntaxhighlighter");
-  jsmanager.loadScriptResource("SearchTagName");
-
-  jsmanager.addJavascript('eXo.forum.webservice.SearchTagName.init();') ;
-
-  jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
-  jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.loadTagScroll();") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInTopic');") ;
   long setTime = 0;
   String uiformId = uicomponent.getName() ;
   String userLogin = "" ;
@@ -88,6 +68,18 @@
   }
   String idLastPost = uicomponent.getIdPostView() ;
   String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
+  if(!isNull) {
+    // add JavaScript
+  	String []scripts = [
+  	         	"eXo.forum.UIForumPortlet.controlWorkSpace();",
+  	         	"eXo.forum.UIForumPortlet.loadTagScroll();",
+  	         	"eXo.forum.UIForumPortlet.submitSearch('SearchInTopic');",
+  	         	"eXo.forum.UIForumPortlet.ReloadImage();"
+  	         	];
+  	ForumUtils.addScripts(null, null, scripts);
+  	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.SearchTagName.init();");
+  	ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  }
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -460,7 +452,7 @@
                 }
             %>
                   <div class="ContentAction MemberName ClearFix">
-                    <div  class="FL" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event)"><h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
+                    <div  class="FL UserMenuInfo"><h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
                     <div class="UIPopupInfoMenu">
                        <div class="UIPopupInfoContent">
                           <div class="Arrow"><span></span></div>
@@ -489,7 +481,7 @@
                   if(isDisplayAvatar) {
                 %>
                 <div class="ContentAction ClearFix">
-                  <div class="ImgAvatarBorder FL" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event)">
+                  <div class="ImgAvatarBorder FL UserMenuInfo">
                     <img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
                   </div>
                   <div class="UIPopupInfoMenu">
@@ -722,7 +714,7 @@
         </tbody>
       </table>
     <% }//end for
-      jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 700);");
+      ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 700);");
      } else {
      uicomponent.renderPoll();
      if(canEdit){
@@ -802,7 +794,7 @@
 <%uiform.end()%>
 <%
   if(uicomponent.isShowRule) { 
-    uicomponent.renderChild(UIPostRules.class)
+    uicomponent.renderChild(UIPostRules.class);
   } 
 %>
 </div>

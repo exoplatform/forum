@@ -1,7 +1,6 @@
 <%	
 	import org.exoplatform.forum.webui.UIPostRules ;
 	import org.exoplatform.forum.webui.UIForumModerator;
-	import org.exoplatform.forum.service.ForumServiceUtils;
 %>
 <div class="UIForumInfos ClearFix">
 	<div class="ThreadsStartsList RightStartsList">

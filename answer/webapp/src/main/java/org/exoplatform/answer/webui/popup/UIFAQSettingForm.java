@@ -45,7 +45,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/answer/webui/popup/UIFAQSettingForm.gtmpl", 
+    template = "app:/templates/faq/webui/popup/UIFAQSettingForm.gtmpl", 
     events = {
         @EventConfig(listeners = UIFAQSettingForm.SaveActionListener.class), 
         @EventConfig(listeners = UIFAQSettingForm.SelectTabActionListener.class) 

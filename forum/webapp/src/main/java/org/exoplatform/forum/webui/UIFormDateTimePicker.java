@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.exoplatform.web.application.JavascriptManager;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
 
@@ -193,8 +192,8 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    JavascriptManager jsmanager = context.getJavascriptManager();
-    jsmanager.loadScriptResource("dateTimePicker");
+    context.getJavascriptManager().require("SHARED/UIDateTimePicker", "dateTimePicker");
+    
     Writer w = context.getWriter();
     w.write("<input type=\"text\" class=\"DateTimeInput\" name=\"");
     w.write(getName());

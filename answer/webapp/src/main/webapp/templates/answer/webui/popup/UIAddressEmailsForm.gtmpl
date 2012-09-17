@@ -2,8 +2,9 @@
 <%
 import org.exoplatform.services.organization.User;
  uiform.begin() 
- def rcontext = _ctx.getRequestContext() ;
- rcontext.getJavascriptManager().addJavascript('eXo.forum.CheckBoxManager.init("'+uiform.id+'") ;') ;
+  def requireJS = _ctx.getRequestContext().getJavascriptManager()
+      .require("SHARED/CheckBoxManager", "checkBoxManager");
+  requireJS.addScripts("checkBoxManager.CheckBoxManager.init('"+uiform.id+"') ;");
  %>
 <div class="UIInsertAddress">
   <div class="InsertAddressContainer">

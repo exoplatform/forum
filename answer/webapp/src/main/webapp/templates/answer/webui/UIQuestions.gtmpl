@@ -1,19 +1,19 @@
 <%
-  import org.exoplatform.faq.service.FileAttachment;
-  import org.exoplatform.faq.service.Category;
-  import org.exoplatform.faq.service.Question;
-  import org.exoplatform.faq.service.Answer;
-  import org.exoplatform.faq.service.Comment;
-  import org.exoplatform.answer.webui.ValidatorDataInput;
-  import org.exoplatform.answer.webui.FAQUtils;
-  import org.exoplatform.web.application.JavascriptManager;
-
-  String compId = uicomponent.getId(); 
-  def rcontext = _ctx.getRequestContext();
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript('eXo.answer.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
-  jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
-  jsmanager.addCustomizedOnLoadScript('eXo.answer.UIAnswersPortlet.loadActionScroll();');
+	import org.exoplatform.faq.service.FileAttachment;
+	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.Answer;
+	import org.exoplatform.faq.service.Comment;
+	import org.exoplatform.answer.webui.ValidatorDataInput;
+	import org.exoplatform.answer.webui.FAQUtils;
+	
+	String compId = uicomponent.getId(); 
+	String hileLeftPanels = _ctx.appRes("UIQuestions.label.HileLeftPanels");
+	String showLeftPanels = _ctx.appRes("UIQuestions.label.ShowLeftPanels");
+	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+	requireJS.addScripts("eXo.answer.UIAnswersPortlet.initContextMenu('"+compId+"') ;")
+	         .addScripts("eXo.answer.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + hileLeftPanels + "', '" + showLeftPanels + "');")
+	         .addScripts("eXo.answer.UIAnswersPortlet.loadActionScroll();");
   String cateId = uicomponent.getCategoryId();
   uicomponent.setIsModerators(); //reset permission
   boolean canEditQuestion = uicomponent.getCanEditQuestion();
@@ -948,7 +948,7 @@
     <%
       if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
         String divId = uicomponent.getQuestionView();
-        jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.jumToQuestion('"+divId+"');");
+        requireJS.addScripts("eXo.answer.UIAnswersPortlet.jumToQuestion('"+divId+"');");
       }
     %>
   </div>

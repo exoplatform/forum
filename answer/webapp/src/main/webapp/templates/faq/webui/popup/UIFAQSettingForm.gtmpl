@@ -1,6 +1,7 @@
 <% 
 	import org.exoplatform.faq.service.Category;
 	uiform.initSettingForm();
+	_ctx.getRequestContext().getJavascriptManager().require("SHARED/AnswerUtils", null);
 %>
 <div class="UIFAQSettingForm">
 	<% uiform.begin() %>
@@ -81,10 +82,10 @@
 											      if(i == 1) {%>
 												      <div class="FAQDomNode">
 																<div id="FAQCate$i" class="FAQCate ClearFix">
-																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																	<div class="Icon CategoryIcon" onclick="eXo.answer.AnswerUtils.checkedNode(this);">
 																		<%tabconten.renderChild(cateId);%>
 																 	</div>
-																	<label for="$cateId" class="LabelNameCategory" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+																	<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 																</div>
 																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 											  	<%
@@ -95,10 +96,10 @@
 											        	</div>
 												      <div class="FAQDomNode">
 											        	<div class="FAQCate ClearFix">
-											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+											        			<div class="Icon CategoryIcon" onclick="eXo.answer.AnswerUtils.checkedNode(this);">
 																			<%tabconten.renderChild(cateId);%>
 																		</div>
-																		<label for="$cateId" class="LabelNameCategory" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+																		<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 																</div>
 																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 																
@@ -107,10 +108,10 @@
 													      <div class="FAQDomNode">
 																	<div class="FAQCate ClearFix">
 															    	<div id="FAQCate$i">
-															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+															    		<div class="Icon CategoryIcon" onclick="eXo.answer.AnswerUtils.checkedNode(this);">
 																				<%tabconten.renderChild(cateId);%>
 																			</div>
-															    		<label for="$cateId" class="LabelNameCategory" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"> <%= cate.getCategory().getName();%></label>
+															    		<label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')"> <%= cate.getCategory().getName();%></label>
 															    	</div>
 															    </div>
 																  <div class="FAQChildNodeContainer" id="FAQViewChild$i">
@@ -122,10 +123,10 @@
 											     		<%}%>
 												      <div class="FAQDomNode">
 															 <div class="FAQCate ClearFix">
-															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+															 	 <div class="Icon CategoryIcon" onclick="eXo.answer.AnswerUtils.checkedNode(this);">
 																		<%tabconten.renderChild(cateId);%>
 																 </div>
-																 <label for="$cateId" class="LabelNameCategory" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
+																 <label for="$cateId" class="LabelNameCategory" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 															 </div>
 															 <div class="FAQChildNodeContainer" id="FAQViewChild$i">
 											     <%

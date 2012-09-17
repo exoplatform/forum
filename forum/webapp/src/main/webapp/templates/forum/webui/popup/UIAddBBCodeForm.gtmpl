@@ -1,9 +1,3 @@
-<%
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsManager = rcontext.getJavascriptManager();
-	jsManager.loadScriptResource("forumResources-syntaxhighlighter");
-%>
 <div class="UIAddBBCodeForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
@@ -98,7 +92,8 @@
                 </div>
 							</td>
 						</tr>
-						<% } else { 
+						<% } else {
+						   org.exoplatform.forum.ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
 							 String actionPriview = uicomponent.event("Preview","back");
 						%>
 						<tr>

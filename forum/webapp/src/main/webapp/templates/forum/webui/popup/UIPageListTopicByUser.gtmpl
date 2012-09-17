@@ -7,11 +7,8 @@
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.TimeConvertUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
-	import org.exoplatform.web.application.JavascriptManager;
 	
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
+	ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;");
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;

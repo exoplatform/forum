@@ -20,7 +20,7 @@
 //
 // create namespaces
 //
-dp = {
+window.dp = {
 	sh :
 	{
 		Toolbar : {},
@@ -85,7 +85,7 @@ dp.sh.Toolbar.Commands = {
 			{
 				var flashcopier = highlighter.flashCopier;
 				
-				if(flashcopier === null)
+				if(flashcopier === null || String(typeof flashcopier) === "undefined")
 				{
 					flashcopier = document.createElement('div');
 					highlighter.flashCopier = flashcopier;

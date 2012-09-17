@@ -1,11 +1,8 @@
 <%
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.ForumSessionUtils;
-  import org.exoplatform.web.application.JavascriptManager;
   import org.exoplatform.forum.ForumUtils;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addCustomizedOnLoadScript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','true');") ;
+  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','true');");
   List bookMarks = uiform.getBookMark();
 %>
 <div class="UIShowBookMarkForm">

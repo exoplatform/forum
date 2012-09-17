@@ -20,32 +20,31 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
-  <portlet>
-    <name>AnswersPortlet</name>
-    <module>
-      <depends>
-        <module>answersPortlet</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>FAQPortlet</name>
-    <module>
-      <depends>
-        <module>fAQPortlet</module>
-      </depends>
-    </module>
-  </portlet>
-
   <module>
-    <name>fAQPortlet</name>
+    <name>FaqPortlet</name>
     <script>
       <name>eXo.faq.UIFaqPortlet</name>
       <path>/javascript/eXo/faq/UIFaqPortlet.js</path>
     </script>
+   <depends>
+      <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
     <depends>
-      <module>forumResources</module>
+      <module>webui-ext</module>
+    </depends>
+    <depends>
+      <module>webui</module>
+    </depends>
+    <depends>
+      <module>base</module>
+    </depends>
+    <depends>
+      <module>navigation</module>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
   </module>
 
@@ -57,36 +56,79 @@
     </script>
     <depends>
       <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>EventManager</module>
+      <as>eventManager</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
   </module>
 
   <module>
-    <name>answersPortlet</name>
+    <name>AnswerUtils</name>
+    <script>
+      <name>eXo.answer.AnswerUtils</name>
+      <path>/javascript/eXo/answer/AnswerUtils.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends>
+  </module>
+
+  <module>
+    <name>UIAnswersPortlet</name>
     <script>
       <name>eXo.answer.UIAnswersPortlet</name>
       <path>/javascript/eXo/answer/UIAnswersPortlet.js</path>
     </script>
     <depends>
-      <module>DragDrop</module>
+      <module>AnswerUtils</module>
     </depends>
     <depends>
-      <module>forumResources</module>
+      <module>DragDrop</module>
+      <as>dragDrop</as>
     </depends>
     <depends>
       <module>MaskLayerControl</module>
+      <as>maskLayer</as>
     </depends>
     <depends>
       <module>UIContextMenu</module>
+      <as>contextMenu</as>
     </depends>
     <depends>
       <module>CheckBoxManager</module>
+      <as>checkBoxManager</as>
     </depends>
     <depends>
-      <module>EventManager</module>
+      <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>webui-ext</module>
+    </depends>
+    <depends>
+      <module>webui</module>
+    </depends>
+    <depends>
+      <module>base</module>
     </depends>
     <depends>
       <module>navigation</module>
     </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends> 
   </module>
 
 </gatein-resources>

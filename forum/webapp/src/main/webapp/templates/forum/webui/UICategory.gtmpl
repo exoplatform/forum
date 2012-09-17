@@ -10,20 +10,21 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	Category category = uicomponent.getCategory();
 	if(category == null) return ; 
-	UserProfile userProfile = uicomponent.getUserProfile();
-%>
-<% 
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax()+"') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');") ;
+
+	String [] scripts = [
+							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
+	      			"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+	      			"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
+	      			"eXo.forum.UIForumPortlet.goLastPost('top');",
+	      			"eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');"
+          	];
+  ForumUtils.addScripts(null, null, scripts);
+               
 	String categoryId = category.getId();
 	boolean isShowMenu = !UserHelper.isAnonim();
+	UserProfile userProfile = uicomponent.getUserProfile();
 	String userLogin = userProfile.getUserId() ;
 	boolean isAdmin = false ;
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
@@ -329,7 +330,7 @@
 										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 										<div class="LastPostInfos">
 											<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
-											<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
+											<a style="color:#058EE6;" href="javaScript:void(0)" class="UserMenuInfo">$screemNamePost</a>
 											<span class="DateTime">&nbsp;($dateTime)</span>
 											<div class="UIPopupInfoMenu">
                         <div class="UIPopupInfoContent">

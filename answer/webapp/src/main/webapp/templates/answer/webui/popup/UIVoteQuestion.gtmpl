@@ -1,10 +1,5 @@
-<%
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-%>
-<% uiform.begin() %>
 <div class="UIRatingForm">
+<% uiform.begin() %>
 	<div class="VoteFormContainer">
 		<div class="RatingInfoContainer">
 			<div class="OptionsContainer ClearFix">
@@ -27,5 +22,5 @@
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Close"); %></a>
     </div>
 	</div>
-</div>
 <%uiform.end()%>
+</div>

@@ -32,24 +32,30 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
-  <portlet>
-    <name>PollPortlet</name>
-    <module>
-      <depends>
-        <module>pollPortlet</module>
-      </depends>
-    </module>
-  </portlet>
 
   <module>
-    <name>pollPortlet</name>
+    <name>UIPollPortlet</name>
+    <as>poll</as>
     <script>
       <name>eXo.poll.UIPollPortlet</name>
       <path>/javascript/eXo/poll/UIPollPortlet.js</path>
     </script>
     <depends>
-      <module>forumResources</module>
+      <module>ForumUtils</module>
+      <as>utils</as>
     </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends> 
+    <depends>
+      <module>webui-ext</module>
+    </depends>
+    <depends>
+      <module>webui</module>
+    </depends>
+    <depends>
+      <module>base</module>
+    </depends>    
   </module>
-
 </gatein-resources>

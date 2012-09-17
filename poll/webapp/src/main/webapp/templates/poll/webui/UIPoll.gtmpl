@@ -2,6 +2,9 @@
   import org.exoplatform.forum.common.UserHelper; 
   import org.exoplatform.poll.service.Poll ;
   import org.exoplatform.poll.Utils ;
+  import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 %>
   <% 
     uiform.begin() ; 
@@ -25,7 +28,7 @@
             <span><%=_ctx.appRes("UIPoll.label.Poll"); %>:</span>
             <span>${question}</span>
           </div>
-          <div class="IconRight CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" onclick="eXo.poll.UIPollPortlet.expandCollapse(this) ;"><span></span></div>
+          <div class="IconRight CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>"><span></span></div>
         <% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
           
           <div class="ContentAction ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">

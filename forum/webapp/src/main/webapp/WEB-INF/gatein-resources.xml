@@ -31,36 +31,41 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
-  <portlet>
-    <name>ForumPortlet</name>
-    <module>
-      <depends>
-        <module>forumPortlet</module>
-      </depends>
-    </module>
-  </portlet>
-
   <module>
-    <name>forumPortlet</name>
+    <name>UIForumPortlet</name>
     <script>
       <name>eXo.forum.UIForumPortlet</name>
       <path>/javascript/eXo/forum/UIForumPortlet.js</path>
     </script>
     <depends>
-      <module>forumResources</module>
-    </depends>
-    <depends>
       <module>MaskLayerControl</module>
+      <as>maskLayer</as>
     </depends>
     <depends>
       <module>UIContextMenu</module>
+      <as>contextMenu</as>
     </depends>
     <depends>
       <module>CheckBoxManager</module>
+      <as>checkBoxManager</as>
     </depends>
     <depends>
       <module>ForumUtils</module>
+      <as>utils</as>
     </depends>
+    <depends>
+      <module>webui-ext</module>
+    </depends>
+    <depends>
+      <module>webui</module>
+    </depends>
+    <depends>
+      <module>base</module>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends> 
     <depends>
       <module>navigation</module>
     </depends>
@@ -74,10 +79,15 @@
 		</script>
 		<depends>
 			<module>ForumUtils</module>
+			<as>utils</as>
 		</depends>
 		<depends>
-			<module>JSON</module>
+			<module>cometd</module>
 		</depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends> 
 	</module>
 
   <module>
@@ -88,9 +98,14 @@
     </script>
     <depends>
       <module>ForumUtils</module>
+      <as>utils</as>
     </depends>
     <depends>
       <module>cometd</module>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
   </module>
 
@@ -102,6 +117,11 @@
     </script>
     <depends>
       <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
     <depends>
       <module>cometd</module>
@@ -116,6 +136,11 @@
     </script>
     <depends>
       <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
     <depends>
       <module>base</module>

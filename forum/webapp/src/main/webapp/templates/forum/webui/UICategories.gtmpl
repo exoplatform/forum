@@ -10,12 +10,14 @@
   import org.exoplatform.forum.ForumSessionUtils;
   import org.exoplatform.forum.service.UserProfile ;
   import org.exoplatform.forum.webui.UIForumListSearch;
-  import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
+  String [] scripts = [
+				"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
+  			"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+  			"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');"
+  			];
+  ForumUtils.addScripts(null, null, scripts);
+  
   UserProfile userProfile = uicomponent.getUserProfile();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');") ;
   String userLogin = userProfile.getUserId() ;
   boolean isAdmin = false ;
   if(userProfile.userRole == 0) isAdmin = true ;
@@ -279,7 +281,7 @@
                         <% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
                         <div class="LastPostInfos">
                           <span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
-                          <a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
+                          <a style="color:#058EE6;" href="javaScript:void(0)" class="UserMenuInfo">$screemNamePost</a>
                           <div class="UIPopupInfoMenu">
                             <div class="UIPopupInfoContent">
                               <div class="Arrow"><span></span></div>

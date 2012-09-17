@@ -1,5 +1,4 @@
 <%  
-	import org.exoplatform.forum.webui.UIForumDescription ;
 	import org.exoplatform.forum.service.Forum ;
   Forum forum = uicomponent.getForum();
 %>
@@ -12,7 +11,7 @@
 				<span class="NameForum"><%=forum.getForumName()%></span>
 		<%
 			String des = forum.getDescription();
-			if(des != null && des.length() > 0){
+			if(des != null && des.trim().length() > 0) {
 		%>
 				<span class="Description">: $des</span>
 		<%} %>

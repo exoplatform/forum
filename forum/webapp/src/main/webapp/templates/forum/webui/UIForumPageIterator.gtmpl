@@ -1,11 +1,8 @@
 <%
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
-	import org.exoplatform.forum.service.JCRPageList ;
-	 
 	List totals = uicomponent.getInfoPage() ; 
 	int pageSelected = uicomponent.getPageSelected() ;
 	int max_page = totals.get(3) ;
-	String selected = "" + pageSelected ;
+	String selected = String.valueOf(pageSelected) ;
 %>
 <div class="UIForumPageIterator ClearFix" id="$uicomponent.id">
 <% if(max_page > 1) {%>

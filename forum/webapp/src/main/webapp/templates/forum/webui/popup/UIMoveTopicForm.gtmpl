@@ -1,7 +1,6 @@
 <%	
 	import org.exoplatform.forum.service.Category ;
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
 %>
 
 <div class="UIMoveTopicForm">

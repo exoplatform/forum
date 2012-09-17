@@ -11,9 +11,8 @@
   import org.exoplatform.web.application.JavascriptManager;
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicsTag') ;") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicsTag') ;") ;
-  jsmanager.addJavascript("eXo.forum.CheckBoxManager.init('UITopicContent') ;") ;
+  //jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicsTag') ;") ;
+  //jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicsTag') ;") ;
 %>
 <% uiform.begin() %>
 <%
@@ -184,7 +183,7 @@
                   $approved
                 </div>
                 <% String screemNamePost =  uicomponent.getScreenName(topicBy);%>
-                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
+                  <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$screemNamePost</a>
                   <div class="UIPopupInfoMenu">
                     <div class="UIPopupInfoContent">
                       <div class="Arrow"><span></span></div>
@@ -233,7 +232,7 @@
                   <a class="RightArrowIcon" title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>" href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"></a>
                   <%=_ctx.appRes("UITopicContainer.label.by");%>
                   <% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
-                  <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
+                  <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewPostNewBy</a>
                   <div class="UIPopupInfoMenu LastPostCategory">
                     <div class="UIPopupInfoContent">
                       <div class="Arrow"><span></span></div>

@@ -5,9 +5,8 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	import org.exoplatform.faq.service.Utils;
 	String compId = uicomponent.getId() ; 
-	def rcontext = _ctx.getRequestContext() ;	
-	rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-%>
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+  requireJS.addScripts("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+compId+"');");%>
 <div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%=_ctx.appRes("UIMoveQuestionForm.label.MoveQuestionTo")%>:</div>
@@ -19,7 +18,7 @@
 		    String link = uicomponent.event("Ok",Utils.CATEGORY_HOME);
 		    %>
 		    <div id="FAQCateRoot" style="padding-left:20px;">
-					<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQRootChildren')" ondblclick="$link">
+					<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQRootChildren')" ondblclick="$link">
 						<img src="/answer/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="<%=uicomponent.homeCategoryName%>"/>
 					</a>
 				</div>
@@ -43,13 +42,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -68,13 +67,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -92,13 +91,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -118,13 +117,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 						    			<div id="FAQCate$i" style="float:left">
-						    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+						    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 						    					$categoryName
 						    				</a>
 						    			</div>
 					    			<%} else { %>
 							    			<div id="FAQCate$i" style="float:left">
-							    				<a href="javaScript:void(0)" onclick="eXo.answer.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+							    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" ondblclick="$link">
 							    					$categoryName
 							    				</a>
 							    			</div>

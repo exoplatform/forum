@@ -1,15 +1,13 @@
 <% 
-	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.answer.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
 	import org.exoplatform.answer.webui.FAQUtils;
 	import org.exoplatform.faq.service.Answer;
 	import org.exoplatform.faq.service.Comment;
-	def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnResizeJavascript('eXo.answer.UIAnswersPortlet.reSizeImagesView');
-	jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.reSizeImagesView();");
+	
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+  requireJS.addScripts("eXo.answer.UIAnswersPortlet.reSizeImagesView();");
  %>
 <div class="UIPopupViewQuestion">
 	<% uiform.begin() %>

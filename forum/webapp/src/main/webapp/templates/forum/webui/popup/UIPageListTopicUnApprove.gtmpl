@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List topics = uicomponent.getTopicsUnApprove() ;

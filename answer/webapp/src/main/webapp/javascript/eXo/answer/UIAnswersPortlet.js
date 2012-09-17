@@ -1,37 +1,37 @@
 ;(function($, window, document) {
 
-  function UIAnswersPortlet() {
-    this.viewImage = true;
-    this.scrollManagerLoaded = false;
-    this.hiddentMenu = true;
-    this.scrollMgr = [];
-    this.portletId = 'UIAnswersPortlet';
+  var UIAnswersPortlet = {
+    viewImage : true,
+    scrollManagerLoaded : false,
+    hiddentMenu : true,
+    scrollMgr : [],
+    elements : [],
+    portletId : 'UIAnswersPortlet'
   };
   
-  UIAnswersPortlet.prototype.init = function (portletId) {
-    this.portletId = new String(portletId);
-    this.updateContainersHeight();
-    this.controlWorkSpace();
-    this.disableContextMenu(this.portletId);
-    eXo.core.Browser.addOnResizeCallback(portletId, this.resizeCallback)
-    eXo.core.Browser.init();
+  UIAnswersPortlet.init = function (portletId) {
+    UIAnswersPortlet.portletId = String(portletId);
+    UIAnswersPortlet.updateContainersHeight();
+    UIAnswersPortlet.controlWorkSpace();
+    UIAnswersPortlet.disableContextMenu(UIAnswersPortlet.portletId);
+    utils.ForumUtils.onResize(UIAnswersPortlet.resizeCallback);
   };
 
-  UIAnswersPortlet.prototype.resizeCallback = function() {
-    eXo.forum.ForumUtils.setMaskLayer(this.portletId);
+  UIAnswersPortlet.resizeCallback = function() {
+    utils.ForumUtils.setMaskLayer(UIAnswersPortlet.portletId);
   };
   
-  UIAnswersPortlet.prototype.updateContainersHeight = function () {
-    var viewQuestionContentEl = findId(this.portletId + ' div.CategoriesContainer div.ViewQuestionContent');
+  UIAnswersPortlet.updateContainersHeight = function () {
+    var viewQuestionContentEl = findId(UIAnswersPortlet.portletId + ' div.CategoriesContainer div.ViewQuestionContent');
     viewQuestionContentEl.css('height', viewQuestionContentEl.height() - 67);
   };
   
-  UIAnswersPortlet.prototype.controlWorkSpace = function () {
-    $('#ControlWorkspaceSlidebar div.SlidebarButton').on('click', this.onClickSlidebarButton);
-    setTimeout(this.reSizeImages, 1500);
+  UIAnswersPortlet.controlWorkSpace = function () {
+    $('#ControlWorkspaceSlidebar div.SlidebarButton').on('click', UIAnswersPortlet.onClickSlidebarButton);
+    setTimeout(UIAnswersPortlet.reSizeImages, 1500);
   };
   
-  UIAnswersPortlet.prototype.disableContextMenu = function (id) {
+  UIAnswersPortlet.disableContextMenu = function (id) {
     var oncontextmenus = findId(id + ' .disableContextMenu');
     for (var i = 0; i < oncontextmenus.length; i++) {
       oncontextmenus.eq(i).on('contextmenu', function() {
@@ -40,7 +40,7 @@
     }
   };
   
-  UIAnswersPortlet.prototype.selectCateInfor = function (number) {
+  UIAnswersPortlet.selectCateInfor = function (number) {
     var obj = null;
     for (var i = 0; i < 3; i++) {
       obj = $('#uicategoriesCateInfors' + i);
@@ -49,34 +49,34 @@
     }
   };
   
-  UIAnswersPortlet.prototype.setCheckEvent = function (isCheck) {
-    this.hiddentMenu = isCheck;
+  UIAnswersPortlet.setCheckEvent = function (isCheck) {
+    UIAnswersPortlet.hiddentMenu = isCheck;
   };
   
-  UIAnswersPortlet.prototype.viewTitle = function (id) {
+  UIAnswersPortlet.viewTitle = function (id) {
     findId(id).css('display', 'block');
-    this.hiddentMenu = false;
+    UIAnswersPortlet.hiddentMenu = false;
   };
   
-  UIAnswersPortlet.prototype.hiddenTitle = function (id) {
+  UIAnswersPortlet.hiddenTitle = function (id) {
     findId(id).css('display', 'none');
   };
   
-  UIAnswersPortlet.prototype.hiddenMenu = function () {
-    if (this.hiddentMenu) {
-      this.hiddenTitle('FAQCategroManager');
-      this.hiddentMenu = false;
+  UIAnswersPortlet.hiddenMenu = function () {
+    if (UIAnswersPortlet.hiddentMenu) {
+      UIAnswersPortlet.hiddenTitle('FAQCategroManager');
+      UIAnswersPortlet.hiddentMenu = false;
     }
     setTimeout('eXo.answer.UIAnswersPortlet.checkAction()', 1000);
   };
   
-  UIAnswersPortlet.prototype.checkAction = function () {
-    if (this.hiddentMenu) {
+  UIAnswersPortlet.checkAction = function () {
+    if (UIAnswersPortlet.hiddentMenu) {
       setTimeout('eXo.answer.UIAnswersPortlet.hiddenMenu()', 1500);
     }
   };
   
-  UIAnswersPortlet.prototype.checkCustomView = function (isNotSpace, hideTitle, showTitle) {
+  UIAnswersPortlet.checkCustomView = function (isNotSpace, hideTitle, showTitle) {
     var cookie = eXo.core.Browser.getCookie('FAQCustomView');
     cookie = (cookie == 'none' || cookie == '' && isNotSpace == 'false') ? 'none' : '';
     $('#FAQViewCategoriesColumn').css('display', cookie);
@@ -92,7 +92,7 @@
     eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
   };
   
-  UIAnswersPortlet.prototype.changeCustomView = function (change, hideTitle, showTitle) {
+  UIAnswersPortlet.changeCustomView = function (change, hideTitle, showTitle) {
     var columnCategories = $('#FAQViewCategoriesColumn');
     var buttomView = $('#FAQCustomView');
     var title = $('#FAQTitlePanels');
@@ -111,11 +111,11 @@
     }
     
     eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
-    if ($.isFunction(this.initActionScroll)) this.initActionScroll();
-    if ($.isFunction(this.initBreadCumbScroll)) this.initBreadCumbScroll();
+    if ($.isFunction(UIAnswersPortlet.initActionScroll)) UIAnswersPortlet.initActionScroll();
+    if ($.isFunction(UIAnswersPortlet.initBreadCumbScroll)) UIAnswersPortlet.initBreadCumbScroll();
   };
   
-  UIAnswersPortlet.prototype.changeStarForVoteQuestion = function (i, id) {
+  UIAnswersPortlet.changeStarForVoteQuestion = function (i, id) {
     findId(id + i).attr('class', 'OverVote');
     
     for (var j = 0; j <= i; j++) {
@@ -127,16 +127,16 @@
     }
   };
   
-  UIAnswersPortlet.prototype.jumToQuestion = function (id) {
+  UIAnswersPortlet.jumToQuestion = function (id) {
     var viewContent = findId(id.substring(id.lastIndexOf('/') + 1)).parents('.ViewQuestionContent');
     if (viewContent.exists()) {
       viewContent.scrollTop(viewContent.position().top);
     }
   };
   
-  // Remove UIAnswersPortlet.prototype.OverButton function.
+  // Remove UIAnswersPortlet.OverButton function.
   
-  UIAnswersPortlet.prototype.viewDivById = function (id) {
+  UIAnswersPortlet.viewDivById = function (id) {
     var obj = findId(id);
     if (obj.css('display') === 'none') {
       obj.css('display', 'block');
@@ -146,20 +146,20 @@
     }
   };
   
-  // Remove UIAnswersPortlet.prototype.FAQViewAllBranch function.
-  // Remove UIAnswersPortlet.prototype.hidePicture function.
+  // Remove UIAnswersPortlet.FAQViewAllBranch function.
+  // Remove UIAnswersPortlet.hidePicture function.
   
-  UIAnswersPortlet.prototype.showPicture = function (src) {
-    if (this.viewImage) {
+  UIAnswersPortlet.showPicture = function (src) {
+    if (UIAnswersPortlet.viewImage) {
       eXo.forum.MaskLayerControl.showPicture(src);
     }
   };
   
-  // Remove UIAnswersPortlet.prototype.getImageSize function.
-  // Remove UIAnswersPortlet.prototype.showFullScreen function.
-  // Remove UIAnswersPortlet.prototype.showMenu function.
+  // Remove UIAnswersPortlet.getImageSize function.
+  // Remove UIAnswersPortlet.showFullScreen function.
+  // Remove UIAnswersPortlet.showMenu function.
   
-  UIAnswersPortlet.prototype.printPreview = function (obj) {
+  UIAnswersPortlet.printPreview = function (obj) {
     var uiPortalApplication = $("#UIPortalApplication");
     var answerContainer = $(obj).parents('.AnswersContainer');
     var printArea = answerContainer.find('div.QuestionSelect:first');
@@ -192,19 +192,19 @@
     if ($.browser.msie) {
       dummyPortlet.find('.DisablePrint').hide();
     }
-    dummyPortlet = this.removeLink(dummyPortlet);
+    dummyPortlet = UIAnswersPortlet.removeLink(dummyPortlet);
     dummyPortlet.css('width', '98.5%');
-    this.removeLink(dummyPortlet).insertBefore(uiPortalApplication);
+    UIAnswersPortlet.removeLink(dummyPortlet).insertBefore(uiPortalApplication);
     uiPortalApplication.hide();
     $(window).scrollTop(0).scrollLeft(0);
   
-    cancelAction.on('click', eXo.answer.UIAnswersPortlet.closePrint);
+    cancelAction.on('click', UIAnswersPortlet.closePrint);
     printAction.on('click', window.print);
   
-    this.viewImage = false;
+    UIAnswersPortlet.viewImage = false;
   };
   
-  UIAnswersPortlet.prototype.printAll = function (obj) {
+  UIAnswersPortlet.printAll = function (obj) {
     var container = $('<div></div>').addClass('UIAnswersPortlet');
     if (typeof (obj) == 'string') obj = findId(obj);
     $('#UIWorkingWorkspace').hide();
@@ -212,9 +212,9 @@
     $('body').append(container);
   };
   
-  // Remove UIAnswersPortlet.prototype.closePrintAll function.
+  // Remove UIAnswersPortlet.closePrintAll function.
   
-  UIAnswersPortlet.prototype.removeLink = function (rootNode) {
+  UIAnswersPortlet.removeLink = function (rootNode) {
     rootNode.find('a').attr('href', 'javascript:void(0);');
     rootNode.find('a[onclick]').removeAttr('onclick');
 
@@ -235,53 +235,48 @@
     return rootNode;
   };
   
-  // Remove UIAnswersPortlet.prototype.findDescendantsByAttribute function.
+  // Remove UIAnswersPortlet.findDescendantsByAttribute function.
   
-  UIAnswersPortlet.prototype.closePrint = function () {
+  UIAnswersPortlet.closePrint = function () {
     $('#UIPortalApplication').css('display', 'block');
     var children = $('body').children();
     for (var i = 0; i < children.length; i++) {
       if (children.eq(i).hasClass('UIAnswersPortlet')) children.eq(i).remove();
     }
     $(window).scrollTop(0).scrollLeft(0);
-    this.viewImage = true;
+    UIAnswersPortlet.viewImage = true;
   };
 
-  UIAnswersPortlet.prototype.loadActionScroll = function () {
-    var uiNav = eXo.answer.UIAnswersPortlet;
+  UIAnswersPortlet.loadActionScroll = function () {
     var container = $("#UIQuestions");
     if (container.exists()) {
-      var callback = uiNav.initActionScroll;
-      uiNav.loadScroll("UIQuestions", container, callback);
+      UIAnswersPortlet.loadScroll("UIQuestions", container, UIAnswersPortlet.initActionScroll);
     }
   };
 
-  UIAnswersPortlet.prototype.loadBreadcumbScroll = function () {
-    var uiNav = eXo.answer.UIAnswersPortlet;
+  UIAnswersPortlet.loadBreadcumbScroll = function () {
     var container = $("#UIBreadcumbs");
     if (container.exists()) {
-      var callback = uiNav.initBreadcumbScroll;
-      uiNav.loadScroll("UIBreadcumbs", container, callback);
+      UIAnswersPortlet.loadScroll("UIBreadcumbs", container, UIAnswersPortlet.initBreadcumbScroll);
     }
   };
 
-  UIAnswersPortlet.prototype.initBreadcumbScroll = function () {
+  UIAnswersPortlet.initBreadcumbScroll = function () {
     if ($('#UIPortalApplication').css('display') == 'none') return;
-    var uiNav = eXo.answer.UIAnswersPortlet;
-    if(uiNav.scrollMgr['UIBreadcumbs'] != undefined) {
-      uiNav.scrollMgr['UIBreadcumbs'].init();
-      uiNav.scrollMgr['UIBreadcumbs'].checkAvailableSpace();
-      if (uiNav.scrollMgr['UIBreadcumbs'].arrowsContainer) {
-        uiNav.scrollMgr['UIBreadcumbs'].renderElements();
+    if(UIAnswersPortlet.scrollMgr['UIBreadcumbs'] != undefined) {
+      UIAnswersPortlet.scrollMgr['UIBreadcumbs'].init();
+      UIAnswersPortlet.scrollMgr['UIBreadcumbs'].checkAvailableSpace();
+      if (UIAnswersPortlet.scrollMgr['UIBreadcumbs'].arrowsContainer) {
+        UIAnswersPortlet.scrollMgr['UIBreadcumbs'].renderElements();
       }
     }
   };
 
-  UIAnswersPortlet.prototype.loadScroll = function (scrollname, container, callback) {
-    var uiNav = eXo.answer.UIAnswersPortlet;
+  UIAnswersPortlet.loadScroll = function (scrollname, container, callback) {
+    var uiNav = UIAnswersPortlet;
     var controlButtonContainer = container.find('td.ControlButtonContainer:first');
     if (container.exists() && controlButtonContainer.exists()) {
-      uiNav.scrollMgr[scrollname] = new ScrollManager(scrollname);
+      uiNav.scrollMgr[scrollname] = new navigation.ScrollManager(scrollname);
       uiNav.scrollMgr[scrollname].initFunction = callback;
       uiNav.scrollMgr[scrollname].mainContainer = controlButtonContainer.eq(0);
       uiNav.scrollMgr[scrollname].answerLoadItems('ControlButton');
@@ -300,9 +295,9 @@
     }
   };
 
-  UIAnswersPortlet.prototype.scrollCallback = function () {};
+  UIAnswersPortlet.scrollCallback = function () {};
 
-  UIAnswersPortlet.prototype.initActionScroll = function () {
+  UIAnswersPortlet.initActionScroll = function () {
     if ($('#UIPortalApplication').css('display') == 'none') return;
     var uiNav = eXo.answer.UIAnswersPortlet;
     if(uiNav.scrollMgr['UIQuestions'] != undefined) {
@@ -314,19 +309,19 @@
     }
   };
   
-  UIAnswersPortlet.prototype.onClickSlidebarButton = function () {
-    if ($('#UIWorkspaceContainer').css('display') == none) setTimeout(this.reSizeImages, 500);
+  UIAnswersPortlet.onClickSlidebarButton = function () {
+    if ($('#UIWorkspaceContainer').css('display') == none) setTimeout(UIAnswersPortlet.reSizeImages, 500);
   };
   
-  UIAnswersPortlet.prototype.reSizeImagesView = function () {
+  UIAnswersPortlet.reSizeImagesView = function () {
     setTimeout('eXo.answer.UIAnswersPortlet.setSizeImages(10, "SetWidthImageContent")', 1000);
   };
   
-  UIAnswersPortlet.prototype.reSizeImages = function () {
-    eXo.answer.UIAnswersPortlet.setSizeImages(10, 'SetWidthContent');
+  UIAnswersPortlet.reSizeImages = function () {
+    UIAnswersPortlet.setSizeImages(10, 'SetWidthContent');
   };
   
-  UIAnswersPortlet.prototype.setSizeImages = function (delta, classParant) {
+  UIAnswersPortlet.setSizeImages = function (delta, classParant) {
     var widthContent = document.getElementById(classParant);
     if (widthContent) {
       var isDesktop = document.getElementById('UIPageDesktop');
@@ -353,26 +348,26 @@
             }
           }
           if (img.width > 600) {
-            images_[i].onclick = eXo.answer.UIAnswersPortlet.showImage;
+            images_[i].onclick = UIAnswersPortlet.showImage;
           }
         }
       }
     }
   };
   
-  UIAnswersPortlet.prototype.showImage = function () {
-    this.showPicture(this.src);
+  UIAnswersPortlet.showImage = function () {
+    UIAnswersPortlet.showPicture(this.src);
   };
   
-  UIAnswersPortlet.prototype.FAQChangeHeightToAuto = function () {
+  UIAnswersPortlet.FAQChangeHeightToAuto = function () {
     $('#UIFAQPopupWindow').find('div.PopupContent:first').css({'height':'auto', 'maxHeight':'500px'});
   };
   
-  UIAnswersPortlet.prototype.initContextMenu = function (id) {
+  UIAnswersPortlet.initContextMenu = function (id) {
     var cont = findId(id);
     if (cont.exists()) {
-      this.disableContextMenu(id);
-      var uiContextMenu = eXo.forum.UIContextMenu;
+      UIAnswersPortlet.disableContextMenu(id);
+      var uiContextMenu = contextMenu.UIContextMenu;
       if (!uiContextMenu.classNames) {
         uiContextMenu.classNames = new Array("oncontextmenu", "QuestionContextMenu");
     } else {
@@ -384,38 +379,41 @@
     }
   };
   
-  UIAnswersPortlet.prototype.setSelectboxOnchange = function (id) {
+  UIAnswersPortlet.setSelectboxOnchange = function (id) {
     if (!$.browser.mozilla) return;
     var select = findId(id).find('select.selectbox:first');
-    if (select.exists()) select.attr('onchange',
-                                      select.attr('onchange').replace('javascript:', 'javascript:eXo.answer.UIAnswersPortlet.setDisableSelectbox(this);'));
+    if (select.exists()) {
+      select.attr('onchange', 
+          select.attr('onchange')
+                .replace('javascript:', 'javascript:eXo.answer.UIAnswersPortlet.setDisableSelectbox(this);'));
+    }
   };
   
-  UIAnswersPortlet.prototype.setDisableSelectbox = function (selectbox) {
+  UIAnswersPortlet.setDisableSelectbox = function (selectbox) {
     selectbox.disabled = true;
   };
   
-  UIAnswersPortlet.prototype.voteAnswerUpDown = function (imageId, isVote) {
+  UIAnswersPortlet.voteAnswerUpDown = function (imageId, isVote) {
     var obj = findId(imageId);
     if (isVote) obj.css({'filter':' alpha(opacity: 100)', 'MozOpacity':1});
     else obj.css({'filter':' alpha(opacity: 70)', 'MozOpacity':0.7});
   };
   
-  UIAnswersPortlet.prototype.openDiscussLink = function (link) {
+  UIAnswersPortlet.openDiscussLink = function (link) {
     link = link.replace(/&amp;/g, "&");
     window.open(link);
   };
   
-  UIAnswersPortlet.prototype.executeLink = function (evt) {
+  UIAnswersPortlet.executeLink = function (evt) {
     var onclickAction = String(this.getAttribute('actions'));
     eval(onclickAction);
-    eXo.forum.ForumUtils.cancelEvent(evt);
+    utils.ForumUtils.cancelEvent(evt);
     return false;
   };
   
-  // Remove UIAnswersPortlet.prototype.createLink function.
+  // Remove UIAnswersPortlet.createLink function.
   
-  UIAnswersPortlet.prototype.showTreeNode = function (obj, isShow) {
+  UIAnswersPortlet.showTreeNode = function (obj, isShow) {
     if (isShow === "false") return;
     var parentNode = $(obj).parents('.ParentNode');
     var nodes = parentNode.find('div.Node');
@@ -435,12 +433,12 @@
     }
   };
   
-  UIAnswersPortlet.prototype.submitSearch = function (id) {
-    findId(id).on('keydown', this.submitOnKey);
+  UIAnswersPortlet.submitSearch = function (id) {
+    findId(id).on('keydown', UIAnswersPortlet.submitOnKey);
   };
   
-  UIAnswersPortlet.prototype.submitOnKey = function (event) {
-    var key = eXo.forum.ForumUtils.getKeynum(event);
+  UIAnswersPortlet.submitOnKey = function (event) {
+    var key = utils.ForumUtils.getKeynum(event);
     if (key == 13) {
       $(this).find('div.ActionSearch:first').click();
       eXo.core.EventManager.cancelEvent(event);
@@ -448,15 +446,17 @@
     }
   };
   
-  ScrollManager.prototype.answerLoadItems = function (elementClass, clean) {
-    if (clean) this.cleanElements();
-    this.elements.clear();
-    this.elements.pushAll($(this.mainContainer).find('.' + elementClass).toArray().reverse());
+  navigation.ScrollManager.prototype.answerLoadItems = function (elementClass, clean) {
+    if (clean) UIAnswersPortlet.cleanElements();
+    UIAnswersPortlet.elements.clear();
+    UIAnswersPortlet.elements.pushAll($(UIAnswersPortlet.mainContainer).find('.' + elementClass).toArray().reverse());
   };
   
   // Expose
   window.eXo = eXo || {};
   window.eXo.answer = eXo.answer || {} ;
-  window.eXo.answer.UIAnswersPortlet = new UIAnswersPortlet();
+  window.eXo.answer.UIAnswersPortlet = UIAnswersPortlet;
 
 })(gj, window, document);
+
+_module.UIAnswersPortlet = eXo.answer.UIAnswersPortlet;

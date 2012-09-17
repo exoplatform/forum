@@ -1,9 +1,6 @@
 <%  
-	import org.exoplatform.forum.webui.UIForumIconState ;
+	boolean isIconForum = uicomponent.getIsIconForum() ;
 %>
-	<%  
-		boolean isIconForum = uicomponent.getIsIconForum() ;
-	%>
 <div class="UIForumIconState" id="$uicomponent.id">
 	<div class="ForumContains ClearFix">
 	<% if(isIconForum) { %>

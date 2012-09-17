@@ -16,6 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
@@ -120,8 +123,22 @@ public class UIForumActionBar extends UIContainer {
     return ((UIForumPortlet) this.getParent()).getCometdContextName();
   }
 
-  public String getUserToken() throws Exception {
+  public String getUserToken() {
     return ((UIForumPortlet) this.getParent()).getUserToken();
+  }
+  
+  protected void initJavaScripts() {
+    List<String> scripts = new ArrayList<String>();
+    scripts.add("eXo.forum.UIForumPortlet.loadScroll();");
+    if(getUserProfile().getUserRole() <=1) {
+      scripts.add("eXo.forum.UIForumPortlet.visibleAction('"+getId()+"');");
+      StringBuilder init = new StringBuilder("forumJob.ForumTotalJob.init('");
+      init.append(userProfile.getUserId()).append("', '")
+          .append(getUserToken()).append("', '")
+          .append(getCometdContextName()).append("');");
+      ForumUtils.addScripts("ForumTotalJob", "forumJob", init.toString());
+    }
+    ForumUtils.addScripts(null, null, scripts.toArray(new String[]{}));
   }
 
   static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {

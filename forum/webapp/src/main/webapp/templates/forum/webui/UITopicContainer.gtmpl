@@ -1,28 +1,7 @@
 <%
-  import org.exoplatform.forum.ForumUtils ;
-  import org.exoplatform.forum.TimeConvertUtils ;
-  import org.exoplatform.forum.ForumSessionUtils;
   import org.exoplatform.forum.service.Forum ;
-  import org.exoplatform.forum.service.UserProfile ;
-  import org.exoplatform.forum.service.Utils ;
-  import org.exoplatform.forum.webui.UICategory ;
-  import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
-  import org.exoplatform.forum.webui.UITopicContainer ; 
-  import org.exoplatform.forum.common.UserHelper; 
-  import org.exoplatform.web.application.JavascriptManager;
-  
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
-  jsmanager.addJavascript("eXo.forum.CheckBoxManager.init('UITopicContent') ;") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInForum');") ;
+
   Forum forum = uicomponent.getForum() ;
-  String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
-  if(forum != null)  {
-  uicomponent.initPage() ;
-  }
   if(forum == null || uicomponent.isNull()) {
     uicomponent.setNull(false);
 %>
@@ -36,6 +15,14 @@
 <%  
   return;
  }
+  import org.exoplatform.forum.common.UserHelper; 
+  import org.exoplatform.forum.service.UserProfile ;
+  import org.exoplatform.forum.service.Utils ;
+  import org.exoplatform.forum.TimeConvertUtils ;
+  import org.exoplatform.forum.ForumUtils ;
+  
+  String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
+ 	uicomponent.initPage() ;
   List topics = uicomponent.getTopicPageList() ;
   String forumName = forum.getForumName();
   String subForumName = ForumUtils.getSubString(forumName, 35);
@@ -54,6 +41,17 @@
     if(!isLock) hasCreadTopic = uicomponent.getCanAddNewThread() ;
   }
   String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+
+  // add script
+  String [] scripts = [
+          		"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+          		"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
+          		"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
+          		"eXo.forum.UIForumPortlet.goLastPost('top');",
+          		"eXo.forum.UIForumPortlet.submitSearch('SearchInForum');"
+          		];
+	ForumUtils.addScripts(null, null, scripts);
+	ForumUtils.addScripts("CheckBoxManager", "checkBoxManager", "checkBoxManager.CheckBoxManager.init('"+uicomponent.id+"') ;");
 %>
 <div class="UITopicContainer">
   <% uiform.begin() %>
@@ -452,7 +450,7 @@
                     
                       <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
                       <div class="PopupSelectCategory">
-                        <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewTopicBy</a>
+                        <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewTopicBy</a>
                         <div class="UIPopupInfoMenu">
                           <div class="UIPopupInfoContent">
                             <div class="Arrow"><span></span></div>
@@ -506,7 +504,7 @@
                     <div class="PostInfos LastPostInfos">
                       <span><%=_ctx.appRes("UITopicContainer.label.by");%></span> 
                       <% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
-                      <a class="PostBy" href="javaScript:void(0)" onclick="eXo.forum.ForumUtils.showUserMenu(this.parentNode, event);">$viewPostNewBy</a>
+                      <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewPostNewBy</a>
 
                       <div class="UIPopupInfoMenu LastPostCategory">
                         <div class="UIPopupInfoContent">

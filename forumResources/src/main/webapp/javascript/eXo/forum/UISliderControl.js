@@ -1,37 +1,34 @@
-;(function($, window, document) {
-  
-  function UISliderControl() {
-    this.container = null;
-    this.object = null;
-    this.parent = null;
-    this.inputField = null;
-  }
-  
-  UISliderControl.prototype.start = function(obj, evt) {
+var UISliderControl = {
+  container : null,
+  object : null,
+  parent : null,
+  inputField : null,
+
+  start : function(obj, evt) {
     this.container = obj;
-    this.object = $(obj).find('div.SliderPointer').eq(0)[0];
-    this.parent = $(obj).parent();
+    this.object = gj(obj).find('div.SliderPointer').eq(0)[0];
+    this.parent = gj(obj).parent();
     this.inputField = this.parent.find('input').eq(0)[0];
-    var mouseX = eXo.core.Browser.findMouseRelativeX(obj, $.event.fix(evt));
-    var props = eXo.webui.UISliderControl.getValue(mouseX);
-    $(this.object).css('width', props[0] + 'px');
-    $(this.inputField).val(props[1] * 5);
+    var mouseX = eXo.core.Browser.findMouseRelativeX(obj, gj.event.fix(evt));
+    var props = UISliderControl.getValue(mouseX);
+    gj(this.object).css('width', props[0] + 'px');
+    gj(this.inputField).val(props[1] * 5);
     this.parent.find('label[for=' + this.inputField.id + ']').html(props[1] * 5);
     this.parent.on('mousemove', this.execute);
     this.parent.on('mouseup', this.end);
-  };
-  
-  UISliderControl.prototype.execute = function(evt) {
-    var UISliderControl = eXo.webui.UISliderControl;
+  },
+
+  execute : function(evt) {
+    var UISliderControl = UISliderControl;
     var cont = UISliderControl.container;
-    var mouseX = eXo.core.Browser.findMouseRelativeX(cont, $.event.fix(evt));
+    var mouseX = eXo.core.Browser.findMouseRelativeX(cont, gj.event.fix(evt));
     var props = UISliderControl.getValue(mouseX);
-    $(UISliderControl.object).css('width', props[0] + 'px');
-    $(UISliderControl.inputField).val(String(props[1] * 5));
+    gj(UISliderControl.object).css('width', props[0] + 'px');
+    gj(UISliderControl.inputField).val(String(props[1] * 5));
     UISliderControl.parent.find('label[for=' + UISliderControl.inputField.id + ']').html(props[1] * 5);
-  };
-  
-  UISliderControl.prototype.getValue = function(mouseX) {
+  },
+
+  getValue : function(mouseX) {
     var width = 0;
     var value = 0;
     mouseX = parseInt(mouseX);
@@ -49,22 +46,23 @@
       value = 200;
     }
     return [ width, value ];
-  };
-  
-  UISliderControl.prototype.end = function() {
-    eXo.webui.UISliderControl.parent.off('mousemove', eXo.webui.UISliderControl.execute);
-    eXo.webui.UISliderControl.parent.off('mouseup', eXo.webui.UISliderControl.end);
-    eXo.webui.UISliderControl.object = null;
-    eXo.webui.UISliderControl.container = null;
-  };
-  
-  UISliderControl.prototype.reset = function(input) {
-    $(input).val('0');
-    var parent = $(input).parents('.UISliderControl');
-    parent.find('label[for=' + $(input).attr('id') + ']').html('0');
+  },
+
+  end : function() {
+    UISliderControl.parent.off('mousemove', UISliderControl.execute);
+    UISliderControl.parent.off('mouseup', UISliderControl.end);
+    UISliderControl.object = null;
+    UISliderControl.container = null;
+  },
+
+  reset : function(input) {
+    gj(input).val('0');
+    var parent = gj(input).parents('.UISliderControl');
+    parent.find('label[for=' + gj(input).attr('id') + ']').html('0');
     parent.find('div.SliderPointer').css('width', '14px');
-  };
-  
-  window.eXo.webui = window.eXo.webui || {};
-  window.eXo.webui.UISliderControl = new UISliderControl();
-})(gj, window, document);
+  }
+};
+window.eXo = window.eXo || {};
+window.eXo.webui = window.eXo.webui || {};
+window.eXo.webui.UISliderControl = UISliderControl;
+_module.UISliderControl = window.eXo.webui.UISliderControl;

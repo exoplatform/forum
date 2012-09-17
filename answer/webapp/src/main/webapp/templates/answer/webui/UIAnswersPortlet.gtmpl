@@ -1,12 +1,9 @@
 <%
-  import org.exoplatform.web.application.JavascriptManager;
-
   def rcontext = _ctx.getRequestContext();
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addOnResizeJavascript('function(){eXo.forum.ForumUtils.setMaskLayer("'+uicomponent.id+'");}');
-  jsmanager.addOnResizeJavascript('eXo.answer.UIAnswersPortlet.reSizeImages');
+  def requireJS = rcontext.getJavascriptManager().require("SHARED/UIAnswersPortlet", "answer");
 %>
 <div class="UIAnswersPortlet" id="$uicomponent.id">
+	<% requireJS.addScripts("eXo.answer.UIAnswersPortlet.init('"+uicomponent.id+"');"); %>  
   <div class="ParentMaskLayer">
     <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
   </div>
@@ -19,6 +16,3 @@
     }
   %>
 </div>
-<%
-  jsmanager.addJavascript("setTimeout('eXo.answer.UIAnswersPortlet.init(\""+uicomponent.id+"\")', 500);");
-%>

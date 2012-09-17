@@ -1,14 +1,15 @@
 <%  
   import org.exoplatform.faq.service.CategoryInfo;
   import org.exoplatform.faq.service.Utils;
-  import org.exoplatform.web.application.JavascriptManager;
   
-  def rcontext = _ctx.getRequestContext();
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.faq.UIFaqPortlet.createLink('UIFAQPortlet','"+uicomponent.useAjax+"');") ;
+  def requireJS = _ctx.getRequestContext()
+      .getJavascriptManager().require("SHARED/FaqPortlet", "faq");
 %>
 <div class="FAQViewerContainer" id="$uicomponent.id">
-  <%  
+  <%
+  requireJS.addScripts("faq.FaqPortlet.focusQuestion();")
+  				 .addScripts("faq.FaqPortlet.createLink('$uicomponent.id', '$uicomponent.useAjax');");
+  
   CategoryInfo cateInfo = uicomponent.getCategoryInfo();
   if(cateInfo != null) {
     List subCategoryInfos = cateInfo.getSubCateInfos();

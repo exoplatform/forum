@@ -1,23 +1,15 @@
-<%  
+<div class="UIForumPortlet" id="$uicomponent.id">
+<%
 	if(uicomponent.forumSpDeleted) {
-%>
-<div class="UIForumPortlet" id="$uicomponent.id">
-	<div style="padding: 20px"><%=_ctx.appRes("UIForumPortlet.msg.forum-space-deleted").replace("{0}", uicomponent.spaceDisplayName);%></div>
-</div>
-<%
+	  print("<div style=\"padding: 20px\">" + 
+	         _ctx.appRes("UIForumPortlet.msg.forum-space-deleted").replace("{0}", uicomponent.spaceDisplayName) + 
+	        "</div>");
 		return; 
-	} 
+	}
+//
+	org.exoplatform.forum.ForumUtils.addScripts("UIForumPortlet", "forum", "eXo.forum.UIForumPortlet.init('"+uicomponent.id+"');");
 %>
 
-<%
-	import org.exoplatform.web.application.JavascriptManager;
-	import org.exoplatform.forum.service.UserProfile;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
-%>
-
-<div class="UIForumPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer" id="ForumPortlet">
 		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
 	</div>
@@ -29,20 +21,7 @@
 			}
 		}
 	
-  UserProfile userProfile = uicomponent.getUserProfile() ;
-	if(userProfile.getUserRole() <= 2){
-		jsmanager.loadScriptResource("ForumSendNotification");
-		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
-    jsmanager.addJavascript(
-      'eXo.forum.ForumSendNotification.initParam("'
-      + _ctx.appRes("UIForumPortlet.label.Notification") +  '", "'
-      + _ctx.appRes("UIForumPortlet.type.message") + '", "'
-      + _ctx.appRes("UIForumPortlet.type.post") + '", "'
-      + _ctx.appRes("UIForumPortlet.label.titeName") + '", "'
-      + _ctx.appRes("UIForumPortlet.label.from") + '", "'
-      + _ctx.appRes("UIForumPortlet.label.briefContent") + '", "'
-      + _ctx.appRes("UIForumPortlet.label.GoDirectly") + '");') ;
-  }
+  uicomponent.initSendNotification() ;
 	%>
 	<div><span></span></div>
 </div>

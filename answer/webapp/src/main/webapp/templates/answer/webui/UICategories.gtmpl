@@ -1,16 +1,17 @@
 <%
-  import org.exoplatform.web.application.JavascriptManager; 
   import org.exoplatform.faq.service.Category;
   import org.exoplatform.faq.service.Utils;
   import org.exoplatform.faq.service.Question;
   import org.exoplatform.answer.webui.FAQUtils;
   String compId = uicomponent.getId() ; 
-    def rcontext = _ctx.getRequestContext() ; 
   uicomponent.setListCate();
   
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript('eXo.answer.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
-  if(uicomponent.isModerator) jsmanager.addJavascript('eXo.answer.DragDrop.init("'+compId+'") ;') ;
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().require("SHARED/DragDrop", "dragDrop");
+  requireJS.addScripts("eXo.answer.UIAnswersPortlet.initContextMenu('"+compId+"') ;");
+  if(uicomponent.isModerator) {
+    requireJS.addScripts("dragDrop.DragDrop.init('"+compId+"') ;") ;
+  }
+  
   String [] categoryAction;
   
 %>

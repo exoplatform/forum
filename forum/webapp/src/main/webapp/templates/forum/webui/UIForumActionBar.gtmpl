@@ -1,18 +1,9 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.common.UserHelper;
-	import org.exoplatform.web.application.JavascriptManager;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
-	boolean isAdmin = false ;
-	if(userProfile.getUserRole() == 0) isAdmin = true ;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
-	if(userProfile.getUserRole() <= 1) {
-	  jsmanager.loadScriptResource("ForumTotalJob");
-		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
-		jsmanager.addJavascript("eXo.forum.UIForumPortlet.visibleAction('"+uicomponent.id+"');") ;
-	}
+	boolean isAdmin = (userProfile.getUserRole() == 0) ;
+	uicomponent.initJavaScripts();
 %>
 <div class="UIForumActionBar" id="UIForumActionBar">
 
