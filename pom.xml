@@ -50,15 +50,20 @@
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <org.chromattic.version>1.1.4</org.chromattic.version>
 
-    <!-- xwiki rendering -->
-    <org.xwiki.platform.version>3.3</org.xwiki.platform.version>
+    <!-- Begin wiki properties -->
+    <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
+    <org.xwiki.platform.version>4.1.3</org.xwiki.platform.version>
+    <org.xwiki.commons.version>4.1.3</org.xwiki.commons.version>
+    <org.xwiki.rendering.version>4.1.3</org.xwiki.rendering.version>
     <org.wikimodel.version>2.0.7-SNAP-rev-532</org.wikimodel.version>
-    <!--dependencies which Code Macro depends on -->
-    <jython-standalone.version>2.5.2-xwiki</jython-standalone.version>
-    <pygments.version>1.4-xwiki</pygments.version>
     <gwt.version>2.4.0</gwt.version>
     <smartgwt.version>2.5</smartgwt.version>
     <net.sourceforge.htmlcleaner.version>2.2</net.sourceforge.htmlcleaner.version>
+    <!--dependencies which Code Macro depends on -->
+    <jython-standalone.version>2.5.2-xwiki</jython-standalone.version>
+    <pygments.version>1.4-xwiki</pygments.version>
+    <org.jdom.version>2.0.2</org.jdom.version>
+    <!--column-macro.version>1.1-SNAPSHOT</column-macro.version -->
     <org.suigeneris.version>0.4.2</org.suigeneris.version>
     <ecs.version>1.4.2</ecs.version>
     <cssparser.version>0.9.5</cssparser.version>
@@ -66,6 +71,9 @@
     <!--dependencies which org.xwiki.platform:xwiki-core-properties depends on -->
     <javax.validation.version>1.0.0.GA</javax.validation.version>
     <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
+    <itext.version>2.1.7</itext.version>
+    <flying-saucer-core.version>9.0.1</flying-saucer-core.version>
+    <flying-saucer-pdf.version>9.0.1</flying-saucer-pdf.version>
     <!-- End wiki properties -->
 
     <org.codehaus.swizzle.version>1.6.1</org.codehaus.swizzle.version>
