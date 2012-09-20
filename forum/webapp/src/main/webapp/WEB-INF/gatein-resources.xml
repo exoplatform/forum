@@ -20,8 +20,8 @@
 
 -->
 <gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
-		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
+  xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
+    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
 
   <portlet-skin>
     <application-name>forum</application-name>
@@ -71,24 +71,25 @@
     </depends>
   </module>
 
-	<module>
-		<name>SearchTagName</name>
-		<script>
-			<name>eXo.forum.webservice.SearchTagName</name>
-			<path>/javascript/eXo/forum/webservice/SearchTagName.js</path>
-		</script>
-		<depends>
-			<module>ForumUtils</module>
-			<as>utils</as>
-		</depends>
-		<depends>
-			<module>cometd</module>
-		</depends>
+  <module>
+    <name>SearchTagName</name>
+    <script>
+      <name>eXo.forum.webservice.SearchTagName</name>
+      <path>/javascript/eXo/forum/webservice/SearchTagName.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+      <as>utils</as>
+    </depends>
+    <depends>
+      <module>commons-cometd</module>
+      
+    </depends>
     <depends>
       <module>jquery</module>
       <as>gj</as>
     </depends> 
-	</module>
+  </module>
 
   <module>
     <name>ForumSendNotification</name>
@@ -101,7 +102,8 @@
       <as>utils</as>
     </depends>
     <depends>
-      <module>cometd</module>
+      <module>commons-cometd</module>
+      
     </depends>
     <depends>
       <module>jquery</module>
@@ -124,7 +126,8 @@
       <as>gj</as>
     </depends>
     <depends>
-      <module>cometd</module>
+      <module>commons-cometd</module>
+      
     </depends>
   </module>
 

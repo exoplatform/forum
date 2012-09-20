@@ -19,7 +19,6 @@ var UISliderControl = {
   },
 
   execute : function(evt) {
-    var UISliderControl = UISliderControl;
     var cont = UISliderControl.container;
     var mouseX = eXo.core.Browser.findMouseRelativeX(cont, gj.event.fix(evt));
     var props = UISliderControl.getValue(mouseX);

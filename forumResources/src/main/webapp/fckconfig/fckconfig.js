@@ -24,6 +24,7 @@
  * http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options
  */
 
+window.FCKConfig = window.FCKConfig || {};
 FCKConfig.Fckcontext = parent.eXo.env.server.context ;
 FCKConfig.eXoPath = "/forumResources/fckconfig/"; 
 FCKConfig.EditorAreaCSS = FCKConfig.BasePath + 'css/fck_editorarea.css' ;

@@ -124,5 +124,26 @@ var ForumUtils = {
   }
 };
 
+window.Array.prototype.clear = function() {
+  this.length = 0;
+};
+
+window.Array.prototype.pushAll = function(array) {
+  if (array != null) {
+    for ( var i = 0; i < array.length; i++) {
+      this.push(array[i]);
+    }
+  }
+};
+
+window.Array.prototype.contains = function (element) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == element) {
+      return true ;
+    }
+  }
+  return false ;
+} ;
+
  gj('body').click(ForumUtils.hideElements);
 _module.ForumUtils = ForumUtils;

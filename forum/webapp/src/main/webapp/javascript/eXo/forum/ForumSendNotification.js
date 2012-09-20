@@ -1,14 +1,14 @@
-var SendNotification = {
-    notification : "Notification",
-    message : "message",
-    post : "post",
-    titeName : "You have received a new private TYPE",
-    from : "From",
-    briefContent : "Brief content",
-    GoDirectly : "Go directly to the TYPE: LINK Click here."
-};
-
-(function(ForumSendNotification, $, window, document) {
+;(function(module, Cometd, $, document, window) {
+  
+  var ForumSendNotification = {
+      notification : "Notification",
+      message : "message",
+      post : "post",
+      titeName : "You have received a new private TYPE",
+      from : "From",
+      briefContent : "Brief content",
+      GoDirectly : "Go directly to the TYPE: LINK Click here."
+  };
 
   ForumSendNotification.initParam = function(notification, message, post, titeName, from, briefContent, GoDirectly) {
     ForumSendNotification.notification = notification;
@@ -22,12 +22,12 @@ var SendNotification = {
 
   ForumSendNotification.init = function(eXoUser, eXoToken, contextName) {
     if (String(eXoToken) != '') {
-      if (!eXo.core.Cometd.isConnected()) {
-        eXo.core.Cometd.url = '/' + contextName + '/cometd';
-        eXo.core.Cometd.exoId = eXoUser;
-        eXo.core.Cometd.exoToken = eXoToken;
-        eXo.core.Cometd.addOnConnectionReadyCallback(ForumSendNotification.subcribeCometdSendNotification);
-        eXo.core.Cometd.init();
+      if (!Cometd.isConnected()) {
+        Cometd.url = '/' + contextName + '/cometd';
+        Cometd.exoId = eXoUser;
+        Cometd.exoToken = eXoToken;
+        Cometd.addOnConnectionReadyCallback(ForumSendNotification.subcribeCometdSendNotification);
+        Cometd.init(Cometd.url);
       } else {
         ForumSendNotification.subcribeCometdSendNotification();
       }
@@ -35,13 +35,13 @@ var SendNotification = {
   };
 
   ForumSendNotification.subcribeCometdSendNotification = function() {
-    eXo.core.Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', function(eventObj) {
-      eXo.forum.ForumSendNotification.alarm(eventObj);
+    Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', function(eventObj) {
+      ForumSendNotification.alarm(eventObj);
     });
   };
 
   ForumSendNotification.alarm = function(eventObj) {
-    var message = eXo.core.JSON.parse(eventObj.data); // message
+    var message = JSON.parse(eventObj.data); // message
     var parent = $(ForumSendNotification.createMessage(message));
     parent.height('auto');
     var popup = parent.find('div.UIPopupNotification');
@@ -197,6 +197,9 @@ var SendNotification = {
     obj.style.top = (currentTop < posTop) ? posTop + "px" : currentTop + "px";
     window.setTimeout('Box.floatingBox("' + objID + '",' + posTop + ')', 100);
   };
+
   window.Box = Box;
-})(SendNotification, gj, window, document);
-_module.ForumSendNotification = SendNotification;
+  module.ForumSendNotification = ForumSendNotification;
+
+})(_module, cometd, gj, document, window);
+
