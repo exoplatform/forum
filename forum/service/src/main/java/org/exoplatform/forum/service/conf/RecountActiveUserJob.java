@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.forum.common.job.MultiTenancyJob;
+import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;

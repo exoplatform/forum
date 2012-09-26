@@ -23,12 +23,13 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.forum.common.job.MultiTenancyJob;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
+
 
 public class DeactiveJob extends MultiTenancyJob {
   private static Log log_ = ExoLogger.getLogger("job.forum.DesactiveJob");

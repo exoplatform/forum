@@ -16,7 +16,7 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.forum.common.job.MultiTenancyJob;
+import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -26,7 +26,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 public class UpdateDataJob extends MultiTenancyJob {
-  private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+  private static Log log_ = ExoLogger.getLogger(UpdateDataJob.class);
 
   @Override
   public Class<? extends MultiTenancyTask> getTask() {
