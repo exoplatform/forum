@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum</artifactId>
-    <version>4.0.0.Alpha1-SNAPSHOT</version>
+    <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
   </parent>
   <artifactId>forum-extension</artifactId>
   <packaging>pom</packaging>
