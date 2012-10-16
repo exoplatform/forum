@@ -84,7 +84,7 @@ if(!uicomponent.isEditPortlet_){
 <%
 } else {
 %>
-<div class="UISettingForm $uicomponent.id" style="padding:4px;">
+<div class="UISettingForm $uicomponent.id">
 	<div class="UITabPane">
 		<div style="padding:2px;">
 			<div class="WorkingArea">
@@ -132,7 +132,7 @@ if(!uicomponent.isEditPortlet_){
 				<%uiform.begin()%>
 				<div style="background-color:#F3F3F3;">
 				
-					<div class="UITabContentContainer">
+					<div class="UITabContentContainers">
 						<%
 							for(formInput in uicomponent.getChildren()) {
 								if(!formInput.isRendered()) continue ;
@@ -141,8 +141,8 @@ if(!uicomponent.isEditPortlet_){
 						%>
 								<div class="UITabContent"	style="display:$display;">
 								<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)){%>
-										<div>
-											<!-- -------------------------------------------------------------------------------------------------------------------- -->
+
+                  <!-- Child-UIHorizontalTabs -->
 											<div class="UIHorizontalTabs">
 										 		<div class="LeftHorizontalTabs">
 										 			<div class="RightHorizontalTabs">
@@ -174,9 +174,10 @@ if(!uicomponent.isEditPortlet_){
 												</div>
 											</div>
 											
-											<!-- -------------------------------------------------------------------------------------------------------------------- -->
+		              <!-- /Child-UIHorizontalTabs -->
+		              <!-- Child-UITabContentContainer -->
 											<div style="background-color:#F3F3F3;">
-												<div class="UITabContentContainer">
+												<div class="UITabContentContainers">
 													<%
 														int i = 0;
 														for(uiFormInput in formInput.getChildren()) {
@@ -213,7 +214,8 @@ if(!uicomponent.isEditPortlet_){
 													<%}%>
 												</div>
 											</div>
-									 	</div>
+
+							   <!-- /Child-UITabContentContainer -->
 								 <%}else if(formInput.getId().equals(uicomponent.CATEGORY_SCOPING)) {%>
 								 		<!-- View interface -->
 										<div class="HorizontalLayout ViewQuestionsToSelect" style="overflow:auto;">
@@ -305,6 +307,8 @@ if(!uicomponent.isEditPortlet_){
 						<%}%>
 					</div>
 				</div>
+        <!-- /ContentTabs-->
+        <!-- UIAction-->
 				 <div class="UIAction">
         <%for(action in uicomponent.getActions()) { 
 									if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
@@ -314,6 +318,7 @@ if(!uicomponent.isEditPortlet_){
       <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
+        <!-- /UIAction-->
 				<%uiform.end()%>
 			</div>
 		</div>	
