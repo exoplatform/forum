@@ -250,8 +250,9 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
           dresource.setDownloadName(fileName + ".zip");
         }
         DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class);
-        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)).replaceAll("&amp;", "&");
+
+        event.getRequestContext().getJavascriptManager().addJavascript("(function(){ window.location.href = '" + downloadLink + "';})();");
         portlet.cancelAction();
       } finally {
         if (bos != null) {
