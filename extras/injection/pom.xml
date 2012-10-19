@@ -226,4 +226,20 @@
     
   </dependencies>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <!-- There are some problems with these tests that don't allow us to avoid such settings -->
+            <forkMode>always</forkMode>
+            <argLine>-Xms256m -Xmx1024m</argLine>
+            <useManifestOnlyJar>false</useManifestOnlyJar>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

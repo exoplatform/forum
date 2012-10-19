@@ -439,8 +439,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <forkMode>always</forkMode>
-            <argLine>-Xms256m -Xmx1024m</argLine>
             <systemPropertyVariables>
               <org.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog</org.apache.commons.logging.Log>
               <org.apache.commons.logging.simplelog.defaultlog>info</org.apache.commons.logging.simplelog.defaultlog>
@@ -449,7 +447,6 @@
               <java.naming.factory.initial>org.exoplatform.services.naming.SimpleContextFactory</java.naming.factory.initial>
               <gatein.test.tmp.dir>${project.build.directory}</gatein.test.tmp.dir>
             </systemPropertyVariables>
-            <useManifestOnlyJar>false</useManifestOnlyJar>
           </configuration>
         </plugin>
       </plugins>
