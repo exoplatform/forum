@@ -1,4 +1,5 @@
 <assembly>
+  <id>docs-zip</id>
   <formats>
     <format>zip</format>
   </formats>
