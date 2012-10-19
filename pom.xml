@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
-    <artifactId>exo.parent</artifactId>
-    <version>7.1</version>
+    <artifactId>maven-parent-pom</artifactId>
+    <version>9-SNAPSHOT</version>
     <relativePath/>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
@@ -13,22 +13,24 @@
   <packaging>pom</packaging>
   <name>eXo Forum</name>
   <description>eXo Forum manages forum, answer and poll.</description>
-  <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   <scm>
    <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
    <developerConnection>scm:git:git@github.com:exoplatform/forum.git</developerConnection>
    <url>http://fisheye.exoplatform.org/browse/forum</url>
+   <tag>HEAD</tag>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>https://jira.exoplatform.org/browse/FORUM</url>
-  </issueManagement>
-  <ciManagement>
-    <system>hudson</system>
-    <url>https://ci.exoplatform.org/job/forum-master-ci/</url>
-  </ciManagement>
   <properties>
-      
+    <!-- **************************************** -->
+    <!-- Jira Settings                            -->
+    <!-- **************************************** -->
+    <jira.project.key>FORUM</jira.project.key>
+    <!-- **************************************** -->
+    <!-- Jenkins Settings                         -->
+    <!-- **************************************** -->
+    <jenkins.job.name>forum-master-ci</jenkins.job.name>
+    <!-- **************************************** -->
+    <!-- Dependencies versions                    -->
+    <!-- **************************************** -->
     <org.exoplatform.kernel.version>2.3.6-GA</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.4.6-GA</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.2.6-GA</org.exoplatform.ws.version>
