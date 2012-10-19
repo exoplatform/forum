@@ -16,19 +16,18 @@
  */
 package org.exoplatform.forum.service;
 
+import org.testng.annotations.Test;
+
 import static org.exoplatform.commons.testing.AssertUtils.assertContains;
-import junit.framework.TestCase;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestUserProfile extends TestCase {
+public class TestUserProfile {
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-
+  @Test
   public void testSetLastReadPostOfTopic() {
 
     String[] array = new String[] { "foo,foo", "bar,bar" };
@@ -41,6 +40,7 @@ public class TestUserProfile extends TestCase {
 
   }
 
+  @Test
   public void testSetLastReadPostOfForum() {
 
     String[] array = new String[] { "foo,foo", "bar,bar" };
@@ -53,6 +53,7 @@ public class TestUserProfile extends TestCase {
 
   }
 
+  @Test
   public void testGetLastTimeAccessForum() throws Exception {
     UserProfile profile = new UserProfile();
     long actual = profile.getLastTimeAccessForum("foo");
@@ -63,6 +64,7 @@ public class TestUserProfile extends TestCase {
     assertEquals(1, actual);
   }
 
+  @Test
   public void testGetLastTimeAccessTopic() throws Exception {
     UserProfile profile = new UserProfile();
     long actual = profile.getLastTimeAccessTopic("foo");
@@ -73,6 +75,7 @@ public class TestUserProfile extends TestCase {
     assertEquals(1, actual);
   }
 
+  @Test
   public void testGetScreenname() {
 
     // not set defaults to default user id

@@ -20,34 +20,38 @@ package org.exoplatform.forum.service.rest;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.RuntimeDelegate;
-
 import org.exoplatform.forum.service.ws.ForumWebservice;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * Created by The eXo Platform SARL Author : Volodymyr Krasnikov
  * volodymyr.krasnikov@exoplatform.com.ua
  */
-
+@Test
 public class TestWebservice extends AbstractResourceTest {
   ForumWebservice     forurumWebservice;
 
   static final String baseURI = "";
-
+  @BeforeTest
   public void setUp() throws Exception {
     RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
     super.setUp();
     forurumWebservice = (ForumWebservice) container.getComponentInstanceOfType(ForumWebservice.class);
-    registry(forurumWebservice);
+    //registry(forurumWebservice);
   }
 
+  @AfterTest
   public void tearDown() throws Exception {
     super.tearDown();
   }
 
+  @Test
   public void testCheckPublicRss() throws Exception {
     MultivaluedMap<String, String> h = new MultivaluedMapImpl();
     String username = "root";
@@ -58,6 +62,7 @@ public class TestWebservice extends AbstractResourceTest {
     assertNotNull(response);
   }
 
+  @Test
   public void testGetLastpost() throws Exception {
     // MultivaluedMap<String, String> h = new MultivaluedMapImpl();
 

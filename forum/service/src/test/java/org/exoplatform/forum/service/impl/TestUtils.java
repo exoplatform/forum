@@ -16,33 +16,30 @@
  */
 package org.exoplatform.forum.service.impl;
 
-import static org.exoplatform.commons.testing.AssertUtils.assertContains;
-import static org.exoplatform.commons.testing.AssertUtils.assertEmpty;
-import static org.exoplatform.commons.testing.AssertUtils.assertNotContains;
-import static org.exoplatform.commons.testing.mock.JCRMockUtils.stubValue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import javax.jcr.Value;
-
-import junit.framework.TestCase;
-
 import org.exoplatform.forum.service.Utils;
+import org.testng.annotations.Test;
+
+import static org.exoplatform.commons.testing.AssertUtils.assertContains;
+import static org.exoplatform.commons.testing.AssertUtils.assertEmpty;
+import static org.exoplatform.commons.testing.AssertUtils.assertNotContains;
+import static org.exoplatform.commons.testing.mock.JCRMockUtils.stubValue;
+import static org.testng.AssertJUnit.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestUtils extends TestCase {
+public class TestUtils {
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-
+  @Test
   public void testRemoveCharterStrange() {
 
     assertEquals("", Utils.removeCharterStrange(null));
@@ -56,6 +53,7 @@ public class TestUtils extends TestCase {
 
   }
 
+  @Test
   public void testArraysHaveDifferentContent() {
 
     // if 2 arrays are the same, then it's false
@@ -85,6 +83,7 @@ public class TestUtils extends TestCase {
 
   }
 
+  @Test
   public void testListsHaveDifferentContent() {
     // if 2 arrays are the same, then it's false
     List<String> a = Arrays.asList("foo", "bar", "zed");
@@ -112,6 +111,7 @@ public class TestUtils extends TestCase {
     assertTrue(Utils.listsHaveDifferentContent(a, b));
   }
 
+  @Test
   public void testMapToArray() {
     Map<String, String> map = new HashMap<String, String>();
     String[] actual = Utils.mapToArray(map);
@@ -124,6 +124,7 @@ public class TestUtils extends TestCase {
     assertContains(actual, "foo,foo", "bar,bar", "zed,zed");
   }
 
+  @Test
   public void testArrayToMap() {
     String[] s = new String[] { "foo,foo", "bar,bar", "zed,zed" };
     Map<String, String> actual = Utils.arrayToMap(s);
@@ -140,6 +141,7 @@ public class TestUtils extends TestCase {
     assertEquals(null, actual.get("zed"));
   }
 
+  @Test
   public void testGetQueryInList() {
     List<String> list = new ArrayList<String>();
     String actual = Utils.propertyMatchAny("prop", list);
@@ -159,6 +161,7 @@ public class TestUtils extends TestCase {
 
   }
 
+  @Test
   public void testIsListContentItemList() {
     List<String> list = Arrays.asList(" ");
     List<String> list1 = null;
@@ -181,6 +184,7 @@ public class TestUtils extends TestCase {
 
   }
 
+  @Test
   public void testGetStringsInList() throws Exception {
     List<String> list = new ArrayList<String>();
     String[] actual = Utils.getStringsInList(list);
@@ -193,6 +197,7 @@ public class TestUtils extends TestCase {
     assertContains(actual, "foo", "bar");
   }
 
+  @Test
   public void testExtractSameItems() throws Exception {
     List<String> pList = Arrays.asList("foo", "bar", "zed");
     List<String> cList = Arrays.asList("foo", " ", "bar");
@@ -213,6 +218,7 @@ public class TestUtils extends TestCase {
 
   }
 
+  @Test
   public void testValuesToArray() throws Exception {
     Value[] values = new Value[0];
     String[] actual = Utils.valuesToArray(values);
@@ -229,6 +235,7 @@ public class TestUtils extends TestCase {
     assertEquals(3, actual.length);
   }
 
+  @Test
   public void testValuesToList() throws Exception {
     Value[] values = new Value[0];
     List<String> actual = Utils.valuesToList(values);
@@ -245,6 +252,7 @@ public class TestUtils extends TestCase {
     assertEquals(3, actual.size());
   }
 
+  @Test
   public void testArrayCopy() {
 
     // null in, null out
@@ -265,6 +273,7 @@ public class TestUtils extends TestCase {
     assertContains(actual, "foo", "bar", "zed"); // should contain all elements
   }
 
+  @Test
   public void testGetQueryByProperty() throws Exception {
     String actual = Utils.getQueryByProperty("", "", "").toString();
     String expected = "";
@@ -303,6 +312,7 @@ public class TestUtils extends TestCase {
     assertEquals(expected, actual);
   }
   
+  @Test
   public void testInsertBuilder() throws Exception {
     StringBuilder qr = Utils.getPathQuery("true", "", "", "");
     String strQuery = "exo:test='test value'";
@@ -321,6 +331,7 @@ public class TestUtils extends TestCase {
     assertEquals("[(exo:test='test value')]", qr.toString());
   }
   
+  @Test
   public void testGetPathQuery() throws Exception {
     // test for value is empty and true or false.
     String actual = Utils.getPathQuery("", "", "", "").toString();
@@ -383,6 +394,7 @@ public class TestUtils extends TestCase {
     assertEquals(expected, actual);
   }
 
+  @Test
   public void testBuildXpathByUserInfo() {
     // the property and listOfUser always not null.
     String property = "exo:foo";
@@ -404,6 +416,7 @@ public class TestUtils extends TestCase {
     assertEquals(expected, actual);
   }
   
+  @Test
   public void testHasPermission() {
     List<String> l1 = Arrays.asList(" ");
     List<String> l2 = null;
@@ -434,6 +447,7 @@ public class TestUtils extends TestCase {
     assertTrue(condition);
   }
   
+  @Test
   public void testGetCategoryId() {
     assertEquals("forumCategorya77608b97f0001012e0f6c254a761b67",
                  Utils.getCategoryId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));
@@ -443,6 +457,7 @@ public class TestUtils extends TestCase {
                  Utils.getCategoryId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
 
+  @Test
   public void testGetCategoryPath() {
     assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67",
                  Utils.getCategoryPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));
@@ -452,6 +467,7 @@ public class TestUtils extends TestCase {
                  Utils.getCategoryPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
 
+  @Test
   public void testGetForumId() {
     assertEquals("foruma77608da7f0001017c1031ba8c6197c2",
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));
@@ -461,6 +477,7 @@ public class TestUtils extends TestCase {
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
 
+  @Test
   public void testGetForumPath() {
     assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2",
                  Utils.getForumPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));

@@ -20,9 +20,9 @@ package org.exoplatform.forum.service.rest;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedMap;
-
 import org.exoplatform.services.rest.ContainerResponseWriter;
 import org.exoplatform.services.rest.impl.ContainerRequest;
 import org.exoplatform.services.rest.impl.ContainerResponse;

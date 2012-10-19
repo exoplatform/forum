@@ -6,9 +6,9 @@ package org.exoplatform.forum.test;
 
 import java.util.List;
 
+
 import javax.jcr.Node;
 import javax.jcr.Session;
-
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.RootContainer;

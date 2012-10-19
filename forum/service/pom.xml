@@ -138,11 +138,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <classifier>jdk15</classifier>
@@ -159,6 +154,12 @@
       <artifactId>exo.portal.component.test.core</artifactId>
       <version>${org.exoplatform.portal.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -170,11 +171,6 @@
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.common</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>

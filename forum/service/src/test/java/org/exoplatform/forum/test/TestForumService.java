@@ -16,36 +16,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
-
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.PropertyReader;
-import org.exoplatform.forum.service.CacheUserProfile;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
-import org.exoplatform.forum.service.ForumNodeTypes;
-import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.MessageBuilder;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.PruneSetting;
-import org.exoplatform.forum.service.Tag;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.*;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.MembershipEntry;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * Created by The eXo Platform SARL
@@ -76,6 +61,7 @@ public class TestForumService extends ForumServiceTestCase {
 
   private String       topicId;
 
+  @BeforeTest
   public void setUp() throws Exception {
     super.setUp();
     forumService_ = (ForumService) container.getComponentInstanceOfType(ForumService.class);
@@ -84,13 +70,13 @@ public class TestForumService extends ForumServiceTestCase {
     sProvider = sessionProviderService.getSystemSessionProvider(null);
 
   }
-
+  @Test
   public void testForumService() throws Exception {
     ForumStatistic forumStatistic = new ForumStatistic();
     forumService_.saveForumStatistic(forumStatistic);
     assertNotNull(forumService_);
   }
-
+  @Test
   public void testUserProfile() throws Exception {
     String userName = "tu.duy";
     UserProfile userProfile = createdUserProfile(userName);
@@ -129,7 +115,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
     //
   }
-
+  @Test
   public void testUserLogin() throws Exception {
     String[] userIds = new String[] { USER_ROOT, USER_JOHN, USER_DEMO };
     for (int i = 0; i < userIds.length; i++) {
@@ -155,7 +141,7 @@ public class TestForumService extends ForumServiceTestCase {
     forumService_.userLogout(USER_DEMO);
     assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
   }
-
+  @Test
   public void testForumAdministration() throws Exception {
     ForumAdministration administration = createForumAdministration();
     forumService_.saveForumAdministration(administration);
@@ -163,7 +149,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertNotNull(administration);
     assertEquals(administration.getForumSortBy(), "forumName");
   }
-  
+
   private void setData() throws Exception {
     killData();
     Category cat = createCategory(getId(Utils.CATEGORY));
@@ -185,7 +171,8 @@ public class TestForumService extends ForumServiceTestCase {
       }
     }
   }
-  
+  // TODO Fix this test reactivated after a JUnit -> TestNG Conversion (SWF-2162)
+  @Test(enabled = false)
   public void testCategory() throws Exception {
     String[] catIds = new String[] { getId(Utils.CATEGORY), getId(Utils.CATEGORY), getId(Utils.CATEGORY) };
 
@@ -212,7 +199,7 @@ public class TestForumService extends ForumServiceTestCase {
     categoriesId.add(catId);
     forumService_.saveModOfCategory(categoriesId, USER_DEMO, true);
     catTest = forumService_.getCategory(catId);
-    assertEquals("The moderators of category not contanins user demo.", catTest.getModerators()[0], USER_DEMO);
+    assertEquals("The moderators of category not contains user demo.", catTest.getModerators()[0], USER_DEMO);
 
     // add category
     forumService_.saveCategory(createCategory(catIds[0]), true);
@@ -237,7 +224,7 @@ public class TestForumService extends ForumServiceTestCase {
     categories = forumService_.getCategories();
     assertEquals("Size categories can not equals 0", categories.size(), 0);
   }
-
+  @Test
   public void testForum() throws Exception {
     String catId = getId(Utils.CATEGORY);
     Category cat = createCategory(catId);
@@ -318,7 +305,8 @@ public class TestForumService extends ForumServiceTestCase {
     forums = forumService_.getForumSummaries(catId, "");
     assertEquals("List forums can not equals 0", forums.size(), 0);
   }
-
+  // TODO Fix this test reactivated after a JUnit -> TestNG Conversion (SWF-2162)
+  @Test(enabled = false)
   public void testTopic() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
@@ -448,7 +436,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals("Topics in forum failed to remove. List topic has size more than 1.", topics2.size(), 1);
     assertEquals(1, forumService_.getForum(cat.getId(), forum.getId()).getTopicCount());
   }
-
+  @Test
   public void testTopicType() throws Exception {
     // set Data
     setData();
@@ -462,7 +450,7 @@ public class TestForumService extends ForumServiceTestCase {
     List<TopicType> listTopicType = forumService_.getTopicTypes();
     assertEquals("Can not get all topic type. Size of topicTypes list is not 3.", listTopicType.size(), 3);
   }
-
+  @Test
   public void testPost() throws Exception {
     // set Data
     setData();
@@ -510,6 +498,7 @@ public class TestForumService extends ForumServiceTestCase {
   }
 
   // BookMark
+  @Test
   public void testBookMark() throws Exception {
     // set Data
     setData();
@@ -527,6 +516,7 @@ public class TestForumService extends ForumServiceTestCase {
   }
 
   // Private Message
+  @Test
   public void testPrivateMessage() throws Exception {
     ForumPrivateMessage privateMessage = new ForumPrivateMessage();
     privateMessage.setFrom("demo");
@@ -564,7 +554,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals(pageList.getAvailable(), 0);
     //
   }
-
+  @Test
   public void testGetObjectNameByPath() throws Exception {
     // set Data
     setData();
@@ -621,7 +611,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertNull(updatedForum);
   }
 
-
+  @Test
   public void testGetObjectNameById() throws Exception {
     // set Data
     setData();
@@ -674,7 +664,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertNull(updatedForum);
 
   }
-
+  @Test
   public void testImportXML() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
@@ -693,7 +683,7 @@ public class TestForumService extends ForumServiceTestCase {
       log.debug("Failed to test importXML", e);
     }
   }
-
+  @Test
   public void testExportXML() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
@@ -705,7 +695,7 @@ public class TestForumService extends ForumServiceTestCase {
     forumService_.exportXML(cat.getId(), forum.getId(), new ArrayList<String>(), forum.getPath(), bos, false);
     assertEquals("can't export Forum into XML file", bos.size() > 0, true);
   }
-
+  @Test
   public void testTag() throws Exception {
     // set Data
     setData();
@@ -732,7 +722,7 @@ public class TestForumService extends ForumServiceTestCase {
     // assertEquals("All tags size is not 3", 3, forumService_.getAllTags().size());
 
   }
-
+  @Test
   public void testSearch() throws Exception {
   /*  
     setData(); //getQuickSearch List<String> users = new ArrayList<String>(); users.add("root"); String pathQuery = ""; // from ForumService/ String textQuery = "description"; String type = "true,all"; List<ForumSearch> forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); assertEquals(forumSearchs.isEmpty(), false); //getAdvancedSearch
@@ -740,7 +730,7 @@ public class TestForumService extends ForumServiceTestCase {
     eventQuery.setPostCountMin("0") ; eventQuery.setViewCountMin("0") ; eventQuery.setModerator("") ; forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); assertEquals(forumSearchs.isEmpty(), false);
   */   
   }
-
+  @Test
   public void testWatch() throws Exception {
     // set Data
     setData();
@@ -756,7 +746,7 @@ public class TestForumService extends ForumServiceTestCase {
     watchs = forumService_.getWatchByUser("root");
     assertEquals(watchs.size(), 0);
   }
-
+  @Test
   public void testIpBan() throws Exception {
     // set Data
     setData();
@@ -781,7 +771,7 @@ public class TestForumService extends ForumServiceTestCase {
     listBans = forumService_.getBanList();
     assertEquals("Ip is removed in listBans, size is not 0 ", listBans.size(), 0);
   }
-
+  @Test
   public void testCalculateDeletedGroupForSpace() throws Exception {
     killData();
     // test for case in spaces:
@@ -801,7 +791,7 @@ public class TestForumService extends ForumServiceTestCase {
     forumService_.calculateDeletedGroup(groupId, groupName);
     assertNull(String.format("The forum %s is not null after deleted the group %s ", forumId, groupId), forumService_.getForum(cateId, forumId));
   }
-
+  @Test
   public void testCalculateDeletedGroupForNormal() throws Exception {
     killData();
     // set group in categories/forums/topics

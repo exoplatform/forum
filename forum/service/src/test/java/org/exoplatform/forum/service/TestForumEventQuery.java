@@ -22,9 +22,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.exoplatform.commons.utils.ISO8601;
+import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Created by The eXo Platform SAS
@@ -32,12 +33,9 @@ import org.exoplatform.commons.utils.ISO8601;
  *          tu.duy@exoplatform.com
  * Dec 28, 2009 - 7:00:29 AM  
  */
-public class TestForumEventQuery extends TestCase {
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+public class TestForumEventQuery {
 
+  @Test
   public void testQuerySearchCategory() {
     List<String> categoryIds = new ArrayList<String>();
     String selector = "/jcr:root/forumPath//element(*,exo:forumCategory)";
@@ -92,6 +90,7 @@ public class TestForumEventQuery extends TestCase {
 
   }
 
+  @Test
   public void testQuerySearchForum() {
     List<String> categoryIds = new ArrayList<String>();
     String selector = "/jcr:root/forumPath//element(*,exo:forum)";
@@ -186,6 +185,7 @@ public class TestForumEventQuery extends TestCase {
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
   }
 
+  @Test
   public void testQuerySearchTopic() {
     List<String> categoryIds = new ArrayList<String>();
     String selector = "/jcr:root/forumPath//element(*,exo:topic)";
@@ -272,6 +272,7 @@ public class TestForumEventQuery extends TestCase {
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
   }
 
+  @Test
   public void testQuerySearchPost() {
     List<String> categoryIds = new ArrayList<String>();
     String selector = "/jcr:root/forumPath//element(*,exo:post)";
