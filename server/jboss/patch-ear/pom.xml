@@ -12,7 +12,6 @@
   <packaging>jar</packaging>
   <name>Forum Jboss Server</name>
   <description>eXo Jboss Server</description>
-  <url>http://www.exoplatform.org</url>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
