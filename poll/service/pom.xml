@@ -61,6 +61,12 @@
       <artifactId>commons-testing</artifactId>
       <version>${org.exoplatform.commons.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.testng</groupId>
+          <artifactId>testng</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.testng</groupId>
