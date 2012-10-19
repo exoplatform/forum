@@ -466,25 +466,6 @@
             <useManifestOnlyJar>false</useManifestOnlyJar>
           </configuration>
         </plugin>
-        <!--
-          we shouldn't need to specify this plugin here, but the maven
-          compiler plugin is not accepting its memory option properties. This
-          should be removed when we can just set the compiler properties
-        -->
-        <!--
-          we need to specify this as building GateIn can cause memory
-          problems with some JDKs (ie IBM)
-        -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${version.compiler.plugin}</version>
-          <configuration>
-            <fork>true</fork>
-            <meminitial>256m</meminitial>
-            <maxmem>1024m</maxmem>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
