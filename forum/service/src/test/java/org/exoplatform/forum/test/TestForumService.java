@@ -171,8 +171,7 @@ public class TestForumService extends ForumServiceTestCase {
       }
     }
   }
-  // TODO Fix this test reactivated after a JUnit -> TestNG Conversion (SWF-2162)
-  @Test(enabled = false)
+  @Test
   public void testCategory() throws Exception {
     String[] catIds = new String[] { getId(Utils.CATEGORY), getId(Utils.CATEGORY), getId(Utils.CATEGORY) };
 
@@ -305,8 +304,7 @@ public class TestForumService extends ForumServiceTestCase {
     forums = forumService_.getForumSummaries(catId, "");
     assertEquals("List forums can not equals 0", forums.size(), 0);
   }
-  // TODO Fix this test reactivated after a JUnit -> TestNG Conversion (SWF-2162)
-  @Test(enabled = false)
+  @Test
   public void testTopic() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
