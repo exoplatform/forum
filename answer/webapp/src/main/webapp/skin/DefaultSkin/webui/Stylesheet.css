@@ -2050,8 +2050,26 @@
 
 .UIMaskWorkspace .UIAnswersPortlet	{
 	min-width: 600px;
+	background: transparent;
 }
 
+.UIMaskWorkspace .UIAnswersPortlet .UISettingForm {
+	padding: 0px;
+}
+
+.UIAnswersPortlet .UISettingForm {
+	padding: 4px;
+}
+
+.UIAnswersPortlet .UITabContentContainers {
+	border: 1px solid #aeaeae;
+	border-top: none;
+}
+
+.UIAnswersPortlet .UITabContentContainers .UITabContent {
+	border: 1px solid white;
+	border-top: none;
+}
 /************************** UIViewUserProfile *****************************/
 .UIAnswersPortlet .UIViewUserProfile {
 	margin: 10px;
