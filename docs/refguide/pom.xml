@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum-docs</artifactId>
-    <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
+    <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
   
   <artifactId>forum-docs-refguide</artifactId>

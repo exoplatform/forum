@@ -8,12 +8,12 @@
   <parent>
     <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum-extras</artifactId>
-    <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
+    <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras-injection</artifactId>
-  <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
+  <version>4.0.0.Alpha1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Forum Injectors</name>
   <description>Forum Injectors</description>

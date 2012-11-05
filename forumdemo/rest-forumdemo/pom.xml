@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum-demo</artifactId>
-    <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
+    <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
   <artifactId>forum-demo-rest-forumdemo</artifactId>
   <packaging>war</packaging>
