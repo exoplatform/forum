@@ -965,6 +965,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   private Question getQuestion(Node questionNode) throws Exception {
+    if(questionNode == null) return null;
     Question question = new Question();
     PropertyReader reader = new PropertyReader(questionNode);
     question.setId(questionNode.getName());
@@ -1048,7 +1049,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   @Override
   public Question getQuestionById(String questionId) throws Exception {
     SessionProvider sessionProvider = CommonUtils.createSystemProvider();
-    return getQuestion(getQuestionNode(sessionProvider, questionId));
+    Node questionNode = getQuestionNode(sessionProvider, questionId);
+    return getQuestion(questionNode);
   }
 
   private List<String> getViewableCategoryIds(SessionProvider sessionProvider) throws Exception {
@@ -1921,7 +1923,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       if (!faqSetting.isAdmin()) {
         PropertyReader reader = new PropertyReader(parentCategory);
         List<String> userPrivates = reader.list(EXO_USER_PRIVATE, new ArrayList<String>());
-        if (!userPrivates.isEmpty() && !Utils.hasPermission(limitedUsers, userPrivates))
+        if (!userPrivates.isEmpty() && !Utils.hasPermission(userPrivates, limitedUsers))
           return catList;
       }
 
@@ -3006,8 +3008,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       Node node = getCategoryNode(sProvider, categoryId);
       List<String> values = new PropertyReader(node).list(EXO_MODERATORS, new ArrayList<String>());
-      List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
-      return Utils.hasPermission(userGroups, values);
+      return Utils.hasPermission(values, UserHelper.getAllGroupAndMembershipOfUser(user));
     } catch (Exception e) {
       return false;
     }
