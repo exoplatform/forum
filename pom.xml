@@ -568,7 +568,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
+  <profiles>
     <profile>
       <id>hsqldb</id>
       <activation>
