@@ -31,6 +31,6 @@ public class ExoNameGeneratorTestCase extends TestCase {
     assertTrue(exoNameGenerator.compose(4).length() > 4);
     assertTrue(exoNameGenerator.compose(3).length() > 3);
     assertTrue(exoNameGenerator.compose(2).length() > 2);
-    assertTrue(exoNameGenerator.compose(1).length() > 1);
+    assertTrue(exoNameGenerator.compose(1).length() >= 1);
   }
 }
