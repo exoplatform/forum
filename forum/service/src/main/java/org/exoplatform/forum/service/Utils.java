@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -504,24 +503,38 @@ public class Utils implements ForumNodeTypes {
    * @return boolean
    */
   static public boolean hasPermission(List<String> listOfCanviewrs, List<String> listOfBoundUsers) {
-    if (listOfBoundUsers == null || listOfCanviewrs == null)
+    if (listOfBoundUsers == null || listOfCanviewrs == null) {
       return false;
-    List<String> tem = new ArrayList<String>();
-    for (String str : listOfCanviewrs) {
-      if (str == null)
-        continue;
-      if (listOfBoundUsers.contains(str))
+    }
+    List<String> groups = new ArrayList<String>();
+    List<String> groupsAllmembershipType = new ArrayList<String>();
+    for (String str : listOfBoundUsers) {
+      if (str.indexOf("/") >= 0) {
+        groups.add(str.substring(str.indexOf("/")));
+      }
+      if (str.indexOf("*") >= 0) {// user has membershipType *
+        str = str.substring(str.indexOf("/"));
+        groupsAllmembershipType.add(str);
+      }
+      if (listOfCanviewrs.contains(str)) {
         return true;
-      if (str.contains("*")) {
-        str = str.substring(str.indexOf("/"), str.length());
-        tem.add(str);
-        if (listOfBoundUsers.contains(str))
-          return true;
       }
     }
-    for (String s : listOfBoundUsers) {
-      if (tem.contains(s))
-        return true;
+    if (groups.size() > 0 || groupsAllmembershipType.size() > 0) {
+      for (String str : listOfCanviewrs) {
+        if (str.indexOf("*") >= 0) {// listPlugin has membershipType *
+          str = str.substring(str.indexOf("/"));
+          if (groups.contains(str)) {
+            return true;
+          }
+        }
+        if (str.indexOf(":") > 0) {
+          str = str.substring(str.indexOf("/"));
+        }
+        if (groupsAllmembershipType.contains(str)) {
+          return true;
+        }
+      }
     }
     return false;
   }
