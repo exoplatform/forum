@@ -147,12 +147,6 @@
     <quartz.version>1.5.2</quartz.version>
     <nekohtml.version>1.9.14</nekohtml.version>
     <caja.version>r1</caja.version>
-  
-    <!-- ************** -->
-    <!-- Build settings -->
-    <!-- ************** -->
-    <!-- maven-release-plugin -->
-    <arguments>-Ppkg-tomcat,arc-tomcat -Dgatein.working.dir=target</arguments>
   </properties>
   <dependencyManagement>
     <!-- TODO : import dependencyManagement of platform, instead of redefining those properties -->
@@ -526,7 +520,6 @@
     <module>docs</module>
     <module>server/tomcat/patch</module>
     <module>server/jboss/patch-ear</module>
-    <module>packaging</module>
 
   </modules>
 </project>
