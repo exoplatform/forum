@@ -18,10 +18,10 @@ package org.exoplatform.forum.rendering;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.commons.testing.AssertUtils;
-import org.exoplatform.commons.testing.Closure;
 import org.exoplatform.forum.rendering.api.Renderer;
 import org.exoplatform.forum.rendering.api.UnsupportedSyntaxException;
+import org.exoplatform.forum.rendering.base.AssertUtils;
+import org.exoplatform.forum.rendering.base.Closure;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 
 /**
