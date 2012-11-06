@@ -24,13 +24,6 @@
       <artifactId>forum-component-common</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-testing</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

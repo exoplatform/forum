@@ -58,19 +58,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-testing</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>${org.testng.version}</version>
-      <classifier>jdk15</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.test.core</artifactId>
       <scope>test</scope>
