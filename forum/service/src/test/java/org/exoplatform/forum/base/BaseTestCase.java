@@ -25,9 +25,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import junit.framework.TestSuite;
 
 import org.exoplatform.component.test.AbstractGateInTest;
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.component.test.KernelBootstrap;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
