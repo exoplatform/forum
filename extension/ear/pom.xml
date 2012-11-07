@@ -13,67 +13,55 @@
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-extension-config</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-rendering</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-application-common</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-answer-service</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-answer-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-forum-service</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-forum-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-poll-service</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-poll-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-forumResources</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-extension-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
-      <version>${javax.jcr.api.version}</version>
     </dependency>
   </dependencies>
   <build>

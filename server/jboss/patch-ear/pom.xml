@@ -8,18 +8,9 @@
     <relativePath>../../../pom.xml</relativePath>
   </parent>
   <artifactId>forum-server-jboss-patch-ear</artifactId>
-  <!--version>${project.version}</version-->
   <packaging>jar</packaging>
   <name>Forum Jboss Server</name>
   <description>eXo Jboss Server</description>
-  <dependencies>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.server.jboss.patch-ear</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
   <build>
     <resources>
       <resource>
@@ -45,7 +36,6 @@
                 <artifactItem>
                   <groupId>org.exoplatform.portal</groupId>
                   <artifactId>exo.portal.server.jboss.patch-ear</artifactId>
-                  <version>${org.exoplatform.portal.version}</version>
                   <type>jar</type>
                 </artifactItem>
               </artifactItems>

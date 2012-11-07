@@ -12,14 +12,6 @@
   <packaging>jar</packaging>
   <name>Forum Tomcat Server</name>
   <description>eXo Tomcat Server</description>
-  <dependencies>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.server.tomcat.patch</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
   <build>
     <resources>
       <resource>
@@ -45,7 +37,6 @@
                 <artifactItem>
                   <groupId>org.exoplatform.portal</groupId>
                   <artifactId>exo.portal.server.tomcat.patch</artifactId>
-                  <version>${org.exoplatform.portal.version}</version>
                   <type>jar</type>
                 </artifactItem>
               </artifactItems>

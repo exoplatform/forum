@@ -14,18 +14,18 @@
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-demo-config</artifactId>
-      <version>${project.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-demo-rest-forumdemo</artifactId>
-      <version>${project.version}</version>
+      <scope>runtime</scope>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-demo-webapp</artifactId>
-      <version>${project.version}</version>
+      <scope>runtime</scope>
       <type>war</type>
     </dependency>
   </dependencies>

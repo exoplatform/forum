@@ -27,7 +27,7 @@
     <dependency>
       <groupId>org.wikbook</groupId>
       <artifactId>wikbook.docbkxstyle</artifactId>
-      <version>${version.wikbook.plugin}</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
@@ -193,7 +193,7 @@
             <artifactId>docbook-xml</artifactId>
             <version>4.4</version>
             <scope>runtime</scope>
-          </dependency>
+    </dependency>
         </dependencies>
       </plugin>
 
