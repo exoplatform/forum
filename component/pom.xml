@@ -15,6 +15,5 @@
     <module>bbcode</module>
     <module>statistics</module>
     <module>injector</module>
-    <module>upgrade</module>
   </modules>
 </project>
