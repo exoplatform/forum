@@ -749,12 +749,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-injector</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${org.slf4j.version}</version>
