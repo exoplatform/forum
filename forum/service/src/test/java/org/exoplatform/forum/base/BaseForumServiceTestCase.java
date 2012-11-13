@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
@@ -58,7 +59,8 @@ import org.exoplatform.services.security.MembershipEntry;
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml")
 })
-public abstract class BaseForumServiceTestCase extends BaseTestCase {
+
+public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
   public static final String         USER_ROOT         = "root";
 
   public static final String         USER_DEMO         = "demo";
@@ -94,6 +96,7 @@ public abstract class BaseForumServiceTestCase extends BaseTestCase {
     //
     end();
   }
+  
 
   @SuppressWarnings("unchecked")
   public <T> T getService(Class<T> clazz) {

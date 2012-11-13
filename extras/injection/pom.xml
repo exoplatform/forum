@@ -208,9 +208,15 @@
       <version>${org.exoplatform.portal.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
-
     </dependency>
-    
+
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-testing</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>jtidy</groupId>
       <artifactId>jtidy</artifactId>
@@ -233,10 +239,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <!-- There are some problems with these tests that don't allow us to avoid such settings -->
-            <forkMode>always</forkMode>
-            <argLine>-Xms256m -Xmx1024m</argLine>
             <useManifestOnlyJar>false</useManifestOnlyJar>
+            <includes>
+              <include>**/ExoNameGeneratorTestCase.java</include>
+              <include>**/BaseInjectorTestSuite.java</include>
+            </includes>
           </configuration>
         </plugin>
       </plugins>

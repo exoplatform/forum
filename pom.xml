@@ -37,7 +37,7 @@
     <org.exoplatform.jcr.version>1.14.10-GA-SNAPSHOT</org.exoplatform.jcr.version>
     <org.exoplatform.portal.version>3.4.0.Final</org.exoplatform.portal.version>
     <org.exoplatform.webos.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.webos.version>
-    <org.exoplatform.commons.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.commons.version>
+    <org.exoplatform.commons.version>4.0.0.Alpha1-ut-reducing-SNAPSHOT</org.exoplatform.commons.version>
     <org.exoplatform.gwtframework.version>1.1.2</org.exoplatform.gwtframework.version>
     <org.exoplatform.ide.version>1.1.8-SNAPSHOT</org.exoplatform.ide.version>
     <org.exoplatform.calendar.version>4.0.0.Alpha1-SNAPSHOT</org.exoplatform.calendar.version>
@@ -112,7 +112,7 @@
     <picocontainer.version>1.1</picocontainer.version>
     <commons-io.version>1.4</commons-io.version>
     <dom4j.version>1.6.1</dom4j.version>
-    <junit.version>3.8.2</junit.version>
+    <junit.version>4.8.2</junit.version>
     <xpp3.version>1.1.4c</xpp3.version>
     <mockito.version>1.8.1</mockito.version>
     <jtidy.version>4aug2000r7-dev</jtidy.version>

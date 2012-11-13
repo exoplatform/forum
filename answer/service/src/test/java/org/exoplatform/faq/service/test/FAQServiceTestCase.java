@@ -59,6 +59,7 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     super();
   }
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
   }

@@ -42,6 +42,12 @@ import org.exoplatform.services.security.Identity;
  */
 
 @ConfiguredBy({
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.core.test.configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.forum.component.service.test.configuration.xml")
 })
 
@@ -143,7 +149,7 @@ public abstract class AbstractServiceTest extends BaseForumServiceTestCase {
    *
    * @param clazz the class of resource
    */
-  public void removeResource(Class clazz) {
+  public void removeResource(Class<?> clazz) {
     resourceBinder.removeResource(clazz);
   }
 

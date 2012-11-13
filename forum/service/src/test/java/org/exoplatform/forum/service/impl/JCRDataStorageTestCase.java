@@ -16,7 +16,6 @@
  */
 package org.exoplatform.forum.service.impl;
 
-import static org.exoplatform.forum.base.AssertUtils.assertContains;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,20 +35,20 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.KernelUtils;
+import org.exoplatform.commons.testing.mock.JCRMockUtils;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.forum.base.AssertUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.JCRSessionManager;
 import org.exoplatform.forum.common.jcr.JCRTask;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.forum.membership.AbstractJCRTestCase;
-import org.exoplatform.forum.membership.JCRMockUtils;
-import org.exoplatform.forum.membership.KernelUtils;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -67,7 +66,6 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
   private JCRDataStorage storage;
   @Override
   public void beforeRunBare() throws Exception {
-    setGetAllConfig(false);
     super.beforeRunBare();
   }
   
@@ -99,17 +97,17 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     Node node = JCRMockUtils.mockNode();
     JCRMockUtils.stubProperty(node, moderatorsPropName, "foo", "bar");
     String[] actual = storage.updateModeratorInForum(node, moderators);
-    assertContains(actual, "foo", "bar", "zed");
+    AssertUtils.assertContains(actual, "foo", "bar", "zed");
 
     Node node2 = JCRMockUtils.mockNode();
     JCRMockUtils.stubNullProperty(node2, moderatorsPropName);
     String[] actual2 = storage.updateModeratorInForum(node2, moderators);
-    assertContains(actual2, "foo", "zed");
+    AssertUtils.assertContains(actual2, "foo", "zed");
 
     Node node3 = JCRMockUtils.mockNode();
     JCRMockUtils.stubProperty(node3, moderatorsPropName, " ", "bar");
     String[] actual3 = storage.updateModeratorInForum(node3, moderators);
-    assertContains(actual3, "foo", "zed");
+    AssertUtils.assertContains(actual3, "foo", "zed");
   }
 
   public void testSetDefaultAvatar() throws Exception {

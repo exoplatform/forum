@@ -18,12 +18,12 @@ package org.exoplatform.forum.rendering.spi;
 
 import junit.framework.TestCase;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.Closure;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.forum.rendering.api.Renderer;
-import org.exoplatform.forum.rendering.base.AssertUtils;
-import org.exoplatform.forum.rendering.base.Closure;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

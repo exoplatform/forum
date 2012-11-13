@@ -17,7 +17,7 @@
 
 package org.exoplatform.forum.extras.injection;
 
-import org.exoplatform.component.test.AbstractKernelTest;
+import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
@@ -34,23 +34,23 @@ import org.exoplatform.component.test.ContainerScope;
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml")
 })
-public abstract class BaseTestCase extends AbstractKernelTest {
- 
-  
+public abstract class BaseInjectorTestCase extends BaseExoTestCase {
+
   @Override
   public void setUp() throws Exception {
     //
     begin();
-    
-    
   }
 
   @Override
   public void tearDown() throws Exception {
-    
     //
     end();
   }
   
+  @SuppressWarnings("unchecked")
+  public <T> T getService(Class<T> clazz) {
+    return (T) getContainer().getComponentInstanceOfType(clazz);
+  }
   
 }

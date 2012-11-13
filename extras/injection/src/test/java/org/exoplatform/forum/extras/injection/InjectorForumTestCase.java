@@ -38,7 +38,7 @@ import org.exoplatform.services.organization.OrganizationService;
  * @author <a href="mailto:thanhvc@exoplatform.com">Thanh Vu</a>
  * @version $Revision$
  */
-public class InjectorForumTestCase extends BaseTestCase {
+public class InjectorForumTestCase extends BaseInjectorTestCase {
 
   private OrganizationService organizationService;
   private ForumService forumService;
@@ -66,20 +66,21 @@ public class InjectorForumTestCase extends BaseTestCase {
 
     //
     super.begin();
-    
-    //
-    profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
-    categoryInjector = (CategoryInjector) getContainer().getComponentInstanceOfType(CategoryInjector.class);
-    forumInjector = (ForumInjector) getContainer().getComponentInstanceOfType(ForumInjector.class);
-    topicInjector = (TopicInjector) getContainer().getComponentInstanceOfType(TopicInjector.class);
-    postInjector = (PostInjector) getContainer().getComponentInstanceOfType(PostInjector.class);
-    membershipInjector = (MembershipInjector) getContainer().getComponentInstanceOfType(MembershipInjector.class);
-    attachmentInjector = (AttachmentInjector) getContainer().getComponentInstanceOfType(AttachmentInjector.class);
-    
-    //
-    organizationService = (OrganizationService) getContainer().getComponentInstanceOfType(OrganizationService.class);
-    forumService = (ForumService) getContainer().getComponentInstanceOfType(ForumService.class);
-    
+
+    if(forumService == null){
+      //
+      profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
+      categoryInjector = (CategoryInjector) getContainer().getComponentInstanceOfType(CategoryInjector.class);
+      forumInjector = (ForumInjector) getContainer().getComponentInstanceOfType(ForumInjector.class);
+      topicInjector = (TopicInjector) getContainer().getComponentInstanceOfType(TopicInjector.class);
+      postInjector = (PostInjector) getContainer().getComponentInstanceOfType(PostInjector.class);
+      membershipInjector = (MembershipInjector) getContainer().getComponentInstanceOfType(MembershipInjector.class);
+      attachmentInjector = (AttachmentInjector) getContainer().getComponentInstanceOfType(AttachmentInjector.class);
+      
+      //
+      organizationService = (OrganizationService) getContainer().getComponentInstanceOfType(OrganizationService.class);
+      forumService = (ForumService) getContainer().getComponentInstanceOfType(ForumService.class);
+    }
     
     assertNotNull(membershipInjector);
     assertNotNull(profileInjector);

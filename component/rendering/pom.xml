@@ -29,5 +29,11 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-testing</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
