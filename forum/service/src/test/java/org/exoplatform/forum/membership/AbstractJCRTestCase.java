@@ -27,7 +27,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.exoplatform.commons.testing.BaseExoTestCase;
+import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -40,7 +40,7 @@ import org.exoplatform.services.log.Log;
  *          tuvd@exoplatform.com
  * Oct 8, 2012  
  */
-public abstract class AbstractJCRTestCase  extends BaseExoTestCase {
+public abstract class AbstractJCRTestCase  extends BaseForumServiceTestCase {
   
   private static final Log LOG = ExoLogger.getLogger(AbstractJCRTestCase.class);
 

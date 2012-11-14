@@ -38,9 +38,6 @@ import javax.jcr.observation.ObservationManager;
 import org.exoplatform.commons.testing.AssertUtils;
 import org.exoplatform.commons.testing.KernelUtils;
 import org.exoplatform.commons.testing.mock.JCRMockUtils;
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
@@ -57,10 +54,7 @@ import org.exoplatform.forum.service.ForumAttachment;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy( { 
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"), 
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "forumconf/forum-configuration.xml") 
-})
+
 public class JCRDataStorageTestCase extends AbstractJCRTestCase {
 
   private JCRDataStorage storage;
@@ -69,10 +63,16 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     super.beforeRunBare();
   }
   
-  protected void setUp() throws Exception {
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
     storage = new JCRDataStorage();
-    KSDataLocation locator = new KSDataLocation("portal-test", getRepositoryService());
-    storage.setDataLocator(locator);
+    storage.setDataLocator(dataLocation);
+  }
+  
+  @Override
+  public void tearDown() throws Exception {
+    super.tearDown();
   }
 
   public void testConstructor() {

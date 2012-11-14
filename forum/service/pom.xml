@@ -236,11 +236,7 @@
           <configuration>
             <includes>
               <include>**/NoContainerTestSuite.java</include>
-
               <include>**/BaseForumTestSuite.java</include>
-              <include>**/ForumWebserviceTestCase.java</include>
-              <include>**/JCRDataStorageTestCase.java</include>
-              <include>**/ForumServiceUtilsTestCase.java</include>
             </includes>
           </configuration>
         </plugin>
