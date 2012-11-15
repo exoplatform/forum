@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum-answer</artifactId>
+    <groupId>org.exoplatform.forum</groupId>
     <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
   </parent>
   <artifactId>forum-answer-webapp</artifactId>
@@ -51,7 +50,6 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
@@ -96,7 +94,6 @@
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-answer-service</artifactId>
@@ -105,14 +102,12 @@
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-forum-service</artifactId>
     </dependency>
-
     <!-- this dependency is used in class RenderHelper but mvn dependency:analyze 
       still say "undeclared" -->
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-bbcode</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-application-common</artifactId>
@@ -125,7 +120,6 @@
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-common</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-webui-component</artifactId>
@@ -134,7 +128,6 @@
       <groupId>org.exoplatform.social</groupId>
       <artifactId>social-component-core</artifactId>
     </dependency>
-
   </dependencies>
   <build>
     <!-- see is we can remove this -->

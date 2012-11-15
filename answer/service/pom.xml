@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.exoplatform.forum</groupId>
     <artifactId>forum-answer</artifactId>
+    <groupId>org.exoplatform.forum</groupId>
     <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
   </parent>
   <artifactId>forum-answer-service</artifactId>
@@ -91,7 +90,6 @@
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
     </dependency>
-
     <!-- Chromattic -->
     <dependency>
       <groupId>org.chromattic</groupId>
@@ -128,31 +126,26 @@
       <artifactId>chromattic.metamodel</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.testframework</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.test.jcr</artifactId>
@@ -180,8 +173,6 @@
       <artifactId>exo.portal.component.test.core</artifactId>
       <scope>test</scope>
     </dependency>
-
-
   </dependencies>
   <build>
     <pluginManagement>
