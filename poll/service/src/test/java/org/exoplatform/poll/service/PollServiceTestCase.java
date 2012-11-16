@@ -16,6 +16,7 @@
  */
 package org.exoplatform.poll.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.poll.base.BaseTestCase;
@@ -27,12 +28,18 @@ import org.exoplatform.poll.base.BaseTestCase;
  * Oct 8, 2012 
  */
 public class PollServiceTestCase extends BaseTestCase {
+  
+  private List<Poll> tearDownPollList;
 
   public void setUp() throws Exception {
     super.setUp();
+    tearDownPollList = new ArrayList<Poll>();
   }
 
   public void tearDown() throws Exception {
+    for (Poll poll : tearDownPollList) {
+      pollService.removePoll(poll.getId());
+    }
     super.tearDown();
   }
 
@@ -67,6 +74,11 @@ public class PollServiceTestCase extends BaseTestCase {
     pollPulic.setParentPath(parentPathPublic);
     pollService.savePoll(pollPulic, true, false);
     assertNotNull(pollService.getPoll(pollPulic.getId()));
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(pollTopic);
+    tearDownPollList.add(pollGroup);
+    tearDownPollList.add(pollPulic);
   }
 
   /**
@@ -75,11 +87,30 @@ public class PollServiceTestCase extends BaseTestCase {
    * @throws Exception
    */
   public void testGetPoll() throws Exception {
-    String pollId = pollService.getPagePoll().get(1).getId();
-    String path = pollService.getPagePoll().get(1).getParentPath();
-    Poll p = pollService.getPoll(pollId);
-    assertNotNull(p);
-    assertEquals(path, p.getParentPath());
+    
+    /*    Create new polls    */
+    Poll pollTopic = new Poll();
+    pollTopic.setParentPath(topicPath);
+    pollService.savePoll(pollTopic, true, false);
+    Poll pollGroup = new Poll();
+    String parentPathGroup = "platform/users/" + PollNodeTypes.APPLICATION_DATA + "/"
+        + PollNodeTypes.EXO_POLLS;
+    pollGroup.setParentPath(parentPathGroup);
+    pollService.savePoll(pollGroup, true, false);
+    Poll pollPulic = new Poll();
+    String parentPathPublic = "portal" + PollNodeTypes.POLLS;
+    pollPulic.setParentPath(parentPathPublic);
+    pollService.savePoll(pollPulic, true, false);
+    
+    /*    test getPoll    */
+    Poll pTopic = pollService.getPoll(pollTopic.getId());
+    assertNotNull(pTopic);
+    assertEquals(pTopic.getId(),pollTopic.getId());
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(pollTopic);
+    tearDownPollList.add(pollGroup);
+    tearDownPollList.add(pollPulic);
   }
 
   /**
@@ -88,8 +119,28 @@ public class PollServiceTestCase extends BaseTestCase {
    * @throws Exception
    */
   public void testGetPagePoll() throws Exception {
+    /*    Create new polls    */
+    Poll pollTopic = new Poll();
+    pollTopic.setParentPath(topicPath);
+    pollService.savePoll(pollTopic, true, false);
+    Poll pollGroup = new Poll();
+    String parentPathGroup = "platform/users/" + PollNodeTypes.APPLICATION_DATA + "/"
+        + PollNodeTypes.EXO_POLLS;
+    pollGroup.setParentPath(parentPathGroup);
+    pollService.savePoll(pollGroup, true, false);
+    Poll pollPulic = new Poll();
+    String parentPathPublic = "portal" + PollNodeTypes.POLLS;
+    pollPulic.setParentPath(parentPathPublic);
+    pollService.savePoll(pollPulic, true, false);
+    
+    /*    test getPagePoll    */
     List<Poll> listPoll = pollService.getPagePoll();
-    assertEquals(listPoll.size(), 2);
+    assertEquals(listPoll.size(), 3);
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(pollTopic);
+    tearDownPollList.add(pollGroup);
+    tearDownPollList.add(pollPulic);
   }
 
   /**
@@ -98,9 +149,28 @@ public class PollServiceTestCase extends BaseTestCase {
    * @throws Exception
    */
   public void testRemovePoll() throws Exception {
-    String pollId = pollService.getPagePoll().get(1).getId();
-    pollService.removePoll(pollId);
-    assertEquals(1, pollService.getPagePoll().size());
+    /*    Create new polls    */
+    Poll pollTopic = new Poll();
+    pollTopic.setParentPath(topicPath);
+    pollService.savePoll(pollTopic, true, false);
+    Poll pollGroup = new Poll();
+    String parentPathGroup = "platform/users/" + PollNodeTypes.APPLICATION_DATA + "/"
+        + PollNodeTypes.EXO_POLLS;
+    pollGroup.setParentPath(parentPathGroup);
+    pollService.savePoll(pollGroup, true, false);
+    Poll pollPulic = new Poll();
+    String parentPathPublic = "portal" + PollNodeTypes.POLLS;
+    pollPulic.setParentPath(parentPathPublic);
+    pollService.savePoll(pollPulic, true, false);
+    
+    /*    test removePoll   */
+    pollService.removePoll(pollGroup.getId());
+    assertEquals(2, pollService.getPagePoll().size());
+    assertNull(pollService.getPoll(pollGroup.getId()));
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(pollTopic);
+    tearDownPollList.add(pollPulic);
   }
 
 }

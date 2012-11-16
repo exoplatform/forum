@@ -1,5 +1,8 @@
 package org.exoplatform.poll.webservice;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -12,14 +15,20 @@ public class PollWebserviceTest extends AbstractResourceTest {
   protected PollWebservice pollWebservice;
 
   private final String     RESOURCE_URL = "/ks/poll";
+  
+  private List<Poll> tearDownPollList;
 
   public void setUp() throws Exception {
     super.setUp();
+    tearDownPollList = new ArrayList<Poll>();
     pollWebservice = new PollWebservice();
     addResource(pollWebservice, null);
   }
 
   public void tearDown() throws Exception {
+    for (Poll poll : tearDownPollList) {
+      pollService.removePoll(poll.getId());
+    }
     removeResource(pollWebservice);
     super.tearDown();
   }
@@ -35,10 +44,14 @@ public class PollWebserviceTest extends AbstractResourceTest {
     Poll poll = new Poll();
     poll.setParentPath(topicPath);
     pollService.savePoll(poll, true, false);
+    
     String resourceUrl = RESOURCE_URL + "/viewpoll/" + poll.getId();
     startSessionAs("root");
     ContainerResponse response = service("GET", resourceUrl, "", null, null);
     assertEquals("containerResponse1.getStatus() must return: " + 200, 200, response.getStatus());
+    
+    /*    clear all poll    */
+    tearDownPollList.add(poll);
   }
 
   /**
@@ -186,5 +199,9 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
     // Test the number of vote, here is 2
     assertEquals(2, Integer.parseInt(pMultiNew.getInfoVote()[pMultiNew.getInfoVote().length-1]));
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(poll);
+    tearDownPollList.add(pollMulti);
   }
 }
