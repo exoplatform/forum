@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 eXo Platform SAS.
+  * Copyright (C) 2003-2011 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  *          tu.duy@exoplatform.com
  * Apr 28, 2011  
  */
-public class UtilsTestCase extends TestCase{
+public class UtilsTestCase extends TestCase {
   
   public UtilsTestCase() {
     super();

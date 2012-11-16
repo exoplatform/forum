@@ -18,70 +18,26 @@ package org.exoplatform.poll.service;
 
 import java.util.List;
 
-import javax.jcr.Node;
-import javax.jcr.Session;
-
-import org.exoplatform.forum.common.jcr.KSDataLocation;
-import org.exoplatform.forum.common.jcr.SessionManager;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumNodeTypes;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.poll.base.BaseTestCase;
 
 /**
- * Created by The eXo Platform SAS Author : Vu Duy Tu tuvd@exoplatform.com Oct
- * 8, 2012
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu
+ *          tuvd@exoplatform.com
+ * Oct 8, 2012 
  */
 public class PollServiceTestCase extends BaseTestCase {
 
-  protected PollService    pollService;
-
-  protected KSDataLocation dataLocation;
-
-  private Node             topicNode;
-
-  @Override
   public void setUp() throws Exception {
-    pollService = (PollService) getContainer().getComponentInstanceOfType(PollService.class);
-    dataLocation = (KSDataLocation) getContainer().getComponentInstanceOfType(KSDataLocation.class);
-    initForumdata();
-    begin();
+    super.setUp();
   }
 
-  @Override
   public void tearDown() throws Exception {
-    end();
+    super.tearDown();
   }
 
   public void testPollService() throws Exception {
-    assertNotNull(pollService);
-  }
-
-  /**
-   * create new node forum, node topic in this forum then use this topic's path
-   * to create a poll later
-   */
-  private void initForumdata() {
-    SessionManager manager = dataLocation.getSessionManager();
-    try {
-      // startSessionAs("root");
-      Session session = manager.openSession();
-      Category cat = new Category();
-      Node nodeHome = session.getRootNode().getNode(dataLocation.getForumCategoriesLocation());
-      Node catN = nodeHome.addNode(cat.getId(), ForumNodeTypes.EXO_FORUM_CATEGORY);
-      Forum forum = new Forum();
-      Node forNode = catN.addNode(forum.getId(), ForumNodeTypes.EXO_FORUM);
-      Topic topic = new Topic();
-      topicNode = forNode.addNode(topic.getId(), ForumNodeTypes.EXO_TOPIC);
-      session.save();
-      String topicPath = topicNode.getPath();
-      assertNotNull(session.getItem(topicPath));
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      manager.closeSession();
-    }
+    assertNotNull(getPollService());
   }
 
   /**
@@ -92,8 +48,7 @@ public class PollServiceTestCase extends BaseTestCase {
   public void testSavePoll() throws Exception {
     // if poll of topic : parentPath = topic.getPath();
     Poll pollTopic = new Poll();
-    String parentPathTopic = topicNode.getPath();
-    pollTopic.setParentPath(parentPathTopic);
+    pollTopic.setParentPath(topicPath);
     pollService.savePoll(pollTopic, true, false);
     assertNotNull(pollService.getPoll(pollTopic.getId()));
 
@@ -134,7 +89,7 @@ public class PollServiceTestCase extends BaseTestCase {
    */
   public void testGetPagePoll() throws Exception {
     List<Poll> listPoll = pollService.getPagePoll();
-    assertEquals(listPoll.size(), 3);
+    assertEquals(listPoll.size(), 2);
   }
 
   /**
@@ -145,7 +100,7 @@ public class PollServiceTestCase extends BaseTestCase {
   public void testRemovePoll() throws Exception {
     String pollId = pollService.getPagePoll().get(1).getId();
     pollService.removePoll(pollId);
-    assertEquals(2, pollService.getPagePoll().size());
+    assertEquals(1, pollService.getPagePoll().size());
   }
 
 }

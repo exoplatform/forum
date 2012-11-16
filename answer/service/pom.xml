@@ -36,6 +36,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
       <scope>provided</scope>
@@ -179,13 +184,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-testing</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.test.jcr</artifactId>
       <scope>test</scope>
@@ -208,8 +206,9 @@
     </dependency>
     
   </dependencies>
+  
   <build>
-  <pluginManagement>
+    <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -217,9 +216,7 @@
           <configuration>
             <includes>
               <include>**/NoContainerTestSuite.java</include>
-
               <include>**/BaseFAQTestSuite.java</include>
-              <include>**/FAQWebServiceTestCase.java</include>
             </includes>
           </configuration>
         </plugin>

@@ -156,7 +156,6 @@
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-testing</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
       <scope>test</scope>
     </dependency>
 

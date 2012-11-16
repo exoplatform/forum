@@ -18,9 +18,6 @@ package org.exoplatform.faq.service.ws;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.faq.base.FAQServiceBaseTestCase;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -41,18 +38,11 @@ import org.exoplatform.services.security.Identity;
  * @since   May 27, 2010 3:26:01 PM
  */
 
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.faq.component.core.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.faq.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.faq.test.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.faq.component.service.test.configuration.xml")
-})
+
 
 public abstract class AbstractServiceTest extends FAQServiceBaseTestCase {
-  protected static Log LOG = ExoLogger.getLogger(AbstractServiceTest.class.getName());
+  
+  protected static Log LOG = ExoLogger.getLogger(AbstractServiceTest.class);
   protected SessionProvider sessionProvider;
   protected ProviderBinder providerBinder;
   protected ResourceBinder resourceBinder;
@@ -63,6 +53,7 @@ public abstract class AbstractServiceTest extends FAQServiceBaseTestCase {
     super();
   }
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     sessionProviderService = (SessionProviderService) getService(SessionProviderService.class);
@@ -76,6 +67,7 @@ public abstract class AbstractServiceTest extends FAQServiceBaseTestCase {
     startSessionAs(USER_ROOT);
   }
 
+  @Override
   public void tearDown() throws Exception {
     super.tearDown();
     endSession();

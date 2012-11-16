@@ -372,6 +372,11 @@
         <version>${org.exoplatform.commons.version}</version>
       </dependency>
       <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-testing</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+    </dependency>
+      <dependency>
         <groupId>net.sourceforge.nekohtml</groupId>
         <artifactId>nekohtml</artifactId>
         <version>${nekohtml.version}</version>

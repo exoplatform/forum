@@ -16,16 +16,10 @@
  */
 package org.exoplatform.faq.service.test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
-import junit.framework.TestSuite;
-
 import org.exoplatform.commons.testing.BaseExoContainerTestSuite;
 import org.exoplatform.commons.testing.ConfigTestCase;
-import org.exoplatform.component.test.KernelBootstrap;
 import org.exoplatform.faq.base.FAQServiceBaseTestCase;
+import org.exoplatform.faq.service.ws.FAQWebServiceTestCase;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -46,7 +40,8 @@ import org.junit.runners.Suite.SuiteClasses;
   FAQServiceTestCase.class,
   FAQServiceUtilsTestCase.class,
   MultiLanguagesTestCase.class,
-  InitialDataPluginTestCase.class
+  InitialDataPluginTestCase.class,
+  FAQWebServiceTestCase.class
 })
 @ConfigTestCase(FAQServiceBaseTestCase.class)
 public class BaseFAQTestSuite extends BaseExoContainerTestSuite {
