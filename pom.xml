@@ -87,6 +87,7 @@
     <org.aspectj.version>1.6.11</org.aspectj.version>
     <commons-collections.version>3.2.1</commons-collections.version>
     <javax.xml.bind.jaxb-api.version>2.1</javax.xml.bind.jaxb-api.version>
+    <stax-api.version>1.0.1</stax-api.version>
   </properties>
   <dependencyManagement>
     <!-- TODO : import dependencyManagement of platform, instead of redefining 
@@ -478,6 +479,11 @@
         <version>${org.mortbay.jetty.cometd-bayeux.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>${org.slf4j.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.wikbook</groupId>
         <artifactId>wikbook.docbkxstyle</artifactId>
         <version>${version.wikbook.plugin}</version>
@@ -503,9 +509,16 @@
         <version>${rome.version}</version>
       </dependency>
       <dependency>
+        <groupId>stax</groupId>
+        <artifactId>stax-api</artifactId>
+        <version>${stax-api.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
         <version>${xml-apis.version}</version>
+        <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>xpp3</groupId>
@@ -514,13 +527,16 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <!--
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-jdk14</artifactId>
       <version>${org.slf4j.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
+  -->
   <build>
     <pluginManagement>
       <plugins>
