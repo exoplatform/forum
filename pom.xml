@@ -96,6 +96,12 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-answer-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-application-common</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
@@ -132,6 +138,12 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-demo-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-extension-config</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -140,6 +152,12 @@
         <artifactId>forum-extension-webapp</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-extension-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -155,9 +173,21 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-forum-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forumResources</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-forumResources</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -170,6 +200,12 @@
         <artifactId>forum-poll-webapp</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-poll-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
       </dependency>
       <!-- To be replaced by an import of JCR parent POM -->
       <dependency>
