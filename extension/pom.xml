@@ -13,6 +13,5 @@
   <modules>
     <module>config</module>
     <module>webapp</module>
-    <module>ear</module>
   </modules>
 </project>
