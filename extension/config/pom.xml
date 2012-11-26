@@ -11,9 +11,9 @@
   <name>Forum Extension configuration jar</name>
   <dependencies>
     <dependency>
-	  <groupId>org.exoplatform.kernel</groupId>
-	  <artifactId>exo.kernel.container</artifactId>
-	  <scope>runtime</scope>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>
