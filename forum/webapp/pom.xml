@@ -10,10 +10,60 @@
   <packaging>war</packaging>
   <name>Forum Forum application</name>
   <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-comet-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-webui-component</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
+    </dependency>
+    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-component-bbcode</artifactId>
+    </dependency>
     <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-common</artifactId>
+    </dependency>
+    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-component-rendering</artifactId>
     </dependency>
     <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
@@ -25,27 +75,9 @@
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-poll-service</artifactId>
     </dependency>
-    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-rendering</artifactId>
-    </dependency>
-    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-application-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.component.common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -58,65 +90,20 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.portlet</groupId>
-      <artifactId>portlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xpp3</groupId>
-      <artifactId>xpp3</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.jcr</groupId>
-      <artifactId>jcr</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.eXo</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.organization.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>exo.jcr.component.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.portal</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>cometd-bayeux</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-comet-service</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-webui-component</artifactId>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.framework</artifactId>
+      <artifactId>exo.portal.component.resources</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -128,27 +115,35 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.resources</artifactId>
+      <artifactId>exo.portal.component.web.server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.eXo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.portlet</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-bbcode</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.web.server</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.social</groupId>
       <artifactId>social-component-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>cometd-bayeux</artifactId>
     </dependency>
     <dependency>
       <groupId>stax</groupId>
@@ -164,13 +159,18 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.test.core</artifactId>
-      <scope>test</scope>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.test.core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -11,32 +11,16 @@
   <name>Forum Poll application</name>
   <dependencies>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-poll-service</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-application-common</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.portlet</groupId>
-      <artifactId>portlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.container</artifactId>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.core</groupId>
@@ -47,20 +31,20 @@
       <artifactId>exo.core.component.security.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.core</artifactId>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.portal</artifactId>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-poll-service</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.portlet</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.framework</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -69,6 +53,22 @@
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web.controller</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portlet</artifactId>
     </dependency>
     <dependency>
       <groupId>org.gatein.wci</groupId>

@@ -10,31 +10,42 @@
   <packaging>jar</packaging>
   <name>Forum Applications commons</name>
   <dependencies>
-    <!-- added by us -->
     <dependency>
-      <groupId>rome</groupId>
-      <artifactId>rome</artifactId>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
     </dependency>
-    <!-- platform provided -->
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-rendering</artifactId>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.security.core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-common</artifactId>
     </dependency>
+    <!-- platform provided -->
     <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.container</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.component.common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.commons</artifactId>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-component-rendering</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
@@ -45,24 +56,16 @@
       <artifactId>exo.jcr.component.ext</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.security.core</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.jcr</groupId>
-      <artifactId>jcr</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.organization.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.portal</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -70,7 +73,11 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.eXo</artifactId>
+      <artifactId>exo.portal.component.portal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.resources</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -78,52 +85,45 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.web.resources</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.eXo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.framework</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.web.resources</artifactId>
+      <artifactId>exo.portal.webui.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.portlet</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.resources</artifactId>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
     </dependency>
+    <!-- added by us -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
     </dependency>
     <dependency>
-      <groupId>quartz</groupId>
-      <artifactId>quartz</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.test.core</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

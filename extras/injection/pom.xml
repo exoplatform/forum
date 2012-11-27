@@ -13,16 +13,16 @@
   <description>Forum Injectors</description>
   <dependencies>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-common</artifactId>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-application-common</artifactId>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-poll-service</artifactId>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
@@ -30,15 +30,27 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-component-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-forum-service</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-component-common</artifactId>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-poll-service</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.jcr</groupId>
-      <artifactId>jcr</artifactId>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.ext</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -49,12 +61,14 @@
       <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>exo.jcr.component.core</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>exo.jcr.component.ext</artifactId>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.api</artifactId>
+      <scope>test</scope>
     </dependency>
     <!-- Chromattic -->
     <dependency>
@@ -64,12 +78,7 @@
     </dependency>
     <dependency>
       <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.spi</artifactId>
+      <artifactId>chromattic.common</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -84,12 +93,17 @@
     </dependency>
     <dependency>
       <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.common</artifactId>
+      <artifactId>chromattic.metamodel</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.metamodel</artifactId>
+      <artifactId>chromattic.spi</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-comet-service</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -99,22 +113,20 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.identity</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-comet-service</artifactId>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.organization.api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
@@ -127,23 +139,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.identity</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>rome</groupId>
-      <artifactId>rome</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
@@ -151,6 +146,11 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
