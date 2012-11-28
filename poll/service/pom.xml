@@ -55,13 +55,10 @@
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.rest.core</artifactId>
-      <version>2.2.9-GA-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.testframework</artifactId>
-      <version>2.2.9-GA-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     
