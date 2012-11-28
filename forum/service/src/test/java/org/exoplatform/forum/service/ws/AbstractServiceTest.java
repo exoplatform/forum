@@ -18,9 +18,6 @@ package org.exoplatform.forum.service.ws;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -41,11 +38,9 @@ import org.exoplatform.services.security.Identity;
  * @since   May 27, 2010 3:26:01 PM
  */
 
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.forum.component.service.test.configuration.xml")
-})
 
 public abstract class AbstractServiceTest extends BaseForumServiceTestCase {
+  
   protected static Log LOG = ExoLogger.getLogger(AbstractServiceTest.class.getName());
   protected SessionProvider sessionProvider;
   protected ProviderBinder providerBinder;
@@ -63,13 +58,11 @@ public abstract class AbstractServiceTest extends BaseForumServiceTestCase {
     providerBinder = ProviderBinder.getInstance();
     ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, providerBinder));
     resourceBinder.clear();
-    begin();
   }
 
   public void tearDown() throws Exception {
     endSession();
     super.tearDown();
-    end();
   }
 
   /**
@@ -143,7 +136,7 @@ public abstract class AbstractServiceTest extends BaseForumServiceTestCase {
    *
    * @param clazz the class of resource
    */
-  public void removeResource(Class clazz) {
+  public void removeResource(Class<?> clazz) {
     resourceBinder.removeResource(clazz);
   }
 

@@ -14,13 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service;
+package org.exoplatform.faq.service.test;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.Closure;
+import org.exoplatform.commons.testing.KernelUtils;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.faq.base.AssertUtils;
 import org.exoplatform.faq.base.FAQServiceBaseTestCase;
-import org.exoplatform.faq.base.KernelUtils;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.InitialDataPlugin;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,6 +46,7 @@ public class InitialDataPluginTestCase extends FAQServiceBaseTestCase {
     super();
   }
 
+  @Override
   public void setUp() throws Exception {
     begin();
     faq = (FAQService) getService(FAQService.class);
@@ -53,6 +57,7 @@ public class InitialDataPluginTestCase extends FAQServiceBaseTestCase {
     plugin = new InitialDataPlugin(params);
   }
 
+  @Override
   public void tearDown() throws Exception {
     end();
   }
@@ -83,9 +88,5 @@ public class InitialDataPluginTestCase extends FAQServiceBaseTestCase {
     plugin.setLocation(DATAZIP_LOCATION);
     assertFalse(plugin.importData(faq, conf));
 
-  }
-  
-  public interface Closure {
-    void dothis();
   }
 }

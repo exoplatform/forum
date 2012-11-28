@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.bean;
+package org.exoplatform.forum.utils;
 
-import static org.exoplatform.forum.base.AssertUtils.assertContains;
 import junit.framework.TestCase;
 
+import org.exoplatform.commons.testing.AssertUtils;
 import org.exoplatform.forum.service.UserProfile;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UserProfileTestCase extends TestCase {
+public class UserProfileUtilsTestCase extends TestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -37,7 +37,7 @@ public class UserProfileTestCase extends TestCase {
     UserProfile profile = new UserProfile();
     profile.setLastReadPostOfTopic(array);
     String[] actual = profile.getLastReadPostOfTopic();
-    assertContains(actual, "foo,foo", "bar,bar");
+    AssertUtils.assertContains(actual, "foo,foo", "bar,bar");
     assertEquals("foo", profile.getLastPostIdReadOfTopic("foo"));
     assertEquals("", profile.getLastPostIdReadOfTopic("zed"));
 
@@ -49,7 +49,7 @@ public class UserProfileTestCase extends TestCase {
     UserProfile profile = new UserProfile();
     profile.setLastReadPostOfForum(array);
     String[] actual = profile.getLastReadPostOfForum();
-    assertContains(actual, "foo,foo", "bar,bar");
+    AssertUtils.assertContains(actual, "foo,foo", "bar,bar");
     assertEquals("foo", profile.getLastPostIdReadOfForum("foo"));
     assertEquals("", profile.getLastPostIdReadOfForum("zed"));
 

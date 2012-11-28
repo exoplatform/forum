@@ -27,9 +27,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.poll.base.BaseTestCase;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -48,15 +45,6 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.MembershipEntry;
 
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.component.core.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.component.service.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.test.portal-configuration.xml")
-})
 public abstract class AbstractResourceTest extends BaseTestCase {
   
   protected SessionProvider sessionProvider;
@@ -67,6 +55,7 @@ public abstract class AbstractResourceTest extends BaseTestCase {
   private Collection<MembershipEntry> membershipEntries = new ArrayList<MembershipEntry>();
   
   public void setUp() throws Exception {
+    super.setUp();
     sessionProviderService = (SessionProviderService) getContainer().
         getComponentInstanceOfType(SessionProviderService.class);
     resourceBinder = (ResourceBinder) getContainer().getComponentInstanceOfType(ResourceBinder.class);
@@ -75,59 +64,11 @@ public abstract class AbstractResourceTest extends BaseTestCase {
     providerBinder = ProviderBinder.getInstance();
     ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, providerBinder));
     resourceBinder.clear();
-    begin();
   }
   
-  /**
-   * registry resource object
-   *
-   * @param resource
-   * @return
-   * @throws Exception
-   */
-  public boolean registry(Object resource) throws Exception {
-    // container.registerComponentInstance(resource);
-    return resourceBinder.bind(resource);
-  }
-  /**
-   * registry resource class
-   *
-   * @param resourceClass
-   * @return
-   * @throws Exception
-   */
-  public boolean registry(Class<?> resourceClass) throws Exception {
-    // container.registerComponentImplementation(resourceClass.getName(),
-    // resourceClass);
-    return resourceBinder.bind(resourceClass);
-  }
-
-  /**
-   * unregistry resource object
-   *
-   * @param resource
-   * @return
-   * @deprecated Use {@link #addResource(Object, javax.ws.rs.core.MultivaluedMap)} instead.
-   *             Will be removed by 1.3.x.
-   */
-  @Deprecated
-  public boolean unregistry(Object resource) {
-    // container.unregisterComponentByInstance(resource);
-    return resourceBinder.unbind(resource.getClass());
-  }
-
-  /**
-   * unregistry resource class
-   *
-   * @param resourceClass
-   * @return
-   * @deprecated Use {@link #removeResource(Class)} instead.
-   *             Will be removed by 1.3.x
-   */
-  @Deprecated
-  public boolean unregistry(Class<?> resourceClass) {
-    // container.unregisterComponent(resourceClass.getName());
-    return resourceBinder.unbind(resourceClass);
+  public void tearDown() throws Exception {
+    endSession();
+    super.tearDown();
   }
 
    /**
@@ -165,19 +106,14 @@ public abstract class AbstractResourceTest extends BaseTestCase {
 
   /**
    * Removes the resource instance of provided class from root resource container.
+   * @param <T>
    *
    * @param clazz the class of resource
    */
-  public void removeResource(Class clazz) {
-    resourceBinder.removeResource(clazz);
+  public <T> void removeResource(T clazz) {
+    resourceBinder.removeResource(clazz.getClass());
   }
 
-  
-  public void tearDown() throws Exception {
-    endSession();
-    end();
-  }
-  
   protected void startSystemSession() {
     sessionProvider = sessionProviderService.getSystemSessionProvider(null);
   }

@@ -207,14 +207,6 @@ public class FAQServiceUtils {
   }
 
   /**
-   * @deprecated use {@link UserHelper#getAllGroupAndMembershipOfUser(String)}
-   */
-  @Deprecated
-  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
-    return UserHelper.getAllGroupAndMembershipOfUser(userId);
-  }
-
-  /**
    * Repare permission of node
    * @param node  Node which is repared permission
    * @param owner  permission will be added for this node

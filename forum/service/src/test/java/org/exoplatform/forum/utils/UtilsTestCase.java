@@ -26,7 +26,7 @@ import javax.jcr.Value;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.forum.base.AssertUtils;
+import org.exoplatform.commons.testing.AssertUtils;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
 

@@ -1,16 +1,12 @@
 package org.exoplatform.poll.webservice;
 
-import javax.jcr.Node;
-import javax.jcr.Session;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.exoplatform.forum.common.jcr.KSDataLocation;
-import org.exoplatform.forum.common.jcr.SessionManager;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumNodeTypes;
-import org.exoplatform.forum.service.Topic;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+
 import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.ws.PollWebservice;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 
@@ -18,50 +14,23 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
   protected PollWebservice pollWebservice;
 
-  protected PollService    pollService;
-
-  protected KSDataLocation dataLocation;
-
-  private Node             topicNode;
-
   private final String     RESOURCE_URL = "/ks/poll";
+  
+  private List<Poll> tearDownPollList;
 
   public void setUp() throws Exception {
     super.setUp();
+    tearDownPollList = new ArrayList<Poll>();
     pollWebservice = new PollWebservice();
     addResource(pollWebservice, null);
-    pollService = (PollService) getContainer().getComponentInstanceOfType(PollService.class);
-    dataLocation = (KSDataLocation) getContainer().getComponentInstanceOfType(KSDataLocation.class);
-    initForumdata();
   }
 
   public void tearDown() throws Exception {
-    unregistry(pollWebservice);
-    super.tearDown();
-  }
-
-  /**
-   * Create new forum node, new topic node
-   */
-  private void initForumdata() {
-    SessionManager manager = dataLocation.getSessionManager();
-    try {
-      Session session = manager.openSession();
-      Category cat = new Category();
-      Node nodeHome = session.getRootNode().getNode(dataLocation.getForumCategoriesLocation());
-      Node catN = nodeHome.addNode(cat.getId(), ForumNodeTypes.EXO_FORUM_CATEGORY);
-      Forum forum = new Forum();
-      Node forNode = catN.addNode(forum.getId(), ForumNodeTypes.EXO_FORUM);
-      Topic topic = new Topic();
-      topicNode = forNode.addNode(topic.getId(), ForumNodeTypes.EXO_TOPIC);
-      session.save();
-      String topicPath = topicNode.getPath();
-      assertNotNull(session.getItem(topicPath));
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      manager.closeSession();
+    for (Poll poll : tearDownPollList) {
+      pollService.removePoll(poll.getId());
     }
+    removeResource(pollWebservice);
+    super.tearDown();
   }
 
   public void testPollService() throws Exception {
@@ -73,13 +42,16 @@ public class PollWebserviceTest extends AbstractResourceTest {
    */
   public void testViewPoll() throws Exception {
     Poll poll = new Poll();
-    String parentPathTopic = topicNode.getPath();
-    poll.setParentPath(parentPathTopic);
+    poll.setParentPath(topicPath);
     pollService.savePoll(poll, true, false);
+    
     String resourceUrl = RESOURCE_URL + "/viewpoll/" + poll.getId();
     startSessionAs("root");
     ContainerResponse response = service("GET", resourceUrl, "", null, null);
     assertEquals("containerResponse1.getStatus() must return: " + 200, 200, response.getStatus());
+    
+    /*    clear all poll    */
+    tearDownPollList.add(poll);
   }
 
   /**
@@ -89,8 +61,7 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
     /********************** Single vote **********************/
     Poll poll = new Poll();
-    String parentPathTopic = topicNode.getPath();
-    poll.setParentPath(parentPathTopic);
+    poll.setParentPath(topicPath);
     String[] options = { "abc", "def", "ghi" };
     poll.setOption(options);
     pollService.savePoll(poll, true, false);
@@ -153,7 +124,7 @@ public class PollWebserviceTest extends AbstractResourceTest {
     /********************** Multi vote *****************************/
 
     Poll pollMulti = new Poll();
-    pollMulti.setParentPath(parentPathTopic);
+    pollMulti.setParentPath(topicPath);
     String[] optionsMulti = { "abc", "def", "ghi", "jqk" };
     pollMulti.setOption(optionsMulti);
     pollMulti.setIsMultiCheck(true);
@@ -178,7 +149,7 @@ public class PollWebserviceTest extends AbstractResourceTest {
     assertEquals("50.0", pMulti.getVote()[2]);
     assertEquals("0.0", pMulti.getVote()[3]);
 
-    // Test the number of vote, here is 1 (one vote but 2 options)
+    // Test the number of vote, here is 1 (one vote but multi options)
     assertEquals(1, Integer.parseInt(pMulti.getInfoVote()[pMulti.getInfoVote().length-1]));
 
     /***************************************************/
@@ -202,8 +173,8 @@ public class PollWebserviceTest extends AbstractResourceTest {
     assertEquals("50.0", pMultiUpdate.getVote()[2]);
     assertEquals("0.0", pMultiUpdate.getVote()[3]);
 
-    // Test the number of vote, here is 1
-    assertEquals(1, Integer.parseInt(pMultiUpdate.getInfoVote()[pMultiUpdate.getInfoVote().length-1]));
+    // Test the number of vote, here is 1 (one vote but multi options)
+    assertEquals(1, Integer.parseInt(pMulti.getInfoVote()[pMulti.getInfoVote().length-1]));
 
     /***************************************************/
 
@@ -220,7 +191,7 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
     Poll pMultiNew = (Poll) responseMulti.getEntity();
 
-    // Test percent of each vote
+    // Test percent of each vote 
     assertEquals("25.0", pMultiNew.getVote()[0]);
     assertEquals("25.0", pMultiNew.getVote()[1]);
     assertEquals("25.0", pMultiNew.getVote()[2]);
@@ -228,6 +199,9 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
     // Test the number of vote, here is 2
     assertEquals(2, Integer.parseInt(pMultiNew.getInfoVote()[pMultiNew.getInfoVote().length-1]));
-
+    
+    /*    Clear all poll    */
+    tearDownPollList.add(poll);
+    tearDownPollList.add(pollMulti);
   }
 }

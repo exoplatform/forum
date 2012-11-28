@@ -18,9 +18,10 @@ package org.exoplatform.faq.service;
 
 import junit.framework.TestCase;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.Closure;
+import org.exoplatform.commons.testing.KernelUtils;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.faq.base.AssertUtils;
-import org.exoplatform.faq.base.KernelUtils;
 
 /**
  * Unit Tests for {@link InitialDataPlugin}
@@ -37,8 +38,8 @@ public class InitialDataPluginSimpleTestCase extends TestCase {
     KernelUtils.addValueParam(params, "forceXML", "true");
     KernelUtils.addValueParam(params, "category", "Foo");
     InitialDataPlugin plugin = new InitialDataPlugin(params);
-    AssertUtils.assertTrue(plugin.isForceXML());
-    AssertUtils.assertEquals(DATAZIP_LOCATION, plugin.getLocation());
+    assertTrue(plugin.isForceXML());
+    assertEquals(DATAZIP_LOCATION, plugin.getLocation());
 
     // check defaults
     params = new InitParams();
@@ -58,7 +59,7 @@ public class InitialDataPluginSimpleTestCase extends TestCase {
     assertTrue(plugin.isZip("toto.zip"));
     assertFalse(plugin.isZip("toto.xml"));
 
-    AssertUtils.assertException(new InitialDataPluginTestCase.Closure() {
+    AssertUtils.assertException(new Closure() {
       public void dothis() {
         plugin.isZip("toto.unsupported");
       }

@@ -16,10 +16,16 @@
  */
 package org.exoplatform.poll.base;
 
-import org.exoplatform.component.test.AbstractKernelTest;
+import javax.jcr.Node;
+import javax.jcr.Session;
+
+import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.SessionManager;
+import org.exoplatform.poll.service.PollService;
 
 /**
  * Created by The eXo Platform SAS
@@ -33,21 +39,89 @@ import org.exoplatform.component.test.ContainerScope;
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.component.core.test.configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.component.service.test.configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.test.jcr-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.poll.test.portal-configuration.xml")
 })
 
-public abstract class BaseTestCase extends AbstractKernelTest {
+public abstract class BaseTestCase extends BaseExoTestCase {
+  protected KSDataLocation    dataLocation;
+
+  protected PollService       pollService;
+
+  private final static String categoryId = "forumCategoryabctest";
+
+  private final static String forumId    = "forumtheidforumoftest";
+
+  private final static String topicId    = "topicthetopicoftest";
+
+  public String               topicPath  = null;
+
   @Override
   public void setUp() throws Exception {
     //
     begin();
+    dataLocation = (KSDataLocation) getService(KSDataLocation.class);
+    pollService = (PollService) getService(PollService.class);
+    initForumdata();
   }
 
   @Override
   public void tearDown() throws Exception {
-
+    removeForumData();
     //
     end();
+  }
+
+  public PollService getPollService() {
+    return pollService;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T getService(Class<T> clazz) {
+    return (T) getContainer().getComponentInstanceOfType(clazz);
+  }
+
+  /**
+   * Create new forum node, new topic node
+   */
+  private void initForumdata() {
+    SessionManager manager = dataLocation.getSessionManager();
+    try {
+      Session session = manager.openSession();
+      Node nodeHome = session.getRootNode().getNode(dataLocation.getForumCategoriesLocation());
+
+      if (!nodeHome.hasNode(categoryId)) {
+        Node catN = nodeHome.addNode(categoryId, "exo:forumCategory");
+        Node forNode = catN.addNode(forumId, "exo:forum");
+        Node topicNode = forNode.addNode(topicId, "exo:topic");
+        topicPath = topicNode.getPath();
+        session.save();
+      } else {
+        Node topicNode = nodeHome.getNode(categoryId + "/" + forumId + "/" + topicId);
+        topicPath = topicNode.getPath();
+      }
+
+      assertNotNull(session.getItem(topicPath));
+    } catch (Exception e) {
+    } finally {
+      manager.closeSession();
+    }
+  }
+
+  private void removeForumData() {
+    SessionManager manager = dataLocation.getSessionManager();
+    try {
+      Session session = manager.openSession();
+      Node nodeHome = session.getRootNode().getNode(dataLocation.getForumCategoriesLocation());
+
+      if (nodeHome.hasNode(categoryId)) {
+        nodeHome.getNode(categoryId).remove();
+        session.save();
+      }
+    } catch (Exception e) {
+    } finally {
+      manager.closeSession();
+    }
   }
 }

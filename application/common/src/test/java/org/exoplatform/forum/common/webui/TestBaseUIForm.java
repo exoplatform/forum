@@ -16,7 +16,8 @@
  */
 package org.exoplatform.forum.common.webui;
 
-import org.exoplatform.forum.common.base.AbstractUIComponentTestCase;
+import org.exoplatform.commons.testing.webui.AbstractUIComponentTestCase;
+
 
 /**
  * 

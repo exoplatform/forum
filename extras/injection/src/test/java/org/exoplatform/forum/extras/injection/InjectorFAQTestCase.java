@@ -38,7 +38,7 @@ import org.exoplatform.services.organization.UserHandler;
  * @author <a href="mailto:thanhvc@exoplatform.com">Thanh Vu</a>
  * @version $Revision$
  */
-public class InjectorFAQTestCase extends BaseTestCase {
+public class InjectorFAQTestCase extends BaseInjectorTestCase {
 
   private OrganizationService organizationService;
   private FAQService faqService;
@@ -64,20 +64,21 @@ public class InjectorFAQTestCase extends BaseTestCase {
 
     super.setUp();
     
-    //
-    profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
-    categoryInjector = (CategoryInjector) getContainer().getComponentInstanceOfType(CategoryInjector.class);
-    answerInjector = (AnswerInjector) getContainer().getComponentInstanceOfType(AnswerInjector.class);
-    commentInjector = (CommentInjector) getContainer().getComponentInstanceOfType(CommentInjector.class);
-    questionInjector = (QuestionInjector) getContainer().getComponentInstanceOfType(QuestionInjector.class);
-    attachmentInjector = (AttachmentInjector) getContainer().getComponentInstanceOfType(AttachmentInjector.class);
-    membershipInjector = (MembershipInjector) getContainer().getComponentInstanceOfType(MembershipInjector.class);
-    
-    //
-    organizationService = (OrganizationService) getContainer().getComponentInstanceOfType(OrganizationService.class);
-    faqService = (FAQService) getContainer().getComponentInstanceOfType(FAQService.class);
-    userHandler = organizationService.getUserHandler();
-    
+    if(faqService == null) {
+      //
+      profileInjector = (ProfileInjector) getService(ProfileInjector.class);
+      categoryInjector = (CategoryInjector) getService(CategoryInjector.class);
+      answerInjector = (AnswerInjector) getService(AnswerInjector.class);
+      commentInjector = (CommentInjector) getService(CommentInjector.class);
+      questionInjector = (QuestionInjector) getService(QuestionInjector.class);
+      attachmentInjector = (AttachmentInjector) getService(AttachmentInjector.class);
+      membershipInjector = (MembershipInjector) getService(MembershipInjector.class);
+      
+      //
+      organizationService = (OrganizationService) getService(OrganizationService.class);
+      faqService = (FAQService) getService(FAQService.class);
+      userHandler = organizationService.getUserHandler();
+    }
     
     assertNotNull(profileInjector);
     assertNotNull(categoryInjector);
