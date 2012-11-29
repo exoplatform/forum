@@ -44,7 +44,7 @@ public class UpdateDataJob extends MultiTenancyJob {
       super.run();
       try {
         ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        String name = context.getJobDetail().getName();
+        String name = context.getJobDetail().getKey().getName();
         JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
         String path = jdatamap.getString("path");
         forumService.updateForum(path);
