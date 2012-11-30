@@ -38,6 +38,7 @@
     <org.exoplatform.portal.version>3.4.0.Final</org.exoplatform.portal.version>
     <org.exoplatform.webos.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.webos.version>
     <org.exoplatform.commons.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.commons.version>
+		<org.exoplatform.platform-ui.version>1.0.0-SNAPSHOT</org.exoplatform.platform-ui.version>
     <org.exoplatform.gwtframework.version>1.1.2</org.exoplatform.gwtframework.version>
     <org.exoplatform.ide.version>1.1.8-SNAPSHOT</org.exoplatform.ide.version>
     <org.exoplatform.calendar.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.calendar.version>
@@ -155,7 +156,12 @@
   </properties>
   <dependencyManagement>
     <!-- TODO : import dependencyManagement of platform, instead of redefining those properties -->
-    <dependencies>
+		<dependencies>
+			<dependency>
+				<groupId>org.exoplatform.platform-ui</groupId>
+				<artifactId>platform-ui-web-eXoResources</artifactId>
+				<version>${org.exoplatform.platform-ui.version}</version>
+			</dependency>
       <dependency>
         <groupId>org.exoplatform.kernel</groupId>
         <artifactId>exo.kernel.container</artifactId>
