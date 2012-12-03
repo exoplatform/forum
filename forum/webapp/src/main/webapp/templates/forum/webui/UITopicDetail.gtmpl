@@ -700,7 +700,7 @@
                       String actionLink = uicomponent.event(action,uiformId,postId);
                       if(isShowAction) {
                   %>
-                      <div class="BntPostReply ActionButton">
+                      <div class="BntPostReply btn">
                         <a onclick="$actionLink" class="IconButton ${action}PostIcon" title="$title">$label</a>
                       </div>
                     <%}
@@ -769,13 +769,13 @@
         <label for="<%=uicomponent.FIELD_MESSAGE_TEXTAREA%>"><%=_ctx.appRes("UITopicDetail.label.Message");%>:</label>
         <%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
       </div>
-      <div class="UIAction">
+      <div class="uiAction">
       <% for(action in uicomponent.getActions()) { 
              String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
              String link = uicomponent.event(action);
              if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
         %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
     </div>

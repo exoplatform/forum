@@ -90,12 +90,12 @@
 		</div>	
 	</div>
 	<!-- =============================================== Action of this form ====================================================== -->
-	<div class="UIAction">
+	<div class="uiAction">
   <% for(action in uiform.getActions()) { 
 					 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
 					 String link = uiform.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

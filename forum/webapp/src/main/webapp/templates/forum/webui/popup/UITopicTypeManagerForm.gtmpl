@@ -46,11 +46,11 @@
 	<%
     org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');");
 	%>
-		<div class="UIAction">
+		<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
 		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
   %>
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	</div>

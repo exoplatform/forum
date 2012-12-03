@@ -175,8 +175,8 @@
 															<%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL_ADD))%>
 														</td>
 														<td>
-															<div class="UIAction">
-                                <a href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></a>
+															<div class="uiAction">
+                                <a href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></a>
                               </div>
 														</td>
 													</tr>
@@ -199,12 +199,12 @@
 	</div>
 	
 	<!-- =============================================== Action of this form ====================================================== -->
-	<div class="UIAction">
+	<div class="uiAction">
   <% for(action in uiform.getActions()) { 
 					 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
 					 String link = uiform.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

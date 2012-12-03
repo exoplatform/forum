@@ -127,8 +127,8 @@
 			</table>
 		</div>
 	</div>
-	<div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+	<div class="uiAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
     </div>
 <%uiform.end()%>
 </div>

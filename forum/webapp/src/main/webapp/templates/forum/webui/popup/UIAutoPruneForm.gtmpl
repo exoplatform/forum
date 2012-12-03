@@ -95,8 +95,8 @@
 	<% 
 	 org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('AutoPruneContainer', 'TableContent','UIGrid');");
 	%>
-	<div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></a>
+	<div class="uiAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></a>
     </div>
 	<%uiform.end()%>
 </div>

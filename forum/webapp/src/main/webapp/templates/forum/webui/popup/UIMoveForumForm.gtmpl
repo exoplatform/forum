@@ -28,8 +28,8 @@
 		 </div>
 	</div>
 	
-	<div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
+	<div class="uiAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
     </div>
 	<%uiform.end()%>
 </div>

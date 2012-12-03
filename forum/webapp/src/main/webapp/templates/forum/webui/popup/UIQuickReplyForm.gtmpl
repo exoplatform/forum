@@ -1,6 +1,6 @@
 <div class="UITopicDetail">
 <% uiform.begin() %>
-	<div class="UIAction"> 
+	<div class="uiAction"> 
 		<div class="ForumCategory ForumQuickReply">
 			<div class="ForumToolbar ClearFix">
 				<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
@@ -17,7 +17,7 @@
 					 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
 					 String link = uicomponent.event(action) ;
 			%>
-					<a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+					<a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
 			<%}%>
 				</div>
 			</div>

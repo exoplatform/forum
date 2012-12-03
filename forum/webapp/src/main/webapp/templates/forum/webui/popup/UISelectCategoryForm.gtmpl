@@ -26,12 +26,12 @@
 			}%>	
 		 </div>
 	</div>
-	<div class="UIAction">
+	<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
 				 String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$action</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$action</a>
       <%}%>
     </div>
 	<%uiform.end()%>
