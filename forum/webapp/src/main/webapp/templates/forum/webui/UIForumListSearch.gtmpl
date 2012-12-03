@@ -19,7 +19,7 @@
 				</table>
 			</div>
 			<div class="SearchResult">
-				<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+				<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 					<thead>
 						<tr>
 							<th style="width:80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>

@@ -18,7 +18,7 @@ import org.exoplatform.forum.service.Forum;
 							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.SelectForums");%></legend>
 						<%}%>
 							<div style="height:160px; overflow:auto;">
-								<table class="UIGrid" style="margin:2px auto; width:95%;">
+								<table class="uiGrid table table-hover table-striped" style="margin:2px auto; width:95%;">
 									<thead>
 										<tr>
 											<th style="width:16px;"><span></span></th>

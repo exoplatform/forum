@@ -15,7 +15,7 @@
 					<div style="overflow:auto; margin:2px 0px;" class="ClearFix">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>
-					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+					<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 						<thead>
 							<tr>
 								<th style="width:40px;"></th>

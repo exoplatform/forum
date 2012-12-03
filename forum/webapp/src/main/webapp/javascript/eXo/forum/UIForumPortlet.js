@@ -1,4 +1,4 @@
-;(function($, window, document) {
+;(function($, window, document) {window.jq = $;
   var UIForumPortlet = {
     obj : null,
     event : null,

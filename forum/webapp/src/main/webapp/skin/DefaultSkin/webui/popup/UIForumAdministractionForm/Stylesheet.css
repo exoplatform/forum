@@ -84,7 +84,11 @@
 	height: auto;
 }
 
-*+html .UIBBCodeManagerForm .BBCodeContainer .UIGrid {
+.UIForumPopupAction .BBCodeContainer table.table {
+	margin: 0px !important;
+}
+
+*+html .UIBBCodeManagerForm .BBCodeContainer .uiGrid {
 	width: 97%;
 }
 

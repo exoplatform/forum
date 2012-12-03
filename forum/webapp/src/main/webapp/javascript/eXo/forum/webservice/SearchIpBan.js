@@ -9,7 +9,7 @@ var SearchIpBan = {
     SearchIpBan.jSearchIpBan = gj('#searchIpBan');
     if (SearchIpBan.jSearchIpBan.exists()) {
       SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.parent('.UITabContent');
-      SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.UIGrid');
+      SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.uiGrid');
       SearchIpBan.jSearchIpBan.on('keydown', SearchIpBan.searchIpBanWrapper);
     }
   },

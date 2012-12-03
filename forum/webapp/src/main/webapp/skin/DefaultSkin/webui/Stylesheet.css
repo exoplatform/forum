@@ -169,8 +169,8 @@
 
 /**************************** UIForumPortlet ForumToolBar *********************************/
 .UIForumPortlet .ForumToolbar {
-	background: #e6e6e6;
-	border: 1px solid #c6c6c6;
+	background: #F0F0F0;
+	border: 1px solid #CFCFCF;
 	border-bottom: none;
 	border-radius: 3px 3px 0px 0px;
 	padding: 2px 0px 2px 10px;
@@ -486,7 +486,7 @@
 	width: 16px;
 }
 
-.UIForumPortlet .UIGrid input.checkbox {
+.UIForumPortlet .uiGrid input.checkbox {
 	height: 13px;
 	margin: 3px 0px 0px 0px;
 }

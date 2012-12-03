@@ -11,7 +11,7 @@
 	<div style="padding:5px 10px; margin:5px; background:#F3F3F3; border:1px solid #B7B7B7;">
 		<div class="ModeratorsManagementContainer">
 			<div class="ManagementContent">
-			  <table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
+			  <table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="uiGrid table table-hover table-striped">
 				  <thead>
 				  	<tr>
 				      <th style="width:30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>

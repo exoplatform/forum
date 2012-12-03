@@ -17,7 +17,7 @@
 
 		<% } %>
 	</div>
-	<table cellspacing="0" class="UIGrid" id="PermissionInfo" border="0" cellpadding="0">
+	<table cellspacing="0" class="uiGrid table table-hover table-striped" id="PermissionInfo" border="0" cellpadding="0">
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>

@@ -31,7 +31,7 @@
 
 				</div>
 		 
-				<table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
+				<table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="uiGrid table table-hover table-striped">
 					<thead>
 						<tr>
 							<th style="width:30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>

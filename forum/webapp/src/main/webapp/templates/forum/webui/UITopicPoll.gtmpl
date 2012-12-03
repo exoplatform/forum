@@ -91,7 +91,7 @@
       <a href="<%=uicomponent.event("Vote")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
     </div>
           <% } else { %>
-              <table  id="UIGrid" class="UIGrid ViewPollForm">
+              <table  id="UIGrid" class="uiGrid table table-hover table-striped ViewPollForm">
                 <thead>
                   <tr>
                     <th><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>

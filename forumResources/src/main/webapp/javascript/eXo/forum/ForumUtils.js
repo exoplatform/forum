@@ -74,7 +74,7 @@ var ForumUtils = {
         if (jpopupWindow.css('display') == 'block') {
           jmaskLayer.css('width', (portlet.outerWidth() - 3) + 'px').css('height', (portlet.outerHeight() - 3) + 'px');
         }
-        var closeButton = jpopupAction.find('.CloseButton');
+        var closeButton = jpopupAction.find('.uiIconClose');
         if (closeButton.exists()) {
           var newDiv = closeButton.find('div.ClosePopup');
           if (!newDiv.exists()) {

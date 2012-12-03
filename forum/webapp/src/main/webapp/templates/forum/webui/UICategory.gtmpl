@@ -128,7 +128,7 @@
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumList">
-			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 				<thead>
 					<tr>
 						<th style="width:40px;">&nbsp;</th>
@@ -161,7 +161,7 @@
 				<%}else {
 						GregorianCalendar calendar = new GregorianCalendar() ;
 						long toDay = calendar.getTimeInMillis();
-						String classRow = "whileRow";
+						String classRow = "EvenRow";
 						int i = 0;
 						String topicNewPostIcon = "";
 						String topicNewPostTitle = "";
@@ -176,7 +176,7 @@
 					 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 					 	String lastReadPost = "";
 						for(forum in forums) {
-							if(i%2 == 0) classRow = "whileRow";
+							if(i%2 == 0) classRow = "EvenRow";
 							else classRow = "OddRow";
 							++i;
 							String forumId = forum.getId();

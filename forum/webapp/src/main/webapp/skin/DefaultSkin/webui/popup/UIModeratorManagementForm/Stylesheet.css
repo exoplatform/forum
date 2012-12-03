@@ -33,7 +33,7 @@
 	padding: 14px;
 }
 
-.UIModeratorManagementForm .ManagementContent .UIGrid .ActionContainer {
+.UIModeratorManagementForm .ManagementContent .uiGrid .ActionContainer {
 	width: 40px;
 	margin: 0px auto;
 }
@@ -59,7 +59,7 @@
 	padding: 0px;
 }
 
-.UIModeratorManagementForm .ModeratorsGroup .UIGrid .IconContent {
+.UIModeratorManagementForm .ModeratorsGroup .uiGrid .IconContent {
 	width: 55px;
 	margin: auto;
 	overflow: auto;

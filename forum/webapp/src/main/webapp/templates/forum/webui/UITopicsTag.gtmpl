@@ -54,7 +54,7 @@
       <%} %>
     </div>
     <div class=" ContentContainer UITopicList"  id="UITopicContent">
-      <table class="UIGrid">
+      <table class="uiGrid table table-hover table-striped">
         <thead>
           <tr>
             <th class="WidthStatus">&nbsp;</th>

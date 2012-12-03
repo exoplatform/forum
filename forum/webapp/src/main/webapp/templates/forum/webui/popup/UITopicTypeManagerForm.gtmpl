@@ -2,7 +2,7 @@
 	<% uiform.begin() %>
 	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
 		<div style="padding:0px 16px 0px 1px;">
-			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 				<thead>
 					<tr>
 						<th style="width:60px; text-align:center"><%=_ctx.appRes("UITopicTypeManagerForm.label.Icon");%></th>
@@ -13,7 +13,7 @@
 			</table>
 		</div>
 		<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
-			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped" id="UIGrid">
 				<tbody>
 				<% 
 						List topicTypes = uicomponent.getTopicTypes();
@@ -44,7 +44,7 @@
 			</table>
 		</div>
 	<%
-    org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');");
+    org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','uiGrid');");
 	%>
 		<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
