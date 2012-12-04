@@ -89,26 +89,24 @@
 				<% /*End Popup Menu*/ %>
 			</div>
 			<% } %>
-			<div class="ContentAction SearchForm DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
+			<div class="ContentAction SearchForm DefaultStyle ForumSeparatorLine" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
 
-				<div class="SearchIcon StatusIcon">
-					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></a>
+				<div class="dropdown">
+          <div data-toggle="dropdown">
+            <%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
+            <i class="uiIconMiniArrowDown"></i>          
+          </div>
+          <ul class="dropdown-menu">
+            <li>
+              <div class="controls controls-row">
+                <input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+                <a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+                <br/>
+                <a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+              </div>
+            </li>
+          </ul>
 				</div>
-				
-					<% /*Begin Popup Menu*/ %>
-						<div class="UIPopupCategory CancelEvent" style="display:none;">
-							<ul class="UIRightClickPopupMenu SearchPopup" id="SearchInCategory" style="display:block;">
-									<li class="BorderSearch ClearFix">
-										<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-										<label for="<%=ForumUtils.SEARCHFORM_ID%>"><a class="NormalButtomBT SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a></label>
-									</li>
-									<li class="MenuItem">
-										<a class="ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-									</li>
-							</ul>
-						</div>
-					<% /*End Popup Menu*/ %>
-				
 			</div>
 			<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 				<a style="padding-left:16px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>

@@ -194,24 +194,23 @@
                 <% /*End Popup Menu*/ %>
               </div>
               <% } %>
-              <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">
-                <div class="StatusIcon SearchIcon">
-                  <a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%></a>
-                </div>
-                <% /*Begin Popup Menu*/ %>
-
-                <div class="UIPopupCategory" style="display:none;">
-                  <ul id="SearchInTopic" class="SearchPopup UIRightClickPopupMenu"  style="display:block;">
-                    <li class="ClearFix SearchTopic BorderSearch">
-                        <% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-                       <label for="<%=ForumUtils.SEARCHFORM_ID%>"><a class="SearchLink NormalButtomBT UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a></label>
-                    </li>
-                    <li class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
-                      <a class="ItemIcon AdvancedSearchIcon" href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+              <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
+                <div class="dropdown">
+                  <div data-toggle="dropdown">
+                    <%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
+                    <i class="uiIconMiniArrowDown"></i>          
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <div class="controls controls-row">
+                        <input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+                        <a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+                        <br/>
+                        <a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+                      </div>
                     </li>
                   </ul>
-                </div>
-                <% /*End Popup Menu*/ %>
+          			</div>
               </div>
             <% if((canEdit && isShowMenu) || isUserCreatedTopic) { %> 
               <div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">                
