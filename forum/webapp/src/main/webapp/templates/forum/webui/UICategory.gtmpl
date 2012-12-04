@@ -45,28 +45,28 @@
 		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
 		<h6 class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></h6>
 		<% if(isShowMenu){ %>
-			<div class="ContentAction ToolbarActionsContainer DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.checkAction(this, event);" >
-				<div class="ManageCategoryButton StatusIcon">
-					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
-				</div>
-				<% /*Begin Popup Menu*/ %>
-					<div class="UIPopupCategory" style="display:none;">
-							<ul class="UIRightClickPopupMenu" style="display:block;">
-							<%
-								String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
-								for(action in uicomponent.getActions()) {
-									String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
-									String classIconItem = action + "Icon";
-									String link = uicomponent.event(action,uicomponent.id,"category") ;
-									if(action.equals("RemoveForum")){
-										String deleteMoreForum = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace);
-										String removeForum = uicomponent.getConfirm(_ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace);
-										String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
-							%>
-								<li class="MenuItem">
-									<a class="ItemIcon $classIconItem" href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><%=nameItem%></a>
-								</li>
-							<% 
+			<div class="ContentAction ToolbarActionsContainer DefaultStyle ForumSeparatorLine" >
+        <div class="dropdown">
+          <div data-toggle="dropdown">
+            <%=_ctx.appRes("UICategory.label.manageCategory");%>
+            <i class="uiIconMiniArrowDown"></i>
+          </div>
+          <ul class="dropdown-menu">
+          <%
+            String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
+            for(action in uicomponent.getActions()) {
+              String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
+              String classIconItem = action + "Icon";
+              String link = uicomponent.event(action,uicomponent.id,"category") ;
+              if(action.equals("RemoveForum")){
+                String deleteMoreForum = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace);
+                String removeForum = uicomponent.getConfirm(_ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace);
+                String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
+          %>
+                <li class="MenuItem">
+                  <a class="ItemIcon $classIconItem" href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><%=nameItem%></a>
+                </li>
+          <% 
 									} else if(action.equals("DeleteCategory")){
 									String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
 							%>
@@ -76,17 +76,14 @@
 							<%	} else { %>
 								<li class="MenuItem">
 									<a class="ItemIcon $classIconItem" href="$link"><%=nameItem%></a>
-							<%		if(action.equals("WatchOption")) { %>
-										<div class="LineMenu"><span></span></div>
-							<%		} %>
 								</li>
-							<%	}
-								} 
-							%>
-								<li class="RightClickCustomItem"></li>
-						</ul>
-					</div>
-				<% /*End Popup Menu*/ %>
+                <%    if(action.equals("WatchOption")) { %>
+                    <li class="divider"></li>
+              <%    }
+							   	}
+								} %>
+          </ul>
+        </div>
 			</div>
 			<% } %>
 			<div class="ContentAction SearchForm DefaultStyle ForumSeparatorLine" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
