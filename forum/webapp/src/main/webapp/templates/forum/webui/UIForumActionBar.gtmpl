@@ -25,36 +25,32 @@
 						if(action.equals("Administrations")){
 							isAdm = true;
 						} else isAdm = false;
+                  if(!isAdm){
 				%>
-
-					<div class="DefaultStyle ControlButton SeparatorLineForum" id="$action">
-						<%if(isAdm){%>
-							<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-						<%}%>
-								<div class="Icon $action">
-								<%if(isAdm){%>
-									<a class="DownArrow1Icon" style="padding-right:16px;" href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
-								<%} else {%>
-									<a href="<%=uicomponent.event(action)%>" style="display:block;"><%= _ctx.appRes("UIForumActionBar.label." + action); %></a>
-								<%}%>
-								</div>
-						<%if(isAdm){%>
-							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display: none; left:-5px;">
-									<ul class="UIRightClickPopupMenu" style="display:block;">
-									<% for(ac in uicomponent.getActionMenu()){ %>
-										<li class="MenuItem">
-											<a class="ItemIcon ${ac}Icon" href="<%=uicomponent.event(ac)%>" style="display:block">
-												<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
-											</a>
-										</li>
-									<% } %>
-									</ul>			
-								</div>
-							<% /*End Popup Menu*/ %>
-							</div>
-						<%}%>
-					</div>
+                  <div class="DefaultStyle ControlButton SeparatorLineForum" id="$action">
+                     <div class="Icon $action">
+                        <a href="<%=uicomponent.event(action)%>" style="display:block;"><%= _ctx.appRes("UIForumActionBar.label." + action); %></a>
+                     </div>
+                  </div>
+                  <%} else {%>
+                  <div class="DefaultStyle ControlButton SeparatorLineForum" id="$action">
+                     <div class="dropdown">
+                        <div data-toggle="dropdown">
+                           <%=_ctx.appRes("UIForumActionBar.label.Administrations");%>
+                           <i class="uiIconMiniArrowDown"></i>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
+                        <% for(ac in uicomponent.getActionMenu()){ %>
+                          <li>
+                            <a class="${ac}Icon" href="<%=uicomponent.event(ac)%>">
+							<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
+							</a>
+						   </li>
+						<%} %>
+                        </ul>
+                     </div>
+                  </div>
+                  <%} %>
 				<% }%>
 				<div class="ScrollButtons" style="width:35px;">
 					<div title="Previous">
