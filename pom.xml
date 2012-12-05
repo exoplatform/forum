@@ -81,12 +81,12 @@
         <version>${org.exoplatform.core.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>xstream</groupId>
             <artifactId>xstream</artifactId>
+            <groupId>xstream</groupId>
           </exclusion>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -96,8 +96,8 @@
         <version>${org.exoplatform.core.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -246,12 +246,12 @@
         <version>${org.exoplatform.jcr.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
           </exclusion>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -261,8 +261,8 @@
         <version>${org.exoplatform.jcr.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -273,8 +273,8 @@
         <version>${org.exoplatform.kernel.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -284,8 +284,8 @@
         <version>${org.exoplatform.kernel.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -295,8 +295,8 @@
         <version>${org.exoplatform.kernel.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -306,12 +306,12 @@
         <version>${org.exoplatform.kernel.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -321,20 +321,20 @@
         <version>${org.exoplatform.portal.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
           <exclusion>
-            <groupId>org.apache.tomcat</groupId>
             <artifactId>el-api</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>jasper-el</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet</groupId>
+            <artifactId>jasper-el</artifactId>
+            <groupId>org.apache.tomcat</groupId>
+          </exclusion>
+          <exclusion>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -356,16 +356,16 @@
         <version>${org.exoplatform.portal.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>xstream</groupId>
             <artifactId>xstream</artifactId>
+            <groupId>xstream</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
+            <groupId>javax.servlet.jsp</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -376,12 +376,12 @@
         <type>test-jar</type>
         <exclusions>
           <exclusion>
-            <groupId>xstream</groupId>
             <artifactId>xstream</artifactId>
+            <groupId>xstream</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
+            <groupId>javax.servlet.jsp</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -416,8 +416,8 @@
         <version>${org.exoplatform.portal.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -442,24 +442,24 @@
         <version>${org.exoplatform.portal.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
           <exclusion>
-            <groupId>org.apache.tomcat</groupId>
             <artifactId>el-api</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>org.apache.tomcat</groupId>
+          </exclusion>
+          <exclusion>
             <artifactId>jasper-el</artifactId>
+            <groupId>org.apache.tomcat</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
           <exclusion>
-            <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
+            <groupId>javax.servlet.jsp</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -475,8 +475,8 @@
         <version>${org.exoplatform.social.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -498,8 +498,8 @@
         <version>${org.exoplatform.ws.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -509,8 +509,8 @@
         <version>${org.exoplatform.ws.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -530,15 +530,19 @@
         <artifactId>wci-wci</artifactId>
         <version>${org.gatein.wci.version}</version>
       </dependency>
-      
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${org.slf4j.version}</version>
+      </dependency>
       <dependency>
         <groupId>picocontainer</groupId>
         <artifactId>picocontainer</artifactId>
         <version>${picocontainer.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>xstream</groupId>
             <artifactId>xstream</artifactId>
+            <groupId>xstream</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -548,15 +552,10 @@
         <version>${quartz.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>${org.slf4j.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
