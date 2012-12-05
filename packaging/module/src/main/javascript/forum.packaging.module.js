@@ -33,7 +33,9 @@ function getModule(params) {
   // FORUM components
   module.component = {};
   module.component.common = new Project("org.exoplatform.forum", "forum-component-common", "jar", module.version).
-                            addDependency(new Project("org.exoplatform.commons", "commons-webui-component", "jar", commonsVersion));
+    addDependency(new Project("org.exoplatform.commons", "commons-webui-component", "jar", commonsVersion)).
+    addDependency(new Project("org.exoplatform.commons", "commons-component-common", "jar", commonsVersion)).
+    addDependency(new Project("org.exoplatform.commons", "commons-api", "jar", commonsVersion));
 
   module.component.rendering = new Project("org.exoplatform.forum", "forum-component-rendering", "jar", module.version);
 

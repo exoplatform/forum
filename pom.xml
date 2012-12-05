@@ -366,11 +366,19 @@
         <artifactId>commons-collections</artifactId>
         <version>${commons-collections.version}</version>
       </dependency>
+      
       <dependency>
         <groupId>org.exoplatform.commons</groupId>
         <artifactId>commons-component-common</artifactId>
         <version>${org.exoplatform.commons.version}</version>
       </dependency>
+      
+      <dependency>
+        <groupId>org.exoplatform.commons</groupId>
+        <artifactId>commons-api</artifactId>
+        <version>${org.exoplatform.commons.version}</version>
+      </dependency>
+      
       <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-testing</artifactId>
