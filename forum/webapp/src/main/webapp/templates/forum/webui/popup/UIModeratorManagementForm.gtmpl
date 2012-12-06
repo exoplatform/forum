@@ -95,74 +95,46 @@
 		</div>
 		<div><span></span></div>
 		<% if(uiform.getIsEdit()) { %>
-			<div class="UIFormTabPane">
-				<div class="UITabPane">
-					<div class="TabPaneContent">
-						
-						<div class="WorkingArea">
-							<div class="UIHorizontalTabs">
-								<div class="LeftHorizontalTabs">
-									<div class="RightHorizontalTabs">
-										<div class="CenterHorizontalTabs">
-											<div class="TabsContainer">
-											<%String classCss = "SelectedTab" ; 
-												for(tabconten in uiform.getChildren()){ 
-													if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
-												%>	
-												<div class="UITab NormalTabStyle">
-													<div class="$classCss">
-														<div class="LeftTab">
-															<div class="RightTab">
-																<div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-															</div>
-														</div>
-													</div>
-												</div>
-											<% classCss = "NormalTab" ;	
-											} %>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="UIForm">
-								<div class="HorizontalLayout">
-									<div class="UITabContentContainer">
-										<% 
-											String display =	"block";
-											for(tabconten in uiform.getChildren()){
-												if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
-										%>
-												<div style="display:$display;" id="UITabContent" class="UITabContent ClearFix">
-													<%if(tabconten.id.equals("ForumUserProfile")){%>
-															<div style="float:left; width:150px; text-align:center;">
-																<img src="<%=uicomponent.userAvartarUrl%>" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
-																<div style="color:blue; cursor:pointer;" onclick="javaScirpt:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>'))<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
-															</div>
-															<div style="float:left; width:500px;"><%uiform.renderChild(tabconten.id);%></div>
-															
-													<%}else{%>
-															<%uiform.renderChild(tabconten.id);%>
-													<%}%>
-												</div>
-										<% display = "none"; %>
-									<% } %>
-										<div class="uiAction">
-                  <% for(action in uiform.getActions()) { 
-												 if(action.equals("Cancel") || action.equals("Save")) {
-										%>
-                    <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
-                    <% 	 } 
-											 }%>
-                  </div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-					</div>	
-				</div>	
-			</div>
+      <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+        <ul class="nav nav-tabs">
+          <%String classCss = "active" ; 
+            for(tabcontent in uiform.getChildren()){ 
+              if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) continue;
+              String tabId = tabcontent.getId();
+              String paneId = uicomponent.getId();
+          %>
+          <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId')">              
+            <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+          </li>  
+          <% classCss=""; } %>    
+        </ul>
+        <div class="tab-content">
+          <% 
+            String active =  "in active";
+            for(tabcontent in uiform.getChildren()){
+              if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) continue;
+              println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\" style=\"overflow:auto;\">" ;
+              if(tabcontent.id.equals("ForumUserProfile")){%>
+                <div style="float:left; width:150px; text-align:center;">
+                  <img src="<%=uicomponent.userAvartarUrl%>" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
+                  <div style="color:blue; cursor:pointer;" onclick="javaScirpt:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>'))<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
+                </div>
+                <div style="float:left; width:500px;"><%uiform.renderChild(tabcontent.id);%></div>
+              <%} else uiform.renderChild(tabcontent.id);
+                println "</div>" ;
+                active = "";
+              }
+              %>
+              </div>
+        </div>
+        <div class="uiAction">
+        <% for(action in uiform.getActions()) { 
+               if(action.equals("Cancel") || action.equals("Save")) {
+          %>
+          <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
+          <%   } 
+             }%>
+        </div>
 		<% } %>
 	</div>
 	 <div class="uiAction">

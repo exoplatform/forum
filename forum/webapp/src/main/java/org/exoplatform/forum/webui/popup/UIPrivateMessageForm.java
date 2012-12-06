@@ -89,7 +89,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
 
   private boolean            fullMessage               = true;
 
-  public static final String FIELD_SENDTO_TEXTAREA     = "SendTo";
+  public static final String FIELD_SENDTO_TEXT     = "SendTo";
 
   public static final String FIELD_MAILTITLE_INPUT     = "MailTitle";
 
@@ -104,7 +104,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   public static final String USER_SELECTOR_POPUPWINDOW = "UIPMUserPopupWindow";
 
   public UIPrivateMessageForm() throws Exception {
-    UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
+    UIFormStringInput SendTo = new UIFormStringInput(FIELD_SENDTO_TEXT, FIELD_SENDTO_TEXT, null);
     SendTo.addValidator(MandatoryValidator.class);
     UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
     MailTitle.addValidator(MandatoryValidator.class);
@@ -133,7 +133,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       actions.add(ad);
       ++i;
     }
-    sendMessageTab.setActionField(FIELD_SENDTO_TEXTAREA, actions);
+    sendMessageTab.setActionField(FIELD_SENDTO_TEXT, actions);
     addUIFormInput(sendMessageTab);
     addChild(UIListInBoxPrivateMessage.class, null, null);
     addChild(UIListSentPrivateMessage.class, null, null);
@@ -151,11 +151,11 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   }
 
   public void setSendtoField(String str) {
-    this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA).setValue(str);
+     ((UIFormStringInput)findComponentById(FIELD_SENDTO_TEXT)).setValue(str);
   }
 
   public void updateSelect(String selectField, String value) throws Exception {
-    UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField);
+    UIFormStringInput fieldInput = findComponentById(selectField);
     String values = fieldInput.getValue();
     fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
   }
@@ -187,19 +187,19 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
       UIPrivateMessageForm messageForm = event.getSource();
       UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
-      UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA);
+      UIFormStringInput areaInput = messageForm.findComponentById(FIELD_SENDTO_TEXT);
       String sendTo = areaInput.getValue();
       sendTo = ForumUtils.removeSpaceInString(sendTo);
       sendTo = ForumUtils.removeStringResemble(sendTo);
       sendTo = messageForm.removeCurrentUser(sendTo);
       if (ForumUtils.isEmpty(sendTo)) {
-        messageForm.warning("UIPrivateMessageForm.msg.sendToCurrentUser", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXTAREA) });
+        messageForm.warning("UIPrivateMessageForm.msg.sendToCurrentUser", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXT) });
         return;
       }
 
       String erroUser = UserHelper.checkValueUser(sendTo);
       if (!ForumUtils.isEmpty(erroUser)) {
-        messageForm.warning("NameValidator.msg.erroUser-input", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser });
+        messageForm.warning("NameValidator.msg.erroUser-input", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXT), erroUser });
         return;
       }
       UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
@@ -259,7 +259,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
           uiGroupSelector.setId("UIGroupSelector");
         uiGroupSelector.setType(type);
         uiGroupSelector.setSelectedGroups(null);
-        uiGroupSelector.setComponent(messageForm, new String[] { FIELD_SENDTO_TEXTAREA });
+        uiGroupSelector.setComponent(messageForm, new String[] { FIELD_SENDTO_TEXT });
         uiGroupSelector.getChild(UITree.class).setId(UIGroupSelector.TREE_GROUP_ID);
         uiGroupSelector.getChild(org.exoplatform.webui.core.UIBreadcumbs.class).setId(UIGroupSelector.BREADCUMB_GROUP_ID);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
@@ -278,7 +278,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       title = new StringBuffer(label).append(": ").append(title).toString();
     }
     if (isReply) {
-      UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA);
+      UIFormStringInput areaInput = findComponentById(FIELD_SENDTO_TEXT);
       areaInput.setValue(privateMessage.getFrom());
       stringInput.setValue(title);
       content = new StringBuffer("<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">").append(content).append("</div>").toString();
@@ -327,7 +327,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class);
       UIPrivateMessageForm messageForm = forumPortlet.findFirstComponentOfType(UIPrivateMessageForm.class);
       if (messageForm != null) {
-        messageForm.updateSelect(FIELD_SENDTO_TEXTAREA, values);
+        messageForm.updateSelect(FIELD_SENDTO_TEXT, values);
       }
       UIPopupWindow popupWindow = uiUserSelector.getParent();
       closePopupWindow(popupWindow);
