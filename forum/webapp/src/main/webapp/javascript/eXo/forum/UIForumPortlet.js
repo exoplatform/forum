@@ -13,6 +13,12 @@
         jportlet.find('.UserMenuInfo').on('click', utils.ForumUtils.showUserMenu);
       }
       utils.ForumUtils.onResize(UIForumPortlet.resizeCallback);
+
+      $.each($('ul.dropdown-menu').find('a'), function(i, item){
+        $(item).on('click', function(){
+          $(this).parents('.dropdown').removeClass('open');
+        })
+      });
     },
 
     resizeCallback : function() {
