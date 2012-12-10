@@ -27,13 +27,10 @@
 		<div class="ForumStatsList">
 			<table cellspacing="0px" cellpadding="0px" border="0px" id="UIListUsers" class="uiGrid table table-hover table-striped">
 				<tbody>
-					<!--tr>
-						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;"><div class="UserIcon"><span></span></div></td>
-					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
-		 			</tr-->
-					<tr class="OddRow">
-						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
-					 	<td >
+
+					<tr>
+						<td width="20px"></td>
+					 	<td>
 							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
 							<div class="text ClearFix" style="padding-bottom:5px;">
 								<div class="FloatLeft"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
@@ -78,13 +75,7 @@
 						</td>
 		 			</tr>
 					<tr>
-						<td style="width:40px; border-right:1px solid #ffffff;">
-							<div class="ChartIcon"><span></span></div>
-						</td>
-					 	<td class="text"><%=_ctx.appRes("UICategoryInfo.label.ForumStatistics");%></td>
-		 			</tr>
-					<tr class="OddRow">
-						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
+						<td width="20px"></td>
 					 	<td class="text">
 					 		<div class="text">
 					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics,</span> 

@@ -4,12 +4,9 @@
 <div class="UIForumIconState" id="$uicomponent.id">
 	<div class="ForumContains ClearFix">
 	<% if(isIconForum) { %>
-		<div class="IconPost ForumNormalIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryNoNewPosts")%></div>
-		<div class="IconPost ForumNewPostIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryNewPosts")%></div>
+		<div class="IconPost ThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%></div>
 		<div class="IconPost ForumLockedIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryLockedPosts")%></div>
 		<div class="IconPost ForumCloseIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryClosedPosts")%></div>
-		<div class="IconPost ThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%></div>
-		<div class="IconPost ThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div>
 	<% } else { %>
 		<div class="IconForum HotThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></div>
  		<div class="IconForum HotThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNoNewPost")%></div>
