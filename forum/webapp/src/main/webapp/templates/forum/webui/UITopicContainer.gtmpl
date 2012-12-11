@@ -96,7 +96,7 @@
               <h6 class="Title"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%> <strong title="$forumName">$subForumName</strong></h6>
             <% if(isShowMenu && canEdit) { %> 
               <div class="ContentAction DefaultStyle">
-                <div class="dropdown">
+                <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                     <%=_ctx.appRes("UITopicContainer.label.Moderation");%>
                     <i class="uiIconMiniArrowDown"></i>
@@ -141,7 +141,7 @@
             <% } %>
               <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
 
-                <div class="dropdown">
+                <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                     <%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
                     <i class="uiIconMiniArrowDown"></i>          
@@ -161,7 +161,7 @@
               </div>
             <% if(isShowMenu && canEdit) { %> 
               <div class="ContentAction DefaultStyle ForumSeparatorLine">
-                <div class="dropdown">
+                <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                   <%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
                   <i class="uiIconMiniArrowDown"></i>

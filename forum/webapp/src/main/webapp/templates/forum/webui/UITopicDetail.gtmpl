@@ -145,7 +145,7 @@
     <div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
             <% if(isShowMenu && canEdit) { %> 
               <div class="ContentAction DefaultStyle">
-                <div class="dropdown">
+                <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                     <%=_ctx.appRes("UITopicDetail.label.Moderation");%>
                     <i class="uiIconMiniArrowDown"></i>
@@ -194,7 +194,7 @@
               </div>
               <% } %>
               <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
-                <div class="dropdown">
+                <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                     <%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
                     <i class="uiIconMiniArrowDown"></i>          
@@ -213,7 +213,7 @@
               </div>
             <% if((canEdit && isShowMenu) || isUserCreatedTopic) { %> 
               <div class="ContentAction DefaultStyle ForumSeparatorLine">                
-                  <div class="dropdown">
+                  <div class="dropdown uiDropdown uiActionWithLabel">
                     <div data-toggle="dropdown">
                       <%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
                       <i class="uiIconMiniArrowDown"></i>                    

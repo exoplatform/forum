@@ -4,6 +4,7 @@
  %>
 <div class="UIFormInputWithActions" style="*width:96.5%;">	
 	<% uiform.begin() %>
+  <div class="resizable" style="overflow: auto">
   <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
     <ul class="nav nav-tabs">
       <%String classCss = "" ; 
@@ -171,7 +172,7 @@
   <% } %>
     </div>
   </div>	
-  
+  </div>
 	<!-- =============================================== Action of this form ====================================================== -->
 	<div class="uiAction">
   <% for(action in uiform.getActions()) { 

@@ -34,7 +34,7 @@
                   </div>
                   <%} else {%>
                   <div class="DefaultStyle ControlButton SeparatorLineForum" id="$action">
-                     <div class="dropdown">
+                     <div class="dropdown uiDropdown uiActionWithLabel">
                         <div data-toggle="dropdown">
                            <%=_ctx.appRes("UIForumActionBar.label.Administrations");%>
                            <i class="uiIconMiniArrowDown"></i>
@@ -42,7 +42,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
                         <% for(ac in uicomponent.getActionMenu()){ %>
                           <li>
-                            <a class="${ac}Icon" href="<%=uicomponent.event(ac)%>">
+                            <a class="${ac}Icon" onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
 							<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
 							</a>
 						   </li>

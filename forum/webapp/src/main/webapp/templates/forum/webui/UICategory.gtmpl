@@ -46,7 +46,7 @@
 		<h6 class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></h6>
 		<% if(isShowMenu){ %>
 			<div class="ContentAction ToolbarActionsContainer DefaultStyle ForumSeparatorLine" >
-        <div class="dropdown">
+        <div class="dropdown uiDropdown uiActionWithLabel">
           <div data-toggle="dropdown">
             <%=_ctx.appRes("UICategory.label.manageCategory");%>
             <i class="uiIconMiniArrowDown"></i>
@@ -88,7 +88,7 @@
 			<% } %>
 			<div class="ContentAction SearchForm DefaultStyle ForumSeparatorLine" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
 
-				<div class="dropdown">
+				<div class="dropdown uiDropdown uiActionWithLabel">
           <div data-toggle="dropdown">
             <%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
             <i class="uiIconMiniArrowDown"></i>          
