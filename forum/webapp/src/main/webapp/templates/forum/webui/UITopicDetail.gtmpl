@@ -86,16 +86,16 @@
   <% if(!isNull) {%>
   <div class="ButtomAndPageListContainer ClearFix">
   <%if(isCanReply || isNotLogin) { %>
-    <div class="UIActionForum FL BntPostReply">
+    <div class="UIActionForum FL">
     <% } else { %>
       <div class="LockActionForum UIActionForum FL BntPostReply">
     <% } %>
           <% if(isCanReply) { %>
-                <a class="IconButton PostReplyIcon" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+                <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
           <% } else if(isNotLogin) {  %>
-                  <a class="IconButton PostReplyIcon" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+                  <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
           <% } else {%>
-                <a class="IconButton LockIcon" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+                <a class="uiLockIcon btn btn-primary" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
           <% } %>
       </div>
       <%  
@@ -697,8 +697,8 @@
                       String actionLink = uicomponent.event(action,uiformId,postId);
                       if(isShowAction) {
                   %>
-                      <div class="BntPostReply btn">
-                        <a onclick="$actionLink" class="IconButton ${action}PostIcon" title="$title">$label</a>
+                      <div class="FR">
+                        <a onclick="$actionLink" class="btn" title="$title">$label</a>
                       </div>
                     <%}
                     } 
@@ -726,14 +726,14 @@
 <!-- End PostsInThreadContainer -->
   <div class="ButtomAndPageListContainer">
   <%if(isCanReply || isNotLogin) { %>
-    <div class="UIActionForum FL BntPostReply">
+    <div class="UIActionForum FL">
   <% } else { %>
     <div class="LockActionForum UIActionForum FL BntPostReply">
   <% } %>
         <% if(isCanReply) { %>
-              <a class="IconButton PostReplyIcon" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+              <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
         <% } else if(isNotLogin) {  %>
-              <a class="IconButton PostReplyIcon" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+              <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
         <% } else {%>
               <a class="IconButton LockIcon" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
         <% } %>
