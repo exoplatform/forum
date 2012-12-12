@@ -56,10 +56,10 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
 
   public boolean             isViewResponseQuestion = false;
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIQuestionManagerForm() throws Exception {

@@ -174,10 +174,10 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     addChild(inputset);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public String getParentId() {

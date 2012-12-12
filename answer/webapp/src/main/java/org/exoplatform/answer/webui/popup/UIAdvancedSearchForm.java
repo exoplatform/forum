@@ -170,10 +170,10 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     setActions(new String[] { "Search", "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public Calendar getFromDate() {

@@ -128,10 +128,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     return post;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setViewUserInfo(boolean isView) {

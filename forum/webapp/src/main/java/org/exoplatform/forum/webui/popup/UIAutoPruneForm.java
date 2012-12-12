@@ -56,10 +56,10 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   public UIAutoPruneForm() {
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected List<PruneSetting> getPruneSettings() throws Exception {

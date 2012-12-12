@@ -68,10 +68,10 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 
   private FAQSetting          faqSetting_      = new FAQSetting();
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected List<String> listCateSelected = new ArrayList<String>();

@@ -83,10 +83,10 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
     this.isChangeAvatar_ = isChangeAvatar;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends EventListener<UIAttachFileForm> {

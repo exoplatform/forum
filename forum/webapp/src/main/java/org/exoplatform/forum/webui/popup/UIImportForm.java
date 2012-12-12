@@ -41,10 +41,10 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
 
   private String       categoryPath = null;
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIImportForm() {

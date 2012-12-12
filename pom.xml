@@ -52,6 +52,7 @@
     <org.gatein.common.version>2.1.0.Final</org.gatein.common.version>
     <org.gatein.portal.version>3.5.0.Final</org.gatein.portal.version>
     <org.gatein.wci.version>2.3.0.Final</org.gatein.wci.version>
+    <org.picketlink.idm.version>1.4.0.Final</org.picketlink.idm.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -527,6 +528,12 @@
         <artifactId>wci-wci</artifactId>
         <version>${org.gatein.wci.version}</version>
       </dependency>
+      <!-- Update the version of picketlink-idm-hibernate to 1.4.0.Final -->
+      <dependency>
+        <groupId>org.picketlink.idm</groupId>
+        <artifactId>picketlink-idm-hibernate</artifactId>
+        <version>${org.picketlink.idm.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>
@@ -547,6 +554,12 @@
               <com.arjuna.ats.arjuna.objectstore.objectStoreDir>${project.build.directory}</com.arjuna.ats.arjuna.objectstore.objectStoreDir>
               <exo.profiles>hsqldb</exo.profiles>
             </systemPropertyVariables>
+            <systemProperties>
+              <property>
+                <name>gatein.test.output.path</name>
+                <value>${project.build.directory}</value>
+              </property>
+            </systemProperties>
           </configuration>
         </plugin>
         <plugin>
