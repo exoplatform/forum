@@ -3,6 +3,7 @@
 %>
 <div class="UIBBCodeManagerForm UIAutoPruneForm">
 	<% uiform.begin() %>
+  <div class="resizable">
 	<div class="AutoPruneContainer"  id="AutoPruneContainer">
 		<div style="padding:0px 16px 0px 1px;">
 			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
@@ -92,6 +93,7 @@
 			</table>
 		</div>
 	</div>
+  </div>
 	<% 
 	 org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('AutoPruneContainer', 'TableContent','uiGrid');");
 	%>

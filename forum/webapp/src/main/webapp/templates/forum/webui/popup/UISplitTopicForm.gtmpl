@@ -10,8 +10,8 @@
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
-<div class="UISplitTopicForm" style="padding:10px;">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UISplitTopicForm resizable" style="padding:10px;">
 	<table class="ActionContainer">
 		<tr>
 			<td style="width:150px;" align="right">
@@ -77,13 +77,14 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="uiAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
+           String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
       <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	<%uiform.end()%>
-</div>
+<%uiform.end()%>

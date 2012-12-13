@@ -5,9 +5,9 @@
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','true');");
   List bookMarks = uiform.getBookMark();
 %>
-<div class="UIShowBookMarkForm">
-	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="_width:88%;">
+<% uiform.begin() %>
+<div class="UIShowBookMarkForm resizable">
+		<div class="HorizontalLayout">
 		  <div style="overflow:auto; padding-bottom:2px;" class="ClearFix">
 				<% 
 				  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
@@ -59,8 +59,8 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="uiAction">
+</div>
+<div class="uiAction">
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></a>
     </div>
-	<%uiform.end()%>
-</div>
+<%uiform.end()%>

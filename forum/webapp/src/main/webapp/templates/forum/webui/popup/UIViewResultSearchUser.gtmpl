@@ -6,8 +6,8 @@
 
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setEnableInput();");
 %>
-<div class="UIViewResultSearchUser">
 <% uiform.begin() %>
+<div class="UIViewResultSearchUser resizable">
 	<div style="padding:5px 10px; margin:5px; background:#F3F3F3; border:1px solid #B7B7B7;">
 		<div class="ModeratorsManagementContainer">
 			<div class="ManagementContent">
@@ -66,11 +66,8 @@
 		</div>
 
 	</div>
-
-	<div class="uiAction">
-  
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-    </div>
-
-<%uiform.end()%>
 </div>
+<div class="uiAction">
+  <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+</div>
+<%uiform.end()%>

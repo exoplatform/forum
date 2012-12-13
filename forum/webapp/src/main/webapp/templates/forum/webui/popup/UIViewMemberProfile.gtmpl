@@ -5,8 +5,8 @@
 	import org.exoplatform.forum.common.user.CommonContact;
 	import org.exoplatform.forum.service.Utils;
 %>
-<div class="UIViewMemberProfile">
 <% uiform.begin() %>
+<div class="UIViewMemberProfile resizable">
 <%	
 	UserProfile userProfileViewer = uiform.getUserProfileViewer() ;
 	UserProfile userProfile = uiform.getUserProfile() ;
@@ -127,8 +127,9 @@
 			</table>
 		</div>
 	</div>
-	<div class="uiAction">
+</div>
+
+<div class="uiAction">
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
     </div>
 <%uiform.end()%>
-</div>

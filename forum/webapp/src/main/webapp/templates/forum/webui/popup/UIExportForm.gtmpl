@@ -5,6 +5,7 @@ import org.exoplatform.forum.service.Forum;
 %>
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
+    <div class="resizable">
 		<div style="display:none;" id="divChecked" checked="0"><span></span></div>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
@@ -73,7 +74,7 @@ import org.exoplatform.forum.service.Forum;
 				</table>
 			</div>
 		</div>
-		
+		</div>
 		<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 

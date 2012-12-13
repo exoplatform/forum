@@ -1,6 +1,6 @@
 <div class="UIAddPollForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
+		<div class="HorizontalLayout resizable">
 			<div class="UIFormInputSet">
 				<table class="UIFormGrid">
 					<tbody>

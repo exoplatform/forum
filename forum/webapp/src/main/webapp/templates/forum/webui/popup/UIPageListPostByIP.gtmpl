@@ -16,7 +16,7 @@
 
 <div class="UIPageListPostByUser" id="searchIpBan">
 	<% uiform.begin() %>
-		<div class="UITopicContainer">
+		<div class="UITopicContainer resziable">
 		 	<div class="UIForumContainer">
 				<div class="ContentContainer">
 					<div class="UITopicList">

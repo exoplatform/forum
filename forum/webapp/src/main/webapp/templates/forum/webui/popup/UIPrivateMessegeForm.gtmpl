@@ -85,7 +85,9 @@
     </div>
   </div>
 	<% } else { 
+     println "<div class='resizable'>";
 	   uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
+     println "</div>";
 	 } %>
    
 	<div class="uiAction">

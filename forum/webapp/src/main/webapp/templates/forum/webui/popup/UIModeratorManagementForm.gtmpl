@@ -8,6 +8,7 @@
 %>
 <div class="UIModeratorManagementForm">
 	<% uiform.begin() %>
+  <div class="resizable">
 	<div class="UIComponentModerator">
 		<div class="ModeratorsManagementContainer">
 		
@@ -137,6 +138,7 @@
         </div>
 		<% } %>
 	</div>
+  </div>
 	 <div class="uiAction">
       <a href="javascript:void(0);"  onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
     </div>

@@ -16,8 +16,8 @@
   ForumUtils.addScripts(null, null, scripts);
   ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
 %>
-<div class="UIViewTopic UITopicDetail" id="SizeImage">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIViewTopic UITopicDetail resizable" id="SizeImage">
 <%	
 	uicomponent.initPage() ;
 	Topic topic = uicomponent.getTopic();
@@ -219,19 +219,20 @@
 			<%} %>
 		</div>
 	</div>
-	<div class="uiAction">
+</div>
+
+<div class="uiAction">
   <%  
-					String []actions = uicomponent.getActions();
-					int l = actions.length;
-				%>
+          String []actions = uicomponent.getActions();
+          int l = actions.length;
+        %>
         <div style="width:<%=(l*100)%>px;">
         <% for(action in actions) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
+           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
       <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
       </div>
     </div>
-	<%uiform.end()%>
-</div>
+<%uiform.end()%>

@@ -4,8 +4,8 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 %>
-<div class="$uicomponent.id">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="$uicomponent.id resizable">
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
@@ -87,14 +87,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="uiAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
+           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
       <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	
-	<%uiform.end()%>
-</div>
+  
+  <%uiform.end()%>

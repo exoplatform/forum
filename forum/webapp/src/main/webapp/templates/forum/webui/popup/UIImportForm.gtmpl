@@ -1,5 +1,6 @@
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
+  <div class="resizable">
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
@@ -23,7 +24,7 @@
 				</table>
 			</div>
 		</div>
-		
+		</div>
 		<div class="uiAction">
     <% for(action in uicomponent.getActions()) { 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 

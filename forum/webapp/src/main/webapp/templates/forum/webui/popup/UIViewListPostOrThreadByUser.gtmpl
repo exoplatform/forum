@@ -1,6 +1,8 @@
 <div class="UIFormForum">
 	<% uiform.begin() 
+    println "<div class='resizable'>";
 		uicomponent.renderChildren();
+    println "</div>";
 	%>
 		<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 

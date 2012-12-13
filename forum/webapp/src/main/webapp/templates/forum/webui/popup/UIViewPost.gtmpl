@@ -20,8 +20,8 @@
 	String postCreatedDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), (userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), timeZone);	
 	List attachments = post.getAttachments() ;
 %>
-<div class="UIViewPost" id="SizeImage">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIViewPost resizable" id="SizeImage">
 	<div class="ViewContainer ImageContentContainer ClearFix">
 		<h6 class="PostViewIcon $classIcon">$title</h6>
 		<span class="PostTime">$postCreatedDate</span>
@@ -83,14 +83,15 @@
 			}
 		} %>
 	</div>
-	 <div class="uiAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
+           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
       <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	<%uiform.end();
-	%>
-</div>
+
+<%uiform.end();%>

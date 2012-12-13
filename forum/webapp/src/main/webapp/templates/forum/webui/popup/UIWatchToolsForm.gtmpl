@@ -1,5 +1,5 @@
-<div class="UIWatchToolsForm">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIWatchToolsForm resizable">
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
@@ -50,9 +50,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
-		<div class="uiAction">
+</div>
+
+</div>
+    <div class="uiAction">
       <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
     </div>
-	<%uiform.end()%>
-</div>
+  <%uiform.end()%>

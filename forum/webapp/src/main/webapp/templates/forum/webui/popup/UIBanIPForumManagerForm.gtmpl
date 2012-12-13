@@ -1,11 +1,13 @@
 <%
 	import org.exoplatform.forum.ForumUtils;
+  import org.exoplatform.forum.webui.UIForumPageIterator;
 	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.SearchIpBan.init();");
 	String forumId = uicomponent.forumId.replaceAll("/",".") ;
 	String linkOp = uicomponent.event("OpenPosts", "OBJIP");
 %>
 <div class="UIBanIPForumManagerForm">
-	<% uiform.begin() %>	
+	<% uiform.begin() %>
+  <div class="resizable">	
 	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
 		<div style="width:400px; margin:auto;">
 			<div class="UIQuickSearchForm ClearFix" style="padding:10px 0px;">
@@ -63,6 +65,7 @@
 		</div>
 
 	</div>
+  </div>
 	<div class="uiAction">
     <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
   </div>

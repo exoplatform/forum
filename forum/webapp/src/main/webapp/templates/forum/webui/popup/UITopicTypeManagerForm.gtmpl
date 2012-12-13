@@ -1,5 +1,5 @@
-<div class="UIBBCodeManagerForm UITopicTypeManagerForm">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIBBCodeManagerForm UITopicTypeManagerForm resizable">
 	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
 		<div style="padding:0px 16px 0px 1px;">
 			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
@@ -46,13 +46,14 @@
 	<%
     org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','uiGrid');");
 	%>
-		<div class="uiAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+     String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
   %>
       <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	</div>
-	<%uiform.end()%>			
-</div>
+  </div>
+<%uiform.end()%>
