@@ -39,6 +39,7 @@
           else {active = "";}
     %>
       <div id="$tabcontent.id-tab" class="tab-pane fade $active">
+        <div class="resizable">
         <% 
           tabcontent.setRendered(true);
           if(!tabcontent.id.equals("ThreadIcon")) {
@@ -47,6 +48,7 @@
             uiform.renderChild(UIFormInputIconSelector.class);
           }
         %>
+        </div>
       </div>
     <% ++j;} %>
     </div>

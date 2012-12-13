@@ -41,6 +41,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -525,7 +526,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   static public class SelectTabActionListener extends BaseEventListener<UIPostForm> {
     public void onEvent(Event<UIPostForm> event, UIPostForm postForm, String id) throws Exception {
       postForm.tabId = Integer.parseInt(id);
-      event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent());
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

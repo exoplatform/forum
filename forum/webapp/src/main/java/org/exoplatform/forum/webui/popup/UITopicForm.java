@@ -50,6 +50,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -774,7 +775,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UITopicForm topicForm = event.getSource();
       topicForm.id = Integer.parseInt(id);
-      event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent());
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

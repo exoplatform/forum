@@ -4,7 +4,6 @@
  %>
 <div class="UIFormInputWithActions" style="*width:96.5%;">	
 	<% uiform.begin() %>
-  <div class="resizable" style="overflow: auto">
   <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
     <ul class="nav nav-tabs">
       <%String classCss = "" ; 
@@ -30,6 +29,7 @@
         else active = "" ; 
     %>
         <div id="$tabcontent.id-tab" class="tab-pane fade $active">
+          <div class="resizable">
           <%
           if(tabcontent.id.equals("ForumUserProfile")){
           %>
@@ -168,10 +168,10 @@
           <%
           }
           %>
+          </div>
         </div>
   <% } %>
     </div>
-  </div>	
   </div>
 	<!-- =============================================== Action of this form ====================================================== -->
 	<div class="uiAction">

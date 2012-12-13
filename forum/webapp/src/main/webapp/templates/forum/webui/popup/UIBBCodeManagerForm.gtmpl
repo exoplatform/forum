@@ -17,7 +17,7 @@
 			</thead>
 		</table>
 	</div>
-	<div class="BBCodeContainer">
+	<div class="BBCodeContainer resizable">
 		<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 			<tbody>
 			<%

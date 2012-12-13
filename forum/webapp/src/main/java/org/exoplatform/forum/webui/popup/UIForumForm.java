@@ -44,6 +44,7 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -649,7 +650,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumForm forumForm = event.getSource();
       forumForm.id = Integer.parseInt(id);
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumForm);
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

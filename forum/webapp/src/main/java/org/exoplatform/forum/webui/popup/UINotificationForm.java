@@ -25,6 +25,8 @@ import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -193,7 +195,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
   static public class SelectTabActionListener extends BaseEventListener<UINotificationForm> {
     public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String id) throws Exception {
       uiForm.tabId = Integer.parseInt(id);
-      refresh();
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

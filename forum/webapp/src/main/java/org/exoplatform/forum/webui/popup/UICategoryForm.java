@@ -36,6 +36,7 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -387,7 +388,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       } else {
         popupWindow.setWindowSize(550, 380);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

@@ -15,8 +15,8 @@
             link = uicomponent.event("SelectTab",""+i) ;
           }
       %> 
-        <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId')">              
-            <a data-toggle="tab" data-target="#$tabId-tab" href="$link"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+        <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');$link">              
+            <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
         </li>   
       <% i++; } %>
     </ul>
@@ -27,8 +27,10 @@
         for(tabcontent in uiform.getChildren()){
           if(uiform.tabIsSelected(j)) active =  "in active";
           else active = "";
-          println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\" style=\"overflow:auto;\">" ;
-          uiform.renderChild(tabcontent.id) ;
+          println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\">" ;
+          println "<div class='resizable'>";
+          uiform.renderChild(tabcontent.id);
+          println "</div>";
           println "</div>" ;
           j++ ;
         }

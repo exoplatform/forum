@@ -479,7 +479,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
   static public class OpenTabActionListener extends BaseEventListener<UIForumUserSettingForm> {
     public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String objectId) throws Exception {
       uiForm.tabId = objectId;
-      refresh();
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 
