@@ -75,6 +75,16 @@
       <artifactId>exo.ws.rest.core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
       <exclusions>
@@ -82,15 +92,9 @@
           <artifactId>xstream</artifactId>
           <groupId>xstream</groupId>
         </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-      <exclusions>
         <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
+          <artifactId>jmock</artifactId>
+          <groupId>jmock</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -102,6 +106,12 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <!-- To upgrade the version required by picocontainer -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -155,15 +165,20 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.testframework</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.identity</artifactId>
-      <type>test-jar</type>
+      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
-      <type>test-jar</type>
+      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -182,8 +197,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>exo.ws.testframework</artifactId>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -199,11 +214,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

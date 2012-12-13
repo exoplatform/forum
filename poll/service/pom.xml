@@ -54,12 +54,12 @@
       <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.gatein.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.rest.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>picocontainer</groupId>
@@ -69,12 +69,22 @@
           <artifactId>xstream</artifactId>
           <groupId>xstream</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>jmock</artifactId>
+          <groupId>jmock</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <!-- To upgrade the version required by picocontainer -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -129,15 +139,20 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.testframework</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.identity</artifactId>
-      <type>test-jar</type>
+      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
-      <type>test-jar</type>
+      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -148,11 +163,6 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.test.jcr</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>exo.ws.testframework</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
