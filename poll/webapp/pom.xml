@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-poll</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.0.0.Alpha1-kill-exobuild-SNAPSHOT</version>
+    <version>4.0.0.Alpha1-SNAPSHOT</version>
   </parent>
   <artifactId>forum-poll-webapp</artifactId>
   <packaging>war</packaging>
