@@ -23,19 +23,8 @@
     <load-on-startup>0</load-on-startup>
   </servlet>
   
-  <servlet>
-    <servlet-name>forumservlet</servlet-name>
-    <servlet-class>org.exoplatform.forum.rss.KSRSSServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
   <servlet-mapping>
     <servlet-name>GateInServlet</servlet-name>
     <url-pattern>/gateinservlet</url-pattern>
   </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>forumservlet</servlet-name>
-    <url-pattern>/rss/*</url-pattern>
-  </servlet-mapping> 
 </web-app>

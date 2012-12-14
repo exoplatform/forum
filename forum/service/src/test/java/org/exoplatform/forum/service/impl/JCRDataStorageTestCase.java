@@ -16,12 +16,6 @@
  */
 package org.exoplatform.forum.service.impl;
 
-import static org.exoplatform.forum.base.AssertUtils.assertContains;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -29,52 +23,62 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
-
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.KernelUtils;
+import org.exoplatform.commons.testing.mock.JCRMockUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.forum.base.AssertUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.JCRSessionManager;
 import org.exoplatform.forum.common.jcr.JCRTask;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.forum.membership.AbstractJCRTestCase;
-import org.exoplatform.forum.membership.JCRMockUtils;
-import org.exoplatform.forum.membership.KernelUtils;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy( { 
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"), 
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "forumconf/forum-configuration.xml") 
-})
+// TODO :
+// * Fix tests to not have to specify the order of execution like this
+// * The order of tests execution changed in Junit 4.11 (https://github.com/KentBeck/junit/blob/master/doc/ReleaseNotes4.11.md)
+@FixMethodOrder(MethodSorters.JVM)
 public class JCRDataStorageTestCase extends AbstractJCRTestCase {
 
   private JCRDataStorage storage;
   @Override
   public void beforeRunBare() throws Exception {
-    setGetAllConfig(false);
     super.beforeRunBare();
   }
   
-  protected void setUp() throws Exception {
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
     storage = new JCRDataStorage();
-    KSDataLocation locator = new KSDataLocation("portal-test", getRepositoryService());
-    storage.setDataLocator(locator);
+    storage.setDataLocator(dataLocation);
+  }
+  
+  @Override
+  public void tearDown() throws Exception {
+    super.tearDown();
   }
 
   public void testConstructor() {
@@ -99,17 +103,17 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     Node node = JCRMockUtils.mockNode();
     JCRMockUtils.stubProperty(node, moderatorsPropName, "foo", "bar");
     String[] actual = storage.updateModeratorInForum(node, moderators);
-    assertContains(actual, "foo", "bar", "zed");
+    AssertUtils.assertContains(actual, "foo", "bar", "zed");
 
     Node node2 = JCRMockUtils.mockNode();
     JCRMockUtils.stubNullProperty(node2, moderatorsPropName);
     String[] actual2 = storage.updateModeratorInForum(node2, moderators);
-    assertContains(actual2, "foo", "zed");
+    AssertUtils.assertContains(actual2, "foo", "zed");
 
     Node node3 = JCRMockUtils.mockNode();
     JCRMockUtils.stubProperty(node3, moderatorsPropName, " ", "bar");
     String[] actual3 = storage.updateModeratorInForum(node3, moderators);
-    assertContains(actual3, "foo", "zed");
+    AssertUtils.assertContains(actual3, "foo", "zed");
   }
 
   public void testSetDefaultAvatar() throws Exception {

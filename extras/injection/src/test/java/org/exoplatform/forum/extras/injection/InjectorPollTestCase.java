@@ -38,7 +38,7 @@ import org.exoplatform.services.organization.OrganizationService;
  * Jun 15, 2012
  */
 
-public class InjectorPollTestCase extends BaseTestCase {
+public class InjectorPollTestCase extends BaseInjectorTestCase {
   GroupInjector                   groupInjector;
 
   PollInjector                    pollInjector;
@@ -66,12 +66,18 @@ public class InjectorPollTestCase extends BaseTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    groupInjector = (GroupInjector) getContainer().getComponentInstanceOfType(GroupInjector.class);
-    pollInjector = (PollInjector) getContainer().getComponentInstance(PollInjector.class);
-    voteInjector = (VoteInjector) getContainer().getComponentInstance(VoteInjector.class);
-    profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
-    organizationService = (OrganizationService) getContainer().getComponentInstance(OrganizationService.class);
-    pollService = (PollService) getContainer().getComponentInstance(PollService.class);
+    
+    if(pollService == null){
+      //
+      groupInjector = (GroupInjector) getContainer().getComponentInstanceOfType(GroupInjector.class);
+      pollInjector = (PollInjector) getContainer().getComponentInstance(PollInjector.class);
+      voteInjector = (VoteInjector) getContainer().getComponentInstance(VoteInjector.class);
+      profileInjector = (ProfileInjector) getContainer().getComponentInstanceOfType(ProfileInjector.class);
+      
+      //
+      organizationService = (OrganizationService) getContainer().getComponentInstance(OrganizationService.class);
+      pollService = (PollService) getContainer().getComponentInstance(PollService.class);
+    }
 
     assertNotNull(groupInjector);
     assertNotNull(pollInjector);

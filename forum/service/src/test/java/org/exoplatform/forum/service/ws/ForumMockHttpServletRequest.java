@@ -16,11 +16,11 @@
  */
 package org.exoplatform.forum.service.ws;
 
-import org.exoplatform.services.test.mock.MockHttpServletRequest;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import org.exoplatform.services.test.mock.MockHttpServletRequest;
 
 /**
  * The MockHttpServletRequest of Social to override 2 methods of MockHttpServletRequest.

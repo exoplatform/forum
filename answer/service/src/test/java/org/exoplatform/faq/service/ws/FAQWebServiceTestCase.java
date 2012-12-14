@@ -50,6 +50,16 @@ public class FAQWebServiceTestCase extends AbstractResourceTest {
     removeResource(faqWebservice.getClass());
   }
   
+  @Override
+  public void beforeRunBare() throws Exception {
+    super.beforeRunBare();
+  }
+  
+  @Override
+  protected void afterRunBare() {
+    super.afterRunBare();
+  }
+
   public void testViewRss() throws Exception {
     ContainerResponse response = service("GET", BASE_URL + REST_CONTEXT + "/rss/categories", "", null, null);
     assertEquals(200, response.getStatus());

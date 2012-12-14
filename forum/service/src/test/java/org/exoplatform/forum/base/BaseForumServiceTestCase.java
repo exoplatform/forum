@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
@@ -56,9 +57,11 @@ import org.exoplatform.services.security.MembershipEntry;
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.core.test.configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml")
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.forum.component.service.test.configuration.xml")
 })
-public abstract class BaseForumServiceTestCase extends BaseTestCase {
+
+public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
   public static final String         USER_ROOT         = "root";
 
   public static final String         USER_DEMO         = "demo";
@@ -79,8 +82,8 @@ public abstract class BaseForumServiceTestCase extends BaseTestCase {
 
   @Override
   public void setUp() throws Exception {
-    //
     begin();
+    //
     if (forumService_ == null) {
       forumService_ = (ForumService) getService(ForumService.class);
       dataLocation = (KSDataLocation) getService(KSDataLocation.class);
@@ -94,6 +97,7 @@ public abstract class BaseForumServiceTestCase extends BaseTestCase {
     //
     end();
   }
+  
 
   @SuppressWarnings("unchecked")
   public <T> T getService(Class<T> clazz) {

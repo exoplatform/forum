@@ -64,7 +64,8 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
   public DataStorageTestCase() throws Exception {
     super();
   }
-  
+
+  @Override
   public void setUp() throws Exception {
     //
     dataStorage = (DataStorage) getService(JCRDataStorage.class);
@@ -72,6 +73,7 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
     super.setUp();
   }
 
+  @Override
   public void tearDown() throws Exception {
     super.tearDown();
   }
@@ -89,11 +91,6 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
   }
   
   public void testGetUserSetting() throws Exception {
-    // TODO: Check why sometime assertEquals("created", faqSetting_.getOrderBy()) fail
-//    dataStorage.getUserSetting(USER_ROOT, faqSetting_);
-//    assertEquals("created", faqSetting_.getOrderBy());
-//    assertEquals("asc", faqSetting_.getOrderType());
-//    assertTrue(faqSetting_.isSortQuestionByVote());
   }
   
   public void testSaveFAQSetting() throws Exception {

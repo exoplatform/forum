@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 
+import org.exoplatform.commons.testing.webui.AbstractUIComponentTestCase;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.bbcode.core.BBCodeRenderer;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
@@ -24,7 +25,6 @@ import org.exoplatform.forum.bbcode.core.MemoryBBCodeService;
 import org.exoplatform.forum.rendering.MarkupRenderingService;
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.webui.base.AbstractUIComponentTestCase;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
