@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>forum</artifactId>
-    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
     <groupId>org.exoplatform.forum</groupId>
+    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
   </parent>
   <artifactId>forum-forum</artifactId>
   <packaging>pom</packaging>

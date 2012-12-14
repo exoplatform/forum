@@ -21,8 +21,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>forum</artifactId>
-    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
     <groupId>org.exoplatform.forum</groupId>
+    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras</artifactId>

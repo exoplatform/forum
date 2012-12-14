@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>forum-extension</artifactId>
-    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
     <groupId>org.exoplatform.forum</groupId>
+    <version>4.0.0.Alpha1-relooking-SNAPSHOT</version>
   </parent>
   <artifactId>forum-extension-config</artifactId>
   <packaging>jar</packaging>

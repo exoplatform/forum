@@ -49,7 +49,7 @@
     <org.exoplatform.portal.version>3.4.0.Final</org.exoplatform.portal.version>
     <org.exoplatform.webos.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.webos.version>
     <org.exoplatform.commons.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.commons.version>
-	<org.exoplatform.platform-ui.version>1.0.0-SNAPSHOT</org.exoplatform.platform-ui.version>
+    <org.exoplatform.platform-ui.version>1.0.0-SNAPSHOT</org.exoplatform.platform-ui.version>
     <org.exoplatform.gwtframework.version>1.1.2</org.exoplatform.gwtframework.version>
     <org.exoplatform.ide.version>1.1.8-SNAPSHOT</org.exoplatform.ide.version>
     <org.exoplatform.calendar.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.calendar.version>
@@ -59,17 +59,13 @@
     <org.exoplatform.integ.version>4.0.0.Alpha1-relooking-SNAPSHOT</org.exoplatform.integ.version>
     <org.exoplatform.leadcapture.version>3.4</org.exoplatform.leadcapture.version>
     <org.exoplatform.exopackage.version>1.1.4</org.exoplatform.exopackage.version>
-    
     <org.gatein.portal.version>3.4.0.Final</org.gatein.portal.version>
     <org.gatein.common.version>2.0.4-GA</org.gatein.common.version>
     <org.gatein.wci.version>2.3.0.Beta02</org.gatein.wci.version>
-
-
     <!-- 3rd parties -->
     <org.crsh.version>1.0.0-beta15</org.crsh.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <org.chromattic.version>1.1.4</org.chromattic.version>
-
     <!-- Begin wiki properties -->
     <maven-compiler-plugin.version>2.3.1</maven-compiler-plugin.version>
     <org.xwiki.platform.version>4.1.3</org.xwiki.platform.version>
@@ -95,7 +91,6 @@
     <flying-saucer-core.version>9.0.1</flying-saucer-core.version>
     <flying-saucer-pdf.version>9.0.1</flying-saucer-pdf.version>
     <!-- End wiki properties -->
-
     <org.codehaus.swizzle.version>1.6.1</org.codehaus.swizzle.version>
     <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
     <org.jsecurity.version>0.9.0</org.jsecurity.version>
@@ -163,7 +158,6 @@
     <quartz.version>1.5.2</quartz.version>
     <nekohtml.version>1.9.14</nekohtml.version>
     <caja.version>r1</caja.version>
-  
     <!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->
@@ -172,12 +166,7 @@
   </properties>
   <dependencyManagement>
     <!-- TODO : import dependencyManagement of platform, instead of redefining those properties -->
-	<dependencies>
-	  <dependency>
-		<groupId>org.exoplatform.platform-ui</groupId>
-		<artifactId>platform-ui-web-eXoResources</artifactId>
-	    <version>${org.exoplatform.platform-ui.version}</version>
-	  </dependency>
+    <dependencies>
       <dependency>
         <groupId>org.exoplatform</groupId>
         <artifactId>maven-depmgt-pom</artifactId>
@@ -587,6 +576,11 @@
             <groupId>jmock</groupId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.platform-ui</groupId>
+        <artifactId>platform-ui-web-eXoResources</artifactId>
+        <version>${org.exoplatform.platform-ui.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.portal</groupId>
