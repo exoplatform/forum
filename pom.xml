@@ -259,7 +259,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-answer-webapp</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -301,7 +301,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-demo-webapp</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -318,7 +318,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-extension-webapp</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -336,7 +336,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forum-webapp</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -348,7 +348,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forumResources</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -360,7 +360,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-gadgets</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -378,7 +378,7 @@
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-poll-webapp</artifactId>
         <version>${project.version}</version>
-        <classifier>classes</classifier>
+        <type>pom</type>
       </dependency>
       <!-- To be replaced by an import of JCR parent POM -->
       <dependency>
