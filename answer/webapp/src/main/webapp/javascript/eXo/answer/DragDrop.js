@@ -1,4 +1,4 @@
-;(function($, window, document) {
+(function($,utils, eventManager, window, document) {
   
   var DragDrop = {
     dragObject : null,
@@ -7,13 +7,13 @@
     init : function(compid) {
       var comp = findId(compid);
       comp.find('div.FAQCategory').on('mousedown', this.attach);
-      comp.on('selectstart', utils.ForumUtils.returnFalse);
-      comp.on('dragstart', utils.ForumUtils.returnFalse);
+      comp.on('selectstart', utils.returnFalse);
+      comp.on('dragstart', utils.returnFalse);
     },
     
     attach : function(evt) {
       evt = evt || window.event;
-      if (eventManager.EventManager.getMouseButton(evt) == 2) return;
+      if (eventManager.getMouseButton(evt) == 2) return;
       var dnd = eXo.answer.DragDrop;
       var dragObject = this.cloneNode(true);
       $(dragObject).attr('class', 'FAQDnDCategory')
@@ -97,7 +97,7 @@
       if (targetClass) {
         var i = targetClass.length;
         while (i--) {
-          var target = eventManager.EventManager.getEventTargetByClass(evt, targetClass[i]);
+          var target = eventManager.getEventTargetByClass(evt, targetClass[i]);
           if (target) return target;
         }
       }
@@ -148,5 +148,6 @@
   window.eXo = eXo || {};
   window.eXo.answer = eXo.answer || {} ;
   window.eXo.answer.DragDrop = DragDrop;
-})(gj, window, document);
-_module.DragDrop = eXo.answer.DragDrop;
+  
+  return DragDrop;
+})(gj, utils, eventManager, window, document);

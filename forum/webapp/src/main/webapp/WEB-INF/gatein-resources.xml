@@ -34,7 +34,6 @@
   <module>
     <name>UIForumPortlet</name>
     <script>
-      <name>eXo.forum.UIForumPortlet</name>
       <path>/javascript/eXo/forum/UIForumPortlet.js</path>
     </script>
     <depends>
@@ -69,12 +68,14 @@
     <depends>
       <module>navigation</module>
     </depends>
+    <depends>
+      <module>popupCategory</module>
+    </depends>
   </module>
 
   <module>
     <name>SearchTagName</name>
     <script>
-      <name>eXo.forum.webservice.SearchTagName</name>
       <path>/javascript/eXo/forum/webservice/SearchTagName.js</path>
     </script>
     <depends>
@@ -94,7 +95,6 @@
   <module>
     <name>ForumSendNotification</name>
     <script>
-      <name>eXo.forum.ForumSendNotification</name>
       <path>/javascript/eXo/forum/ForumSendNotification.js</path>
     </script>
     <depends>
@@ -103,7 +103,7 @@
     </depends>
     <depends>
       <module>commons-cometd</module>
-      
+      <as>cometd</as>
     </depends>
     <depends>
       <module>jquery</module>
@@ -114,7 +114,6 @@
   <module>
     <name>ForumTotalJob</name>
     <script>
-      <name>eXo.forum.ForumTotalJob</name>
       <path>/javascript/eXo/forum/ForumTotalJob.js</path>
     </script>
     <depends>
@@ -127,14 +126,13 @@
     </depends>
     <depends>
       <module>commons-cometd</module>
-      
+      <as>cometd</as>
     </depends>
   </module>
 
   <module>
     <name>SearchIpBan</name>
     <script>
-      <name>eXo.forum.webservice.SearchIpBan</name>
       <path>/javascript/eXo/forum/webservice/SearchIpBan.js</path>
     </script>
     <depends>

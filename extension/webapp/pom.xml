@@ -57,6 +57,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>gatein-exo-forum-${project.version}</finalName>
+    <finalName>forum-extension</finalName>
   </build>
 </project>

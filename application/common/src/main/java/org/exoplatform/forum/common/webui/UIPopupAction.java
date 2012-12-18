@@ -37,6 +37,6 @@ public class UIPopupAction extends AbstractPopupAction {
   protected void afterProcessRender(WebuiRequestContext context) {
     String portletId = this.getAncestorOfType(UIPortletApplication.class).getId();
     context.getJavascriptManager().require("SHARED/ForumUtils", "utils")
-           .addScripts("utils.ForumUtils.setMaskLayer('" + portletId + "');");
+           .addScripts("utils.setMaskLayer('" + portletId + "');");
   }
 }

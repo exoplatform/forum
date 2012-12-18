@@ -23,7 +23,6 @@
   <module>
     <name>FaqPortlet</name>
     <script>
-      <name>eXo.faq.UIFaqPortlet</name>
       <path>/javascript/eXo/faq/UIFaqPortlet.js</path>
     </script>
    <depends>
@@ -51,7 +50,6 @@
   <module>
     <name>DragDrop</name>
     <script>
-      <name>eXo.answer.DragDrop</name>
       <path>/javascript/eXo/answer/DragDrop.js</path>
     </script>
     <depends>
@@ -71,7 +69,6 @@
   <module>
     <name>AnswerUtils</name>
     <script>
-      <name>eXo.answer.AnswerUtils</name>
       <path>/javascript/eXo/answer/AnswerUtils.js</path>
     </script>
     <depends>
@@ -87,7 +84,6 @@
   <module>
     <name>UIAnswersPortlet</name>
     <script>
-      <name>eXo.answer.UIAnswersPortlet</name>
       <path>/javascript/eXo/answer/UIAnswersPortlet.js</path>
     </script>
     <depends>
