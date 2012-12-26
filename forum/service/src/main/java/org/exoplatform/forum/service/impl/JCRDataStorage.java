@@ -58,6 +58,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -469,6 +470,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
      */
   private Node getNodeAt(String relPath) throws Exception {
     return sessionManager.getCurrentSession().getRootNode().getNode(relPath);
+  }
+
+  private Node getNodeAt(SessionProvider sProvider, String relPath) throws Exception {
+    if (relPath.indexOf(CommonUtils.SLASH) == 0) {
+      relPath = relPath.substring(1);
+    } else if(relPath.indexOf(Utils.CATEGORY) == 0) {
+      relPath = dataLocator.getForumCategoriesLocation() + CommonUtils.SLASH + relPath;
+    }
+    return sessionManager.getSession(sProvider).getRootNode().getNode(relPath);
   }
 
   /**
@@ -3844,6 +3854,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       throw e;
     }
   }
+  
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    // save new topic
+    saveTopic(newTopic.getCategoryId(), newTopic.getForumId(), newTopic, true, true, new MessageBuilder());
+    // save first post
+    savePost(fistPost.getCategoryId(), fistPost.getForumId(), fistPost.getTopicId(), fistPost, false, new MessageBuilder());
+    // move all posts to new topic
+    movePost(postPathMove.toArray(new String[postPathMove.size()]), newTopic.getPath(), true, mailContent, link);
+  }
 
   public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
@@ -5137,7 +5156,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       if (path.indexOf(KSDataLocation.Locations.FORUM_CATEGORIES_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
         path = getCategoryHome(sProvider).getPath() + "/" + path;
-      } else {
+      } else if(path.indexOf(Utils.TAG) >= 0){
         path = getTagHome(sProvider).getPath() + "/" + path;
       }
       Node myNode = (Node) getForumHomeNode(sProvider).getSession().getItem(path);
@@ -7817,5 +7836,53 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private Calendar getGreenwichMeanTime() {
     return CommonUtils.getGreenwichMeanTime();
+  }
+
+  @Override
+  public void saveActivityIdForOwner(String ownerId, String type, String activityId) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node ownerNode = getNodeById(sProvider, ownerId, type);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
+    }
+  }
+
+  @Override
+  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node ownerNode = getNodeAt(sProvider, ownerPath);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.error(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
+    }
+  }
+
+  @Override
+  public String getActivityIdForOwner(String ownerId, String type) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node ownerNode = getNodeById(sProvider, ownerId, type);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.error(String.format("Failed to get attach activityId for %s: %s ", type, ownerId), e);
+    }
+    return null;
+  }
+
+  @Override
+  public String getActivityIdForOwner(String ownerPath) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node ownerNode = getNodeAt(sProvider, ownerPath);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.error(String.format("Failed to get attach activityId for %s ", ownerPath), e);
+    }
+    return null;
   }
 }

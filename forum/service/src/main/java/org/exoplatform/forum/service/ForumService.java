@@ -364,6 +364,19 @@ public interface ForumService extends ForumServiceLegacy {
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 
   /**
+   * Split topic.
+   * 
+   * @param newTopic - the new topic create when split topic.
+   * @param fistPost - the fist post of new topic.
+   * @param postPathMove - the list path's posts move to new topic
+   * @param mailContent - the mail content to send notification
+   * @param link to topic
+   * @throws Exception
+   * @since 4.0
+   */
+  void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception;
+
+  /**
    * Gets the posts.
    * 
    * @param categoryId the category id
@@ -1429,4 +1442,48 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception 
    */
   public void removeCacheUserProfile(String userName) throws Exception;
+  
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into Node what is owner created activity via Id
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @param type - the type of object matching with node.
+   * If Topic type is Utils.TOPIC else Post is Utils.POST
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForOwner(String ownerId,  String type, String activityId);
+
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForOwner(String ownerPath, String activityId);
+
+  /**
+   * Get value of exo:activityId property in specified node via Id. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @param type - the type of object matching with node.
+   * If Topic type is Utils.TOPIC else Post is Utils.POST 
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForOwner(String ownerId, String type);
+
+  /**
+   * Get value of exo:activityId property in specified node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForOwner(String ownerPath);
 }

@@ -774,4 +774,22 @@ public class FakeForumService implements ForumService {
     
   }
 
+  @Override
+  public void saveActivityIdForOwner(String ownerId, String type, String activityId) throws Exception {
+  }
+
+  @Override
+  public void saveActivityIdForOwner(String ownerPath, String activityId) throws Exception {
+  }
+
+  @Override
+  public String getActivityIdForOwner(String ownerId, String type) throws Exception {
+    return null;
+  }
+
+  @Override
+  public String getActivityIdForOwner(String ownerPath) throws Exception {
+    return null;
+  }
+
 }

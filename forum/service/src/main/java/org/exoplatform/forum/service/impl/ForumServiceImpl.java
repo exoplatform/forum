@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
@@ -397,6 +399,11 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void modifyTopic(List<Topic> topics, int type) {
     storage.modifyTopic(topics, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Topic topic : topics) {
+        f.updateStatusTopic(topic, type);
+      }
+    }
   }
 
   /**
@@ -411,10 +418,12 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
-      if (isNew)
+      if (isNew) {
         f.addTopic(topic, categoryId, forumId);
-      else
+      } else {
         f.updateTopic(topic, categoryId, forumId);
+        f.updateTopic(topic);
+      }
     }
   }
 
@@ -476,6 +485,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
     storage.moveTopic(topics, destForumPath, mailContent, link);
+    String toForumName = ((Forum) storage.getObjectNameByPath(destForumPath)).getForumName();
+    String toCategoryName = ((Category) storage.getObjectNameByPath(Utils.getCategoryPath(destForumPath))).getCategoryName();
+    for (ForumEventLifeCycle f : listeners_) {
+      for (Topic topic : topics) {
+        f.moveTopic(topic, toCategoryName, toForumName);
+      }
+    }
     CacheUserProfile.clearCache();
   }
 
@@ -483,8 +499,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
+    String activityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    Topic topic = storage.removeTopic(categoryId, forumId, topicId);
+    for (ForumEventLifeCycle f : listeners_) {
+      f.removeActiviry(activityId);
+    }
     CacheUserProfile.clearCache();
-    return storage.removeTopic(categoryId, forumId, topicId);
+    return topic;
   }
 
   /**
@@ -537,7 +558,7 @@ public class ForumServiceImpl implements ForumService, Startable {
       if (isNew)
         f.addPost(post, categoryId, forumId, topicId);
       else
-        f.updatePost(post, categoryId, forumId, topicId);
+        f.updatePost(post);
     }
   }
 
@@ -546,19 +567,22 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void modifyPost(List<Post> posts, int type){
     storage.modifyPost(posts, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Post post : posts) {
+        f.updateStatusPost(post, type);
+      }
+    }
   }
 
   /**
    * {@inheritDoc}
    */
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-    String[] postPaths = new String[posts.size()];
-    int i = 0;
+    List<String> postPaths = new ArrayList<String>();
     for (Post p : posts) {
-      postPaths[i] = p.getPath();
-      ++i;
+      postPaths.add(p.getPath());
     }
-    movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+    movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
   /**
@@ -573,8 +597,27 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+    String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
+    String destActivityId = storage.getActivityIdForOwner(destTopicPath);
+    //
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
+    //
+    Topic newTopic = storage.getTopicByPath(destTopicPath, false);
+    for (ForumEventLifeCycle f : listeners_) {
+      f.mergeTopic(newTopic, srcActivityId, destActivityId);
+    }
+    
     CacheUserProfile.clearCache();
+  }
+
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    String srcTopicPath = Utils.getTopicPath(postPathMove.get(0));
+    storage.splitTopic(newTopic, fistPost, postPathMove, mailContent, link);
+    String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
+    Topic srcTopic = storage.getTopicByPath(srcTopicPath, false);
+    for (ForumEventLifeCycle f : listeners_) {
+      f.splitTopic(newTopic, srcTopic, srcActivityId);
+    }
   }
 
   /**
@@ -1410,10 +1453,26 @@ public class ForumServiceImpl implements ForumService, Startable {
     listeners_.add(listener);
   }
   
-  public void removeCacheUserProfile(String userName) throws Exception {
+  public void removeCacheUserProfile(String userName) {
     UserProfile userProfile = CacheUserProfile.getFromCache(userName);
     if (userProfile != null && UserProfile.USER_DELETED != userProfile.getUserRole()) {
       CacheUserProfile.removeInCache(userName);
     }
+  }
+
+  public void saveActivityIdForOwner(String ownerId,  String type, String activityId) {
+    storage.saveActivityIdForOwner(ownerId, type, activityId);
+  }
+
+  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+    storage.saveActivityIdForOwner(ownerPath, activityId);
+  }
+
+  public String getActivityIdForOwner(String ownerId, String type) {
+    return storage.getActivityIdForOwner(ownerId, type);
+  }
+
+  public String getActivityIdForOwner(String ownerPath) {
+    return storage.getActivityIdForOwner(ownerPath);
   }
 }
