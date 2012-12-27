@@ -14,6 +14,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -494,6 +495,10 @@ public class CachedDataStorage implements DataStorage, Startable {
         )
     );
 
+  }
+
+  public List<CategoryFilter> filterForumByName(String filterKey) throws Exception {
+    return storage.filterForumByName(filterKey);
   }
 
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {

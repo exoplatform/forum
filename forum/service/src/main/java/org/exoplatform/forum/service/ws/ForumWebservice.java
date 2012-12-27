@@ -24,6 +24,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.services.log.ExoLogger;
@@ -225,6 +226,20 @@ public class ForumWebservice implements ResourceContainer {
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
     } catch (Exception e) {
       log.trace("\nGet UserRSS fail: ", e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+  
+  @GET
+  @Path("filterforum/{forumname}")
+  @Produces(MediaType.TEXT_XML)
+  public Response filterForum(@PathParam("forumname") String forumname) throws Exception {
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname);
+      
+      return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
+    } catch (Exception e) {
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }

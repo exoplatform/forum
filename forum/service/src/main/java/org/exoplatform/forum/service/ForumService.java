@@ -130,6 +130,13 @@ public interface ForumService extends ForumServiceLegacy {
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   /**
+   * @param filterKey
+   * @return
+   * @throws Exception
+   */
+  List<CategoryFilter> filterForumByName(String filterKey) throws Exception;
+
+  /**
    * Gets the forum in the category identify.
    * 
    * @param categoryId is the id of category identify.

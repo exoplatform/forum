@@ -74,6 +74,7 @@ import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.DeletedUserCalculateEventListener;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
@@ -1251,6 +1252,50 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return new ArrayList<Forum>();
     }
+  }
+
+  public List<CategoryFilter> filterForumByName(String filterKey) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      ForumEventQuery eventQuery = new ForumEventQuery();
+      eventQuery.setType(Utils.FORUM);
+      eventQuery.setKeyValue(filterKey);
+      eventQuery.setIsClose("false");
+      eventQuery.setIsLock("false");
+      eventQuery.setPath(categoryHome.getPath());
+      eventQuery.setValueIn(ForumEventQuery.VALUE_IN_TITLE);
+      
+      String queryString = eventQuery.getPathQuery(new ArrayList<String>());
+      log.info("\n\nqueryString: " + queryString);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(queryString, Query.XPATH);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      
+      Map<String, CategoryFilter> categoryFilters = new HashMap<String, CategoryFilter>();
+      CategoryFilter categoryFilter;
+      String categoryId, categoryName, forumName;
+      while(iter.hasNext()) {
+        Node node = iter.nextNode();
+        categoryId = node.getParent().getName();
+        if(categoryFilters.keySet().contains(categoryId)) {
+          categoryFilter = categoryFilters.get(categoryId);
+        } else {
+          categoryName = node.getParent().getProperty(EXO_NAME).getString();
+          categoryFilter = new CategoryFilter(categoryId, categoryName);
+          categoryFilters.put(categoryId, categoryFilter);
+        }
+        forumName = node.getProperty(EXO_NAME).getString();
+        categoryFilter.setForumInfos(node.getName(), forumName);
+      }
+      return new ArrayList<CategoryFilter>(categoryFilters.values());
+    } catch (Exception e) {
+      if(log.isDebugEnabled()) {
+        log.debug("\nCould not filter forum by name: " + filterKey + e.getCause());
+      }
+    }
+    return null;
   }
 
   public Forum getForum(String categoryId, String forumId){

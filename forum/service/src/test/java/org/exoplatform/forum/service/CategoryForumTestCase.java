@@ -162,4 +162,26 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     forums = forumService_.getForumSummaries(catId, "");
     assertEquals("List forums can not equals 0", forums.size(), 0);
   }
+  
+  public void testFilterForumByName() throws Exception {
+    // create categories
+    List<String> categories = new ArrayList<String>();
+    for(int i = 0; i < 10; ++i) {
+      String catId = getId(Utils.CATEGORY);
+      categories.add(catId);
+      Category cat = createCategory(catId);
+      forumService_.saveCategory(cat, true);
+    }
+
+    // create forums
+    for(String cateId : categories) {
+      for(int i =0; i < 5; ++i) {
+        Forum forum = createdForum();
+        forum.setForumName("test key foo bar");
+        forumService_.saveForum(cateId, forum, true);
+      }
+    }
+    log.info(forumService_.filterForumByName("foo").size());
+    
+  }
 }

@@ -107,6 +107,8 @@ public interface DataStorage {
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
+  
+  List<CategoryFilter> filterForumByName(String filterKey) throws Exception;
 
   Forum getForum(String categoryId, String forumId);
 
