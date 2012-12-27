@@ -48,7 +48,7 @@
   </module>
 
   <module>
-    <name>DragDrop</name>
+    <name>AnswerDragDrop</name>
     <script>
       <path>/javascript/eXo/answer/DragDrop.js</path>
     </script>
@@ -90,7 +90,7 @@
       <module>AnswerUtils</module>
     </depends>
     <depends>
-      <module>DragDrop</module>
+      <module>AnswerDragDrop</module>
       <as>dragDrop</as>
     </depends>
     <depends>
