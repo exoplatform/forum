@@ -31,6 +31,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,7 +75,6 @@ import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.DeletedUserCalculateEventListener;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
@@ -114,6 +114,7 @@ import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -1254,10 +1255,36 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey) throws Exception {
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
+      // get can create topic
+      List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
+      StringBuilder qrCanCreateTopic = new StringBuilder(JCR_ROOT);
+      qrCanCreateTopic.append(categoryHome.getPath()).append("//* [(");
+      qrCanCreateTopic.append("(").append(Utils.buildXpathHasProperty(EXO_CREATE_TOPIC_ROLE))
+                      .append(" or ").append(Utils.buildXpathByUserInfo(EXO_CREATE_TOPIC_ROLE, listOfUser)).append(")")
+                      .append(" or (").append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser)).append(")");
+      qrCanCreateTopic.append(")]");
+
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(qrCanCreateTopic.toString(), Query.XPATH);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      
+      Set<String> canCreateTopicIds = new HashSet<String>();
+      while(iter.hasNext()) {
+        Node node = iter.nextNode();
+        if(node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM)) {
+          canCreateTopicIds.add(node.getName());
+        }
+      }
+
+      // get category private
+      List<String> categoryPrivates = getCategoriesUserCanview(categoryHome, listOfUser);
+      
+      //query forum by input-key
       ForumEventQuery eventQuery = new ForumEventQuery();
       eventQuery.setType(Utils.FORUM);
       eventQuery.setKeyValue(filterKey);
@@ -1265,30 +1292,39 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       eventQuery.setIsLock("false");
       eventQuery.setPath(categoryHome.getPath());
       eventQuery.setValueIn(ForumEventQuery.VALUE_IN_TITLE);
-      
-      String queryString = eventQuery.getPathQuery(new ArrayList<String>());
-      log.info("\n\nqueryString: " + queryString);
-      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      Query query = qm.createQuery(queryString, Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
-      
-      Map<String, CategoryFilter> categoryFilters = new HashMap<String, CategoryFilter>();
+      eventQuery.setStartWith(true);
+
+
+      StringBuffer strQuery = new StringBuffer(eventQuery.getPathQuery(new ArrayList<String>()));
+      strQuery.append(" order by @").append(EXO_NAME).append(ASCENDING);
+      query = qm.createQuery(strQuery.toString(), Query.XPATH);
+      result = query.execute();
+      iter = result.getNodes();
+
+      LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
       CategoryFilter categoryFilter;
-      String categoryId, categoryName, forumName;
+      String categoryId, categoryName, forumId, forumName;
       while(iter.hasNext()) {
         Node node = iter.nextNode();
         categoryId = node.getParent().getName();
-        if(categoryFilters.keySet().contains(categoryId)) {
-          categoryFilter = categoryFilters.get(categoryId);
-        } else {
-          categoryName = node.getParent().getProperty(EXO_NAME).getString();
-          categoryFilter = new CategoryFilter(categoryId, categoryName);
-          categoryFilters.put(categoryId, categoryFilter);
+        forumId = node.getName();
+        //can create topic in category/forum
+        if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
+            && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
+          
+          if(categoryFilters.keySet().contains(categoryId)) {
+            categoryFilter = categoryFilters.get(categoryId);
+          } else {
+            categoryName = node.getParent().getProperty(EXO_NAME).getString();
+            categoryFilter = new CategoryFilter(categoryId, categoryName);
+            categoryFilters.put(categoryId, categoryFilter);
+          }
+          forumName = node.getProperty(EXO_NAME).getString();
+          categoryFilter.setForumFilter(forumId, forumName);
+        
         }
-        forumName = node.getProperty(EXO_NAME).getString();
-        categoryFilter.setForumInfos(node.getName(), forumName);
       }
+
       return new ArrayList<CategoryFilter>(categoryFilters.values());
     } catch (Exception e) {
       if(log.isDebugEnabled()) {

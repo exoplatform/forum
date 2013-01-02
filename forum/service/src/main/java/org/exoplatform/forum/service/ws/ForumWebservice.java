@@ -7,6 +7,7 @@ package org.exoplatform.forum.service.ws;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -24,9 +25,10 @@ import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
@@ -233,11 +235,15 @@ public class ForumWebservice implements ResourceContainer {
   @GET
   @Path("filterforum/{forumname}")
   @Produces(MediaType.TEXT_XML)
-  public Response filterForum(@PathParam("forumname") String forumname) throws Exception {
+  public Response filterForum(@PathParam("forumname") String forumname, 
+                               @Context SecurityContext sc,
+                               @Context UriInfo uriInfo) throws Exception {
     try {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname);
-      
+      String userName = getUserId(sc, uriInfo);
+      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname, userName);
+      Collections.sort(categoryFilters, new Utils.CategoryNameComparator(Utils.CategoryNameComparator.TYPE.ASC));
+
       return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
     } catch (Exception e) {
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();

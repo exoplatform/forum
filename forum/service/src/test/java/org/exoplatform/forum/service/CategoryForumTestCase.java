@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 
 /**
  * Created by The eXo Platform SARL
@@ -174,14 +175,39 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     }
 
     // create forums
+    String prefix = "search ";
     for(String cateId : categories) {
       for(int i =0; i < 5; ++i) {
         Forum forum = createdForum();
-        forum.setForumName("test key foo bar");
+        String t = String.valueOf(Character.toChars(103-i)[0]);
+        forum.setForumName(prefix + t + " test key foo bar ");
         forumService_.saveForum(cateId, forum, true);
       }
     }
-    log.info(forumService_.filterForumByName("foo").size());
+    
+    // search with key random
+    List<CategoryFilter> categoryFilters = forumService_.filterForumByName("jobl", null);
+    // result have 0 categories. 
+    assertEquals(0, categoryFilters.size());
+    
+    // search with key: foo
+    categoryFilters = forumService_.filterForumByName("foo", null);
+    // result have 0 category. 
+    assertEquals(0, categoryFilters.size());
+    
+    // search with key: search1
+    categoryFilters = forumService_.filterForumByName(prefix+"c", null);
+    // result have 10 categories and each one category has one forum. 
+    assertEquals(10, categoryFilters.size());
+    assertEquals(1, categoryFilters.get(0).getForumInfos().size());
+
+    // search with key: search
+    categoryFilters = forumService_.filterForumByName(prefix, null);
+    // result have 10 categories and each one category has 5 forums. 
+    assertEquals(10, categoryFilters.size());
+    assertEquals(5, categoryFilters.get(0).getForumInfos().size());
+    
+
     
   }
 }

@@ -28,6 +28,7 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
@@ -108,7 +109,7 @@ public interface DataStorage {
 
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
   
-  List<CategoryFilter> filterForumByName(String filterKey) throws Exception;
+  List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception;
 
   Forum getForum(String categoryId, String forumId);
 

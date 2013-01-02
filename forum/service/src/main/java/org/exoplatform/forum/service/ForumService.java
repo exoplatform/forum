@@ -25,6 +25,7 @@ import java.util.List;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -130,11 +131,14 @@ public interface ForumService extends ForumServiceLegacy {
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   /**
-   * @param filterKey
-   * @return
+   *  filter forums by key via user.
+   * 
+   * @param filterKey - the key to search forum.
+   * @param userName - the identify of user.
+   * @return - list of categoryFilter.
    * @throws Exception
    */
-  List<CategoryFilter> filterForumByName(String filterKey) throws Exception;
+  List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception;
 
   /**
    * Gets the forum in the category identify.

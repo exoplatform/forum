@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.jcr.Value;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -165,6 +166,33 @@ public class Utils implements ForumNodeTypes {
     }
   }
 
+  static public class CategoryNameComparator implements Comparator<Object> {
+    public enum TYPE {
+      DESC, ASC
+    }
+
+    private TYPE type = TYPE.DESC;
+
+    public CategoryNameComparator() {
+    }
+
+    public CategoryNameComparator(TYPE type) {
+      this.type = type;
+    }
+
+    public int compare(Object o1, Object o2) throws ClassCastException {
+      String name1 = "", name2 = "";
+      if (o1 instanceof CategoryFilter) {
+        name1 = ((CategoryFilter) o1).getCategoryName();
+        name2 = ((CategoryFilter) o2).getCategoryName();
+      } else {
+        name1 = ((Category) o1).getCategoryName();
+        name2 = ((Category) o2).getCategoryName();
+      }
+      return (type == TYPE.DESC) ? name1.compareTo(name2) : name2.compareTo(name1);
+    }
+  }
+  
   /**
    * Compare two arrays and to verify there is a difference in content between two string arrays. The elements may not appear in the same order in both arrays.
    * @param a first string array to compare

@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service;
+package org.exoplatform.forum.service.filter.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,16 +31,16 @@ public class CategoryFilter {
   private String              categoryName;
 
   // The list forum's information <forumId, forumName>
-  private Map<String, String> forumInfos;
+  private List<ForumFilter> forumFilters;
 
   public CategoryFilter(String categoryId, String categoryName) {
     this.categoryId = categoryId;
     this.categoryName = categoryName;
-    this.forumInfos = new HashMap<String, String>();
+    this.forumFilters = new ArrayList<ForumFilter>();
   }
 
   public CategoryFilter() {
-    this.forumInfos = new HashMap<String, String>();
+    this.forumFilters = new ArrayList<ForumFilter>();
   }
 
   public String getCategoryId() {
@@ -59,22 +59,28 @@ public class CategoryFilter {
     this.categoryName = categoryName;
   }
 
-  public Map<String, String> getForumInfos() {
-    return forumInfos;
+  public List<ForumFilter> getForumFilters() {
+    return forumFilters;
   }
 
-  public void setForumInfos(Map<String, String> forumInfos) {
-    this.forumInfos = forumInfos;
+  public void setForumFilters(List<ForumFilter> forumFilters) {
+    this.forumFilters = forumFilters;
   }
 
-  public void setForumInfos(String forumId, String forumName) {
-    this.forumInfos.put(forumId, forumName);
+  public void setForumFilter(String forumId, String forumName) {
+    this.forumFilters.add(new ForumFilter(forumId, forumName));
   }
-  
+
+  public void setForumFilter(ForumFilter forumFilter) {
+    this.forumFilters.add(forumFilter);
+  }
+
   public boolean equals(CategoryFilter categoryFilter) {
     if(categoryFilter.getCategoryId() == this.categoryId) {
       return true;
     }
     return false;
   }
+  
+  
 }

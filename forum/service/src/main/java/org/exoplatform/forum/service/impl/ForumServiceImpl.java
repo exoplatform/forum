@@ -37,7 +37,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.service.CacheUserProfile;
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.CategoryFilter;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -66,6 +65,7 @@ import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -365,8 +365,8 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.moveForum(forums, destCategoryPath);
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey) throws Exception {
-    return storage.filterForumByName(filterKey);
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
+    return storage.filterForumByName(filterKey, userName);
   }
   /**
    * {@inheritDoc}

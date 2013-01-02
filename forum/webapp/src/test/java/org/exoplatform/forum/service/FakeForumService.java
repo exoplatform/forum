@@ -30,6 +30,7 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.bbcode.api.BBCode;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -772,6 +773,11 @@ public class FakeForumService implements ForumService {
   @Override
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     
+  }
+
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
