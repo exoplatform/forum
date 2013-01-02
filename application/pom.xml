@@ -11,5 +11,6 @@
   <name>Forum Applications</name>
   <modules>
     <module>common</module>
+    <module>create</module>
   </modules>
 </project>
