@@ -729,67 +729,60 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  @Override
   public void calculateDeletedUser(String userName) throws Exception {
 
     
   }
 
-  @Override
   public void addListenerPlugin(ForumEventListener listener) throws Exception {
 
     
   }
 
-  @Override
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
 
     return null;
   }
 
-  @Override
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
 
     
   }
 
-  @Override
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
 
     
   }
 
-  @Override
   public List<Post> getRecentPostsForUser(String userName, int number) throws Exception {
     return null;
   }
 
-  @Override
   public void removeCacheUserProfile(String userName) throws Exception {
     
   }
 
-  @Override
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     
   }
 
-  @Override
-  public void saveActivityIdForOwner(String ownerId, String type, String activityId) throws Exception {
+  public void saveActivityIdForOwner(String ownerId, String type, String activityId) {
+    
   }
 
-  @Override
-  public void saveActivityIdForOwner(String ownerPath, String activityId) throws Exception {
+  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+    
   }
 
-  @Override
-  public String getActivityIdForOwner(String ownerId, String type) throws Exception {
+  public String getActivityIdForOwner(String ownerId, String type) {
     return null;
   }
 
-  @Override
-  public String getActivityIdForOwner(String ownerPath) throws Exception {
+  public String getActivityIdForOwner(String ownerPath) {
     return null;
   }
 
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    
+  }
 }
