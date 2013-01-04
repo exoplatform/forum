@@ -189,7 +189,7 @@ public class Utils implements ForumNodeTypes {
         name1 = ((Category) o1).getCategoryName();
         name2 = ((Category) o2).getCategoryName();
       }
-      return (type == TYPE.DESC) ? name1.compareTo(name2) : name2.compareTo(name1);
+      return (type == TYPE.ASC) ? name1.compareTo(name2) : name2.compareTo(name1);
     }
   }
   

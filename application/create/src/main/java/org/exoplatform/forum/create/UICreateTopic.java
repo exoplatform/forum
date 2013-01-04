@@ -16,15 +16,26 @@
  */
 package org.exoplatform.forum.create;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,34 +45,25 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
-  template = "classpath:groovy/webui/forum/create/UICreateTopic.gtmpl", 
+  template = "classpath:groovy/webui/forum/create/UICreate.gtmpl", 
   events = {
     @EventConfig(listeners = UICreateTopic.NextActionListener.class, phase = Phase.DECODE),
-    @EventConfig(listeners = UICreateTopic.CancelActionListener.class, phase = Phase.DECODE) 
+    @EventConfig(listeners = UICreateForm.CancelActionListener.class, phase = Phase.DECODE) 
   }
 )
-public class UICreateTopic extends BaseUIForm {
+public class UICreateTopic extends UICreateForm {
 
+  
   public UICreateTopic() {
-  }
 
+  }
+  
   static public class NextActionListener extends EventListener<UICreateTopic> {
 
     public void execute(Event<UICreateTopic> event) throws Exception {
-
+      UICreateTopic createTopic = event.getSource();
+      nextAction(createTopic, ACTION_TYPE.CREATE_TOPIC, event.getRequestContext());
     }
   }
 
-  static public class CancelActionListener extends EventListener<UICreateTopic> {
-
-    public void execute(Event<UICreateTopic> event) throws Exception {
-      UICreateTopic uisource = event.getSource();
-      WebuiRequestContext ctx = event.getRequestContext();
-      Event<UIComponent> cancelEvent = uisource.<UIComponent> getParent().createEvent("Cancel", Event.Phase.DECODE, ctx);
-      if (cancelEvent != null) {
-        cancelEvent.broadcast();
-      }
-
-    }
-  }
 }

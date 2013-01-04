@@ -41,6 +41,18 @@
   </module>
 
   <module>
+    <name>forumFilter</name>
+    <script>
+      <name>eXo.forum.UIForumFilter</name>
+      <path>/javascript/eXo/forum/UIForumFilter.js</path>
+    </script>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends>
+  </module>
+
+  <module>
     <name>EventManager</name>
     <as>eventManager</as>
     <script>

@@ -50,6 +50,7 @@ import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
+import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -77,6 +78,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     @EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),  
     @EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),  
     @EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.AddPollActionListener.class ),  
     @EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
     @EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),// Menu
                                                                                   // Forum
@@ -145,6 +147,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private boolean                isShowActive      = false;
 
   protected String               DEFAULT_ID        = TopicType.DEFAULT_ID;
+
+  public String                   openTopicId      = ForumUtils.EMPTY_STR;
 
   private Map<String, TopicType> topicTypeM        = new HashMap<String, TopicType>();
 
@@ -601,6 +605,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     }
   }
 
+  static public class AddPollActionListener extends BaseEventListener<UITopicContainer> {
+    public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
+
+      UIPollForm pollForm = uiTopicContainer.openPopup(UIPollForm.class, 655, 455);
+      pollForm.setAddTopic(uiTopicContainer.getForum().getPath());
+      
+    }
+  }
+
   static public class OpenTopicsTagActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
@@ -613,19 +626,25 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   static public class OpenTopicActionListener extends BaseEventListener<UITopicContainer> {
-    public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String idAndNumber) throws Exception {
+    public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, String idAndNumber) throws Exception {
+      idAndNumber = (idAndNumber == null || idAndNumber.equals(ForumUtils.EMPTY_STR)) ? 
+                      uiTopicContainer.openTopicId + ForumUtils.COMMA + "1" + ForumUtils.COMMA + "false" : idAndNumber;
+      uiTopicContainer.openTopicId = ForumUtils.EMPTY_STR;
       String[] temp = idAndNumber.split(ForumUtils.COMMA);
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       try {
+
         Topic topic = uiTopicContainer.getTopic(temp[0]);
-        if (topic != null) {
+        if(topic != null) {
           topic = uiTopicContainer.getForumService().getTopicUpdate(topic, false);
+        } else {
+          uiTopicContainer.getForumService().getTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, temp[0], "");
+        }
+        
+        if (topic != null) {
           uiTopicContainer.forum = uiTopicContainer.getForumService().getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);
           if (uiTopicContainer.forum != null) {
-            if(topic == null) {
-              warning("UIForumPortlet.msg.topicEmpty", false);
-              event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
-            } else if(!uiTopicContainer.isModerator){
+            if(!uiTopicContainer.isModerator){
               if(uiTopicContainer.forum.getIsClosed()) {
                 forumPortlet.renderForumHome();
                 warning("UIForumPortlet.msg.do-not-permission", false);

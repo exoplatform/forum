@@ -94,3 +94,91 @@
 	line-height: 25px;
 	padding: 0px 2px;
 }
+
+.UICreate {
+	width: 300px;
+}
+
+.UICreate .UIForm .HorizontalLayout select {
+	width: 140px;
+}
+
+.UICreate .ActionButton {
+	float:left;
+	width: 80px;
+}
+
+.UICreate .UIAction {
+	clear: left;
+}
+
+.UIForumFilter {
+	width: 150px;
+	height: 24px;
+	line-height: 23px;
+	background: gray;
+  border: 1px solid #D3D3D3;
+	position:relative;
+  box-shadow: -1px 2px 3px #D5D5D5;
+  border-radius: 4px;
+}
+
+.UIForumFilter > span {
+	text-align: left;
+	font-weight: bold;
+	float: left;
+	white-space: nowrap;
+}
+
+.UIForumFilter .RightArrow {
+	width: 20px;
+	height: 22px;
+	border-left: 1px solid  #D3D3D3;
+	background: #777;
+	float: right;
+}
+
+.UIForumFilter .FilterMenu {
+	position:absolute;
+	top: 15px; left: -5px;
+	width: 180px; height: 0px;
+	visibility:hidden;
+	border: solid 1px #D3D3D3;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.UIForumFilter .FilterMenu input {
+	width: 150px;
+	margin: auto;
+	padding: 2px 5px;
+}
+
+.UIForumFilter .FilterMenu > ul {
+}
+
+.UIForumFilter .FilterMenu > ul > li {
+	border-bottom: solid 1px #D3D3D3;
+}
+
+.UIForumFilter .FilterMenu li {
+	padding-left: 10px;
+}
+
+.UIForumFilter .FilterMenu > ul > li:last-child {
+	border-bottom: none;
+}
+
+.UIForumFilter .FilterMenu .Item li {
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+

@@ -158,6 +158,12 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-application-create</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-component-bbcode</artifactId>
         <version>${project.version}</version>
         <type>jar</type>

@@ -9,7 +9,11 @@
   <artifactId>forum-application-create</artifactId>
   <name>Forum create</name>
   <dependencies>
-   
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-component-common</artifactId>
@@ -23,18 +27,9 @@
     <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-common</artifactId>
-    </dependency>
-    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-forum-service</artifactId>
-    </dependency>
-    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
-    <dependency>
-      <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-application-common</artifactId>
     </dependency>
+
 
     <dependency>
       <groupId>org.exoplatform.portal</groupId>

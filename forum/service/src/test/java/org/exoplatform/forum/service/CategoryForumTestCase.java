@@ -165,6 +165,7 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
   }
   
   public void testFilterForumByName() throws Exception {
+    loginUser(USER_ROOT);
     // create categories
     List<String> categories = new ArrayList<String>();
     for(int i = 0; i < 10; ++i) {
@@ -199,13 +200,13 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     categoryFilters = forumService_.filterForumByName(prefix+"c", null);
     // result have 10 categories and each one category has one forum. 
     assertEquals(10, categoryFilters.size());
-    assertEquals(1, categoryFilters.get(0).getForumInfos().size());
+    assertEquals(1, categoryFilters.get(0).getForumFilters().size());
 
     // search with key: search
     categoryFilters = forumService_.filterForumByName(prefix, null);
     // result have 10 categories and each one category has 5 forums. 
     assertEquals(10, categoryFilters.size());
-    assertEquals(5, categoryFilters.get(0).getForumInfos().size());
+    assertEquals(2, categoryFilters.get(0).getForumFilters().size());
     
 
     

@@ -1283,7 +1283,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       // get category private
       List<String> categoryPrivates = getCategoriesUserCanview(categoryHome, listOfUser);
-      
       //query forum by input-key
       ForumEventQuery eventQuery = new ForumEventQuery();
       eventQuery.setType(Utils.FORUM);
@@ -1294,37 +1293,57 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       eventQuery.setValueIn(ForumEventQuery.VALUE_IN_TITLE);
       eventQuery.setStartWith(true);
 
-
       StringBuffer strQuery = new StringBuffer(eventQuery.getPathQuery(new ArrayList<String>()));
       strQuery.append(" order by @").append(EXO_NAME).append(ASCENDING);
       query = qm.createQuery(strQuery.toString(), Query.XPATH);
-      result = query.execute();
-      iter = result.getNodes();
-
+      
+      QueryImpl queryImpl = (QueryImpl)query;
+      int offset = 0, count = 0, number=15, limit;
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
+      QueryResult qr;
       CategoryFilter categoryFilter;
       String categoryId, categoryName, forumId, forumName;
-      while(iter.hasNext()) {
-        Node node = iter.nextNode();
-        categoryId = node.getParent().getName();
-        forumId = node.getName();
-        //can create topic in category/forum
-        if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
-            && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
-          
-          if(categoryFilters.keySet().contains(categoryId)) {
-            categoryFilter = categoryFilters.get(categoryId);
-          } else {
-            categoryName = node.getParent().getProperty(EXO_NAME).getString();
-            categoryFilter = new CategoryFilter(categoryId, categoryName);
-            categoryFilters.put(categoryId, categoryFilter);
-          }
-          forumName = node.getProperty(EXO_NAME).getString();
-          categoryFilter.setForumFilter(forumId, forumName);
-        
+      //
+      while (count < number) {
+        queryImpl.setOffset(offset);
+        limit = number + offset;
+        queryImpl.setLimit(limit);
+        qr = queryImpl.execute();
+        iter = qr.getNodes();
+        if (iter.getSize() <= 0) {
+          return new ArrayList<CategoryFilter>(categoryFilters.values());
         }
-      }
 
+        //
+        while(iter.hasNext()) {
+          Node node = iter.nextNode();
+          categoryId = node.getParent().getName();
+          forumId = node.getName();
+
+          //can create topic in category/forum
+          if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
+              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
+            
+            if(categoryFilters.keySet().contains(categoryId)) {
+              categoryFilter = categoryFilters.get(categoryId);
+            } else {
+              categoryName = node.getParent().getProperty(EXO_NAME).getString();
+              categoryFilter = new CategoryFilter(categoryId, categoryName);
+              categoryFilters.put(categoryId, categoryFilter);
+            }
+            forumName = node.getProperty(EXO_NAME).getString();
+            categoryFilter.setForumFilter(forumId, forumName);
+          
+            count++;
+            if (count == number){
+              break;
+            }
+          }
+        }
+        
+        offset = limit;
+      }
+      
       return new ArrayList<CategoryFilter>(categoryFilters.values());
     } catch (Exception e) {
       if(log.isDebugEnabled()) {

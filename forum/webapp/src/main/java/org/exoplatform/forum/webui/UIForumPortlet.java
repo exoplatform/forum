@@ -63,6 +63,7 @@ import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -247,6 +248,9 @@ public class UIForumPortlet extends UIPortletApplication {
       }
     }
     if (!ForumUtils.isEmpty(url) && url.length() > Utils.FORUM.length()) {
+      if(url.indexOf("&") > 0) {
+        url = url.substring(0, url.indexOf("&"));
+      }
       calculateRenderComponent(url, context);
       context.addUIComponentToUpdateByAjax(this);
     }
@@ -851,7 +855,30 @@ public class UIForumPortlet extends UIPortletApplication {
           UIForumContainer forumContainer = this.findFirstComponentOfType(UIForumContainer.class);
           forumContainer.setIsRenderChild(true);
           forumContainer.getChild(UIForumDescription.class).setForum(forum);
-          forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page);
+          UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
+          topicContainer.setUpdateForum(cateId, forum, page);
+
+          if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
+            //
+            PortalRequestContext portalContext = Util.getPortalRequestContext();
+            String hasCreateTopic = portalContext.getRequestParameter(ForumUtils.HAS_CREATE_TOPIC);
+            if(!ForumUtils.isEmpty(hasCreateTopic) && Boolean.parseBoolean(hasCreateTopic)) {
+              Event<UIComponent> addTopicEvent = topicContainer.createEvent("AddTopic", Event.Phase.PROCESS, context);
+              if (addTopicEvent != null) {
+                addTopicEvent.broadcast();
+              }
+            } else {
+              String hasCreatePoll = portalContext.getRequestParameter(ForumUtils.HAS_CREATE_POLL);
+              if(!ForumUtils.isEmpty(hasCreatePoll) && Boolean.parseBoolean(hasCreatePoll)) {
+                Event<UIComponent> addTopicEvent = topicContainer.createEvent("AddPoll", Event.Phase.PROCESS, context);
+                if (addTopicEvent != null) {
+                  addTopicEvent.broadcast();
+                }
+              }
+            }
+            
+          }
+         
         } else {
           showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
                              new String[] { forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase() });

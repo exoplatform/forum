@@ -16,15 +16,12 @@
  */
 package org.exoplatform.forum.create;
 
-import org.exoplatform.forum.common.webui.BaseUIForm;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,13 +31,13 @@ import org.exoplatform.webui.event.Event.Phase;
  */
 
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
-template = "classpath:groovy/webui/forum/create/UICreatePoll.gtmpl", 
-events = {
-  @EventConfig(listeners = UICreatePoll.NextActionListener.class, phase = Phase.DECODE),
-  @EventConfig(listeners = UICreatePoll.CancelActionListener.class, phase = Phase.DECODE) 
-}
+  template = "classpath:groovy/webui/forum/create/UICreate.gtmpl", 
+  events = {
+    @EventConfig(listeners = UICreatePoll.NextActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UICreateForm.CancelActionListener.class, phase = Phase.DECODE) 
+  }
 )
-public class UICreatePoll extends BaseUIForm {
+public class UICreatePoll extends UICreateForm {
   
   public UICreatePoll() {
   }
@@ -48,20 +45,8 @@ public class UICreatePoll extends BaseUIForm {
   static public class NextActionListener extends EventListener<UICreatePoll> {
 
     public void execute(Event<UICreatePoll> event) throws Exception {
-
-    }
-  }
-
-  static public class CancelActionListener extends EventListener<UICreatePoll> {
-
-    public void execute(Event<UICreatePoll> event) throws Exception {
-      UICreatePoll uisource = event.getSource();
-      WebuiRequestContext ctx = event.getRequestContext();
-      Event<UIComponent> cancelEvent = uisource.<UIComponent> getParent().createEvent("Cancel", Event.Phase.DECODE, ctx);
-      if (cancelEvent != null) {
-        cancelEvent.broadcast();
-      }
-
+      UICreatePoll createPoll = event.getSource();
+      nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
     }
   }
 
