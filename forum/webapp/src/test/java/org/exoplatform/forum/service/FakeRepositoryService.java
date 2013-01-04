@@ -75,7 +75,6 @@ public class FakeRepositoryService implements RepositoryService {
 
   @Override
   public void removeRepository(String repositoryName, boolean forceRemove) throws RepositoryException {
-    // TODO Auto-generated method stub
     
   }
 
