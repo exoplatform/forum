@@ -89,7 +89,7 @@
   </module>
 
   <module>
-    <name>MaskLayerControl</name>
+    <name>ForumMaskLayer</name>
     <script>
       <path>/javascript/eXo/forum/MaskLayerControl.js</path>
     </script>

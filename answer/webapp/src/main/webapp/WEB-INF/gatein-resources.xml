@@ -94,7 +94,7 @@
       <as>dragDrop</as>
     </depends>
     <depends>
-      <module>MaskLayerControl</module>
+      <module>ForumMaskLayer</module>
       <as>maskLayer</as>
     </depends>
     <depends>

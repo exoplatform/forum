@@ -152,7 +152,7 @@
   
   UIAnswersPortlet.showPicture = function (src) {
     if (UIAnswersPortlet.viewImage) {
-      eXo.forum.MaskLayerControl.showPicture(src);
+      maskLayer.showPicture(src);
     }
   };
   
