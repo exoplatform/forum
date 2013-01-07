@@ -82,7 +82,7 @@ import javax.jcr.PathNotFoundException;
      @EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
      @EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
      @EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
-     @EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE),
+     @EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE)
    }
 )
 public class UITopicForm extends BaseForumForm {
