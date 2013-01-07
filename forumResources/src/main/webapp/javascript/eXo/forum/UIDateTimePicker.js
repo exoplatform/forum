@@ -1,4 +1,4 @@
-(function(module, utils, $, document, window) {
+(function(utils, $, document, window) {
   var UIDateTimePicker = {
     calendarId : "UICalendarControl",
     dateField : "",
@@ -341,6 +341,6 @@
   window.eXo = window.eXo || {};
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIDateTimePicker = UIDateTimePicker;
-  module.UIDateTimePicker = window.eXo.forum.UIDateTimePicker;
+  return UIDateTimePicker;
   
-})(module, utils, gj, document, window);
+})(utils, gj, document, window);

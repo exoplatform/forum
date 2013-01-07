@@ -192,7 +192,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    context.getJavascriptManager().require("SHARED/UIDateTimePicker", "dateTimePicker");
+    context.getJavascriptManager().require("SHARED/ForumDateTimePicker", "dateTimePicker");
     
     Writer w = context.getWriter();
     w.write("<input type=\"text\" class=\"DateTimeInput\" name=\"");

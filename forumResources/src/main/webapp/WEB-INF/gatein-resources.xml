@@ -119,7 +119,7 @@
   </module>
 
   <module>
-    <name>UIDateTimePicker</name>
+    <name>ForumDateTimePicker</name>
     <script>
       <path>/javascript/eXo/forum/UIDateTimePicker.js</path>
     </script>
@@ -137,6 +137,54 @@
     <name>Syntaxhighlighter</name>
     <depends>
       <module>shCore</module>
+    </depends>
+    <depends>
+      <module>shLoadConfig</module>
+    </depends>
+    <depends>
+      <module>shBrushBash</module>
+    </depends>
+    <depends>
+      <module>shBrushCpp</module>
+    </depends>
+    <depends>
+      <module>shBrushCSharp</module>
+    </depends>
+    <depends>
+      <module>shBrushCss</module>
+    </depends>
+    <depends>
+      <module>shBrushDelphi</module>
+    </depends>
+    <depends>
+      <module>shBrushGroovy</module>
+    </depends>
+    <depends>
+      <module>shBrushJava</module>
+    </depends>
+    <depends>
+      <module>shBrushJScript</module>
+    </depends>
+    <depends>
+      <module>shBrushPhp</module>
+    </depends>
+    <depends>
+      <module>shBrushPython</module>
+    </depends>
+    <depends>
+      <module>shBrushRuby</module>
+    </depends>
+    <depends>
+      <module>shBrushScala</module>
+    </depends>
+    <depends>
+      <module>shBrushSql</module>
+    </depends>
+    <depends>
+      <module>shBrushVb</module>
+    </depends>
+    <depends>
+      <module>shBrushXml</module>
     </depends>
   </module>
   
