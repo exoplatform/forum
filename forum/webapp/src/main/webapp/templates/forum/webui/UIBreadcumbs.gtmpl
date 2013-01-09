@@ -3,11 +3,9 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	uicomponent.setIsUseAjax();
 %>
-<div class="UIBreadcumbs" id="$uicomponent.id">
-	<div class="LeftBreadcumbs">
-		<div class="RightBreadcumbs"> 
-			<div class="CenterBreadcumbs ClearFix">
-				<div class="BreadcumbsInfoBar ClearFix">
+<div class="uiBreadcumbs uiGrayLightBox clearfix" id="$uicomponent.id">
+  <div class="pull-left">
+  <ul class="breadcrumb">
 				<% int t = 0 ;
 					String link = "";
 					String checkPath = ""; 
@@ -32,51 +30,57 @@
 						if(t+1 < uicomponent.getMaxPath()) {
 				%>
 					<%if(uicomponent.useAjax){%>
+              <li>
 							<a href="$link" onclick="$event; return false;" title="$namePath" class="Selected">$name</a>
+              <span class="uiIconMiniArrowRight"></span>
+              </li>
 					<%} else {%>
+              <li>
 							<a href="$link" title="$namePath" class="Selected">$name</a>
+              <span class="uiIconMiniArrowRight"></span>
+              </li>
 					<%} %>
 					
-					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
 				 		 	if(uicomponent.isLink()) {
 				 %>
 				 	<%if(uicomponent.useAjax){%>
+              <li>
 							<a href="$link" title="$namePath" onmousedown="$event; return false;" onkeydown="$event; return false;" class="Selected">$name</a>
+              <span class="uiIconMiniArrowRight"></span>
+              </li>
 					<%} else {%>
+              <li>
 							<a href="$link" title="$namePath" class="Selected">$name</a>
+              <span class="uiIconMiniArrowRight"></span>
+              </li>
 					<%}%>
 					<% 	} else{ %>				 
-					<div title="$namePath" class="Selected">$name</div>
+					<li class="active">$name</li>
 				 <%		
 				 			}
 				 		} 
 					t = t + 1 ;
 					} 
 				 %>
-
-				</div>
-				<div class="RSSBar ClearFix">
-				  <%String toolTip = uicomponent.getToolTip();
-				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
-					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
-				  %>
-					<div class="ForumSeparatorLine" style="float:right; padding-top:2px;">
-						<div class="ShareLink">
-							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
-						</div>
-					</div>	
-					<%}%>
-				
-					<div class="SearchForms" style="float:left">
-						<%
-							uicomponent.renderChildren() ;
-						%>
-					</div>
-
-				</div>
-
+  </ul>
+  </div>
+	<div class="pull-right">
+	  <%String toolTip = uicomponent.getToolTip();
+	    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
+		    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
+	  %>
+		<div class="ForumSeparatorLine" style="float:right; padding-top:2px;">
+			<div class="ShareLink">
+				<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
 			</div>
+		</div>	
+		<%}%>
+	
+		<div class="SearchForms" style="float:left">
+			<%
+				uicomponent.renderChildren() ;
+			%>
 		</div>
 	</div>
 </div>
