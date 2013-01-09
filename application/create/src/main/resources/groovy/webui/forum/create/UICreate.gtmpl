@@ -3,6 +3,7 @@
   <% uiform.begin() %>
     <div class="HorizontalLayout">
       <div class="UIFormInput">
+        <div class="CreateName"><%=(_ctx.appRes(uiform.getName() + ".label.create") + " " + uiform.getParStatus()); %></div>
         <table class="UIFormGrid">
           <tbody>           
         <% 

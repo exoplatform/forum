@@ -1284,19 +1284,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // get category private
       List<String> categoryPrivates = getCategoriesUserCanview(categoryHome, listOfUser);
       //query forum by input-key
-      ForumEventQuery eventQuery = new ForumEventQuery();
-      eventQuery.setType(Utils.FORUM);
-      eventQuery.setKeyValue(filterKey);
-      eventQuery.setIsClose("false");
-      eventQuery.setIsLock("false");
-      eventQuery.setPath(categoryHome.getPath());
-      eventQuery.setValueIn(ForumEventQuery.VALUE_IN_TITLE);
-      eventQuery.setStartWith(true);
 
-      StringBuffer strQuery = new StringBuffer(eventQuery.getPathQuery(new ArrayList<String>()));
-      strQuery.append(" order by @").append(EXO_NAME).append(ASCENDING);
-      query = qm.createQuery(strQuery.toString(), Query.XPATH);
+      StringBuffer strQuery = new StringBuffer("SELECT * FROM ");
       
+      strQuery.append(EXO_FORUM).append(" WHERE (jcr:path LIKE '").append(categoryHome.getPath()).append("/%') AND (")
+              .append("UPPER(").append(EXO_NAME).append(") LIKE '").append(filterKey.toUpperCase())
+              .append("%' OR CONTAINS(").append(EXO_NAME).append(", ' ").append(filterKey).append("')) AND (")
+              .append(EXO_IS_CLOSED).append("='false') AND (").append(EXO_IS_LOCK).append("='false')")
+              .append(" ORDER BY ").append(EXO_NAME);
+      
+      query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl)query;
       int offset = 0, count = 0, number=15, limit;
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
@@ -1345,12 +1342,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       
       return new ArrayList<CategoryFilter>(categoryFilters.values());
-    } catch (Exception e) {
+    } catch (Exception e) {e.printStackTrace();
       if(log.isDebugEnabled()) {
         log.debug("\nCould not filter forum by name: " + filterKey + e.getCause());
       }
     }
-    return null;
+    return new ArrayList<CategoryFilter>();
   }
 
   public Forum getForum(String categoryId, String forumId){

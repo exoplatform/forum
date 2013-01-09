@@ -39,15 +39,25 @@ import org.exoplatform.webui.form.UIFormSelectBox;
  *          tuvd@exoplatform.com
  * Jan 4, 2013  
  */
-public class UICreateForm extends BaseUIForm{
+public class UICreateForm extends BaseUIForm {
   public static final String LOCALTION_SELEXT_BOX = "location";
 
   public static final String FORUM_SELEXT_BOX     = "forumId";
 
-  public boolean             isStepOne             = true;
+  public boolean              isStepOne            = true;
+
+  private String               parStatus            = "";
 
   public enum ACTION_TYPE {
     CREATE_POLL, CREATE_TOPIC
+  }
+
+  public void setParStatus(String parStatus) {
+    this.parStatus = parStatus;
+  }
+
+  public String getParStatus() {
+    return parStatus;
   }
 
   public UICreateForm() {
@@ -77,7 +87,7 @@ public class UICreateForm extends BaseUIForm{
         PortalRequestContext pContext = Util.getPortalRequestContext();
         String fullUrl = ((HttpServletRequest) pContext.getRequest()).getRequestURL().toString();
         String subUrl = fullUrl.substring(0, fullUrl.indexOf(containerName) + containerName.length());
-        subUrl += CommonUtils.SLASH + portalName + "/forum/forum/" + forumId + "?hasCreateTopic=true";
+        subUrl += CommonUtils.SLASH + portalName + "/forum/forum/" + forumId;
         
         String actionType = (type.equals(ACTION_TYPE.CREATE_TOPIC)) ? "?hasCreateTopic=true" :"?hasCreatePoll=true";
         subUrl += actionType;

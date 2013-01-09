@@ -193,8 +193,8 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     
     // search with key: foo
     categoryFilters = forumService_.filterForumByName("foo", null);
-    // result have 0 category. 
-    assertEquals(0, categoryFilters.size());
+    // result have 10 category. 
+    assertEquals(10, categoryFilters.size());
     
     // search with key: search1
     categoryFilters = forumService_.filterForumByName(prefix+"c", null);
