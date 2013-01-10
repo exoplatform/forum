@@ -633,3 +633,13 @@
 .UIForumPortlet .UIAddBBCodeForm .PreviewContainer ol li {
 	list-style: inherit;
 }
+
+.UIForumPortlet .UITabContentContainers {
+	border: 1px solid #aeaeae;
+	border-top: none;
+}
+
+.UIForumPortlet .UITabContentContainers .UITabContent {
+	border: 1px solid white;
+	border-top: none;
+}
