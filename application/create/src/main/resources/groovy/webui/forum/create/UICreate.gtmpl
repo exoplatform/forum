@@ -3,7 +3,7 @@
   <% uiform.begin() %>
     <div class="HorizontalLayout">
       <div class="UIFormInput">
-        <div class="CreateName"><%=(_ctx.appRes(uiform.getName() + ".label.create") + " " + uiform.getParStatus()); %></div>
+        <div class="CreateName"><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></div>
         <table class="UIFormGrid">
           <tbody>           
         <% 
@@ -33,7 +33,7 @@
     </div>
     <div class="UIAction">
   <% for(action in uicomponent.getActions()) { 
-           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
            String link = uicomponent.event(action) ;
         %>
       <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>

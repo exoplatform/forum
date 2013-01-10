@@ -28,6 +28,7 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -92,15 +93,25 @@ public class UICreateForm extends BaseUIForm {
         String actionType = (type.equals(ACTION_TYPE.CREATE_TOPIC)) ? "?hasCreateTopic=true" :"?hasCreatePoll=true";
         subUrl += actionType;
 
-        System.out.println("\n\n\n=========> subUrl: " + subUrl);
         pContext.getJavascriptManager().getRequireJS().addScripts("(function(){ window.location.href = '" + subUrl + "';})();");
+        uiForm.isStepOne = true;
+        if (uiForm.getChildById(FORUM_SELEXT_BOX) != null) {
+          uiForm.removeChildById(FORUM_SELEXT_BOX);
+        }
         context.addUIComponentToUpdateByAjax(uiForm);
 
-        Event<UIComponent> cancelEvent = uiForm.createEvent("Cancel", Event.Phase.DECODE, pContext);
-        if (cancelEvent != null) {
-          cancelEvent.broadcast();
+        UIContainer container = uiForm.getParent();
+        List<UIComponent> uilist = container.getChildren();
+        List<String> lisID = new ArrayList<String>();
+        if (uilist.size() != 0) {
+          for (UIComponent uIComponent : uilist) {
+            lisID.add(uIComponent.getId());
+          }
+          for (String id : lisID) {
+            container.removeChildById(id);
+          }
         }
-
+        context.addUIComponentToUpdateByAjax(container);
       } else {
         uiForm.warning("RequireSelectForum");
       }

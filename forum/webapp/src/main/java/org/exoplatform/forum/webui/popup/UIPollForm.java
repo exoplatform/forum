@@ -430,13 +430,13 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             forumContainer.getChild(UIForumDescription.class).setForum(forum);
 
             UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
+            event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
             topicContainer.setUpdateForum(topic.getCategoryId(), forum, 0);
             Event<UIComponent> openTopicEvent = topicContainer.createEvent("OpenTopic", Event.Phase.PROCESS, event.getRequestContext());
             if (openTopicEvent != null) {
               topicContainer.openTopicId = topic.getId();
               openTopicEvent.broadcast();
             }
-            
           } else {
             UITopicDetail topicDetail = detailContainer.getChild(UITopicDetail.class);
             topicDetail.hasPoll(true);

@@ -1282,7 +1282,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       // get category private
-      List<String> categoryPrivates = getCategoriesUserCanview(categoryHome, listOfUser);
+      Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), EXO_USER_PRIVATE);
+      List<String> categoryPrivates = mapPrivate.get(Utils.CATEGORY);
       //query forum by input-key
 
       StringBuffer strQuery = new StringBuffer("SELECT * FROM ");
@@ -1319,7 +1320,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
           //can create topic in category/forum
           if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
-              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
+              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY+"spaces") ) {
             
             if(categoryFilters.keySet().contains(categoryId)) {
               categoryFilter = categoryFilters.get(categoryId);
