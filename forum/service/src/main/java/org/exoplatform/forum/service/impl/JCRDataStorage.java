@@ -1255,32 +1255,40 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  private List<String> getCategoryIdForumIdUserCanCreateTopic(Node categoryHome, List<String> listOfUser) throws Exception {
+    StringBuilder qrCanCreateTopic = new StringBuilder(JCR_ROOT);
+    qrCanCreateTopic.append(categoryHome.getPath()).append("//* ");
+    qrCanCreateTopic.append("[(")
+                    .append(Utils.buildXpathHasProperty(EXO_CREATE_TOPIC_ROLE))
+                    .append(" or ")
+                    .append(Utils.buildXpathByUserInfo(EXO_CREATE_TOPIC_ROLE, listOfUser))
+                    .append(") or (")
+                    .append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser))
+                    .append(")]");
+
+    QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+    Query query = qm.createQuery(qrCanCreateTopic.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes();
+
+    Set<String> canCreateTopicIds = new HashSet<String>();
+    while (iter.hasNext()) {
+      Node node = iter.nextNode();
+      if (node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM)) {
+        canCreateTopicIds.add(node.getName());
+      }
+    }
+    return new ArrayList<String>(canCreateTopicIds);
+  }
+
   public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
-      // get can create topic
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
-      StringBuilder qrCanCreateTopic = new StringBuilder(JCR_ROOT);
-      qrCanCreateTopic.append(categoryHome.getPath()).append("//* [(");
-      qrCanCreateTopic.append("(").append(Utils.buildXpathHasProperty(EXO_CREATE_TOPIC_ROLE))
-                      .append(" or ").append(Utils.buildXpathByUserInfo(EXO_CREATE_TOPIC_ROLE, listOfUser)).append(")")
-                      .append(" or (").append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser)).append(")");
-      qrCanCreateTopic.append(")]");
-
-      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      Query query = qm.createQuery(qrCanCreateTopic.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
+      // get can create topic
+      List<String> canCreateTopicIds = getCategoryIdForumIdUserCanCreateTopic(categoryHome, listOfUser);
       
-      Set<String> canCreateTopicIds = new HashSet<String>();
-      while(iter.hasNext()) {
-        Node node = iter.nextNode();
-        if(node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM)) {
-          canCreateTopicIds.add(node.getName());
-        }
-      }
-
       // get category private
       Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), EXO_USER_PRIVATE);
       List<String> categoryPrivates = mapPrivate.get(Utils.CATEGORY);
@@ -1290,17 +1298,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       
       strQuery.append(EXO_FORUM).append(" WHERE (jcr:path LIKE '").append(categoryHome.getPath()).append("/%') AND (")
               .append("UPPER(").append(EXO_NAME).append(") LIKE '").append(filterKey.toUpperCase())
-              .append("%' OR CONTAINS(").append(EXO_NAME).append(", ' ").append(filterKey).append("')) AND (")
+              .append("%' OR UPPER(").append(EXO_NAME).append(") LIKE '% ").append(filterKey.toUpperCase()).append("%') AND (")
               .append(EXO_IS_CLOSED).append("='false') AND (").append(EXO_IS_LOCK).append("='false')")
               .append(" ORDER BY ").append(EXO_NAME);
-      
-      query = qm.createQuery(strQuery.toString(), Query.SQL);
+
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl)query;
       int offset = 0, count = 0, number=15, limit;
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
       QueryResult qr;
       CategoryFilter categoryFilter;
       String categoryId, categoryName, forumId, forumName;
+      NodeIterator iter;
       //
       while (count < number) {
         queryImpl.setOffset(offset);
