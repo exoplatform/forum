@@ -77,7 +77,7 @@
   	         	"eXo.forum.UIForumPortlet.ReloadImage();"
   	         	];
   	ForumUtils.addScripts(null, null, scripts);
-  	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.SearchTagName.init();");
+  	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init();");
   	ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
   }
 %>

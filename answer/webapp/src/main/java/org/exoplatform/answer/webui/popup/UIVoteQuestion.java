@@ -64,10 +64,10 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 
   String             answerId_;
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIVoteQuestion() throws Exception {

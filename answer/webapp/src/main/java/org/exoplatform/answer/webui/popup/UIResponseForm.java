@@ -124,10 +124,10 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private boolean                        isAnswerApproved      = true;
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   private RenderHelper renderHelper = new RenderHelper();

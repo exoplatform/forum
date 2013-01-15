@@ -24,6 +24,6 @@ import org.exoplatform.webui.form.UIForm;
  * @version $Revision$
  */
 public class SampleForm extends UIForm implements UIPopupComponent {
-  public void activate() throws Exception {}
-  public void deActivate() throws Exception {}
+  public void activate() {}
+  public void deActivate() {}
 }

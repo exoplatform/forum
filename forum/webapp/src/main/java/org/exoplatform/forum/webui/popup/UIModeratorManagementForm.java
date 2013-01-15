@@ -261,10 +261,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return this.userProfile;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   private String stringProcess(List<String> values) {

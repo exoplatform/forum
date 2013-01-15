@@ -92,10 +92,10 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
     addUIFormInput(stringInput);
   }
   
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setForumId(String forumId) {

@@ -59,10 +59,10 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
     this.topic = topic;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class VoteTopicActionListener extends BaseEventListener<UIRatingForm> {

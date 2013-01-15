@@ -178,10 +178,10 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     this.initMultiValuesField(list);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void updateSelect(String selectField, String value) throws Exception {

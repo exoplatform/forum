@@ -61,10 +61,10 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
     setActions(new String[] { "AddNewBBCode", "Save", "Close" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void loadBBCodes() throws Exception {

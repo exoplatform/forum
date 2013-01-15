@@ -553,11 +553,11 @@ public class UIForumPortlet extends UIPortletApplication {
 
   protected void initSendNotification() {
     if(getUserProfile().getUserRole() <=2 ) {
-      StringBuilder init = new StringBuilder("forumNotify.ForumSendNotification.init('");
+      StringBuilder init = new StringBuilder("forumNotify.init('");
       init.append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("');");
-      StringBuilder initParam = new StringBuilder("forumNotify.ForumSendNotification.initParam('");
+      StringBuilder initParam = new StringBuilder("forumNotify.initParam('");
       initParam.append(WebUIUtils.getLabel(getId(), "Notification")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "message")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "post")).append("', '")

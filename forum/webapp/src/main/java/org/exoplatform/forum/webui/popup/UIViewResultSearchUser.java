@@ -75,10 +75,10 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
     return this.userProfiles;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class ViewUserActionListener extends EventListener<UIViewResultSearchUser> {

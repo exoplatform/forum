@@ -50,7 +50,7 @@ public class NotifyJob implements Job {
     try {
       ExoContainer exoContainer = CommonUtils.getExoContainer(context);
       MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
-      String name = context.getJobDetail().getName();
+      String name = context.getJobDetail().getKey().getName();
       Common common = new Common() ;
       NotifyInfo messageInfo = common.getMessageInfo(name) ;
       List<String> emailAddresses = messageInfo.getEmailAddresses() ;

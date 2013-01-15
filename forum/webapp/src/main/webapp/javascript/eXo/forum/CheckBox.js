@@ -1,4 +1,4 @@
-;(function($, window, document) {
+(function($, window, document) {
   var CheckBox = {
     init : function(cont) {
       if (typeof(cont) == 'string') cont = findId(cont) ;
@@ -9,12 +9,12 @@
         var len = checkboxes.length ;
         for(var i = 1 ; i < len ; i ++) {
           checkboxes.eq(i).on('click', this.check);
-          checkBoxManager.CheckBoxManager.checkItem(checkboxes.eq(i));
+          checkBoxManager.checkItem(checkboxes.eq(i));
         }
       }
     },
     check : function(){
-      checkBoxManager.CheckBoxManager.checkItem(this);
+      checkBoxManager.checkItem(this);
       var row = $(this).parents('tr');
       if (this.checked) {
         row.addClass('SelectedItem');

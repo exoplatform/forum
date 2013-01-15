@@ -183,10 +183,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     this.initMultiValuesField(list);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends EventListener<UIPollForm> {

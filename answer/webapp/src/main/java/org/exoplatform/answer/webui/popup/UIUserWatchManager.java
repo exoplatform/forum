@@ -95,10 +95,10 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
     this.setActions(new String[] { "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public int getTabSelect() {

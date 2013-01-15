@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
-    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
+  xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_3 http://www.gatein.org/xml/ns/gatein_resources_1_3"
+    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
 
   <portal-skin>
     <skin-name>Default</skin-name>
@@ -13,7 +13,6 @@
   <module>
     <name>ForumUtils</name>
     <script>
-      <name>eXo.forum.ForumUtils</name>
       <path>/javascript/eXo/forum/ForumUtils.js</path>
     </script>
     <depends>
@@ -31,7 +30,6 @@
   <module>
     <name>ForumPlugins</name>
     <script>
-      <name>eXo.forum.ForumPlugins</name>
       <path>/javascript/eXo/forum/ForumPlugins.js</path>
     </script>
     <depends>
@@ -56,7 +54,6 @@
     <name>EventManager</name>
     <as>eventManager</as>
     <script>
-      <name>eXo.forum.EventManager</name>
       <path>/javascript/eXo/forum/EventManager.js</path>
     </script>
     <depends>
@@ -72,7 +69,6 @@
   <module>
     <name>UIContextMenu</name>
     <script>
-      <name>eXo.forum.UIContextMenu</name>
       <path>/javascript/eXo/forum/UIContextMenu.js</path>
     </script>
     <depends>
@@ -92,7 +88,6 @@
   <module>
     <name>CheckBoxManager</name>
     <script>
-      <name>eXo.forum.CheckBox</name>
       <path>/javascript/eXo/forum/CheckBoxManager.js</path>
     </script>
     <depends>
@@ -106,9 +101,8 @@
   </module>
 
   <module>
-    <name>MaskLayerControl</name>
+    <name>ForumMaskLayer</name>
     <script>
-      <name>eXo.forum.MaskLayerControl</name>
       <path>/javascript/eXo/forum/MaskLayerControl.js</path>
     </script>
     <depends>
@@ -124,7 +118,6 @@
   <module>
     <name>UISliderControl</name>
     <script>
-      <name>eXo.webui.UISliderControl</name>
       <path>/javascript/eXo/forum/UISliderControl.js</path>
     </script>
     <depends>
@@ -138,9 +131,8 @@
   </module>
 
   <module>
-    <name>UIDateTimePicker</name>
+    <name>ForumDateTimePicker</name>
     <script>
-      <name>eXo.forum.UIDateTimePicker</name>
       <path>/javascript/eXo/forum/UIDateTimePicker.js</path>
     </script>
     <depends>
@@ -155,73 +147,243 @@
 
   <module>
     <name>Syntaxhighlighter</name>
+    <depends>
+      <module>shCore</module>
+    </depends>
+    <depends>
+      <module>shLoadConfig</module>
+    </depends>
+    <depends>
+      <module>shBrushBash</module>
+    </depends>
+    <depends>
+      <module>shBrushCpp</module>
+    </depends>
+    <depends>
+      <module>shBrushCSharp</module>
+    </depends>
+    <depends>
+      <module>shBrushCss</module>
+    </depends>
+    <depends>
+      <module>shBrushDelphi</module>
+    </depends>
+    <depends>
+      <module>shBrushGroovy</module>
+    </depends>
+    <depends>
+      <module>shBrushJava</module>
+    </depends>
+    <depends>
+      <module>shBrushJScript</module>
+    </depends>
+    <depends>
+      <module>shBrushPhp</module>
+    </depends>
+    <depends>
+      <module>shBrushPython</module>
+    </depends>
+    <depends>
+      <module>shBrushRuby</module>
+    </depends>
+    <depends>
+      <module>shBrushScala</module>
+    </depends>
+    <depends>
+      <module>shBrushSql</module>
+    </depends>
+    <depends>
+      <module>shBrushVb</module>
+    </depends>
+    <depends>
+      <module>shBrushXml</module>
+    </depends>
+  </module>
+  
+  <module>
+    <name>shCore</name>
     <script>
-      <name>shCore</name>
-      <path>/syntaxhighlighter/Scripts/shCore.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shCore.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushBash</name>
     <script>
-      <name>shBrushBash</name>
-      <path>/syntaxhighlighter/Scripts/shBrushBash.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushBash.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushCpp</name>
     <script>
-      <name>shBrushCpp</name>
-      <path>/syntaxhighlighter/Scripts/shBrushCpp.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushCpp.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushCSharp</name>
     <script>
-      <name>shBrushCSharp</name>
-      <path>/syntaxhighlighter/Scripts/shBrushCSharp.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushCSharp.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushCss</name>
     <script>
-      <name>shBrushCss</name>
-      <path>/syntaxhighlighter/Scripts/shBrushCss.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushCss.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushDelphi</name>
     <script>
-      <name>shBrushDelphi</name>
-      <path>/syntaxhighlighter/Scripts/shBrushDelphi.js</path>
+    <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushDelphi.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushGroovy</name>
     <script>
-      <name>shBrushGroovy</name>
-      <path>/syntaxhighlighter/Scripts/shBrushGroovy.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushGroovy.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushJava</name>
     <script>
-      <name>shBrushJava</name>
-      <path>/syntaxhighlighter/Scripts/shBrushJava.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushJava.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushJScript</name>
     <script>
-      <name>shBrushJScript</name>
-      <path>/syntaxhighlighter/Scripts/shBrushJScript.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushJScript.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushPhp</name>
     <script>
-      <name>shBrushPhp</name>
-      <path>/syntaxhighlighter/Scripts/shBrushPhp.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushPhp.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushPython</name>
     <script>
-      <name>shBrushPython</name>
-      <path>/syntaxhighlighter/Scripts/shBrushPython.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushPython.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushRuby</name>
     <script>
-      <name>shBrushRuby</name>
-      <path>/syntaxhighlighter/Scripts/shBrushRuby.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushRuby.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushScala</name>
     <script>
-      <name>shBrushScala</name>
-      <path>/syntaxhighlighter/Scripts/shBrushScala.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushScala.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushSql</name>
     <script>
-      <name>shBrushSql</name>
-      <path>/syntaxhighlighter/Scripts/shBrushSql.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushSql.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushVb</name>
     <script>
-      <name>shBrushVb</name>
-      <path>/syntaxhighlighter/Scripts/shBrushVb.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushVb.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shBrushXml</name>
     <script>
-      <name>shBrushXml</name>
-      <path>/syntaxhighlighter/Scripts/shBrushXml.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shBrushXml.js</include>        
+        })();      
+      </adapter>
     </script>
+  </module>
+  
+  <module>
+    <name>shLoadConfig</name>
     <script>
-      <name>shLoadConfig</name>
-      <path>/syntaxhighlighter/Scripts/shLoadConfig.js</path>
+      <adapter> 
+        (function() {
+        <include>/syntaxhighlighter/Scripts/shLoadConfig.js</include>        
+        })();      
+      </adapter>
     </script>
   </module>
 </gatein-resources>

@@ -1,4 +1,4 @@
-;(function(module, Cometd, $, document, window) {
+(function(Cometd, $, document, window) {
   
   var ForumSendNotification = {
       notification : "Notification",
@@ -199,7 +199,7 @@
   };
 
   window.Box = Box;
-  module.ForumSendNotification = ForumSendNotification;
+  return ForumSendNotification;
 
-})(_module, cometd, gj, document, window);
+})(cometd, gj, document, window);
 
