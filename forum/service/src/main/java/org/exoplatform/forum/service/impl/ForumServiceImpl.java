@@ -29,7 +29,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -398,10 +400,53 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyTopic(List<Topic> topics, int type) {
+    //update case
+    List<Topic> editeds = new ArrayList<Topic>();
+    Topic edited = null;
+    for(Topic topic : topics) {
+      //
+      try {
+        edited = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+      } catch (Exception e) {
+       log.warn("Ca not get Topic for " + topic.getId());
+      }
+      
+      //
+      switch (type) {
+        case Utils.CLOSE: {
+          edited.setEditedIsClosed(topic.getIsClosed());
+          break;
+        }
+        case Utils.LOCK: {
+          edited.setEditedIsLock(topic.getIsLock());
+          break;
+        }
+        case Utils.WAITING: {//CENSORING
+          edited.setEditedIsWaiting(topic.getIsWaiting());
+          break;
+        }
+        case Utils.ACTIVE: {//HIDDEN & Showing
+          edited.setEditedIsActive(topic.getIsActive());
+          break;
+        }
+        case Utils.CHANGE_NAME: {
+          edited.setEditedTopicName(topic.getTopicName());
+          break;
+        }
+        case Utils.VOTE_RATING: {
+          edited.setEditedVoteRating(topic.getVoteRating());
+          break;
+        }
+      }
+      
+      editeds.add(edited);
+      
+    }
+    
     storage.modifyTopic(topics, type);
     for (ForumEventLifeCycle f : listeners_) {
-      for(Topic topic : topics) {
-        f.updateStatusTopic(topic, type);
+      for(Topic topic : editeds) {
+        f.updateTopic(topic);
       }
     }
   }
@@ -416,13 +461,25 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
+    //update case
+    Topic edited = null;
+    if(isNew == false) {
+      edited = getTopic(categoryId, forumId, topic.getId(), "");
+      edited.setEditedDescription(topic.getDescription());
+      edited.setEditedTopicName(topic.getTopicName());
+      edited.setEditedIsClosed(topic.getIsClosed());
+      edited.setEditedIsLock(topic.getIsLock());
+      edited.setEditedIsWaiting(topic.getIsWaiting());
+    }
+    
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
       if (isNew) {
-        f.addTopic(topic, categoryId, forumId);
+        f.addTopic(topic);
       } else {
-        f.updateTopic(topic, categoryId, forumId);
-        f.updateTopic(topic);
+        if (edited != null) {
+          f.updateTopic(edited);
+        }
       }
     }
   }
@@ -502,7 +559,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     String activityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
     Topic topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
-      f.removeActiviry(activityId);
+      f.removeActivity(activityId);
     }
     CacheUserProfile.clearCache();
     return topic;
@@ -556,7 +613,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
       if (isNew)
-        f.addPost(post, categoryId, forumId, topicId);
+        f.addPost(post);
       else
         f.updatePost(post);
     }
@@ -569,7 +626,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.modifyPost(posts, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Post post : posts) {
-        f.updateStatusPost(post, type);
+        f.updatePost(post);
       }
     }
   }
@@ -1460,19 +1517,35 @@ public class ForumServiceImpl implements ForumService, Startable {
     }
   }
 
-  public void saveActivityIdForOwner(String ownerId,  String type, String activityId) {
-    storage.saveActivityIdForOwner(ownerId, type, activityId);
+  public void saveActivityIdForOwnerId(String ownerId,  String activityId) {
+    storage.saveActivityIdForOwner(ownerId, Utils.TOPIC, activityId);
   }
 
-  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+  public void saveActivityIdForOwnerPath(String ownerPath, String activityId) {
     storage.saveActivityIdForOwner(ownerPath, activityId);
   }
 
-  public String getActivityIdForOwner(String ownerId, String type) {
-    return storage.getActivityIdForOwner(ownerId, type);
+  public String getActivityIdForOwnerId(String ownerId) {
+    return storage.getActivityIdForOwner(ownerId, Utils.TOPIC);
   }
 
-  public String getActivityIdForOwner(String ownerPath) {
+  public String getActivityIdForOwnerPath(String ownerPath) {
+    return storage.getActivityIdForOwner(ownerPath);
+  }
+  
+  public void saveCommentIdForOwnerId(String ownerId,  String commentId) {
+    storage.saveActivityIdForOwner(ownerId, Utils.POST, commentId);
+  }
+
+  public void saveCommentIdForOwnerPath(String ownerPath, String commentId) {
+    storage.saveActivityIdForOwner(ownerPath, commentId);
+  }
+
+  public String getCommentIdForOwnerId(String ownerId) {
+    return storage.getActivityIdForOwner(ownerId, Utils.POST);
+  }
+
+  public String getCommentIdForOwnerPath(String ownerPath) {
     return storage.getActivityIdForOwner(ownerPath);
   }
 }

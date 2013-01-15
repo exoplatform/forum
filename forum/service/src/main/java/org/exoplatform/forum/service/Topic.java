@@ -16,9 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+
+import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.commons.utils.PropertyChangeSupport;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
@@ -26,6 +29,30 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * March 2, 2007  
  */
 public class Topic {
+  
+  /** topic name */
+  public static String TOPIC_NAME = "name";
+  
+  /** topic content */
+  public static String TOPIC_CONTENT = "description";
+  
+  /** Open or Closed*/
+  public static String TOPIC_STATE_CLOSED = "isClosed";
+  
+  /** locked or unlock*/
+  public static String TOPIC_STATUS_LOCK = "isLock";
+  
+  /** waiting or censoring*/
+  public static String TOPIC_STATUS_WAITING = "isWaiting";
+  
+  /** active or hidden*/
+  public static String TOPIC_STATUS_ACTIVE = "isActive";
+  
+  /** vote rate*/
+  public static String TOPIC_RATING = "voteRating";
+  
+  private PropertyChangeSupport pcs = null;
+  
   private String                id;
 
   private String                owner;
@@ -102,6 +129,9 @@ public class Topic {
     userVoteRating = new String[] {};
     tagId = new String[] {};
     emailNotification = new String[] {};
+    
+    //
+    pcs = new PropertyChangeSupport(this);
   }
 
   public String getOwner() {
@@ -175,6 +205,11 @@ public class Topic {
   public void setTopicName(String topic) {
     this.name = topic;
   }
+  
+  public void setEditedTopicName(String topic) {
+    pcs.addPropertyChange(TOPIC_NAME, this.name, topic);
+    this.name = topic;
+  }
 
   public String getDescription() {
     return description;
@@ -183,6 +218,13 @@ public class Topic {
   public void setDescription(String description) {
     this.description = description;
   }
+  
+  public void setEditedDescription(String description) {
+    pcs.addPropertyChange(TOPIC_CONTENT, this.description, description);
+    this.description = description;
+  }
+  
+  
 
   public long getPostCount() {
     return postCount;
@@ -223,12 +265,22 @@ public class Topic {
   public void setIsClosed(boolean isClosed) {
     this.isClosed = isClosed;
   }
+  
+  public void setEditedIsClosed(boolean isClosed) {
+    pcs.addPropertyChange(TOPIC_STATE_CLOSED, this.isClosed, isClosed);
+    this.isClosed = isClosed;
+  }
 
   public boolean getIsLock() {
     return isLock;
   }
 
   public void setIsLock(boolean isLock) {
+    this.isLock = isLock;
+  }
+  
+  public void setEditedIsLock(boolean isLock) {
+    pcs.addPropertyChange(TOPIC_STATUS_LOCK, this.isLock, isLock);
     this.isLock = isLock;
   }
 
@@ -330,6 +382,11 @@ public class Topic {
   public void setVoteRating(Double voteRating) {
     this.voteRating = voteRating;
   }
+  
+  public void setEditedVoteRating(Double voteRating) {
+    pcs.addPropertyChange(TOPIC_RATING, this.voteRating, voteRating);
+    this.voteRating = voteRating;
+  }
 
   public void setAttachments(List<ForumAttachment> attachments) {
     this.attachments = attachments;
@@ -354,12 +411,22 @@ public class Topic {
   public void setIsWaiting(boolean isWaiting) {
     this.isWaiting = isWaiting;
   }
+  
+  public void setEditedIsWaiting(boolean isWaiting) {
+    pcs.addPropertyChange(TOPIC_RATING, this.isWaiting, isWaiting);
+    this.isWaiting = isWaiting;
+  }
 
   public boolean getIsActive() {
     return isActive;
   }
 
   public void setIsActive(boolean isActive) {
+    this.isActive = isActive;
+  }
+  
+  public void setEditedIsActive(boolean isActive) {
+    pcs.addPropertyChange(TOPIC_STATUS_ACTIVE, this.isActive, isActive);
     this.isActive = isActive;
   }
 
@@ -393,5 +460,9 @@ public class Topic {
 
   public void setEmailNotification(String[] emailNotification) {
     this.emailNotification = emailNotification;
+  }
+
+  public PropertyChangeEvent[] getChangeEvent() {
+    return pcs.getChangeEvents();
   }
 }

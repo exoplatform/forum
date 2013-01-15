@@ -42,14 +42,8 @@ public interface ForumEventLifeCycle {
    * @param topic
    * @param forumId
    */
-  public void addTopic(Topic topic, String categoryId, String forumId);
+  public void addTopic(Topic topic);
 
-  /**
-   * @deprecated use {@link #updatePost(Post post)}
-   * Will remove in 4.0.1
-   */
-  @Deprecated
-  public void updateTopic(Topic topic, String categoryId, String forumId);
   /**
    * This will be call after update topic
    * @param topic
@@ -57,18 +51,6 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void updateTopic(Topic topic);
-  
-  
-  /**
-   * This will be call after status of topic changed.
-   *  
-   * @param topic
-   * @param type - type of status changed
-   * It set by Utils.CLOSE, Utils.LOCK, Utils.APPROVE, Utils.STICKY, Utils.WAITING
-   * Utils.ACTIVE, Utils.CHANGE_NAME, Utils.VOTE_RATING
-   * @since 4.0
-   */
-  public void updateStatusTopic(Topic topic, int type);
   
   /**
    * This will be call after moved topic to other forum.
@@ -114,14 +96,7 @@ public interface ForumEventLifeCycle {
    * @param forumId
    * @param topicId
    */
-  public void addPost(Post post, String categoryId, String forumId, String topicId);
-
-  /**
-   * @deprecated use {@link #updatePost(Post post)}
-   * Will remove in 4.0.1
-   */
-  @Deprecated
-  public void updatePost(Post post, String categoryId, String forumId, String topicId);
+  public void addPost(Post post);
   
   /**
    * This will be call after save post
@@ -130,14 +105,6 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void updatePost(Post post);
-  
-  /**
-   * @param post
-   * @param type - type of status changed
-   * It set by Utils.APPROVE, Utils.WAITING, Utils.HIDDEN 
-   * @since 4.0
-   */
-  public void updateStatusPost(Post post, int type);
 
   /**
    * This will be call after topics/posts removed.
@@ -145,5 +112,5 @@ public interface ForumEventLifeCycle {
    * @param activityId - the activity Id will remove.
    * @since 4.0
    */
-  public void removeActiviry(String activityId);
+  public void removeActivity(String activityId);
 }

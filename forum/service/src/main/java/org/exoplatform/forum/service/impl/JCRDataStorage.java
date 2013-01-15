@@ -2413,6 +2413,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       } else {
         forumNode.save();
       }
+      
+      //
+      topic.setPath(topicNode.getPath());
+      
+      //
       if (topic.getIsWaiting() || !topic.getIsApproved()) {
         getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
         isGetLastTopic = true;
@@ -3201,6 +3206,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       } else {
         forumNode.save();
       }
+      
+      //
+      post.setPath(postNode.getPath());
+      
+      //
       if (!isFistPost && isNew) {
         sendNotification(topicNode, null, post, messageBuilder, true);
       }

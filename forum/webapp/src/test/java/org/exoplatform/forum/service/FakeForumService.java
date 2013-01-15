@@ -766,23 +766,47 @@ public class FakeForumService implements ForumService {
     
   }
 
-  public void saveActivityIdForOwner(String ownerId, String type, String activityId) {
+  public void saveActivityIdForOwnerId(String ownerId, String activityId) {
     
   }
 
-  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+  public void saveActivityIdForOwnerPath(String ownerPath, String activityId) {
     
   }
 
-  public String getActivityIdForOwner(String ownerId, String type) {
+  public String getActivityIdForOwnerId(String ownerId) {
     return null;
   }
 
-  public String getActivityIdForOwner(String ownerPath) {
+  public String getActivityIdForOwnerPath(String ownerPath) {
     return null;
   }
 
   public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
     
+  }
+
+  @Override
+  public void saveCommentIdForOwnerId(String ownerId, String commentId) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void saveCommentIdForOwnerPath(String ownerPath, String commentId) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getCommentIdForOwnerId(String ownerId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getCommentIdForOwnerPath(String ownerPath) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
