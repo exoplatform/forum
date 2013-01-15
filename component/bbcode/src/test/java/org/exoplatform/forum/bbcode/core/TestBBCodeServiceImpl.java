@@ -213,9 +213,7 @@ public class TestBBCodeServiceImpl extends AbstractKernelTest {
       assertTrue(true);
     } catch (Exception e) {
       assertTrue(false);
-    } finally{
-      session.logout();
-    }
+    } 
   }
 
   private void assertNodeNotExists(String path) {

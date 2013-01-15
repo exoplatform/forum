@@ -88,10 +88,10 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
     addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator");
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public Topic getTopic() {

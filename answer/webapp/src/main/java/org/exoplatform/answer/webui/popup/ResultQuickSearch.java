@@ -99,10 +99,10 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
     return searchResults_;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class OpenCategoryActionListener extends BaseEventListener<ResultQuickSearch> {

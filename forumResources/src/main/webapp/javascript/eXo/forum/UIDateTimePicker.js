@@ -1,4 +1,4 @@
-;(function(module, utils, $, document, window) {
+(function(utils, $, document, window) {
   var UIDateTimePicker = {
     calendarId : "UICalendarControl",
     dateField : "",
@@ -66,7 +66,7 @@
     },
   
     show : function(event) {
-      utils.ForumUtils.hideElements();
+      utils.hideElements();
       var re = /^(\d{1,2}\/\d{1,2}\/\d{1,4})\s*(\s+\d{1,2}:\d{1,2}:\d{1,2})?$/i;
       UIDateTimePicker.selectedDate = new Date();
       if (re.test(UIDateTimePicker.dateField.value)) {
@@ -114,10 +114,10 @@
       }
       $(clndr).find('.UICalendar:first').on('mousedown', function(evt) {
         var event = evt || window.event;
-        utils.ForumUtils.cancelEvent(event)
+        utils.cancelEvent(event)
       });
-      utils.ForumUtils.addhideElement(clndr.firstChild);
-      utils.ForumUtils.cancelEvent(event);
+      utils.addhideElement(clndr.firstChild);
+      utils.cancelEvent(event);
     },
   
     hide : function() {
@@ -125,7 +125,7 @@
         $(document.getElementById(UIDateTimePicker.calendarId).firstChild).hide();
         UIDateTimePicker.dateField = null;
       }
-      utils.ForumUtils.hideElements();
+      utils.hideElements();
     },
   
     /* TODO: Move HTML code to a javascript template file (.jstmpl) */
@@ -217,7 +217,7 @@
       var clndr = document.getElementById(UIDateTimePicker.calendarId);
       clndr.firstChild.lastChild.innerHTML = UIDateTimePicker.renderCalendar();
       var event = evt || window.event;
-      utils.ForumUtils.cancelEvent(event);
+      utils.cancelEvent(event);
     },
   
     changeYear : function(change, evt) {
@@ -226,7 +226,7 @@
       var clndr = document.getElementById(UIDateTimePicker.calendarId);
       clndr.firstChild.lastChild.innerHTML = UIDateTimePicker.renderCalendar();
       var event = evt || window.event;
-      utils.ForumUtils.cancelEvent(event);
+      utils.cancelEvent(event);
     },
   
     setDate : function(year, month, day) {
@@ -341,6 +341,6 @@
   window.eXo = window.eXo || {};
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIDateTimePicker = UIDateTimePicker;
-  module.UIDateTimePicker = window.eXo.forum.UIDateTimePicker;
+  return UIDateTimePicker;
   
-})(_module, utils, gj, document, window);
+})(utils, gj, document, window);

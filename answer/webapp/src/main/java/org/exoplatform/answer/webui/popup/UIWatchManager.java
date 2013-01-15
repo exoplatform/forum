@@ -78,10 +78,10 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
     this.setActions(new String[] { "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public String getCategoryID() {

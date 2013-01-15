@@ -79,10 +79,10 @@ public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent
         getLabel("email"), getLabel("jobTitle"), getLabel("location"), getLabel("homePhone"), getLabel("workPhone"), getLabel("website")};
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class CloseActionListener extends EventListener<UIViewUserProfile> {

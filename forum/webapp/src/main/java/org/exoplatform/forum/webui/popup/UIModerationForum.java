@@ -77,10 +77,10 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     setActions(new String[] { "Close" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setReloadPortlet(boolean isReloadPortlet) {

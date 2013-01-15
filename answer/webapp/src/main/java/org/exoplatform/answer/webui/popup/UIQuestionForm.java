@@ -159,10 +159,10 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private FAQSetting                     faqSetting_;
   
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setFAQSetting(FAQSetting faqSetting) {

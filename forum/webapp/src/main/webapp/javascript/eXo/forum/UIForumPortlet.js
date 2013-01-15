@@ -1,4 +1,4 @@
-;(function($, window, document) {
+(function(maskLayer, contextMenu, checkBoxManager, utils, $, window, document) {
   var UIForumPortlet = {
     obj : null,
     event : null,
@@ -9,14 +9,14 @@
       UIForumPortlet.id = id;
       var jportlet = findId(id);
       if (jportlet.exists()) {
-        jportlet.find('.oncontextmenu').on('contextmenu', utils.ForumUtils.returnFalse);
-        jportlet.find('.UserMenuInfo').on('click', utils.ForumUtils.showUserMenu);
+        jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
+        jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
       }
-      utils.ForumUtils.onResize(UIForumPortlet.resizeCallback);
+      utils.onResize(UIForumPortlet.resizeCallback);
     },
 
     resizeCallback : function() {
-      utils.ForumUtils.setMaskLayer(UIForumPortlet.id);
+      utils.setMaskLayer(UIForumPortlet.id);
     },
 
     selectItem : function(obj) {
@@ -259,7 +259,7 @@
             var parentIt = menuItem.parents(".MenuItem");
             menuItem.attr("tmpClass", parentIt.attr('class'));
             parentIt.attr('class', "DisableMenuItem");
-            parentIt.on('click', utils.ForumUtils.cancelEvent);
+            parentIt.on('click', utils.cancelEvent);
           }
         }
       } else {
@@ -360,8 +360,8 @@
       }
       vote.on('mouseover', UIForumPortlet.parentOverVote);
       vote.on('blur', UIForumPortlet.parentOverVote);
-      optsContainer.on('mouseover', utils.ForumUtils.cancelEvent);
-      optsContainer.on('blur', utils.ForumUtils.cancelEvent);
+      optsContainer.on('mouseover', utils.cancelEvent);
+      optsContainer.on('blur', utils.cancelEvent);
     },
 
     parentOverVote : function(event) {
@@ -397,12 +397,12 @@
       for ( var t = 0; t < strs.length; t++) {
         var jelm = $(strs[t]);
         if (jelm.exists()) {
-          jelm.on('click', utils.ForumUtils.cancelEvent);
+          jelm.on('click', utils.cancelEvent);
         }
       }
       eXo.webui.UIPopupSelectCategory.show(elm, e);
-      utils.ForumUtils.cancelEvent(e);
-      utils.ForumUtils.addhideElement($(elm).find('div.UIPopupCategory'));
+      utils.cancelEvent(e);
+      utils.addhideElement($(elm).find('div.UIPopupCategory'));
     },
 
     goLastPost : function(idLastPost) {
@@ -458,7 +458,7 @@
     },
 
     showPicture : function(src) {
-      maskLayer.MaskLayerControl.showPicture(src);
+      maskLayer.showPicture(src);
     },
 
     getImageSize : function(imageNode) {
@@ -677,7 +677,7 @@
             aImage[i].width = 590 + "px";
         }
       }
-      utils.ForumUtils.onResize('eXo.forum.UIForumPortlet.reSizeImages');
+      utils.onResize('eXo.forum.UIForumPortlet.reSizeImages');
     },
 
     shareLink : function(obj) {
@@ -840,7 +840,7 @@
     executeLink : function(evt) {
       var onclickAction = String($(this).attr("rel"));
       eval(onclickAction);
-      utils.ForumUtils.cancelEvent(evt);
+      utils.cancelEvent(evt);
       return false;
     },
 
@@ -891,7 +891,7 @@
 
     initContextMenu : function(id) {
       var cont = document.getElementById(id);
-      var uiContextMenu = contextMenu.UIContextMenu;
+      var uiContextMenu = contextMenu;
       if (!uiContextMenu.classNames)
         uiContextMenu.classNames = new Array("ActionLink");
       else
@@ -952,13 +952,13 @@
     },
 
     submitOnKey : function(event) {
-      var key = utils.ForumUtils.getKeynum(event);
+      var key = utils.getKeynum(event);
       if (key == 13) {
         var searchLinkElm = $(this).find('a.SearchLink');
         if (searchLinkElm.exists()) {
           var link = String(searchLinkElm.attr('href')).replace("javascript:", "");
           eval(link);
-          utils.ForumUtils.cancelEvent(event);
+          utils.cancelEvent(event);
           return false;
         }
       }
@@ -968,6 +968,6 @@
   window.eXo = window.eXo || {};
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
-})(gj, window, document);
+  return UIForumPortlet;
+})(maskLayer, contextMenu, checkBoxManager, utils, gj, window, document);
 
-_module.UIForumPortlet = eXo.forum.UIForumPortlet;

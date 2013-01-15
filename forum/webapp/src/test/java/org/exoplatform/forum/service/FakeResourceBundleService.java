@@ -35,7 +35,7 @@ public class FakeResourceBundleService implements ResourceBundleService {
     return null;
   }
 
-  public PageList findResourceDescriptions(Query q) throws Exception {
+  public PageList findResourceDescriptions(Query q) {
 
     return null;
   }
@@ -60,7 +60,7 @@ public class FakeResourceBundleService implements ResourceBundleService {
     return null;
   }
 
-  public ResourceBundleData getResourceBundleData(String id) throws Exception {
+  public ResourceBundleData getResourceBundleData(String id) {
 
     return null;
   }
@@ -70,12 +70,12 @@ public class FakeResourceBundleService implements ResourceBundleService {
     return null;
   }
 
-  public ResourceBundleData removeResourceBundleData(String id) throws Exception {
+  public ResourceBundleData removeResourceBundleData(String id) {
 
     return null;
   }
 
-  public void saveResourceBundle(ResourceBundleData data) throws Exception {
+  public void saveResourceBundle(ResourceBundleData data) {
   }
 
 }

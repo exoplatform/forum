@@ -84,11 +84,15 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
     this.listTopic = topics;
   }
 
-  public void activate() throws Exception {
-    intAddChild();
+  public void activate() {
+    try {
+      intAddChild();
+    } catch (Exception e) {
+      log.error(e);
+    }
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends EventListener<UIMergeTopicForm> {

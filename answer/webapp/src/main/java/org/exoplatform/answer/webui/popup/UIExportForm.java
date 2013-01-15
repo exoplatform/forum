@@ -34,10 +34,10 @@ public class UIExportForm extends BaseUIForm implements UIPopupComponent {
 
   private String       objectId  = "";
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIExportForm() {

@@ -104,10 +104,10 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         cateId_                              = Utils.ALL;
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIQuestionsInfo() throws Exception {

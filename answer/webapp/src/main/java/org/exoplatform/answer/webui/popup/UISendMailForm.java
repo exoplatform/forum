@@ -122,10 +122,10 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     this.setActions(new String[] { "Send", "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public List<User> getToUsers() {

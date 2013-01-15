@@ -7,8 +7,8 @@
 %>
 <div class="FAQViewerContainer" id="$uicomponent.id">
   <%
-  requireJS.addScripts("faq.FaqPortlet.focusQuestion();")
-  				 .addScripts("faq.FaqPortlet.createLink('$uicomponent.id', '$uicomponent.useAjax');");
+  requireJS.addScripts("faq.focusQuestion();")
+  				 .addScripts("faq.createLink('$uicomponent.id', '$uicomponent.useAjax');");
   
   CategoryInfo cateInfo = uicomponent.getCategoryInfo();
   if(cateInfo != null) {

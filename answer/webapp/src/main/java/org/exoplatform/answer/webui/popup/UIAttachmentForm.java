@@ -71,10 +71,10 @@ public class UIAttachmentForm extends BaseUIFAQForm implements UIPopupComponent 
     addUIFormInput(uploadInput);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIAttachmentForm() {

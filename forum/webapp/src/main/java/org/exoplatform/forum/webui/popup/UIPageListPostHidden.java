@@ -68,10 +68,10 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
     this.setActions(new String[] { "UnHidden", "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected String getTitleInHTMLCode(String s) {

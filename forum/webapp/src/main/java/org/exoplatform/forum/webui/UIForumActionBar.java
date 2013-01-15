@@ -132,7 +132,7 @@ public class UIForumActionBar extends UIContainer {
     scripts.add("eXo.forum.UIForumPortlet.loadScroll();");
     if(getUserProfile().getUserRole() <=1) {
       scripts.add("eXo.forum.UIForumPortlet.visibleAction('"+getId()+"');");
-      StringBuilder init = new StringBuilder("forumJob.ForumTotalJob.init('");
+      StringBuilder init = new StringBuilder("forumJob.init('");
       init.append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("');");

@@ -249,7 +249,7 @@ public class CommonUtils {
   
   public static ExoContainer getExoContainer(JobExecutionContext context) {
     if(context == null) return null;
-    String portalName = context.getJobDetail().getGroup();
+    String portalName = context.getJobDetail().getKey().getGroup();
     if(portalName == null) {
       portalName = PortalContainer.getCurrentPortalContainerName();
     }

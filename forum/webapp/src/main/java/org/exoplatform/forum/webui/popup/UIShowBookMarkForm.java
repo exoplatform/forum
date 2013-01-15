@@ -64,10 +64,10 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
     pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   private void updateBookMark() {
