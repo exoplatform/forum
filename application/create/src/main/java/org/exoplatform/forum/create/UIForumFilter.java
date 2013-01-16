@@ -16,12 +16,12 @@
  */
 package org.exoplatform.forum.create;
 
-import java.io.Writer;
-
 import org.exoplatform.commons.utils.HTMLEntityEncoder;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
+
+import java.io.Writer;
 
 /**
  * Created by The eXo Platform SAS
@@ -59,7 +59,7 @@ public class UIForumFilter extends UIFormInputBase<String> {
   }
   
   @Override
-  public void decode(Object input, WebuiRequestContext context) throws Exception {
+  public void decode(Object input, WebuiRequestContext context) {
     String val = (String)input;
     if ((val == null || val.length() == 0)) {
       return;

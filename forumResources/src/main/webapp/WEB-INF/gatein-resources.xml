@@ -41,7 +41,6 @@
   <module>
     <name>forumFilter</name>
     <script>
-      <name>eXo.forum.UIForumFilter</name>
       <path>/javascript/eXo/forum/UIForumFilter.js</path>
     </script>
     <depends>
