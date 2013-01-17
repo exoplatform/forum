@@ -1,4 +1,4 @@
-;(function($, window, document) {
+(function(dragDrop, maskLayer, contextMenu, checkBoxManager, utils, $, document, window) {
 
   var UIAnswersPortlet = {
     viewImage : true,
@@ -14,15 +14,16 @@
     UIAnswersPortlet.updateContainersHeight();
     UIAnswersPortlet.controlWorkSpace();
     UIAnswersPortlet.disableContextMenu(UIAnswersPortlet.portletId);
-    utils.ForumUtils.onResize(UIAnswersPortlet.resizeCallback);
+    utils.onResize(UIAnswersPortlet.resizeCallback);
   };
 
   UIAnswersPortlet.resizeCallback = function() {
-    utils.ForumUtils.setMaskLayer(UIAnswersPortlet.portletId);
+    utils.setMaskLayer(UIAnswersPortlet.portletId);
   };
   
   UIAnswersPortlet.updateContainersHeight = function () {
-    var viewQuestionContentEl = findId(UIAnswersPortlet.portletId + ' div.CategoriesContainer div.ViewQuestionContent');
+    var viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.CategoriesContainer');
+    if(!viewQuestionContentEl.exists()) viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.ViewQuestionContent');
     viewQuestionContentEl.css('height', viewQuestionContentEl.height() - 67);
   };
   
@@ -151,7 +152,7 @@
   
   UIAnswersPortlet.showPicture = function (src) {
     if (UIAnswersPortlet.viewImage) {
-      eXo.forum.MaskLayerControl.showPicture(src);
+      maskLayer.showPicture(src);
     }
   };
   
@@ -367,10 +368,10 @@
     var cont = findId(id);
     if (cont.exists()) {
       UIAnswersPortlet.disableContextMenu(id);
-      var uiContextMenu = contextMenu.UIContextMenu;
+      var uiContextMenu = contextMenu;
       if (!uiContextMenu.classNames) {
         uiContextMenu.classNames = new Array("oncontextmenu", "QuestionContextMenu");
-    } else {
+      } else {
         uiContextMenu.classNames.push("oncontextmenu");
         uiContextMenu.classNames.push("QuestionContextMenu");
       }
@@ -407,7 +408,7 @@
   UIAnswersPortlet.executeLink = function (evt) {
     var onclickAction = String(this.getAttribute('actions'));
     eval(onclickAction);
-    utils.ForumUtils.cancelEvent(evt);
+    utils.cancelEvent(evt);
     return false;
   };
   
@@ -438,7 +439,7 @@
   };
   
   UIAnswersPortlet.submitOnKey = function (event) {
-    var key = utils.ForumUtils.getKeynum(event);
+    var key = utils.getKeynum(event);
     if (key == 13) {
       $(this).find('div.ActionSearch:first').click();
       eXo.core.EventManager.cancelEvent(event);
@@ -457,6 +458,5 @@
   window.eXo.answer = eXo.answer || {} ;
   window.eXo.answer.UIAnswersPortlet = UIAnswersPortlet;
 
-})(gj, window, document);
-
-_module.UIAnswersPortlet = eXo.answer.UIAnswersPortlet;
+  return UIAnswersPortlet;
+})(dragDrop, maskLayer, contextMenu, checkBoxManager, utils, gj, document, window);

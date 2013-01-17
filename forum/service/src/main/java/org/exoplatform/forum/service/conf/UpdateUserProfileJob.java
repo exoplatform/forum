@@ -54,7 +54,7 @@ public class UpdateUserProfileJob extends MultiTenancyJob {
         ExoContainer exoContainer = CommonUtils.getExoContainer(context);
         ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
         ExoContainerContext.setCurrentContainer(exoContainer);
-        String name = context.getJobDetail().getName();
+        String name = context.getJobDetail().getKey().getName();
         JobSchedulerService schedulerService = (JobSchedulerService) exoContainer.getComponentInstanceOfType(JobSchedulerService.class);
         JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
         RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);

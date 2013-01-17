@@ -175,7 +175,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
     return this;
   }
 
-  public void decode(Object input, WebuiRequestContext context) throws Exception {
+  public void decode(Object input, WebuiRequestContext context) {
     String[] values = context.getRequestParameterValues(getId());
     if (values == null) {
       value_ = null;

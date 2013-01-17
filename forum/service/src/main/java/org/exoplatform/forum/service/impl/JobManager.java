@@ -43,7 +43,7 @@ public class JobManager {
   @Managed
   @ManagedName("Name")
   public String getName() {
-    return jobDetail.getName();
+    return jobDetail.getKey().getName();
   }
 
   @Managed

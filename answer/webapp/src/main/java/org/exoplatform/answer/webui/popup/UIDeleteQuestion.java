@@ -57,10 +57,10 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent {
     isManagement_ = false;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected String getAuthor() {

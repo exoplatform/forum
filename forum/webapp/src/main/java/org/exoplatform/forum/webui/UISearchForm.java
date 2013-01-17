@@ -313,7 +313,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     return (UIFormRadioBoxInput) findComponentById(name);
   }
 
-  public String getLabel(ResourceBundle res, String id) throws Exception {
+  public String getLabel(ResourceBundle res, String id) {
     String label = getId() + ".label." + id;
     try {
       return res.getString(label);

@@ -271,10 +271,10 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     this.setActions(new String[] { "Save", "Cancel" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected boolean getIsSelected(int id) {

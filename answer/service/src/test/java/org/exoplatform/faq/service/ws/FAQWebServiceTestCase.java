@@ -18,6 +18,8 @@ package org.exoplatform.faq.service.ws;
 
 import javax.ws.rs.core.MediaType;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 
 /**
@@ -33,6 +35,8 @@ public class FAQWebServiceTestCase extends AbstractResourceTest {
   private static final String  REST_CONTEXT = "/ks/faq";
   
   private static FAQWebservice faqWebservice;
+  
+  protected Log log = ExoLogger.getLogger(FAQWebServiceTestCase.class);
 
   public FAQWebServiceTestCase() throws Exception {
   }
@@ -51,8 +55,12 @@ public class FAQWebServiceTestCase extends AbstractResourceTest {
   }
   
   @Override
-  public void beforeRunBare() throws Exception {
-    super.beforeRunBare();
+  public void beforeRunBare() {
+    try {
+      super.beforeRunBare();
+    } catch (Exception e) {
+      log.error(e);
+    }
   }
   
   @Override

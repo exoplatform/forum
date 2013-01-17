@@ -196,10 +196,10 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     return new String[] { FIELD_MODERAROR_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, FIELD_VIEWER_MULTIVALUE };
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setCategoryValue(Category category, boolean isUpdate) throws Exception {

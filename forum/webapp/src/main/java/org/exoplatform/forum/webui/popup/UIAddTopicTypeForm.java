@@ -72,10 +72,10 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
     addUIFormInput(uiIconSelector);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setTopicType(TopicType topicType) {

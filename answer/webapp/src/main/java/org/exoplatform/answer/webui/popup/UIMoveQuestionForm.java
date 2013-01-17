@@ -74,10 +74,10 @@ public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponen
     categoryId_ = s;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected List<Cate> getListCate() {

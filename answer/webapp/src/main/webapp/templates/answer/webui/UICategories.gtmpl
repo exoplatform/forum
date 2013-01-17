@@ -9,7 +9,7 @@
   def requireJS = _ctx.getRequestContext().getJavascriptManager().require("SHARED/DragDrop", "dragDrop");
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.initContextMenu('"+compId+"') ;");
   if(uicomponent.isModerator) {
-    requireJS.addScripts("dragDrop.DragDrop.init('"+compId+"') ;") ;
+    requireJS.addScripts("dragDrop.init('"+compId+"') ;") ;
   }
   
   String [] categoryAction;

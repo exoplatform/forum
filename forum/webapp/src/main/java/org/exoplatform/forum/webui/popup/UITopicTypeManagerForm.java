@@ -58,10 +58,10 @@ public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComp
     setActions(new String[] { "AddTopicType", "Close" });
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected List<TopicType> getTopicTypes() throws Exception {

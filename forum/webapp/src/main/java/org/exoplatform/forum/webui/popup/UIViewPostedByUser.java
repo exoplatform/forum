@@ -42,10 +42,10 @@ public class UIViewPostedByUser extends UIForm implements UIPopupComponent {
     addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser");
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setUserProfile(String userId) {

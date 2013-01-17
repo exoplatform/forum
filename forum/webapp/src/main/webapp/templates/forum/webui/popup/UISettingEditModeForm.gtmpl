@@ -50,7 +50,7 @@
 					
 					<div class="UIForm">
 						<div class="HorizontalLayout">
-							<div class="UITabContentContainer">
+							<div class="UITabContentContainers">
 							<% 
 								String displayTab="block", display="", iconClass="", categoryName="", forumName="", classForumIcon="", height="";
 								int j = 0, t = 0;

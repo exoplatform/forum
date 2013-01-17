@@ -63,10 +63,10 @@ public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
   public UIMovePostForm() throws Exception {
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   protected String getTitleInHTMLCode(String s) {

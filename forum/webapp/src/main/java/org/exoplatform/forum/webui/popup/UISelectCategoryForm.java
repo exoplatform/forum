@@ -58,10 +58,10 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
   public UISelectCategoryForm() {
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setSelectCateId(List<String> listIdIsSelected) throws Exception {

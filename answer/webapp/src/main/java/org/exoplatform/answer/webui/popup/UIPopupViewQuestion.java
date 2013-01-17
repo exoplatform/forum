@@ -140,10 +140,10 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
     return result;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class DownloadAttachActionListener extends EventListener<UIPopupViewQuestion> {
