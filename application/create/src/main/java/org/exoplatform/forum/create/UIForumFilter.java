@@ -110,7 +110,7 @@ public class UIForumFilter extends UIFormInputBase<String> {
       
      context.getJavascriptManager().getRequireJS()
          .require("SHARED/forumFilter", "filter")
-         .addScripts("filter.UIForumFilter.init('Fake" + getId() + "');");
+         .addScripts("filter.init('Fake" + getId() + "');");
   }
 
 }
