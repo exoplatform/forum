@@ -465,4 +465,10 @@ public class Topic {
   public PropertyChangeEvent[] getChangeEvent() {
     return pcs.getChangeEvents();
   }
+
+  public PropertyChangeSupport getPcs() {
+    return pcs;
+  }
+  
+  
 }
