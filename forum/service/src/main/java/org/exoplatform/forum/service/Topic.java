@@ -413,7 +413,7 @@ public class Topic {
   }
   
   public void setEditedIsWaiting(boolean isWaiting) {
-    pcs.addPropertyChange(TOPIC_RATING, this.isWaiting, isWaiting);
+    pcs.addPropertyChange(TOPIC_STATUS_WAITING, this.isWaiting, isWaiting);
     this.isWaiting = isWaiting;
   }
 
