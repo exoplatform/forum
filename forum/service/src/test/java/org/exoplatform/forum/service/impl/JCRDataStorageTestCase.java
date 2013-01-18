@@ -44,6 +44,8 @@ import org.exoplatform.forum.membership.AbstractJCRTestCase;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
@@ -62,11 +64,17 @@ import static org.mockito.Mockito.when;
 // * The order of tests execution changed in Junit 4.11 (https://github.com/KentBeck/junit/blob/master/doc/ReleaseNotes4.11.md)
 @FixMethodOrder(MethodSorters.JVM)
 public class JCRDataStorageTestCase extends AbstractJCRTestCase {
+  
+  protected Log log = ExoLogger.getLogger(JCRDataStorageTestCase.class);
 
   private JCRDataStorage storage;
   @Override
-  public void beforeRunBare() throws Exception {
-    super.beforeRunBare();
+  public void beforeRunBare() {
+    try {
+      super.beforeRunBare();
+    } catch (Exception e) {
+      log.error(e);
+    }
   }
   
   @Override

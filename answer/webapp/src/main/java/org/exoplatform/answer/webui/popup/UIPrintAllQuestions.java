@@ -69,10 +69,10 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 
   private RenderHelper renderHelper    = new RenderHelper();
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public UIPrintAllQuestions() {

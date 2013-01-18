@@ -166,10 +166,10 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     return false;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setCategoryValue(Category category, boolean isUpdate) throws Exception {

@@ -58,7 +58,7 @@ public class UISliderControl extends UIFormInputBase<String> {
     w.write("</div>");
   }
 
-  public void decode(Object input, WebuiRequestContext context) throws Exception {
+  public void decode(Object input, WebuiRequestContext context) {
     String val = (String) input;
     if (ForumUtils.isEmpty(val) || (val.equals("null"))){
       value_ = "0".intern();

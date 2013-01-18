@@ -83,10 +83,10 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
     return this.listcate;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   private List<String> getPathName(String allPath) throws Exception {

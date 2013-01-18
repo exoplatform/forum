@@ -99,10 +99,10 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     return renderHelper.renderQuestion(question);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void setInfor(Question question, String commentId, FAQSetting faqSetting, String language) throws Exception {

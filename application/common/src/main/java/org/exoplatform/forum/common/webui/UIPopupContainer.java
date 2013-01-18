@@ -33,7 +33,7 @@ public class UIPopupContainer extends UIContainer implements UIPopupComponent {
     addChild(UIPopupAction.class, null, null).setRendered(true) ;
   }
   
-  public void activate() throws Exception {}
-  public void deActivate() throws Exception {}
+  public void activate() {}
+  public void deActivate() {}
   
 }

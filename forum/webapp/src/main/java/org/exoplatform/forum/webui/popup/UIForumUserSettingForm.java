@@ -393,11 +393,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     return findComponentById(name);
   }
 
-  public void activate() throws Exception {
-    initForumOption();
+  public void activate() {
+    try {
+      initForumOption();
+    } catch (Exception e) {
+      log.error(e);
+    }
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends BaseEventListener<UIForumUserSettingForm> {

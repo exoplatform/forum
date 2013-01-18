@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2_1 http://www.gatein.org/xml/ns/gatein_resources_1_2_1"
-		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2_1">
+	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_3 http://www.gatein.org/xml/ns/gatein_resources_1_3"
+		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
 
   <portlet-skin>
     <application-name>answer</application-name>
@@ -23,7 +23,6 @@
   <module>
     <name>FaqPortlet</name>
     <script>
-      <name>eXo.faq.UIFaqPortlet</name>
       <path>/javascript/eXo/faq/UIFaqPortlet.js</path>
     </script>
    <depends>
@@ -49,9 +48,8 @@
   </module>
 
   <module>
-    <name>DragDrop</name>
+    <name>AnswerDragDrop</name>
     <script>
-      <name>eXo.answer.DragDrop</name>
       <path>/javascript/eXo/answer/DragDrop.js</path>
     </script>
     <depends>
@@ -71,7 +69,6 @@
   <module>
     <name>AnswerUtils</name>
     <script>
-      <name>eXo.answer.AnswerUtils</name>
       <path>/javascript/eXo/answer/AnswerUtils.js</path>
     </script>
     <depends>
@@ -87,18 +84,17 @@
   <module>
     <name>UIAnswersPortlet</name>
     <script>
-      <name>eXo.answer.UIAnswersPortlet</name>
       <path>/javascript/eXo/answer/UIAnswersPortlet.js</path>
     </script>
     <depends>
       <module>AnswerUtils</module>
     </depends>
     <depends>
-      <module>DragDrop</module>
+      <module>AnswerDragDrop</module>
       <as>dragDrop</as>
     </depends>
     <depends>
-      <module>MaskLayerControl</module>
+      <module>ForumMaskLayer</module>
       <as>maskLayer</as>
     </depends>
     <depends>

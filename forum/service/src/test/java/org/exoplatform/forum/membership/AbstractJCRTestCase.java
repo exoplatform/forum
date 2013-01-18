@@ -107,11 +107,7 @@ public abstract class AbstractJCRTestCase  extends BaseForumServiceTestCase {
       LOG.error("failed to assert node exists", e);
     } catch (RepositoryConfigurationException e) {
       LOG.error("failed to assert node exists", e);
-    } finally {
-      if (session != null) {
-        session.logout();
-      }
-    }
+    } 
   }
 
   /**
@@ -131,11 +127,7 @@ public abstract class AbstractJCRTestCase  extends BaseForumServiceTestCase {
       LOG.error("failed to assert node exists", e);
     } catch (RepositoryConfigurationException e) {
       LOG.error("failed to assert node exists", e);
-    } finally {
-      if (session != null) {
-        session.logout();
-      }
-    }
+    } 
   }
 
   /**
@@ -155,11 +147,7 @@ public abstract class AbstractJCRTestCase  extends BaseForumServiceTestCase {
     } catch (RepositoryConfigurationException e) {
       LOG.error("failed to load node exists", e);
       return null;
-    } finally {
-      if (session != null) {
-        session.logout();
-      }
-    }
+    } 
   }
 
   /**

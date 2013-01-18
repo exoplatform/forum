@@ -60,47 +60,47 @@
       <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.web.controller</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.web.resources</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.eXo</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.framework</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.portal</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.portlet</artifactId>
     </dependency>
     <dependency>
-      <groupId>quartz</groupId>
+      <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
       <exclusions>
         <exclusion>
@@ -134,7 +134,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
+      <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.test.core</artifactId>
       <scope>test</scope>
     </dependency>

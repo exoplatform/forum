@@ -77,10 +77,10 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
     categoryId_ = s;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public List<Cate> getListCate() {

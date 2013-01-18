@@ -212,10 +212,10 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
     }
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
 }

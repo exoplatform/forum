@@ -59,10 +59,10 @@ public class UICensorKeywordForm extends BaseForumForm implements UIPopupCompone
     addUIFormInput(censorKeyword);
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends BaseEventListener<UICensorKeywordForm> {

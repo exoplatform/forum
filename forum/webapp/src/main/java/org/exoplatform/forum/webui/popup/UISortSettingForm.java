@@ -118,10 +118,10 @@ public class UISortSettingForm extends BaseForumForm implements UIPopupComponent
     return forumSortBy;
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   static public class SaveActionListener extends BaseEventListener<UISortSettingForm> {

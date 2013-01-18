@@ -71,10 +71,10 @@ public class UIMoveTopicForm extends BaseDataForm implements UIPopupComponent {
   public UIMoveTopicForm() throws Exception {
   }
 
-  public void activate() throws Exception {
+  public void activate() {
   }
 
-  public void deActivate() throws Exception {
+  public void deActivate() {
   }
 
   public void updateTopic(String forumId, List<Topic> topics, boolean isFormTopic) throws Exception {

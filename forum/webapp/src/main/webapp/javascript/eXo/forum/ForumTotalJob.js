@@ -1,4 +1,4 @@
-;(function(module, Cometd, $, window, document) {
+(function(Cometd, $, window, document) {
   var ForumTotalJob = {
     init : function(eXoUser, eXoToken, contextName) {
       if (String(eXoToken)) {
@@ -30,6 +30,6 @@
     }
   };
 
-  module.ForumTotalJob = ForumTotalJob;
+  return ForumTotalJob;
 
-})(_module, cometd, gj, window, document);
+})(cometd, gj, window, document);

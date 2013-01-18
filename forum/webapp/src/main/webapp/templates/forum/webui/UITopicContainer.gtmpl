@@ -51,7 +51,7 @@
           		"eXo.forum.UIForumPortlet.submitSearch('SearchInForum');"
           		];
 	ForumUtils.addScripts(null, null, scripts);
-	ForumUtils.addScripts("CheckBoxManager", "checkBoxManager", "checkBoxManager.CheckBoxManager.init('"+uicomponent.id+"') ;");
+	ForumUtils.addScripts("CheckBoxManager", "checkBoxManager", "checkBoxManager.init('"+uicomponent.id+"') ;");
 %>
 <div class="UITopicContainer">
   <% uiform.begin() %>
