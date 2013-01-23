@@ -140,7 +140,7 @@
       <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
     </div>
 <!-- Start PostsInThreadContainer -->
-  <div style="display:none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
+  <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
   <div class="PostsInThreadContainer ImageContentContainer">
     <div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
             <% if(isShowMenu && canEdit) { %> 

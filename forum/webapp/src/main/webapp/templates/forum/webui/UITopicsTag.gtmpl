@@ -31,7 +31,7 @@
   <div class="ClearFix">
     <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
   </div>
-  <div class="ForumContainer" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>">
+  <div class="ForumContainer" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>">
     <div class="ForumToolbar ForumActionToolbar ClearFix">
       <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
       <h6 class="Title"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:<strong>$tagName_</strong></h6>

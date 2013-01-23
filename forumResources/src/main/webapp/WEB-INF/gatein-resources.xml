@@ -39,7 +39,7 @@
   </module>
 
   <module>
-    <name>EventManager</name>
+    <name>ForumEventManager</name>
     <as>eventManager</as>
     <script>
       <path>/javascript/eXo/forum/EventManager.js</path>
@@ -60,7 +60,7 @@
       <path>/javascript/eXo/forum/UIContextMenu.js</path>
     </script>
     <depends>
-      <module>EventManager</module>
+      <module>ForumEventManager</module>
       <as>eventManager</as>
     </depends>
     <depends>
@@ -74,7 +74,7 @@
   </module>
 
   <module>
-    <name>CheckBoxManager</name>
+    <name>ForumCheckBoxManager</name>
     <script>
       <path>/javascript/eXo/forum/CheckBoxManager.js</path>
     </script>

@@ -102,11 +102,12 @@
       var divChecked = $('#divChecked');
       if (divChecked.exists()) {
         var check = 0;
-        check = divChecked.attr("checked") * 1;
+        check = divChecked.attr("data-checked") * 1;
+        window.console.log(check + ' ' + isChecked);
         if (isChecked)
-          divChecked.attr("checked", (check + 1));
+          divChecked.attr("data-checked", (check + 1));
         else
-          divChecked.attr("checked", (check - 1));
+          divChecked.attr("data-checked", (check - 1));
       }
     },
 
@@ -126,7 +127,7 @@
     numberIsChecked : function(formName, checkAllName, multiAns, onlyAns, notChecked) {
       var divChecked = $('#divChecked');
       var total = 0;
-      total = divChecked.attr("checked") * 1;
+      total = divChecked.attr("data-checked") * 1;
       if (total > 1) {
         var text = String(multiAns);
         return confirm(text.replace('{0}', total));
@@ -241,7 +242,7 @@
       var checkBoxs = parentContent.find('input.checkbox');
       var clen = checkBoxs.length;
       var mlen = menuItems.length;
-      var j = $('#divChecked').attr("checked") * 1;
+      var j = $('#divChecked').attr("data-checked") * 1;
       for ( var i = 1; i < clen; i++) {
         if (checkBoxs[i].checked) {
           j = 1;

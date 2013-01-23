@@ -10,7 +10,7 @@
       if (!checkboxes.exists())
         return;
       checkboxes.on('click', this.check);
-      checkboxes.eq(0).on('click', this.checkAll);
+      checkboxes.eq(0).off('click').on('click', this.checkAll);
     },
 
     checkAll : function() {
