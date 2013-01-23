@@ -75,7 +75,7 @@
 									    checked = "checked=\"checked\"";
 									  }
 									%>
-									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" id="$topicId" name="$topicId" $checked/></td>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" id="$topicId" name="$topicId" $checked/></td>
 					 			</tr>
 						 	<% i = i + 1;} 
 						 	} else {
