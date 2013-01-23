@@ -57,7 +57,7 @@
       <as>utils</as>
     </depends>
     <depends>
-      <module>EventManager</module>
+      <module>ForumEventManager</module>
       <as>eventManager</as>
     </depends>
     <depends>
@@ -102,7 +102,7 @@
       <as>contextMenu</as>
     </depends>
     <depends>
-      <module>CheckBoxManager</module>
+      <module>ForumCheckBoxManager</module>
       <as>checkBoxManager</as>
     </depends>
     <depends>
