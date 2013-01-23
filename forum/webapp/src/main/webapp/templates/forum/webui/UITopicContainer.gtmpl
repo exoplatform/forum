@@ -294,7 +294,7 @@
                   </div>
                 </th>
                 <% if(canEdit) { %>
-                <th style="width:30px;"><input type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
+                <th style="width:30px;"><input type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
                 <% } %>
               </tr>
             </thead>
@@ -540,7 +540,7 @@
                       checked = "checked=\"checked\"";
                     }
                   %>
-                  <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" title="$titlePost" name="$topicId" $checked/></td>
+                  <td class="Tdbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/></td>
                   <% } %>
                 </tr>
             <% 

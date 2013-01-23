@@ -138,7 +138,7 @@
 						<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<% if(isShowMenu){ %>
-						<th style="width:30px;"><input type="checkbox" class="checkbox" name="checkAll" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4" onclick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+						<th style="width:30px;"><input type="checkbox" class="checkbox" name="checkAll" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" onclick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
 					</tr>
 				</thead>

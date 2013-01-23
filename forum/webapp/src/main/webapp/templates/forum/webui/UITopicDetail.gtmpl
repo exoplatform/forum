@@ -552,7 +552,7 @@
                        isChecked = "checked=\"checked\"";
                      } 
                   %>
-                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" value="false" name="$postId" $isChecked/>
+                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" name="$postId" $isChecked/>
                   <%} %>
                 <%
                    if(isShowIP) {

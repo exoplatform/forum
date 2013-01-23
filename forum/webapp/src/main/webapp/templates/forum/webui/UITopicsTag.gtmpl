@@ -66,7 +66,7 @@
             <th class="WidthReplies"><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","postCount");%>"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a></th>
             <th class="WidthReplies"><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><%=_ctx.appRes("UITopicContainer.label.Views");%></a></th>
             <% if(isShowMenu) { %>
-            <th class="WidthCheck"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
+            <th class="WidthCheck"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
             <% } %>
           </tr>
         </thead>
@@ -265,7 +265,7 @@
                 checked = "checked=\"checked\"";
                 }
               %>
-              <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" title="$titlePost" name="$topicId" $checked/></td>
+              <td class="Tdbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/></td>
               <% } %>
             </tr>
         <% 
