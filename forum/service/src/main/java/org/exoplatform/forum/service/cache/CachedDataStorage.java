@@ -1255,7 +1255,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public String getActivityIdForOwner(String ownerId, String type) {
-    return storage.getActivityIdForOwner(ownerId);
+    return storage.getActivityIdForOwner(ownerId, type);
   }
 
   public String getActivityIdForOwner(String ownerPath) {

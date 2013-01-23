@@ -415,31 +415,42 @@ public class ForumServiceImpl implements ForumService, Startable {
       switch (type) {
         case Utils.CLOSE: {
           edited.setEditedIsClosed(topic.getIsClosed());
+          editeds.add(edited);
           break;
         }
         case Utils.LOCK: {
           edited.setEditedIsLock(topic.getIsLock());
+          editeds.add(edited);
           break;
         }
         case Utils.WAITING: {//CENSORING
           edited.setEditedIsWaiting(topic.getIsWaiting());
+          editeds.add(edited);
           break;
         }
         case Utils.ACTIVE: {//HIDDEN & Showing
           edited.setEditedIsActive(topic.getIsActive());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.APPROVE: {
+          edited.setEditedIsApproved(topic.getIsApproved());
+          editeds.add(edited);
           break;
         }
         case Utils.CHANGE_NAME: {
           edited.setEditedTopicName(topic.getTopicName());
+          editeds.add(edited);
           break;
         }
         case Utils.VOTE_RATING: {
           edited.setEditedVoteRating(topic.getVoteRating());
+          editeds.add(edited);
           break;
         }
       }
       
-      editeds.add(edited);
+      
       
     }
     
@@ -682,7 +693,16 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) {
     CacheUserProfile.clearCache();
-    return storage.removePost(categoryId, forumId, topicId, postId);
+    Post deleted = storage.removePost(categoryId, forumId, topicId, postId);
+    
+    
+    //
+    String activityId = storage.getActivityIdForOwner(deleted.getPath());
+    for (ForumEventLifeCycle f : listeners_) {
+      f.removeActivity(activityId);
+    }
+    
+    return deleted;
   }
 
   /**

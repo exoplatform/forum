@@ -42,6 +42,9 @@ public class Topic {
   /** locked or unlock*/
   public static String TOPIC_STATUS_LOCK = "isLock";
   
+  /** approved or un-approved*/
+  public static String TOPIC_STATUS_APPROVED = "isApproved";
+  
   /** waiting or censoring*/
   public static String TOPIC_STATUS_WAITING = "isWaiting";
   
@@ -316,6 +319,11 @@ public class Topic {
   }
 
   public void setIsApproved(boolean isApproved) {
+    this.isApproved = isApproved;
+  }
+  
+  public void setEditedIsApproved(boolean isApproved) {
+    pcs.addPropertyChange(TOPIC_STATUS_APPROVED, this.isApproved, isApproved);
     this.isApproved = isApproved;
   }
 
