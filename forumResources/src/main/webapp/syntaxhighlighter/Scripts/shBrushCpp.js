@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Cpp = function()
+window.eXo.dp.sh.Brushes.Cpp = function()
 {
 	var datatypes = 
 	'ATOM BOOL BOOLEAN BYTE CHAR COLORREF DWORD DWORDLONG DWORD_PTR ' +
@@ -58,10 +58,10 @@ dp.sh.Brushes.Cpp = function()
 	'using uuid virtual void volatile whcar_t while';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
 		{ regex: new RegExp('^ *#.*', 'gm'),						css: 'preprocessor' },
 		{ regex: new RegExp(this.GetKeywords(datatypes), 'gm'),		css: 'datatypes' },
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }
@@ -71,5 +71,5 @@ dp.sh.Brushes.Cpp = function()
 	this.Style =	'.dp-cpp .datatypes { color: #2E8B57; font-weight: bold; }';
 };
 
-dp.sh.Brushes.Cpp.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Cpp.Aliases	= ['cpp', 'c', 'c++'];
+window.eXo.dp.sh.Brushes.Cpp.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Cpp.Aliases	= ['cpp', 'c', 'c++'];

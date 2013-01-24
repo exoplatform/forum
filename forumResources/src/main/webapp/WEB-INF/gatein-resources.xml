@@ -136,9 +136,6 @@
   <module>
     <name>Syntaxhighlighter</name>
     <depends>
-      <module>shCore</module>
-    </depends>
-    <depends>
       <module>shLoadConfig</module>
     </depends>
     <depends>
@@ -186,6 +183,9 @@
     <depends>
       <module>shBrushXml</module>
     </depends>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -208,6 +208,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -219,6 +222,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -230,6 +236,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -241,6 +250,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -252,6 +264,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -263,6 +278,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -274,6 +292,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -285,6 +306,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -296,6 +320,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -307,6 +334,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -318,6 +348,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -329,6 +362,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -340,6 +376,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -351,6 +390,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -362,6 +404,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -373,5 +418,8 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
 </gatein-resources>

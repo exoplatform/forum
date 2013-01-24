@@ -18,7 +18,7 @@
  */
 
 /* Delphi brush is contributed by Eddie Shipman */
-dp.sh.Brushes.Delphi = function()
+window.eXo.dp.sh.Brushes.Delphi = function()
 {
 	var keywords =	'abs addr and ansichar ansistring array as asm begin boolean byte cardinal ' +
 					'case char class comp const constructor currency destructor div do double ' +
@@ -35,8 +35,8 @@ dp.sh.Brushes.Delphi = function()
 	this.regexList = [
 		{ regex: new RegExp('\\(\\*[\\s\\S]*?\\*\\)', 'gm'),		css: 'comment' },  			// multiline comments (* *)
 		{ regex: new RegExp('{(?!\\$)[\\s\\S]*?}', 'gm'),			css: 'comment' },  			// multiline comments { }
-		{ regex: dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },  			// one line
-		{ regex: dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },  			// one line
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
 		{ regex: new RegExp('\\{\\$[a-zA-Z]+ .+\\}', 'g'),			css: 'directive' },			// Compiler Directives and Region tags
 		{ regex: new RegExp('\\b[\\d\\.]+\\b', 'g'),				css: 'number' },			// numbers 12345
 		{ regex: new RegExp('\\$[a-zA-Z0-9]+\\b', 'g'),				css: 'number' },			// numbers $F5D3
@@ -49,5 +49,5 @@ dp.sh.Brushes.Delphi = function()
 					'.dp-delphi .vars { color: #000; }';
 };
 
-dp.sh.Brushes.Delphi.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Delphi.Aliases	= ['delphi', 'pascal'];
+window.eXo.dp.sh.Brushes.Delphi.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Delphi.Aliases	= ['delphi', 'pascal'];

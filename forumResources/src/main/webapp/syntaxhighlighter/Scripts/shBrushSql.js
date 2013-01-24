@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Sql = function()
+window.eXo.dp.sh.Brushes.Sql = function()
 {
 	var funcs	=	'abs avg case cast coalesce convert count current_timestamp ' +
 					'current_user day isnull left lower month nullif replace right ' +
@@ -45,8 +45,8 @@ dp.sh.Brushes.Sql = function()
 
 	this.regexList = [
 		{ regex: new RegExp('--(.*)$', 'gm'),						css: 'comment' },			// one line and multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// double quoted strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// single quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// double quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// single quoted strings
 		{ regex: new RegExp(this.GetKeywords(funcs), 'gmi'),		css: 'func' },				// functions
 		{ regex: new RegExp(this.GetKeywords(operators), 'gmi'),	css: 'op' },				// operators and such
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gmi'),		css: 'keyword' }			// keyword
@@ -57,5 +57,5 @@ dp.sh.Brushes.Sql = function()
 					'.dp-sql .op { color: #808080; }';
 };
 
-dp.sh.Brushes.Sql.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Sql.Aliases	= ['sql'];
+window.eXo.dp.sh.Brushes.Sql.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Sql.Aliases	= ['sql'];

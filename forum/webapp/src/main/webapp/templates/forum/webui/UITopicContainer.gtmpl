@@ -89,7 +89,7 @@
       _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
     %>
   </div>
-  <div style="display:block;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
+  <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
   <div class="ForumContainer">
     
       <div class="ForumToolbar ForumActionToolbar ClearFix">

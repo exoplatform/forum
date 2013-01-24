@@ -78,7 +78,7 @@
   	         	];
   	ForumUtils.addScripts(null, null, scripts);
   	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init();");
-  	ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  	ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
   }
 %>
 <div class="UITopicDetail">

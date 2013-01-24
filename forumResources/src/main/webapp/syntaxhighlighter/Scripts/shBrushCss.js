@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.CSS = function()
+window.eXo.dp.sh.Brushes.CSS = function()
 {
 	var keywords =	'ascent azimuth background-attachment background-color background-image background-position ' +
 					'background-repeat background baseline bbox border-collapse border-color border-spacing border-style border-top ' +
@@ -52,9 +52,9 @@ dp.sh.Brushes.CSS = function()
 	var fonts =		'[mM]onospace [tT]ahoma [vV]erdana [aA]rial [hH]elvetica [sS]ans-serif [sS]erif';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.MultiLineCComments,						css: 'comment' },	// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,						css: 'string' },	// double quoted strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,						css: 'string' },	// single quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,						css: 'comment' },	// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,						css: 'string' },	// double quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,						css: 'string' },	// single quoted strings
 		{ regex: new RegExp('\\#[a-zA-Z0-9]{3,6}', 'g'),				css: 'value' },		// html colors
 		{ regex: new RegExp('(-?\\d+)(\.\\d+)?(px|em|pt|\:|\%|)', 'g'),	css: 'value' },		// sizes
 		{ regex: new RegExp('!important', 'g'),							css: 'important' },	// !important
@@ -68,15 +68,15 @@ dp.sh.Brushes.CSS = function()
 					'.dp-css .important { color: red; }';
 };
 
-dp.sh.Highlighter.prototype.GetKeywordsCSS = function(str)
+window.eXo.dp.sh.Highlighter.prototype.GetKeywordsCSS = function(str)
 {
 	return '\\b([a-z_]|)' + str.replace(/ /g, '(?=:)\\b|\\b([a-z_\\*]|\\*|)') + '(?=:)\\b';
 };
 
-dp.sh.Highlighter.prototype.GetValuesCSS = function(str)
+window.eXo.dp.sh.Highlighter.prototype.GetValuesCSS = function(str)
 {
 	return '\\b' + str.replace(/ /g, '(?!-)(?!:)\\b|\\b()') + '\:\\b';
 };
 
-dp.sh.Brushes.CSS.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.CSS.Aliases	= ['css'];
+window.eXo.dp.sh.Brushes.CSS.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.CSS.Aliases	= ['css'];
