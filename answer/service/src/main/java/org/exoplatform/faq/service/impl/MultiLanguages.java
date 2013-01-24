@@ -622,4 +622,5 @@ public class MultiLanguages implements FAQNodeTypes {
     questionNode.setProperty(EXO_USERS_VOTE, newList.toArray(new String[newList.size()]));
     questionNode.save();
   }
+  
 }

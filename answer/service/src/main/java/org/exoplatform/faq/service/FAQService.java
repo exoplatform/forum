@@ -808,9 +808,10 @@ public interface FAQService extends FAQServiceLegacy {
    * @param questionPath path of question
    * @param commentId id of comment
    * @param language deleted language 
+   * @param isPromoted true in case a comment is promoted to an answer
    * @throws Exception
    */
-  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception;
+  public void deleteCommentQuestionLang(String questionPath, String commentId, String language, boolean isPromoted) throws Exception;
 
   /**
    * Get language of question
@@ -1032,6 +1033,13 @@ public interface FAQService extends FAQServiceLegacy {
    * @throws Exception
    */
   public void addListenerPlugin(AnswerEventListener listener) throws Exception;
+  
+  /**
+   * Remove listener for answer 
+   * @param listener answer event listener 
+   * @throws Exception
+   */
+  public void removeListenerPlugin(AnswerEventListener listener) throws Exception;
 
   /**
    * Get comments of a question 
@@ -1063,4 +1071,69 @@ public interface FAQService extends FAQServiceLegacy {
    */
   public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception;
   
+  /**
+   * Defines Mixin type exo:activityInfo for question node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForQuestion(String ownerPath, String activityId);
+
+  /**
+   * Get value of exo:activityId property in question node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForQuestion(String ownerPath);
+  
+  /**
+   * Defines Mixin type exo:activityInfo for answer node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param answer
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForAnswer(String ownerPath, Answer answer, String activityId);
+
+  /**
+   * Get value of exo:activityId property in answer node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param answer
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForAnswer(String ownerPath, Answer answer);
+  
+  /**
+   * Defines Mixin type exo:activityInfo for comment node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param commentId - the id of comment posted for the question
+   * @param language - the language of comment
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForComment(String ownerPath, String commentId, String language, String activityId);
+
+  /**
+   * Get value of exo:activityId property in comment node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param commentId - the id of comment posted for the question
+   * @param language - the language of comment
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForComment(String ownerPath, String commentId, String language);
 }

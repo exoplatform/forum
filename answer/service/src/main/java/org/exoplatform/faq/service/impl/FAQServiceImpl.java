@@ -486,6 +486,10 @@ public class FAQServiceImpl implements FAQService, Startable {
   }
 
   public void removeQuestion(String questionId) throws Exception {
+    String questionActivityId = getActivityIdForQuestion(questionId);
+    for (AnswerEventListener ae : listeners_) {
+      ae.removeQuestion(questionActivityId);
+    }
     jcrData_.removeQuestion(questionId);
   }
 
@@ -535,6 +539,16 @@ public class FAQServiceImpl implements FAQService, Startable {
   }
 
   public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
+    Question oldQuestion = null;
+    if (isAddNew == false) {
+      oldQuestion = getQuestionById(question.getId());
+      oldQuestion.setEditedQuestionName(question.getQuestion());
+      oldQuestion.setEditedQuestionDetail(question.getDetail());
+      oldQuestion.setEditedQuestionAttachment(question.getAttachMent().size());
+      oldQuestion.setEditedQuestionActivated(question.isActivated());
+      oldQuestion.setEditedQuestionLanguage(question.getLanguage());
+      question.setPcs(oldQuestion.getPcs());
+    }
     Node questionNode = jcrData_.saveQuestion(question, isAddNew, faqSetting);
     SessionProvider provider = CommonUtils.createSystemProvider();
     questionNode = (Node) locator.getSessionManager().getSession(provider).getItem(questionNode.getPath());
@@ -896,6 +910,7 @@ public class FAQServiceImpl implements FAQService, Startable {
     saveAnswer(questionId, answer, isNew);
   }
 
+  // This service is called when vote answer
   public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception {
     jcrData_.saveAnswer(questionId, answer, isNew);
     for (AnswerEventListener ae : listeners_) {
@@ -910,9 +925,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception {
     jcrData_.saveComment(questionId, comment, isNew);
-    for (AnswerEventListener ae : listeners_) {
-      ae.saveComment(questionId, comment, isNew);
-    }
+    /*for (AnswerEventListener ae : listeners_) {
+      ae.saveComment(questionId, comment, "");
+    }*/
   }
 
   public Comment getCommentById(SessionProvider sProvider, String questionId, String commentId) throws Exception {
@@ -941,7 +956,17 @@ public class FAQServiceImpl implements FAQService, Startable {
     saveAnswer(questionId, answers);
   }
 
+  //This action will be called when a response is added or modified
   public void saveAnswer(String questionId, Answer[] answers) throws Exception {
+    for (Answer answer : answers) {
+      Answer oldAnswer = getAnswerById(questionId, answer.getId());
+      if (oldAnswer != null) {
+        oldAnswer.setEditedAnswer(answer.getResponses());
+        oldAnswer.setEditedAnswerActivated(answer.getActivateAnswers());
+        oldAnswer.setEditedAnswerApproved(answer.getApprovedAnswers());
+        answer.setPcs(oldAnswer.getPcs());
+      }
+    }
     jcrData_.saveAnswer(questionId, answers);
     for (AnswerEventListener ae : listeners_) {
       ae.saveAnswer(questionId, answers, true);
@@ -1073,6 +1098,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      for (AnswerEventListener ae : listeners_) {
+        ae.removeAnswer(questionPath, answerId);
+      }
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.deleteAnswerQuestionLang(questionNode, answerId, language);
     } catch (Exception e) {
@@ -1080,11 +1108,18 @@ public class FAQServiceImpl implements FAQService, Startable {
     }
   }
 
-  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception {
+  public void deleteCommentQuestionLang(String questionPath, String commentId, String language, boolean isPromoted) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      String commentActivityId = getActivityIdForComment(questionPath, commentId, language);
+      String questionActivityId = getActivityIdForQuestion(questionPath);
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.deleteCommentQuestionLang(questionNode, commentId, language);
+      if (isPromoted == false) {
+        for (AnswerEventListener ae : listeners_) {
+          ae.removeComment(questionActivityId, commentActivityId);
+        }
+      }
     } catch (Exception e) {
       log.error("Fail to delete " + commentId + " comment question", e);
     }
@@ -1122,11 +1157,21 @@ public class FAQServiceImpl implements FAQService, Startable {
     return null;
   }
 
+  //This service is called when change status of answer or comment to an answer
   public void saveAnswer(String questionPath, Answer answer, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      Answer oldAnswer = getAnswerById(questionPath, answer.getId());
+      if (oldAnswer != null) {
+        oldAnswer.setEditedAnswerActivated(answer.getActivateAnswers());
+        oldAnswer.setEditedAnswerApproved(answer.getApprovedAnswers());
+        answer.setPcs(oldAnswer.getPcs());
+      }
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.saveAnswer(questionNode, answer, language);
+      for (AnswerEventListener ae : listeners_) {
+        ae.saveAnswer(questionPath, answer, true);
+      }
     } catch (Exception e) {
       log.error("Fail to save answer:", e);
     }
@@ -1142,13 +1187,13 @@ public class FAQServiceImpl implements FAQService, Startable {
     }
   }
 
-  public void saveComment(String questionPath, Comment comment, String languge) throws Exception {
+  public void saveComment(String questionPath, Comment comment, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
-      MultiLanguages.saveComment(questionNode, comment, languge);
+      MultiLanguages.saveComment(questionNode, comment, language);
       for (AnswerEventListener ae : listeners_) {
-        ae.saveComment(questionNode.getName(), comment, true);
+        ae.saveComment(questionPath, comment, language);
       }
     } catch (Exception e) {
       log.error("\nFail to save comment\n ", e);
@@ -1180,6 +1225,9 @@ public class FAQServiceImpl implements FAQService, Startable {
     try {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.voteQuestion(questionNode, userName, number);
+      for (AnswerEventListener ae : listeners_) {
+        ae.voteQuestion(questionNode.getName());
+      }
     } catch (Exception e) {
       log.error("\nFail to vote question\n", e);
     }
@@ -1190,6 +1238,9 @@ public class FAQServiceImpl implements FAQService, Startable {
     try {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.unVoteQuestion(questionNode, userName);
+      for (AnswerEventListener ae : listeners_) {
+        ae.unVoteQuestion(questionNode.getName());
+      }
     } catch (Exception e) {
       log.error("\nFail to unvote question\n", e);
     }
@@ -1259,6 +1310,10 @@ public class FAQServiceImpl implements FAQService, Startable {
     listeners_.add(listener);
   }
 
+  public void removeListenerPlugin(AnswerEventListener listener) throws Exception {
+    listeners_.remove(listener);
+  }
+  
   public void calculateDeletedUser(String userName) throws Exception {
     jcrData_.calculateDeletedUser(userName);
   }
@@ -1271,5 +1326,29 @@ public class FAQServiceImpl implements FAQService, Startable {
   @Override
   public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception {
     return jcrData_.readQuestionProperty(questionId, propertyName, returnType);
+  }
+  
+  public void saveActivityIdForQuestion(String ownerPath, String activityId) {
+    jcrData_.saveActivityIdForQuestion(ownerPath, activityId);
+  }
+
+  public String getActivityIdForQuestion(String ownerPath) {
+    return jcrData_.getActivityIdForQuestion(ownerPath);
+  }
+  
+  public void saveActivityIdForAnswer(String ownerPath, Answer answer, String activityId) {
+    jcrData_.saveActivityIdForAnswer(ownerPath, answer, activityId);
+  }
+
+  public String getActivityIdForAnswer(String ownerPath, Answer answer) {
+    return jcrData_.getActivityIdForAnswer(ownerPath, answer);
+  }
+  
+  public void saveActivityIdForComment(String ownerPath, String commentId, String language, String activityId) {
+    jcrData_.saveActivityIdForComment(ownerPath, commentId, language, activityId);
+  }
+
+  public String getActivityIdForComment(String ownerPath, String commentId, String language) {
+    return jcrData_.getActivityIdForComment(ownerPath, commentId, language);
   }
 }

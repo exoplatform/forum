@@ -19,7 +19,9 @@ package org.exoplatform.faq.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.beans.PropertyChangeEvent;
 
+import org.exoplatform.commons.utils.PropertyChangeSupport;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
@@ -112,7 +114,27 @@ public class Question {
 
   /** number of answers that are activated and approved */
   private long                 numberOfPublicAnswers   = 0;
-
+  
+  /** question name */
+  public static String QUESTION_NAME = "questionName";
+  
+  /** question detail */
+  public static String QUESTION_DETAIL = "questionDetail";
+  
+  /** question activated */
+  public static String QUESTION_ACTIVATED = "questionActivated";
+  
+  /** question add attachment*/
+  public static String QUESTION_ATTACHMENT= "questionAttachment";
+  
+  /** question add language*/
+  public static String QUESTION_LANGUAGE= "questionLanguage";
+  
+  /** question rate*/
+  public static String QUESTION_RATING = "questionRating";
+  
+  private PropertyChangeSupport pcs = null;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -120,6 +142,40 @@ public class Question {
     id = QUESTION_ID + IdGenerator.generate();
     relations = new String[] {};
     multiLanguages = new QuestionLanguage[] {};
+    pcs = new PropertyChangeSupport(this);
+  }
+  
+  public PropertyChangeSupport getPcs() {
+    return pcs;
+  }
+
+  public void setPcs(PropertyChangeSupport pcs) {
+    this.pcs = pcs;
+  }
+  
+  public void setEditedQuestionName(String newName) {
+    pcs.addPropertyChange(QUESTION_NAME, this.question, newName);
+  }
+  
+  public void setEditedQuestionDetail(String newDetail) {
+    pcs.addPropertyChange(QUESTION_DETAIL, this.detail, newDetail);
+  }
+  
+  public void setEditedQuestionActivated(boolean activate) {
+    pcs.addPropertyChange(QUESTION_ACTIVATED, this.isActivated, activate);
+  }
+  
+  //Actually we check only the number of attachments, must be confirmed all actions related to this change
+  public void setEditedQuestionAttachment(int length) {
+    pcs.addPropertyChange(QUESTION_ATTACHMENT, this.listAttachments.size(), length);
+  }
+  
+  public void setEditedQuestionLanguage(String language) {
+    pcs.addPropertyChange(QUESTION_LANGUAGE, this.language, language);
+  }
+  
+  public void setEditedQuestionRating(double markVote) {
+    pcs.addPropertyChange(QUESTION_RATING, this.markVote, markVote);
   }
 
   /**
@@ -612,6 +668,10 @@ public class Question {
    */
   public void setNumberOfPublicAnswers(long numberOfPublicAnswers) {
     this.numberOfPublicAnswers = numberOfPublicAnswers;
+  }
+  
+  public PropertyChangeEvent[] getChangeEvent() {
+    return pcs.getChangeEvents();
   }
 
 }

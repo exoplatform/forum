@@ -16,8 +16,10 @@
  */
 package org.exoplatform.faq.service;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
+import org.exoplatform.commons.utils.PropertyChangeSupport;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
@@ -65,11 +67,23 @@ public class Answer {
 
   private String   postId;
 
+  /** answer detail */
+  public static String ANSWER_EDIT = "answerEdit";
+  
+  /** answer activate*/
+  public static String ANSWER_ACTIVATED = "answerActivated";
+  
+  /** answer approved*/
+  public static String ANSWER_APPROVED = "answerApproved";
+  
+  private PropertyChangeSupport pcs = null;
+  
   /**
    * Instantiates a new answer.
    */
   public Answer() {
     id = ANSWER_ID + IdGenerator.generate();
+    pcs = new PropertyChangeSupport(this);
   }
 
   public Answer(String currentAnswer, boolean isApprovetedAnswer) {
@@ -79,6 +93,31 @@ public class Answer {
     this.activateAnswers = true;
     this.dateResponse = new java.util.Date();
     this.marksVoteAnswer = 0;
+    pcs = new PropertyChangeSupport(this);
+  }
+  
+  public PropertyChangeSupport getPcs() {
+    return pcs;
+  }
+
+  public void setPcs(PropertyChangeSupport pcs) {
+    this.pcs = pcs;
+  }
+  
+  public void setEditedAnswer(String newAnswer) {
+    pcs.addPropertyChange(ANSWER_EDIT, this.responses, newAnswer);
+  }
+  
+  public void setEditedAnswerActivated(boolean activated) {
+    pcs.addPropertyChange(ANSWER_ACTIVATED, this.activateAnswers, activated);
+  }
+  
+  public void setEditedAnswerApproved(boolean approved) {
+    pcs.addPropertyChange(ANSWER_APPROVED, this.approvedAnswers, approved);
+  }
+  
+  public PropertyChangeEvent[] getChangeEvent() {
+    return pcs.getChangeEvents();
   }
 
   /**
