@@ -17,6 +17,7 @@
 
 package org.exoplatform.poll.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.component.ComponentPlugin;
@@ -25,8 +26,12 @@ import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.Poll.PollAction;
+import org.exoplatform.poll.service.PollEventLifeCycle;
+import org.exoplatform.poll.service.PollEventListener;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
+import org.exoplatform.poll.service.Utils;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -39,6 +44,8 @@ public class PollServiceImpl implements Startable, PollService {
   private KSDataLocation   dataLocator;
 
   private static final Log log = ExoLogger.getLogger(PollServiceImpl.class);
+  
+  protected List<PollEventListener>   listeners_ = new ArrayList<PollEventListener>(3);
 
   public PollServiceImpl(InitParams params, KSDataLocation locator, NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
     this.dataLocator = locator;
@@ -66,13 +73,43 @@ public class PollServiceImpl implements Startable, PollService {
   }
 
   public Poll removePoll(String pollId) {
+    for (PollEventLifeCycle f : listeners_) {
+      f.pollRemove(pollId);
+    }
     return storage_.removePoll(pollId);
   }
 
   public void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception {
+    if (!isVote) {
+      if (isNew) {
+        poll.setPollAction(PollAction.Create_Poll);
+      } else {
+        poll.setPollAction(PollAction.Update_Poll);
+      }
+    } else {
+        Poll oldPoll = getPoll(poll.getId());
+        int oldVoters = oldPoll.getUserVote().length;
+        int newVoters = poll.getUserVote().length;
+        boolean isVoteAgain = (oldVoters == newVoters);
+        poll.setPollAction(PollAction.Vote_Poll);
+        if(isVoteAgain) {
+          poll.setPollAction(PollAction.Vote_Again_Poll);
+        }
+    }
     storage_.savePoll(poll, isNew, isVote);
+    for (PollEventLifeCycle f : listeners_) {
+      f.savePoll(poll);
+    }
+  }
+  
+  public void addListenerPlugin(PollEventListener listener) throws Exception {
+    listeners_.add(listener);
   }
 
+  public void removeListenerPlugin(PollEventListener listener) throws Exception {
+    listeners_.remove(listener);
+  }
+  
   public void setClosedPoll(Poll poll){
     storage_.setClosedPoll(poll);
   }
@@ -87,6 +124,14 @@ public class PollServiceImpl implements Startable, PollService {
   
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
     return storage_.getPollSummary(groupOfUser);
+  }
+  
+  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+    storage_.saveActivityIdForOwner(ownerPath, activityId);
+  }
+
+  public String getActivityIdForOwner(String ownerPath) {
+    return storage_.getActivityIdForOwner(ownerPath);
   }
 
 }

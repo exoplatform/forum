@@ -68,6 +68,62 @@ public class Poll {
   private String   expire;
 
   private String   isAdmin      = "false";
+  
+  private String   link;
+  
+  /** Types of action on poll. */
+  public static enum                PollAction 
+                                      {
+                                        Create_Poll(true),
+                                        Update_Poll(true),
+                                        Vote_Poll(true),
+                                        Vote_Again_Poll(true);
+                                        
+                                        private boolean type;
+                                        
+                                        private PollAction(boolean type) {
+                                          this.type = type;
+                                        }
+                                        public boolean value() {
+                                          return this.type;
+                                        }
+                                        public String getMessage(String value) {
+                                          switch (this) {
+                                            case Create_Poll: {
+                                              return "";
+                                            }
+                                            case Update_Poll: {
+                                              return "Poll has been updated.";
+                                            }
+                                            case Vote_Poll: {
+                                              return "Has voted for "+value+".";
+                                            }
+                                            case Vote_Again_Poll: {
+                                              return "Has changed is voted for "+value+".";
+                                            }
+                                            default : {
+                                              return null;
+                                            }
+                                          }
+                                        }
+                                        
+                                      };
+                                      
+  private PollAction pollAction;
+
+  /**
+   * @return the pollAction
+   */
+  public PollAction getPollAction() {
+    return pollAction;
+  }
+
+  /**
+   * @param pollAction the pollAction to set
+   */
+  public void setPollAction(PollAction pollAction) {
+    this.pollAction = pollAction;
+  }
 
   public Poll() {
     id = PollNodeTypes.POLL + IdGenerator.generate();
@@ -299,4 +355,19 @@ public class Poll {
   public String getExpire() {
     return expire;
   }
+
+  /**
+   * @return the link
+   */
+  public String getLink() {
+    return link;
+  }
+
+  /**
+   * @param link the link to set
+   */
+  public void setLink(String link) {
+    this.link = link;
+  }
+
 }

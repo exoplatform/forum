@@ -72,5 +72,7 @@ public interface PollNodeTypes {
   public static final String POLLS              = "Polls".intern();
 
   public static final String GROUPS             = "Groups".intern();
+  
+  public static final String EXO_LINK           = "exo:link";
 
 }

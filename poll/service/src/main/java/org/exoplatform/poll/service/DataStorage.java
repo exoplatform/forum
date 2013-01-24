@@ -17,4 +17,8 @@ public interface DataStorage {
   boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception;
 
   PollSummary getPollSummary(List<String> groupOfUser) throws Exception;
+  
+  void saveActivityIdForOwner(String ownerPath, String activityId);
+
+  String getActivityIdForOwner(String ownerPath);
 }
