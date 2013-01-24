@@ -18,7 +18,7 @@
  */
 
 /** Contributed by Yegor Jbanov and David Bernard. */
-dp.sh.Brushes.Scala = function()
+window.eXo.dp.sh.Brushes.Scala = function()
 {
 	var keywords =	'val sealed case def true trait implicit forSome import match object null finally super ' +
 	                'override try lazy for var catch throw type extends class while with new final yield abstract ' +
@@ -27,11 +27,11 @@ dp.sh.Brushes.Scala = function()
 	var keyops =	'[_:=><%#@]+';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },		// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },		// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },		// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },		// multiline comments
 		{ regex: new RegExp("(['\"]{3})([^\\1])*?\\1", 'gm'),                   css: 'string'  },		// multi-line strings
 		{ regex: new RegExp('"(?!")(?:\\.|\\\\\\"|[^\\""\\n\\r])*"', 'gm'),     css: 'string'  },       // double-quoted string
-		{ regex: dp.sh.RegexLib.SingleQuotedString,								css: 'string'  },		// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,								css: 'string'  },		// strings
 		{ regex: new RegExp('\\b([\\d]+(\\.[\\d]+)?|0x[a-f0-9]+)\\b', 'gi'),	css: 'number'  },		// numbers
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),					css: 'keyword' },		// keywords
 		{ regex: new RegExp(keyops, 'gm'),										css: 'keyword' }		                    // scala keyword
@@ -42,5 +42,5 @@ dp.sh.Brushes.Scala = function()
 					'.dp-j .number { color: #C00000; }';
 }
 
-dp.sh.Brushes.Scala.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Scala.Aliases		= ['scala'];
+window.eXo.dp.sh.Brushes.Scala.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Scala.Aliases		= ['scala'];

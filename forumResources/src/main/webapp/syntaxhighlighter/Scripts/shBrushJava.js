@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Java = function()
+window.eXo.dp.sh.Brushes.Java = function()
 {
 	var keywords =	'abstract assert boolean break byte case catch char class const ' +
 			'continue default do double else enum extends ' +
@@ -28,10 +28,10 @@ dp.sh.Brushes.Java = function()
 			'transient try void volatile while';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },		// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },		// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,								css: 'string' },		// strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,								css: 'string' },		// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },		// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },		// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,								css: 'string' },		// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,								css: 'string' },		// strings
 		{ regex: new RegExp('\\b([\\d]+(\\.[\\d]+)?|0x[a-f0-9]+)\\b', 'gi'),	css: 'number' },		// numbers
 		{ regex: new RegExp('(?!\\@interface\\b)\\@[\\$\\w]+\\b', 'g'),			css: 'annotation' },	// annotation @anno
 		{ regex: new RegExp('\\@interface\\b', 'g'),							css: 'keyword' },		// @interface keyword
@@ -43,5 +43,5 @@ dp.sh.Brushes.Java = function()
 					'.dp-j .number { color: #C00000; }';
 };
 
-dp.sh.Brushes.Java.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Java.Aliases	= ['java'];
+window.eXo.dp.sh.Brushes.Java.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Java.Aliases	= ['java'];

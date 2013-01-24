@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-dp.sh.Brushes.Bash = function()
+window.eXo.dp.sh.Brushes.Bash = function()
 {
 	var keywords =	'if fi then elif else for do done until while break continue case function return in eq ne gt lt ge le';
 	var commands =  'alias apropos awk bash bc bg builtin bzip2 cal cat cd cfdisk chgrp chmod chown chroot' +
@@ -36,8 +36,8 @@ dp.sh.Brushes.Bash = function()
 					;
     
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLinePerlComments,			css: 'comment' },		// one line comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,				css: 'string' },		// double quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLinePerlComments, css: 'comment' },		// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString, css: 'string' },		// double quoted strings
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),	css: 'keyword' },		// keywords
 		{ regex: new RegExp(this.GetKeywords(commands), 'gm'),	css: 'command' }		// commands
 		];
@@ -46,6 +46,6 @@ dp.sh.Brushes.Bash = function()
 	this.Style =	'.dp-sh .command { color: #646464; font-weight: bold; }';
 }
 
-dp.sh.Brushes.Bash.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Bash.Aliases		= ['bash', 'shell'];
+window.eXo.dp.sh.Brushes.Bash.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Bash.Aliases		= ['bash', 'shell'];
 

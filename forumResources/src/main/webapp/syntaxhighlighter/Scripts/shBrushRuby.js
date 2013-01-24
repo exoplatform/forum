@@ -18,7 +18,7 @@
  */
 
 /* Ruby 1.8.4 syntax contributed by Erik Peterson */
-dp.sh.Brushes.Ruby = function()
+window.eXo.dp.sh.Brushes.Ruby = function()
 {
   var keywords =	'alias and BEGIN begin break case class def define_method defined do each else elsif ' +
 					'END end ensure false for if in module new next nil not or raise redo rescue retry return ' +
@@ -29,9 +29,9 @@ dp.sh.Brushes.Ruby = function()
 					'ThreadGroup Thread Time TrueClass';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLinePerlComments,			css: 'comment' },	// one line comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,				css: 'string' },	// double quoted strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,				css: 'string' },	// single quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLinePerlComments,			css: 'comment' },	// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,				css: 'string' },	// double quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,				css: 'string' },	// single quoted strings
 		{ regex: new RegExp(':[a-z][A-Za-z0-9_]*', 'g'),		css: 'symbol' },	// symbols
 		{ regex: new RegExp('(\\$|@@|@)\\w+', 'g'),				css: 'variable' },	// $global, @instance, and @@class variables
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),	css: 'keyword' },	// keywords
@@ -43,5 +43,5 @@ dp.sh.Brushes.Ruby = function()
 					'.dp-rb .variable { color: #a70; font-weight: bold; }';
 };
 
-dp.sh.Brushes.Ruby.prototype = new dp.sh.Highlighter();
-dp.sh.Brushes.Ruby.Aliases = ['ruby', 'rails', 'ror'];
+window.eXo.dp.sh.Brushes.Ruby.prototype = new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Ruby.Aliases = ['ruby', 'rails', 'ror'];
