@@ -14,7 +14,7 @@
             "eXo.forum.UIForumPortlet.ReloadImage();"
             ];
   ForumUtils.addScripts(null, null, scripts);
-  ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 %>
 <% uiform.begin() %>
 <div class="UIViewTopic UITopicDetail resizable" id="SizeImage">

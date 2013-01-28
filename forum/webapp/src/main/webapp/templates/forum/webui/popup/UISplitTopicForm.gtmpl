@@ -70,7 +70,7 @@
 						    checked = "checked=\"checked\"";
 						  }
 					 %>
-					 <div><input type="checkbox" class="checkbox" value="false" id="$postId" name="$postId" $checked/></div>
+					 <div><input type="checkbox" class="checkbox" id="$postId" name="$postId" $checked/></div>
 		 			 </td>
 				</tr>
 			<%} %>

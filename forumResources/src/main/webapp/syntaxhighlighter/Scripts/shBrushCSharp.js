@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.CSharp = function()
+window.eXo.dp.sh.Brushes.CSharp = function()
 {
 	var keywords =	'abstract as base bool break byte case catch char checked class const ' +
 					'continue decimal default delegate do double else enum event explicit ' +
@@ -35,10 +35,10 @@ dp.sh.Brushes.CSharp = function()
 //		{ regex: new RegExp('(?<!/)//(?!/).*$|(?<!/)////(?!/).*$|/\\*[^\\*]*(.)*?\\*/', 'gm'),	css: 'comment' },			// one line comments starting with anything BUT '///' and multiline comments
 //		{ regex: new RegExp('(?<!/)///(?!/).*$', 'gm'),											css: 'comments' },		// XML comments starting with ///
 
-		{ regex: dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
 		{ regex: new RegExp('^\\s*#.*', 'gm'),						css: 'preprocessor' },		// preprocessor tags like #region and #endregion
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }			// c# keyword
 		];
@@ -47,5 +47,5 @@ dp.sh.Brushes.CSharp = function()
 	this.Style = '.dp-c .vars { color: #d00; }';
 };
 
-dp.sh.Brushes.CSharp.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.CSharp.Aliases	= ['c#', 'c-sharp', 'csharp'];
+window.eXo.dp.sh.Brushes.CSharp.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.CSharp.Aliases	= ['c#', 'c-sharp', 'csharp'];

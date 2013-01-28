@@ -141,6 +141,13 @@ public class CachedDataStorage implements DataStorage, Startable {
     linkListData.select(new ScopeCacheSelector<LinkListKey, ListLinkData>());
   }
   
+  private void clearTopicsCache(List<Topic> topics) throws Exception {
+    for(Topic t : topics) {
+      topicData.remove(new TopicKey(t.getPath(), true));
+    }
+    
+  }
+  
   private void clearTopicCache(String topicPath) throws Exception {
     topicData.remove(new TopicKey(topicPath, true));
   }
@@ -626,6 +633,13 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void modifyTopic(List<Topic> topics, int type) {
     storage.modifyTopic(topics, type);
+
+    //
+    try {
+      clearTopicsCache(topics);
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+    }
   }
 
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {

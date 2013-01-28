@@ -1,42 +1,46 @@
 (function($, window, document) {
   var CheckBox = {
+    jqCheckAll : null,
     init : function(cont) {
-      if (typeof(cont) == 'string') cont = findId(cont) ;
-      if (cont.exists()){
+      if (typeof (cont) == 'string') cont = findId(cont);
+      if (cont.exists()) {
         var checkboxes = cont.find('input.checkbox');
-        if (!checkboxes.exists()) return ;
-        checkboxes.eq(0).on('click', this.checkAll);
-        var len = checkboxes.length ;
-        for(var i = 1 ; i < len ; i ++) {
-          checkboxes.eq(i).on('click', this.check);
-          checkBoxManager.checkItem(checkboxes.eq(i));
-        }
+        if (!checkboxes.exists()) return;
+        checkboxes.on('click', this.check);
+        this.jqCheckAll = cont.find('input.checkbox:first');
+        this.jqCheckAll.off('click').on('click', this.checkAll);
+        
+        $.each(checkboxes, function(i, it) {
+          if($(it).attr('name') !== 'checkAll') {
+            CheckBox.checkItem($(it));
+          }
+        });
       }
     },
-    check : function(){
-      checkBoxManager.checkItem(this);
-      var row = $(this).parents('tr');
-      if (this.checked) {
+    check : function() {
+      CheckBox.checkItem($(this));
+      eXo.forum.UIForumPortlet.setChecked(this.checked);
+    },
+    checkItem : function(elm) {
+      var row = elm.parents('tr:first');
+      if (elm.is(':checked')) {
         row.addClass('SelectedItem');
-        eXo.forum.UIForumPortlet.setChecked(true);
-      }else{
-        eXo.forum.UIForumPortlet.setChecked(false);
+        var parent = row.parents('tbody:first');
+        if (parent.find("input[type=checkbox]:checked").length === parent.find('input[type=checkbox]').length) {
+          CheckBox.jqCheckAll.prop('checked', true);
+        }
+      } else {
         row.removeClass('SelectedItem');
+        CheckBox.jqCheckAll.prop('checked', false);
       }
     },
-    checkAll : function(){
+    checkAll : function() {
       eXo.forum.UIForumPortlet.checkAll(this);
-      var table = $(this).find('table tbody').eq(0);
-      var rows = $(table).find('tr');
-      var i = rows.length ;
+      var rows = $(this).parents('table').find('tbody:first').find('tr');
       if (this.checked) {
-        while(i--) {
-          rows.eq(i).addClass('SelectedItem');
-        }
-      } else{
-        while(i--){
-          rows.eq(i).removeClass('SelectedItem');
-        }
+        rows.addClass('SelectedItem');
+      } else {
+        rows.removeClass('SelectedItem');
       }
     }
   };
@@ -45,4 +49,6 @@
   window.eXo = eXo || {};
   window.eXo.forum = eXo.forum || {} ;
   window.eXo.forum.CheckBox = CheckBox;
+  
+  return CheckBox;
 })(gj, window, document);

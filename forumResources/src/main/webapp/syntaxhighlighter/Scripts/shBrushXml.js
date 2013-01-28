@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Xml = function()
+window.eXo.dp.sh.Brushes.Xml = function()
 {
 	this.CssClass = 'dp-xml';
 	this.Style =	'.dp-xml .cdata { color: #ff1493; }' +
@@ -26,10 +26,10 @@ dp.sh.Brushes.Xml = function()
 					'.dp-xml .attribute-value { color: blue; }';
 };
 
-dp.sh.Brushes.Xml.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Xml.Aliases	= ['xml', 'xhtml', 'xslt', 'html', 'xhtml'];
+window.eXo.dp.sh.Brushes.Xml.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Xml.Aliases	= ['xml', 'xhtml', 'xslt', 'html', 'xhtml'];
 
-dp.sh.Brushes.Xml.prototype.ProcessRegexList = function()
+window.eXo.dp.sh.Brushes.Xml.prototype.ProcessRegexList = function()
 {
 	function push(array, value)
 	{
@@ -66,12 +66,12 @@ dp.sh.Brushes.Xml.prototype.ProcessRegexList = function()
 			continue;
 		}
 			
-		push(this.matches, new dp.sh.Match(match[1], match.index, 'attribute'));
+		push(this.matches, new window.eXo.dp.sh.Match(match[1], match.index, 'attribute'));
 	
 		// if xml is invalid and attribute has no property value, ignore it	
 		if(match[2] != undefined)
 		{
-			push(this.matches, new dp.sh.Match(match[2], match.index + match[0].indexOf(match[2]), 'attribute-value'));
+			push(this.matches, new window.eXo.dp.sh.Match(match[2], match.index + match[0].indexOf(match[2]), 'attribute-value'));
 		}
 	}
 
@@ -84,6 +84,6 @@ dp.sh.Brushes.Xml.prototype.ProcessRegexList = function()
 	regex = new RegExp('(?:\&lt;|<)/*\\?*\\s*([:\\w-\.]+)', 'gm');
 	while((match = regex.exec(this.code)) != null)
 	{
-		push(this.matches, new dp.sh.Match(match[1], match.index + match[0].indexOf(match[1]), 'tag-name'));
+		push(this.matches, new window.eXo.dp.sh.Match(match[1], match.index + match[0].indexOf(match[1]), 'tag-name'));
 	}
 }

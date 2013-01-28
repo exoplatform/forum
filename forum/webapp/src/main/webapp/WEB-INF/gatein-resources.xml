@@ -45,7 +45,7 @@
       <as>contextMenu</as>
     </depends>
     <depends>
-      <module>CheckBoxManager</module>
+      <module>ForumCheckBoxManager</module>
       <as>checkBoxManager</as>
     </depends>
     <depends>
@@ -70,6 +70,17 @@
     </depends>
     <depends>
       <module>popupCategory</module>
+    </depends>
+  </module>
+
+  <module>
+    <name>ForumCheckBox</name>
+    <script>
+      <path>/javascript/eXo/forum/CheckBox.js</path>
+    </script>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
     </depends>
   </module>
 

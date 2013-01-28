@@ -36,7 +36,7 @@
     },
 
     getMenuElement : function(evt) {
-      var target = eventManager.EventManager.getEventTarget(evt);
+      var target = eventManager.getEventTarget(evt);
       for (i = 0; i < UIContextMenu.classNames.length; i++) {
         var parent = gj(target).parents('.' + UIContextMenu.classNames[i]);
         if (parent.exists()) {

@@ -1,7 +1,4 @@
-
-if(dp != null || dp != 'undefine'){ 
-	if(window.isBloggerMode == true)
-		dp.SyntaxHighlighter.BloggerMode();
-  
-	dp.SyntaxHighlighter.ClipboardSwf = '/forumResources/syntaxhighlighter/Scripts/clipboard.swf';
+if(window.isBloggerMode == true) {
+  window.eXo.dp.sh.BloggerMode();
 }
+window.eXo.dp.sh.ClipboardSwf = '/forumResources/syntaxhighlighter/Scripts/clipboard.swf';
