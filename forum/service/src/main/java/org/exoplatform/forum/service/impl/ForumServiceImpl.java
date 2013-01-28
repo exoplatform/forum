@@ -557,6 +557,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     String toCategoryName = ((Category) storage.getObjectNameByPath(Utils.getCategoryPath(destForumPath))).getCategoryName();
     for (ForumEventLifeCycle f : listeners_) {
       for (Topic topic : topics) {
+        topic.setPath(destForumPath);
         f.moveTopic(topic, toCategoryName, toForumName);
       }
     }
