@@ -76,6 +76,9 @@ public class Answer {
   /** answer approved*/
   public static String ANSWER_APPROVED = "answerApproved";
   
+  /** answer promoted from comment*/
+  public static String ANSWER_PROMOTED = "answerPromoted";
+  
   private PropertyChangeSupport pcs = null;
   
   /**
@@ -114,6 +117,10 @@ public class Answer {
   
   public void setEditedAnswerApproved(boolean approved) {
     pcs.addPropertyChange(ANSWER_APPROVED, this.approvedAnswers, approved);
+  }
+  
+  public void setEditedAnswerPromoted(boolean isPromoted) {
+    pcs.addPropertyChange(ANSWER_PROMOTED, false, isPromoted);
   }
   
   public PropertyChangeEvent[] getChangeEvent() {

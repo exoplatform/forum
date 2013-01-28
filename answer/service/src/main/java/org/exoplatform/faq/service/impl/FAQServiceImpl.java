@@ -1157,7 +1157,7 @@ public class FAQServiceImpl implements FAQService, Startable {
     return null;
   }
 
-  //This service is called when change status of answer or comment to an answer
+  //This service is called when change status of answer or promote a comment to an answer
   public void saveAnswer(String questionPath, Answer answer, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
@@ -1166,6 +1166,9 @@ public class FAQServiceImpl implements FAQService, Startable {
         oldAnswer.setEditedAnswerActivated(answer.getActivateAnswers());
         oldAnswer.setEditedAnswerApproved(answer.getApprovedAnswers());
         answer.setPcs(oldAnswer.getPcs());
+      }
+      if (answer.getChangeEvent().length == 0) {//case of promote comment
+        answer.setEditedAnswerPromoted(true);
       }
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.saveAnswer(questionNode, answer, language);
