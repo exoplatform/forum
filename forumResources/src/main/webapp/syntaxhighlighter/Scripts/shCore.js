@@ -20,7 +20,8 @@
 //
 // create namespaces
 //
-window.dp = {
+window.eXo = window.eXo || {};
+window.eXo.dp = window.eXo.dp || {
 	sh :
 	{
 		Toolbar : {},
@@ -34,6 +35,7 @@ window.dp = {
 		Version : '1.5.2'
 	}
 };
+var dp = window.eXo.dp;
 
 // make an alias
 dp.SyntaxHighlighter = dp.sh;

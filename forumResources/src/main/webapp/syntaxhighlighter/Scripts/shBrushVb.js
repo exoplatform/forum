@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Vb = function()
+window.eXo.dp.sh.Brushes.Vb = function()
 {
 	var keywords =	'AddHandler AddressOf AndAlso Alias And Ansi As Assembly Auto ' +
 					'Boolean ByRef Byte ByVal Call Case Catch CBool CByte CChar CDate ' +
@@ -36,7 +36,7 @@ dp.sh.Brushes.Vb = function()
 
 	this.regexList = [
 		{ regex: new RegExp('\'.*$', 'gm'),							css: 'comment' },			// one line comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// strings
 		{ regex: new RegExp('^\\s*#.*', 'gm'),						css: 'preprocessor' },		// preprocessor tags like #region and #endregion
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }			// c# keyword
 		];
@@ -44,5 +44,5 @@ dp.sh.Brushes.Vb = function()
 	this.CssClass = 'dp-vb';
 };
 
-dp.sh.Brushes.Vb.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Vb.Aliases	= ['vb', 'vb.net'];
+window.eXo.dp.sh.Brushes.Vb.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Vb.Aliases	= ['vb', 'vb.net'];

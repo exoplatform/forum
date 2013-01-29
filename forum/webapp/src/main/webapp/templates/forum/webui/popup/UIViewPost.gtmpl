@@ -9,7 +9,7 @@
 	         "eXo.forum.UIForumPortlet.reSizeImgViewPost();"
          ];
   ForumUtils.addScripts(null, null, scripts);
-  ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
   
 	Post post = uicomponent.getPostView(); 
 	String title = post.getName();	

@@ -18,7 +18,7 @@
  */
 
 /* Python 2.3 syntax contributed by Gheorghe Milas */
-dp.sh.Brushes.Python = function()
+window.eXo.dp.sh.Brushes.Python = function()
 {
     var keywords =  'and assert break class continue def del elif else ' +
                     'except exec finally for from global if import in is ' +
@@ -27,7 +27,7 @@ dp.sh.Brushes.Python = function()
     var special =  'None True False self cls class_';
 
     this.regexList = [
-        { regex: dp.sh.RegexLib.SingleLinePerlComments, css: 'comment' },
+        { regex: window.eXo.dp.sh.RegexLib.SingleLinePerlComments, css: 'comment' },
         { regex: new RegExp("^\\s*@\\w+", 'gm'), css: 'decorator' },
         { regex: new RegExp("(['\"]{3})([^\\1])*?\\1", 'gm'), css: 'comment' },
         { regex: new RegExp('"(?!")(?:\\.|\\\\\\"|[^\\""\\n\\r])*"', 'gm'), css: 'string' },
@@ -45,5 +45,5 @@ dp.sh.Brushes.Python = function()
 					'.dp-py .commonlibs { color: #8A2BE2; font-style: italic; }';
 };
 
-dp.sh.Brushes.Python.prototype  = new dp.sh.Highlighter();
-dp.sh.Brushes.Python.Aliases    = ['py', 'python'];
+window.eXo.dp.sh.Brushes.Python.prototype  = new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Python.Aliases    = ['py', 'python'];

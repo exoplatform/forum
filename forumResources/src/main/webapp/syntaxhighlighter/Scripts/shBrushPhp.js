@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-dp.sh.Brushes.Php = function()
+window.eXo.dp.sh.Brushes.Php = function()
 {
 	var funcs	=	'abs acos acosh addcslashes addslashes ' +
 					'array_change_key_case array_chunk array_combine array_count_values array_diff '+
@@ -63,11 +63,11 @@ dp.sh.Brushes.Php = function()
 					'__METHOD__ abstract interface public implements extends private protected throw';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
-		{ regex: dp.sh.RegexLib.SingleLinePerlComments,				css: 'comment' },			// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// double quoted strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// single quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLinePerlComments,				css: 'comment' },			// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// double quoted strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// single quoted strings
 		{ regex: new RegExp('\\$\\w+', 'g'),						css: 'vars' },				// variables
 		{ regex: new RegExp(this.GetKeywords(funcs), 'gmi'),		css: 'func' },				// functions
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }			// keyword
@@ -76,5 +76,5 @@ dp.sh.Brushes.Php = function()
 	this.CssClass = 'dp-c';
 };
 
-dp.sh.Brushes.Php.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Php.Aliases	= ['php'];
+window.eXo.dp.sh.Brushes.Php.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Php.Aliases	= ['php'];

@@ -18,7 +18,7 @@
  */
 
 /** Created by Andres Almiray (http://jroller.com/aalmiray/entry/nice_source_code_syntax_highlighter). */
-dp.sh.Brushes.Groovy = function()
+window.eXo.dp.sh.Brushes.Groovy = function()
 {
 	var keywords =	'as assert break case catch class continue def default do else extends finally ' +
 					'if in implements import instanceof interface new package property return switch ' +
@@ -39,10 +39,10 @@ dp.sh.Brushes.Groovy = function()
 					'getText';
 
 	this.regexList = [
-		{ regex: dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },	// one line comments
-		{ regex: dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },	// multiline comments
-		{ regex: dp.sh.RegexLib.DoubleQuotedString,								css: 'string' },	// strings
-		{ regex: dp.sh.RegexLib.SingleQuotedString,								css: 'string' },	// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,							css: 'comment' },	// one line comments
+		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,								css: 'comment' },	// multiline comments
+		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,								css: 'string' },	// strings
+		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,								css: 'string' },	// strings
 		{ regex: new RegExp('""".*"""','g'),									css: 'string' },	// GStrings
 		{ regex: new RegExp('\\b([\\d]+(\\.[\\d]+)?|0x[a-f0-9]+)\\b', 'gi'),	css: 'number' },	// numbers
 		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),					css: 'keyword' },	// goovy keyword
@@ -64,5 +64,5 @@ dp.sh.Brushes.Groovy = function()
 					;
 }
 
-dp.sh.Brushes.Groovy.prototype	= new dp.sh.Highlighter();
-dp.sh.Brushes.Groovy.Aliases	= ['groovy'];
+window.eXo.dp.sh.Brushes.Groovy.prototype	= new window.eXo.dp.sh.Highlighter();
+window.eXo.dp.sh.Brushes.Groovy.Aliases	= ['groovy'];

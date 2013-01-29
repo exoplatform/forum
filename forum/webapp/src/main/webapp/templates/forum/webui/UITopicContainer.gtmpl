@@ -48,10 +48,11 @@
           		"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
           		"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
           		"eXo.forum.UIForumPortlet.goLastPost('top');",
+          		"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
           		"eXo.forum.UIForumPortlet.submitSearch('SearchInForum');"
           		];
-	ForumUtils.addScripts(null, null, scripts);
-	ForumUtils.addScripts("CheckBoxManager", "checkBoxManager", "checkBoxManager.init('"+uicomponent.id+"') ;");
+  ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
+	ForumUtils.addScripts("ForumCheckBoxManager", "checkBoxManager", "checkBoxManager.init('"+uicomponent.id+"') ;");
 %>
 <div class="UITopicContainer">
   <% uiform.begin() %>
@@ -88,7 +89,7 @@
       _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
     %>
   </div>
-  <div style="display:none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
+  <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
   <div class="ForumContainer">
     
       <div class="ForumToolbar ForumActionToolbar ClearFix">
@@ -294,7 +295,7 @@
                   </div>
                 </th>
                 <% if(canEdit) { %>
-                <th style="width:30px;"><input type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
+                <th style="width:30px;"><input type="checkbox" name="checkAll" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
                 <% } %>
               </tr>
             </thead>
@@ -540,7 +541,7 @@
                       checked = "checked=\"checked\"";
                     }
                   %>
-                  <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" title="$titlePost" name="$topicId" $checked/></td>
+                  <td class="Tdbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/></td>
                   <% } %>
                 </tr>
             <% 

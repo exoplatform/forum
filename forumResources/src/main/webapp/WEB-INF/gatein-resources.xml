@@ -37,20 +37,20 @@
       <as>gj</as>
     </depends>
   </module>
+   
+   <module>
+      <name>forumFilter</name>
+      <script>
+         <path>/javascript/eXo/forum/UIForumFilter.js</path>
+      </script>
+      <depends>
+         <module>jquery</module>
+         <as>gj</as>
+      </depends>
+   </module>
 
   <module>
-    <name>forumFilter</name>
-    <script>
-      <path>/javascript/eXo/forum/UIForumFilter.js</path>
-    </script>
-    <depends>
-      <module>jquery</module>
-      <as>gj</as>
-    </depends>
-  </module>
-
-  <module>
-    <name>EventManager</name>
+    <name>ForumEventManager</name>
     <as>eventManager</as>
     <script>
       <path>/javascript/eXo/forum/EventManager.js</path>
@@ -71,7 +71,7 @@
       <path>/javascript/eXo/forum/UIContextMenu.js</path>
     </script>
     <depends>
-      <module>EventManager</module>
+      <module>ForumEventManager</module>
       <as>eventManager</as>
     </depends>
     <depends>
@@ -85,7 +85,7 @@
   </module>
 
   <module>
-    <name>CheckBoxManager</name>
+    <name>ForumCheckBoxManager</name>
     <script>
       <path>/javascript/eXo/forum/CheckBoxManager.js</path>
     </script>
@@ -147,9 +147,6 @@
   <module>
     <name>Syntaxhighlighter</name>
     <depends>
-      <module>shCore</module>
-    </depends>
-    <depends>
       <module>shLoadConfig</module>
     </depends>
     <depends>
@@ -197,6 +194,9 @@
     <depends>
       <module>shBrushXml</module>
     </depends>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -219,6 +219,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -230,6 +233,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -241,6 +247,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -252,6 +261,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -263,6 +275,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -274,6 +289,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -285,6 +303,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -296,6 +317,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -307,6 +331,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -318,6 +345,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -329,6 +359,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -340,6 +373,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -351,6 +387,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -362,6 +401,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -373,6 +415,9 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
   
   <module>
@@ -384,5 +429,8 @@
         })();      
       </adapter>
     </script>
+    <depends>
+      <module>shCore</module>
+    </depends>
   </module>
 </gatein-resources>

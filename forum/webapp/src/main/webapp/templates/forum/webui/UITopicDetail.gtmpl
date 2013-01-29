@@ -78,7 +78,7 @@
   	         	];
   	ForumUtils.addScripts(null, null, scripts);
   	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init();");
-  	ForumUtils.addScripts("Syntaxhighlighter", null, "dp.SyntaxHighlighter.HighlightAll('code');");
+  	ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
   }
 %>
 <div class="UITopicDetail">
@@ -140,7 +140,7 @@
       <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
     </div>
 <!-- Start PostsInThreadContainer -->
-  <div style="display:none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
+  <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
   <div class="PostsInThreadContainer ImageContentContainer">
     <div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
             <% if(isShowMenu && canEdit) { %> 
@@ -552,7 +552,7 @@
                        isChecked = "checked=\"checked\"";
                      } 
                   %>
-                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" value="false" name="$postId" $isChecked/>
+                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" name="$postId" $isChecked/>
                   <%} %>
                 <%
                    if(isShowIP) {

@@ -5,7 +5,7 @@ import org.exoplatform.forum.service.Forum;
 %>
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
-		<div style="display:none;" id="divChecked" checked="0"><span></span></div>
+		<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 			<%
