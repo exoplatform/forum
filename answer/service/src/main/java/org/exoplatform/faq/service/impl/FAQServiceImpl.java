@@ -1117,7 +1117,7 @@ public class FAQServiceImpl implements FAQService, Startable {
       MultiLanguages.deleteCommentQuestionLang(questionNode, commentId, language);
       if (isPromoted == false) {
         for (AnswerEventListener ae : listeners_) {
-          ae.removeComment(questionActivityId, commentActivityId);
+          ae.removeComment(questionActivityId, commentActivityId, questionPath);
         }
       }
     } catch (Exception e) {

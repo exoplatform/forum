@@ -40,6 +40,6 @@ public interface AnswerEventLifeCycle {
   
   public void removeAnswer(String questionId, String answerId);
   
-  public void removeComment(String questionActivityId, String commentActivityId);
+  public void removeComment(String questionActivityId, String commentActivityId, String questionPath);
   
 }
