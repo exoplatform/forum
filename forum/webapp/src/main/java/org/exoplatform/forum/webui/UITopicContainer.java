@@ -627,7 +627,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class OpenTopicActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, String idAndNumber) throws Exception {
-      idAndNumber = (idAndNumber == null || idAndNumber.equals(ForumUtils.EMPTY_STR)) ? 
+      idAndNumber = (ForumUtils.isEmpty(idAndNumber) || idAndNumber.indexOf(ForumUtils.COMMA) < 0) ? 
                       uiTopicContainer.openTopicId + ForumUtils.COMMA + "1" + ForumUtils.COMMA + "false" : idAndNumber;
       uiTopicContainer.openTopicId = ForumUtils.EMPTY_STR;
       String[] temp = idAndNumber.split(ForumUtils.COMMA);

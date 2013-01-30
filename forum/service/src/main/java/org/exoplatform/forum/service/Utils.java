@@ -126,6 +126,8 @@ public class Utils implements ForumNodeTypes {
    */
   public static final String FORUM_SPACE_ID_PREFIX = (FORUM + "Space").intern();
 
+  public static final String CATEGORY_SPACE        = "spaces";
+
   public static final String ADMIN_ROLE            = "ADMIN".intern();
 
   public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." + "<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <strong>$OBJECT_NAME</strong> with the following content: "

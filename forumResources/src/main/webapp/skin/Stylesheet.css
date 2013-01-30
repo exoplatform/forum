@@ -140,7 +140,7 @@
 
 .UIForumFilter .FilterMenu {
 	position:absolute;
-	top: 15px; left: -5px;
+	top: 24px; left: -5px;
 	width: 180px; height: 0px;
 	visibility:hidden;
 	border: solid 1px #D3D3D3;

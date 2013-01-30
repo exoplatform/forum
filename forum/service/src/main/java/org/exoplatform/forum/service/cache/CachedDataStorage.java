@@ -441,6 +441,10 @@ public class CachedDataStorage implements DataStorage, Startable {
     ).build();
 
   }
+  
+  public Category getCategoryIncludedSpace() {
+    return storage.getCategoryIncludedSpace();
+  }
 
   public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
     return storage.getPermissionTopicByCategory(categoryId, type);

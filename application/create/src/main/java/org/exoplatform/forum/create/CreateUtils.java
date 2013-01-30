@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.portal.config.UserPortalConfigService;
+import org.exoplatform.portal.mop.SiteKey;
+import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 
 /**
@@ -29,7 +32,7 @@ import org.exoplatform.portal.webui.util.Util;
  *          tuvd@exoplatform.com
  * Jan 3, 2013  
  */
-public class Utils {
+public class CreateUtils {
 
   public static List<String> getAllPortalNames() {
     UserPortalConfigService dataStorage = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
@@ -42,6 +45,11 @@ public class Utils {
   }
 
   public static String getCurrentPortalName() {
-    return Util.getUIPortal().getName();
+    UIPortal uiPortal = Util.getUIPortal();
+    SiteKey siteKey = uiPortal.getSiteKey();
+    if(siteKey.getType() == SiteType.PORTAL) {
+      return siteKey.getName();
+    }
+    return SiteType.GROUP.name();
   }
 }

@@ -34,12 +34,13 @@ import org.exoplatform.webui.event.EventListener;
   template = "classpath:groovy/webui/forum/create/UICreate.gtmpl", 
   events = {
     @EventConfig(listeners = UICreatePoll.NextActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UICreatePoll.OnChangeLocalActionListener.class, phase = Phase.DECODE),
     @EventConfig(listeners = UICreateForm.CancelActionListener.class, phase = Phase.DECODE) 
   }
 )
 public class UICreatePoll extends UICreateForm {
   
-  public UICreatePoll() {
+  public UICreatePoll() throws Exception {
   }
 
   static public class NextActionListener extends EventListener<UICreatePoll> {
@@ -49,6 +50,15 @@ public class UICreatePoll extends UICreateForm {
       nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
     }
   }
+  
+  static public class OnChangeLocalActionListener extends EventListener<UICreatePoll> {
 
+    public void execute(Event<UICreatePoll> event) throws Exception {
+      UICreatePoll createPoll = event.getSource();
+      String location = createPoll.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
+      createPoll.isStepOne = createPoll.allPortalNames.contains(location);
+      nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
+    }
+  }
 
 }

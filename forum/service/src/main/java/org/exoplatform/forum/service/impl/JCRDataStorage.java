@@ -772,13 +772,25 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public List<Category> getCategories(){
+  public List<Category> getCategories() {
+    return getCategories(CommonUtils.EMPTY_STR);
+  }
+
+  private List<Category> getCategories(String strQuery) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Category> categories = new ArrayList<Category>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer(JCR_ROOT + categoryHome.getPath() + "/element(*,exo:forumCategory) order by @exo:categoryOrder ascending, @exo:createdDate ascending");
+      StringBuffer queryString = new StringBuffer(JCR_ROOT);
+      queryString.append(categoryHome.getPath())
+                 .append("/element(*,").append(EXO_FORUM_CATEGORY) .append(")");
+      if(!Utils.isEmpty(strQuery)) {
+        queryString.append("[").append(strQuery).append("]");
+      }
+      queryString.append(" order by @").append(EXO_CATEGORY_ORDER).append(ASCENDING)
+                 .append(", @").append(EXO_CREATED_DATE).append(ASCENDING);
+      
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -811,6 +823,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return null;
     }
+  }
+  
+  public Category getCategoryIncludedSpace() {
+    StringBuffer strQuery = new StringBuffer();
+    strQuery.append("@").append(EXO_INCLUDED_SPACE).append("='true'");
+    List<Category> categories = getCategories(strQuery.toString());
+    return (categories.size() >= 1) ? categories.get(0) : null;
   }
 
   public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
@@ -845,6 +864,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     cat.setViewer(reader.strings(EXO_VIEWER));
     cat.setCreateTopicRole(reader.strings(EXO_CREATE_TOPIC_ROLE));
     cat.setPoster(reader.strings(EXO_POSTER));
+    cat.setIncludedSpace(reader.bool(EXO_INCLUDED_SPACE));
     return cat;
   }
 
@@ -858,6 +878,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         catNode.setProperty(EXO_ID, category.getId());
         catNode.setProperty(EXO_OWNER, category.getOwner());
         catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
+        boolean isIncludedSpace = category.isIncludedSpace() || category.getId().contains(Utils.CATEGORY_SPACE);
+        catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
         categoryHome.getSession().save();
         addModeratorCalculateListener(catNode);
       } else {

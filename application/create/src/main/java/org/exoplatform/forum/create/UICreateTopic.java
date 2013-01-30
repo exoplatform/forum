@@ -34,13 +34,14 @@ import org.exoplatform.webui.event.EventListener;
   template = "classpath:groovy/webui/forum/create/UICreate.gtmpl", 
   events = {
     @EventConfig(listeners = UICreateTopic.NextActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UICreateTopic.OnChangeLocalActionListener.class, phase = Phase.DECODE),
     @EventConfig(listeners = UICreateForm.CancelActionListener.class, phase = Phase.DECODE) 
   }
 )
 public class UICreateTopic extends UICreateForm {
 
   
-  public UICreateTopic() {
+  public UICreateTopic() throws Exception {
 
   }
   
@@ -48,6 +49,16 @@ public class UICreateTopic extends UICreateForm {
 
     public void execute(Event<UICreateTopic> event) throws Exception {
       UICreateTopic createTopic = event.getSource();
+      nextAction(createTopic, ACTION_TYPE.CREATE_TOPIC, event.getRequestContext());
+    }
+  }
+  
+  static public class OnChangeLocalActionListener extends EventListener<UICreateTopic> {
+
+    public void execute(Event<UICreateTopic> event) throws Exception {
+      UICreateTopic createTopic = event.getSource();
+      String location = createTopic.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
+      createTopic.isStepOne = createTopic.allPortalNames.contains(location);
       nextAction(createTopic, ACTION_TYPE.CREATE_TOPIC, event.getRequestContext());
     }
   }

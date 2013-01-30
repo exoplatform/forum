@@ -76,6 +76,14 @@ public interface ForumService extends ForumServiceLegacy {
   Category getCategory(String categoryId) throws Exception;
 
   /**
+   * Get category included spaces
+   * 
+   * @return the category
+   * @throws Exception
+   */
+  Category getCategoryIncludedSpace();
+
+  /**
    * Get user and group have edit permission in a category
    * 
    * @param categoryId id of category

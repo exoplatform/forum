@@ -19,12 +19,16 @@ package org.exoplatform.forum.create;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
@@ -47,7 +51,13 @@ public class UICreateForm extends BaseUIForm {
 
   public boolean              isStepOne            = true;
 
+  private String               INTRANER             = "intranet";
+
   private String               parStatus            = "";
+
+  private String               categoryIdOfSpaces   = "";
+  
+  public List<String> allPortalNames       = new ArrayList<String>();
 
   public enum ACTION_TYPE {
     CREATE_POLL, CREATE_TOPIC
@@ -61,38 +71,90 @@ public class UICreateForm extends BaseUIForm {
     return parStatus;
   }
 
-  public UICreateForm() {
+  public UICreateForm() throws Exception {
     isStepOne = true;
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-    List<String> allPortalNames = Utils.getAllPortalNames();
+    allPortalNames = CreateUtils.getAllPortalNames();
     for (String portalName : allPortalNames) {
       list.add(new SelectItemOption<String>(portalName, portalName));
     }
+    ForumService forumService = getApplicationComponent(ForumService.class);
+    Category categoryIncludedSpace = forumService.getCategoryIncludedSpace();
+    if(categoryIncludedSpace != null) {
+      
+      this.categoryIdOfSpaces = categoryIncludedSpace.getId();
+      // check permission
+      List<String> groupAndMembershipInfos = UserHelper.getAllGroupAndMembershipOfUser(null);
+      
+      StringBuilder strQuery = new StringBuilder();
+      if(!forumService.isAdminRole(groupAndMembershipInfos.get(0))){
+        strQuery.append("(")
+                .append(Utils.buildXpathByUserInfo(Utils.EXO_CREATE_TOPIC_ROLE, groupAndMembershipInfos))
+                .append(" or ").append(Utils.buildXpathByUserInfo(Utils.EXO_MODERATORS, groupAndMembershipInfos));
+        strQuery.append(") and ");
+      }
+      
+      strQuery.append(Utils.getQueryByProperty("", Utils.EXO_IS_CLOSED, "false"));
+      
+      List<Forum> forums = forumService.getForumSummaries(categoryIdOfSpaces, strQuery.toString());
+      
+      for (Forum forum : forums) {
+        list.add(new SelectItemOption<String>(forum.getForumName(), forum.getId()));
+      }
+    }
     UIFormSelectBox formSelectBox = new UIFormSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
-    formSelectBox.setValue(Utils.getCurrentPortalName());
+    formSelectBox.setValue(getIntranerSite());
+    formSelectBox.setOnChange("OnChangeLocal");
     addUIFormInput(formSelectBox);
+    setActions(new String[]{"Next", "Cancel"});
+  }
+  
+  public String getIntranerSite() {
+    String portalName = CreateUtils.getCurrentPortalName();
+    if (portalName.equals(SiteType.GROUP.name())) {
+      for (String portalName_ : allPortalNames) {
+        if (portalName_.equals(INTRANER)) {
+          return portalName_;
+        }
+      }
+    }
+    return portalName;
   }
   
   public static void nextAction(UICreateForm uiForm, ACTION_TYPE type, WebuiRequestContext context) throws Exception {
     if (uiForm.isStepOne) {
       uiForm.isStepOne = false;
-      UIForumFilter forumFilter = new UIForumFilter(FORUM_SELEXT_BOX, FORUM_SELEXT_BOX);
-      uiForm.addUIFormInput(forumFilter);
+      UIForumFilter forumFilter = (UIForumFilter)uiForm.getUIInput(FORUM_SELEXT_BOX);
+      if(forumFilter == null) {
+        forumFilter = new UIForumFilter(FORUM_SELEXT_BOX, FORUM_SELEXT_BOX);
+        forumFilter.setOnChange("Next");
+        uiForm.addUIFormInput(forumFilter);
+      }
       context.addUIComponentToUpdateByAjax(uiForm);
     } else {
-      String forumId = ((UIForumFilter) uiForm.getUIInput(FORUM_SELEXT_BOX)).getValue();
-      if (!CommonUtils.isEmpty(forumId)) {
-        String portalName = uiForm.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
-
-        String containerName = uiForm.getApplicationComponent(ExoContainerContext.class).getPortalContainerName();
-        PortalRequestContext pContext = Util.getPortalRequestContext();
-        String fullUrl = ((HttpServletRequest) pContext.getRequest()).getRequestURL().toString();
-        String subUrl = fullUrl.substring(0, fullUrl.indexOf(containerName) + containerName.length());
-        subUrl += CommonUtils.SLASH + portalName + "/forum/forum/" + forumId;
+      String location = uiForm.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
+      String subUrl = null;
+      if(uiForm.allPortalNames.contains(location)) {
+        UIForumFilter forumFilter = (UIForumFilter)uiForm.getUIInput(FORUM_SELEXT_BOX);
         
-        String actionType = (type.equals(ACTION_TYPE.CREATE_TOPIC)) ? "?hasCreateTopic=true" :"?hasCreatePoll=true";
-        subUrl += actionType;
+        String categoryId = forumFilter.getCategoryId();
+        String forumId = forumFilter.getForumId();
 
+        if (!CommonUtils.isEmpty(forumId)) {
+          subUrl = urlBuilder(categoryId, forumId, type, location);
+        } else {
+          uiForm.warning("UICreateList.label.RequireSelectForum");
+        }
+        
+      } else {
+        subUrl = urlBuilder(uiForm.categoryIdOfSpaces, location, type, null);
+      }
+
+      if (!CommonUtils.isEmpty(subUrl)) {
+        
+        uiForm.log.info(uiForm.getId() + "::sendRedirect =" + subUrl);
+
+        PortalRequestContext pContext = Util.getPortalRequestContext();
         pContext.getJavascriptManager().getRequireJS().addScripts("(function(){ window.location.href = '" + subUrl + "';})();");
         uiForm.isStepOne = true;
         if (uiForm.getChildById(FORUM_SELEXT_BOX) != null) {
@@ -112,10 +174,17 @@ public class UICreateForm extends BaseUIForm {
           }
         }
         context.addUIComponentToUpdateByAjax(container);
-      } else {
-        uiForm.warning("RequireSelectForum");
       }
     }
+  }
+  
+  private static String urlBuilder(String categoryId, String forumId, ACTION_TYPE type, String siteName) {
+    String urlBuilder = WebUIUtils.buildLink(categoryId, forumId, null, siteName);
+    if (!CommonUtils.isEmpty(urlBuilder)) {
+      String actionType = (type.equals(ACTION_TYPE.CREATE_TOPIC)) ? "?hasCreateTopic=true" : "?hasCreatePoll=true";
+      urlBuilder += actionType;
+    }
+    return urlBuilder;
   }
   
   static public class CancelActionListener extends EventListener<UICreateForm> {

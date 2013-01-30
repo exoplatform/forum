@@ -5,6 +5,7 @@
       inputValue : null,
       menu : null,
       fakeInput : null,
+      onChange : null,
       init : function(inputId) {
         //
         this.inputValue = gj('#'+inputId.replace('Fake', ''));
@@ -13,9 +14,12 @@
         this.fakeInput = this.parent.find('span:first');
         this.input = this.parent.find('.FilterInput:first');
         this.menu = this.parent.find('.FilterMenu:first');
+        var jOnchange = gj('#'+inputId.replace('Fake', 'onChange'));
+        this.onChange = jOnchange.attr('data-onchange');
         var arrow = this.parent.find('.RightArrow:first');
         
         arrow.off('click').on('click', function(e) {
+          e.stopPropagation();
           //
           UIForumFilter.menu.css('height', 'auto');
           var h = UIForumFilter.menu.height();
@@ -26,7 +30,20 @@
             });
         });
         
+        this.input.on('keydown click focus', function(e) {
+          e.stopPropagation();
+        });
+        
         this.input.on('keyup', UIForumFilter.filter);
+
+        var uiForm = this.parent.parents('.UIForm:first');
+        function parentClick() {
+          var pr = gj(this);
+          pr.find('.FilterMenu').animate({'height': '0px'}, 200, function() {
+            gj(this).css({'visibility' :'hidden'});
+          });
+        }
+        uiForm.off(parentClick).on('click', parentClick);
       },
       filter : function(e) {
         var query = UIForumFilter.input.val();
@@ -63,11 +80,11 @@
         var li = gj('<li></li>');
         li.html(cate.categoryName);
         li.attr('data-catid', cate.categoryId);
-        li.addClass("Item");
+        li.addClass("Item category");
         ul.append(li);
         var forums = cate.forumFilters;
         li = gj('<li></li>');
-        li.addClass("Item");
+        li.addClass("Item forum");
         var ul2 = gj('<ul></ul>');
         ul2.appendTo(li);
         for(var i = 0; i < forums.length; ++i) {
@@ -78,11 +95,17 @@
           li2.on('click', function(e) {
             e.stopPropagation();
             var item = gj(this);
-            window.console.log(UIForumFilter.input.html())
             UIForumFilter.fakeInput.html(item.html());
-            UIForumFilter.inputValue.val(item.attr('data-forid'));
-            UIForumFilter.menu.css({'height': '0px','visibility' :'hidden'});
+            var cat = item.parents('li.forum').siblings('li.category');
+            UIForumFilter.inputValue.val(cat.attr('data-catid') + ';' + item.attr('data-forid'));
+
             UIForumFilter.input.val('');
+            
+            UIForumFilter.menu.animate({'height': '0px'}, 200, function() {
+              gj(this).css({'visibility' :'hidden'});
+              gj('<div onclick="'+UIForumFilter.onChange+'"></div>').trigger('click');
+            });
+            
           });
           ul2.append(li2);
         }

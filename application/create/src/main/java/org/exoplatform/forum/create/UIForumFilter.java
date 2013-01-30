@@ -19,6 +19,7 @@ package org.exoplatform.forum.create;
 import org.exoplatform.commons.utils.HTMLEntityEncoder;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputBase;
 
 import java.io.Writer;
@@ -31,6 +32,9 @@ import java.io.Writer;
  */
 public class UIForumFilter extends UIFormInputBase<String> {
   private String defaultSelectName = null;
+
+  private String onchange_         = null;
+
   public UIForumFilter() {
   }
 
@@ -45,6 +49,16 @@ public class UIForumFilter extends UIFormInputBase<String> {
 
   public void setDefaultSelect(String defaultSelectName) {
     this.defaultSelectName = defaultSelectName;
+  }
+
+  public String getCategoryId() {
+    String value = (this.value_ != null && this.value_.length() > 0) ? this.value_ : " ; ";
+    return value.split(";")[0].trim();
+  }
+
+  public String getForumId() {
+    String value = (this.value_ != null && this.value_.length() > 0) ? this.value_ : " ; ";
+    return value.split(";")[1].trim();
   }
 
   public String getDefaultSelect() {
@@ -69,8 +83,22 @@ public class UIForumFilter extends UIFormInputBase<String> {
        value_ = null;
   }
   
+  public void setOnChange(String onchange)
+  {
+     onchange_ = onchange;
+  }
+  
+  protected String renderOnChangeEvent(UIForm uiForm) throws Exception
+  {
+    if(onchange_ != null && onchange_.length() > 0) {
+      return uiForm.event(onchange_, (String)getId());
+    }
+    return "";
+  }
+  
   public void processRender(WebuiRequestContext context) throws Exception
   {
+     UIForm uiForm = getAncestorOfType(UIForm.class);
      String value = getValue();
      Writer w = context.getWriter();
      w.write("<input name=\"");
@@ -89,7 +117,11 @@ public class UIForumFilter extends UIFormInputBase<String> {
         w.write("\"");
      }
      w.write("/>");
-     
+     w.write("  <div style=\"display:none\" id=\"onChange");
+     w.write(getId());
+     w.write("\" data-onchange=\"");
+     w.write(renderOnChangeEvent(uiForm));
+     w.write("\"></div>\n");
      w.write("<div class=\"UIForumFilter ClearFix\" id=\"Fake");
      w.write(getId());
      w.write("\" style=\"position:relative\" ");
@@ -109,8 +141,8 @@ public class UIForumFilter extends UIFormInputBase<String> {
      w.write("</div>\n");
       
      context.getJavascriptManager().getRequireJS()
-         .require("SHARED/forumFilter", "filter")
-         .addScripts("filter.init('Fake" + getId() + "');");
+         .require("SHARED/forumFilter", "forumfilter")
+         .addScripts("forumfilter.init('Fake" + getId() + "');");
   }
 
 }

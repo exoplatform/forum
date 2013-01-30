@@ -90,6 +90,8 @@ public interface DataStorage {
   List<Category> getCategories();
 
   Category getCategory(String categoryId) throws Exception;
+  
+  Category getCategoryIncludedSpace();
 
   String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception;
 

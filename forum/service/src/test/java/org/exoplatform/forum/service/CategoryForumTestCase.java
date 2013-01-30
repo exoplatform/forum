@@ -82,6 +82,13 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     assertEquals("Size categories can not equals 0", categories.size(), 0);
   }
 
+  public void testGetCategoryIncludedSpace() throws Exception {
+    assertNull(forumService_.getCategoryIncludedSpace());
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    cat.setIncludedSpace(true);
+    forumService_.saveCategory(cat, true);
+    assertNotNull(forumService_.getCategoryIncludedSpace());
+  }
 
   public void testForum() throws Exception {
     String catId = getId(Utils.CATEGORY);
