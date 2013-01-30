@@ -16,22 +16,16 @@
  */
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.NodeIterator;
-
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
+
+import javax.jcr.NodeIterator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -194,7 +188,12 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
+    @Override
+    public Category getCategoryIncludedSpace() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
 
     return null;
   }
