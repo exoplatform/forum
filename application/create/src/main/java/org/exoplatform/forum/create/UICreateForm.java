@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseUIForm;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -179,7 +178,7 @@ public class UICreateForm extends BaseUIForm {
   }
   
   private static String urlBuilder(String categoryId, String forumId, ACTION_TYPE type, String siteName) {
-    String urlBuilder = WebUIUtils.buildLink(categoryId, forumId, null, siteName);
+    String urlBuilder = CreateUtils.buildLink(categoryId, forumId, null, siteName);
     if (!CommonUtils.isEmpty(urlBuilder)) {
       String actionType = (type.equals(ACTION_TYPE.CREATE_TOPIC)) ? "?hasCreateTopic=true" : "?hasCreatePoll=true";
       urlBuilder += actionType;
