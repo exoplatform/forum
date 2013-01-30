@@ -546,7 +546,7 @@ public class FAQServiceImpl implements FAQService, Startable {
       oldQuestion.setEditedQuestionDetail(question.getDetail());
       oldQuestion.setEditedQuestionAttachment(question.getAttachMent().size());
       oldQuestion.setEditedQuestionActivated(question.isActivated());
-      oldQuestion.setEditedQuestionLanguage(question.getLanguage());
+      oldQuestion.setEditedQuestionLanguage(question.getMultiLanguages().length);
       question.setPcs(oldQuestion.getPcs());
     }
     Node questionNode = jcrData_.saveQuestion(question, isAddNew, faqSetting);

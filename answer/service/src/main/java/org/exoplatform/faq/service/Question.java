@@ -170,8 +170,8 @@ public class Question {
     pcs.addPropertyChange(QUESTION_ATTACHMENT, this.listAttachments.size(), length);
   }
   
-  public void setEditedQuestionLanguage(String language) {
-    pcs.addPropertyChange(QUESTION_LANGUAGE, this.language, language);
+  public void setEditedQuestionLanguage(int length) {
+    pcs.addPropertyChange(QUESTION_LANGUAGE, this.multiLanguages.length, length);
   }
   
   public void setEditedQuestionRating(double markVote) {
