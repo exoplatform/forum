@@ -140,7 +140,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
             try {
               List<Topic> list = new ArrayList<Topic>();
               list.add(topicMerge);
-              forumService.modifyTopic(list, Utils.CHANGE_NAME);
+              forumService.modifyMergedTopic(list, Utils.CHANGE_NAME);
             } catch (Exception e) {
               uiForm.log.error("Merge topic is fall ", e);
               isMerge = false;

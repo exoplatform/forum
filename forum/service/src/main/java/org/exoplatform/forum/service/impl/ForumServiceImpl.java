@@ -449,9 +449,6 @@ public class ForumServiceImpl implements ForumService, Startable {
           break;
         }
       }
-      
-      
-      
     }
     
     storage.modifyTopic(topics, type);
@@ -460,6 +457,13 @@ public class ForumServiceImpl implements ForumService, Startable {
         f.updateTopic(topic);
       }
     }
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public void modifyMergedTopic(List<Topic> topics, int type) {
+    storage.modifyTopic(topics, type);
   }
 
   /**

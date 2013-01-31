@@ -318,6 +318,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @param type the type
    */
   void modifyTopic(List<Topic> topics, int type);
+  
+  /**
+   * Modify merged new topic.
+   * 
+   * @param topics the topics
+   * @param type the type
+   */
+  void modifyMergedTopic(List<Topic> topics, int type);
 
   /**
    * Save topic.
