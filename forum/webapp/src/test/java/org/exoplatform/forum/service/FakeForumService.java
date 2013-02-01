@@ -809,4 +809,11 @@ public class FakeForumService implements ForumService {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public void modifyMergedTopic(List<Topic> topics, int type) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
