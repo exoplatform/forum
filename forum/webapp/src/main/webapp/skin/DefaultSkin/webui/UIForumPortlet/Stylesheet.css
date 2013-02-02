@@ -149,79 +149,7 @@
 	cursor: pointer;
 	color: #000000;
 }
-/******************************************** UIForumActionBar ****************************************/
-.UIForumPortlet .UIForumActionBar {
-	background: #ffffff;
-	border: 1px solid #cccccc;
-	margin: 7px 10px;
-	padding: 2px 5px;
-	zoom: 1;
-}
 
-.UIForumPortlet .UIForumActionBar a:hover {
-	color: #0053a7;
-}
-
-.UIForumPortlet .UIForumActionBar .Icon {
-	padding: 0px 2px 0px 26px;
-	background-position: left center;
-	white-space: nowrap;
-}
-
-.UIForumPortlet .UIForumActionBar .SeparatorLineForum {
-	background: url('background/SeparatorLineToolbar1x27.gif') no-repeat right center;
-	height: 25px;
-	margin: 0px 2px;
-	padding: 0 10px 0 5px;
-}
-
-.UIForumPortlet .UIForumActionBar #OpenBookMark.SeparatorLineForum {
-	background: none;
-}
-
-.UIForumPortlet .UIForumActionBar .RightLine {
-	float: right;
-}
-
-.UIForumPortlet .UIForumActionBar .AddCategory {
-	background: url('icons/24x24/AddCategory.gif') no-repeat left center;
-}
-
-.UIForumPortlet .UIForumActionBar .DefaultStyle .DisableAction {
-	opacity: 0.5;
-	filter: alpha(opacity = 50);
-}
-
-.UIForumPortlet .ToolbarActionsTag {
-	float: right;
-	margin: 2px 6px 0px 0px;
-	cursor: pointer;
-}
-
-/******************************************** UIForumDescription ****************************************/
-.UIForumPortlet .UIForumDescription {
-	border: 1px solid #cdcdcd;
-	line-height: 16px;
-	padding: 7px 10px;
-	margin: 0px 0px 10px 0px;
-	zoom: 1;
-}
-
-.UIForumPortlet .UIForumDescription .ForumLabel {
-	color: #373737;
-	font-size: 12px;
-}
-
-.UIForumPortlet .UIForumDescription .NameForum {
-	color: #373737;
-	font-size: 12px;
-	font-weight: bold;
-}
-
-.UIForumPortlet .UIForumDescription .Description {
-	color: #5a5a5a;
-	padding: 0px 5px;
-}
 
 /******************************************** ForumContains ****************************************/
 .UIForumPortlet .ForumContains {
