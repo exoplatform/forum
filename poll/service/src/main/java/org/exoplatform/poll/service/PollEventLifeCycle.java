@@ -26,6 +26,13 @@ public interface PollEventLifeCycle {
   public void savePoll(Poll poll);
   
   /**
+   * This will be call after close poll
+   * @param poll
+   */
+
+  public void closePoll(Poll poll);
+  
+  /**
    * This will be call after remove poll
    * @param poll
    */

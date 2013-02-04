@@ -112,6 +112,11 @@ public class PollServiceImpl implements Startable, PollService {
   
   public void setClosedPoll(Poll poll){
     storage_.setClosedPoll(poll);
+    if (poll.getIsClosed() == true) {
+      for (PollEventLifeCycle f : listeners_) {
+        f.closePoll(poll);
+      }
+    }
   }
 
   public List<Poll> getPagePoll() throws Exception {

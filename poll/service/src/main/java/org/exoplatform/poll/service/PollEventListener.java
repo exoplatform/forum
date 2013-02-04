@@ -22,6 +22,8 @@ public abstract class PollEventListener extends BaseComponentPlugin implements P
   
   public abstract void savePoll(Poll poll);
   
+  public abstract void closePoll(Poll poll);
+  
   public abstract void pollRemove(String pollId);
 
 }

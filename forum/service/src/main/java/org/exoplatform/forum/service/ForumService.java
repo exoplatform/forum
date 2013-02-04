@@ -367,9 +367,10 @@ public interface ForumService extends ForumServiceLegacy {
    * @param destTopicPath the target of topic
    * @param mailContent mail to send notification
    * @param link to topic
+   * @param topicMergeTitle new topic's name
    * @throws Exception the exception
    */
-  void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
+  void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception;
 
   /**
    * Split topic.

@@ -219,6 +219,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     pollNew.setIsMultiCheck(reader.bool(EXO_IS_MULTI_CHECK));
     pollNew.setIsAgainVote(reader.bool(EXO_IS_AGAIN_VOTE, false));
     pollNew.setIsClosed(reader.bool(EXO_IS_CLOSED, false));
+    pollNew.setInTopic(pollNode.getParent().isNodeType(EXO_TOPIC));
     setPollLink(pollNode, pollNew);
     return pollNew;
   }
@@ -502,6 +503,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
         pollNode.setProperty(EXO_IS_AGAIN_VOTE, poll.getIsAgainVote());
       }
       setPollLink(pollNode, poll);
+      poll.setInTopic(pollNode.getParent().isNodeType(EXO_TOPIC));
       if (parentNode.isNew())
         parentNode.getSession().save();
       else

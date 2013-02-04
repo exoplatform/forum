@@ -107,10 +107,19 @@ public interface ForumEventLifeCycle {
   public void updatePost(Post post);
 
   /**
-   * This will be call after topics/posts removed.
+   * This will be call after topics removed.
    * 
    * @param activityId - the activity Id will remove.
    * @since 4.0
    */
   public void removeActivity(String activityId);
+  
+  /**
+   * This will be call after posts removed.
+   * 
+   * @param activityId - the activity Id.
+   * @param commentId - the comment Id will be remove
+   * @since 4.0
+   */
+  public void removeComment(String activityId, String commentId);
 }

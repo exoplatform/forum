@@ -3736,7 +3736,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, questionId), e);
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, questionId), e);
     }
   }
 
@@ -3746,7 +3746,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node ownerNode = getQuestionNodeById(questionId);
       return ActivityTypeUtils.getActivityId(ownerNode);
     } catch (Exception e) {
-      log.error(String.format("Failed to get attach activityId for %s ", questionId), e);
+      log.debug(String.format("Failed to get attach activityId for %s ", questionId), e);
     }
     return null;
   }
@@ -3758,7 +3758,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, answer.getId()), e);
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, answer.getId()), e);
     }
   }
 
@@ -3768,7 +3768,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node ownerNode = getAnswerNode(questionId, answer);
       return ActivityTypeUtils.getActivityId(ownerNode);
     } catch (Exception e) {
-      log.error(String.format("Failed to get attach activityId for %s ", answer.getId()), e);
+      log.debug(String.format("Failed to get attach activityId for %s ", answer.getId()), e);
     }
     return null;
   }
@@ -3780,7 +3780,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, commentId), e);
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, commentId), e);
     }
   }
 
@@ -3790,7 +3790,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node ownerNode = getCommentNode(questionId, commentId, language);
       return ActivityTypeUtils.getActivityId(ownerNode);
     } catch (Exception e) {
-      log.error(String.format("Failed to get attach activityId for %s ", commentId), e);
+      log.debug(String.format("Failed to get attach activityId for %s ", commentId), e);
     }
     return null;
   }

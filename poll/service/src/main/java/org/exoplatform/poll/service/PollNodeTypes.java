@@ -27,6 +27,8 @@ public interface PollNodeTypes {
 
   public static final String EXO_POLL           = "exo:poll";
 
+  public static final String EXO_TOPIC          = "exo:topic";
+
   public static final String EXO_IS_AGAIN_VOTE  = "exo:isAgainVote";
 
   public static final String EXO_IS_MULTI_CHECK = "exo:isMultiCheck";

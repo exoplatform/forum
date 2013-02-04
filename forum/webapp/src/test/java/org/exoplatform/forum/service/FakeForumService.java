@@ -503,7 +503,7 @@ public class FakeForumService implements ForumService {
     return false;
   }
 
-  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception {
   }
 
   public void modifyForum(Forum forum, int type) throws Exception {

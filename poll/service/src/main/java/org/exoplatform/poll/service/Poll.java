@@ -61,6 +61,8 @@ public class Poll {
 
   private boolean  showVote     = true;
 
+  private boolean  isInTopic    = false;
+
   private String   votes;
 
   private String[] infoVote;
@@ -368,6 +370,20 @@ public class Poll {
    */
   public void setLink(String link) {
     this.link = link;
+  }
+
+  /**
+   * @return the isInTopic
+   */
+  public boolean isInTopic() {
+    return isInTopic;
+  }
+
+  /**
+   * @param isInTopic the isInTopic to set
+   */
+  public void setInTopic(boolean isInTopic) {
+    this.isInTopic = isInTopic;
   }
 
 }

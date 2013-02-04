@@ -129,7 +129,8 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
               forumService.mergeTopic(categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topic.getId(),
                                       destTopicPath,
                                       emailContent,
-                                      link);
+                                      link,
+                                      topicMergeTitle);
             } catch (Exception e) {
               isMerge = false;
               break;

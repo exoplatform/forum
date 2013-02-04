@@ -561,7 +561,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     String toCategoryName = ((Category) storage.getObjectNameByPath(Utils.getCategoryPath(destForumPath))).getCategoryName();
     for (ForumEventLifeCycle f : listeners_) {
       for (Topic topic : topics) {
-        topic.setPath(destForumPath);
+        topic.setPath(destForumPath.concat("/").concat(topic.getId()));
         f.moveTopic(topic, toCategoryName, toForumName);
       }
     }
@@ -572,10 +572,14 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
-    String activityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
     Topic topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
-      f.removeActivity(activityId);
+      if (topic.getIsPoll()) {
+        f.removeActivity(pollActivityId);
+      }
+      f.removeActivity(topicActivityId);
     }
     CacheUserProfile.clearCache();
     return topic;
@@ -669,16 +673,18 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception {
     String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
     String destActivityId = storage.getActivityIdForOwner(destTopicPath);
     //
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
-    //
+    
     Topic newTopic = storage.getTopicByPath(destTopicPath, false);
+    newTopic.setTopicName(topicMergeTitle);
     for (ForumEventLifeCycle f : listeners_) {
       f.mergeTopic(newTopic, srcActivityId, destActivityId);
     }
+    //
     
     CacheUserProfile.clearCache();
   }
@@ -698,13 +704,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) {
     CacheUserProfile.clearCache();
+    String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    String postActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(postId));
     Post deleted = storage.removePost(categoryId, forumId, topicId, postId);
     
-    
     //
-    String activityId = storage.getActivityIdForOwner(deleted.getPath());
     for (ForumEventLifeCycle f : listeners_) {
-      f.removeActivity(activityId);
+      f.removeComment(topicActivityId, postActivityId);
     }
     
     return deleted;
