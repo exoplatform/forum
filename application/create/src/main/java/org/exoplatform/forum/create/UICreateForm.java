@@ -95,9 +95,9 @@ public class UICreateForm extends BaseUIForm {
     currentIntranet = getIntranerSite();
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     allPortalNames = CreateUtils.getAllPortalNames();
-    for (String portalName : allPortalNames) {
-      list.add(new SelectItemOption<String>(portalName, portalName));
-    }
+//    for (String portalName : allPortalNames) {
+//      list.add(new SelectItemOption<String>(portalName, portalName));
+//    }
     
     String currentUser = UserHelper.getCurrentUser();
     ForumService forumService = getApplicationComponent(ForumService.class);
