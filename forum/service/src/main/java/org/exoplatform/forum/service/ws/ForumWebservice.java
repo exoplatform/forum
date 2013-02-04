@@ -14,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -236,12 +237,21 @@ public class ForumWebservice implements ResourceContainer {
   @Path("filterforum/{forumname}")
   @Produces(MediaType.TEXT_XML)
   public Response filterForum(@PathParam("forumname") String forumname, 
+                               @QueryParam("m") String maxSize,
                                @Context SecurityContext sc,
                                @Context UriInfo uriInfo) throws Exception {
     try {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       String userName = getUserId(sc, uriInfo);
-      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname, userName);
+      int m = 0;
+      if(!Utils.isEmpty(maxSize)) {
+        try {
+          m = Integer.parseInt(maxSize.trim());
+        } catch (NumberFormatException e) {
+          m = 0;
+        }
+      }
+      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname, userName, m);
       Collections.sort(categoryFilters, new Utils.CategoryNameComparator(Utils.CategoryNameComparator.TYPE.ASC));
 
       return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();

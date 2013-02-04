@@ -191,41 +191,41 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     forumService_.saveForum(categoryId, forum, true);
     
     // search with key random
-    List<CategoryFilter> categoryFilters = forumService_.filterForumByName("jobl", null);
+    List<CategoryFilter> categoryFilters = forumService_.filterForumByName("jobl", null, 0);
     // result have 0 categories.
     assertEquals(0, categoryFilters.size());
 
     // search with key: foo
-    categoryFilters = forumService_.filterForumByName("foo", null);
+    categoryFilters = forumService_.filterForumByName("foo", null, 0);
     // result have 1 category and has 5 forums.
     assertEquals(1, categoryFilters.size());
     assertEquals(5, categoryFilters.get(0).getForumFilters().size());
 
     // search with key: search1
-    categoryFilters = forumService_.filterForumByName(prefix + " c", null);
+    categoryFilters = forumService_.filterForumByName(prefix + " c", null, 0);
     // result have 1 category and has one forum.
     assertEquals(1, categoryFilters.size());
     assertEquals(1, categoryFilters.get(0).getForumFilters().size());
 
     // search with key: search
-    categoryFilters = forumService_.filterForumByName(prefix, null);
+    categoryFilters = forumService_.filterForumByName(prefix, null, 0);
     // result have 1 categories and has 5 forums.
     assertEquals(1, categoryFilters.size());
     assertEquals(5, categoryFilters.get(0).getForumFilters().size());
 
     // search with key: x
-    categoryFilters = forumService_.filterForumByName("x", null);
+    categoryFilters = forumService_.filterForumByName("x", null, 0);
     // result have 1 category and has one forum.
     assertEquals(1, categoryFilters.size());
     assertEquals(1, categoryFilters.get(0).getForumFilters().size());
 
     // search with key: est
-    categoryFilters = forumService_.filterForumByName("est", null);
+    categoryFilters = forumService_.filterForumByName("est", null, 0);
     // result have 0 category.
     assertEquals(0, categoryFilters.size());
 
     // search with key: tes
-    categoryFilters = forumService_.filterForumByName("tes", null);
+    categoryFilters = forumService_.filterForumByName("tes", null, 0);
     // result have 1 categories and has 5 forums.
     assertEquals(1, categoryFilters.size());
     assertEquals(5, categoryFilters.get(0).getForumFilters().size());

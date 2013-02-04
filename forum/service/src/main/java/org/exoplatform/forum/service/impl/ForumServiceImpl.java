@@ -369,8 +369,8 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.moveForum(forums, destCategoryPath);
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
-    return storage.filterForumByName(filterKey, userName);
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    return storage.filterForumByName(filterKey, userName, maxSize);
   }
   /**
    * {@inheritDoc}

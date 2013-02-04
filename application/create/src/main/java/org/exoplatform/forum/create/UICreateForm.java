@@ -29,6 +29,8 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
@@ -48,14 +50,23 @@ public class UICreateForm extends BaseUIForm {
 
   public static final String FORUM_SELEXT_BOX     = "forumId";
 
+  private static final String INTRANER            = "intranet";
+
   public boolean              isStepOne            = true;
 
-  private String               INTRANER             = "intranet";
+  public boolean              hasForumIntranet     = true;
+
+  private boolean             hasForum             = true;
+
+  private boolean             hasNext              = true;
 
   private String               parStatus            = "";
 
   private String               categoryIdOfSpaces   = "";
   
+  public String                currentIntranet      = INTRANER;
+  
+
   public List<String> allPortalNames       = new ArrayList<String>();
 
   public enum ACTION_TYPE {
@@ -69,15 +80,33 @@ public class UICreateForm extends BaseUIForm {
   public String getParStatus() {
     return parStatus;
   }
+  
+  public boolean hasForum() {
+    return hasForum;
+  }
+
+  public boolean hasNext() {
+    return hasNext;
+  }
 
   public UICreateForm() throws Exception {
+    hasNext = true;
     isStepOne = true;
+    currentIntranet = getIntranerSite();
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     allPortalNames = CreateUtils.getAllPortalNames();
     for (String portalName : allPortalNames) {
       list.add(new SelectItemOption<String>(portalName, portalName));
     }
+    
+    String currentUser = UserHelper.getCurrentUser();
     ForumService forumService = getApplicationComponent(ForumService.class);
+    
+    hasForumIntranet = forumService.filterForumByName("_", currentUser, 1).size() > 0;
+    if(hasForumIntranet) {
+      list.add(new SelectItemOption<String>(currentIntranet, currentIntranet));
+    }
+    
     Category categoryIncludedSpace = forumService.getCategoryIncludedSpace();
     if(categoryIncludedSpace != null) {
       
@@ -97,17 +126,42 @@ public class UICreateForm extends BaseUIForm {
       
       List<Forum> forums = forumService.getForumSummaries(categoryIdOfSpaces, strQuery.toString());
       
-      for (Forum forum : forums) {
-        list.add(new SelectItemOption<String>(forum.getForumName(), forum.getId()));
+      SpaceService spaceService = getApplicationComponent(SpaceService.class);
+      
+      List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
+      Forum forum;
+      for (Space space : spaces) {
+        forum = getForum(forums, space.getPrettyName());
+        if (forum != null) {
+          list.add(new SelectItemOption<String>(space.getDisplayName(), forum.getId()));
+        }
       }
     }
-    UIFormSelectBox formSelectBox = new UIFormSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
-    formSelectBox.setValue(getIntranerSite());
-    formSelectBox.setOnChange("OnChangeLocal");
-    addUIFormInput(formSelectBox);
-    setActions(new String[]{"Next", "Cancel"});
+    
+    if(list.size() > 0) {
+      UIFormSelectBox formSelectBox = new UIFormSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
+      if(hasForumIntranet) {
+        formSelectBox.setValue(currentIntranet);
+      }
+      formSelectBox.setOnChange("OnChangeLocal");
+      addUIFormInput(formSelectBox);
+      hasForum = true;
+      setActions(new String[]{"Next", "Cancel"});
+    } else {
+      hasForum = false;
+      setActions(new String[]{"Cancel"});
+    }
   }
   
+  private Forum getForum(List<Forum> forums, String spacePrettyName) {
+    for (Forum forum : forums) {
+      if(forum.getId().indexOf(spacePrettyName) > 0) {
+        return forum;
+      }
+    }
+    return null;
+  }
+
   public String getIntranerSite() {
     String portalName = CreateUtils.getCurrentPortalName();
     if (portalName.equals(SiteType.GROUP.name())) {
@@ -121,19 +175,21 @@ public class UICreateForm extends BaseUIForm {
   }
   
   public static void nextAction(UICreateForm uiForm, ACTION_TYPE type, WebuiRequestContext context) throws Exception {
-    if (uiForm.isStepOne) {
+    if (uiForm.isStepOne && uiForm.hasForumIntranet) {
       uiForm.isStepOne = false;
-      UIForumFilter forumFilter = (UIForumFilter)uiForm.getUIInput(FORUM_SELEXT_BOX);
-      if(forumFilter == null) {
+      UIForumFilter forumFilter = (UIForumFilter) uiForm.getUIInput(FORUM_SELEXT_BOX);
+      if (forumFilter == null) {
         forumFilter = new UIForumFilter(FORUM_SELEXT_BOX, FORUM_SELEXT_BOX);
         forumFilter.setOnChange("Next");
         uiForm.addUIFormInput(forumFilter);
       }
+      forumFilter.setRendered(true);
+      uiForm.hasNext = false;
       context.addUIComponentToUpdateByAjax(uiForm);
     } else {
       String location = uiForm.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
       String subUrl = null;
-      if(uiForm.allPortalNames.contains(location)) {
+      if(uiForm.currentIntranet.equals(location)) {
         UIForumFilter forumFilter = (UIForumFilter)uiForm.getUIInput(FORUM_SELEXT_BOX);
         
         String categoryId = forumFilter.getCategoryId();

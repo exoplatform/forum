@@ -111,7 +111,7 @@ public interface DataStorage {
 
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
   
-  List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception;
+  List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
 
   Forum getForum(String categoryId, String forumId);
 

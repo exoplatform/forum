@@ -508,8 +508,8 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
-    return storage.filterForumByName(filterKey, userName);
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    return storage.filterForumByName(filterKey, userName, maxSize);
   }
 
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {

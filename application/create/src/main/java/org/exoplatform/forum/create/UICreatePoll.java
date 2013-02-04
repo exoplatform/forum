@@ -57,7 +57,15 @@ public class UICreatePoll extends UICreateForm {
       UICreatePoll createPoll = event.getSource();
       String location = createPoll.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
       createPoll.isStepOne = createPoll.allPortalNames.contains(location);
-      nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
+      if(createPoll.isStepOne) {
+        nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
+      } else {
+        UIForumFilter forumFilter = (UIForumFilter) createPoll.getUIInput(FORUM_SELEXT_BOX);
+        if(forumFilter != null){
+          forumFilter.setRendered(false);
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(createPoll);
+      }
     }
   }
 

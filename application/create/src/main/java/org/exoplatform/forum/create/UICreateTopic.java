@@ -58,8 +58,16 @@ public class UICreateTopic extends UICreateForm {
     public void execute(Event<UICreateTopic> event) throws Exception {
       UICreateTopic createTopic = event.getSource();
       String location = createTopic.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
-      createTopic.isStepOne = createTopic.allPortalNames.contains(location);
-      nextAction(createTopic, ACTION_TYPE.CREATE_TOPIC, event.getRequestContext());
+      createTopic.isStepOne = createTopic.currentIntranet.equals(location);
+      if(createTopic.isStepOne) {
+        nextAction(createTopic, ACTION_TYPE.CREATE_TOPIC, event.getRequestContext());
+      } else {
+        UIForumFilter forumFilter = (UIForumFilter) createTopic.getUIInput(FORUM_SELEXT_BOX);
+        if(forumFilter != null){
+          forumFilter.setRendered(false);
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(createTopic);
+      }
     }
   }
 

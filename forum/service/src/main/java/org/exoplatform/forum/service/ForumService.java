@@ -143,10 +143,11 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param filterKey - the key to search forum.
    * @param userName - the identify of user.
+   * @param maxSize TODO
    * @return - list of categoryFilter.
    * @throws Exception
    */
-  List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception;
+  List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
 
   /**
    * Gets the forum in the category identify.

@@ -1303,7 +1303,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return new ArrayList<String>(canCreateTopicIds);
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey, String userName) throws Exception {
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -1327,7 +1327,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl)query;
-      int offset = 0, count = 0, number=15, limit;
+      long number, offset = 0, count = 0, limit;
+      if(maxSize > 0){
+        number = maxSize;
+      } else {
+        number = query.execute().getNodes().getSize();
+      }
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
       QueryResult qr;
       CategoryFilter categoryFilter;

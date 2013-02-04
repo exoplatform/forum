@@ -1,11 +1,22 @@
 <%
 	_ctx.getRequestContext().getJavascriptManager().require("SHARED/uiForm");
 %>
+<style>
+.UIAction .DisableStyle {
+  color: gray;
+  background: #E7E7E7;
+  cursor: auto;
+}
+</style>
 <div class="UICreate">
   <% uiform.begin() %>
     <div class="HorizontalLayout">
       <div class="UIFormInput">
         <div class="CreateName"><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></div>
+       <% 
+         boolean hasForum = uiform.hasForum();
+         if(hasForum) {
+       %>
         <table class="UIFormGrid">
           <tbody>           
         <% 
@@ -13,7 +24,7 @@
             if(field.isRendered()) {
         %>
               <tr>
-                <%fieldName = uicomponent.getLabel(field.getName());%>
+                <%fieldName = uiform.getLabel(field.getName());%>
                 <%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>                        
                   <td class="FieldLabel">
                       <label for="<%=field.getId()%>"><%=fieldName%></label>
@@ -31,15 +42,27 @@
         %>            
           </tbody>
         </table>
+       <%
+         } else {
+           print("<div class=\"noforum\">" +_ctx.appRes("UICreateList.label.NoForum").replace('{1}', uiform.getParStatus().toLowerCase()) + "</div>");
+         }
+       %>
       </div>
     </div>
-    <div class="UIAction">
-  <% for(action in uicomponent.getActions()) { 
-           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
-           String link = uicomponent.event(action) ;
-        %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
-      <%}%>
-    </div>
+    <center>
+	    <div class="uiAction uiActionBorder">
+	  <% for(action in uicomponent.getActions()) { 
+	           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
+	           String link = uicomponent.event(action);
+	           String clazz = "";
+	           if(!uicomponent.hasNext() && action.equals("Next")) {
+	             link = "void(0)" ;
+	             clazz = " DisableButton";
+	           }
+	        %>
+	      <input type="button" onclick="$link" class="btn$clazz" value="$actionLabel"/>
+	      <%}%>
+	    </div>
+    </center>
   <%uiform.end()%>
 </div>
