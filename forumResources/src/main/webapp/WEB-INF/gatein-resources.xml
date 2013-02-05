@@ -49,6 +49,17 @@
       </depends>
    </module>
 
+   <module>
+      <name>scrollSelectBox</name>
+      <script>
+         <path>/javascript/eXo/forum/UIFormScrollSelectBox.js</path>
+      </script>
+      <depends>
+         <module>jquery</module>
+         <as>gj</as>
+      </depends>
+   </module>
+
   <module>
     <name>ForumEventManager</name>
     <as>eventManager</as>

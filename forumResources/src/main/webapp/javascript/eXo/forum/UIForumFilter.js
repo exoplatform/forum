@@ -26,7 +26,7 @@
           UIForumFilter.menu.css({'height': '0px','visibility' :'visible'})
             .animate({height: h + 'px'}, 200, function() {
               gj(this).css('height', 'auto');
-              UIForumFilter.filter();
+              UIForumFilter.filter(e);
             });
         });
         
@@ -43,9 +43,10 @@
             gj(this).css({'visibility' :'hidden'});
           });
         }
-        uiForm.off(parentClick).on('click', parentClick);
+        uiForm.off('click', parentClick).on('click', parentClick);
       },
       filter : function(e) {
+        e.stopPropagation();
         var query = UIForumFilter.input.val();
         if(query === null || query ==='') {
           query = '_';
@@ -56,7 +57,7 @@
           UIForumFilter.renderMenu(data);
         } else {
           var url = window.location.protocol + '//' + window.location.host + '/' + eXo.env.portal.rest + 
-                    '/ks/forum/filterforum/' + query;
+                    '/ks/forum/filterforum?name=' + query + '&m=0';
           gj.getJSON(url, function(response) {
             UIForumFilter.saveCache(query, response)
             UIForumFilter.renderMenu(response);
@@ -81,6 +82,9 @@
         li.html(cate.categoryName);
         li.attr('data-catid', cate.categoryId);
         li.addClass("Item category");
+        li.on('click', function(e) {
+          e.stopPropagation();
+        });
         ul.append(li);
         var forums = cate.forumFilters;
         li = gj('<li></li>');

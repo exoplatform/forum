@@ -185,11 +185,11 @@ public class Utils implements ForumNodeTypes {
     public int compare(Object o1, Object o2) throws ClassCastException {
       String name1 = "", name2 = "";
       if (o1 instanceof CategoryFilter) {
-        name1 = ((CategoryFilter) o1).getCategoryName();
-        name2 = ((CategoryFilter) o2).getCategoryName();
+        name1 = ((CategoryFilter) o1).getCategoryName().toUpperCase();
+        name2 = ((CategoryFilter) o2).getCategoryName().toUpperCase();
       } else {
-        name1 = ((Category) o1).getCategoryName();
-        name2 = ((Category) o2).getCategoryName();
+        name1 = ((Category) o1).getCategoryName().toUpperCase();
+        name2 = ((Category) o2).getCategoryName().toUpperCase();
       }
       return (type == TYPE.ASC) ? name1.compareTo(name2) : name2.compareTo(name1);
     }

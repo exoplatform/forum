@@ -22,6 +22,8 @@ import java.util.List;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.UIFormScrollSelectBox;
+import org.exoplatform.forum.common.webui.UIForumFilter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -37,7 +39,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SAS
@@ -56,13 +57,13 @@ public class UICreateForm extends BaseUIForm {
 
   public boolean              hasForumIntranet     = true;
 
-  private boolean             hasForum             = true;
+  public boolean              hasForum             = true;
 
-  private boolean             hasNext              = true;
+  public boolean              hasNext              = true;
 
-  private String               parStatus            = "";
+  public String                parStatus            = "";
 
-  private String               categoryIdOfSpaces   = "";
+  public String                categoryIdOfSpaces   = "";
   
   public String                currentIntranet      = INTRANER;
   
@@ -95,9 +96,6 @@ public class UICreateForm extends BaseUIForm {
     currentIntranet = getIntranerSite();
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     allPortalNames = CreateUtils.getAllPortalNames();
-//    for (String portalName : allPortalNames) {
-//      list.add(new SelectItemOption<String>(portalName, portalName));
-//    }
     
     String currentUser = UserHelper.getCurrentUser();
     ForumService forumService = getApplicationComponent(ForumService.class);
@@ -139,7 +137,7 @@ public class UICreateForm extends BaseUIForm {
     }
     
     if(list.size() > 0) {
-      UIFormSelectBox formSelectBox = new UIFormSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
+      UIFormScrollSelectBox formSelectBox = new UIFormScrollSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
       if(hasForumIntranet) {
         formSelectBox.setValue(currentIntranet);
       }
@@ -155,7 +153,7 @@ public class UICreateForm extends BaseUIForm {
   
   private Forum getForum(List<Forum> forums, String spacePrettyName) {
     for (Forum forum : forums) {
-      if(forum.getId().indexOf(spacePrettyName) > 0) {
+      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spacePrettyName)) {
         return forum;
       }
     }
@@ -164,12 +162,8 @@ public class UICreateForm extends BaseUIForm {
 
   public String getIntranerSite() {
     String portalName = CreateUtils.getCurrentPortalName();
-    if (portalName.equals(SiteType.GROUP.name())) {
-      for (String portalName_ : allPortalNames) {
-        if (portalName_.equals(INTRANER)) {
-          return portalName_;
-        }
-      }
+    if (portalName.equalsIgnoreCase(SiteType.GROUP.name())) {
+      return INTRANER;
     }
     return portalName;
   }
@@ -177,7 +171,7 @@ public class UICreateForm extends BaseUIForm {
   public static void nextAction(UICreateForm uiForm, ACTION_TYPE type, WebuiRequestContext context) throws Exception {
     if (uiForm.isStepOne && uiForm.hasForumIntranet) {
       uiForm.isStepOne = false;
-      UIForumFilter forumFilter = (UIForumFilter) uiForm.getUIInput(FORUM_SELEXT_BOX);
+      UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELEXT_BOX);
       if (forumFilter == null) {
         forumFilter = new UIForumFilter(FORUM_SELEXT_BOX, FORUM_SELEXT_BOX);
         forumFilter.setOnChange("Next");
@@ -187,10 +181,10 @@ public class UICreateForm extends BaseUIForm {
       uiForm.hasNext = false;
       context.addUIComponentToUpdateByAjax(uiForm);
     } else {
-      String location = uiForm.getUIFormSelectBox(LOCALTION_SELEXT_BOX).getValue();
+      String location = uiForm.getUIFormScrollSelectBox(LOCALTION_SELEXT_BOX).getValue();
       String subUrl = null;
       if(uiForm.currentIntranet.equals(location)) {
-        UIForumFilter forumFilter = (UIForumFilter)uiForm.getUIInput(FORUM_SELEXT_BOX);
+        UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELEXT_BOX);
         
         String categoryId = forumFilter.getCategoryId();
         String forumId = forumFilter.getForumId();

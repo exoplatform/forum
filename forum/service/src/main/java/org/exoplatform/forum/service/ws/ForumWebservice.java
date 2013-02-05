@@ -234,26 +234,28 @@ public class ForumWebservice implements ResourceContainer {
   }
   
   @GET
-  @Path("filterforum/{forumname}")
+  @Path("filterforum/")
   @Produces(MediaType.TEXT_XML)
-  public Response filterForum(@PathParam("forumname") String forumname, 
+  public Response filterForum(@QueryParam("name") String forumname, 
                                @QueryParam("m") String maxSize,
                                @Context SecurityContext sc,
                                @Context UriInfo uriInfo) throws Exception {
     try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      String userName = getUserId(sc, uriInfo);
-      int m = 0;
-      if(!Utils.isEmpty(maxSize)) {
-        try {
-          m = Integer.parseInt(maxSize.trim());
-        } catch (NumberFormatException e) {
-          m = 0;
+      List<CategoryFilter> categoryFilters = new ArrayList<CategoryFilter>();
+      if(!Utils.isEmpty(forumname)) {
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        String userName = getUserId(sc, uriInfo);
+        int m = 0;
+        if(!Utils.isEmpty(maxSize)) {
+          try {
+            m = Integer.parseInt(maxSize.trim());
+          } catch (NumberFormatException e) {
+            m = 0;
+          }
         }
+        categoryFilters = forumService.filterForumByName(forumname, userName, m);
+        Collections.sort(categoryFilters, new Utils.CategoryNameComparator(Utils.CategoryNameComparator.TYPE.ASC));
       }
-      List<CategoryFilter> categoryFilters = forumService.filterForumByName(forumname, userName, m);
-      Collections.sort(categoryFilters, new Utils.CategoryNameComparator(Utils.CategoryNameComparator.TYPE.ASC));
-
       return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
     } catch (Exception e) {
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
