@@ -6,7 +6,7 @@
   String compId = uicomponent.getId() ; 
   uicomponent.setListCate();
   
-  def requireJS = _ctx.getRequestContext().getJavascriptManager().require("SHARED/DragDrop", "dragDrop");
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().require("SHARED/AnswerDragDrop", "dragDrop");
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.initContextMenu('"+compId+"') ;");
   if(uicomponent.isModerator) {
     requireJS.addScripts("dragDrop.init('"+compId+"') ;") ;
