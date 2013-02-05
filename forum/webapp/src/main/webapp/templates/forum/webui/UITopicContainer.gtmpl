@@ -21,7 +21,7 @@
   import org.exoplatform.forum.TimeConvertUtils ;
   import org.exoplatform.forum.ForumUtils ;
   
-  String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
+  String forumSeparatorLine = UserHelper.isAnonim() ? "" : "forumSeparatorLine";
  	uicomponent.initPage() ;
   List topics = uicomponent.getTopicPageList() ;
   String forumName = forum.getForumName();
@@ -91,7 +91,6 @@
   </div>
   <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
   <div class="ForumContainer forumContainer">
-      
       <div class="ContentContainer" id="UITopicContent">
         <div class="UITopicList">
           <table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
@@ -99,87 +98,43 @@
 			<caption class="rounded-corners-top">
 				<ul class="forumToolbar ForumActionToolbar clearfix">
 				
-					<% if(isShowMenu && canEdit) { %> 
-						<li class="ContentAction DefaultStyle ">
-							<div class="dropdown uiDropdownWithIcon uiActionWithLabel">
-								<div data-toggle="dropdown">
-								<%=_ctx.appRes("UITopicContainer.label.Moderation");%>
-									<i class="uiIconMiniArrowDown"></i>
-								</div>
-								<ul class="dropdown-menu">
-								<% 
-								  for(action in uicomponent.getActionMenuTopic()) {
-									String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
-									String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-									String classIcon = null;
-									String classMenu = "";
-									classIcon = "uiIcon" + action;
-									classIcon = classIcon.replaceFirst("Topic", "").replaceFirst("Set", "");
-									classIcon = classIcon.replaceFirst("Merge", "ForumMerge");
-									classIcon = classIcon.replaceFirst("Locked", "Lock");
-									classIcon = classIcon.replaceFirst("Stick", "ForumStick");
-									classIcon = classIcon.replaceFirst("Close", "Minus");
-									classIcon = classIcon.replaceFirst("UnForumStick", "ForumUnStick");
-									classIcon = classIcon.replaceFirst("UnWaiting", "ForumCensor");
-									if(!isApproveTopic && action.indexOf("Approve") > -1) { 
-									  continue;
-									}
-									if(action.indexOf("ActivateTopics") >= 0){
-									  if(!uicomponent.getIsAutoPrune()){
-										continue; 
-									  }
-									}
-									if(!action.equals("SetDeleteTopic")){
-								 %> <li>
-										
-									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
-										
-								  </li>
-								 <% 
-									} else {%>
-								  <li>
-									<a onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">   
-									  <i class="uiIconDelete"></i>$itemLabel
-									</a>
-								  </li>
-								  <%}
-								 } %>
-							  </ul>
-							</div>
-						</li>
-					<% } %>
-					  <li class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+					<%if(uicomponent.userProfile.getUserRole() < 3){%>
 
-						<div class="dropdown uiDropdown uiActionWithLabel">
-						  <div data-toggle="dropdown">
-							<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-							<i class="uiIconMiniArrowDown"></i>          
-						  </div>
-						  <ul class="dropdown-menu">
-							<li>
-							  <div class="controls controls-row">
-								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
-								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-								<br/>
-								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-							  </div>
-							</li>
-						  </ul>
+					<li class="defaultStyle forumSeparatorLine" >
+						<div class="uiActionWithLabel">
+						<% if(uicomponent.isWatching(forum.getPath())) {%>
+							<a href="<%=uicomponent.event("UnWatch","forum")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+						<% } else { %>
+							<a href="<%=uicomponent.event("AddWatching","forum")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+						<% } %>
 						</div>
-					  
-					  </li>
+					</li>
+					<li class="defaultStyle forumSeparatorLine">
+						<div class="uiActionWithLabel">
+							<a href="<%=uicomponent.event("AddBookMark","forum")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+						</div>
+					</li>
+					<% } %> 
+				
+					<li class="defaultStyle forumSeparatorLine">
+						<div class="uiActionWithLabel">
+							<a href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+						</div>
+					</li>
+				
 					<% if(isShowMenu && canEdit) { %> 
-					  <li class="ContentAction DefaultStyle ForumSeparatorLine">
-						<div class="dropdown uiDropdown uiActionWithLabel">
-						  <div data-toggle="dropdown">
-						  <%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
-						  <i class="uiIconMiniArrowDown"></i>
-						  </div>
+					<li class="ContentAction defaultStyle forumSeparatorLine">
+						<div class="dropdown uiDropdownWithIcon uiActionWithLabel">
+							<div data-toggle="dropdown">
+								<i class="uiIconSettings uiIconLightGray"></i>
+								<%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
+								<i class="uiIconMiniArrowDown"></i>
+							</div>
 						  <ul class="dropdown-menu">
 							<% if(!isLock && hasCreadTopic) { %>   
-								<li class="MenuItem">
-								  <a class="ItemIcon PostnewThreadIcon" href="<%=uicomponent.event("AddTopic")%>">
-									<%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
+								<li>
+								  <a href="<%=uicomponent.event("AddTopic")%>">
+									<i class="uiIconForumCreateTopic"></i><%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
 								  </a>
 								</li>
 							  
@@ -190,8 +145,14 @@
 							  for(action in actionMenuForum) {
 								link = uicomponent.event(action,uicomponent.getName(),"topic") ;
 								itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								if(action.length() < 12) classIcon = action + "Icon" ;
-								else classIcon = action.replaceFirst("Forum", "") + "Icon" ;
+								classIcon = "uiIcon" + action;
+								classIcon = classIcon.replaceFirst("Forum", "").replaceFirst("Set", "");
+								classIcon = classIcon.replaceFirst("Locked", "Lock");
+								classIcon = classIcon.replaceFirst("Close", "Minus");
+								classIcon = classIcon.replaceFirst("Remove", "Delete");
+								classIcon = classIcon.replaceFirst("WatchOption", "Watch");
+								classIcon = classIcon.replaceFirst("BanIpTools", "ForumBanIp");
+								
 								if(action.equals(actionMenuForum[1])){
 								  isView = forum.getIsLock() ;
 								} else if(action.equals(actionMenuForum[2])){
@@ -212,52 +173,97 @@
 								  link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
 								}
 							 %>
-								  <li class="$classDisable">
-									<a class="ItemIcon $classIcon" href="$link">$itemLabel</a>
-								  </li>
+								<li>
+									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
+								</li>
 						   <% } %>
 						  </ul>
 						</div>
 					  </li>
 					<% } %> 
-					  <li class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
-						
-							<a href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-						
-					  </li>
-					<%if(uicomponent.userProfile.getUserRole() < 3){%>
-					  <li class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
-
-						
-							<a href="<%=uicomponent.event("AddBookMark","forum")%>"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-						
-
-					  </li>
-					  <li class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
-
-						  <% if(uicomponent.isWatching(forum.getPath())) {%>
-							<a href="<%=uicomponent.event("UnWatch","forum")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-						  <% } else { %>
-							<a href="<%=uicomponent.event("AddWatching","forum")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
-						  <% } %>
-
-					  </li>
-					<% } %> 
-				
 					
+					<li class="ContentAction defaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+						<div class="dropdown uiDropdown uiActionWithLabel">
+						  <div data-toggle="dropdown">
+							<i class="uiIconSearch uiIconLightGray"></i>
+							<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
+							<i class="uiIconMiniArrowDown"></i>          
+						  </div>
+						  <ul class="dropdown-menu">
+							<li>
+							  <div class="controls controls-row">
+								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+								<br/>
+								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+							  </div>
+							</li>
+						  </ul>
+						</div>
+					</li>
+				
+					<% if(isShowMenu && canEdit) { %> 
+					<li class="ContentAction defaultStyle forumSeparatorLine">
+						<div class="uiDropdownWithIcon uiActionWithLabel dropdown pull-right">
+							<div data-toggle="dropdown">
+								<i class="uiIconForumModerator uiIconForumLightGray"></i>
+								<%=_ctx.appRes("UITopicContainer.label.Moderation");%>
+								<i class="uiIconMiniArrowDown"></i>
+							</div>
+							<ul class="dropdown-menu">
+							<% 
+							  for(action in uicomponent.getActionMenuTopic()) {
+								String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
+								String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+								String classIcon = null;
+								String classMenu = "";
+								classIcon = "uiIcon" + action;
+								classIcon = classIcon.replaceFirst("Topic", "").replaceFirst("Set", "");
+								classIcon = classIcon.replaceFirst("Merge", "ForumMerge");
+								classIcon = classIcon.replaceFirst("Locked", "Lock");
+								classIcon = classIcon.replaceFirst("Stick", "ForumStick");
+								classIcon = classIcon.replaceFirst("Close", "Minus");
+								classIcon = classIcon.replaceFirst("UnForumStick", "ForumUnStick");
+								classIcon = classIcon.replaceFirst("UnWaiting", "ForumCensor");
+								if(!isApproveTopic && action.indexOf("Approve") > -1) { 
+								  continue;
+								}
+								if(action.indexOf("ActivateTopics") >= 0){
+								  if(!uicomponent.getIsAutoPrune()){
+									continue; 
+								  }
+								}
+								if(!action.equals("SetDeleteTopic")){
+							 %> <li>
+								<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
+							  </li>
+							 <% 
+								} else {%>
+							  <li>
+								<a onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">   
+								  <i class="uiIconDelete"></i>$itemLabel
+								</a>
+							  </li>
+							  <%}
+							 } %>
+						  </ul>
+						</div>
+					</li>
+					<% } %>
+
 				</ul>
 			
 			</caption>
             <thead>
               <tr>
-                <th style="width:40px;">&nbsp;</th>
-                <th style="width:40px;">&nbsp;</th>
+                <th style="width:20px;">&nbsp;</th>
+                <th style="width:20px;">&nbsp;</th>
                 <th>
                   <div class="<%=uicomponent.getCssClassForSorting("name");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_NAME);%>">
                     <%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
                   </div>
                 </th>
-                <th style="width:40px;"><span class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></span></th>
+                <th style="width:20px;"><i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i></th>
                 <th style="width:96px;">
                   <div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_VOTE_RATING);%>">
                     <div class="THFixHidden" style="width: 80px;">
@@ -282,12 +288,15 @@
                 <th style="width:60px;">
                   <div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_VIEW_COUNT);%>">
                     <div class="THFixHidden" style="width: 44px;">
-                     <%=_ctx.appRes("UITopicContainer.label.Views");%>
+						<i class="uiIconView uiIconLightGray"></i>
                     </div>
                   </div>
                 </th>
                 <% if(canEdit) { %>
-                <th style="width:30px;"><input type="checkbox" name="checkAll" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
+                <th style="width:20px;">
+					<span class="uiCheckbox"><input type="checkbox" name="checkAll" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/><span></span>
+					</span>
+				</th>
                 <% } %>
               </tr>
             </thead>
@@ -344,15 +353,21 @@
                   String postView = String.valueOf(topic.getViewCount());
                   String number = "0";
                   
-                  String hot = ""; 
-                   
-                  if(topic.getPostCount() > 30) hot = "Hot"; 
-                  String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+                 
+                  String iconTopicStatus = newPost+"Post" ;
+                  if(topic.getPostCount() > 30) {
+					
+					iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
+				  } else {
+					iconTopicStatus = iconTopicStatus.replaceFirst("NoNewPost", "");
+					iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
+				  }
+                  
                   if(topic.getIsLock() || isLock) {
-                    iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
+                    iconTopicStatus = "uiIconForumColorLockTiny";
                   }
                   if(topic.getIsClosed()) {
-                    iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
+                    iconTopicStatus = "uiIconForumColorCloseTiny";
                   }
                   String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
                   String approved = "" ;
@@ -383,7 +398,7 @@
                   }
               %>
                 <tr class="$classRow $classSelect oncontextmenu">
-                  <td class="Tdbox"><span style="display: block;" class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"></span></td>
+                  <td class="Tdbox"><i class="$iconTopicStatus" title="$titleTopicStatus"></i></td>
                   <td class="Tdbox" style="*text-align:left;">
                     <%if(topic.getIsPoll()){%>
                         <div class="StatusIcon $iconClassTopic">
@@ -402,10 +417,22 @@
                     <% } %>
                       
                         <% ++rCNB; %>
-                        <%if(uicomponent.isUseAjax){%>
-                            <a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
-                        <%} else {%>
-                            <a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+                        <%if(uicomponent.isUseAjax){
+							if(topic.getPostCount() > 30) {
+							%>
+                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
+							<%} else {%>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
+							<%}%>
+						
+                        <%} else {
+							if(topic.getPostCount() > 30) {
+							%>
+                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+							<%} else {%>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+							<%}%>
+                            
                         <%}%>
                         
                         <div id="UIPopupMenu${rCNB}" style="display:none;">
@@ -533,7 +560,11 @@
                       checked = "checked=\"checked\"";
                     }
                   %>
-                  <td class="Tdbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/></td>
+                  <td class="Tdbox">
+					<span class="uiCheckbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/>
+					<span></span>
+					</span>
+				  </td>
                   <% } %>
                 </tr>
             <% 

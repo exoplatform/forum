@@ -9,10 +9,10 @@
       UIForumPortlet.id = id;
       var jportlet = findId(id);
       if (jportlet.exists()) {
-        jportlet.find('.oncontextmenu').on('contextmenu', utils.ForumUtils.returnFalse);
-        jportlet.find('.UserMenuInfo').on('click', utils.ForumUtils.showUserMenu);
+        jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
+        jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
       }
-      utils.ForumUtils.onResize(UIForumPortlet.resizeCallback);
+      utils.onResize(UIForumPortlet.resizeCallback);
 
       $.each($('ul.dropdown-menu').find('a'), function(i, item){
         $(item).on('click', function(){

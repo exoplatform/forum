@@ -1,4 +1,4 @@
-<div class="UIForumPortlet" id="$uicomponent.id">
+<div class="UIForumPortlet uiForumPortlet" id="$uicomponent.id">
 <%
 	if(uicomponent.forumSpDeleted) {
 	  print("<div style=\"padding: 20px\">" + 

@@ -41,16 +41,6 @@
 	font-weight: bold;
 }
 
-.UIForumContainer .ContentContainer .UITopicList .TitleNorman {
-	color: #204aa0;
-	font-size: 12px;
-}
-
-.UIForumContainer .ContentContainer .TitleNorman {
-	color: #204aa0;
-	font-size: 12px;
-}
-
 .UIForumContainer .ContentContainer .TitleNewpost {
 	font-weight: bold;
 	color: #204aa0;

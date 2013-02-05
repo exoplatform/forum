@@ -32,23 +32,31 @@
 						} else isAdm = false;
                   if(!isAdm){
 				%>
-                  <div class="DefaultStyle ControlButton" id="$action">
+                  <div class="defaultStyle ControlButton" id="$action">
 					<a href="<%=uicomponent.event(action)%>" style="display:block;">
 						<i class="$icon"></i>
 						<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 					</a>
                   </div>
                   <%} else {%>
-                  <div class="DefaultStyle ControlButton" id="$action">
-                     <div class="dropdown uiDropdown uiActionWithLabel">
+                  <div class="defaultStyle ControlButton" id="$action">
+                     <div class="dropdown uiDropdownWithIcon uiActionWithLabel">
                         <a data-toggle="dropdown">
                            <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
-                        <% for(ac in uicomponent.getActionMenu()){ %>
+                        <% for(ac in uicomponent.getActionMenu()){ 
+						  classIcon = "uiIconForum" + ac;
+						  classIcon = classIcon.replaceFirst("Setting", "").replaceFirst("Keyword", "").replaceFirst("Manager", "").replaceFirst("Auto", "");
+						  classIcon = classIcon.replaceFirst("OpenIPBan", "BanIp");
+						  classIcon = classIcon.replaceFirst("ForumExportCategory", "Export");
+						  classIcon = classIcon.replaceFirst("ForumImportCategory", "Import");
+						  classIcon = classIcon.replaceFirst("ForumNotification", "Notification");
+						  classIcon = classIcon.replaceFirst("ForumTopicType", "ForumTopic");
+						%>
                           <li>
-                            <a class="${ac}Icon" onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
-							<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
+                            <a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
+								<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 							</a>
 						   </li>
 						<%} %>
