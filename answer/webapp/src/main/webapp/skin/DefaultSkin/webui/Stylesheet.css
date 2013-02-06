@@ -3,6 +3,8 @@
 @import url('UIMoveCategoryForm/Stylesheet.css');
 @import url('popup/Stylesheet.css');
 
+@import url('/answer/skin/css/answers.css');
+@import url('/answer/skin/css/faq.css');
 
 .UIWindow .UIAnswersPortlet {
 	min-width: 900px;
@@ -225,7 +227,7 @@
 }
 
 .UIAnswersPortlet .UIQuestions div {
-	font-family: Verdana,Lucida,Tahoma,Arial,Helvetica,sans-serif;
+	/*font-family: Verdana,Lucida,Tahoma,Arial,Helvetica,sans-serif;*/
 }
 
 .UIAnswersPortlet .UIQuestions .AnswerToolbar {
@@ -2520,7 +2522,7 @@
 /*********************FAQ UIAnswersContainer***************************/
 
 .UIAnswersPortlet .UIAnswersContainer .FAQViewCategoriesColumn {
-	width:200px;
+	/*width:200px;*/
 }
 
 .UIAnswersPortlet .UIAnswersContainer .MessageNoPermission {

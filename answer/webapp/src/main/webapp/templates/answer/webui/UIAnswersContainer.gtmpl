@@ -1,16 +1,16 @@
 <% uicomponent.setViewRootCate(); %>
-<div id="${uicomponent.id}" class="UIAnswersContainer">
+<div id="${uicomponent.id}" class="UIAnswersContainer uiAnserContainer clearfix">
 	<% if(uicomponent.isRenderChild) { %>
 	<%List children = uicomponent.getChildren() ;%>
-	<table>
-		<tr>
-			<td id="FAQViewCategoriesColumn" class="FAQViewCategoriesColumn"><%uicomponent.renderChild(children.get(2).getClass());%></td>
-			<td>
+	
+			<div id="FAQViewCategoriesColumn" class="FAQViewCategoriesColumn leftColumn pull-left"><%uicomponent.renderChild(children.get(2).getClass());%></div>
+			<div class="resize pull-left">
+				<div class="line"><i class="uiIconMiniArrowLeft"></i></div>
+			</div>
+			<div class="rightColumn">
 				<%uicomponent.renderChild(children.get(0).getClass()); %>
 				<%uicomponent.renderChild(children.get(1).getClass()); %>
-			</td>
-		</tr>
-	</table>
+			</div>
 	<%} else {%>
 	<div class="MessageNoPermission"><%=_ctx.appRes("UIAnswersContainer.label.NotPermission")%></div>
 	<%} %>

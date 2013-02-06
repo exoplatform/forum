@@ -15,26 +15,25 @@
   String [] categoryAction;
   
 %>
-<div class="UICategoriesContainer">
 <%uiform.begin()%>
-    <div class="AnswerToolbar">
-            <%
-            String categoryName = uicomponent.getCurrentName();
-            if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
-            	<% if(categoryName.indexOf("<img") >= 0) { %>
-            		<%=categoryName%>
-            	<% } else { %>
-              	<%=categoryName%>
-              <% } %>
-            <%
-            } else {%>
-              <div class="TextTitle" title="<%=uicomponent.getCurrentName()%>">
-                <%=FAQUtils.getSubString(categoryName, 20)%>
-              </div>
-          <%}%>
-    </div>
+	<div class="uiBox">
+    <h6 class="title">
+	    <%
+	    String categoryName = uicomponent.getCurrentName();
+	    if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
+	    	<% if(categoryName.indexOf("<img") >= 0) { %>
+	    		<%=categoryName%>
+	    	<% } else { %>
+	      	<%=categoryName%>
+	      <% } %>
+	      
+	    <%
+	    } else {%>
+	     <%=FAQUtils.getSubString(categoryName, 20)%>
+	  <%}%>
+    </h6>
     
-    <div class="AnswersContainer">
+    <div class="uiContentBox">
       <%
       if(uicomponent.isShowInfo()){
         long[] cateInfo = uicomponent.getCategoryInfo() ;
@@ -52,11 +51,13 @@
       }
       %>
     </div>
-
-    <div class="AnswerToolbar">
-          <span class="TextTitle"><%= _ctx.appRes("UICategories.title.Categories"); %></span>
-    </div>
-    <div class="AnswersContainer CategoriesContainer">
+	</div>
+	
+	<div class="uiBox">
+    <h6 class="title">
+      <%= _ctx.appRes("UICategories.title.Categories"); %>
+    </h6>
+    <div class="uiContentBox">
       <div class="UICategories">
         <%
          if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
@@ -134,5 +135,6 @@
       </div>
       </div>
     </div>
+  </div>
 <%uiform.end()%>
-</div>
+

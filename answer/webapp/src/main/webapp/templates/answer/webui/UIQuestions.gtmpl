@@ -19,73 +19,100 @@
   boolean canEditQuestion = uicomponent.getCanEditQuestion();
   boolean isViewRootCate = uicomponent.isViewRootCate;
 %>
-<div class="UIQuestions" id="$uicomponent.id">
-  <div class="AnswerToolbar">
-	      <!--  CustomView action  -->
+<div class="UIQuestions uiBox" id="$uicomponent.id">
+  <div class="answerToolbar title">
+  	<ul class="nav nav-pills" style="border: 1px solid red">
+	      <!--  CustomView action 
 	        <div class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.answer.UIAnswersPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
 	          	<a class="Icon FAQCustomView" id="FAQCustomView">
 	              <span></span>
 	            </a>
 	        </div>
-	      
+	       -->
+			
+		    <%if(canEditQuestion) {
+		      String[] actionTollbar = uicomponent.getActionTollbar();
+		      for(String action in actionTollbar) {
+		    %>
+		    	<li>
+		        <button class="btn btn-primary" onclick="<%=uicomponent.event(action, cateId);%>" type="button"><i class="uiIconAnswersSubmitQuestion"></i><%=_ctx.appRes("UIQuestions.action." + action);%></button>
+		    	</li>
+		    <%
+			      }
+			    } else {
+			      if(uicomponent.isAddQuestion()) {
+			    %>
+			    <li>
+		        <button class="btn btn-primary" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>"  type="button"><i class="uiIconAnswersManageQuestion"></i><%=_ctx.appRes("UIQuestions.action.AddQuestion")%></button>
+		    	</li>
+		    <%}
+		    }%>
+		 
 	      <%
 	      if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 	        String linkRss = uicomponent.getRSSLink() ;
 	      %>
-	            <a class="Icon FAQRSS SeparatorLine" href="$linkRss" target="_blank"><%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
-	    <%
-	    }
+	      	<li> 
+	          <a href="$linkRss" target="_blank"><i class="uiIconRss"></i><%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
+	        </li>
+		    <%
+		    }
 	    if(canEditQuestion) {
 	    %>
-	            <div class="DownArrow1Icon SeparatorLine">
-	                <a class="Icon CategoryManager" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.ManageCategory"); %></a>
+					<li>
+	          <div class="uiDropdownWithIcon dropdown">
+	            <!--a class="dropdown-toggle" data-toggle="dropdown" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"-->
+							<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">							
+                <i class="uiIconAnswersManageCategory"></i>
+                <%=_ctx.appRes("UIQuestions.action.ManageCategory"); %>
+								<span class="uiIconArrowDown"></span>
+	            </a>
 	            
 				          
 				      <!--  Begin popup menu  -->
-				        <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();" onblur="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();">
-				          <ul class="UIRightClickPopupMenu UIContextMenuContainer">
+				        <!--ul class="dropdown-menu" onmouseover="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();" onblur="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();"-->
+				        <ul class="dropdown-menu" >
+				          
 				           
 				              <%
 				                String[] actionTollbar = uicomponent.getMenuCateManager();
 				                for(String action in actionTollbar) {
 				                  if(action.equals("DeleteCategory") && uicomponent.isCategoryHome()) continue; 
 				              %>
-				                  <li onmousedown="<%=uicomponent.event(action, cateId);%>" onkeydown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
-				                    <a class="ItemIcon $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
+				                  <li onmousedown="<%=uicomponent.event(action, cateId);%>" onkeydown="<%=uicomponent.event(action, cateId);%>">
+				                    <a href="javascript:void(0);"><i class="uiIcon$action"></i><%=_ctx.appRes("UIQuestions.action." + action)%></a>
 				                  </li>
 				              <%
 				                }%>
 				          
 				          </ul>
-			          </div>
 				      <!--  End popup menu  -->
-		       </div>
+						</div>
+		      </li>
 	    <%
 	    }
-	    if(canEditQuestion) {
-	      String[] actionTollbar = uicomponent.getActionTollbar();
-	      for(String action in actionTollbar) {
 	    %>
-        <a class="Icon $action SeparatorLine" onclick="<%=uicomponent.event(action, cateId);%>" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action);%></a>
-	    <%
-	      }
-	    } else {
-	      if(uicomponent.isAddQuestion()) {
-	    %>
-        <a class="Icon SeparatorLine AddNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.AddQuestion")%></a>
-	    <%}
-	    }%>
+	   
+	   	<!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
+	    <li class="pull-right">
+        <a onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint"></i><%=_ctx.appRes("UIQuestions.action.Print")%></a>
+  		</li>
+  		
 	  <%String currentUser = FAQUtils.getCurrentUser() ; 
 	    if(currentUser != null && currentUser.trim().length() > 0) {
 	      String actionSetting = uicomponent.event("Setting");
 	  %>
-       <a class="Icon Setting SeparatorLine" onclick="$actionSetting" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Settings")%></a>
+	  	<li class="pull-right">
+       	<a onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting"></i><%=_ctx.appRes("UIQuestions.action.Settings")%></a>
+      </li>
 	    <% } %>
-	      <!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
-        <a class="Icon Print SeparatorLine" onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
+	     
+  	</ul>
   </div>
 
-  <div class="AnswersContainer ViewQuestionContent">
+
+
+  <div class="AnswersContainer ViewQuestionContent uiContentBox">
     <div class="FAQContent">
 <!--  View question  -->
       <%

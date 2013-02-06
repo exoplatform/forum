@@ -3,16 +3,16 @@
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.submitSearch('"+uiform.id+"');");
 %>
 
-<div class="UIQuickSeach ClearFix">
+<div class="uiAnswersSearchBox uiSearchInput pull-right">
   <% uiform.begin() %>  
-    <div class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div>
-    <div class="SearchIcon ActionSearch" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
-    <div class="Input FR">
+    <!--div class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div-->
+    <!--div class="SearchIcon ActionSearch" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div-->
+   
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
       %>
-    </div>
-    <div class="FR"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div>
+    
+    <!--div class="FR"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div-->
 
   <%uiform.end()%>
 </div>
