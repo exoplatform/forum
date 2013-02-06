@@ -58,12 +58,12 @@
   <% uiform.begin() %>
   <div class="ButtomAndPageListContainer clearfix">
   <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-    <div class="LockActionForum StartTopicForum FL">
+    <div class="LockActionForum StartTopicForum pull-left">
   <% } else { %>
-    <div class="FL">
+    <div class="pull-left">
   <% } %>
       <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-        <div class="IconButton LockIcon"  title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
+        <div class="bnt" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
       <% } else { %>
         <a class="uiAddTheradIcon btn btn-primary" style="display:block;" href="<%=uicomponent.event("AddTopic")%>">
 			<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
@@ -74,7 +74,7 @@
     <div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
       
       <% /*Begin Popup Menu*/ %>
-      <div class="UIPopupCategory" style="display:none; ">
+      <div class="UIPopupCategory" style="display:none;">
         <div class="UIRightClickPopupMenu clearfix" style="display: block;">
 
             <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
@@ -362,12 +362,12 @@
 					iconTopicStatus = iconTopicStatus.replaceFirst("NoNewPost", "");
 					iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
 				  }
-                  
+                  String iconStatusTopic = "";
                   if(topic.getIsLock() || isLock) {
-                    iconTopicStatus = "uiIconForumColorLockTiny";
+                    iconStatusTopic = "uiIconForumColorLockTiny";
                   }
                   if(topic.getIsClosed()) {
-                    iconTopicStatus = "uiIconForumColorCloseTiny";
+                    iconStatusTopic = "uiIconForumColorCloseTiny";
                   }
                   String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
                   String approved = "" ;
@@ -398,14 +398,12 @@
                   }
               %>
                 <tr class="$classRow $classSelect oncontextmenu">
-                  <td class="Tdbox"><i class="$iconTopicStatus" title="$titleTopicStatus"></i></td>
-                  <td class="Tdbox" style="*text-align:left;">
+                  <td><i class="$iconTopicStatus" title="$titleTopicStatus"></i></td>
+                  <td>
                     <%if(topic.getIsPoll()){%>
-                        <div class="StatusIcon $iconClassTopic">
-                          <span style="display: block;" class="StatusIcon Stats" style="margin-left:18px;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></span>
-                        </div>
+                          <i class="uiIconPoll uiIconLightGray" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
                     <%} else {%>
-                        <span style="display: block;" class="StatusIcon $iconClassTopic" title="$topicType"></span>
+                        <i class="uiIconForumTopic uiIconForumLightGray" title="$topicType"></i>
                     <%}%>
                   </td>
                   
@@ -413,24 +411,24 @@
                   <td>
                     
                     <% if(topic.getIsSticky()) {%>
-                      <span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
+                      <i class="uiIconForumStick"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
                     <% } %>
                       
                         <% ++rCNB; %>
                         <%if(uicomponent.isUseAjax){
 							if(topic.getPostCount() > 30) {
 							%>
-                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
+                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%}%>
 						
                         <%} else {
 							if(topic.getPostCount() > 30) {
 							%>
-                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+                            <a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%}%>
                             
                         <%}%>
@@ -470,7 +468,7 @@
                     
                       <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
                       <div class="PopupSelectCategory">
-                        <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewTopicBy</a>
+                        <!-- <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewTopicBy</a> -->
                         <div class="UIPopupInfoMenu">
                           <div class="UIPopupInfoContent">
                             <div class="Arrow"><span></span></div>
@@ -497,8 +495,8 @@
                     
                   </td>
                   
-                  <td class="Tdbox">$attachment</td>
-                  <td class="Tdbox">
+                  <td>$attachment</td>
+                  <td>
                     
                     <% String[] classNames = uicomponent.getStarNumber(topic) ; 
                        String SumVote = classNames[5] ;
@@ -552,8 +550,8 @@
                       
                     </div>
                   </td>
-                  <td class="Tdbox" align="center">$postCount</td>
-                  <td class="Tdbox" align="center">$postView</td>
+                  <td align="center">$postCount</td>
+                  <td align="center">$postView</td>
                   <% if(canEdit) { 
                     String checked = "";
                     if(checkeds.contains(topicId)){

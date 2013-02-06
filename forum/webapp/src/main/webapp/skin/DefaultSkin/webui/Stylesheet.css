@@ -92,18 +92,8 @@
 	font-size: 14px;
 }
 
-.UIForumPortlet h5 {
-	font-size: 12px;
-}
-
 .UIForumPortlet h6 {
 	font-size: 11px;
-}
-
-.UIForumPortlet ul,li {
-	margin: 0px;
-	padding: 0px;
-	list-style-type: none;
 }
 
 .UIForumPortlet .FL {

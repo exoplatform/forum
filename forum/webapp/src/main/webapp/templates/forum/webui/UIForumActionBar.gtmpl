@@ -5,120 +5,117 @@
 	boolean isAdmin = (userProfile.getUserRole() == 0) ;
 	uicomponent.initJavaScripts();
 %>
-<div class="uiForumActionBar uiBox" id="UIForumActionBar">
-	<table>
-		<tr>
-			<td class="ControlButtonContainer">
-				<%	String[] actions = [""];
-					String[] iconActions = [""];
-					if(isAdmin) {
-						if(uicomponent.isSpace()) {
-							actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
-							iconActions = ["uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
-						} else {
-							actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
-							iconActions = ["uiIconCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
-						}
-					} else {
-						actions = ["EditProfile","OpenBookMark"];
-						iconActions = ["uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
-					}
-					boolean isAdm = false;
-					int i = 0;
-					for(action in actions){
-						String icon = iconActions[i];
-						if(action.equals("Administrations")){
-							isAdm = true;
-						} else isAdm = false;
-                  if(!isAdm){
+<div class="uiForumActionBar uiBox clearfix" id="UIForumActionBar">
+	<ul >
+		<%	String[] actions = [""];
+			String[] iconActions = [""];
+			if(isAdmin) {
+				if(uicomponent.isSpace()) {
+					actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
+					iconActions = ["uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+				} else {
+					actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
+					iconActions = ["uiIconCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+				}
+			} else {
+				actions = ["EditProfile","OpenBookMark"];
+				iconActions = ["uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+			}
+			boolean isAdm = false;
+			int i = 0;
+			for(action in actions){
+				String icon = iconActions[i];
+				if(action.equals("Administrations")){
+					isAdm = true;
+				} else isAdm = false;
+		  if(!isAdm){
+		%>
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
+			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="uiActionWithLabel">
+				<i class="$icon"></i>
+				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+			</a>
+		  </li>
+		  <%} else {%>
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
+			 <div class="dropdown uiDropdownWithIcon uiActionWithLabel">
+				<a data-toggle="dropdown">
+				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
+				<% for(ac in uicomponent.getActionMenu()){ 
+				  classIcon = "uiIconForum" + ac;
+				  classIcon = classIcon.replaceFirst("Setting", "").replaceFirst("Keyword", "").replaceFirst("Manager", "").replaceFirst("Auto", "");
+				  classIcon = classIcon.replaceFirst("OpenIPBan", "BanIp");
+				  classIcon = classIcon.replaceFirst("ForumExportCategory", "Export");
+				  classIcon = classIcon.replaceFirst("ForumImportCategory", "Import");
+				  classIcon = classIcon.replaceFirst("ForumNotification", "Notification");
+				  classIcon = classIcon.replaceFirst("ForumTopicType", "ForumTopic");
 				%>
-                  <div class="defaultStyle ControlButton" id="$action">
-					<a href="<%=uicomponent.event(action)%>" style="display:block;">
-						<i class="$icon"></i>
-						<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+				  <li>
+					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="uiActionWithLabel">
+						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 					</a>
-                  </div>
-                  <%} else {%>
-                  <div class="defaultStyle ControlButton" id="$action">
-                     <div class="dropdown uiDropdownWithIcon uiActionWithLabel">
-                        <a data-toggle="dropdown">
-                           <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
-                        <% for(ac in uicomponent.getActionMenu()){ 
-						  classIcon = "uiIconForum" + ac;
-						  classIcon = classIcon.replaceFirst("Setting", "").replaceFirst("Keyword", "").replaceFirst("Manager", "").replaceFirst("Auto", "");
-						  classIcon = classIcon.replaceFirst("OpenIPBan", "BanIp");
-						  classIcon = classIcon.replaceFirst("ForumExportCategory", "Export");
-						  classIcon = classIcon.replaceFirst("ForumImportCategory", "Import");
-						  classIcon = classIcon.replaceFirst("ForumNotification", "Notification");
-						  classIcon = classIcon.replaceFirst("ForumTopicType", "ForumTopic");
-						%>
-                          <li>
-                            <a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
-								<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
-							</a>
-						   </li>
-						<%} %>
-                        </ul>
-                     </div>
-                  </div>
-                  <%} 
-				   i = i + 1;
-				  %>
-				<% }%>
-				<div class="ScrollButtons" style="width:35px;">
-					<div title="Previous">
-						<div title="Next"><span></span></div>
-					</div>
-				</div>
-			</td>
+				   </li>
+				<%} %>
+				</ul>
+			 </div>
+		  </li>
+		  <%} 
+		   i = i + 1;
+		  %>
+		<% }%>
+		<li class="ScrollButtons" style="width:35px;">
+			<div title="Previous">
+				<div title="Next"><span></span></div>
+			</div>
+		</li>
+	</ul>
+	<% 
+		long numberOfNewMessage = uicomponent.getNewMessage();
+		String priMessage="", pending="";
+		int total = 0;
+	%>
+	<ul class="pull-right">
+		<li>
+		
+	<%
+		if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
+			priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
+			String newMessage;
+			if(numberOfNewMessage > 0) {
+				newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
+			} else {
+				newMessage = "<span>" + priMessage + "</span>" ;
+			}
+			if(userProfile.getUserRole() <= 1) {
+				total = uicomponent.getTotalJobWattingForModerator();
+				pending = _ctx.appRes("UIBreadcumbs.label.Pending");
+				String style = (total > 0)?"text-decoration:blink;":"";
+		%>
+			<div class="pull-right forumSeparatorLine">
+				<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>" class="uiActionWithLabel"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+			</div>
+		<%}%>
+			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
+			<div class="pull-right">
+				<a href="<%=uicomponent.event("PrivateMessage");%>" class="uiActionWithLabel">
+					<i class="uiIconMail uiIconLightGray"></i> $newMessage
+				</a>
+			</div>
 			<% 
-				long numberOfNewMessage = uicomponent.getNewMessage();
-				String priMessage="", pending="";
-				int total = 0;
+				int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length();
+				lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
+				lengths = (total > 0)?lengths+3:lengths;
 			%>
-			<td style="width:245px;" id="tdWidth">
-				<div style="width:245px;" id="divWidth">
-				
-			<%
-				if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
-					priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
-					String newMessage;
-					if(numberOfNewMessage > 0) {
-						newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
-					} else {
-						newMessage = "<span>" + priMessage + "</span>" ;
-					}
-					if(userProfile.getUserRole() <= 1) {
-						total = uicomponent.getTotalJobWattingForModerator();
-						pending = _ctx.appRes("UIBreadcumbs.label.Pending");
-						String style = (total > 0)?"text-decoration:blink;":"";
-				%>
-					<div class="RightLine" style="padding-left:5px;">
-						<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
-					</div>
-				<%}%>
-					<div class="SeparatorLineForum RightLine">
-						<a href="<%=uicomponent.event("PrivateMessage");%>">
-							<i class="uiIconMail uiIconLightGray"></i> $newMessage
-						</a>
-					</div>
-					<% 
-						int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length();
-						lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
-						lengths = (total > 0)?lengths+3:lengths;
-					%>
-					<div id="lengthStr" style="display:none; float:right;">$lengths</div>
-					<script type="text/javascript">
-						function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*7.2)+65) + "px"; document.getElementById('divWidth').style.width = ((l*7.2)+65) + "px";}
-						setWitdh();
-					</script>
-				<% } %>
-				</div>
-			</td>
-		</tr>
-	</table>
+			<div id="lengthStr" style="display:none;" class="pull-right">$lengths</div>
+			<script type="text/javascript">
+				function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*7.2)+65) + "px"; document.getElementById('divWidth').style.width = ((l*7.2)+65) + "px";}
+				setWitdh();
+			</script>
+		<% } %>
+		</li>
+	</ul>
 
 	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
 </div>
