@@ -1,4 +1,4 @@
-<div id="$uicomponent.id" class="UIAnswersPortlet UIFAQPortlet">
+<div id="$uicomponent.id" class="uiFAQPortlet">
 	<%
 		List children = uicomponent.getChildren() ;
 		for(component in children) {

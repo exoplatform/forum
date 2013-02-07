@@ -1,0 +1,71 @@
+.faqCont {
+	padding: 20px;
+	.questionBlock, .answersBlock {
+		margin-top: 20px;
+	}
+	.answersBlock [class^="uiIcon"] {
+		padding-left: 7px;
+	}
+	
+	li {
+		line-height: 30px;
+	}
+}
+
+.questionBlock, .answersBlock { 
+	h4:first-child {
+		background-color: #ccc;
+		border-radius: 2px;
+		line-height: 35px;
+		padding-left: 10px;
+	}
+}
+
+.viewerQuestion, .viewerAnswer {
+	padding: 10px 25px;
+	> div {
+		margin-bottom: 20px;
+	}
+	
+	> p {
+		padding-left: 22px;
+	}
+}
+
+.questionList {
+	padding: 0 15px 10px;
+	> ul {
+		padding-left: 10px;
+	}
+	h5:first-child a, h5:first-child a:hover {
+		color: #333;
+	}
+}
+
+.answerList {
+	padding: 0 15px 10px;
+	
+	> h5:first-child {
+		background-color: #f5f5f5;
+		border-radius: 2px;
+		line-height: 30px;
+		padding-left: 10px;
+		margin-top: 0;
+	}
+	
+	> div {
+		margin: 20px 10px;
+	}
+}
+
+.viewerAnswer, .answerList {
+	.description {
+		color: @gray;
+		padding-left: 22px;
+	}
+	
+	.answers {
+		padding-left: 22px;
+	}
+}
+
