@@ -6,7 +6,7 @@
       dataConfig : {
         onchange : '',
         sizeScroll : 10,
-        isdisabled : false
+        isDisabled : false
       },
       menuContainer : null,
       selectedDisplay : null,
@@ -14,7 +14,7 @@
       menu : null,
       init : function(parentId) {
         //
-        this.inputValue = gj('#'+parentId.replace('ScrollSelect', ''));
+        this.inputValue = gj('#' + parentId.replace('ScrollSelect', ''));
         
         this.parent = gj('#' + parentId);
         
@@ -22,7 +22,7 @@
         
         this.dataConfig.onchange = this.inforData.attr('data-onchange');
         this.dataConfig.sizeScroll = this.inforData.attr('data-size');
-        this.dataConfig.isdisabled = this.inforData.attr('data-disabled');
+        this.dataConfig.isDisabled = this.inforData.attr('data-disabled');
         
         this.menuContainer = this.parent.find('.uiFormScrollMenu:first');
         this.selectedDisplay = this.menuContainer.find('span:first');
@@ -31,19 +31,19 @@
 
         this.optionListCont = this.menu.find('ul.option-list:first');
 
-        if(String(this.dataConfig.isdisabled) === 'false') {
+        if(String(this.dataConfig.isDisabled) === 'false') {
           var arrow = this.menuContainer.find('.rightArrow:first');
           arrow.off('click').on('click', function(e) {
             e.stopPropagation();
-            
+            gj('.filterMenu').css({'height': '0px','visibility' :'hidden'});
+
             //
             UIFormScrollSelectBox.menu.css('height', 'auto');
             var h = UIFormScrollSelectBox.menu.height();
             UIFormScrollSelectBox.menu.css({'height': '0px','visibility' :'visible'})
-            .animate({height: h + 'px'}, 200, function() {
+            .animate({height: h + 'px'}, 400, function() {
               gj(this).css('height', 'auto');
             });
-            gj('.FilterMenu').css({'height': '0px','visibility' :'visible'});
           });
         }
 
@@ -53,7 +53,7 @@
         function parentClick() {
           var pr = gj(this);
           pr.find('.optionMenu').animate({'height': '0px'}, 200, function() {
-            gj(this).css({'visibility' :'hidden'});
+            gj(this).css({'visibility': 'hidden'});
           });
         }
         uiForm.off('click', parentClick).on('click', parentClick);
@@ -68,10 +68,10 @@
           UIFormScrollSelectBox.selectedDisplay.html(item.html());
           UIFormScrollSelectBox.inputValue.val(item.attr('data-value'));
 
-          UIFormScrollSelectBox.menu.animate({'height': '0px'}, 200, function() {
-            UIFormScrollSelectBox.menu.css({'visibility' :'hidden'});
+          UIFormScrollSelectBox.menu.animate({'height': '0px'}, 400, function() {
+            UIFormScrollSelectBox.menu.css({'visibility': 'hidden'});
             if(UIFormScrollSelectBox.dataConfig.onchange && UIFormScrollSelectBox.dataConfig.onchange !== '') {
-              gj('<div onclick="'+UIFormScrollSelectBox.dataConfig.onchange+'"></div>').trigger('click');
+              gj('<div onclick="' + UIFormScrollSelectBox.dataConfig.onchange + '"></div>').trigger('click');
             }
           });
           

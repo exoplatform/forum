@@ -1303,7 +1303,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return new ArrayList<String>(canCreateTopicIds);
   }
 
-  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+  public List<CategoryFilter> filterForumByName(String forumNameFilter, String userName, int maxSize) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -1319,19 +1319,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       StringBuffer strQuery = new StringBuffer("SELECT * FROM ");
       
       strQuery.append(EXO_FORUM).append(" WHERE (jcr:path LIKE '").append(categoryHome.getPath()).append("/%') AND (")
-              .append("UPPER(").append(EXO_NAME).append(") LIKE '").append(filterKey.toUpperCase())
-              .append("%' OR UPPER(").append(EXO_NAME).append(") LIKE '% ").append(filterKey.toUpperCase()).append("%') AND (")
+              .append("UPPER(").append(EXO_NAME).append(") LIKE '").append(forumNameFilter.toUpperCase())
+              .append("%' OR UPPER(").append(EXO_NAME).append(") LIKE '% ").append(forumNameFilter.toUpperCase()).append("%') AND (")
               .append(EXO_IS_CLOSED).append("='false') AND (").append(EXO_IS_LOCK).append("='false')")
               .append(" ORDER BY ").append(EXO_NAME);
 
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl)query;
-      long number, offset = 0, count = 0, limit;
+      long totalSize, nextOffset = 0, gotItemNumber = 0, nextLimit;
       if(maxSize > 0){
-        number = maxSize;
+        totalSize = maxSize;
       } else {
-        number = query.execute().getNodes().getSize();
+        totalSize = query.execute().getNodes().getSize();
       }
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
       QueryResult qr;
@@ -1339,10 +1339,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String categoryId, categoryName, forumId, forumName;
       NodeIterator iter;
       //
-      while (count < number) {
-        queryImpl.setOffset(offset);
-        limit = number + offset;
-        queryImpl.setLimit(limit);
+      while (gotItemNumber < totalSize) {
+        queryImpl.setOffset(nextOffset);
+        nextLimit = totalSize + nextOffset;
+        queryImpl.setLimit(nextLimit);
         qr = queryImpl.execute();
         iter = qr.getNodes();
         if (iter.getSize() <= 0) {
@@ -1357,9 +1357,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
           //can create topic in category/forum
           if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
-              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY+"spaces") ) {
+              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY + Utils.CATEGORY_SPACE) ) {
             
-            if(categoryFilters.keySet().contains(categoryId)) {
+            if(categoryFilters.containsKey(categoryId)) {
               categoryFilter = categoryFilters.get(categoryId);
             } else {
               categoryName = node.getParent().getProperty(EXO_NAME).getString();
@@ -1369,20 +1369,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             forumName = node.getProperty(EXO_NAME).getString();
             categoryFilter.setForumFilter(forumId, forumName);
           
-            count++;
-            if (count == number){
+            gotItemNumber++;
+            if (gotItemNumber == totalSize){
               break;
             }
           }
         }
         
-        offset = limit;
+        nextOffset = nextLimit;
       }
       
       return new ArrayList<CategoryFilter>(categoryFilters.values());
-    } catch (Exception e) {e.printStackTrace();
+    } catch (Exception e) {
       if(log.isDebugEnabled()) {
-        log.debug("\nCould not filter forum by name: " + filterKey + e.getCause());
+        log.debug("\nCould not filter forum by name: " + forumNameFilter + e.getCause());
       }
     }
     return new ArrayList<CategoryFilter>();

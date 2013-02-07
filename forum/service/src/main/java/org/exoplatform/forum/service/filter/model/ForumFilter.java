@@ -51,4 +51,13 @@ public class ForumFilter {
   public void setForumName(String forumName) {
     this.forumName = forumName;
   }
+  
+  @Override
+  public boolean equals(Object forumFilter) {
+    if (forumFilter instanceof ForumFilter &&
+          ((ForumFilter) forumFilter).getForumId() == this.getForumId()) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -127,7 +127,7 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
       options_.get(0).setSelected(true);
     } else {
       for (SelectItemOption<String> item : options_) {
-        item.setSelected(item.getValue().equals(value_));
+        item.setSelected(item.getValue().equals(value_) ? true : false);
       }
     }
   }
@@ -151,59 +151,56 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     return null;
   }
   
-  public void processRender(WebuiRequestContext context) throws Exception
-  {
-     ResourceBundle res = context.getApplicationResourceBundle();
-     UIForm uiForm = getAncestorOfType(UIForm.class);
-     String formId = uiForm.getId();
-     String clazzMaxSize = (options_.size() > displayNumber_) ? " scroll-menu" : "";
+  public void processRender(WebuiRequestContext context) throws Exception {
+    ResourceBundle res = context.getApplicationResourceBundle();
+    UIForm uiForm = getAncestorOfType(UIForm.class);
+    String formId = uiForm.getId();
+    String clazzMaxSize = (options_.size() > displayNumber_) ? " scroll-menu" : "";
 
-     Writer w = context.getWriter();
-     w.write("<div class=\"uiFormScrollSelectBox\" id=\"ScrollSelect");
-     w.write(getId());
-     w.write("\" ");
-     renderHTMLAttributes(w);
-     w.write(">");
-     
-     //
-     w.write("<input name=\"");
-     w.write(getName());
-     w.write("\"");
-     w.write(" type=\"hidden\"");
-     w.write(" id=\"");
-     w.write(getId());
-     w.write("\"");
-     if (value_ != null && value_.length() > 0)
-     {
-       value_ = HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value_);
-        w.write(" value=\"");
-        w.write(value_);
-        w.write("\"");
-     }
-     w.write("/>");
-     
-     //
-     w.write("  <div style=\"display:none\" class=\"selectInfoData\" data-onchange=\"");
-     w.write(renderOnChangeEvent(uiForm));
-     w.write("\" data-size=\"");
-     w.write(displayNumber_);
-     w.write("\" data-disabled=\"");
-     w.write(String.valueOf(isDisabled()));
-     w.write("\"></div>\n");
+    Writer w = context.getWriter();
+    w.write("<div class=\"uiFormScrollSelectBox\" id=\"ScrollSelect");
+    w.write(getId());
+    w.write("\" ");
+    renderHTMLAttributes(w);
+    w.write(">");
 
-     //
-     String clazzDisable = (isDisabled()) ? "disabled " : "";
-     w.write("<div class=\"uiFormScrollMenu " + clazzDisable + "ClearFix\" style=\"position:relative\" ");
-     renderHTMLAttributes(w);
-     w.write(">\n");
-     w.write("  <span>");
-     w.write(getSelectedLabel());
-     w.write("  </span>\n");
-     w.write("  <div class=\"rightArrow\"></div>\n");
-     w.write("  <div class=\"optionMenu" + clazzMaxSize + "\" style=\"position:absolute; visibility:hidden\">\n");
-     w.write("    <ul class=\"option-list\">\n");
+    //
+    w.write("<input name=\"");
+    w.write(getName());
+    w.write("\"");
+    w.write(" type=\"hidden\"");
+    w.write(" id=\"");
+    w.write(getId());
+    w.write("\"");
+    if (value_ != null && value_.length() > 0) {
+      value_ = HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value_);
+      w.write(" value=\"");
+      w.write(value_);
+      w.write("\"");
+    }
+    w.write("/>");
 
-     
+    //
+    w.write("  <div style=\"display:none\" class=\"selectInfoData\" data-onchange=\"");
+    w.write(renderOnChangeEvent(uiForm));
+    w.write("\" data-size=\"");
+    w.write(displayNumber_);
+    w.write("\" data-disabled=\"");
+    w.write(String.valueOf(isDisabled()));
+    w.write("\"></div>\n");
+
+    //
+    String clazzDisable = (isDisabled()) ? "disabled " : "";
+    w.write("<div class=\"uiFormScrollMenu " + clazzDisable + "ClearFix\" style=\"position:relative\" ");
+    renderHTMLAttributes(w);
+    w.write(">\n");
+    w.write("  <span>");
+    w.write(getSelectedLabel());
+    w.write("  </span>\n");
+    w.write("  <div class=\"rightArrow\"></div>\n");
+    w.write("  <div class=\"optionMenu" + clazzMaxSize + "\" style=\"position:absolute; visibility:hidden\">\n");
+    w.write("    <ul class=\"option-list\">\n");
+
     for (SelectItemOption<String> item : options_) {
       String label = item.getLabel();
       try {
@@ -224,19 +221,19 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
       w.write(label);
       w.write("</li>\n");
     }
-     
-     w.write("    </ul>\n");
-     w.write("  </div>\n");
-     w.write("</div>\n");
-     
-     if (this.isMandatory())
-        w.write(" *");
-     
-     w.write("</div>\n");
-     
-     context.getJavascriptManager().getRequireJS()
-            .require("SHARED/scrollSelectBox", "formScrollSelectBox")
-            .addScripts("formScrollSelectBox.init('ScrollSelect" + getId() + "');");
+
+    w.write("    </ul>\n");
+    w.write("  </div>\n");
+    w.write("</div>\n");
+
+    if (this.isMandatory())
+      w.write(" *");
+
+    w.write("</div>\n");
+
+    context.getJavascriptManager()
+           .getRequireJS().require("SHARED/scrollSelectBox", "formScrollSelectBox")
+           .addScripts("formScrollSelectBox.init('ScrollSelect" + getId() + "');");
   }
 
 }

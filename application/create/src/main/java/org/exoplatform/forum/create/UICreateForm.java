@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
@@ -47,9 +48,9 @@ import org.exoplatform.webui.event.EventListener;
  * Jan 4, 2013  
  */
 public class UICreateForm extends BaseUIForm {
-  public static final String LOCALTION_SELEXT_BOX = "location";
+  public static final String LOCATION_SELECT_BOX  = "location";
 
-  public static final String FORUM_SELEXT_BOX     = "forumId";
+  public static final String FORUM_SELECT_BOX     = "forumId";
 
   private static final String INTRANER            = "intranet";
 
@@ -64,8 +65,10 @@ public class UICreateForm extends BaseUIForm {
   public String                parStatus            = "";
 
   public String                categoryIdOfSpaces   = "";
-  
+
   public String                currentIntranet      = INTRANER;
+
+  public CategoryFilter        onlyOneForum         = null;
   
 
   public List<String> allPortalNames       = new ArrayList<String>();
@@ -100,7 +103,13 @@ public class UICreateForm extends BaseUIForm {
     String currentUser = UserHelper.getCurrentUser();
     ForumService forumService = getApplicationComponent(ForumService.class);
     
-    hasForumIntranet = forumService.filterForumByName("_", currentUser, 1).size() > 0;
+    List<CategoryFilter> filters = forumService.filterForumByName("_", currentUser, 2);
+    int categoriesSize = filters.size();
+    if(categoriesSize == 1 && filters.get(0).getForumFilters().size() == 1) {
+      onlyOneForum = filters.get(0);      
+    }
+    
+    hasForumIntranet = (categoriesSize > 0);
     if(hasForumIntranet) {
       list.add(new SelectItemOption<String>(currentIntranet, currentIntranet));
     }
@@ -137,7 +146,7 @@ public class UICreateForm extends BaseUIForm {
     }
     
     if(list.size() > 0) {
-      UIFormScrollSelectBox formSelectBox = new UIFormScrollSelectBox(LOCALTION_SELEXT_BOX, LOCALTION_SELEXT_BOX, list);
+      UIFormScrollSelectBox formSelectBox = new UIFormScrollSelectBox(LOCATION_SELECT_BOX, LOCATION_SELECT_BOX, list);
       if(hasForumIntranet) {
         formSelectBox.setValue(currentIntranet);
       }
@@ -171,30 +180,42 @@ public class UICreateForm extends BaseUIForm {
   public static void nextAction(UICreateForm uiForm, ACTION_TYPE type, WebuiRequestContext context) throws Exception {
     if (uiForm.isStepOne && uiForm.hasForumIntranet) {
       uiForm.isStepOne = false;
-      UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELEXT_BOX);
-      if (forumFilter == null) {
-        forumFilter = new UIForumFilter(FORUM_SELEXT_BOX, FORUM_SELEXT_BOX);
-        forumFilter.setOnChange("Next");
-        uiForm.addUIFormInput(forumFilter);
-      }
-      forumFilter.setRendered(true);
-      uiForm.hasNext = false;
-      context.addUIComponentToUpdateByAjax(uiForm);
-    } else {
-      String location = uiForm.getUIFormScrollSelectBox(LOCALTION_SELEXT_BOX).getValue();
-      String subUrl = null;
-      if(uiForm.currentIntranet.equals(location)) {
-        UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELEXT_BOX);
-        
-        String categoryId = forumFilter.getCategoryId();
-        String forumId = forumFilter.getForumId();
-
-        if (!CommonUtils.isEmpty(forumId)) {
-          subUrl = urlBuilder(categoryId, forumId, type, location);
-        } else {
-          uiForm.warning("UICreateList.label.RequireSelectForum");
+      if(uiForm.onlyOneForum == null){
+        UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELECT_BOX);
+        if (forumFilter == null) {
+          forumFilter = new UIForumFilter(FORUM_SELECT_BOX, FORUM_SELECT_BOX);
+          forumFilter.setOnChange("OnChangeFilter");
+          uiForm.addUIFormInput(forumFilter);
         }
-        
+        forumFilter.setRendered(true);
+        uiForm.hasNext = false;
+        context.addUIComponentToUpdateByAjax(uiForm);
+      } else {
+        nextAction(uiForm, type, context);
+      }
+    } else {
+      String location = uiForm.getUIFormScrollSelectBox(LOCATION_SELECT_BOX).getValue();
+      String subUrl = null;
+      if (uiForm.currentIntranet.equals(location)) {
+        if (uiForm.onlyOneForum == null) {
+          UIForumFilter forumFilter = uiForm.getUIForumFilter(FORUM_SELECT_BOX);
+
+          String categoryId = forumFilter.getCategoryId();
+          String forumId = forumFilter.getForumId();
+
+          if (!CommonUtils.isEmpty(forumId)) {
+            subUrl = urlBuilder(categoryId, forumId, type, location);
+          } else {
+            uiForm.warning("UICreateList.label.RequireSelectForum");
+          }
+
+        } else {
+          String categoryId = uiForm.onlyOneForum.getCategoryId();
+          String forumId = uiForm.onlyOneForum.getForumFilters().get(0).getForumId();
+          subUrl = urlBuilder(categoryId, forumId, type, location);
+          uiForm.onlyOneForum = null;
+        }
+
       } else {
         subUrl = urlBuilder(uiForm.categoryIdOfSpaces, location, type, null);
       }
@@ -206,8 +227,8 @@ public class UICreateForm extends BaseUIForm {
         PortalRequestContext pContext = Util.getPortalRequestContext();
         pContext.getJavascriptManager().getRequireJS().addScripts("(function(){ window.location.href = '" + subUrl + "';})();");
         uiForm.isStepOne = true;
-        if (uiForm.getChildById(FORUM_SELEXT_BOX) != null) {
-          uiForm.removeChildById(FORUM_SELEXT_BOX);
+        if (uiForm.getChildById(FORUM_SELECT_BOX) != null) {
+          uiForm.removeChildById(FORUM_SELECT_BOX);
         }
         context.addUIComponentToUpdateByAjax(uiForm);
 
@@ -236,20 +257,30 @@ public class UICreateForm extends BaseUIForm {
     return urlBuilder;
   }
   
-  static public class CancelActionListener extends EventListener<UICreateForm> {
+  static public class OnChangeFilterActionListener extends EventListener<UICreateForm> {
 
     public void execute(Event<UICreateForm> event) throws Exception {
       UICreateForm createForm = event.getSource();
+      createForm.isStepOne = false;
+      createForm.hasNext = true;
+      event.getRequestContext().addUIComponentToUpdateByAjax(createForm);
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UICreateForm> {
+    
+    public void execute(Event<UICreateForm> event) throws Exception {
+      UICreateForm createForm = event.getSource();
       createForm.isStepOne = true;
-      if (createForm.getChildById(FORUM_SELEXT_BOX) != null) {
-        createForm.removeChildById(FORUM_SELEXT_BOX);
+      if (createForm.getChildById(FORUM_SELECT_BOX) != null) {
+        createForm.removeChildById(FORUM_SELECT_BOX);
       }
       WebuiRequestContext ctx = event.getRequestContext();
       Event<UIComponent> cancelEvent = createForm.getParent().createEvent("Cancel", Event.Phase.DECODE, ctx);
       if (cancelEvent != null) {
         cancelEvent.broadcast();
       }
-
+      
     }
   }
 

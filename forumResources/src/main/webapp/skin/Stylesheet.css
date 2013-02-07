@@ -112,7 +112,7 @@
 	clear: left;
 }
 
-.UIForumFilter {
+.uiForumFilter {
 	width: 150px;
 	height: 24px;
 	line-height: 23px;
@@ -123,7 +123,7 @@
   border-radius: 4px;
 }
 
-.UIForumFilter > span {
+.uiForumFilter > span {
 	width: 128px;
 	text-align: left;
 	font-weight: bold;
@@ -133,7 +133,7 @@
 	overflow-x: hidden;
 }
 
-.UIForumFilter .RightArrow {
+.uiForumFilter .rightArrow {
 	cursor: pointer;
 	width: 20px;
 	height: 22px;
@@ -142,7 +142,7 @@
 	float: right;
 }
 
-.UIForumFilter .FilterMenu {
+.uiForumFilter .filterMenu {
 	position:absolute;
 	top: 24px; left: -5px;
 	width: 180px; height: 0px;
@@ -152,34 +152,34 @@
   background: #fff;
 }
 
-.UIForumFilter .FilterMenu input {
+.uiForumFilter .filterMenu input {
 	width: 150px;
 	margin: auto;
 	padding: 2px 5px;
 }
 
-.UIForumFilter .FilterMenu > ul {
+.uiForumFilter .filterMenu > ul {
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height: 302px; /* 13x23+3 */
 }
 
-.UIForumFilter .FilterMenu > ul > li {
+.uiForumFilter .filterMenu > ul > li {
 	border-bottom: solid 1px #D3D3D3;
 }
 
-.UIForumFilter .FilterMenu li {
+.uiForumFilter .filterMenu li {
 	padding-left: 10px;
 	white-space: nowrap;
 	text-overflow:ellipsis;
 	overflow-x: hidden;
 }
 
-.UIForumFilter .FilterMenu > ul > li:last-child {
+.uiForumFilter .filterMenu > ul > li:last-child {
 	border-bottom: none;
 }
 
-.UIForumFilter .FilterMenu .Item li {
+.uiForumFilter .filterMenu .item li {
 	cursor: pointer;
 }
 

@@ -8,25 +8,34 @@
       onChange : null,
       init : function(inputId) {
         //
-        this.inputValue = gj('#'+inputId.replace('Fake', ''));
-        
         this.parent = gj('#' + inputId);
+
+        this.inputValue = gj('#' + inputId.replace('uiForumFilter', ''));
+        
         this.fakeInput = this.parent.find('span:first');
-        this.input = this.parent.find('.FilterInput:first');
-        this.menu = this.parent.find('.FilterMenu:first');
-        var jOnchange = gj('#'+inputId.replace('Fake', 'onChange'));
+        
+        this.input = this.parent.find('input.filterInput:first');
+        
+        this.menu = this.parent.find('.filterMenu:first');
+        
+        var jOnchange = this.parent.find('div.forumFilterData');
         this.onChange = jOnchange.attr('data-onchange');
-        var arrow = this.parent.find('.RightArrow:first');
+        
+        var arrow = this.parent.find('.rightArrow:first');
         
         arrow.off('click').on('click', function(e) {
           e.stopPropagation();
+          
+          //
+          UIForumFilter.filter(e);
+          
           //
           UIForumFilter.menu.css('height', 'auto');
           var h = UIForumFilter.menu.height();
           UIForumFilter.menu.css({'height': '0px','visibility' :'visible'})
             .animate({height: h + 'px'}, 200, function() {
               gj(this).css('height', 'auto');
-              UIForumFilter.filter(e);
+              UIForumFilter.input.focus();
             });
         });
         
@@ -39,7 +48,7 @@
         var uiForm = this.parent.parents('.UIForm:first');
         function parentClick() {
           var pr = gj(this);
-          pr.find('.FilterMenu').animate({'height': '0px'}, 200, function() {
+          pr.find('.filterMenu').animate({'height': '0px'}, 400, function() {
             gj(this).css({'visibility' :'hidden'});
           });
         }
@@ -57,7 +66,7 @@
           UIForumFilter.renderMenu(data);
         } else {
           var url = window.location.protocol + '//' + window.location.host + '/' + eXo.env.portal.rest + 
-                    '/ks/forum/filterforum?name=' + query + '&m=0';
+                    '/ks/forum/filterforum?name=' + query + '&maxSize=0';
           gj.getJSON(url, function(response) {
             UIForumFilter.saveCache(query, response)
             UIForumFilter.renderMenu(response);
@@ -68,7 +77,7 @@
       renderMenu : function(data) {
         window.datas= data;
         var ul = UIForumFilter.menu.find('ul:first');
-        ul.find('li.Item').remove();
+        ul.find('li.item').remove();
         if(data != null && data.length > 0) {
           var size = data.length;
           for(var i = 0; i < size; ++i) {
@@ -80,15 +89,14 @@
       makeItem : function(cate, ul) {
         var li = gj('<li></li>');
         li.html(cate.categoryName);
-        li.attr('data-catid', cate.categoryId);
-        li.addClass("Item category");
+        li.addClass("item category");
         li.on('click', function(e) {
           e.stopPropagation();
         });
         ul.append(li);
         var forums = cate.forumFilters;
         li = gj('<li></li>');
-        li.addClass("Item forum");
+        li.addClass("item forum");
         var ul2 = gj('<ul></ul>');
         ul2.appendTo(li);
         for(var i = 0; i < forums.length; ++i) {
@@ -96,18 +104,24 @@
           var li2 = gj('<li></li>');
           li2.html(forum.forumName);
           li2.attr('data-forid', forum.forumId);
+          li2.attr('data-catid', cate.categoryId);
           li2.on('click', function(e) {
             e.stopPropagation();
             var item = gj(this);
             UIForumFilter.fakeInput.html(item.html());
-            var cat = item.parents('li.forum').siblings('li.category');
-            UIForumFilter.inputValue.val(cat.attr('data-catid') + ';' + item.attr('data-forid'));
+            var value = item.attr('data-catid') + ';' + 
+                        item.attr('data-forid') + ';' + 
+                        gj.trim(item.html());
+            
+            UIForumFilter.inputValue.val(value);
 
             UIForumFilter.input.val('');
             
-            UIForumFilter.menu.animate({'height': '0px'}, 200, function() {
+            UIForumFilter.menu.animate({'height': '0px'}, 400, function() {
               gj(this).css({'visibility' :'hidden'});
-              gj('<div onclick="'+UIForumFilter.onChange+'"></div>').trigger('click');
+              if(UIForumFilter.onChange != null && UIForumFilter.onChange.length > 0){
+                gj('<div onclick="'+UIForumFilter.onChange+'"></div>').trigger('click');
+              }
             });
             
           });
@@ -116,9 +130,9 @@
         ul.append(li);
       },
       saveCache : function(key, data){
-        var ojCache = gj('div#searchData');
+        var ojCache = gj('div#searchDataForumFilter');
         if(ojCache.length == 0) {
-          ojCache = gj('<div id="searchData"></div>').appendTo(gj(document.body));
+          ojCache = gj('<div id="searchDataForumFilter"></div>').appendTo(gj(document.body));
           ojCache.hide();
         }
         key = 'result' + ((key === ' ') ? '_20' : key);
@@ -129,11 +143,11 @@
       },
       getCache : function(key) {
         key = 'result' + ((key === ' ') ? '_20' : key);
-        var datas = gj('div#searchData').data("CacheSearch");
+        var datas = gj('div#searchDataForumFilter').data("CacheSearch");
         return (String(datas) === "undefined") ? null : datas[key];
       },
       clearCache : function() {
-        gj('div#searchData').animate({
+        gj('div#searchDataForumFilter').stop().animate({
           'cursor' : 'none'
         }, 10000, function() {
           gj(this).data("CacheSearch", {});

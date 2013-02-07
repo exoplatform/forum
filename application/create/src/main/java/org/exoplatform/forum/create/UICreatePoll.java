@@ -36,6 +36,7 @@ import org.exoplatform.webui.event.EventListener;
   events = {
     @EventConfig(listeners = UICreatePoll.NextActionListener.class, phase = Phase.DECODE),
     @EventConfig(listeners = UICreatePoll.OnChangeLocalActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UICreatePoll.OnChangeFilterActionListener.class, phase = Phase.DECODE),
     @EventConfig(listeners = UICreateForm.CancelActionListener.class, phase = Phase.DECODE) 
   }
 )
@@ -56,12 +57,12 @@ public class UICreatePoll extends UICreateForm {
 
     public void execute(Event<UICreatePoll> event) throws Exception {
       UICreatePoll createPoll = event.getSource();
-      String location = createPoll.getUIFormScrollSelectBox(LOCALTION_SELEXT_BOX).getValue();
+      String location = createPoll.getUIFormScrollSelectBox(LOCATION_SELECT_BOX).getValue();
       createPoll.isStepOne = createPoll.allPortalNames.contains(location);
       if(createPoll.isStepOne) {
         nextAction(createPoll, ACTION_TYPE.CREATE_POLL, event.getRequestContext());
       } else {
-        UIForumFilter forumFilter = createPoll.getUIForumFilter(FORUM_SELEXT_BOX);
+        UIForumFilter forumFilter = createPoll.getUIForumFilter(FORUM_SELECT_BOX);
         if(forumFilter != null){
           forumFilter.setRendered(false);
         }

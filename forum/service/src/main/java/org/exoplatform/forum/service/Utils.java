@@ -169,16 +169,16 @@ public class Utils implements ForumNodeTypes {
   }
 
   static public class CategoryNameComparator implements Comparator<Object> {
-    public enum TYPE {
+    public enum DIRECTION {
       DESC, ASC
     }
 
-    private TYPE type = TYPE.DESC;
+    private DIRECTION type = DIRECTION.ASC;
 
     public CategoryNameComparator() {
     }
 
-    public CategoryNameComparator(TYPE type) {
+    public CategoryNameComparator(DIRECTION type) {
       this.type = type;
     }
 
@@ -191,7 +191,7 @@ public class Utils implements ForumNodeTypes {
         name1 = ((Category) o1).getCategoryName().toUpperCase();
         name2 = ((Category) o2).getCategoryName().toUpperCase();
       }
-      return (type == TYPE.ASC) ? name1.compareTo(name2) : name2.compareTo(name1);
+      return (type == DIRECTION.ASC) ? name1.compareTo(name2) : name2.compareTo(name1);
     }
   }
   

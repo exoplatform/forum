@@ -61,8 +61,18 @@ public class UIForumFilter extends UIFormInputBase<String> {
     return value.split(";")[1].trim();
   }
 
-  public String getDefaultSelect() {
-    if(defaultSelectName == null) {
+  public String getForumName() {
+    if (this.value_ != null && this.value_.length() > 0) {
+      String forumName = this.value_.replaceFirst(getCategoryId() + ";", "");
+      forumName = forumName.replaceFirst(getForumId() + ";", "").trim();
+      return forumName;
+    }
+
+    return getDefaultSelect().trim();
+  }
+
+  private String getDefaultSelect() {
+    if (defaultSelectName == null) {
       defaultSelectName = WebUIUtils.getLabel(this.getParent().getId(), "SelectAForum");
     }
     return this.defaultSelectName;
@@ -74,75 +84,74 @@ public class UIForumFilter extends UIFormInputBase<String> {
   
   @Override
   public void decode(Object input, WebuiRequestContext context) {
-    String val = (String)input;
+    String val = (String) input;
     if ((val == null || val.length() == 0)) {
       return;
     }
     value_ = val;
     if (value_ != null && value_.length() == 0)
-       value_ = null;
+      value_ = null;
+  }
+
+  public void setOnChange(String onchange) {
+    onchange_ = onchange;
   }
   
-  public void setOnChange(String onchange)
-  {
-     onchange_ = onchange;
-  }
-  
-  protected String renderOnChangeEvent(UIForm uiForm) throws Exception
-  {
-    if(onchange_ != null && onchange_.length() > 0) {
-      return uiForm.event(onchange_, (String)getId());
+  protected String renderOnChangeEvent(UIForm uiForm) throws Exception {
+    if (onchange_ != null && onchange_.length() > 0) {
+      return uiForm.event(onchange_, (String) getId());
     }
     return "";
   }
   
-  public void processRender(WebuiRequestContext context) throws Exception
-  {
-     UIForm uiForm = getAncestorOfType(UIForm.class);
-     String value = getValue();
-     Writer w = context.getWriter();
-     w.write("<input name=\"");
-     w.write(getName());
-     w.write("\"");
-     w.write(" type=\"hidden\"");
-    
-     w.write(" id=\"");
-     w.write(getId());
-     w.write("\"");
-     if (value != null && value.length() > 0)
-     {
-        value = HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value);
-        w.write(" value=\"");
-        w.write(value);
-        w.write("\"");
-     }
-     w.write("/>");
-     w.write("  <div style=\"display:none\" id=\"onChange");
-     w.write(getId());
-     w.write("\" data-onchange=\"");
-     w.write(renderOnChangeEvent(uiForm));
-     w.write("\"></div>\n");
-     w.write("<div class=\"UIForumFilter ClearFix\" id=\"Fake");
-     w.write(getId());
-     w.write("\" style=\"position:relative\" ");
-     renderHTMLAttributes(w);
-     w.write(">\n");
-     w.write("  <span>");
-     w.write(getDefaultSelect());
-     w.write("  </span>\n");
-     w.write("  <div class=\"RightArrow\"></div>\n");
-     w.write("  <div class=\"FilterMenu\" style=\"position:absolute; visibility:hidden\">\n");
-     w.write("    <ul>\n");
-     w.write("      <li>\n");
-     w.write("        <input type=\"text\" class=\"FilterInput\" placeholder=\""+getFilerPlaceholder()+"\"/>\n");
-     w.write("      </li>\n");
-     w.write("    </ul>\n");
-     w.write("  </div>\n");
-     w.write("</div>\n");
-      
+  public void processRender(WebuiRequestContext context) throws Exception {
+    UIForm uiForm = getAncestorOfType(UIForm.class);
+    Writer w = context.getWriter();
+    w.write("<div id=\"uiForumFilter");
+    w.write(getId());
+    w.write("\">\n");
+
+    w.write("  <input name=\"");
+    w.write(getName());
+    w.write("\"");
+    w.write(" type=\"hidden\"");
+
+    w.write(" id=\"");
+    w.write(getId());
+    w.write("\"");
+    String value = getValue();
+    if (value != null && value.length() > 0) {
+      w.write(" value=\"");
+      w.write(HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value));
+      w.write("\"");
+    }
+    w.write("/>\n");
+
+    w.write("  <div style=\"display:none\" class=\"forumFilterData\" data-onchange=\"");
+    w.write(renderOnChangeEvent(uiForm));
+    w.write("\"></div>\n");
+
+    w.write("  <div class=\"uiForumFilter ClearFix\" style=\"position:relative\" ");
+    renderHTMLAttributes(w);
+    w.write(">\n");
+    w.write("    <span>");
+    w.write(getForumName());
+    w.write("    </span>\n");
+    w.write("    <div class=\"rightArrow\"></div>\n");
+    w.write("    <div class=\"filterMenu\" style=\"position:absolute; visibility:hidden\">\n");
+    w.write("      <ul>\n");
+    w.write("        <li>\n");
+    w.write("          <input type=\"text\" class=\"filterInput\" placeholder=\"" + getFilerPlaceholder() + "\"/>\n");
+    w.write("        </li>\n");
+    w.write("      </ul>\n");
+    w.write("    </div>\n");
+    w.write("  </div>\n");
+
+    w.write("</div>\n");
+
      context.getJavascriptManager().getRequireJS()
          .require("SHARED/forumFilter", "forumfilter")
-         .addScripts("forumfilter.init('Fake" + getId() + "');");
+         .addScripts("forumfilter.init('uiForumFilter" + getId() + "');");
   }
 
 }
