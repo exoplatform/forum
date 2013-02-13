@@ -153,7 +153,7 @@ public class UICreateForm extends BaseUIForm {
       formSelectBox.setOnChange("OnChangeLocal");
       addUIFormInput(formSelectBox);
       hasForum = true;
-      setActions(new String[]{"Next", "Cancel"});
+      setActions(new String[]{ "Cancel","Next"});
     } else {
       hasForum = false;
       setActions(new String[]{"Cancel"});
