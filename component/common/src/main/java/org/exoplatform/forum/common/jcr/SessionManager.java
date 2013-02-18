@@ -36,7 +36,6 @@ public interface SessionManager {
 
   /**
    * This method is here for backward compatibility, but will be removed to get rid of SessionProvider
-   * @deprecated use {@link #openSession()} t
    * @param sessionProvider
    * @return
    */

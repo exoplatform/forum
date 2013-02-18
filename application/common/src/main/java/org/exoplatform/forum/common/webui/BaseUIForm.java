@@ -77,6 +77,14 @@ public class BaseUIForm extends UIForm {
     return labelID;
   }
   
+  public UIFormScrollSelectBox getUIFormScrollSelectBox(String name) {
+    return (UIFormScrollSelectBox) getUIInput(name);
+  }
+  
+  public UIForumFilter getUIForumFilter(String name) {
+    return (UIForumFilter) getUIInput(name);
+  }
+  
   /**
    * Sends a info message to ui and ignore ajax update on Portlets
    * @param messageKey resource bundle key for the message

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>forum-application</artifactId>
+    <groupId>org.exoplatform.forum</groupId>
+    <version>4.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>forum-application-create</artifactId>
+  <name>Forum create</name>
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+    </dependency>
+
+    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-poll-service</artifactId>
+    </dependency>
+    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
+    </dependency>
+    <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-forum-service</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.webui.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.webui.eXo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.webui.framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.webui.portlet</artifactId>
+    </dependency>
+  </dependencies>
+</project>
