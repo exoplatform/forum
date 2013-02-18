@@ -373,6 +373,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public boolean isAdminRole(String userName) throws Exception {
+    if (Utils.isEmpty(userName)){
+      return false;
+    }
     try {
       for (int i = 0; i < rulesPlugins.size(); ++i) {
         List<String> list = new ArrayList<String>();
@@ -383,8 +386,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (ForumServiceUtils.hasPermission(adminrules, userName))
           return true;
       }
+      Node userHome = getUserProfileHome(CommonUtils.createSystemProvider());
+      if (userHome.hasNode(userName)) {
+        return (new PropertyReader(userHome.getNode(userName)).l(EXO_USER_ROLE, 2) == UserProfile.ADMIN);
+      }
     } catch (Exception e) {
-      log.error("Failed to check admin role", e);
+      return false;
     }
     return false;
   }
@@ -394,7 +401,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
   }
 
-  @SuppressWarnings("deprecation")
   private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getTopicTypesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
@@ -425,11 +431,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
   }
 
-  /**
-   * 
-   * @deprecated use {@link #getUserProfileHome()}
-   */
-  @Deprecated
   protected Node getUserProfileHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getUserProfilesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
@@ -1278,11 +1279,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private List<String> getCategoryIdForumIdUserCanCreateTopic(Node categoryHome, List<String> listOfUser) throws Exception {
+    // get categories/forums users can create topic.
     StringBuilder qrCanCreateTopic = new StringBuilder(JCR_ROOT);
     qrCanCreateTopic.append(categoryHome.getPath()).append("//* ");
+
     qrCanCreateTopic.append("[(")
-                    .append(Utils.buildXpathHasProperty(EXO_CREATE_TOPIC_ROLE))
-                    .append(" or ")
                     .append(Utils.buildXpathByUserInfo(EXO_CREATE_TOPIC_ROLE, listOfUser))
                     .append(") or (")
                     .append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser))
@@ -1300,6 +1301,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         canCreateTopicIds.add(node.getName());
       }
     }
+
+    // get public forums
+    qrCanCreateTopic = new StringBuilder(JCR_ROOT);
+    qrCanCreateTopic.append(categoryHome.getPath())
+                    .append("//element(*,")
+                    .append(EXO_FORUM).append(")");
+
+    qrCanCreateTopic.append("[")
+                    .append(Utils.buildXpathHasProperty(EXO_CREATE_TOPIC_ROLE))
+                    .append("]");
+
+    query = qm.createQuery(qrCanCreateTopic.toString(), Query.XPATH);
+    iter = query.execute().getNodes();
+
+    while (iter.hasNext()) {
+      Node node = iter.nextNode();
+      Node cateNode = node.getParent();
+      if (canCreateTopicIds.contains(cateNode.getName())
+            || (new PropertyReader(cateNode).list(EXO_CREATE_TOPIC_ROLE, new ArrayList<String>()).isEmpty())) {
+        canCreateTopicIds.add(node.getName());
+      }
+    }
+
     return new ArrayList<String>(canCreateTopicIds);
   }
 
@@ -1310,7 +1334,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
       // get can create topic
       List<String> canCreateTopicIds = getCategoryIdForumIdUserCanCreateTopic(categoryHome, listOfUser);
-      
+
       // get category private
       Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), EXO_USER_PRIVATE);
       List<String> categoryPrivates = mapPrivate.get(Utils.CATEGORY);
@@ -1356,8 +1380,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           forumId = node.getName();
 
           //can create topic in category/forum
-          if( (canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
-              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY + Utils.CATEGORY_SPACE) ) {
+          if((isAdminRole(userName)) || (( canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
+              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY + Utils.CATEGORY_SPACE)) ) {
             
             if(categoryFilters.containsKey(categoryId)) {
               categoryFilter = categoryFilters.get(categoryId);
