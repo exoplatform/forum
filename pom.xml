@@ -183,24 +183,6 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-demo-config</artifactId>
-        <version>${project.version}</version>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-demo-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-demo-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-extension-config</artifactId>
         <version>${project.version}</version>
       </dependency>
