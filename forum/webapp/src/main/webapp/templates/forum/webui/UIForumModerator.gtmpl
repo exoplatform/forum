@@ -5,12 +5,12 @@
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div class="uiForumModerator uiBox" id="uicomponent.id">
-	<h6 class="title">
-		<i class="uiIconMiniArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+	<h5 class="title">
+		<i class="uiIconArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 		<%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
-	</h6>
-	<div class="forumList">
-		<ul class="clearfix">
+	</h5>
+	<div class="uiContentBox">
+		<ul>
 			<% boolean isMod = false ;
 			int i = 1;
 			String userView;
@@ -57,8 +57,8 @@
 			%>
 	
 			<%if(!isMod){%>
-			<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
+			<li><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></li>
 			<% } %>
-			</div>
 		</ul>
+	</div>
 </div>

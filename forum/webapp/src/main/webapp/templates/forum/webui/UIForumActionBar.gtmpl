@@ -31,14 +31,14 @@
 		  if(!isAdm){
 		%>
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
-			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="uiActionWithLabel">
+			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
 				<i class="$icon"></i>
 				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 			</a>
 		  </li>
 		  <%} else {%>
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
-			 <div class="dropdown uiDropdownWithIcon uiActionWithLabel">
+			 <div class="dropdown uiDropdownWithIcon actionIcon">
 				<a data-toggle="dropdown">
 				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
 				</a>
@@ -53,7 +53,7 @@
 				  classIcon = classIcon.replaceFirst("ForumTopicType", "ForumTopic");
 				%>
 				  <li>
-					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="uiActionWithLabel">
+					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="actionIcon">
 						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 					</a>
 				   </li>
@@ -94,12 +94,12 @@
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
 			<div class="pull-right forumSeparatorLine">
-				<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>" class="uiActionWithLabel"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+				<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
 			<div class="pull-right">
-				<a href="<%=uicomponent.event("PrivateMessage");%>" class="uiActionWithLabel">
+				<a href="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
 					<i class="uiIconMail uiIconLightGray"></i> $newMessage
 				</a>
 			</div>

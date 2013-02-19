@@ -30,13 +30,15 @@
 %>
 <div id="$uicomponent.id" class="uiBox uiPostRules">
 	<h5 class="title clearfix">
-		<i class="uiIconMiniArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+		<i class="uiIconArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 		<%=_ctx.appRes("UIPostRules.label.PostRules")%>
 	</h5>
-	<ul class="textPostRules">
-		<li>$you <strong>$canCreatThread</strong> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
-		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>
-		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></li>
-		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></li>
-	</ul>
+	<div class="uiContentBox">
+		<ul>
+			<li>$you <strong>$canCreatThread</strong> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
+			<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>
+			<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></li>
+			<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></li>
+		</ul>
+	</div>
 </div>

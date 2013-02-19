@@ -286,18 +286,16 @@
 
     expandCollapse : function(obj) {
       var jobject = $(obj)
-      var forumToolbar = jobject.parents(".ForumToolbar");
-      var contentContainer = forumToolbar.next('div');
+      var forumToolbar = jobject.parents(".uiBox");
+      var contentContainer = forumToolbar.find('.uiContentBox');
       if (contentContainer.css('display') != "none") {
         contentContainer.hide();
-        jobject.addClass('ExpandButton').removeClass('CollapseButton');
+        jobject.attr( 'class', 'uiIconArrowRight pull-right');
         jobject.attr("title", jobject.attr("expand"));
-        forumToolbar.css('border-bottom', 'solid 1px #b7b7b7');
       } else {
         contentContainer.show(100);
-        jobject.addClass('CollapseButton').removeClass('ExpandButton');
+        jobject.attr( 'class', 'uiIconArrowDown pull-right');
         jobject.attr("title", jobject.attr("collapse"));
-        forumToolbar.css('border-bottom', 'none');
       }
     },
 

@@ -36,7 +36,8 @@
 .dropdown-menu > li > a:hover > [class^="uiIconForum"],
 .dropdown-menu > .active > a > [class^="uiIconForum"],
 .uiDropdownWithIcon .dropdown-submenu:hover > a > [class^="uiIconForum"],
-.btn:hover [class^="uiIconForum"],
+.btn:hover [class^="uiIconForum"], .actionIcon:hover [class^="uiIconForum"], 
+.uiActionWithLabel:hover [class^="uiIconForum"],
 [class^="uiIconForum"]:hover, .uiIconForumBlue
 {
   background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumBlue.png");
@@ -86,6 +87,10 @@
   vertical-align: text-top;
   background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumColor.png");
   background-repeat: no-repeat;
+}
+
+[class^="uiIconForumColor"]:hover{
+	background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumColor.png");
 }
 
 .uiIconForumPending{
@@ -168,10 +173,14 @@
 	background-position: -180px -20px;
 }
 
-
 .uiIconForumForward{
 	background-position: 0 -40px;
 }
+
+.uiIconForumViewStatistic{
+	background-position: -20px -40px;
+}
+
 
 /* icons for Color */
 

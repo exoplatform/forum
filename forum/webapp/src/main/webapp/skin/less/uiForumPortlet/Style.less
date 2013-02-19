@@ -65,15 +65,29 @@
 		
 	}
 	
-	.textHotTopic{
-		color: @red;
-	}
-	
 	.forumSeparatorLine + .forumSeparatorLine{
 		background: url("/forum/skin/DefaultSkin/images/background/SeparatorLine.png") no-repeat left -4px;
-	
+	}
+	.uiForumIconState{ 
+		.forumContains {
+			line-height: 42px;
+			padding: 0px 0px 0px 15px;
+			
+			i + i{
+				margin-left: 20px;
+			}
+			
+			span{
+				margin-right: 20px;
+			}
+		}
 	}
 }
+
+.textHotTopic{
+	color: @red;
+}
+
 
 
 

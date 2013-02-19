@@ -1,19 +1,20 @@
 <%  
 	boolean isIconForum = uicomponent.getIsIconForum() ;
 %>
-<div class="UIForumIconState" id="$uicomponent.id">
-	<div class="ForumContains ClearFix">
+<div class="uiForumIconState uiBox" id="$uicomponent.id">
+	<div class="forumContains">
 	<% if(isIconForum) { %>
-		<div class="IconPost ThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%></div>
-		<div class="IconPost ForumLockedIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryLockedPosts")%></div>
-		<div class="IconPost ForumCloseIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryClosedPosts")%></div>
+		<i class="uiIconForumColorUnread"></i><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%>
+		<i class="uiIconForumColorLockTiny"></i><%=_ctx.appRes("UIForumIconState.label.CategoryLockedPosts")%>
+		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.CategoryClosedPosts")%>
 	<% } else { %>
-		<div class="IconForum HotThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></div>
- 		<div class="IconForum HotThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNoNewPost")%></div>
-		<div class="IconForum ThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%></div>
-		<div class="IconForum ThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div>
-		<div class="IconForum ThreadNoNewLockPost"><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%></div>
-		<div class="IconForum ThreadNoNewClosePost"><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%></div>
+		<span class="textHotTopic"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></span>
+ 		<!-- <div class="IconForum HotThreadNoNewPost"><i class=""></i><%=_ctx.appRes("UIForumIconState.label.ForumHotNoNewPost")%></div> -->
+		<i class="uiIconForumColorUnread"></i><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%>
+		<!-- <div class="IconForum ThreadNoNewPost"><i class=""></i><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div> -->
+		<i class="uiIconForumColorLockTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%>
+		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%>
+		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.TopicStick")%>
 	<% } %>
-  </div>
+	</div>
 </div>
