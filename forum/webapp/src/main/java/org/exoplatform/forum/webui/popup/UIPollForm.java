@@ -28,10 +28,16 @@ import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIFormMultiValueInputSet;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIForumContainer;
+import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
@@ -39,6 +45,7 @@ import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -85,11 +92,15 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 
   private UIFormMultiValueInputSet uiFormMultiValue         = new UIFormMultiValueInputSet(FIELD_OPTIONS, FIELD_OPTIONS);
 
-  private String                   TopicPath;
+  private String                   topicPath;
+
+  private String                   forumPath;
 
   private Poll                     poll                     = new Poll();
 
-  private boolean                  isUpdate                 = false;
+  private boolean                  isUpdate                = false;
+
+  private boolean                  isAddTopic              = false;
 
   public UIPollForm() throws Exception {
     UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, null);
@@ -121,7 +132,14 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
   }
 
   public void setTopicPath(String topicPath) {
-    this.TopicPath = topicPath;
+    this.topicPath = topicPath;
+    this.isUpdate = false;
+  }
+
+  public void setAddTopic(String forumPath) {
+    this.isAddTopic = true;
+    this.isUpdate = false;
+    this.forumPath = forumPath;
   }
 
   protected String getDateAfter() throws Exception {
@@ -351,7 +369,34 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
         uiForm.poll.setVote(vote);
         uiForm.poll.setTimeOut(timeOut);
         uiForm.poll.setIsClosed(uiForm.poll.getIsClosed());
-        String[] id = uiForm.TopicPath.trim().split(ForumUtils.SLASH);
+        Topic topic = new Topic();
+        if(uiForm.isAddTopic) {
+          String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false);
+          uiForm.topicPath = uiForm.forumPath + "/" + topic.getId();
+          StringBuilder message = new StringBuilder(question);
+          message.append("<br/>    ________________________________<br/>");
+          for(int j = 0; j < options.length; ++j) {
+            message.append("<br/>").append(String.valueOf(j+1)).append(". ").append(options[j]);
+          }
+          //
+          topic.setOwner(userName);
+          topic.setTopicName(question);
+          topic.setCreatedDate(new Date());
+          topic.setModifiedBy(userName);
+          topic.setModifiedDate(new Date());
+          topic.setLastPostBy(userName);
+          topic.setLastPostDate(new Date());
+          topic.setIcon("IconsView");
+          topic.setCanView(new String[] {});
+          topic.setCanPost(new String[] {});
+          topic.setRemoteAddr(WebUIUtils.getRemoteIP());
+          topic.setPath(uiForm.topicPath);
+          
+          topic.setDescription(message.toString());
+          topic.setLink(link);
+          uiForm.getForumService().saveTopic(topic.getCategoryId(), topic.getForumId(), topic, true, false, ForumUtils.getDefaultMail());
+        }
+        String[] id = uiForm.topicPath.trim().split(ForumUtils.SLASH);
         try {
           PollService pollSv = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
           if (uiForm.isUpdate) {
@@ -362,7 +407,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
           } else {
             uiForm.poll.setUserVote(new String[] {});
             uiForm.poll.setId(id[id.length - 1].replace(Utils.TOPIC, Utils.POLL));
-            uiForm.poll.setParentPath(uiForm.TopicPath.trim());
+            uiForm.poll.setParentPath(uiForm.topicPath.trim());
             pollSv.savePoll(uiForm.poll, true, false);
           }
         } catch (Exception e) {
@@ -371,17 +416,40 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
         uiForm.isUpdate = false;
         try {
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.cancelAction();
-          UITopicDetailContainer detailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
+          UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+          UITopicDetailContainer detailContainer = forumContainer.getChild(UITopicDetailContainer.class);
           detailContainer.setRederPoll(true);
           detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
-          detailContainer.getChild(UITopicDetail.class).hasPoll(true);
-          event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
+          
+          forumPortlet.cancelAction();
+          
+          if(uiForm.isAddTopic) {
+            
+            Forum forum = uiForm.getForumService().getForum(topic.getCategoryId(), topic.getForumId());
+            forumContainer.setIsRenderChild(false);
+            forumContainer.getChild(UIForumDescription.class).setForum(forum);
+
+            UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
+            event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+            topicContainer.setUpdateForum(topic.getCategoryId(), forum, 0);
+            Event<UIComponent> openTopicEvent = topicContainer.createEvent("OpenTopic", Event.Phase.PROCESS, event.getRequestContext());
+            if (openTopicEvent != null) {
+              topicContainer.openTopicId = topic.getId();
+              openTopicEvent.broadcast();
+            }
+          } else {
+            UITopicDetail topicDetail = detailContainer.getChild(UITopicDetail.class);
+            topicDetail.hasPoll(true);
+            event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
+          }
         } catch (Exception e) {
+          
           UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class);
-          forumPollPortlet.cancelAction();
-          forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
+          if(forumPollPortlet != null) {
+            forumPollPortlet.cancelAction();
+            forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
+            event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
+          }
         }
       }
       if (!ForumUtils.isEmpty(sms)) {

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 
 /**
  * Created by The eXo Platform SARL
@@ -81,6 +82,13 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     assertEquals("Size categories can not equals 0", categories.size(), 0);
   }
 
+  public void testGetCategoryIncludedSpace() throws Exception {
+    assertNull(forumService_.getCategoryIncludedSpace());
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    cat.setIncludedSpace(true);
+    forumService_.saveCategory(cat, true);
+    assertNotNull(forumService_.getCategoryIncludedSpace());
+  }
 
   public void testForum() throws Exception {
     String catId = getId(Utils.CATEGORY);
@@ -161,5 +169,65 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     // check remove
     forums = forumService_.getForumSummaries(catId, "");
     assertEquals("List forums can not equals 0", forums.size(), 0);
+  }
+  
+  public void testFilterForumByName() throws Exception {
+    loginUser(USER_ROOT);
+    // create category
+    categoryId = getId(Utils.CATEGORY);
+    forumService_.saveCategory(createCategory(categoryId), true);
+
+    // create forums
+    String prefix = "search";
+    for (int i = 0; i < 5; ++i) {
+      Forum forum = createdForum();
+      String t = String.valueOf(Character.toChars(103 - i)[0]);
+      forum.setForumName(prefix + " " + t + " test key foo bar ");
+      forumService_.saveForum(categoryId, forum, true);
+    }
+    
+    Forum forum = createdForum();
+    forum.setForumName("abc xy");
+    forumService_.saveForum(categoryId, forum, true);
+    
+    // search with key random
+    List<CategoryFilter> categoryFilters = forumService_.filterForumByName("jobl", null, 0);
+    // result have 0 categories.
+    assertEquals(0, categoryFilters.size());
+
+    // search with key: foo
+    categoryFilters = forumService_.filterForumByName("foo", null, 0);
+    // result have 1 category and has 5 forums.
+    assertEquals(1, categoryFilters.size());
+    assertEquals(5, categoryFilters.get(0).getForumFilters().size());
+
+    // search with key: search1
+    categoryFilters = forumService_.filterForumByName(prefix + " c", null, 0);
+    // result have 1 category and has one forum.
+    assertEquals(1, categoryFilters.size());
+    assertEquals(1, categoryFilters.get(0).getForumFilters().size());
+
+    // search with key: search
+    categoryFilters = forumService_.filterForumByName(prefix, null, 0);
+    // result have 1 categories and has 5 forums.
+    assertEquals(1, categoryFilters.size());
+    assertEquals(5, categoryFilters.get(0).getForumFilters().size());
+
+    // search with key: x
+    categoryFilters = forumService_.filterForumByName("x", null, 0);
+    // result have 1 category and has one forum.
+    assertEquals(1, categoryFilters.size());
+    assertEquals(1, categoryFilters.get(0).getForumFilters().size());
+
+    // search with key: est
+    categoryFilters = forumService_.filterForumByName("est", null, 0);
+    // result have 0 category.
+    assertEquals(0, categoryFilters.size());
+
+    // search with key: tes
+    categoryFilters = forumService_.filterForumByName("tes", null, 0);
+    // result have 1 categories and has 5 forums.
+    assertEquals(1, categoryFilters.size());
+    assertEquals(5, categoryFilters.get(0).getForumFilters().size());
   }
 }

@@ -69,6 +69,7 @@ import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -308,6 +309,10 @@ public class ForumServiceImpl implements ForumService, Startable {
   public Category getCategory(String categoryId) throws Exception {
     return storage.getCategory(categoryId);
   }
+  
+  public Category getCategoryIncludedSpace() {
+    return storage.getCategoryIncludedSpace();
+  }
 
   /**
    * {@inheritDoc}
@@ -368,6 +373,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.moveForum(forums, destCategoryPath);
   }
 
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    return storage.filterForumByName(filterKey, userName, maxSize);
+  }
   /**
    * {@inheritDoc}
    */

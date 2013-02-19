@@ -815,5 +815,10 @@ public class FakeForumService implements ForumService {
     // TODO Auto-generated method stub
     
   }
+  
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

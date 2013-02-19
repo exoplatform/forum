@@ -199,7 +199,7 @@ public class UserHelper {
   @SuppressWarnings("unchecked")
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
     List<String> listOfUser = new ArrayList<String>();
-    if (userId == null) {
+    if (userId == null || userId.equals(getCurrentUser())) {
       ConversationState conversionState = ConversationState.getCurrent();
       Identity identity = conversionState.getIdentity();
       userId = identity.getUserId();

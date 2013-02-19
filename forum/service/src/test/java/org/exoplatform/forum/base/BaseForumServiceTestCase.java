@@ -207,7 +207,7 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     forum.setIsLock(false);
 
     forum.setViewer(new String[] {});
-    forum.setCreateTopicRole(new String[] {});
+    forum.setCreateTopicRole(new String[] {""});
     forum.setModerators(new String[] {});
     return forum;
   }
