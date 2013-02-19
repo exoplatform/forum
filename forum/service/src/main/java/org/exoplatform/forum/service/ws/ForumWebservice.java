@@ -7,12 +7,14 @@ package org.exoplatform.forum.service.ws;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -26,6 +28,8 @@ import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
@@ -225,6 +229,35 @@ public class ForumWebservice implements ResourceContainer {
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
     } catch (Exception e) {
       log.trace("\nGet UserRSS fail: ", e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+  
+  @GET
+  @Path("filterforum/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterForum(@QueryParam("name") String forumName, 
+                               @QueryParam("maxSize") String maxSize,
+                               @Context SecurityContext sc,
+                               @Context UriInfo uriInfo) throws Exception {
+    try {
+      List<CategoryFilter> categoryFilters = new ArrayList<CategoryFilter>();
+      if(!Utils.isEmpty(forumName)) {
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        String userName = getUserId(sc, uriInfo);
+        int maxSize_ = 0;
+        if(!Utils.isEmpty(maxSize)) {
+          try {
+            maxSize_ = Integer.parseInt(maxSize.trim());
+          } catch (NumberFormatException e) {
+            maxSize_ = 0;
+          }
+        }
+        categoryFilters = forumService.filterForumByName(forumName, userName, maxSize_);
+        Collections.sort(categoryFilters, new Utils.CategoryNameComparator());
+      }
+      return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
+    } catch (Exception e) {
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }

@@ -339,6 +339,8 @@ public interface ForumNodeTypes {
 
   public static final String EXO_READ_TOPIC                 = "exo:readTopic";
 
+  public static final String EXO_INCLUDED_SPACE             = "exo:includedSpace";
+
   public static final String NT_FILE                        = "nt:file";
 
   public static final String JCR_CONTENT                    = "jcr:content";
