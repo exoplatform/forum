@@ -5576,16 +5576,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             queryString.append(" order by @exo:createdDate");
           } else if (("title".equals(sort) || "relevancy".equals(sort))) {
             queryString.append(" order by @exo:name");
-          } else if (order == null || order.length() == 0) {
-            throw new RuntimeException("Sort should be relevance, title or date but is : " + sort);
           }
 
           if ("DESC".equals(order)) {
             queryString.append(" descending");
           } else if ("ASC".equals(order)) {
             queryString.append(" ascending");
-          } else if (order == null || order.length() == 0) {
-            throw new RuntimeException("Order should be asc ok desc but is : " + order);
+          } else if (sort != null && sort.length() > 0 && (order == null || order.length() == 0)) {
+            queryString.append(" ascending"); // If no ascending but sort value : apply ascending as default value
           }
         }
 
