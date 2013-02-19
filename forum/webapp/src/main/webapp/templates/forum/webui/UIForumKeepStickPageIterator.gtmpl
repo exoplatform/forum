@@ -1,71 +1,80 @@
 <%
 	List totals = uicomponent.getInfoPage() ; 
-	int pageSelected = uicomponent.getPageSelect() ;
-	int max_page = totals.get(3) ;
-	String selected = "" + pageSelected ;
-	boolean isMod = false;
-	try{
-		isMod = uicomponent.isModerator();
-	}catch(Exception e) {}
+  int totalPage = totals.get(3);
+  int currentPage = uicomponent.getPageSelect();
+  
+  boolean isMod = uicomponent.isUseAjax;
+  try{
+    isMod = (isMod == true) ? true : uicomponent.isModerator();
+  }catch(Exception e) {}
+  
+  String getHref(int i, boolean isMod) {
+	String href = uicomponent.event("GoPage", "$i");
+	if(isMod) {
+	  href = uicomponent.getURLGopage(String.valueOf(i));
+	}
+	return href;
+  }
+  void render(int i, boolean isMod) {
+	  String href = getHref(i, isMod);
+      if( i == uicomponent.getPageSelect()) { 
+      %>
+    <li class="active"><a href="<%=href%>"><%=i%></a></li>
+  <%  } else { %>
+    <li><a href="<%=href%>"><%=i%></a></li>
+  <%  }   
+  }
+
 %>
-<div class="UIForumPageIterator ClearFix">
-<% if(max_page > 1) {%>
-		<div id="SetMode" style="display:none;">$isMod</div>
-		<span><%=_ctx.appRes("UIForumPageIterator.label.Totalpages");%>:</span>
-		<span class="PagesTotalNumber"><%=max_page%></span>
-		<% if(pageSelected == 1) {%>
-			<span class="Icon DisableLastTopPageIcon"></span>				
-			<span class="Icon DisableLastPageIcon"></span>
-		<% } else if(uicomponent.isLink){ %>
-			<% if(uicomponent.isUseAjax || isMod){ %>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.BackFirstPage");%>" class="ActionLink ActionIsMod Icon LastTopPageIcon"  rel="<%=uicomponent.event("GoPage","first")%>" href="<%=uicomponent.getURLGopage("1")%>"></a>				
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.PreviousPage");%>" class="ActionLink ActionIsMod Icon LastPageIcon" rel="<%=uicomponent.event("GoPage","previous")%>" href="<%=uicomponent.getURLGopage(String.valueOf((pageSelected-1)))%>"></a>
-			<% } else { %>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.BackFirstPage");%>" class="Icon LastTopPageIcon" href="<%=uicomponent.getURLGopage("1")%>"></a>				
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.PreviousPage");%>" class="Icon LastPageIcon" href="<%=uicomponent.getURLGopage(String.valueOf((pageSelected-1)))%>"></a>
-			<% } %>
-		<% } else { %>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.BackFirstPage");%>" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>				
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.PreviousPage");%>" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
-		<% } %>
-		<% 
-			for(number in uicomponent.getTotalpage()) {
-				if(number.equals(selected)) {
-		%>
-				
-					<a class="Number PageSelected">$number</a>
-				
-			<%} else if(uicomponent.isLink){%>
-				
-					<% if(uicomponent.isUseAjax || isMod){ %>
-					<a class="Number ActionLink ActionIsMod PageNormal" rel="<%=uicomponent.event("GoPage",number)%>;" href="<%=uicomponent.getURLGopage(String.valueOf(number))%>">$number</a>
-					<% } else { %>
-					<a class="Number ActionLink PageNormal" href="<%=uicomponent.getURLGopage(String.valueOf(number))%>">$number</a>
-					<% } %>
-				
-			<% } else { %>
-				
-					<a class="Number PageNormal" href="<%=uicomponent.event("GoPage",number)%>;" >$number</a>
-				
-			<% } %>
-		<%} %>
-		<% if(pageSelected != max_page) {%>	
-			<% if(uicomponent.isLink) { %>
-				<% if(uicomponent.isUseAjax || isMod){ %>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="ActionLink ActionIsMod Icon NextPageIcon"  rel="<%=uicomponent.event("GoPage","next")%>" href="<%=uicomponent.getURLGopage(String.valueOf(pageSelected+1))%>"></a>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="ActionLink ActionIsMod Icon NextTopPageIcon" rel="<%=uicomponent.event("GoPage","last")%>" href="<%=uicomponent.getURLGopage(String.valueOf(max_page))%>"></a>
-				<% } else { %>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="ActionLink Icon NextPageIcon" href="<%=uicomponent.getURLGopage(String.valueOf(pageSelected+1))%>"></a>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="ActionLink Icon NextTopPageIcon" href="<%=uicomponent.getURLGopage(String.valueOf(max_page))%>"></a>
-				<% } %>
-			<% } else {%>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
-			<% } %>
-		<% } else { %>	
-			<span class="Icon DisableNextPageIcon"></span>
-			<span class="Icon DisableNextTopPageIcon"></span>
-		<% } %>
-	
-	<% } %>
+
+<div class="pagination uiPageIterator clearfix">
+<% if(totalPage > 1) {%>  
+  <ul class="pull-right">
+  <%if( currentPage > 1 ){%>        
+  <li><a href="<%=getHref(currentPage - 1, isMod)%>" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><i class="uiIconPrevArrow"></i></a></li>
+  <% } else {%>
+  <li class="disabled"><a title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><i class="uiIconPrevArrow"></i></a></li>
+  <%}%>
+  
+  <%    
+  int min = 1;
+  int max = totalPage;
+  int dot1 = dot2 = -1;
+  if (totalPage > 5) {
+    if (currentPage < 4) {
+       max = 3;
+       dot1 = 4;
+    } else if (currentPage >= totalPage - 2) {
+       min = totalPage - 2;
+       dot1 = min - 1;
+    } else {
+       min = currentPage - 1;
+       max = currentPage + 1;
+       dot1 = 2;
+       dot2 = totalPage - 1;
+    }   
+  }
+  
+  for( i = 1 ; i <= 9; i++) {     
+      if (i == 1 && min > 1) render(1, isMod);
+      else if (i == min) {
+         for (j = min; j <= max; j++) {
+          render(j, isMod);            
+         }
+      } else if (i == dot1 || i == dot2) {
+        print """ <li class="disabled"><a href="javascript:void(0)">...</a></li> """;     
+      } else if (i == 9 && max < totalPage) render(totalPage, isMod);
+  }%>   
+        
+  <% if(currentPage < totalPage) { %>
+  <li><a href=" <%=getHref(currentPage + 1, isMod)%>" title="<%=_ctx.appRes("UIPageIterator.label.next")%>"><i class="uiIconNextArrow"></i></a></li>
+  <% } else { %>
+  <li class="disabled"><a title="<%=_ctx.appRes("UIPageIterator.label.next")%>"><i class="uiIconNextArrow"></i></a></li>
+  <%}%> 
+  </ul>
+  <p class="pull-right">
+    <span><%=_ctx.appRes("UIPageIterator.label.totalPage")%>:</span>
+    <span class="pagesTotalNumber"><%=totalPage%></span>
+  </p>
+<%}%>   
 </div>
