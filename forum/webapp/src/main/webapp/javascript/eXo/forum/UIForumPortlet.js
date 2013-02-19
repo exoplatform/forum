@@ -410,8 +410,7 @@
       var isDesktop = $('#UIPageDesktop');
       if (!isDesktop.exists()) {
         if (idLastPost === "top") {
-          var body = $('body')[0];
-          if (body.scrollTop > 250) {
+          if ($(window).scrollTop() > 250) {
             script: scroll(0, 0);
             var viewPage = $('#KSMaskLayer');
             if (viewPage.exists())
@@ -422,6 +421,21 @@
           if (obj)
             obj.scrollIntoView(true);
         }
+        var timeour = setTimeout(function() {
+          var uiWindow = $.fn.findId(UIForumPortlet.id).find('.UIPopupWindow');
+          if (uiWindow.exists() && uiWindow.css('display') === 'block') {
+            var top = (parseInt($(window).height()) - parseInt(uiWindow
+                .outerHeight())) / 2;
+            top = (top < 0) ? 0 : top;
+            var scrollTop = $(window).scrollTop();
+            uiWindow.animate({
+              'top' : (scrollTop + top) + 'px'
+            }, 300, function() {
+            });
+          }
+
+          clearTimeout(timeour);
+        }, 100);
       }
     },
 

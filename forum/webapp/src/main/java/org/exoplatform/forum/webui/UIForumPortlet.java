@@ -698,7 +698,11 @@ public class UIForumPortlet extends UIPortletApplication {
       String[] id = path.split(ForumUtils.SLASH);
       String postId = "top";
       int page = 0;
-      if (path.indexOf(Utils.POST) > 0) {
+      if (path.indexOf(ForumUtils.VIEW_LAST_POST) > 0) {
+        postId = ForumUtils.VIEW_LAST_POST;
+        path = path.replace(ForumUtils.SLASH + ForumUtils.VIEW_LAST_POST, ForumUtils.EMPTY_STR);
+        id = path.split(ForumUtils.SLASH);
+      } else if(path.indexOf(Utils.POST) > 0) {
         postId = id[id.length - 1];
         path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
         id = path.split(ForumUtils.SLASH);
@@ -744,10 +748,9 @@ public class UIForumPortlet extends UIPortletApplication {
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
             this.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
             uiTopicDetail.setIdPostView(postId);
-            uiTopicDetail.setLastPostId((postId.equals("top")?ForumUtils.EMPTY_STR:postId));
+            uiTopicDetail.setLastPostId(((path.indexOf(Utils.POST) < 0) ? ForumUtils.EMPTY_STR : postId));
             if (isReply || isQuote) {
               if (uiTopicDetail.getCanPost()) {
-                uiTopicDetail.setIdPostView("top");
                 try {
                   UIPopupAction popupAction = this.getChild(UIPopupAction.class);
                   UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
