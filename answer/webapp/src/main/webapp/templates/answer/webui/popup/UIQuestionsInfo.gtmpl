@@ -7,78 +7,50 @@
 	import org.exoplatform.answer.webui.FAQUtils;	
 %>
 
-<div class="uiQuestionInfo $uicomponent.id">
+<div class="uiQuestionInfo $uicomponent.id" style="border: 1px solid blue">
 	<% uiform.begin() 
 	Map<String, String> mapPath = new HashMap<String, String>();
 	%>
-  <div class="UIFormTabPane">
-    <div class="UITabPane">
-      <div class="TabPaneContent">
-					<div class="WorkingArea">
+  <div class="uiFormTabPane uiTabNormal">
+
+	          <ul class="nav nav-tabs">
+	          	<%int i = 0 ; 
+	          		String classCssMng = "active";
+	          		String classCssNY = "";
+	          		if(uicomponent.getIsEdit()) {
+	          			classCssMng = "active";
+	          			classCssNY = ""
+	          		} else {
+	          			classCssMng = "";
+	          			classCssNY = "active"
+	          		}
+
+	              	%>  
+	                <li class="$classCssMng"onclick="<%=uicomponent.event("ChangeTab", "0")%>">
+	                       <a data-toggle="tab" data-target="#QuestionManagerment-tab">    
+	                            	 <%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionManagement")%> 
+	                       </a>   
+	                 </li>
+									 <li class="$classCssNY" onclick="<%=uicomponent.event("ChangeTab", "1")%>">
+	                      <a data-toggle="tab" data-target="#QuestionNotAnswered-tab"> 
+	                        		<%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionNotYetAnswered")%>
+	                      </a>   
+	                </li>
+									 <!-- View list categories -->
+							    <li class="pull-right select-category">
+							    	<label for="<%=uicomponent.LIST_CATEGORIES%>"><%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;</label>
+										<% uicomponent.renderChild(uicomponent.LIST_CATEGORIES) ; %>
+									</li>
+		                 
+	          	</ul>
 						
-	          <div class="UIHorizontalTabs">
-	     				<div class="LeftHorizontalTabs">
-	           		<div class="RightHorizontalTabs">
-	             		<div class="CenterHorizontalTabs">
-	              		<div class="TabsContainer">
-	                  	<%int i = 0 ; 
-	                  		String classCss = "SelectedTab";
-	                  		String classLastCss = "NormalTab" ;
-	                  		String displayEdit = "block" ;
-	                  		String displayResponse = "none" ;
-	                  		if(uicomponent.getIsEdit()) {
-	                  			classCss = "SelectedTab";
-	                  			classLastCss = "NormalTab" ;
-	                  			displayEdit = "block" ;
-	                  			displayResponse = "none" ;
-	                  		} else if(uicomponent.getIsResponse()) {
-	                  			classCss = "NormalTab";
-	                  			classLastCss = "SelectedTab" ;
-	                  			displayEdit = "none" ;
-	                  			displayResponse = "block" ;
-	                  		}
-		                  	for(tabcontent in uicomponent.getTab()){ 
-	                  			String link = "" ;
-		                  	%>  
-			                    <div class="UITab NormalTabStyle">
-			                      <div class="$classCss">
-			                        <div class="LeftTab">
-			                          <div class="RightTab" onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)">
-		                          	<%if(i ++ == 0) {
-		                          			link = uicomponent.event("ChangeTab", "0") ;
-		                          	%>
-		                          		<div onclick="$link">
-				                            <div class="MiddleTab">
-				                            	 <%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionManagement")%> 
-				                            </div>
-			                            </div>
-		                            <%} else {
-		                            		link = uicomponent.event("ChangeTab", "1") ;
-		                            %>
-		                            	<div onclick="$link">
-			                            	<div class="MiddleTab">
-			                            		<%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionNotYetAnswered")%>
-				                            </div>
-			                            </div>
-		                            <%}%>
-			                          </div>
-			                        </div>
-			                      </div>
-			                    </div>
-		                		<%classCss = classLastCss ;  
-		                		} %>
-		                  </div>
-		                </div>
-	              	</div>
-	            	</div>
-	          	</div>
-						
-						<div class="UIForm">
-            	<div class="HorizontalLayout">
-            
-              	<div class="UITabContentContainer">
+            	<div class="tab-content">
+            		<% 
+            			String active = (uicomponent.isEditTab_ == true) ? "in active" : "";
+            		 %>
+              	
 	              	<!-- ================================================== All questions ====================================== -->
-	              	<div class="UITabContent UIIETabContent" style="display:$displayEdit;" id="UITabContent"> 
+	              	<div class="tab-pane fade $active" id="QuestionManagerment-tab"> 
 					          <div style="display:block;">
 
 											<div class="HorizontalLayout">
@@ -177,7 +149,11 @@
 	              	</div>
 	              	<!-- end all question-->
 	              	<!-- =================================================== Pending questions ====================================== -->
-	              	<div class="UITabContent UIIETabContent" style="display:$displayResponse" id="UITabContent">
+	               <% 
+            			active = (uicomponent.isEditTab_ == false) ? "in active" : "";
+            		 %>
+	              	
+	              	<div class="tab-pane fade $active" id="QuestionNotAnswered-tab">
 					          <div style="display:block;"  >
 									
 											<div class="HorizontalLayout">
@@ -260,21 +236,14 @@
 									
 	              	<!-- end pending question -->
 								
-								</div>
+							
 							
 							</div>
-						</div>
-						
-				</div>
-			</div>  
+					
+
+   
     
-    <!-- View list categories -->
-    <div style="overflow:auto;float:right;padding-right:10px;">
-    	<label for="<%=uicomponent.LIST_CATEGORIES%>"><%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;</label>
-			<% uicomponent.renderChild(uicomponent.LIST_CATEGORIES) ; %>
-		</div>
-    
-    </div>  
+  
   </div>	
 	<%uiform.end()%>
 </div>

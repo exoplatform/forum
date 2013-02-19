@@ -19,9 +19,9 @@
   boolean canEditQuestion = uicomponent.getCanEditQuestion();
   boolean isViewRootCate = uicomponent.isViewRootCate;
 %>
-<div class="UIQuestions uiBox" id="$uicomponent.id">
+<div class="uiQuestions uiBox" id="$uicomponent.id">
   <div class="answerToolbar title">
-  	<ul class="nav nav-pills" style="border: 1px solid red">
+  	<ul class="nav nav-pills">
 	      <!--  CustomView action 
 	        <div class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.answer.UIAnswersPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
 	          	<a class="Icon FAQCustomView" id="FAQCustomView">
@@ -30,40 +30,29 @@
 	        </div>
 	       -->
 			
-		    <%if(canEditQuestion) {
-		      String[] actionTollbar = uicomponent.getActionTollbar();
-		      for(String action in actionTollbar) {
-		    %>
+		    <%if(canEditQuestion || uicomponent.isAddQuestion()) { %>
 		    	<li>
-		        <button class="btn btn-primary" onclick="<%=uicomponent.event(action, cateId);%>" type="button"><i class="uiIconAnswersSubmitQuestion"></i><%=_ctx.appRes("UIQuestions.action." + action);%></button>
+		        <button class="btn btn-primary addNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" type="button"><i class="uiIconAnsSubmitQuestion"></i><%=_ctx.appRes("UIQuestions.action.AddNewQuestion");%></button>
 		    	</li>
-		    <%
-			      }
-			    } else {
-			      if(uicomponent.isAddQuestion()) {
-			    %>
-			    <li>
-		        <button class="btn btn-primary" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>"  type="button"><i class="uiIconAnswersManageQuestion"></i><%=_ctx.appRes("UIQuestions.action.AddQuestion")%></button>
-		    	</li>
-		    <%}
-		    }%>
-		 
+		    <%} %>
+
 	      <%
-	      if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
-	        String linkRss = uicomponent.getRSSLink() ;
+		      if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+		        String linkRss = uicomponent.getRSSLink() ;
 	      %>
 	      	<li> 
-	          <a href="$linkRss" target="_blank"><i class="uiIconRss"></i><%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
+	          <a href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
 	        </li>
+		    <%} %>
+
 		    <%
-		    }
-	    if(canEditQuestion) {
-	    %>
+		    	if(canEditQuestion) {
+		    %>
 					<li>
 	          <div class="uiDropdownWithIcon dropdown">
 	            <!--a class="dropdown-toggle" data-toggle="dropdown" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"-->
 							<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">							
-                <i class="uiIconAnswersManageCategory"></i>
+                <i class="uiIconAnsManageCategory"></i>
                 <%=_ctx.appRes("UIQuestions.action.ManageCategory"); %>
 								<span class="uiIconArrowDown"></span>
 	            </a>
@@ -89,13 +78,17 @@
 				      <!--  End popup menu  -->
 						</div>
 		      </li>
+		      
+		      <li>
+		        <a href="javascript:void(0);" onclick="<%=uicomponent.event("QuestionManagament", cateId);%>" type="button"><i class="uiIconAnsManageQuestion"></i><%=_ctx.appRes("UIQuestions.action.QuestionManagament");%></a>
+		    	</li>
 	    <%
 	    }
 	    %>
 	   
 	   	<!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
 	    <li class="pull-right">
-        <a onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint"></i><%=_ctx.appRes("UIQuestions.action.Print")%></a>
+        <a onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.Print")%></a>
   		</li>
   		
 	  <%String currentUser = FAQUtils.getCurrentUser() ; 
@@ -103,7 +96,7 @@
 	      String actionSetting = uicomponent.event("Setting");
 	  %>
 	  	<li class="pull-right">
-       	<a onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting"></i><%=_ctx.appRes("UIQuestions.action.Settings")%></a>
+       	<a onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.Settings")%></a>
       </li>
 	    <% } %>
 	     

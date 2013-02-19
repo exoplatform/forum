@@ -21,12 +21,12 @@
 
 	</div>
 	<% uiform.begin() %>
-	 <div class="UIAction">
+	 <div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
         	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String QMLink = uicomponent.event(action) ;
         %>
-      <a href="javascript:void(0);" onclick="$QMLink" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$QMLink" class="btn">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>

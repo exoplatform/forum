@@ -177,7 +177,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   protected String[] getTab() {
-    return new String[] { "Question managerment", "Question not yet answered" };
+    return new String[] { "QuestionManagerment", "QuestionNotAnswered" };
   }
 
   protected boolean getIsEdit() {

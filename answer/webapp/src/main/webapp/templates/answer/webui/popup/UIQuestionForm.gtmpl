@@ -2,7 +2,7 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	uicomponent.setLanguages();
 %>
-<div class="uiQuestionForm $uicomponent.id" style="border: 1px solid red">
+<div class="uiQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 					<% 

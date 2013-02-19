@@ -1,6 +1,6 @@
 @import "variables.less"; 
 @import "mixins.less";
-
+@import "answers/Sprites/Style.less";
 
 .uiAnswersPortlet {
 	.uiAnswersBreadcumbs {
@@ -15,5 +15,32 @@
 	.uiAnserContainer .rightColumn {
 		margin-left: 250px;
 		overflow: hidden;
+	}
+
+	.uiQuestions {
+		margin: 10px 0;	
+		.answerToolbar {
+			.nav-pills > li > a {
+				padding-top: 5px;
+				padding-bottom: 0;
+			}
+			.uiDropdownWithIcon {
+				margin: 4px 0;
+			}
+		}
+	}
+	
+	.uiQuestionInfo {
+		.select-category {
+			label {
+				display: inline-block;
+			}
+			.uiSelectbox {
+				width: 75px;
+				select.selectbox {
+					width: 100px;
+				}
+			}
+		}
 	}
 }
