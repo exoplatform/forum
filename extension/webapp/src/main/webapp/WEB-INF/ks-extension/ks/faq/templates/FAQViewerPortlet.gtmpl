@@ -34,7 +34,7 @@
 				</ul>
 			</div>
 			<div class="questionList">
-				<h5><a href="#">Technical FAQ</a>&nbsp;&nbsp; &nbsp;<span>[</span><a href="#">Forum Troubleshooting</a>&nbsp;&nbsp;<span> | </span>&nbsp;&nbsp;<a href="#">FAQ Troubleshooting</a><span>]</span></h5>
+				<h5><a href="#">Technical FAQ</a>&nbsp;&nbsp; &nbsp;<span>&#91; &nbsp;</span><a href="#" class="childItem">Forum Troubleshooting</a>&nbsp;&nbsp;<span> | </span>&nbsp;&nbsp;<a href="#" class="childItem">FAQ Troubleshooting</a><span>&nbsp; &#93;</span></h5>
 				<ul>
 					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">How do I install KS?</a></li>
 				</ul>

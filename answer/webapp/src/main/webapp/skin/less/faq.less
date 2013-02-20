@@ -1,9 +1,13 @@
 @import "mixins.less";
 @import "variables.less";
 
-.faqCont {
+.uiFAQPortlet {
 	padding: 20px;
-	.questionBlock, .answersBlock {
+}
+
+.faqCont {
+	padding: 10px 20px;
+	.answersBlock {
 		margin-top: 20px;
 	}
 	.answersBlock [class^="uiIcon"] {
@@ -17,7 +21,7 @@
 
 .questionBlock, .answersBlock { 
 	h4:first-child {
-		background-color: #ccc;
+		background-color: @borderColor;
 		border-radius: 2px;
 		line-height: 35px;
 		padding-left: 10px;
@@ -40,8 +44,13 @@
 	> ul {
 		padding-left: 10px;
 	}
-	h5:first-child a, h5:first-child a:hover {
-		color: #333;
+	h5:first-child a:first-child, h5:first-child a:first-child:hover {
+		color: @textColor;
+	}
+	h5 .childItem {
+		color: @linkColor;
+		font-size: @baseFontSize;
+		font-weight: normal;
 	}
 }
 
