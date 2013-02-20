@@ -40,7 +40,7 @@
 							String type = _ctx.appRes("UIForumPortlet.label."+searchEvent.getType()) ;
 					%>
 						<tr class="$classRow">
-							<td class="Tdbox"><div class="" title=""><%=type%></div></td>
+							<td class="Tdbox"><div class="" rel="tooltip" data-placement="bottom" title="<%=type%>"><%=type%></div></td>
 							<td class="Tdbox $classIcon">&nbsp;</td>
 							<td><a href="<%=uicomponent.event("OpentContent",objId);%>"><%=searchEvent.getName()%></a></td>
 						</tr>

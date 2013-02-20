@@ -5,8 +5,8 @@
 
 <div class="uiAnswersSearchBox uiSearchInput pull-right">
   <% uiform.begin() %>  
-    <!--div class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div-->
-    <!--div class="SearchIcon ActionSearch" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div-->
+    <!--div class="AdvancedSearch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div-->
+    <!--div class="SearchIcon ActionSearch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div-->
    
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;

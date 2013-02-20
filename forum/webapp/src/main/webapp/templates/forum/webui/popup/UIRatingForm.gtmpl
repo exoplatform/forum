@@ -13,7 +13,7 @@
 					String onclick = uicomponent.event("VoteTopic", number);
 					String title = _ctx.appRes("UIRatingForm.title.rank" + number); 
 				%>
-				<div class="NormalVote" onclick="$onclick" title="$title"><span></span></div>
+				<div class="NormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"><span></span></div>
 			 <% i = i + 1;
 				 } %>
 				

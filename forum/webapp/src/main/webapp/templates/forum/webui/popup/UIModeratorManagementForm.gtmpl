@@ -16,11 +16,11 @@
 				<div style="overflow:auto;" class="ClearFix">
 					<div style="margin:2px 0px; float:right; padding:0px 0px 0px 14px;" class="ClearFix">
 						<%if(uicomponent.isViewSearchUser){%>
-								<a class="Refresh" style="float:right; margin-top:0px; margin-right: 5px;" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
+								<a class="Refresh" style="float:right; margin-top:0px; margin-right: 5px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
 									<span></span>
 								</a>
 						<%}%>
-						<a class="SearchForumIcon" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
+						<a class="SearchForumIcon" style="float:right;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
 						<div class="Input" style="float:right;" onkeydown="javaScript: if(event.keyCode == 13){<%=uicomponent.event("SearchUser");%>}">
 							<%	
 								uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
@@ -70,10 +70,10 @@
 							<td>				 
 								<div style="margin:0px auto;" class="ActionContainer ClearFix">
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("EditProfile",user.getUserId());%>">
-										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
+										 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
 									</div>
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewPublicUserInfo"><span></span></div>							
+										 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewPublicUserInfo"><span></span></div>							
 									</div>
 
 								</div>

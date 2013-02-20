@@ -30,10 +30,10 @@
 						<td width="80px">
 							<div class="ActionContainer ClearFix" style="margin:0px auto; width:60px;">
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
-									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
+									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
 								</div>
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
-									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
+									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
 								</div>
 
 							</div>

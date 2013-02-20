@@ -78,15 +78,15 @@
         %>
           <div class="FAQTmpCategory"><span></span></div>
           <div class="$classCss FAQCategory disableContextMenu">
-          	<input type="hidden" class="InfoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
+          	<input type="hidden" class="InfoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" rel="tooltip" data-placement="bottom" title="input hidden" name="<%=category.getId()%>"/>
             <div class="oncontextmenu" id="UIContextPopupMenu$i">
-	            <a title="<%=category.getName()%>" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
+	            <a rel="tooltip" data-placement="bottom" title="<%=category.getName()%>" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
 	              <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
 	            </a>
                 <%
                 String linkWacth = uicomponent.event("WatchManager", category.getPath());
                 if(canEdit && uicomponent.hasWatch(category.getPath())) {%>
-                    <a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
+                    <a href="$linkWacth" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
                 <%}%>
                 
                 <!-- action of this category -->

@@ -15,8 +15,8 @@
 				  		String firstPage = _ctx.appRes("UIAnswersPageIterator.label.BackFirstPage") ;
 				  		String priviousPage = _ctx.appRes("UIAnswersPageIterator.label.PreviousPage") ;
 				  %>
-				    <a title="$firstPage" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>        
-				    <a title="$priviousPage" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
+				    <a rel="tooltip" data-placement="bottom" title="$firstPage" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>        
+				    <a rel="tooltip" data-placement="bottom" title="$priviousPage" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
 				  <% } %>
 				  <% 
 				  	for(number in uicomponent.getTotalpage()) {
@@ -35,8 +35,8 @@
 				  		String nextPage = _ctx.appRes("UIAnswersPageIterator.label.NextPage") ;
 				  		String lastPage = _ctx.appRes("UIAnswersPageIterator.label.LastPage");
 				  %>  
-				    <a title="$nextPage" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
-				    <a title="$lastPage" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
+				    <a rel="tooltip" data-placement="bottom" title="$nextPage" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
+				    <a rel="tooltip" data-placement="bottom" title="$lastPage" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
 				  <% } else { %>  
 				    <div class="Icon DisableNextPageIcon"><span></span></div>
 				    <div class="Icon DisableNextTopPageIcon"><span></span></div>

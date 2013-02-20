@@ -58,14 +58,14 @@
 									}
 							%>
 								<tr class="$classRow">
-									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"><span></span></div></td>
 									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<label for="$topicId"><a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="$title">$topicTitle</a></label>
+											<label for="$topicId"><a href="<%=uicomponent.event("OpenTopic", topicId)%>" rel="tooltip" data-placement="bottom" title="$titlePost" class="$title">$topicTitle</a></label>
 										</div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postView</div></td>

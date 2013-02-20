@@ -31,12 +31,12 @@
 				%>
 					<%if(uicomponent.useAjax){%>
 			  <li>
-							<a href="$link" onclick="$event; return false;" title="$namePath" class="Selected">$name</a>
+							<a href="$link" onclick="$event; return false;" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%} else {%>
 			  <li>
-							<a href="$link" title="$namePath" class="Selected">$name</a>
+							<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%} %>
@@ -46,12 +46,12 @@
 				 %>
 					<%if(uicomponent.useAjax){%>
 			  <li>
-							<a href="$link" title="$namePath" onmousedown="$event; return false;" onkeydown="$event; return false;" class="Selected">$name</a>
+							<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" onmousedown="$event; return false;" onkeydown="$event; return false;" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%} else {%>
 			  <li>
-							<a href="$link" title="$namePath" class="Selected">$name</a>
+							<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%}%>

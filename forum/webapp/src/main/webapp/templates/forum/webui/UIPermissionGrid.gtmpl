@@ -21,8 +21,8 @@
     <% for(String owner : uicomponent.getOwners()) { %>
       <tr>
         <td>
-          <div title="<%=uicomponent.getDisplayNameOfOwner(owner)%>"><%=uicomponent.getDisplayNameOfOwner(owner)%></div>
-          <div class="Id" title="$owner">($owner)</div>
+          <div rel="tooltip" data-placement="bottom" title="<%=uicomponent.getDisplayNameOfOwner(owner)%>"><%=uicomponent.getDisplayNameOfOwner(owner)%></div>
+          <div class="Id" rel="tooltip" data-placement="bottom" title="$owner">($owner)</div>
         </td>
         <% for(String permission : uicomponent.getPermissions()) {
             String checked = "";
@@ -35,13 +35,13 @@
          
         <td class="center">
           <span class="uiCheckbox">
-            <input type="checkbox" title="View Pages" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
+            <input type="checkbox" rel="tooltip" data-placement="bottom" title="View Pages" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
             <span></span>
           </span>
         </td>
         <% } %>
         <td class="center">
-		      <a onclick="<%=uicomponent.event("RemoveOwner", owner)%>" title="Remove" class="actionIcon"><i class="uiIconDelete"></i></a>
+		      <a onclick="<%=uicomponent.event("RemoveOwner", owner)%>" rel="tooltip" data-placement="bottom" title="Remove" class="actionIcon"><i class="uiIconDelete"></i></a>
         </td>
       </tr>
       <% } %>

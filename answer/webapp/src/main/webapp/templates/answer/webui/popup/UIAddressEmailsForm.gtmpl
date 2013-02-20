@@ -13,7 +13,7 @@ import org.exoplatform.services.organization.User;
 		<div class="ClearFix">
 			<div class="AddressLabel"><label for="<%=uicomponent.USER_SEARCH%>"><%=_ctx.appRes("UIAddressEmailsForm.label.user-search") %> :</label></div>
 			<div class="InputLabel"><% uiform.renderField(uiform.USER_SEARCH) %></div>
-			<div class="SearchIcon" onclick="<%=uicomponent.event("Search")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"><span></span></div>
+			<div class="SearchIcon" onclick="<%=uicomponent.event("Search")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"><span></span></div>
 		</div>
 		
 		<div class="ClearFix">
@@ -29,7 +29,7 @@ import org.exoplatform.services.organization.User;
         <table cellspacing="0" border="0" cellpadding="0" id="UIListUsers" class="UIGrid">
             <thead>
               <tr>
-                <th class="CheckBoxLabel"><input type="checkbox" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
+                <th class="CheckBoxLabel"><input type="checkbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
                 <th>
                   <div class="BlueDownArrowIcon">
                     <div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.name") %></div>

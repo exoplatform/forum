@@ -11,7 +11,7 @@
 					String number = String.valueOf(i+1) ;
 					String onclick = uicomponent.event(action, number);
 				%>
-					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.answer.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onclick="$onclick" title=""><span></span></div>
+					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.answer.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onclick="$onclick" rel="tooltip" data-placement="bottom" title=""><span></span></div>
 		 <%}%>
 		 		</div>
 

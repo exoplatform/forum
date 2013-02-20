@@ -54,7 +54,7 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="TitleNorman">$topicTitle</a>
+											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" rel="tooltip" data-placement="bottom" title="$titlePost" class="TitleNorman">$topicTitle</a>
 										</div>
 										<div><a class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
@@ -65,10 +65,10 @@
 										<div class="ActionContainer" style="margin:0px auto;">
 											<div class="IconContent">
 												<div onclick="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float:left; cursor:pointer;">
-													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Topic"><span></span></div>							
+													 <div class="Icon16x16 Topic${titleTp}Icon" rel="tooltip" data-placement="bottom" title="$titleTp this Topic"><span></span></div>							
 												</div>
 												<div onclick="javascript:if(confirm('<%=_ctx.appRes("UITopicDetail.confirm.DeleteTopic");%>'))<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float:left; cursor:pointer;">
-													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							
+													 <div class="Icon16x16 DeleteIcon" rel="tooltip" data-placement="bottom" title="Delete this Thread"><span></span></div>							
 												</div>
 											</div>
 										</div>

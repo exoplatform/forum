@@ -41,7 +41,7 @@ if(!uicomponent.isEditPortlet_){
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.user-watch-manager"); %></td>
 											<% String linkWacth =uicomponent.event("UserWatchManager") ; %>
 											<td>
-												<div onclick="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager")%>" class="WatchUserManager">
+												<div onclick="$linkWacth" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager")%>" class="WatchUserManager">
 													<span></span>
 												</div>
 											</td>
@@ -202,7 +202,7 @@ if(!uicomponent.isEditPortlet_){
 																						<div style="float:left; width:90%;">
 																							<%uicomponent.renderUIComponent(childForm);%>
 																						</div>
-																						<div onclick="$actionReset" style="cursor:pointer;" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
+																						<div onclick="$actionReset" style="cursor:pointer;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
 																							<div class="refreshMail"><span></span></div>
 																						</div>
 																					</td>

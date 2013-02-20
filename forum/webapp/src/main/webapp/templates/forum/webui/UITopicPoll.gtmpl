@@ -36,7 +36,7 @@
 
 <div class="UITopicPoll">
 	<div class="ForumToolbar ForumActionToolbar TitleForum ClearFix">
-		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
 		<h6 class="Lable Question">
 			<%=_ctx.appRes("UITopicPoll.label.Poll"); %>:
 			${question}

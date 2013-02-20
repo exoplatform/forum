@@ -33,7 +33,7 @@
   </div>
   <div class="ForumContainer" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>">
     <div class="ForumToolbar ForumActionToolbar ClearFix">
-      <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+      <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
       <h6 class="Title"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:<strong>$tagName_</strong></h6>
       <% if(isShowMenu){ %>
       <div class="ToolbarActionsTag DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
@@ -60,13 +60,13 @@
             <th class="WidthStatus">&nbsp;</th>
             <th class="WidthStatus">&nbsp;</th>
             <th><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a></th>
-            <th class="WidthStatus"><span class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></span></th>
+            <th class="WidthStatus"><span class="AttachmentIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></span></th>
             <th class="WidthRating"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
             <th class="WidthLastPost"><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a></th>
             <th class="WidthReplies"><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","postCount");%>"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a></th>
             <th class="WidthReplies"><a class="DownArrow1Icon" href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><%=_ctx.appRes("UITopicContainer.label.Views");%></a></th>
             <% if(isShowMenu) { %>
-            <th class="WidthCheck"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
+            <th class="WidthCheck"><input id="UIForumCheckAll" type="checkbox" class="checkbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/></th>
             <% } %>
           </tr>
         </thead>
@@ -149,14 +149,14 @@
               }  
           %>
             <tr class="$classRow $classSelect">
-              <td class="Tdbox"><span class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"></span></td>
+              <td class="Tdbox"><span class="ThreadStatusIcon $iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></span></td>
               <td class="Tdbox"><span class="StatusIcon $iconClassTopic"></span></td>
               <td>
                 <div class="ClearFix">
                 <% if(topic.getIsSticky()) {%>
                   <span class="Text StickyIcon FL"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
                 <% } %>
-                  <a onclick="$link; return false;" href="$url" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
+                  <a onclick="$link; return false;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
                   <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent CancelEvent" style="display:none; left:80px;">
                   </div>
                 </div>
@@ -213,7 +213,7 @@
                 <% String[] classNames = uicomponent.getStarNumber(topic) ; 
                    String SumVote = classNames[5] ;
                 %>
-                  <div class="AvgRatingImages ClearFix" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
+                  <div class="AvgRatingImages ClearFix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
                 <%  
                   for(className in classNames) {
                     if(className.equals("star")) className = "Voted" ;
@@ -229,7 +229,7 @@
               <td>
                 <div class="DateTime">$lastPostDate</div>
                 <div class="PostInfos LastPostInfos">
-                  <a class="RightArrowIcon" title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>" href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"></a>
+                  <a class="RightArrowIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>" href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"></a>
                   <%=_ctx.appRes("UITopicContainer.label.by");%>
                   <% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
                   <a class="PostBy UserMenuInfo" href="javaScript:void(0)">$viewPostNewBy</a>
@@ -265,7 +265,7 @@
                 checked = "checked=\"checked\"";
                 }
               %>
-              <td class="Tdbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/></td>
+              <td class="Tdbox"><input type="checkbox" class="checkbox" rel="tooltip" data-placement="bottom" title="$titlePost" name="$topicId" $checked/></td>
               <% } %>
             </tr>
         <% 

@@ -63,7 +63,7 @@
     <div class="pull-left">
   <% } %>
       <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-        <div class="bnt" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
+        <div class="bnt" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
       <% } else { %>
         <a class="uiAddTheradIcon btn btn-primary" style="display:block;" href="<%=uicomponent.event("AddTopic")%>">
 			<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
@@ -71,7 +71,7 @@
       <% } %>
     </div>
   <% if(uicomponent.maxPage > 1) { %>
-    <div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+    <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
       
       <% /*Begin Popup Menu*/ %>
       <div class="UIPopupCategory" style="display:none;">
@@ -182,7 +182,7 @@
 					  </li>
 					<% } %> 
 					
-					<li class="ContentAction defaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+					<li class="ContentAction defaultStyle $forumSeparatorLine SearchForm" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
 						<div class="dropdown uiDropdown actionIcon">
 						  <div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
@@ -282,7 +282,7 @@
                 </th>
                 <% if(canEdit) { %>
                 <th style="width:20px;" class="center">
-					<span class="uiCheckbox"><input type="checkbox" name="checkAll" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/><span></span>
+					<span class="uiCheckbox"><input type="checkbox" name="checkAll" class="checkbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/><span></span>
 					</span>
 				</th>
                 <% } %>
@@ -387,12 +387,12 @@
                   }
               %>
                 <tr class="$classRow $classSelect oncontextmenu">
-					<td><i class="$iconTopicStatus" title="$titleTopicStatus"></i></td>
+					<td><i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i></td>
 					<td>
 						<%if(topic.getIsPoll()){%>
-							  <i class="uiIconPoll uiIconLightGray" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+							  <i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 						<%} else {%>
-							<i class="uiIconForumTopic uiIconForumLightGray" title="$topicType"></i>
+							<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$topicType"></i>
 						<%}%>
 					</td>
                   
@@ -407,23 +407,23 @@
 						<%if(uicomponent.isUseAjax){
 							if(topic.getPostCount() > 30) {
 							%>
-							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%}%>
 						
 						<%} else {
 							if(topic.getPostCount() > 30) {
 							%>
-							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							<%}%>
 							
 						<%}%>
 						$approved
 						<div id="UIPopupMenu${rCNB}" style="display:none;">
-							<ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+							<ul rel="tooltip" data-placement="bottom" rel="tooltip" data-placement="bottom" title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
 						</div>
 						<div>
 						<% if(max_page > 1) { %>
@@ -488,7 +488,7 @@
 						<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 						   String SumVote = classNames[5] ;
 						%>
-						  <div class="AvgRatingImages clearfix" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
+						  <div class="AvgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 						<%  
 						  for(className in classNames) {
 							if(className.equals("star")) className = "Voted" ;
@@ -511,7 +511,7 @@
 						}
 					  %>
 					<td class="center">
-						<span class="uiCheckbox"><input type="checkbox" class="checkbox" title="$titlePost" name="$topicId" $checked/>
+						<span class="uiCheckbox"><input type="checkbox" class="checkbox" rel="tooltip" data-placement="bottom" title="$titlePost" name="$topicId" $checked/>
 						<span></span>
 						</span>
 					</td>
@@ -569,7 +569,7 @@
       <div class="FL">
     <% } %>
       <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-        <div class="IconButton LockIcon"  title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
+        <div class="IconButton LockIcon" rel="tooltip" data-placement="bottom"  title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
       <% } else { %>
         <a class="uiAddTheradIcon btn btn-primary" style="display:block;" href="<%=uicomponent.event("AddTopic")%>">
         <i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
@@ -577,7 +577,7 @@
       <% } %>
     </div>
     <% if(uicomponent.maxPage > 1) { %>
-    <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
+    <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
       
       <% /*Begin Popup Menu*/ %>
 

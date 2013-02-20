@@ -20,7 +20,7 @@
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar ClearFix">
-		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
 		<h6 class="Title"><%=_ctx.appRes("UICategoryInfo.label.What")%></h6>
 	</div>
 	<div class="ForumStatsList">

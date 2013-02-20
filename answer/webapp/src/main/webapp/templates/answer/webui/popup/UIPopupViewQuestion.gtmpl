@@ -148,7 +148,7 @@
 											quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
 										}
 							%>
-										&nbsp; <div title="$title">- $quesRelaCont<br/></div>
+										&nbsp; <div rel="tooltip" data-placement="bottom" title="$title">- $quesRelaCont<br/></div>
 							<% 	}
 								}%>
 						</div>

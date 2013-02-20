@@ -49,10 +49,10 @@
 					<div class="ActionContainer" style="margin:0px auto;">
 						<div class="IconContent">
 							<div onclick="<%=uicomponent.event("ReplyMessage", mailId)%>" style="float:left; cursor:pointer;">
-								 <div class="Icon16x16 ViewPublicUserInfo" title="Reply Message"><span></span></div>							
+								 <div class="Icon16x16 ViewPublicUserInfo" rel="tooltip" data-placement="bottom" title="Reply Message"><span></span></div>							
 							</div>
 							<div onclick="<%=uicomponent.event("DeleteMessage", mailId)%>" style="float:left; cursor:pointer;">
-								 <div class="Icon16x16 DeleteIcon" title="Delete Message"><span></span></div>							
+								 <div class="Icon16x16 DeleteIcon" rel="tooltip" data-placement="bottom" title="Delete Message"><span></span></div>							
 							</div>
 						</div>
 					</div>

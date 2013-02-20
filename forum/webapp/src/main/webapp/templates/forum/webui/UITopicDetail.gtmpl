@@ -95,7 +95,7 @@
           <% } else if(isNotLogin) {  %>
                   <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
           <% } else {%>
-                <a class="uiLockIcon btn btn-primary" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+                <a class="uiLockIcon btn btn-primary" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
           <% } %>
       </div>
       <%  
@@ -110,8 +110,8 @@
             String tagName = tag.getName();
         %>
           <li class="FL MenuItem">
-            <a class="TagIcon FL BlueTagIcon" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
-            <span class="UntagIcon FL" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
+            <a class="TagIcon FL BlueTagIcon" rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+            <span class="UntagIcon FL" rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
           </li>
         <%} %>
           <li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
@@ -124,7 +124,7 @@
           </li>
       </ul>
       <% if(uicomponent.maxPage > 1) { %>
-      <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
+      <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
         <% /*Begin Popup Menu*/ %>
         <div id="goPage1" class="UIPopupCategory CancelEvent" style="display:none">
           <ul class="UIRightClickPopupMenu" style="display:block;">
@@ -193,7 +193,7 @@
                   </div>
               </div>
               <% } %>
-              <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
+              <div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
                 <div class="dropdown uiDropdown uiActionWithLabel">
                   <div data-toggle="dropdown">
                     <%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
@@ -449,7 +449,7 @@
                 }
             %>
                   <div class="ContentAction MemberName ClearFix">
-                    <div  class="FL UserMenuInfo"><h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
+                    <div  class="FL UserMenuInfo"><h5 class="Name State $userSmile" rel="tooltip" data-placement="bottom" title="${screenName}'s $titleSmile">$viewScreenName</h5></div>
                     <div class="UIPopupInfoMenu">
                        <div class="UIPopupInfoContent">
                           <div class="Arrow"><span></span></div>
@@ -549,7 +549,7 @@
                        isChecked = "checked=\"checked\"";
                      } 
                   %>
-                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" name="$postId" $isChecked/>
+                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" rel="tooltip" data-placement="bottom" title="$namePost" type="checkbox" class="checkbox FR" name="$postId" $isChecked/>
                   <%} %>
                 <%
                    if(isShowIP) {
@@ -562,11 +562,11 @@
                          link2 ="javaScript:void(0);";
                        }
                 %>
-                  <div class="IPIcon" title="IP: $ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+                  <div class="IPIcon" rel="tooltip" data-placement="bottom" title="IP: $ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
                     <% /*Begin Popup Menu*/ %>
                       <div class="UIPopupCategory SearchPopup IPIcon" style="display:none;">
                         <ul class="UIRightClickPopupMenu BloclPopupIP">
-                          <li title="$title1" class="MenuItem" onclick="$link2">   
+                          <li rel="tooltip" data-placement="bottom" title="$title1" class="MenuItem" onclick="$link2">   
                               <a class="ItemIcon" href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
                           </li>
                           <% 
@@ -623,7 +623,7 @@
                     %>
                       <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
                       <div class="LabelBox">
-                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
+                        <a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
                         <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
                         <div class="Action">
                           <a class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></a>
@@ -698,7 +698,7 @@
                       if(isShowAction) {
                   %>
                       <div class="FR">
-                        <a onclick="$actionLink" class="btn" title="$title">$label</a>
+                        <a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
                       </div>
                     <%}
                     } 
@@ -735,11 +735,11 @@
         <% } else if(isNotLogin) {  %>
               <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
         <% } else {%>
-              <a class="IconButton LockIcon" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+              <a class="IconButton LockIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
         <% } %>
     </div>
     <% if(uicomponent.maxPage > 1) { %>
-    <div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon ClearFix" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+    <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon ClearFix" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
       <% /*Begin Popup Menu*/ %>
         <div id="goPage2" class="UIPopupCategory CancelEvent" style="display:none;">
           <ul class="UIRightClickPopupMenu" style="display:block;">
@@ -758,7 +758,7 @@
 
   <div class="ForumCategory ForumQuickReply">
     <div class="ForumToolbar ForumActionToolbar ClearFix">
-      <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+      <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
       <h6 class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
     </div>
     <div class="ContentContainer">

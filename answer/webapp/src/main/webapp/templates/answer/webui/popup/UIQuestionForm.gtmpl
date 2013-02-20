@@ -91,11 +91,11 @@
 						     			$name
 						     	<%} else {%>
 							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
-							     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
+							     		<a href="javaScript:void(0);" rel="tooltip" data-placement="bottom" title="$name" style="color:black;">
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
-											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
+											<a href="$link" style="color:#058EE6; font-size:12px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
 												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>"/>
 											</a>
 										</div>

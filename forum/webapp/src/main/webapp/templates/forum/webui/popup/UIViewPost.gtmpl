@@ -39,7 +39,7 @@
 							 String size =ForumUtils.getSizeFile(sizeNumber) ;
 					%>
 						<div class="AttachmentBox">
-							<a class="AttachmentLabel AttachmentIcon WordIcon" title="$titleFile" href="#">$fileName</a>
+							<a class="AttachmentLabel AttachmentIcon WordIcon" rel="tooltip" data-placement="bottom" title="$titleFile" href="#">$fileName</a>
 							<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						</div>
 					<% } %>
@@ -64,7 +64,7 @@
 								%>
 									<a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt="$titleFile"/></a>
 									<div class="LabelBox">
-										<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
+										<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
 										<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 										<div class="Action">
 											<a class="Icon View" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>

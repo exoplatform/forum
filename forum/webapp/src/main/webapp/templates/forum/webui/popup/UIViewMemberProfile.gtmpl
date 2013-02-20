@@ -49,7 +49,7 @@
 	<div class="ViewMemberProfileContainer">
 		<div class="TitleBar">
 			<div class="TitleIcon">
-				<%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" title="${userName}'s $titleSmile">$fullName</span>
+				<%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" rel="tooltip" data-placement="bottom" title="${userName}'s $titleSmile">$fullName</span>
 			</div>
 		</div>
 		<div class="ViewContainer">

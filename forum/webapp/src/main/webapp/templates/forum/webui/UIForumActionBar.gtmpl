@@ -66,8 +66,8 @@
 		  %>
 		<% }%>
 		<li class="ScrollButtons" style="width:35px;">
-			<div title="Previous">
-				<div title="Next"><span></span></div>
+			<div rel="tooltip" data-placement="bottom" title="Previous">
+				<div rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
 			</div>
 		</li>
 	</ul>

@@ -29,7 +29,7 @@
 	          title = FAQUtils.getTitle(namePath) ; 
 	          namePath = FAQUtils.getSubString(namePath,30);
 	        %>
-	          <a href="$url" onclick="$link; return false;" title="$title">$namePath</a>
+	          <a href="$url" onclick="$link; return false;" rel="tooltip" data-placement="bottom" title="$title">$namePath</a>
 	      <%} else { 
 	          if(image.length() > 0){
 	      %>
@@ -47,7 +47,7 @@
 	            namePath = FAQUtils.getSubString(namePath,30);
 	            
 	    %>
-	            <li class="active" title="$title">$namePath</li>
+	            <li class="active" rel="tooltip" data-placement="bottom" title="$title">$namePath</li>
 	      <% } else { %>
 	            <li class="active">$namePath</li>
 	      <% } 
@@ -56,8 +56,8 @@
 	  } %>
 	 <div class="ScrollButtonContainer" style="display: none">
 	   <div class="ScrollButtons">
-	     <div title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
-	       <div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
+	     <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
+	       <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
 	     </div>
 	   </div>
 	 </div>
