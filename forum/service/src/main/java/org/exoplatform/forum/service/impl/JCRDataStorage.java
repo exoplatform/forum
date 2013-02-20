@@ -5464,6 +5464,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
+    return getQuickSearch(textQuery, type_, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator, null, null, null, null);
+  }
+
+  public List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator, Integer offset, Integer limit, String sort, String order) throws Exception {
     List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
@@ -5595,8 +5599,32 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           }
         }
         queryString.append("]");
+
+        if (type.equals(Utils.POST)) {
+          if ("date".equals(sort)) {
+            queryString.append(" order by @exo:createdDate");
+          } else if (("title".equals(sort) || "relevancy".equals(sort))) {
+            queryString.append(" order by @exo:name");
+          }
+
+          if ("DESC".equals(order)) {
+            queryString.append(" descending");
+          } else if ("ASC".equals(order)) {
+            queryString.append(" ascending");
+          } else if (sort != null && sort.length() > 0 && (order == null || order.length() == 0)) {
+            queryString.append(" ascending"); // If no ascending but sort value : apply ascending as default value
+          }
+        }
+
         // System.out.println("\n\n=======>"+queryString.toString());
         Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+
+        if (query instanceof QueryImpl && offset != null && limit != null) {
+          QueryImpl tmpRef = (QueryImpl) query;
+          tmpRef.setOffset(offset);
+          tmpRef.setLimit(limit);
+        }
+
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
         // System.out.println("\n\n=======>iter: "+iter.getSize());
