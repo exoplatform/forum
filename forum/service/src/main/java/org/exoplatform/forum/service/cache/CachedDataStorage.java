@@ -64,6 +64,7 @@ import org.exoplatform.forum.service.cache.model.key.TopicKey;
 import org.exoplatform.forum.service.cache.model.selector.CategoryIdSelector;
 import org.exoplatform.forum.service.cache.model.selector.ForumPathSelector;
 import org.exoplatform.forum.service.cache.model.selector.ScopeCacheSelector;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -447,6 +448,10 @@ public class CachedDataStorage implements DataStorage, Startable {
     ).build();
 
   }
+  
+  public Category getCategoryIncludedSpace() {
+    return storage.getCategoryIncludedSpace();
+  }
 
   public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
     return storage.getPermissionTopicByCategory(categoryId, type);
@@ -508,6 +513,10 @@ public class CachedDataStorage implements DataStorage, Startable {
         )
     );
 
+  }
+
+  public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    return storage.filterForumByName(filterKey, userName, maxSize);
   }
 
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {

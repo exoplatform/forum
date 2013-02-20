@@ -25,6 +25,7 @@ import java.util.List;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -73,6 +74,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   Category getCategory(String categoryId) throws Exception;
+
+  /**
+   * Get category included spaces
+   * 
+   * @return the category
+   * @throws Exception
+   */
+  Category getCategoryIncludedSpace();
 
   /**
    * Get user and group have edit permission in a category
@@ -128,6 +137,17 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
+
+  /**
+   *  filter forums by key via user.
+   * 
+   * @param filterKey - the key to search forum.
+   * @param userName - the identify of user.
+   * @param maxSize TODO
+   * @return - list of categoryFilter.
+   * @throws Exception
+   */
+  List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
 
   /**
    * Gets the forum in the category identify.
