@@ -1,23 +1,26 @@
 package org.exoplatform.forum.search;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.forum.membership.AbstractJCRTestCase;
-import org.exoplatform.forum.service.*;
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.MessageBuilder;
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.forum.service.search.DiscussionSearchConnector;
 import org.exoplatform.services.security.ConversationState;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
 public class DiscussionSearchConnectorTestCase extends AbstractJCRTestCase {
 
-  private JCRDataStorage storage;
   private DiscussionSearchConnector discussionSearchConnector;
   private Category cat;
   private Post postA;
@@ -28,45 +31,46 @@ public class DiscussionSearchConnectorTestCase extends AbstractJCRTestCase {
     super.setUp();
 
     //
-    storage = new JCRDataStorage();
-    storage.setDataLocator(dataLocation);
 
     cat = new Category();
     cat.setCategoryName("Category A");
-    storage.saveCategory(cat, true);
+    forumService_.saveCategory(cat, true);
 
     Forum forum = new Forum();
     forum.setForumName("Forum A");
-    storage.saveForum(cat.getId(), forum, true);
+    forumService_.saveForum(cat.getId(), forum, true);
 
     Topic topic = new Topic();
     topic.setTopicName("Topic A");
     topic.setOwner("foo");
-    storage.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
 
     postA = new Post();
     postA.setName("Post A");
     postA.setMessage("This is the A message");
     postA.setOwner("foo");
-    storage.savePost(cat.getId(), forum.getId(), topic.getId(), postA, true, new MessageBuilder());
+    forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), postA, true, new MessageBuilder());
 
     Post postB = new Post();
     postB.setName("Post B");
     postB.setMessage("This is the B message");
     postB.setOwner("foo");
-    storage.savePost(cat.getId(), forum.getId(), topic.getId(), postB, true, new MessageBuilder());
+    forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), postB, true, new MessageBuilder());
 
     //
     InitParams params = new InitParams();
     params.put("constructor.params", new PropertiesParam());
-    discussionSearchConnector = new DiscussionSearchConnector(params, storage);
+    
+    JCRDataStorage dataStorage = (JCRDataStorage) getService(JCRDataStorage.class);
+    
+    discussionSearchConnector = new DiscussionSearchConnector(params, dataStorage);
 
   }
 
   @Override
   public void tearDown() throws Exception {
     if (cat != null) {
-      storage.removeCategory(cat.getId());
+      forumService_.removeCategory(cat.getId());
     }
     super.tearDown();
   }
@@ -86,7 +90,7 @@ public class DiscussionSearchConnectorTestCase extends AbstractJCRTestCase {
     SearchResult aResult = aResults.get(0);
     assertEquals("Post A", aResult.getTitle());
     assertEquals("This is the A message", aResult.getExcerpt());
-    assertEquals("url://" + postA.getId(), aResult.getUrl());
+    assertEquals("", aResult.getUrl());
     assertTrue(aResult.getDate() > 0);
     assertEquals(postA.getCreatedDate().getTime(), aResult.getDate());
   }

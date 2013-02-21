@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -34,7 +35,7 @@ import org.exoplatform.services.log.Log;
  * truong.nguyen@exoplatform.com
  * May 5, 2008, 3:48:51 PM
  */
-public class FAQEventQuery {
+public class FAQEventQuery implements FAQNodeTypes {
 
   public static final String FAQ_CATEGORY               = "faqCategory";
 
@@ -93,6 +94,14 @@ public class FAQEventQuery {
   private boolean            isAnswerCommentLevelSearch = false;
 
   private boolean            isSearchOnDefaultLanguage  = false;
+
+  private int                offset                     = 0;
+
+  private int                limit                      = 0;
+
+  private String             sort                       = "";//date, title, relevancy
+
+  private String             order                      = "ASC";// (ASC, DESC)
 
   public String getLanguage() {
     return language;
@@ -627,6 +636,20 @@ public class FAQEventQuery {
 
     queryString.append("]"); // close property constraint
 
+    // order
+      if ("date".equals(sort)) {
+        queryString.append(" order by @").append(EXO_CREATED_DATE);
+      } else if ("title".equals(sort) || "relevancy".equals(sort) || CommonUtils.isEmpty(sort)) {
+        queryString.append(" order by @").append(EXO_TITLE);
+      }
+
+      if ("DESC".equals(order)) {
+        queryString.append(DESCENDING);
+      } else if ("ASC".equals(order)) {
+        queryString.append(ASCENDING);
+      } else {
+        queryString.append(ASCENDING);
+      }
     return queryString;
   }
 
@@ -738,5 +761,37 @@ public class FAQEventQuery {
 
   public String getComment() {
     return comment;
+  }
+
+  public int getOffset() {
+    return offset;
+  }
+
+  public void setOffset(int offset) {
+    this.offset = offset;
+  }
+
+  public int getLimit() {
+    return limit;
+  }
+
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
+  public String getSort() {
+    return sort;
+  }
+
+  public void setSort(String sort) {
+    this.sort = sort;
+  }
+
+  public String getOrder() {
+    return order;
+  }
+
+  public void setOrder(String order) {
+    this.order = order;
   }
 }

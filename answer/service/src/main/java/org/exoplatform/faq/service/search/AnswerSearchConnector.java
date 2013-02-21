@@ -1,24 +1,24 @@
-package org.exoplatform.forum.service.search;
+package org.exoplatform.faq.service.search;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.DataStorage;
+import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.ObjectSearchResult;
+import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
@@ -33,62 +33,87 @@ import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.web.url.navigation.NavigationResource;
 import org.exoplatform.web.url.navigation.NodeURL;
 
 /**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *          tuvd@exoplatform.com
+ * Feb 21, 2013  
  */
-public class DiscussionSearchConnector extends SearchServiceConnector {
 
-  private Pattern pattern;
-  private JCRDataStorage storage;
-  private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
+public class AnswerSearchConnector extends SearchServiceConnector {
   
   public static final String  SPACES_GROUP           = "spaces";
 
-  public static final String  CATEGORY               = "category";
+  private static final String ANSWER_PORTLET_NAME     = "AnswerPortlet";
 
-  private static final String FORUM_PAGE_NAGVIGATION = "forum";
+  private static final String ANSWER_PAGE_NAGVIGATION = "answer";
 
-  private static final String FORUM_PORTLET_NAME     = "ForumPortlet";
+  private JCRDataStorage storage;
+  private LocaleConfigService localeConfigService;
+  private static final Log LOG = ExoLogger.getLogger(AnswerSearchConnector.class);
 
 
-  public DiscussionSearchConnector(InitParams initParams, JCRDataStorage storage) {
+  public AnswerSearchConnector(InitParams initParams, DataStorage dataStorage, LocaleConfigService localeConfigService) throws Exception {
     super(initParams);
-    this.storage = storage;
-    this.pattern = Pattern.compile("/");
+    this.storage = (JCRDataStorage) dataStorage;
+    this.localeConfigService = localeConfigService;
   }
-  
-  
+
+  public AnswerSearchConnector(InitParams initParams, DataStorage dataStorage) throws Exception {
+    this(initParams, dataStorage, null);
+  }
 
   @Override
   public Collection<SearchResult> search(String query, Collection<String> sites, int offset, int limit, String sort, String order) {
 
     List<SearchResult> results = new ArrayList<SearchResult>();
-    String currentUser = getCurrentUserName();
+
+    FAQEventQuery eventQuery = new FAQEventQuery();
+    eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
+    eventQuery.setAdmin(false);
+    eventQuery.setComment(query);
+    eventQuery.setQuestion(query);
+    eventQuery.setResponse(query);
+    
+    eventQuery.setUserId(UserHelper.getCurrentUser());
+    eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
+    eventQuery.setLanguageLevelSearch(false);
+    
+    String language = "English";
+    if (localeConfigService != null) {
+      language = localeConfigService.getDefaultLocaleConfig().getLocale().getDisplayLanguage();
+    }
+    eventQuery.setLanguage(language);
+    eventQuery.setSearchOnDefaultLanguage(true);
+
+    eventQuery.setOffset(offset);
+    eventQuery.setLimit(limit);
+    eventQuery.setSort(sort);
+    eventQuery.setOrder(order);
+    
+    
     try {
-      List<ForumSearch> searchResults = storage.getQuickSearch(query, "false,post", null, currentUser, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, offset, limit, sort, order);
-      for (ForumSearch searchResult : searchResults) {
-        PostId id = new PostId(pattern, searchResult.getPath());
-        Forum forum = storage.getForum(id.getCategoryId(), id.getForumId());
-        Topic topic = storage.getTopic(id.getCategoryId(), id.getForumId(), id.getTopicId(), currentUser);
-        Post post = storage.getPost(id.getCategoryId(), id.getForumId(), id.getTopicId(), id.getPostId());
+      List<ObjectSearchResult> searchResults = storage.getUnifiedSearchResults(eventQuery);
+      for (ObjectSearchResult searchResult : searchResults) {
         StringBuilder sb = new StringBuilder();
-        sb.append(forum.getForumName());
-        sb.append(" - " + topic.getPostCount() + " replies");
-        sb.append(" - " + topic.getVoteRating());
-        sb.append(" - " + post.getCreatedDate());
+        sb.append(searchResult.getName());
+        sb.append(" - ").append(searchResult.getNumberOfAnswer()).append(" answers");
+        sb.append(" - ").append(searchResult.getNumberOfComment()).append(" comments");
+        sb.append(" - ").append(searchResult.getRatingOfQuestion());
+        sb.append(" - ").append(searchResult.getCreatedDate());
         SearchResult result = new SearchResult(
             //TODO: Wait for unified search context to build link.
-            "", //buildLink(id.getCategoryId(), id.getForumId(), id.getTopicId()),
-            post.getName(),
-            post.getMessage(),
+            "", //buildLink(searchResult.getPath()),
+            searchResult.getName(),
+            searchResult.getDescription(),
             sb.toString(),
-            topic.getIcon(),
-            post.getCreatedDate().getTime(),
+            searchResult.getIcon(),
+            searchResult.getCreatedDate().getTime(),
             0);
         results.add(result);
       }
@@ -99,36 +124,31 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
 
     return results;
   }
+
   
   /**
    * 
-   * @param categoryId
-   * @param forumId
-   * @param topicId
+   * @param questionPath
    * @return
    */
-  public static String buildLink(String categoryId, String forumId, String topicId) {
-    return buildLink(categoryId, forumId, topicId, null);
+  public static String buildLink(String questionPath) {
+    return buildLink(questionPath, null);
   }
 
   /**
-   * 
-   * @param categoryId
-   * @param forumId
-   * @param topicId
+   * @param questionPath
+   * @param siteName
    * @return
    */
-  public static String buildLink(String categoryId, String forumId, String topicId, String siteName) {
+  public static String buildLink(String questionPath, String siteName) {
     try {
       String link = "";
-
-      String objectType = getType(categoryId, forumId, topicId);
-      String objectId = getObjectId(categoryId, forumId, topicId);
+      String categoryId = getCategoryId(questionPath);
+      String questionId = questionPath.substring(questionPath.indexOf(Question.QUESTION_ID));
       //
-      if (categoryId.indexOf(SPACES_GROUP) > 0 && !objectType.equals(CATEGORY)) {
-        String prefixId = Utils.FORUM_SPACE_ID_PREFIX;
-        String spaceGroupId =String.format("/%s/%s", SPACES_GROUP, forumId.replaceFirst(prefixId, ""));
-        link = buildSpaceLink(spaceGroupId, objectType, objectId);
+      if (categoryId.indexOf(Utils.CATE_SPACE_ID_PREFIX) == 0) {
+        String spaceGroupId = String.format("%s/%s", SPACES_GROUP, categoryId.replace(Utils.CATE_SPACE_ID_PREFIX, CommonUtils.EMPTY_STR));
+        link = buildSpaceLink(spaceGroupId, questionId);
       } else {
         PortalRequestContext prc = Util.getPortalRequestContext();
 
@@ -140,7 +160,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
           //
           if (!CommonUtils.isEmpty(nodeURI)) {
             String siteHomeLink = getSiteHomeURL(siteName, nodeURI);
-            link = String.format("%s/%s/%s", siteHomeLink, objectType, objectId);
+            link = String.format("%s/%s%s", siteHomeLink, Utils.QUESTION_ID, questionId);
           }
         } else {
           UserPortal userPortal = prc.getUserPortal();
@@ -148,10 +168,10 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
           UserNode userNode = userPortal.getNode(userNav, Scope.ALL, null, null);
 
           //
-          UserNode forumNode = userNode.getChild(FORUM_PAGE_NAGVIGATION);
+          UserNode forumNode = userNode.getChild(ANSWER_PAGE_NAGVIGATION);
           if (forumNode != null) {
             String forumURI = getNodeURL(forumNode);
-            link = String.format("%s/%s/%s", forumURI, objectType, objectId);
+            link = String.format("%s/%s%s", forumURI,Utils.QUESTION_ID, questionId);
           }
         }
       }
@@ -159,10 +179,19 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
       //
       return link;
     } catch (Exception ex) {
-      return "";
+      return CommonUtils.EMPTY_STR;
     }
   }
 
+  private static String getCategoryId(String questionPath) {
+    String categoryId = Utils.CATEGORY_HOME;
+    int i = questionPath.indexOf(Category.CATEGORY_ID);
+    if (i > 0) {
+      categoryId = questionPath.substring(i, questionPath.indexOf("/", i));
+    }
+    return categoryId;
+  }
+  
   private static String getNodeURL(UserNode node) {
     RequestContext ctx = RequestContext.getCurrentInstance();
     NodeURL nodeURL = ctx.createURL(NodeURL.TYPE);
@@ -170,20 +199,18 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   }
 
   /**
-   * 
    * @param spaceGroupId
-   * @param objectType
-   * @param objectId
+   * @param questionId
    * @return
    * @throws Exception
    */
-  private static String buildSpaceLink(String spaceGroupId, String objectType, String objectId) throws Exception {
+  private static String buildSpaceLink(String spaceGroupId, String questionId) throws Exception {
 
     String nodeURI = getSiteName(SiteKey.group(spaceGroupId));
     
     if (!CommonUtils.isEmpty(nodeURI)) {
       String spaceLink = getSpaceHomeURL(spaceGroupId);
-      String objectLink = String.format("%s/%s/%s/%s", spaceLink, nodeURI, objectType, objectId);
+      String objectLink = String.format("%s/%s/%s%s", spaceLink, nodeURI, Utils.QUESTION_ID, questionId);
       return objectLink;
     }
 
@@ -206,7 +233,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
       NodeContext<?> child = null;
       while (it.hasNext()) {
         child = it.next();
-        if (FORUM_PAGE_NAGVIGATION.equals(child.getName()) || child.getName().indexOf(FORUM_PORTLET_NAME) >= 0) {
+        if (ANSWER_PAGE_NAGVIGATION.equals(child.getName()) || child.getName().indexOf(ANSWER_PORTLET_NAME) >= 0) {
           break;
         }
       }
@@ -244,22 +271,4 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
 
     return nodeURL.setResource(resource).toString();
   }
-  private static String getType(String categoryId, String forumId, String topicId) {
-    if(!CommonUtils.isEmpty(topicId)) return Utils.TOPIC;
-    if(!CommonUtils.isEmpty(forumId)) return Utils.FORUM;
-    if(!CommonUtils.isEmpty(categoryId)) return CATEGORY;
-    return "";
-  }
-
-  private static String getObjectId(String categoryId, String forumId, String topicId) {
-    if(!CommonUtils.isEmpty(topicId)) return topicId;
-    if(!CommonUtils.isEmpty(forumId)) return forumId;
-    if(!CommonUtils.isEmpty(categoryId)) return categoryId;
-    return "";
-  }
-  
-  public String getCurrentUserName() {
-    return ConversationState.getCurrent().getIdentity().getUserId();
-  }
-
 }

@@ -158,45 +158,33 @@ public abstract class FAQServiceBaseTestCase extends BaseExoTestCase {
 
     //
     Question question2 = createQuestion(categoryId1);
-    question2.setRelations(new String[] {});
-    question2.setLanguage("English");
     question2.setAuthor(USER_ROOT);
     question2.setEmail("root@exoplatform.com");
     question2.setDetail("Really?");
-    question2.setCreatedDate(new Date());
     questionId2 = question2.getId();
     questionPath2 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId2;
 
     //
     Question question3 = createQuestion(categoryId1);
-    question3.setRelations(new String[] {});
-    question3.setLanguage("English");
     question3.setAuthor("Kenny");
     question3.setEmail("kenny@exoplatform.com");
     question3.setDetail("What does eXo Forum do?");
-    question3.setCreatedDate(new Date());
     questionId3 = question3.getId();
     questionPath3 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId3;
 
     //
     Question question4 = createQuestion(categoryId1);
-    question4.setRelations(new String[] {});
-    question4.setLanguage("English");
     question4.setAuthor("John Anthony");
     question4.setEmail("john@exoplatform.com");
     question4.setDetail("Tell me why?");
-    question4.setCreatedDate(new Date());
     questionId4 = question4.getId();
     questionPath4 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId4;
 
     //
     Question question5 = createQuestion(categoryId1);
-    question5.setRelations(new String[] {});
-    question5.setLanguage("English");
     question5.setAuthor("Mary Kelly");
     question5.setEmail("mary@exoplatform.com");
     question5.setDetail("How can I build eXo Forum?");
-    question5.setCreatedDate(new Date());
     questionId5 = question5.getId();
     questionPath5 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId5;
 

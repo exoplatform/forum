@@ -18,6 +18,7 @@ package org.exoplatform.forum.common;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
@@ -185,8 +186,12 @@ public class UserHelper {
     return false;
   }
   
-  public static Collection findMembershipsByUser(String userId) throws Exception {
-    return getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
+  public static Collection findMembershipsByUser(String userId) {
+    try {
+      return getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
+    } catch (Exception e) {
+      return Collections.EMPTY_LIST;
+    }
   }
 
   /**
@@ -197,7 +202,7 @@ public class UserHelper {
    * @throws Exception
    */
   @SuppressWarnings("unchecked")
-  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) {
     List<String> listOfUser = new ArrayList<String>();
     if (userId == null || userId.equals(getCurrentUser())) {
       ConversationState conversionState = ConversationState.getCurrent();

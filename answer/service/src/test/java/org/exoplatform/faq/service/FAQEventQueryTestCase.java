@@ -98,35 +98,36 @@ public class FAQEventQueryTestCase extends TestCase {
   public void testBuildQuestionQuery() throws Exception {
     String selector = "/jcr:root/foo//* [(";
     String predicate;
+    String orderBy = " order by @exo:title ascending";
     final FAQEventQuery eventQuery = new FAQEventQuery();
     eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
     eventQuery.setPath("/foo");
     eventQuery.setAuthor("root");
     predicate = "jcr:contains(@exo:author, 'root')";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setEmail("root@exoplatform");
     predicate += " and jcr:contains(@exo:email, 'root@exoplatform')";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     Calendar calendar = GregorianCalendar.getInstance();
     eventQuery.setFromDate(calendar);
     predicate += " and ((@exo:createdDate >= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateResponse >= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateComment >= xs:dateTime('" + ISO8601.format(calendar) + "')))";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     calendar = GregorianCalendar.getInstance();
     eventQuery.setToDate(calendar);
     predicate += " and ((@exo:createdDate <= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateResponse <= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateComment <= xs:dateTime('" + ISO8601.format(calendar) + "')))";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setLanguage("English");
     eventQuery.setResponse("response");
     predicate += ") and (( exo:responseLanguage='English' and jcr:contains(@exo:responses,'response'))";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setComment("comment");
     predicate += " or ( exo:commentLanguage='English' and jcr:contains(@exo:comments,'comment'))";
-    assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     /*
      * String tempPredicate = predicate; eventQuery.setText("") ; //tempPredicate += ") and (exo:language='English')"; assertEquals(selector + tempPredicate + "]", eventQuery.getQuery());
@@ -135,12 +136,12 @@ public class FAQEventQueryTestCase extends TestCase {
     eventQuery.setText("text");
 
     predicate += " or (jcr:contains(., 'text') and (  exo:language='English' or exo:commentLanguage='English' or exo:responseLanguage='English'))";
-    assertEquals(selector + predicate + " )]".trim(), eventQuery.getQuery().trim());
+    assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setViewingCategories(Arrays.asList("categoryId1", "categoryId2"));
     predicate += ") and (exo:categoryId='categoryId1' or exo:categoryId='categoryId2')";
 
-    assertEquals((selector + predicate + "]").trim(), eventQuery.getQuery().trim());
+    assertEquals((selector + predicate + "]") + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setUserId("root");
     eventQuery.setAdmin(true);

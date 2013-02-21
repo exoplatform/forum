@@ -58,9 +58,9 @@ public class Utils {
 
   final public static String ANSWER_NOW_PARAM     = "answer-now";
 
-  final public static String QUESTION_ID          = "?&".concat(QUESTION_ID_PARAM).concat("=");
+  final public static String QUESTION_ID          = String.format("?&%s=", QUESTION_ID_PARAM);
 
-  final public static String ANSWER_NOW           = "&".concat(ANSWER_NOW_PARAM).concat("=");
+  final public static String ANSWER_NOW           = String.format("&%s=", ANSWER_NOW_PARAM);
 
   /**
    * This method sort list category is date ascending
