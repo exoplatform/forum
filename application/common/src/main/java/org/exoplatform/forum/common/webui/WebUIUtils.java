@@ -36,15 +36,15 @@ import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
  * Jul 22, 2011  
  */
 public class WebUIUtils {
-  private static Log log = ExoLogger.getLogger(WebUIUtils.class);
-  
+  private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
+
   public static String getRemoteIP() {
     String remoteAddr = "";
     try {
       PortalRequestContext context = Util.getPortalRequestContext();
       remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
     } catch (Exception e) { 
-      log.error("Can not get remote IP", e);
+      LOG.error("Can not get remote IP", e);
     }
     return remoteAddr;
   }
@@ -71,4 +71,5 @@ public class WebUIUtils {
       return label;
     }
   }
+  
 }

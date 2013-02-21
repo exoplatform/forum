@@ -55,6 +55,8 @@ public class Category {
   private long     forumCount = 0;
 
   private String[] emailNotification;
+  
+  private boolean includedSpace = false;
 
   public Category(String id) {
     this.id = id;
@@ -196,5 +198,13 @@ public class Category {
 
   public void setEmailNotification(String[] emailNotification) {
     this.emailNotification = emailNotification;
+  }
+
+  public boolean isIncludedSpace() {
+    return includedSpace;
+  }
+
+  public void setIncludedSpace(boolean includedSpace) {
+    this.includedSpace = includedSpace;
   }
 }

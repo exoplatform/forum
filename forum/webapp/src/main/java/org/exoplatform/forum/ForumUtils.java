@@ -108,6 +108,10 @@ public class ForumUtils {
 
   public static final long   MAXMESSAGE              = 10000;
 
+  public static final String HAS_CREATE_TOPIC         = "hasCreateTopic";
+
+  public static final String HAS_CREATE_POLL          = "hasCreatePoll";
+
   private static String buildForumLink(String url, String type, String id) {
     StringBuilder link = new StringBuilder(url);
     if (!isEmpty(type) && !isEmpty(id)) {

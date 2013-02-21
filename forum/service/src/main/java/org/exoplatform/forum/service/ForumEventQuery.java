@@ -49,6 +49,8 @@ public class ForumEventQuery implements ForumNodeTypes {
 
   private Calendar toDateCreatedLastPost;
 
+  private boolean  isStartWith    = false;
+
   private boolean  isAnd          = false;
 
   private boolean  isEmpty        = true;
@@ -209,6 +211,14 @@ public class ForumEventQuery implements ForumNodeTypes {
     this.toDateCreatedLastPost = toDateCreatedLastPost;
   }
 
+  public boolean isStartWith() {
+    return isStartWith;
+  }
+
+  public void setStartWith(boolean isStartWith) {
+    this.isStartWith = isStartWith;
+  }
+
   public boolean getIsEmpty() {
     return this.isEmpty;
   }
@@ -228,10 +238,16 @@ public class ForumEventQuery implements ForumNodeTypes {
     StringBuffer stringBuffer = new StringBuffer();
     stringBuffer.append("[");
     if (keyValue != null && keyValue.length() > 0) {
+      String xpath = "jcr:contains";
+      if(isStartWith) {
+        //jcr:like(@jcr:title, 'P%')";
+        xpath = "jcr:like";
+        keyValue += "%"; 
+      }
       if (VALUE_IN_TITLE.equals(valueIn)) {
-        stringBuffer.append("(jcr:contains(@").append(EXO_NAME).append(", '").append(keyValue).append("'))");
+        stringBuffer.append("(").append(xpath).append("(@").append(EXO_NAME).append(", '").append(keyValue).append("'))");
       } else {
-        stringBuffer.append("(jcr:contains(., '").append(keyValue).append("'))");
+        stringBuffer.append("(").append(xpath).append("(., '").append(keyValue).append("'))");
       }
       isAnd = true;
     }
