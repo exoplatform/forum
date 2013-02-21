@@ -3,7 +3,7 @@
 	<% if(uicomponent.isRenderChild) { %>
 	<%List children = uicomponent.getChildren() ;%>
 	
-			<div id="FAQViewCategoriesColumn" class="FAQViewCategoriesColumn leftColumn pull-left"><%uicomponent.renderChild(children.get(2).getClass());%></div>
+			<div id="FAQViewCategoriesColumn" class="faqViewCategoriesColumn leftColumn pull-left"><%uicomponent.renderChild(children.get(2).getClass());%></div>
 			<div class="resize pull-left">
 				<div class="line"><i class="uiIconMiniArrowLeft"></i></div>
 			</div>

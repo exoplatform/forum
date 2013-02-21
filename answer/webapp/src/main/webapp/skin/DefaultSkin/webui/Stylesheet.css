@@ -10,7 +10,7 @@
 	min-width: 900px;
 	border: none;
 }
-
+/*
 .UIAnswersPortlet {
 	background: white;
 	padding: 5px;
@@ -47,7 +47,7 @@
 	padding: 0px;
 	list-style-type: none;
 }
-
+*/
 /******************************************** UIRightClickPopupMenu ****************************************/
 .UIAnswersPortlet .UIRightClickPopupMenu {
 	background: none repeat scroll 0 0 #FFFFFF;

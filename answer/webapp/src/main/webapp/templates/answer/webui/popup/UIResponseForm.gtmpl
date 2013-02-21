@@ -4,36 +4,28 @@
   def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.setSelectboxOnchange('"+ uicomponent.id +"');");
 %>
-<div class="UIResponse $uicomponent.id">
+<div class="uiResponseForm" id="$uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="*width:93%;">
-			<div class="UIFormInput">
-				<table class="UIFormGrid" style="width:100%">
-					<tbody>
-						<tr>
-							<td class="FieldLabel" style="white-space:nowrap; width:15%">
-								<%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :
-							</td>
-							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.render(uicomponent.questionContent)%></td>
-						</tr>
+		<div class="form-horizontal resizable">
+						<div class="control-group">
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :</label>
+							<div class="controls"><%=uicomponent.render(uicomponent.questionContent)%></div>
+						</div>
 						
-						<tr>
-							<td class="FieldLabel" style="white-space:nowrap; width:15%">
-								<%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :
-							</td>
-							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.render(uicomponent.questionDetail)%></td>
-						</tr>
+						<div class="control-group">
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :</label>
+							<div class="controls"><%=uicomponent.render(uicomponent.questionDetail)%></div>
+						</div>
 					<% 
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
 					%>
-						<tr>
+						<div class="control-group">
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel" style="white-space:nowrap; width:15%">
-									<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
-								</td>
-								<td class="FieldComponent" style="width:85%">
+								<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+							
+								<div class="controls">
 									<%if(field.getName().equals("QuestionRelation")){ 
 											String link = uicomponent.event("AddRelation") ;
 									%>
@@ -53,18 +45,18 @@
 									<%} else {%>
 											<% uiform.renderField(field) %><br/>
 									<%}%>
-								</td>
+								</div>
 							<%} else {%>
-								<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+								<div class="controls-full"><% uiform.renderField(field) %></div>
 							<%}%>
-						</tr>
+						</div>
 					<%}
 					}
 					if(uicomponent.isModerator) {
 					%>
-						<tr>
-							<td style="text-align:right"><%=_ctx.appRes("UIResponseForm.label.Relation")%>  :&nbsp;</td>
-							<td>
+						<div class="control-group">
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.Relation")%>  :&nbsp;</label>
+							<div class="controls">
 								<div class="ItemIcon AddIcon" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>"><span></span></div><br/>
 								<div style="width:100%; margin-top:10px;">
 									<%
@@ -83,22 +75,20 @@
 										</div>
 								<%}%>
 								</div>
-							</td>
-						</tr>
+							</div>
+						</div>
 					<%} %>
-					</tbody>
-				</table>
-			</div>
+		</div>
 			
-			<div class="UIAction">
+		<div class="uiAction uiActionBorder">
       <% for(action in uicomponent.getActions()) { 
 		        	 String actionLabel = _ctx.appRes("UIResponseForm.action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$link" class="btn">$actionLabel</button>
       <%}%>
     </div>
-		</div>
+		
 	<%uiform.end()%>
 </div>
 

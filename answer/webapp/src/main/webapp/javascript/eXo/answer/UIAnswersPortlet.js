@@ -24,7 +24,7 @@
   UIAnswersPortlet.updateContainersHeight = function () {
     var viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.CategoriesContainer');
     if(!viewQuestionContentEl.exists()) viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.ViewQuestionContent');
-    viewQuestionContentEl.css('height', viewQuestionContentEl.height() - 67);
+    //viewQuestionContentEl.css('height', viewQuestionContentEl.height() - 67);
   };
   
   UIAnswersPortlet.controlWorkSpace = function () {
