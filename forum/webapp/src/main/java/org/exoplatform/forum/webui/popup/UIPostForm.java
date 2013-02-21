@@ -175,8 +175,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
-      fileUpload.setActionType(ActionData.TYPE_ATT);
-      fileUpload.setCssIconClass("AttachmentIcon");
+      fileUpload.setActionType(ActionData.TYPE_LINK);
       String size = ForumUtils.getSizeFile(attachdata.getSize());
       fileUpload.setActionName(attachdata.getName() + "(" + size + ")");
       fileUpload.setShowLabel(true);
@@ -186,7 +185,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       removeAction.setActionName(ACT_REMOVE);
       removeAction.setActionParameter(attachdata.getId());
       removeAction.setActionType(ActionData.TYPE_ICON);
-      removeAction.setCssIconClass("DustBin");
+      removeAction.setCssIconClass("uiIconDelete uiIconLightGray");
       removeAction.setBreakLine(true);
       uploadedFiles.add(removeAction);
     }

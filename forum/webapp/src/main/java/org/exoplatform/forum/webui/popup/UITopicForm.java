@@ -279,8 +279,7 @@ public class UITopicForm extends BaseForumForm {
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
-      fileUpload.setActionType(ActionData.TYPE_ATT);
-      fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon");
+      fileUpload.setActionType(ActionData.TYPE_LINK);
       String fileName = ForumUtils.getSizeFile(attachdata.getSize());
       fileName = attachdata.getName() + "(" + fileName + ")";
       fileUpload.setActionName(fileName);
@@ -291,7 +290,7 @@ public class UITopicForm extends BaseForumForm {
       removeAction.setActionName(ACT_REMOVE);
       removeAction.setActionParameter(attachdata.getId());
       removeAction.setActionType(ActionData.TYPE_ICON);
-      removeAction.setCssIconClass("DustBin");
+      removeAction.setCssIconClass("uiIconDelete uiIconLightGray");
       removeAction.setBreakLine(true);
       uploadedFiles.add(removeAction);
     }
