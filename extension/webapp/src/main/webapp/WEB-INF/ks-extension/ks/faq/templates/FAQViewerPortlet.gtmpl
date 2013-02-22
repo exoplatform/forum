@@ -4,81 +4,197 @@
   
   def requireJS = _ctx.getRequestContext()
       .getJavascriptManager().require("SHARED/FaqPortlet", "faq");
+  
+  requireJS.addScripts("faq.focusQuestion();")
+  .addScripts("faq.createLink('$uicomponent.id', '$uicomponent.useAjax');")
+  .addScripts("faq.backtotop();");
 %>
 <div class="roundCornerBoxWithTitle">
-	<h5 class="titleBox">Cloud Workspace</h5>
+	<h5 class="titleBox"><%= uicomponent.getDisplaySpaceName(); %></h5>
 	<div class="faqCont">
-		<div id="UIWikiBreadCrumb" class="uiWikiBreadCrumb">
-			<ul class="breadcrumb">  
-				<li>
-					<a href="#">Technical FAQ</a>
-					<span class="uiIconMiniArrowRight">&nbsp;</span>
-				</li>
-				<li class="active">
-					Forum Troubleshooting
-				</li>
-			</ul>
-		</div>
+    <%
+      CategoryInfo cateInfo = uicomponent.getCategoryInfo();
+      if(cateInfo != null) {
+          List subCategoryInfos = cateInfo.getSubCateInfos();
+          List questionCates = cateInfo.getQuestionInfos();
+          
+          String path = cateInfo.getPath();
+          if(path == null || path.length() == 0){
+            path = Utils.CATEGORY_HOME;
+          }
+          String []ids = path.split("/");
+          List navPath = cateInfo.getPathName();
+          navPath = uicomponent.arrangeList(navPath);
+          if(navPath.size() > 1) {
+            print "<div id='UIWikiBreadCrumb' class='uiWikiBreadCrumb'>";
+  			    print "<ul class='breadcrumb'>";
+
+  			    String link = ids[0], viewName;
+            String url;
+            for(int i = 0; i < navPath.size(); i++) {
+              pathName = navPath[i];
+              if(pathName.equals(Utils.CATEGORY_HOME)){ 
+                pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
+                link = Utils.CATEGORY_HOME;
+              }
+              viewName = pathName;
+              if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
+                viewName = org.exoplatform.answer.webui.FAQUtils.getSubString(pathName, 40);
+              }
+              if(pathName.indexOf("<img") >= 0){
+                pathName = "";
+              }
+              if(i < ids.length && i > 0) {
+                link = link + "/" + ids[i];
+              }
+              
+              if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+                if(uicomponent.isInSpace() && link.equals(Utils.CATEGORY_HOME)) {
+                    url = "javaScript:void(0)";
+                  } else {
+                    url = uicomponent.url("ChangePath", link);
+                  }
+              }
+              
+              if(link == Utils.CATEGORY_HOME) {
+                  viewName = "FAQ home";
+              }
+              if(i == navPath.size() -1) {
+                print "<li class='active'>" + viewName + "</li>";
+              } else {
+                print "<li><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a></li>";
+                print "<span class='uiIconMiniArrowRight'>&nbsp;</span>";
+              }
+            }
+            
+            print "</ul></div>";
+          }
+    %>
+		
+    <!--  Questions -->
 		<div class="questionBlock">
 			<h4>Question</h4>
-			<ul class="viewerQuestion">
-				<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">What can I do with this?</a></li>
-				<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">Just another question?</a></li>
-			</ul>
+      <%for(questionCate in questionCates) { 
+        String question_ =  questionCate.getQuestion();
+        question_ = question_.replaceAll("<br/>", " ");
+        question_ = uicomponent.render(question_);
+        String id_ = questionCate.getId();
+    %>
+      <ul class="viewerQuestion">
+        <li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#${id_}" name="name${id_}">$question_</a></li>
+      </ul>
+    <%} %>
+
+      <%
+      for(categoryInfo in subCategoryInfos){ 
+          String categoryName = categoryInfo.getName();
+          List questionInfos = categoryInfo.getQuestionInfos();
+          List subCategories = categoryInfo.getSubCateInfos();
+      
+      %>    
 			<div class="questionList">
-				<h5><a href="#">General Questions</a></h5>
+        <h5>
+          <a href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
+          <%if (!subCategories.isEmpty()) {%>
+            <span>&#91;</span>
+          <%} 
+            int j = 0;
+            for(subCategory in subCategories) { 
+              String subCateName = subCategory.getName();
+              String subPath = subCategory.getPath();
+          %>
+          <a class="childItem" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+          <%
+             if(j != (subCategories.size-1)) {
+                 print "<span> | </span>";
+             }
+              j++;
+            }
+            if (!subCategories.isEmpty()) {
+          %>
+            <span>&#93;</span>
+          <%}%>
+        </h5>
 				<ul>
-					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">What does eXo Knowledge Suite contain?</a></li>
-					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">Why should I care about eXo KS?</a></li>
-					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">What is the relation between Answers & FAQ?</a></li>
-				</ul>
+          <%for(questionInfo in questionInfos) { 
+              String question = questionInfo.getQuestion();
+              question = uicomponent.render(question);
+              String id = questionInfo.getId();
+          %>
+					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#${id}">$question</a></li>
+				  <%} %>
+        </ul>
 			</div>
-			<div class="questionList">
-				<h5><a href="#">Technical FAQ</a>&nbsp;&nbsp; &nbsp;<span>&#91; &nbsp;</span><a href="#" class="childItem">Forum Troubleshooting</a>&nbsp;&nbsp;<span> | </span>&nbsp;&nbsp;<a href="#" class="childItem">FAQ Troubleshooting</a><span>&nbsp; &#93;</span></h5>
-				<ul>
-					<li><i class="uiIconMiniArrowRight uiIconLightGray"></i><a href="#">How do I install KS?</a></li>
-				</ul>
-			</div>
+      <%} %>
 		</div>
+    <!-- End Questions -->
+    
+    <!-- Answers -->
 		<div class="answersBlock">
 			<h4>Answers</h4>
-			<div class="viewerAnswer">	
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>What can I do with this?</h5>
-					<p class="description"><i>Maecenas porttitor erat blandit est tincidunt vel gravida arcu semper.</i></p>
-				</div>
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>Just another question?</h5>
-					<p class="answers">Be patient. During the private beta, we will review applications for private beta on a weekly basis. You will receive an automated email, when your request is processed.</p>
-				</div>
+      
+      <!-- Questions in current category -->
+			<div class="viewerAnswer">
+        <%for(questionCate in questionCates) { 
+            String question_ =  questionCate.getQuestion();
+            question_ = uicomponent.render(question_);
+            String id_ = questionCate.getId();
+            List answers_ = questionCate.getAnswers();
+            String questionDetail_ = uicomponent.render(questionCate.getDetail());
+        %>
+          <div>
+            <h5 class="titleWithBorder" name="$id_"><i class="uiIconMiniArrowDown uiIconLightGray"></i>$question_</h5>
+            <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) {
+                print "<div class='description'>" + questionDetail_ + "</div>";
+            }
+            %>
+            <%for(answer in answers_){ 
+              answer = uicomponent.render(answer);
+            %>
+              <div class="answers">$answer</div>
+            <%} %>
+          </div>
+        <% } %>	
 			</div>
 			
-			
-			<div class="answerList">
-				<h5>General Questions</h5>
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>What does eXo knowledge Suite contain?</h5>
-					<p class="description"><i>Cras convallis odio nec sapien hendrerit malesuada. Praesent arcu libero, egestas vitae feugiat ac, bibendum quis augue.</i></p>
-					<p class="answers">It is made of 2 apps: fgn hf hfhfgh</p>
-				</div>
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>Why should I care about eXo KS?</h5>
-					<p class="answers">Be patient. During the private beta, we will review applications for private beta on a weekly basis. You will receive an automated email, when your request is processed.</p>
-				</div>
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>What is the relation between Answers & FAQ?</h5>
-					<p class="description"><i>What restrictions currently apply to cloud worksaces comparing to using an on premise version of Platform ?</i></p>
-					<p class="answers"> Workspaces are limited to 20 users. If you need more, contact us.</p>
-				</div>
-			</div>
-			
-			<div class="answerList">
-				<h5>Technical FAQ</h5>
-				<div>
-					<h5 class="titleWithBorder"><i class="uiIconMiniArrowDown uiIconLightGray"></i>How do I install KS?</h5>
-					<p class="answers">We suggest you read following:</p>
-				</div>
-			</div>
+      <!-- Questions in sub-categories -->
+      <%for(categoryInfo in subCategoryInfos) { 
+        String categoryName = categoryInfo.getName();
+        List questionInfos = categoryInfo.getQuestionInfos();
+        String id = categoryInfo.getId();
+      %>
+      <div class="answerList">
+        <h5>$categoryName</h5>
+        <%for(questionInfo in questionInfos) {
+          String question = questionInfo.getQuestion();
+          question = uicomponent.render(question);
+          List answers = questionInfo.getAnswers();
+          String qsId = questionInfo.getId();
+          String questionDetail_ = uicomponent.render(questionInfo.getDetail());
+        %>
+          <div>
+            <h5 class="titleWithBorder" name="$qsId"><i class="uiIconMiniArrowDown uiIconLightGray"></i>$question</h5>
+            <%
+            if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) 
+            {
+              print "<div class='description'>" + questionDetail_+ "</div>";    
+            }
+            %>
+            <%for(answer in answers){ 
+            answer = uicomponent.render(answer);
+            %>
+             <div class="answers">$answer</div>
+            <%} %>                  
+          </div>
+        <% } %>
+      </div>
+      <% } %>
 		</div>
+    <!-- End Anwser -->
+    
+    <%} %>
 	</div>
 </div>
+<a rel="tooltip" onclick="" class="backtotop actionIcon pull-right" style="float: right; position: fixed; bottom: 35px; right: 30px;" href="javascript:void(0);">
+ <i class="uiIconMiniArrowRight uiIconLightGray"></i>
+</a>

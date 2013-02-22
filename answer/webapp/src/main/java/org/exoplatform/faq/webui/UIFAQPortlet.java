@@ -47,9 +47,21 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIFAQPortlet extends UIPortletApplication {
   private final static String SLASH     = "/".intern();
-
+  
   public UIFAQPortlet() throws Exception {
     addChild(UIViewer.class, null, null);
+  }
+  
+  public String getDisplaySpaceName() {
+      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+      PortletPreferences pref = pcontext.getRequest().getPreferences();
+      String url;
+      if ((url = pref.getValue(SpaceUtils.SPACE_URL, null)) != null) {
+        SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
+        Space space = sService.getSpaceByUrl(url);
+        return space.getDisplayName();
+      }
+      return null;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {

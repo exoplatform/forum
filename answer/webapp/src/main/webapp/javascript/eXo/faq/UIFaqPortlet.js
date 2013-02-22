@@ -27,6 +27,23 @@
           elm.parent()[0].scrollIntoView(true);
         }
       });
+    },
+    
+    backtotop: function() {
+    	$(".backtotop").hide();
+    	
+    	$(window).scroll(function() {
+    		if($(this).scrollTop() > 200) {
+    			$(".backtotop").fadeIn();
+    		} else {
+    			$(".backtotop").fadeOut();
+    		}
+    	});
+    	
+    	$(".backtotop").on('click', function() {
+    		 $("html, body").animate({ scrollTop: 150 }, "slow");
+    		 return false;
+    	});
     }
   };
   return FaqPortlet;

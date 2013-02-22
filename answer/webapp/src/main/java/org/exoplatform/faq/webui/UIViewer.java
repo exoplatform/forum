@@ -112,6 +112,10 @@ public class UIViewer extends UIContainer {
     }
     return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
   }
+  
+  String getDisplaySpaceName() {
+    return ((UIFAQPortlet)this.getParent()).getDisplaySpaceName();
+  }
 
   protected String render(String s) {
     Question question = new Question();
