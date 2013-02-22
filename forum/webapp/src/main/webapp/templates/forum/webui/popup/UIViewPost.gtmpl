@@ -21,76 +21,76 @@
 	List attachments = post.getAttachments() ;
 %>
 <% uiform.begin() %>
-<div class="UIViewPost resizable" id="SizeImage">
-	<div class="ViewContainer ImageContentContainer ClearFix">
-		<h6 class="PostViewIcon $classIcon">$title</h6>
-		<span class="PostTime">$postCreatedDate</span>
-		<div class="PostContent">
+<div class="uiViewPost resizable" id="SizeImage">
+	<div class="viewContainer clearfix">
+		<h6><i class="uiIconComment uiIconLightGray"></i> $title</h6>
+		<!-- <span class="PostTime">$postCreatedDate</span> -->
+		<div class="postContent">
 			$message
 		</div>
 	<% if(attachments != null && attachments.size() > 0) {
 			if(uicomponent.getIsViewUserInfo()) {
 	%>			
-					<h6 class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h6>
+					<h6 ><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h6>
 					<% for(attachment in attachments) {
 							 String titleFile = attachment.getName();
 							 String fileName = ForumUtils.getSubString(titleFile, 30);
 							 long sizeNumber = attachment.getSize() ;
 							 String size =ForumUtils.getSizeFile(sizeNumber) ;
 					%>
-						<div class="AttachmentBox">
-							<a class="AttachmentLabel AttachmentIcon WordIcon" rel="tooltip" data-placement="bottom" title="$titleFile" href="#">$fileName</a>
-							<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+						<div class="attachmentBox">
+							<a rel="tooltip" data-placement="bottom" title="$titleFile" href="#"><i class="uiIconAttach"></i> $fileName</a>
+							<div class="size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						</div>
 					<% } %>
 		<% 
 			} else {
 		%>
-						<h6 class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h6>
+					<h6><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h6>
 						
-						<%
-							for(attachment in attachments) {
-								 String urlFile = uicomponent.getFileSource(attachment) ;
-								 String titleFile = attachment.getName();
-								 String fileName = ForumUtils.getSubString(titleFile, 30);
-								 String unit = "Bytes" ;
-								 long sizeNumber = attachment.getSize() ;
-								 String size = ForumUtils.getSizeFile(sizeNumber);
-								 String typeFile = attachment.mimeType ;
-						%>
-								<div class="AttachmentBox">
-								<% if(typeFile.indexOf("image") >= 0) {
-									String attLink = uicomponent.getImageUrl(attachment.getPath());
-								%>
-									<a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt="$titleFile"/></a>
-									<div class="LabelBox">
-										<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
-										<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
-										<div class="Action">
-											<a class="Icon View" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>
-											<a class="Icon Download" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
-										</div>
-									</div>
-							<% } else {
-										String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+					<%
+						for(attachment in attachments) {
+							 String urlFile = uicomponent.getFileSource(attachment) ;
+							 String titleFile = attachment.getName();
+							 String fileName = ForumUtils.getSubString(titleFile, 30);
+							 String unit = "Bytes" ;
+							 long sizeNumber = attachment.getSize() ;
+							 String size = ForumUtils.getSizeFile(sizeNumber);
+							 String typeFile = attachment.mimeType ;
+					%>
+							<div class="attachmentBox">
+							<% if(typeFile.indexOf("image") >= 0) {
+								String attLink = uicomponent.getImageUrl(attachment.getPath());
 							%>
-									<a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
-									<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
-							<% }%>
+							<a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt="$titleFile"/></a>
+							<div class="LabelBox" style="border:solid 1px red">
+								<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile"><i class="uiIconAttach"></i> $fileName</a>
+								<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+								<div class="Action">
+									<a class="Icon View" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>
+									<a class="Icon Download" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
+								</div>
 							</div>
-						<% } %>
+						<% } else {
+									String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+						%>
+							<a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
+							<div class="size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+						<% }%>
+						</div>
+					<% } %>
 		<%
 			}
 		} %>
 	</div>
 </div>
 
-<div class="uiAction">
+<div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
            String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String link = uicomponent.event(action) ;
         %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn">$actionLabel</a>
       <%}%>
     </div>
 
