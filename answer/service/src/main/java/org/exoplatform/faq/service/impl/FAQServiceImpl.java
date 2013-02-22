@@ -1100,11 +1100,15 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      for (AnswerEventListener ae : listeners_) {
-        ae.removeAnswer(questionPath, answerId);
-      }
+      Answer answer = getAnswerById(questionPath, answerId);
+      String answerActivityId = getActivityIdForAnswer(questionPath, answer);
+      
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
       MultiLanguages.deleteAnswerQuestionLang(questionNode, answerId, language);
+      
+      for (AnswerEventListener ae : listeners_) {
+        ae.removeAnswer(questionPath, answerActivityId);
+      }
     } catch (Exception e) {
       log.error("Fail to delete " + answerId + " :", e);
     }

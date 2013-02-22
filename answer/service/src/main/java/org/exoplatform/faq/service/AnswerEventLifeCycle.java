@@ -38,7 +38,7 @@ public interface AnswerEventLifeCycle {
   
   public void removeQuestion(String questionActivityId);
   
-  public void removeAnswer(String questionId, String answerId);
+  public void removeAnswer(String questionId, String answerActivityId);
   
   public void removeComment(String questionActivityId, String commentActivityId, String questionPath);
   
