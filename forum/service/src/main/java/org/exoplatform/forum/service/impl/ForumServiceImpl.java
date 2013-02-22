@@ -332,6 +332,22 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Category removeCategory(String categoryId) throws Exception {
+    List<Forum> listForums = getForums(categoryId, null);
+    for (Forum forum : listForums) {
+      String forumId = forum.getId();
+      List<Topic> listTopics = getTopics(categoryId, forumId);
+      for (Topic topic : listTopics) {
+        String topicId = topic.getId();
+        String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+        for (ForumEventLifeCycle f : listeners_) {
+          if (topic.getIsPoll()) {
+            String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+            f.removeActivity(pollActivityId);
+          }
+          f.removeActivity(topicActivityId);
+        }
+      }
+    }
     return storage.removeCategory(categoryId);
   }
 
@@ -346,7 +362,33 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyForum(Forum forum, int type) throws Exception {
+    List<Topic> oldTopics = getTopics(forum.getCategoryId(), forum.getId());
+    List<Topic> editedTopics = new ArrayList<Topic>();
+    for (Topic topic : oldTopics) {
+      switch (type) {
+        case Utils.CLOSE: {
+          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+          editedTopic.setIsClosed(forum.getIsClosed());
+          topic.setIsClosed(!topic.getIsActiveByForum());
+          topic.setEditedIsClosed(editedTopic.getIsClosed());
+          editedTopics.add(topic);
+          break;
+        }
+        case Utils.LOCK: {
+          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+          editedTopic.setIsLock(forum.getIsLock());
+          topic.setEditedIsLock(editedTopic.getIsLock());
+          editedTopics.add(topic);
+          break;
+        }
+      }
+    }
     storage.modifyForum(forum, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Topic topic : editedTopics) {
+        f.updateTopic(topic);
+      }
+    }
   }
 
   /**
@@ -401,6 +443,18 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Forum removeForum(String categoryId, String forumId) throws Exception {
+    List<Topic> listTopics = getTopics(categoryId, forumId);
+    for (Topic topic : listTopics) {
+      String topicId = topic.getId();
+      String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+      for (ForumEventLifeCycle f : listeners_) {
+        if (topic.getIsPoll()) {
+          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+          f.removeActivity(pollActivityId);
+        }
+        f.removeActivity(topicActivityId);
+      }
+    }
     return storage.removeForum(categoryId, forumId);
   }
 
@@ -581,10 +635,10 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
     String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
-    String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
     Topic topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
       if (topic.getIsPoll()) {
+        String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
         f.removeActivity(pollActivityId);
       }
       f.removeActivity(topicActivityId);
@@ -654,7 +708,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.modifyPost(posts, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Post post : posts) {
-        f.updatePost(post);
+        f.updatePost(post, type);
       }
     }
   }

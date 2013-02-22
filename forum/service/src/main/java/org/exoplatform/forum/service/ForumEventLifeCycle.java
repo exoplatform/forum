@@ -105,6 +105,14 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void updatePost(Post post);
+  
+  /**
+   * This will be call after modify post
+   * @param post
+   * @param type
+   * @since 4.0
+   */
+  public void updatePost(Post post, int type);
 
   /**
    * This will be call after topics removed.
