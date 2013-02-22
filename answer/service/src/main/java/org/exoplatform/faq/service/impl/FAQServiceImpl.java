@@ -1100,7 +1100,7 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Answer answer = getAnswerById(questionPath, answerId);
+      Answer answer = getAnswerById(questionPath, answerId, language);
       String answerActivityId = getActivityIdForAnswer(questionPath, answer);
       
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath);
