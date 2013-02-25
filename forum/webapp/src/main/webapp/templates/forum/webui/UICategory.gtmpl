@@ -14,11 +14,11 @@
 	if(category == null) return ; 
 
 	String [] scripts = [
-							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
-	      			"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
-	      			"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
-	      			"eXo.forum.UIForumPortlet.goLastPost('top');",
-	      			"eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');"
+					"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
+					"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+					"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
+					"eXo.forum.UIForumPortlet.goLastPost('top');",
+					"eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');"
           	];
   ForumUtils.addScripts(null, null, scripts);
                
@@ -130,6 +130,7 @@
 						<th style="width:30px;">&nbsp;</th>
 						<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
 						<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+						<th style="width:175px;"><%=_ctx.appRes("UICategory.label.author");%></th>
 						<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<% if(isShowMenu){ %>
@@ -297,36 +298,36 @@
 										actionBookmark = uicomponent.event("ShareLink","topic//"+path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									}
 						 %>
-									<td >
-								 		<!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
-								 		<div class="ClearFix">
-										<%if(topicNewPost.getIsPoll()){%>
-										<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
-											<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" rel="tooltip" data-placement="bottom" title="This topic has a poll"><span></span></div>
-										</div>
-										<%} else {%>
-										<div class="LastPostIcon $topicNewPostIcon">
-											<span></span>
-										</div>
-										<%}%>
-								 		<div style="float: left;">
-								 			<% ++rCNB; %>
-								 			<%if(uicomponent.useAjax){%>
-										 			<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" rel="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+									<td>
+								 		<div class="clearfix">
+											<%if(topicNewPost.getIsPoll()){%>
+											<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
+												<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" rel="tooltip" data-placement="bottom" title="This topic has a poll"><span></span></div>
+											</div>
 											<%} else {%>
-										 			<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+											<div class="LastPostIcon $topicNewPostIcon">
+												<span></span>
+											</div>
 											<%}%>
-											<div id="UIPopupMenu${rCNB}" style="display:none;">
-												<ul rel="tooltip" data-placement="bottom" title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+											<div style="float: left;">
+												<% ++rCNB; %>
+												<%if(uicomponent.useAjax){%>
+														<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" rel="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+												<%} else {%>
+														<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+												<%}%>
+												<div id="UIPopupMenu${rCNB}" style="display:none;">
+													<ul rel="tooltip" data-placement="bottom" title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+												</div>
 											</div>
 										</div>
-										</div>
-										
+										<div class="DateTime">&nbsp;$dateTime</div>
+									</td>
+									<td>	
 										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 										<div class="LastPostInfos">
-											<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
+											<span><img src="<%=ForumSessionUtils.getUserAvatarURL(lastPostBy, null);%>" width="24px" height="24px"/>&nbsp;</span>
 											<a style="color:#058EE6;" href="javaScript:void(0)" class="UserMenuInfo">$screemNamePost</a>
-											<span class="DateTime">&nbsp;($dateTime)</span>
 											<div class="UIPopupInfoMenu">
                         <div class="UIPopupInfoContent">
                           <div class="Arrow"><span></span></div>
@@ -351,12 +352,14 @@
                       </div>
 											
 										</div>
+									</td>
 								<%} else { %>	
 									<td class="Tdbox" style="height:40px;">
 										 <%= _ctx.appRes("UICategory.label.availableTheard"); %>
-								<% } %>	
 									</td>
-									 <td class="Tdbox">$topicCount</td>
+									<td></td>
+								<% } %>	
+									<td class="Tdbox">$topicCount</td>
 									<td class="Tdbox">$postCount</td>
 								<% if(isShowMenu){ %>
 									<td isLock="$isLock" isClose="$isClose" class="Tdbox" onclick="eXo.forum.UIForumPortlet.selectItem(this.firstChild)"><% uicomponent.renderChild(forumId)%></td>

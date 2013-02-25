@@ -31,6 +31,16 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
+  <portlet>
+    <name>ForumPortlet</name>
+    <depends>
+      <module>UIForumPortlet</module>
+    </depends>
+    <depends>
+      <module>jquery</module>
+    </depends>
+  </portlet>
+
   <module>
     <name>UIForumPortlet</name>
     <script>
@@ -53,6 +63,33 @@
       <as>utils</as>
     </depends>
     <depends>
+      <module>navigation</module>
+    </depends>
+    <depends>
+      <module>bts_button</module>
+    </depends>
+    <depends>
+      <module>bts_collapse</module>
+    </depends>
+    <depends>
+      <module>bts_dropdown</module>
+    </depends>
+    <depends>
+      <module>bts_tab</module>
+    </depends>
+    <depends>
+      <module>bts_tooltip</module>
+    </depends>
+    <depends>
+      <module>uiForm</module>
+    </depends>
+    <depends>
+      <module>navigation</module>
+    </depends>
+    <depends>
+      <module>popupCategory</module>
+    </depends>
+    <depends>
       <module>webui-ext</module>
     </depends>
     <depends>
@@ -64,12 +101,6 @@
     <depends>
       <module>jquery</module>
       <as>gj</as>
-    </depends> 
-    <depends>
-      <module>navigation</module>
-    </depends>
-    <depends>
-      <module>popupCategory</module>
     </depends>
   </module>
 

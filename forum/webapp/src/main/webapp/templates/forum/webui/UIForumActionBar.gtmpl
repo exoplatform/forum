@@ -5,7 +5,7 @@
 	boolean isAdmin = (userProfile.getUserRole() == 0) ;
 	uicomponent.initJavaScripts();
 %>
-<div class="uiForumActionBar uiBox clearfix" id="UIForumActionBar">
+<div class="uiForumActionBar uiBox clearfix" id="${uicomponent.id}">
 	<ul >
 		<%	String[] actions = [""];
 			String[] iconActions = [""];
@@ -30,14 +30,14 @@
 				} else isAdm = false;
 		  if(!isAdm){
 		%>
-		  <li class="defaultStyle forumSeparatorLine" id="$action">
+		  <li class="defaultStyle forumSeparatorLine ControlButton" id="$action">
 			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
 				<i class="$icon"></i>
 				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 			</a>
 		  </li>
 		  <%} else {%>
-		  <li class="defaultStyle forumSeparatorLine" id="$action">
+		  <li class="defaultStyle forumSeparatorLine ControlButton" id="$action">
 			 <div class="dropdown uiDropdownWithIcon actionIcon">
 				<a data-toggle="dropdown">
 				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
@@ -65,22 +65,17 @@
 		   i = i + 1;
 		  %>
 		<% }%>
-		<li class="ScrollButtons" style="width:35px;">
-			<div rel="tooltip" data-placement="bottom" title="Previous">
-				<div rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
-			</div>
+		<li class="ScrollButtons clearfix" style="width:35px;">
+			<div class="ScrollLeftButton pull-left" rel="tooltip" data-placement="bottom" title="Previous"><span></span></div>
+			<div class="ScrollRightButton pull-left" rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
 		</li>
 	</ul>
 	<% 
 		long numberOfNewMessage = uicomponent.getNewMessage();
 		String priMessage="", pending="";
 		int total = 0;
-	%>
-	<ul class="pull-right">
-		<li>
-		
-	<%
-		if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
+
+		if(!UserHelper.isAnonim() && numberOfNewMessage >= 0) {
 			priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
 			String newMessage;
 			if(numberOfNewMessage > 0) {
@@ -88,6 +83,11 @@
 			} else {
 				newMessage = "<span>" + priMessage + "</span>" ;
 			}
+	%>
+
+	<ul class="pull-right" id="uiRightActionBar">
+		<li>	
+		<%
 			if(userProfile.getUserRole() <= 1) {
 				total = uicomponent.getTotalJobWattingForModerator();
 				pending = _ctx.appRes("UIBreadcumbs.label.Pending");
@@ -103,19 +103,16 @@
 					<i class="uiIconMail uiIconLightGray"></i> $newMessage
 				</a>
 			</div>
-			<% 
-				int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length();
-				lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
-				lengths = (total > 0)?lengths+3:lengths;
-			%>
-			<div id="lengthStr" style="display:none;" class="pull-right">$lengths</div>
-			<script type="text/javascript">
-				function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*7.2)+65) + "px"; document.getElementById('divWidth').style.width = ((l*7.2)+65) + "px";}
-				setWitdh();
-			</script>
-		<% } %>
 		</li>
 	</ul>
-
+		<script type="text/javascript">
+			function setWitdh(){ 
+			  var uiRightActionBar = document.getElementById('uiRightActionBar');
+				var l = (uiRightActionBar.innerText.length)*1+1; 
+				uiRightActionBar.style.width = ((l*6.5)+65) + "px"; 
+			}
+			setWitdh();
+		</script>
+<% } %>
 	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
 </div>

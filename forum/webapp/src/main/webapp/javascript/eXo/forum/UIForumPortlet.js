@@ -1,4 +1,4 @@
-(function(maskLayer, contextMenu, checkBoxManager, utils, $, window, document) {
+(function(maskLayer, contextMenu, utils, $, window, document) {
   var UIForumPortlet = {
     obj : null,
     event : null,
@@ -704,7 +704,7 @@
         uiNav.scrollMgr = new navigation.ScrollManager("UIForumActionBar");
         uiNav.scrollMgr.initFunction = uiNav.initScroll;
         uiNav.scrollMgr.mainContainer = container.find('td.ControlButtonContainer:first')[0];
-        uiNav.scrollMgr.arrowsContainer = container.find('div.ScrollButtons:first')[0];
+        uiNav.scrollMgr.arrowsContainer = container.find('li.ScrollButtons:first')[0];
         uiNav.scrollMgr.loadElements("ControlButton", true);
 
         var button = $(uiNav.scrollMgr.arrowsContainer).find('div');
@@ -974,5 +974,4 @@
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
   return UIForumPortlet;
-})(maskLayer, contextMenu, checkBoxManager, utils, gj, window, document);
-
+})(maskLayer, contextMenu, utils, gj, window, document);
