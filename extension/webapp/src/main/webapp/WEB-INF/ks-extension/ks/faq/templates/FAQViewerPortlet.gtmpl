@@ -195,6 +195,6 @@
     <%} %>
 	</div>
 </div>
-<a rel="tooltip" onclick="" class="backtotop actionIcon pull-right" style="float: right; position: fixed; bottom: 35px; right: 30px;" href="javascript:void(0);">
- <i class="uiIconMiniArrowRight uiIconLightGray"></i>
+<a rel="tooltip" onclick="" class="backtotop goUp pull-right" href="javascript:void(0);">
+ <i class="uiIconGoUp uiIconLightGray"></i>
 </a>

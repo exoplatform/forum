@@ -3,6 +3,21 @@
 
 .uiFAQPortlet {
 	padding: 20px;
+	.goUp {
+		background-color: #F9F9F9;
+	    background-image: linear-gradient(to bottom, #FFFFFF, #F1F1F1);
+	    background-repeat: repeat-x;
+	    border: 1px solid #CFCFCF;
+	    border-radius: 3px 3px 3px 3px;
+	    box-shadow: 0 1px 2px 0 #FFFFFF;
+	    float: right; 
+	    position: fixed; 
+	    bottom: 35px; 
+	    right: 30px;
+	    &:hover [class^="uiIcon"] {
+	    	background-image: url("/eXoResources/skin/images/Icons/uiIconsBlue.png");
+	    }
+	}
 }
 
 .faqCont {
@@ -13,10 +28,6 @@
 	.answersBlock [class^="uiIcon"] {
 		padding-left: 7px;
 	}
-	
-	li {
-		line-height: 30px;
-	}
 }
 
 .questionBlock, .answersBlock { 
@@ -26,6 +37,9 @@
 		line-height: 35px;
 		padding-left: 10px;
 	}
+	li {
+		line-height: 30px;
+	} 
 }
 
 .viewerQuestion, .viewerAnswer {
