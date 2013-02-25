@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
+import org.exoplatform.commons.api.search.data.SearchContext;
 import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -69,7 +70,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   }
 
   @Override
-  public Collection<SearchResult> search(String query, Collection<String> sites, int offset, int limit, String sort, String order) {
+  public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
 
     List<SearchResult> results = new ArrayList<SearchResult>();
 

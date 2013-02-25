@@ -77,16 +77,16 @@ public class DiscussionSearchConnectorTestCase extends AbstractJCRTestCase {
 
   public void testFilter() throws Exception {
     setUser("foo");
-    assertEquals(2, discussionSearchConnector.search("Post", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, discussionSearchConnector.search("A", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(2, discussionSearchConnector.search("message", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, discussionSearchConnector.search("B message", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(null, "Post", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(1, discussionSearchConnector.search(null, "A", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(null, "message", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(1, discussionSearchConnector.search(null, "B message", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
 
   }
 
   public void testData() throws Exception {
     setUser("foo");
-    List<SearchResult> aResults = (List<SearchResult>) discussionSearchConnector.search("A", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
+    List<SearchResult> aResults = (List<SearchResult>) discussionSearchConnector.search(null, "A", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
     SearchResult aResult = aResults.get(0);
     assertEquals("Post A", aResult.getTitle());
     assertEquals("This is the A message", aResult.getExcerpt());
@@ -97,19 +97,19 @@ public class DiscussionSearchConnectorTestCase extends AbstractJCRTestCase {
 
   public void testOrder() throws Exception {
     setUser("foo");
-    List<SearchResult> rTitleAsc = (List<SearchResult>) discussionSearchConnector.search("Post", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    List<SearchResult> rTitleAsc = (List<SearchResult>) discussionSearchConnector.search(null, "Post", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     assertEquals("Post A", rTitleAsc.get(0).getTitle());
     assertEquals("Post B", rTitleAsc.get(1).getTitle());
 
-    List<SearchResult> rTitleDesc = (List<SearchResult>) discussionSearchConnector.search("Post", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
+    List<SearchResult> rTitleDesc = (List<SearchResult>) discussionSearchConnector.search(null, "Post", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
     assertEquals("Post B", rTitleDesc.get(0).getTitle());
     assertEquals("Post A", rTitleDesc.get(1).getTitle());
 
-    List<SearchResult> rDateAsc = (List<SearchResult>) discussionSearchConnector.search("Post", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
+    List<SearchResult> rDateAsc = (List<SearchResult>) discussionSearchConnector.search(null, "Post", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
     assertEquals("Post A", rDateAsc.get(0).getTitle());
     assertEquals("Post B", rDateAsc.get(1).getTitle());
 
-    List<SearchResult> rDateDesc = (List<SearchResult>) discussionSearchConnector.search("Post", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
+    List<SearchResult> rDateDesc = (List<SearchResult>) discussionSearchConnector.search(null, "Post", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
     assertEquals("Post B", rDateDesc.get(0).getTitle());
     assertEquals("Post A", rDateDesc.get(1).getTitle());
   }
