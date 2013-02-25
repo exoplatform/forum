@@ -2,7 +2,7 @@
 	_ctx.getRequestContext().getJavascriptManager().require("SHARED/uiForm");
 %>
 <style>
-.Action .DisableButton {
+.uiAction .DisableButton {
   color: gray;
   background: #E7E7E7;
   cursor: auto;
@@ -50,7 +50,7 @@
       </div>
     </div>
     <center>
-	    <div class="Action uiActionBorder">
+       <div class="uiAction uiActionBorder">
 	  <% for(action in uicomponent.getActions()) { 
 	           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
 	           String link = uicomponent.event(action);
@@ -60,9 +60,11 @@
 	             clazz = " DisableButton";
 	           }
 	        %>
-	      <input type="button" onclick="$link" class="btn$clazz" value="$actionLabel"/>
+
+	      <input type="button" onclick="$link" class="btn $clazz" value="$actionLabel"/>
+
 	      <%}%>
-	    </div>
+        </div>
     </center>
   <%uiform.end()%>
 </div>
