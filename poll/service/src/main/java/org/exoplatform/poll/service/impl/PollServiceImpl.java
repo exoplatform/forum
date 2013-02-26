@@ -26,12 +26,10 @@ import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.Poll.PollAction;
 import org.exoplatform.poll.service.PollEventLifeCycle;
 import org.exoplatform.poll.service.PollEventListener;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.poll.service.Utils;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -80,25 +78,9 @@ public class PollServiceImpl implements Startable, PollService {
   }
 
   public void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception {
-    if (!isVote) {
-      if (isNew) {
-        poll.setPollAction(PollAction.Create_Poll);
-      } else {
-        poll.setPollAction(PollAction.Update_Poll);
-      }
-    } else {
-        Poll oldPoll = getPoll(poll.getId());
-        int oldVoters = oldPoll.getUserVote().length;
-        int newVoters = poll.getUserVote().length;
-        boolean isVoteAgain = (oldVoters == newVoters);
-        poll.setPollAction(PollAction.Vote_Poll);
-        if(isVoteAgain) {
-          poll.setPollAction(PollAction.Vote_Again_Poll);
-        }
-    }
     storage_.savePoll(poll, isNew, isVote);
     for (PollEventLifeCycle f : listeners_) {
-      f.savePoll(poll);
+      f.savePoll(poll, isNew, isVote);
     }
   }
   

@@ -20,7 +20,7 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 
 public abstract class PollEventListener extends BaseComponentPlugin implements PollEventLifeCycle {
   
-  public abstract void savePoll(Poll poll);
+  public abstract void savePoll(Poll poll, boolean isNew, boolean isVote);
   
   public abstract void closePoll(Poll poll);
   

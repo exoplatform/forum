@@ -21,9 +21,11 @@ public interface PollEventLifeCycle {
   /**
    * This will be call after save poll
    * @param poll
+   * @param isNew
+   * @param isVote
    */
 
-  public void savePoll(Poll poll);
+  public void savePoll(Poll poll, boolean isNew, boolean isVote);
   
   /**
    * This will be call after close poll
