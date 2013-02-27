@@ -175,7 +175,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         .siteType(siteType)
         .path(path)
         .renderLink();
-    return String.format("/%s%s", siteType, forumURI);
+    return String.format("/%s%s", portalName, forumURI);
   }
   
   /**
@@ -220,7 +220,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         .siteType(siteType)
         .path(path)
         .renderLink();
-    return String.format("/%s%s", siteType, forumURI);
+    return String.format("/%s%s", portalName, forumURI);
   }
   
   
