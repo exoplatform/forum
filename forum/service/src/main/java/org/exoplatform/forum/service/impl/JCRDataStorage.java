@@ -5572,15 +5572,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         queryString.append("]");
 
         if (type.equals(Utils.POST)) {
-          if ("date".equals(sort)) {
+          if ("date".equalsIgnoreCase(sort)) {
             queryString.append(" order by @").append(EXO_CREATED_DATE);
-          } else if ("title".equals(sort) || "relevancy".equals(sort) || Utils.isEmpty(sort)) {
+          } else if ("title".equalsIgnoreCase(sort) || "relevancy".equalsIgnoreCase(sort) || Utils.isEmpty(sort)) {
             queryString.append(" order by @").append(EXO_NAME);
           }
 
-          if ("DESC".equals(order)) {
+          if ("DESC".equalsIgnoreCase(order)) {
             queryString.append(DESCENDING);
-          } else if ("ASC".equals(order)) {
+          } else if ("ASC".equalsIgnoreCase(order)) {
             queryString.append(ASCENDING);
           } else if (Utils.isEmpty(order)) {
             queryString.append(ASCENDING); // If no ascending but sort value : apply ascending as default value

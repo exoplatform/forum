@@ -16,9 +16,11 @@
  */
 package org.exoplatform.faq.service.search;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import org.exoplatform.commons.api.search.data.SearchContext;
 import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
@@ -30,6 +32,10 @@ import org.exoplatform.faq.service.DataStorage;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.web.controller.metadata.ControllerDescriptor;
+import org.exoplatform.web.controller.metadata.DescriptorBuilder;
+import org.exoplatform.web.controller.router.Router;
+import org.exoplatform.web.controller.router.RouterConfigException;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,6 +44,9 @@ import org.exoplatform.faq.service.Utils;
  * Feb 21, 2013  
  */
 public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
+  private final static String CONTROLLER_PATH = "conf/standalone/controller.xml";
+  private SearchContext context;
+  private Router router;
 
   public AnswerSearchConnectorTestCase() throws Exception {
     super();
@@ -48,6 +57,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
+    loadController();
 
     //
     Category cat = createCategory("Category A", 0);
@@ -90,43 +100,61 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
 
   @Override
   public void tearDown() throws Exception {
+    context = null;
+    router = null;
     super.tearDown();
   }
 
   public void testFilter() throws Exception {
-    assertEquals(3, answerSearchConnector.search(null, "Questiontest", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(2, answerSearchConnector.search(null, "foo", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(null, "reponses", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(null, "comment", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(3, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(2, answerSearchConnector.search(context, "foo", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
 
   }
 
   public void testData() throws Exception {
-    List<SearchResult> aResults = (List<SearchResult>) answerSearchConnector.search(null, "kool", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
+    List<SearchResult> aResults = (List<SearchResult>) answerSearchConnector.search(context, "kool", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
     questionTest = faqService_.getQuestionById(questionTest.getId());
     SearchResult aResult = aResults.get(0);
     assertEquals(questionTest.getQuestion(), aResult.getTitle());
     assertEquals(questionTest.getDetail(), aResult.getExcerpt());
-    assertEquals("", aResult.getUrl());
+    String url = aResult.getUrl();
+    
+    assertTrue(url.indexOf("/portal/classic/answers/?&questionId=") >= 0);
     assertEquals(questionTest.getCreatedDate().getTime(), aResult.getDate());
   }
 
   public void testOrder() throws Exception {
-    List<SearchResult> rTitleAsc = (List<SearchResult>) answerSearchConnector.search(null, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    List<SearchResult> rTitleAsc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     assertEquals("Questiontest B", rTitleAsc.get(0).getTitle());
     assertEquals("Questiontest C", rTitleAsc.get(1).getTitle());
 
-    List<SearchResult> rTitleDesc = (List<SearchResult>) answerSearchConnector.search(null, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
+    List<SearchResult> rTitleDesc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
     assertEquals("Questiontest kool 1", rTitleDesc.get(0).getTitle());
     assertEquals("Questiontest C", rTitleDesc.get(1).getTitle());
 
-    List<SearchResult> rDateAsc = (List<SearchResult>) answerSearchConnector.search(null, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
+    List<SearchResult> rDateAsc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
     assertEquals("Questiontest kool 1", rDateAsc.get(0).getTitle());
     assertEquals("Questiontest B", rDateAsc.get(1).getTitle());
 
-    List<SearchResult> rDateDesc = (List<SearchResult>) answerSearchConnector.search(null, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
+    List<SearchResult> rDateDesc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
     assertEquals("Questiontest C", rDateDesc.get(0).getTitle());
     assertEquals("Questiontest B", rDateDesc.get(1).getTitle());
+  }
+  
+  private void loadController() throws Exception {
+    ClassLoader loader = getClass().getClassLoader();
+    InputStream in = loader.getResourceAsStream(CONTROLLER_PATH);
+    try {
+      ControllerDescriptor routerDesc = new DescriptorBuilder().build(in);
+      router = new Router(routerDesc);
+      context = new SearchContext(router);
+    } catch (RouterConfigException e) {
+      log.info(e.getMessage());
+    } finally {
+      in.close();
+    }
   }
 
 }

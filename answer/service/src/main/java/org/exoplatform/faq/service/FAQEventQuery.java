@@ -637,15 +637,15 @@ public class FAQEventQuery implements FAQNodeTypes {
     queryString.append("]"); // close property constraint
 
     // order
-      if ("date".equals(sort)) {
+      if ("date".equalsIgnoreCase(sort)) {
         queryString.append(" order by @").append(EXO_CREATED_DATE);
-      } else if ("title".equals(sort) || "relevancy".equals(sort) || CommonUtils.isEmpty(sort)) {
+      } else if ("title".equalsIgnoreCase(sort) || "relevancy".equalsIgnoreCase(sort) || CommonUtils.isEmpty(sort)) {
         queryString.append(" order by @").append(EXO_TITLE);
       }
 
-      if ("DESC".equals(order)) {
+      if ("DESC".equalsIgnoreCase(order)) {
         queryString.append(DESCENDING);
-      } else if ("ASC".equals(order)) {
+      } else if ("ASC".equalsIgnoreCase(order)) {
         queryString.append(ASCENDING);
       } else {
         queryString.append(ASCENDING);

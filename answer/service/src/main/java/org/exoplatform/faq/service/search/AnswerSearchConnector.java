@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
@@ -20,7 +22,8 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.config.UserPortalConfig;
+import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.navigation.NavigationContext;
@@ -29,15 +32,11 @@ import org.exoplatform.portal.mop.navigation.NodeContext;
 import org.exoplatform.portal.mop.navigation.NodeModel;
 import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.portal.mop.user.UserNavigation;
-import org.exoplatform.portal.mop.user.UserNode;
-import org.exoplatform.portal.mop.user.UserPortal;
-import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.portal.mop.user.UserPortalContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.resources.LocaleConfigService;
-import org.exoplatform.web.application.RequestContext;
-import org.exoplatform.web.url.navigation.NavigationResource;
-import org.exoplatform.web.url.navigation.NodeURL;
+import org.exoplatform.services.security.ConversationState;
 
 /**
  * Created by The eXo Platform SAS
@@ -52,7 +51,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
 
   private static final String ANSWER_PORTLET_NAME     = "AnswerPortlet";
 
-  private static final String ANSWER_PAGE_NAGVIGATION = "answer";
+  private static final String ANSWER_PAGE_NAGVIGATION = "answers";
 
   private JCRDataStorage storage;
   private LocaleConfigService localeConfigService;
@@ -72,6 +71,11 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   @Override
   public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
 
+    String siteName = (sites == null || sites.isEmpty()) ? "" : sites.iterator().next();
+    ExoContainerContext eXoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer()
+        .getComponentInstanceOfType(ExoContainerContext.class);
+    String portalName = eXoContext.getPortalContainerName();
+    
     List<SearchResult> results = new ArrayList<SearchResult>();
 
     FAQEventQuery eventQuery = new FAQEventQuery();
@@ -81,7 +85,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     eventQuery.setQuestion(query);
     eventQuery.setResponse(query);
     
-    eventQuery.setUserId(UserHelper.getCurrentUser());
+    eventQuery.setUserId(getCurrentUserName());
     eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
     eventQuery.setLanguageLevelSearch(false);
     
@@ -107,9 +111,9 @@ public class AnswerSearchConnector extends SearchServiceConnector {
         sb.append(" - ").append(searchResult.getNumberOfComment()).append(" comments");
         sb.append(" - ").append(searchResult.getRatingOfQuestion());
         sb.append(" - ").append(searchResult.getCreatedDate());
+        String url = buildLink(context, portalName, searchResult.getPath(), siteName, searchResult.getLink()); 
         SearchResult result = new SearchResult(
-            //TODO: Wait for unified search context to build link.
-            "", //buildLink(searchResult.getPath()),
+            url,
             searchResult.getName(),
             searchResult.getDescription(),
             sb.toString(),
@@ -128,62 +132,117 @@ public class AnswerSearchConnector extends SearchServiceConnector {
 
   
   /**
-   * 
+   * @param context
+   * @param portalName
    * @param questionPath
+   * @param siteName
+   * @param defaultLink
    * @return
    */
-  public static String buildLink(String questionPath) {
-    return buildLink(questionPath, null);
+  public static String buildLink(SearchContext context, String portalName, String questionPath, String siteName, String defaultLink) {
+    try {
+      String answersURI = "#";
+      String categoryId = getCategoryId(questionPath);
+      String questionId = questionPath.substring(questionPath.indexOf(Question.QUESTION_ID));
+      
+      if (categoryId.indexOf(Utils.CATE_SPACE_ID_PREFIX) == 0) {
+        answersURI = makeURIForSpaceContext(context, portalName, categoryId);
+      } else {
+        answersURI = makeURIForPortalContext(context, portalName, categoryId, siteName);
+      }
+      if(!CommonUtils.isEmpty(answersURI)){
+        answersURI = String.format("%s/%s%s", answersURI, Utils.QUESTION_ID, questionId);
+      } else {
+        return defaultLink;
+      }
+
+      //
+      return answersURI;
+    } catch (Exception ex) {
+      return "#";
+    }
+  }
+  
+  /**
+   * @param context
+   * @param portalName
+   * @param categoryId
+   * @param siteName
+   * @return
+   * @throws Exception
+   */
+  private static String makeURIForPortalContext(SearchContext context, String portalName, String categoryId, String siteName) throws Exception {
+    //
+    String path = "";
+    String siteType = "";
+    
+    UserPortalConfig prc = getUserPortalConfig();
+    
+    //
+    
+    siteName = CommonUtils.isEmpty(siteName) ? prc.getPortalConfig().getName() : siteName;
+    SiteKey siteKey = SiteKey.portal(siteName);
+    
+    //
+    siteType = SiteType.PORTAL.getName();
+    
+    //
+    path = getSiteName(siteKey);
+    
+    //
+    if (CommonUtils.isEmpty(path)) {
+      return CommonUtils.EMPTY_STR;
+    }
+    
+    String forumURI = context.handler(portalName)
+        .lang("")
+        .siteName(siteName)
+        .siteType(siteType)
+        .path(path)
+        .renderLink();
+    return String.format("/%s%s", siteType, forumURI);
+  }
+
+  /**
+   * @param context
+   * @param portalName
+   * @param categoryId
+   * @return
+   * @throws Exception
+   */
+  private static String makeURIForSpaceContext(SearchContext context, String portalName, String categoryId) throws Exception {
+    
+    String groupId = categoryId.replace(Utils.CATE_SPACE_ID_PREFIX, CommonUtils.EMPTY_STR);
+    String spaceGroupId = String.format("%s/%s", SPACES_GROUP, groupId);
+    SiteKey siteKey = SiteKey.group(spaceGroupId);
+    //
+    String siteName = spaceGroupId.replaceAll("/", ":");
+    
+    //
+    String siteType = SiteType.GROUP.getName();
+    
+    //
+    String forumNavName = getSiteName(siteKey);
+    //
+    if (CommonUtils.isEmpty(forumNavName)) {
+      return CommonUtils.EMPTY_STR;
+    }
+    String path = groupId + "/" + forumNavName;
+    
+    String forumURI = context.handler(portalName)
+        .lang("")
+        .siteName(siteName)
+        .siteType(siteType)
+        .path(path)
+        .renderLink();
+    return String.format("/%s%s", siteType, forumURI);
+    
   }
 
   /**
    * @param questionPath
-   * @param siteName
    * @return
    */
-  public static String buildLink(String questionPath, String siteName) {
-    try {
-      String link = "";
-      String categoryId = getCategoryId(questionPath);
-      String questionId = questionPath.substring(questionPath.indexOf(Question.QUESTION_ID));
-      //
-      if (categoryId.indexOf(Utils.CATE_SPACE_ID_PREFIX) == 0) {
-        String spaceGroupId = String.format("%s/%s", SPACES_GROUP, categoryId.replace(Utils.CATE_SPACE_ID_PREFIX, CommonUtils.EMPTY_STR));
-        link = buildSpaceLink(spaceGroupId, questionId);
-      } else {
-        PortalRequestContext prc = Util.getPortalRequestContext();
-
-        if (!CommonUtils.isEmpty(siteName) && !prc.getSiteKey().getName().equals(siteName)) {
-          SiteKey siteKey = SiteKey.portal(siteName);
-
-          String nodeURI = getSiteName(siteKey);
-
-          //
-          if (!CommonUtils.isEmpty(nodeURI)) {
-            String siteHomeLink = getSiteHomeURL(siteName, nodeURI);
-            link = String.format("%s/%s%s", siteHomeLink, Utils.QUESTION_ID, questionId);
-          }
-        } else {
-          UserPortal userPortal = prc.getUserPortal();
-          UserNavigation userNav = userPortal.getNavigation(prc.getSiteKey());
-          UserNode userNode = userPortal.getNode(userNav, Scope.ALL, null, null);
-
-          //
-          UserNode forumNode = userNode.getChild(ANSWER_PAGE_NAGVIGATION);
-          if (forumNode != null) {
-            String forumURI = getNodeURL(forumNode);
-            link = String.format("%s/%s%s", forumURI,Utils.QUESTION_ID, questionId);
-          }
-        }
-      }
-
-      //
-      return link;
-    } catch (Exception ex) {
-      return CommonUtils.EMPTY_STR;
-    }
-  }
-
   private static String getCategoryId(String questionPath) {
     String categoryId = Utils.CATEGORY_HOME;
     int i = questionPath.indexOf(Category.CATEGORY_ID);
@@ -193,38 +252,45 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     return categoryId;
   }
   
-  private static String getNodeURL(UserNode node) {
-    RequestContext ctx = RequestContext.getCurrentInstance();
-    NodeURL nodeURL = ctx.createURL(NodeURL.TYPE);
-    return nodeURL.setNode(node).toString();
+  /**
+   * Get user portal config.
+   * 
+   * @return
+   * @throws Exception
+   * @since 1.2.9
+   */
+  public static UserPortalConfig getUserPortalConfig() throws Exception {
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    UserPortalConfigService userPortalConfigSer = (UserPortalConfigService)
+                                                  container.getComponentInstanceOfType(UserPortalConfigService.class);
+
+    UserPortalContext NULL_CONTEXT = new UserPortalContext() {
+      public ResourceBundle getBundle(UserNavigation navigation) {
+        return null;
+      }
+
+      public Locale getUserLocale() {
+        return Locale.ENGLISH;
+      }
+    };
+    
+    String remoteId = getCurrentUserName();
+    UserPortalConfig userPortalCfg = userPortalConfigSer.
+                                     getUserPortalConfig(userPortalConfigSer.getDefaultPortal(), remoteId, NULL_CONTEXT);
+    return userPortalCfg;
   }
 
   /**
-   * @param spaceGroupId
-   * @param questionId
+   * @param siteKey
    * @return
-   * @throws Exception
    */
-  private static String buildSpaceLink(String spaceGroupId, String questionId) throws Exception {
-
-    String nodeURI = getSiteName(SiteKey.group(spaceGroupId));
-    
-    if (!CommonUtils.isEmpty(nodeURI)) {
-      String spaceLink = getSpaceHomeURL(spaceGroupId);
-      String objectLink = String.format("%s/%s/%s%s", spaceLink, nodeURI, Utils.QUESTION_ID, questionId);
-      return objectLink;
-    }
-
-    return CommonUtils.EMPTY_STR;
-  }
-
   private static String getSiteName(SiteKey siteKey) {
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-    NavigationService navService = (NavigationService) container.getComponentInstance(NavigationService.class);
-    NavigationContext nav = navService.loadNavigation(siteKey);
-    NodeContext<NodeContext<?>> parentNodeCtx = navService.loadNode(NodeModel.SELF_MODEL, nav, Scope.ALL, null);
+    try {
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      NavigationService navService = (NavigationService) container.getComponentInstance(NavigationService.class);
+      NavigationContext nav = navService.loadNavigation(siteKey);
+      NodeContext<NodeContext<?>> parentNodeCtx = navService.loadNode(NodeModel.SELF_MODEL, nav, Scope.ALL, null);
 
-    if (parentNodeCtx.getSize() >= 1) {
       Collection<NodeContext<?>> children = parentNodeCtx.getNodes();
       if (siteKey.getType() == SiteType.GROUP) {
         children = parentNodeCtx.get(0).getNodes();
@@ -233,43 +299,18 @@ public class AnswerSearchConnector extends SearchServiceConnector {
 
       NodeContext<?> child = null;
       while (it.hasNext()) {
-        child = it.next();
+        child = it.next();// answers, AnswerPortlet
         if (ANSWER_PAGE_NAGVIGATION.equals(child.getName()) || child.getName().indexOf(ANSWER_PORTLET_NAME) >= 0) {
-          break;
+          return child.getName();
         }
       }
-      return child.getName();
+      return CommonUtils.EMPTY_STR;
+    } catch (Exception e) {
+      return CommonUtils.EMPTY_STR;
     }
-    return CommonUtils.EMPTY_STR;
   }
-  
-  /**
-   * 
-   * @param portalName
-   * @param nodeURI
-   * @return
-   */
-  private static String getSiteHomeURL(String portalName, String nodeURI) {
 
-    NodeURL nodeURL = RequestContext.getCurrentInstance().createURL(NodeURL.TYPE);
-    NavigationResource resource = new NavigationResource(SiteType.PORTAL, portalName, nodeURI);
-
-    return nodeURL.setResource(resource).toString();
-  }
-  
-  /**
-   * Gets the space home url of a space.
-   * 
-   * @param spaceGroupId
-   * @return
-   * @since 4.0
-   */
-  private static String getSpaceHomeURL(String spaceGroupId) {
-    String permanentSpaceName = spaceGroupId.split("/")[2];
-
-    NodeURL nodeURL = RequestContext.getCurrentInstance().createURL(NodeURL.TYPE);
-    NavigationResource resource = new NavigationResource(SiteType.GROUP, spaceGroupId, permanentSpaceName);
-
-    return nodeURL.setResource(resource).toString();
+  public static String getCurrentUserName() {
+    return ConversationState.getCurrent().getIdentity().getUserId();
   }
 }

@@ -2925,7 +2925,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     objectResult.setNumberOfAnswer((int)reader.l(EXO_NUMBER_OF_PUBLIC_ANSWERS));
     objectResult.setNumberOfComment(getCommentSize(questionNode));
     objectResult.setRatingOfQuestion(reader.d(EXO_MARK_VOTE));
-
+    objectResult.setLink(reader.string(EXO_LINK));
     return objectResult;
   }
 

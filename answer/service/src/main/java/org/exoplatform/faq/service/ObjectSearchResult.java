@@ -40,6 +40,8 @@ public class ObjectSearchResult {
 
   private String icon;
 
+  private String link;
+
   private double ratingOfQuestion = 0;
 
   private int    numberOfAnswer   = 0;
@@ -215,5 +217,19 @@ public class ObjectSearchResult {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /**
+   * @return the link
+   */
+  public String getLink() {
+    return link;
+  }
+
+  /**
+   * @param link the link to set
+   */
+  public void setLink(String link) {
+    this.link = link;
   }
 }
