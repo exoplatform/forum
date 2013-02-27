@@ -139,7 +139,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @param defaultLink
    * @return
    */
-  public static String buildLink(SearchContext context, String portalName, String questionPath, String siteName, String defaultLink) {
+  private String buildLink(SearchContext context, String portalName, String questionPath, String siteName, String defaultLink) {
     try {
       String answersURI = "#";
       String categoryId = getCategoryId(questionPath);
@@ -171,7 +171,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @return
    * @throws Exception
    */
-  private static String makeURIForPortalContext(SearchContext context, String portalName, String categoryId, String siteName) throws Exception {
+  private String makeURIForPortalContext(SearchContext context, String portalName, String categoryId, String siteName) throws Exception {
     //
     String path = "";
     String siteType = "";
@@ -210,7 +210,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @return
    * @throws Exception
    */
-  private static String makeURIForSpaceContext(SearchContext context, String portalName, String categoryId) throws Exception {
+  private String makeURIForSpaceContext(SearchContext context, String portalName, String categoryId) throws Exception {
     
     String groupId = categoryId.replace(Utils.CATE_SPACE_ID_PREFIX, CommonUtils.EMPTY_STR);
     String spaceGroupId = String.format("%s/%s", SPACES_GROUP, groupId);
@@ -243,7 +243,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @param questionPath
    * @return
    */
-  private static String getCategoryId(String questionPath) {
+  private String getCategoryId(String questionPath) {
     String categoryId = Utils.CATEGORY_HOME;
     int i = questionPath.indexOf(Category.CATEGORY_ID);
     if (i > 0) {
@@ -259,7 +259,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @throws Exception
    * @since 1.2.9
    */
-  public static UserPortalConfig getUserPortalConfig() throws Exception {
+  private UserPortalConfig getUserPortalConfig() throws Exception {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     UserPortalConfigService userPortalConfigSer = (UserPortalConfigService)
                                                   container.getComponentInstanceOfType(UserPortalConfigService.class);
@@ -284,7 +284,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @param siteKey
    * @return
    */
-  private static String getSiteName(SiteKey siteKey) {
+  private String getSiteName(SiteKey siteKey) {
     try {
       ExoContainer container = ExoContainerContext.getCurrentContainer();
       NavigationService navService = (NavigationService) container.getComponentInstance(NavigationService.class);
@@ -310,7 +310,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     }
   }
 
-  public static String getCurrentUserName() {
+  private String getCurrentUserName() {
     return ConversationState.getCurrent().getIdentity().getUserId();
   }
 }
