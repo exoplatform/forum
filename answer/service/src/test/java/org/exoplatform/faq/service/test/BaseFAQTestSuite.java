@@ -19,6 +19,7 @@ package org.exoplatform.faq.service.test;
 import org.exoplatform.commons.testing.BaseExoContainerTestSuite;
 import org.exoplatform.commons.testing.ConfigTestCase;
 import org.exoplatform.faq.base.FAQServiceBaseTestCase;
+import org.exoplatform.faq.service.search.AnswerSearchConnectorTestCase;
 import org.exoplatform.faq.service.ws.FAQWebServiceTestCase;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,7 +42,8 @@ import org.junit.runners.Suite.SuiteClasses;
   FAQServiceUtilsTestCase.class,
   MultiLanguagesTestCase.class,
   InitialDataPluginTestCase.class,
-  FAQWebServiceTestCase.class
+  FAQWebServiceTestCase.class,
+  AnswerSearchConnectorTestCase.class
 })
 @ConfigTestCase(FAQServiceBaseTestCase.class)
 public class BaseFAQTestSuite extends BaseExoContainerTestSuite {

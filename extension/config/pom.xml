@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-extension</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.0-stabilization-SNAPSHOT</version>
   </parent>
   <artifactId>forum-extension-config</artifactId>
   <packaging>jar</packaging>
