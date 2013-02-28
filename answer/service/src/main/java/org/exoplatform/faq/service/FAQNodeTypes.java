@@ -189,4 +189,7 @@ public interface FAQNodeTypes {
 
   public static final String EMPTY_STR                    = "";
 
+  public static final String ASCENDING                    = " ascending";
+
+  public static final String DESCENDING                   = " descending";
 }

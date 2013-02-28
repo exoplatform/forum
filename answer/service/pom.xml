@@ -27,6 +27,10 @@
       <artifactId>jsr311-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
     </dependency>
@@ -69,6 +73,10 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
@@ -183,11 +191,6 @@
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
       <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.gatein.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

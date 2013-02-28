@@ -90,7 +90,7 @@ public class Answer {
   }
 
   public Answer(String currentAnswer, boolean isApprovetedAnswer) {
-    id = "Answer" + IdGenerator.generate();
+    id = ANSWER_ID + IdGenerator.generate();
     this.responseBy = currentAnswer;
     this.approvedAnswers = isApprovetedAnswer;
     this.activateAnswers = true;
