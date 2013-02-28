@@ -166,7 +166,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     try {
       ControllerDescriptor routerDesc = new DescriptorBuilder().build(in);
       router = new Router(routerDesc);
-      context = new SearchContext(router);
+      context = new SearchContext(router, "");
     } catch (RouterConfigException e) {
       log.info(e.getMessage());
     } finally {
