@@ -24,7 +24,7 @@
  										List searchResults = uicomponent.getSearchResults() ; 
  										if(searchResults != null && searchResults.size() > 0){
  											for(result in searchResults) {
-												String Id = result.getId();
+												String Id = result.getPath();
 												String name = result.getName() ;
 						 						String date = FAQUtils.getShortDateFormat(result.getCreatedDate());
 						 						String icon = result.getIcon() ;

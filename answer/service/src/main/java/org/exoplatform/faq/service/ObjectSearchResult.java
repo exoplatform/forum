@@ -30,12 +30,23 @@ import java.util.Date;
 public class ObjectSearchResult {
   private String id;
 
-  // private String path ;
+  private String path ;
+
   private String type;
 
   private String name;
 
+  private String description;
+
   private String icon;
+
+  private String link;
+
+  private double ratingOfQuestion = 0;
+
+  private int    numberOfAnswer   = 0;
+
+  private int    numberOfComment  = 0;
 
   private Date   createdDate;
 
@@ -136,5 +147,89 @@ public class ObjectSearchResult {
    */
   public void setIcon(String icon) {
     this.icon = icon;
+  }
+
+  /**
+   * @return the path
+   */
+  public String getPath() {
+    return path;
+  }
+
+  /**
+   * @param path the path to set
+   */
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  /**
+   * @return the ratingOfQuestion
+   */
+  public double getRatingOfQuestion() {
+    return ratingOfQuestion;
+  }
+
+  /**
+   * @param ratingOfQuestion the ratingOfQuestion to set
+   */
+  public void setRatingOfQuestion(double ratingOfQuestion) {
+    this.ratingOfQuestion = ratingOfQuestion;
+  }
+
+  /**
+   * @return the numberOfAnswer
+   */
+  public int getNumberOfAnswer() {
+    return numberOfAnswer;
+  }
+
+  /**
+   * @param numberOfAnswer the numberOfAnswer to set
+   */
+  public void setNumberOfAnswer(int numberOfAnswer) {
+    this.numberOfAnswer = numberOfAnswer;
+  }
+
+  /**
+   * @return the numberOfComment
+   */
+  public int getNumberOfComment() {
+    return numberOfComment;
+  }
+
+  /**
+   * @param numberOfComment the numberOfComment to set
+   */
+  public void setNumberOfComment(int numberOfComment) {
+    this.numberOfComment = numberOfComment;
+  }
+
+  /**
+   * @return
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * @param description
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  /**
+   * @return the link
+   */
+  public String getLink() {
+    return link;
+  }
+
+  /**
+   * @param link the link to set
+   */
+  public void setLink(String link) {
+    this.link = link;
   }
 }
