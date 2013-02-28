@@ -46,6 +46,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
 
   private Pattern pattern;
   private JCRDataStorage storage;
+  private String FIX_ICON = "/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
   private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
   
   public static final String  SPACES_GROUP           = "spaces";
@@ -91,7 +92,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
             post.getName(),
             post.getMessage(),
             sb.toString(),
-            topic.getIcon(),
+            FIX_ICON,
             post.getCreatedDate().getTime(),
             0);
         results.add(result);
