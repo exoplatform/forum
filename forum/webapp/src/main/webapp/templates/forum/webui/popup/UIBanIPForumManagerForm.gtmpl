@@ -5,41 +5,23 @@
 	String forumId = uicomponent.forumId.replaceAll("/",".") ;
 	String linkOp = uicomponent.event("OpenPosts", "OBJIP");
 %>
-<div class="UIBanIPForumManagerForm">
+<div class="uiBanIPForumManagerForm">
 	<% uiform.begin() %>
-  <div class="resizable">	
-	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
-		<div style="width:400px; margin:auto;">
-			<div class="UIQuickSearchForm ClearFix" style="padding:10px 0px;">
-				<div style="float:left;">
-					<label for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</label>
-					<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
-				</div>
+	<div class="resizable">	
+		<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="containerBanIp">
+			<div class="uiQuickSearchForm">
+				<span for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</span>
+				<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
 
 			</div>
-			<table class="uiGrid table table-hover table-striped" width="100%">
-				<tbody>
+			<table class="uiGrid table  table-hover table-striped">
+				<thead>
 					<tr>
-					  <th align="center" style="width: 200px;text-align:center;">IP</th>
-						<th>&nbsp;</th>
-					</tr>	
-					<tr style="background:#edf3ee">
-						<td class="FieldLabel">
-  						<table border="0" width="100%">
-  						  <tbody>
-  						    <tr>
-  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
-  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
-  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
-  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
-    							</tr>
-  						  </tbody>
-  						</table>
-						</td>
-						<td class="FieldLabel" align="center">
-							<a href="<%=uicomponent.event("AddIp")%>">[<%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%>]</a>
-						</td>
+						<th class="center">Banned IP</th>
+						<th class="center">Action</th>
 					</tr>
+				</thead>
+				<tbody>
 				<%
 					String color = "#ffffff";
 					String[] ips = uicomponent.getListIpBan();
@@ -49,25 +31,38 @@
 						String ip = ips[i];
 						String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
 				%>
-					<tr style="background:$color" class="IpBanItem">
-						<td class="FieldLabel">$ip</td>
-						<td class="FieldLabel" align="center">[<a href="<%=uicomponent.event("OpenPosts", ip)%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Posts")%></a>]&nbsp;[<a style="color:red;" href="$unBanLink">X</a>]</td>
-					</tr>
+						<tr>
+							<td>$ip</td>
+							<td class="center">
+								<a class="actionIcon" data-placement="bottom" rel="tooltip" title="View <%=_ctx.appRes("UIBanIPForumManagerForm.label.Posts")%>" href="<%=uicomponent.event("OpenPosts", ip)%>"><i class="uiIconForumTopic uiIconForumLightGray"></i></a>
+								<a href="$unBanLink"  data-placement="bottom" rel="tooltip" title="Delete" class="actionIcon"><i class="uiIconDelete uiIconLightGray"></i></a>
+							</td>
+						</tr>
 				<%}%>
 				</tbody>
 			</table>
-		</div>
-		<div style="overflow:auto; width:400px;" class="ClearFix">
-		<% 
-			uicomponent.renderChild(UIForumPageIterator.class) ;
-		%>
+			<table class="typeInputIp">
+				<tr>
+					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
+					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
+					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
+					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
+					<td style="vertical-align:top;">
+						<a class="btn btn-primary" href="<%=uicomponent.event("AddIp")%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%></a>
+					</td>
+				</tr>
+			</table>
+			<div class="clearfix">
+			<% 
+				uicomponent.renderChild(UIForumPageIterator.class) ;
+			%>
+
+			</div>
 
 		</div>
-
 	</div>
-  </div>
-	<div class="uiAction">
-    <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-  </div>
+<div class="uiAction uiActionBorder">
+	<a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+</div>
 	<% uiform.end() %>	
 </div>
