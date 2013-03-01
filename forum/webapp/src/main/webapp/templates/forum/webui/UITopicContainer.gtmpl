@@ -142,41 +142,38 @@
 							  boolean isView = false ;
 							  String link , itemLabel, classIcon, classDisable="";
 							  String[] actionMenuForum = uicomponent.getActionMenuForum() ;
+							  String [] classIcons = ["uiIconForumCreateTopic", "uiIconEdit", "uiIconUnLock", "uiIconLock", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete", "uiIconExport", "uiIconWatch", "uiIconForumBanIp"];
+							  int id = 0;
 							  for(action in actionMenuForum) {
-								link = uicomponent.event(action,uicomponent.getName(),"topic") ;
-								itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								classIcon = "uiIcon" + action;
-								classIcon = classIcon.replaceFirst("Forum", "").replaceFirst("Set", "");
-								classIcon = classIcon.replaceFirst("Locked", "Lock");
-								classIcon = classIcon.replaceFirst("Close", "Minus");
-								classIcon = classIcon.replaceFirst("Remove", "Delete");
-								classIcon = classIcon.replaceFirst("WatchOption", "Watch");
-								classIcon = classIcon.replaceFirst("BanIpTools", "ForumBanIp");
-								
-								if(action.equals(actionMenuForum[1])){
-								  isView = forum.getIsLock() ;
-								} else if(action.equals(actionMenuForum[2])){
-								  isView = !forum.getIsLock() ;
-								} else if(action.equals(actionMenuForum[3])){
-								  isView = forum.getIsClosed() ;
-								} else if(action.equals(actionMenuForum[4])){
-								  isView = !forum.getIsClosed() ;
-								} else {
-								  isView = true ;
-								}
-								classDisable = "MenuItem" ;
-								if(!isView){
-								  link = "javaScript: void(0);" ;
-								  classDisable = "DisableMenuItem" ;
-								}
-								if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
-								  link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
-								}
+									link = uicomponent.event(action,uicomponent.getName(),"topic") ;
+									itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									classIcon = classIcons[id];
+									id++;
+									
+									if(action.equals(actionMenuForum[1])){
+									  isView = forum.getIsLock() ;
+									} else if(action.equals(actionMenuForum[2])){
+									  isView = !forum.getIsLock() ;
+									} else if(action.equals(actionMenuForum[3])){
+									  isView = forum.getIsClosed() ;
+									} else if(action.equals(actionMenuForum[4])){
+									  isView = !forum.getIsClosed() ;
+									} else {
+									  isView = true ;
+									}
+									classDisable = "MenuItem" ;
+									if(!isView){
+									  link = "javaScript: void(0);" ;
+									  classDisable = "DisableMenuItem" ;
+									}
+									if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
+									  link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
+									}
 							 %>
 								<li>
 									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
 								</li>
-						   <% } %>
+						 <% } %>
 						  </ul>
 						</div>
 					  </li>
@@ -211,20 +208,15 @@
 								<i class="uiIconMiniArrowDown"></i>
 							</div>
 							<ul class="dropdown-menu">
-							<% 
+							<%
+						    String classIconsTopic = ["uiIconEdit", "uiIconOpen", "uiIconMinus", "uiIconLock", "uiIconUnLock", "uiIconForumStick", "uiIconForumUnStick", "uiIconMove", "uiIconDelete", "uiIconForumMerge", "uiIconForumCensor"];
+						    int idIc = 0;
 							  for(action in uicomponent.getActionMenuTopic()) {
 								String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
 								String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								String classIcon = null;
+								String classIcon = classIconsTopic[idIc];
+								idIc++;
 								String classMenu = "";
-								classIcon = "uiIcon" + action;
-								classIcon = classIcon.replaceFirst("Topic", "").replaceFirst("Set", "");
-								classIcon = classIcon.replaceFirst("Merge", "ForumMerge");
-								classIcon = classIcon.replaceFirst("Locked", "Lock");
-								classIcon = classIcon.replaceFirst("Stick", "ForumStick");
-								classIcon = classIcon.replaceFirst("Close", "Minus");
-								classIcon = classIcon.replaceFirst("UnForumStick", "ForumUnStick");
-								classIcon = classIcon.replaceFirst("UnWaiting", "ForumCensor");
 								if(!isApproveTopic && action.indexOf("Approve") > -1) { 
 								  continue;
 								}
@@ -341,16 +333,15 @@
                   if(postCount < 0) postCount = 0;
                   String postView = String.valueOf(topic.getViewCount());
                   String number = "0";
-                  
                  
                   String iconTopicStatus = newPost+"Post" ;
                   if(topic.getPostCount() > 30) {
 					
-					iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
-				  } else {
-					iconTopicStatus = iconTopicStatus.replaceFirst("NoNewPost", "");
-					iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
-				  }
+									iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
+								  } else {
+									iconTopicStatus = iconTopicStatus.replaceFirst("NoNewPost", "");
+									iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
+								  }
                   String iconStatusTopic = "";
                   if(topic.getIsLock() || isLock) {
                     iconStatusTopic = "uiIconForumColorLockTiny";
@@ -392,7 +383,7 @@
 						<%if(topic.getIsPoll()){%>
 							  <i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 						<%} else {%>
-							<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$topicType"></i>
+							<i class="$iconClassTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$topicType"></i>
 						<%}%>
 					</td>
                   

@@ -31,21 +31,34 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
-  <portlet>
-    <name>ForumPortlet</name>
+  <module>
+    <name>bts_forum</name>
     <depends>
-      <module>UIForumPortlet</module>
+      <module>bts_tooltip</module>
     </depends>
     <depends>
-      <module>jquery</module>
+      <module>bts_dropdown</module>
     </depends>
-  </portlet>
-
+    <depends>
+      <module>bts_button</module>
+    </depends>
+    <depends>
+      <module>bts_collapse</module>
+    </depends>
+    <depends>
+      <module>bts_tab</module>
+    </depends>
+  </module>
+  
   <module>
     <name>UIForumPortlet</name>
     <script>
       <path>/javascript/eXo/forum/UIForumPortlet.js</path>
     </script>
+    
+    <depends>
+      <module>uiForm</module>
+    </depends>
     <depends>
       <module>MaskLayerControl</module>
       <as>maskLayer</as>
@@ -63,34 +76,19 @@
       <as>utils</as>
     </depends>
     <depends>
-      <module>navigation</module>
+      <module>popupCategory</module>
     </depends>
     <depends>
-      <module>bts_button</module>
+      <module>webui-ext</module>
     </depends>
     <depends>
-      <module>bts_collapse</module>
-    </depends>
-    <depends>
-      <module>bts_dropdown</module>
-    </depends>
-    <depends>
-      <module>bts_tab</module>
+      <module>bts_forum</module>
     </depends>
     <depends>
       <module>bts_tooltip</module>
     </depends>
     <depends>
-      <module>uiForm</module>
-    </depends>
-    <depends>
       <module>navigation</module>
-    </depends>
-    <depends>
-      <module>popupCategory</module>
-    </depends>
-    <depends>
-      <module>webui-ext</module>
     </depends>
     <depends>
       <module>webui</module>
@@ -126,7 +124,6 @@
     </depends>
     <depends>
       <module>commons-cometd</module>
-      
     </depends>
     <depends>
       <module>jquery</module>

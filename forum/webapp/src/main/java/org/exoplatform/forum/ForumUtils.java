@@ -614,16 +614,23 @@ public class ForumUtils {
     return builder.toString();
   }
   
-  static public void addScripts(String module, String alias, String... scripts) {
+  static public RequireJS addScripts(String module, String alias, String... scripts) {
     PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     RequireJS requireJS;
     if (!isEmpty(module)) {
-      requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+      if (!isEmpty(alias)) {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+      } else {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module);
+      }
     } else {
       requireJS = pContext.getJavascriptManager().getRequireJS();
     }
-    for (int i = 0; i < scripts.length; i++) {
-      requireJS.addScripts(scripts[i]);
+    if(scripts != null) {
+      for (int i = 0; i < scripts.length; i++) {
+        requireJS.addScripts(scripts[i] + ";");
+      }
     }
+    return requireJS;
   }
 }

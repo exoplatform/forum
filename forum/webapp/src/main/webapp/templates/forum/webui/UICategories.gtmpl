@@ -306,6 +306,7 @@
                       <td>
                           <%=_ctx.appRes("UICategory.label.availableTheard"); %>
                       </td>
+                      <td></td>
                       <%} %>
                       <td>$topicCount</td>
                       <td>$postCount</td>

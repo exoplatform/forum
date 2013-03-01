@@ -11,6 +11,7 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
+        $('[rel=tooltip]').tooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 
@@ -640,6 +641,7 @@
       for ( var i = 0; i < popupContents.length; i++) {
         var popupContent = popupContents.eq(i);
         var action = popupContent.attr('title');
+        if(action == null) continue;
         if (action.indexOf(";") < 0) {
           itemmenuBookMark.attr('href', action);
           itemmenuWatching.parent().hide();
@@ -967,6 +969,14 @@
           return false;
         }
       }
+    },
+
+    calculateWidthOfActionBar : function(uiRightActionBar) {
+      var uiRightActionBar = findId(uiRightActionBar);
+      var textContent = uiRightActionBar.text();
+      textContent = textContent.replace(/\n/g, '').replace(/\s\s|\t\t|\r\r/g, '');
+      var l = (textContent.length) * 1 + 1;
+      uiRightActionBar.css('width', ((l * 6.5) + 65) + "px");
     }
   };
 

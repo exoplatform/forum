@@ -43,14 +43,12 @@
 				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
 				</a>
 				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
-				<% for(ac in uicomponent.getActionMenu()){ 
-				  classIcon = "uiIconForum" + ac;
-				  classIcon = classIcon.replaceFirst("Setting", "").replaceFirst("Keyword", "").replaceFirst("Manager", "").replaceFirst("Auto", "");
-				  classIcon = classIcon.replaceFirst("OpenIPBan", "BanIp");
-				  classIcon = classIcon.replaceFirst("ForumExportCategory", "Export");
-				  classIcon = classIcon.replaceFirst("ForumImportCategory", "Import");
-				  classIcon = classIcon.replaceFirst("ForumNotification", "Notification");
-				  classIcon = classIcon.replaceFirst("ForumTopicType", "ForumTopic");
+				<% 
+				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumTopic", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];
+				int j = 0;
+				for(ac in uicomponent.getActionMenu()){ 
+				  classIcon = classIcons[j];
+				  ++j;
 				%>
 				  <li>
 					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="actionIcon">
@@ -105,14 +103,8 @@
 			</div>
 		</li>
 	</ul>
-		<script type="text/javascript">
-			function setWitdh(){ 
-			  var uiRightActionBar = document.getElementById('uiRightActionBar');
-				var l = (uiRightActionBar.innerText.length)*1+1; 
-				uiRightActionBar.style.width = ((l*6.5)+65) + "px"; 
-			}
-			setWitdh();
-		</script>
-<% } %>
+  <% 
+  org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.calculateWidthOfActionBar('uiRightActionBar');");
+  } %>
 	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
 </div>
