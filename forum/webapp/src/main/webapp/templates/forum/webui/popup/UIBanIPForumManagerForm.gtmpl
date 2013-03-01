@@ -8,7 +8,7 @@
 <div class="uiBanIPForumManagerForm">
 	<% uiform.begin() %>
 	<div class="resizable">	
-		<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="containerBanIp">
+		<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="contentContainer">
 			<div class="uiQuickSearchForm">
 				<span for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</span>
 				<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>

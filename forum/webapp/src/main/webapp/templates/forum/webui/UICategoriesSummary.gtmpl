@@ -1,4 +1,4 @@
-<div class="UICategoriesSummary">	
+<div>	
 	<%
 		uicomponent.setRenderChild();
 		List children = uicomponent.getChildren() ;

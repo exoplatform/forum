@@ -5,6 +5,11 @@
 		.box-shadow(none);
 		margin-bottom: 10px;
 	}
+	.uiGrid.table td, .uiGrid.table th{
+		padding: 10px 5px;
+		vertical-align: top;
+	}
+	
 }
 /******************************************** UIForumActionBar ****************************************/
 .uiForumActionBar {
@@ -68,6 +73,7 @@
 	.forumSeparatorLine + .forumSeparatorLine{
 		background: url("/forum/skin/DefaultSkin/images/background/SeparatorLine.png") no-repeat left -4px;
 	}
+	
 	.uiForumIconState{ 
 		.forumContains {
 			line-height: 42px;
@@ -82,10 +88,23 @@
 			}
 		}
 	}
+	
+	.searchAdvance{
+		padding: 10px;
+		input{
+			width: 120px;
+			vertical-align: top;
+			margin-right: 5px;
+		}
+	}
 }
 
 .textHotTopic{
 	color: @red;
+}
+
+.actionExpandCollapse{
+	margin: 8px 8px 8px 0;
 }
 
 
