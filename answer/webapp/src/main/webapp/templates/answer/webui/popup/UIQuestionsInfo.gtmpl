@@ -143,72 +143,7 @@
             		 %>
 	              	
 	              	<div class="tab-pane fade $active" id="QuestionNotAnswered-tab">
-<<<<<<< HEAD
-					          <div style="display:block;"  >
-									
-											<div class="HorizontalLayout">
-													<div class="UIFormInput">
-														<table class="UIGrid">
-															<tr>
-																<th><strong><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></strong></th>
-																<th><strong>Category</strong></th>
-																<th>
-																	<div style="padding-right:4px;">
-																		<strong><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></strong>
-																	</div>
-																</th>
-																<th style="width:60px"><strong><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></strong></th>
-															</tr>
-															<%
-															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
-															if(!questionNotAnswered.isEmpty()) {
-																String linkDelete = "" ;
-																String linkEdit = "" ;
-																for(Question question in questionNotAnswered) {
-																	linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
-																	linkResponse = uicomponent.event("ResponseQuestion", question.getPath()+"/"+question.getLanguage()) ;
-																	if(!mapPath.containsKey(question.getCategoryId()))
-																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(question.getPath()));
-																%>
-																	<tr>
-																		<td class="text" style="text-align:left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-																		<td class="text"><%=mapPath.get(question.getCategoryId())%></td>
-																		<td class="text" style="margin-right:4px;white-space:nowrap; text-align:left">
-																		<%
-																			String linkResponseByLanguage = "";
-																			for(String language :question.getLanguagesNotYetAnswered().split(",")){
-																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getPath() + "/" + language ) ;
-																		%>
-																			<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
-																				<div style="padding:0px 4px 4px 0px;">- &nbsp;$language</div>
-																			</div>
-																		<%}%>
-																		</td>
-																		<td style="text-align:center">
-																			<div style="float:left">
-																				<div onclick="$linkResponse" style="float:left; cursor:pointer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
-																					<div class="ItemIcon ResponseQuestion">
-																						<div style="padding-left:20px;"><span></span></div>
-																					</div>
-																				</div>
-																				
-																				<div onclick="$linkDelete" style="float:left; cursor:pointer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>">
-																					<div class="ItemIcon Delete">
-																							<div style="padding-left:20px;"><span></span></div>
-																					</div>
-																				</div>
-																			</div>
-																		</td>
-																	</tr>
-															<%}
-															} else {%>
-																<tr>
-																	<td colspan="2" align="center">
-																		<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
-																	</td>
-																</tr>
-=======
-					          
+
 										<table class="uiGrid table table-hover table-striped">
 											<tr>
 												<th><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></th>
