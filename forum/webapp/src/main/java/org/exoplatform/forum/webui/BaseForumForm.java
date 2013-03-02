@@ -72,7 +72,7 @@ public class BaseForumForm extends BaseUIForm {
     renderChildren(context);
     end();
     writer.append("</div>");
-    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initTooltip('" + getId() + "')");
+    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');");
   }
 
   /**

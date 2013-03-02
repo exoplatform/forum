@@ -96,7 +96,7 @@
           <table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			
 			<caption class="rounded-corners-top">
-				<ul class="forumToolbar ForumActionToolbar clearfix">
+				<ul class="forumToolbar pull-right">
 				
 					<%if(uicomponent.userProfile.getUserRole() < 3){%>
 
@@ -179,23 +179,23 @@
 					  </li>
 					<% } %> 
 					
-					<li class="ContentAction defaultStyle $forumSeparatorLine SearchForm" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
-						<div class="dropdown uiDropdown actionIcon">
-						  <div data-toggle="dropdown">
-							<i class="uiIconSearch uiIconLightGray"></i>
-							<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-							<i class="uiIconMiniArrowDown"></i>          
-						  </div>
-						  <ul class="dropdown-menu">
-							<li>
-							  <div class="controls controls-row">
-								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
-								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-								<br/>
-								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-							  </div>
-							</li>
-						  </ul>
+					<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+						<div class="dropdown uiDropdown uiActionWithLabel">
+							<div data-toggle="dropdown">
+								<i class="uiIconSearch uiIconLightGray"></i>
+								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
+								<i class="uiIconMiniArrowDown"></i>          
+							</div>
+							<ul class="dropdown-menu">
+								<li>
+									<div class="searchAdvance">
+										<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+										<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+										<br/>
+										<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+									</div>
+								</li>
+							</ul>
 						</div>
 					</li>
 				
@@ -248,8 +248,8 @@
 			</caption>
             <thead>
               <tr>
-                <th style="width:20px;">&nbsp;</th>
-                <th style="width:20px;">&nbsp;</th>
+                <th style="width:15px;">&nbsp;</th>
+                <th style="width:15px;">&nbsp;</th>
                 <th>
                     <%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
                 </th>
@@ -264,21 +264,21 @@
 					<%=_ctx.appRes("UITopicContainer.label.Rating");%>
                 </th>
               
-                <th style="width:20px;" class="center"><i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i></th>
-                <th style="width:20px;" class="center">
+                <th style="width:15px;" class="center"><i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i></th>
+                <th style="width:15px;" class="center">
                    <i class="uiIconUIForms uiIconLightGray"></i>
                 </th>
 				
-                <th style="width:20px;" class="center">
+                <th style="width:15px;" class="center">
 					<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
                 </th>
                 <% if(canEdit) { %>
-                <th style="width:20px;" class="center">
+                <th style="width:15px;" class="center">
 					<span class="uiCheckbox"><input type="checkbox" name="checkAll" class="checkbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>"/><span></span>
 					</span>
 				</th>
                 <% } %>
-				<th style="width:20px;" class="center"></th>
+				<th style="width:15px;" class="center"></th>
               </tr>
             </thead>
             <tbody>
@@ -378,7 +378,7 @@
                   }
               %>
                 <tr class="$classRow $classSelect oncontextmenu">
-					<td><i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i></td>
+					<td class="center"><i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i></td>
 					<td>
 						<%if(topic.getIsPoll()){%>
 							  <i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>

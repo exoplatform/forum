@@ -42,123 +42,120 @@
 <%uiform.begin()%>
 	<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
-			<caption class="rounded-corners-top">
-					<span class="pull-right actionExpandCollapse">
-						<i class="uiIconArrowDown" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
-					</span>
-					<ul class="forumToolbar forumActionToolbar clearfix">
+		<caption class="rounded-corners-top">
+			<span class="pull-right actionExpandCollapse">
+				<i class="uiIconArrowDown" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+			</span>
+			<ul class="forumToolbar pull-right">
 
-					<%if(uicomponent.userProfile.getUserRole() < 3){%>
+			<%if(uicomponent.userProfile.getUserRole() < 3){%>
 
-						<li class="defaultStyle forumSeparatorLine">
-							<div class="actionIcon">
-							<% if(uicomponent.isWatching(category.getPath())) {%>
-								<a href="<%=uicomponent.event("UnWatch",categoryId)%>">
-									<i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%>
-								</a>
-							<% } else { %>
-								<a href="<%=uicomponent.event("AddWatching",categoryId)%>">
-									<i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-								</a>
-							<% } %>
-							</div>
-						</li>
-
-						<li class="defaultStyle forumSeparatorLine" >
-							<div class="actionIcon">
-								<a href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">
-									<i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-								</a>
-							</div>
-						</li>
+				<li class="defaultStyle forumSeparatorLine">
+					<div class="actionIcon">
+					<% if(uicomponent.isWatching(category.getPath())) {%>
+						<a href="<%=uicomponent.event("UnWatch",categoryId)%>">
+							<i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%>
+						</a>
+					<% } else { %>
+						<a href="<%=uicomponent.event("AddWatching",categoryId)%>">
+							<i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+						</a>
 					<% } %>
+					</div>
+				</li>
 
-						<li class="defaultStyle forumSeparatorLine" >
-							<div class="actionIcon">
-								<a href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">
-									<i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIBreadcumbs.label.Rss");%>
-								</a>
-							</div>
-						</li>
-					
-						<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
+				<li class="defaultStyle forumSeparatorLine" >
+					<div class="actionIcon">
+						<a href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">
+							<i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+						</a>
+					</div>
+				</li>
+			<% } %>
 
-							<div class="dropdown uiDropdown uiActionWithLabel">
-							  <div data-toggle="dropdown">
-								<i class="uiIconSearch uiIconLightGray"></i>
-								<%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
-								<i class="uiIconMiniArrowDown uiIconLightGray"></i>          
-							  </div>
-							  <ul class="dropdown-menu">
-								<li>
-								  <div class="searchAdvance">
-									<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
-									<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-									<br/>
-									<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-								  </div>
-								</li>
-							  </ul>
-							</div>
-
-						</li>
-					
-						
-					<% if(isShowMenu){ %>
-						<li class="defaultStyle forumSeparatorLine">
-							<div class="dropdown actionIcon uiDropdownWithIcon">
-							  <div data-toggle="dropdown">
-								 <i class="uiIconForumManageCategory uiIconForumLightGray"></i>
-									 <%=_ctx.appRes("UICategory.label.manageCategory");%>
-								<i class="uiIconMiniArrowDown uiIconLightGray"></i>
-							  </div>
-							  <ul class="dropdown-menu">
-							  <%
-								String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
-								
-								String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlock", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
-								int i = 0;
-								for(action in uicomponent.getActions()) {
-								  String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								  String classIconItem = newActions[i];
-								  ++i;
-								  String link = uicomponent.event(action,uicomponent.id,"category") ;
-
-								  if(action.equals("RemoveForum")){
-									String deleteMoreForum = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace);
-									String removeForum = uicomponent.getConfirm(_ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace);
-									String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
-							  %>
-									<li>
-									  <a href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
-									</li>
-							  <% 
-								  } else if(action.equals("DeleteCategory")) {
-									String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
-								%>
-									<li>
-										<a href="javascript:if(confirm('$confirm')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
-									</li>
-								<%	} else { %>
-									<li>
-										<a href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
-									</li>
-								<%  	if(action.equals("WatchOption")) { %>
-									<li class="divider"></li>
-								<%		}
-									}
-								} %>
-							  </ul>
-							</div>
-						</li>
-					<% } %>
-						<li class="defaultStyle forumSeparatorLine">&nbsp;</li>
-					</ul>
-			</caption>
+				<li class="defaultStyle forumSeparatorLine" >
+					<div class="actionIcon">
+						<a href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">
+							<i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIBreadcumbs.label.Rss");%>
+						</a>
+					</div>
+				</li>
 			
-			<thead>
+				<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
+					<div class="dropdown uiDropdown uiActionWithLabel">
+						<div data-toggle="dropdown">
+							<i class="uiIconSearch uiIconLightGray"></i>
+							<%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
+							<i class="uiIconMiniArrowDown uiIconLightGray"></i>          
+						</div>
+						<ul class="dropdown-menu">
+							<li>
+							  <div class="searchAdvance">
+								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+								<br/>
+								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+							  </div>
+							</li>
+						</ul>
+					</div>
+				</li>
+				
+			<% if(isShowMenu){ %>
+				<li class="defaultStyle forumSeparatorLine">
+					<div class="dropdown actionIcon uiDropdownWithIcon">
+					  <div data-toggle="dropdown">
+						 <i class="uiIconForumManageCategory uiIconForumLightGray"></i>
+							 <%=_ctx.appRes("UICategory.label.manageCategory");%>
+						<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+					  </div>
+					  <ul class="dropdown-menu">
+					  <%
+						String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
+						
+						String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlock", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
+						int i = 0;
+						for(action in uicomponent.getActions()) {
+						  String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
+						  String classIconItem = newActions[i];
+						  ++i;
+						  String link = uicomponent.event(action,uicomponent.id,"category") ;
+
+						  if(action.equals("RemoveForum")){
+							String deleteMoreForum = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace);
+							String removeForum = uicomponent.getConfirm(_ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace);
+							String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
+					  %>
+							<li>
+							  <a href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
+							</li>
+					  <% 
+						  } else if(action.equals("DeleteCategory")) {
+							String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
+						%>
+							<li>
+								<a href="javascript:if(confirm('$confirm')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
+							</li>
+						<%	} else { %>
+							<li>
+								<a href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
+							</li>
+						<%  	if(action.equals("WatchOption")) { %>
+							<li class="divider"></li>
+						<%		}
+							}
+						} %>
+					  </ul>
+					</div>
+				</li>
+			<% } %>
+				<li class="defaultStyle forumSeparatorLine">&nbsp;</li>
+			</ul>
+		</caption>
+			
+		<thead>
 				<tr>
-					<th style="width:10px;">&nbsp;</th>
+					<th style="width:15px;">&nbsp;</th>
 					<th style="width:40%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
 					<th style="width:25%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
 					<th style="width:100px;"><%=_ctx.appRes("UICategory.label.author");%></th>
@@ -173,7 +170,7 @@
 					<% } %>
 				</tr>
 			</thead>
-			<tbody>
+		<tbody>
 			<% 
 				List forums = uicomponent.getForumList();
 				if(forums.size() == 0) {

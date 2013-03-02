@@ -11,7 +11,7 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
-        initTooltip();
+        UIForumPortlet.initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 
