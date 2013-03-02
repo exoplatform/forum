@@ -193,7 +193,6 @@
 					GregorianCalendar calendar = new GregorianCalendar() ;
 					long toDay = calendar.getTimeInMillis();
 					String classRow = "EvenRow";
-					int i = 0;
 					String topicNewPostIcon = "";
 					String topicNewPostTitle = "";
 					String lastPostBy = "";
@@ -207,9 +206,6 @@
 					long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 					String lastReadPost = "";
 					for(forum in forums) {
-						if(i%2 == 0) classRow = "EvenRow";
-						else classRow = "OddRow";
-						++i;
 						String forumId = forum.getId();
 						lastReadPost = uicomponent.getLastReadPostOfForum(forumId);
 

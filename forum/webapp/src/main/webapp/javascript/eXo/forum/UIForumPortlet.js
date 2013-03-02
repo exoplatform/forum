@@ -11,7 +11,7 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
-        $('[rel=tooltip]').tooltip();
+        initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 
@@ -20,6 +20,15 @@
           $(this).parents('.dropdown').removeClass('open');
         })
       });
+    },
+    
+    initTooltip : function(id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
+      } else {
+        jportlet.find('[rel=tooltip]').tooltip();
+      }
     },
 
     resizeCallback : function() {

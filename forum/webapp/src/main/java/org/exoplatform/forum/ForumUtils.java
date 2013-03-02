@@ -627,8 +627,12 @@ public class ForumUtils {
       requireJS = pContext.getJavascriptManager().getRequireJS();
     }
     if(scripts != null) {
+      String script;
       for (int i = 0; i < scripts.length; i++) {
-        requireJS.addScripts(scripts[i] + ";");
+        script = scripts[i];
+        if (!isEmpty(script)) {
+          requireJS.addScripts(script + ";");
+        }
       }
     }
     return requireJS;
