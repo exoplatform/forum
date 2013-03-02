@@ -65,9 +65,7 @@
 	}
 	
 	.forumToolbar{
-		float: right;
 		margin: 4px 0;
-		
 	}
 	
 	.forumSeparatorLine + .forumSeparatorLine{
@@ -77,14 +75,14 @@
 	.uiForumIconState{ 
 		.forumContains {
 			line-height: 42px;
-			padding: 0px 0px 0px 15px;
+			padding: 0px 0px 0px 45px;
 			
 			i + i{
 				margin-left: 20px;
 			}
 			
 			span{
-				margin-right: 20px;
+				margin-right: -25px;
 			}
 		}
 	}
@@ -97,6 +95,31 @@
 			margin-right: 5px;
 		}
 	}
+	
+	.dateTimeForum{
+		color: @grayLight;
+		padding-left: 20px;
+	}
+	
+	.uiCategoryInfo{
+		.uiGrid.table th{
+			padding: 0;
+		}
+		.textInfo{
+			padding: 0 45px;
+		}
+	}
+	
+	
+/******************************************** uiCategories ****************************************/
+
+	.textTitleCategories{
+		padding-left: 20px;
+		line-height: 36px;
+		font-family: @sansBoldFontFamily;
+		color: @linkColor;
+	}
+	
 }
 
 .textHotTopic{
