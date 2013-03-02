@@ -174,7 +174,7 @@
 															<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
 																<div style="padding:0px 4px 4px 0px;">- &nbsp;$language</div>
 															</div>
->>>>>>> UI-2461: [PLF 4] Answers Redesign
+
 														<%}%>
 														</td>
 														<td class="center">
