@@ -251,14 +251,6 @@
 	font-size: 14px;
 }
 
-.UIAnswersPortlet a {
-	color: #000000;
-}
-
-.UIAnswersPortlet a:hover {
-	color: #058ee6;
-}
-
 .UIAnswersPortlet .AnswerToolbar .Title {
 	float: left;
 	font-weight: bold;
@@ -343,10 +335,7 @@
 	line-height: 18px;
 }
 
-.UIAnswersPortlet .AnswersContainer a {
-	color: #4c4c4c;
-	cursor: pointer;
-}
+
 
 .UIAnswersPortlet .AnswersContainer a:hover {
 	color: #115eb2;
@@ -2376,19 +2365,6 @@
 	font-weight: normal;
 	margin: 0px;
 	color: #4c4c4c;
-}
-
-.QuestionContainer .NormalQuest .RightCon {
-	float: left;
-}
-
-.QuestionContainer .NormalQuest .RightCon h5 {
-	margin: 0px 0px 5px 0px;
-}
-
-.QuestionContainer .NormalQuest .RightCon .Questions {
-	font-weight: bold;
-	color: #333333;
 }
 
 .QuestionContainer .NormalQuest .RightCon .WarningCon {
