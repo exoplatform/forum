@@ -6,11 +6,11 @@
 <div class="uiForumDescription uiBox" id="$uicomponent.id">
 	<div class="centerDescription">
 		<span class="forumLabel"></span>
-		<span class="nameForum"><%=name%></span>
+		<span class="nameForum"><strong><%=name%></strong></span>
 		<%
 		if(description != null && description.trim().length() > 0) {
 		%>
-		<span class="description">: $description</span>
+		<span class="description"> $description</span>
 		<%} %>
 	</div>
 </div>

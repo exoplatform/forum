@@ -1,4 +1,4 @@
-<div class="uiResponse uiCommentForm uiForm" id="$uicomponent.id">
+<div class="uiResponse uiCommentForm uiForm">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 				

@@ -46,7 +46,7 @@
 %>
 
 <div class="uiCategory">
-<% uicontainer.renderChild(UIForumDescription.class) %>
+<% uicomponent.renderChild(UIForumDescription.class) %>
 <%uiform.begin()%>
 	<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">

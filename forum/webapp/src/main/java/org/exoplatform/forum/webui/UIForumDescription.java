@@ -53,25 +53,28 @@ public class UIForumDescription extends UIContainer {
   }
 
   public void setCategory(Category category) {
+    this.isForum = false;
     this.category = category;
     this.hasUpdate = false;
   }
 
   public void setForum(Forum forum) {
+    this.isForum = true;
     this.forum = forum;
     this.hasUpdate = false;
   }
 
-  
   public void setCategoryId(String categoryId) {
-    this.hasUpdate = true;
     this.categoryId = categoryId;
+    this.isForum = false;
+    this.hasUpdate = true;
   }
 
   public void setForumId(String categoryId, String forumId) {
-    this.hasUpdate = true;
     this.forumId = forumId;
     this.categoryId = categoryId;
+    this.isForum = true;
+    this.hasUpdate = true;
   }
 
   public String getName() {
@@ -86,17 +89,15 @@ public class UIForumDescription extends UIContainer {
 
   private Category getCategory() {
     if (this.category == null || hasUpdate) {
-      return forumService.getCategory(categoryId);
-    } else {
-      return this.category;
+      this.category = forumService.getCategory(categoryId);
     }
+    return this.category;
   }
 
   private Forum getForum() {
-    if (forum == null || hasUpdate) {
-      return forumService.getForum(categoryId, forumId);
-    } else {
-      return this.forum;
+    if (this.forum == null || hasUpdate) {
+      this.forum = forumService.getForum(categoryId, forumId);
     }
+    return this.forum;
   }
 }

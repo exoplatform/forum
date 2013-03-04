@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,11 +28,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
@@ -207,7 +203,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     managementView.registerStorageManager(storage);
   }
 
-  @SuppressWarnings("unchecked")
   private void manageJobs() {
     try {
       List<JobDetail> jobs = jobSchedulerService.getAllJobs();
@@ -292,7 +287,11 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void saveCategory(Category category, boolean isNew) throws Exception {
     storage.saveCategory(category, isNew);
     for (ForumEventLifeCycle f : listeners_) {
-      f.saveCategory(category);
+      try {
+        f.saveCategory(category);
+      } catch (Exception e) {
+        log.debug("Failed to run function saveCategory in the class ForumEventLifeCycle. ", e);
+      }
     }
   }
 
@@ -340,11 +339,15 @@ public class ForumServiceImpl implements ForumService, Startable {
         String topicId = topic.getId();
         String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
         for (ForumEventLifeCycle f : listeners_) {
-          if (topic.getIsPoll()) {
-            String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
-            f.removeActivity(pollActivityId);
+          try {
+            if (topic.getIsPoll()) {
+              String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+              f.removeActivity(pollActivityId);
+            }
+            f.removeActivity(topicActivityId);
+          } catch (Exception e) {
+            log.debug("Failed to run function removeActivity in the class ForumEventLifeCycle. ", e);
           }
-          f.removeActivity(topicActivityId);
         }
       }
     }
@@ -386,7 +389,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.modifyForum(forum, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Topic topic : editedTopics) {
-        f.updateTopic(topic);
+        try {
+          f.updateTopic(topic);
+        } catch (Exception e) {
+          log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
+        }
       }
     }
   }
@@ -397,7 +404,11 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
     storage.saveForum(categoryId, forum, isNew);
     for (ForumEventLifeCycle f : listeners_) {
-      f.saveForum(forum);
+      try {
+        f.saveForum(forum);
+      } catch (Exception e) {
+        log.debug("Failed to run function saveForum in the class ForumEventLifeCycle. ", e);
+      }
     }
   }
 
@@ -448,11 +459,15 @@ public class ForumServiceImpl implements ForumService, Startable {
       String topicId = topic.getId();
       String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
       for (ForumEventLifeCycle f : listeners_) {
-        if (topic.getIsPoll()) {
-          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
-          f.removeActivity(pollActivityId);
+        try {
+          if (topic.getIsPoll()) {
+            String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+            f.removeActivity(pollActivityId);
+          }
+          f.removeActivity(topicActivityId);
+        } catch (Exception e) {
+          log.debug("Failed to run function removeActivity in the class ForumEventLifeCycle. ", e);
         }
-        f.removeActivity(topicActivityId);
       }
     }
     return storage.removeForum(categoryId, forumId);
@@ -516,7 +531,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.modifyTopic(topics, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Topic topic : editeds) {
-        f.updateTopic(topic);
+        try {
+          f.updateTopic(topic);
+        } catch (Exception e) {
+          log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
+        }
       }
     }
   }
@@ -551,12 +570,16 @@ public class ForumServiceImpl implements ForumService, Startable {
     
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
-      if (isNew) {
-        f.addTopic(topic);
-      } else {
-        if (edited != null) {
-          f.updateTopic(edited);
+      try {
+        if (isNew) {
+          f.addTopic(topic);
+        } else {
+          if (edited != null) {
+            f.updateTopic(edited);
+          }
         }
+      } catch (Exception e) {
+        log.debug("Failed to run function addTopic/updateTopic in the class ForumEventLifeCycle. ", e);
       }
     }
   }
@@ -624,7 +647,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     for (ForumEventLifeCycle f : listeners_) {
       for (Topic topic : topics) {
         topic.setPath(destForumPath.concat("/").concat(topic.getId()));
-        f.moveTopic(topic, toCategoryName, toForumName);
+        try {
+          f.moveTopic(topic, toCategoryName, toForumName);
+        } catch (Exception e) {
+          log.debug("Failed to run function moveTopic in the class ForumEventLifeCycle. ", e);
+        }
       }
     }
     CacheUserProfile.clearCache();
@@ -637,11 +664,15 @@ public class ForumServiceImpl implements ForumService, Startable {
     String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
     Topic topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
-      if (topic.getIsPoll()) {
-        String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
-        f.removeActivity(pollActivityId);
+      try {
+        if (topic.getIsPoll()) {
+          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+          f.removeActivity(pollActivityId);
+        }
+        f.removeActivity(topicActivityId);
+      } catch (Exception e) {
+        log.debug("Failed to run function removeActivity in the class ForumEventLifeCycle. ", e);
       }
-      f.removeActivity(topicActivityId);
     }
     CacheUserProfile.clearCache();
     return topic;
@@ -694,10 +725,14 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
-      if (isNew)
-        f.addPost(post);
-      else
-        f.updatePost(post);
+      try {
+        if (isNew)
+          f.addPost(post);
+        else
+          f.updatePost(post);
+      } catch (Exception e) {
+        log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+      }
     }
   }
 
@@ -708,7 +743,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.modifyPost(posts, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Post post : posts) {
-        f.updatePost(post, type);
+        try {
+          f.updatePost(post, type);
+        } catch (Exception e) {
+          log.debug("Failed to run function updatePost in the class ForumEventLifeCycle. ", e);
+        }
       }
     }
   }
@@ -740,15 +779,18 @@ public class ForumServiceImpl implements ForumService, Startable {
     String destActivityId = storage.getActivityIdForOwner(destTopicPath);
     //
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
-    
+    //
+    CacheUserProfile.clearCache();
+
     Topic newTopic = storage.getTopicByPath(destTopicPath, false);
     newTopic.setTopicName(topicMergeTitle);
     for (ForumEventLifeCycle f : listeners_) {
-      f.mergeTopic(newTopic, srcActivityId, destActivityId);
+      try {
+        f.mergeTopic(newTopic, srcActivityId, destActivityId);
+      } catch (Exception e) {
+        log.debug("Failed to run function mergeTopic in the class ForumEventLifeCycle. ", e);
+      }
     }
-    //
-    
-    CacheUserProfile.clearCache();
   }
 
   public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
@@ -757,7 +799,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
     Topic srcTopic = storage.getTopicByPath(srcTopicPath, false);
     for (ForumEventLifeCycle f : listeners_) {
-      f.splitTopic(newTopic, srcTopic, srcActivityId);
+      try {
+        f.splitTopic(newTopic, srcTopic, srcActivityId);
+      } catch (Exception e) {
+        log.debug("Failed to run function splitTopic in the class ForumEventLifeCycle. ", e);
+      }
     }
   }
 
@@ -772,7 +818,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     
     //
     for (ForumEventLifeCycle f : listeners_) {
-      f.removeComment(topicActivityId, postActivityId);
+      try {
+        f.removeComment(topicActivityId, postActivityId);
+      } catch (Exception e) {
+        log.debug("Failed to run function removeComment in the class ForumEventLifeCycle. ", e);
+      }
     }
     
     return deleted;
