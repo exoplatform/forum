@@ -54,6 +54,7 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -265,7 +266,8 @@ public class UIForumPortlet extends UIPortletApplication {
       SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
       Space space = sService.getSpaceByUrl(url);
       spaceGroupId = space.getGroupId();
-      forumSpId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
+      forumSpId = Utils.FORUM_SPACE_ID_PREFIX
+                  + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
       spaceDisplayName = space.getDisplayName();
       try {
         OrganizationService service = (OrganizationService) PortalContainer.getInstance()
