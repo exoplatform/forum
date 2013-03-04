@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
@@ -56,6 +57,8 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final String FORUM_PAGE_NAGVIGATION = "forum";
 
   private static final String FORUM_PORTLET_NAME     = "ForumPortlet";
+  
+  private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
 
   public DiscussionSearchConnector(InitParams initParams, JCRDataStorage storage) {
@@ -85,7 +88,8 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         sb.append(forum.getForumName());
         sb.append(" - " + topic.getPostCount() + " replies");
         sb.append(" - " + topic.getVoteRating());
-        sb.append(" - " + post.getCreatedDate());
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);
+        sb.append(" - " + sdf.format(post.getCreatedDate()));        
         String uri = buildLink(context, portalName, id.getCategoryId(), id.getForumId(), id.getTopicId(), siteName, topic.getLink());
         SearchResult result = new SearchResult(
             uri,
