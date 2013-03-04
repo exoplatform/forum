@@ -3,3 +3,27 @@
 		padding: 10px;
 	}
 }
+
+.contentTopicDetail{
+	padding: 10px;
+	&+ .contentTopicDetail{
+		border-top: solid 1px #d9d9d9;
+	}
+	.postViewContainer{
+		margin-left: 225px;
+	}
+	
+	.postViewHeader{
+		background: #f9f9f9;
+		padding: 10px 15px;
+		
+		.postViewTitle{
+			font-family: @sansBoldFontFamily;
+		}
+		
+		.postTime{
+			color: @grayLight;
+			margin-right: 10px;
+		}
+	}
+}
