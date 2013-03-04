@@ -110,9 +110,8 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     try {
       List<ObjectSearchResult> searchResults = storage.getUnifiedSearchResults(eventQuery);
       for (ObjectSearchResult searchResult : searchResults) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(searchResult.getName());
-        sb.append(" - ").append(searchResult.getNumberOfAnswer()).append(" answers");
+        StringBuilder sb = new StringBuilder();        
+        sb.append(searchResult.getNumberOfAnswer()).append(" answers");
         sb.append(" - ").append(searchResult.getNumberOfComment()).append(" comments");
         sb.append(" - ").append(searchResult.getRatingOfQuestion());
         SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);        
