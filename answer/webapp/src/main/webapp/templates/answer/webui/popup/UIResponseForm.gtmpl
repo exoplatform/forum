@@ -4,7 +4,7 @@
   def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.setSelectboxOnchange('"+ uicomponent.id +"');");
 %>
-<div class="uiResponseForm" id="$uicomponent.id">
+<div class="uiResponseForm">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 						<div class="control-group">
