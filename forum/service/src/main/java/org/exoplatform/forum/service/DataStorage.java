@@ -89,7 +89,7 @@ public interface DataStorage {
 
   List<Category> getCategories();
 
-  Category getCategory(String categoryId) throws Exception;
+  Category getCategory(String categoryId);
   
   Category getCategoryIncludedSpace();
 

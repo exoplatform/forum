@@ -73,7 +73,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the category
    * @throws Exception the exception
    */
-  Category getCategory(String categoryId) throws Exception;
+  Category getCategory(String categoryId);
 
   /**
    * Get category included spaces

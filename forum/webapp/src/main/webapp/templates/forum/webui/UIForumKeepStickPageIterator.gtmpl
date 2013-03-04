@@ -24,10 +24,13 @@
     <li><a href="<%=href%>"><%=i%></a></li>
   <%  }   
   }
-
+  String classNagination = "uiPageIterator";
+  if(totalPage > 1) {
+    classNagination = "pagination uiPageIterator";
+  }
 %>
 
-<div class="pagination uiPageIterator clearfix">
+<div class="$classNagination clearfix">
 <% if(totalPage > 1) {%>  
   <ul class="pull-right">
   <%if( currentPage > 1 ){%>        

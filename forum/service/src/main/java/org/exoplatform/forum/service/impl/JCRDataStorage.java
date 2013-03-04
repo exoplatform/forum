@@ -824,7 +824,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public Category getCategory(String categoryId) throws Exception {
+  public Category getCategory(String categoryId) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       return getCategory(getCategoryHome(sProvider).getNode(categoryId));

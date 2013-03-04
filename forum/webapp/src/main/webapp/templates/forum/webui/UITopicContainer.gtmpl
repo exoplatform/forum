@@ -526,9 +526,9 @@
                 %>
                   <tr>
                   <% if(canEdit){ %>
-                    <td colspan="9" class="center">
+                    <td colspan="10" class="center">
                   <% } else { %>
-                    <td colspan="8" class="center">
+                    <td colspan="9" class="center">
                   <% } %>
                       <strong style="display: block;" style="margin:15px 0px 20px 0px"><%=_ctx.appRes("UICategory.label.availableTheard");%></strong>
                     </td>
@@ -538,9 +538,9 @@
                   %>
                   <tr>
                   <% if(canEdit){%>
-                    <td colspan="9" align="center">
+                    <td colspan="10" align="center">
                   <% } else { %>
-                    <td colspan="8" align="center">
+                    <td colspan="9" align="center">
                   <% } %>
                       <strong style="display: block;" style="margin:15px 0px 20px 0px"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong>
                     </td>

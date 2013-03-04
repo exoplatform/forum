@@ -306,7 +306,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public Category getCategory(String categoryId) throws Exception {
+  public Category getCategory(String categoryId) {
     return storage.getCategory(categoryId);
   }
   

@@ -426,7 +426,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     
   }
 
-  public Category getCategory(final String categoryId) throws Exception {
+  public Category getCategory(final String categoryId) {
 
     return categoryDataFuture.get(
       new ServiceContext<CategoryData>() {

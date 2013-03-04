@@ -1,17 +1,24 @@
 <%
+  import java.util.GregorianCalendar;
+
+  import org.exoplatform.forum.common.UserHelper;
 	import org.exoplatform.forum.service.Category; 
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.Utils ;
-	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumSessionUtils; 
-	import org.exoplatform.forum.common.UserHelper; 	
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.UserProfile ;
+
+	import org.exoplatform.forum.TimeConvertUtils;
+	import org.exoplatform.forum.webui.UIForumDescription;
+
 	Category category = uicomponent.getCategory();
-	if(category == null) return ; 
+	if(category == null) {
+	  print("<div class=\"uiCategory\"><span></span></div>");
+	  return ; 
+	}
 
 	String [] scripts = [
 					"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
@@ -39,6 +46,7 @@
 %>
 
 <div class="uiCategory">
+<% uicontainer.renderChild(UIForumDescription.class) %>
 <%uiform.begin()%>
 	<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">

@@ -10,9 +10,13 @@
     <li><a href="<%=uicomponent.event("GoPage","$i")%>"><%=i%></a></li>
     <%  }   
   }
+  String classNagination = "uiPageIterator";
+  if(totalPage > 1) {
+    classNagination = "pagination uiPageIterator";
+  }
 %>
 
-<div class="pagination uiPageIterator clearfix" id="$uicomponent.id">
+<div class="$classNagination clearfix" id="$uicomponent.id">
 <% if(totalPage > 1) {%>  
   <ul class="pull-right">
   <%if( currentPage > 1 ){%>        

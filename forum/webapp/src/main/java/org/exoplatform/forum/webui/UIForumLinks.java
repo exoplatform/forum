@@ -191,7 +191,6 @@ public class UIForumLinks extends BaseForumForm {
           if (path.lastIndexOf(Utils.FORUM) > 0) {
             String id[] = path.trim().split(ForumUtils.SLASH);
             Forum forum = uiForm.getForumService().getForum(id[0], id[1]);
-            ;
             if (forum != null) {
               UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
               forumContainer.getChild(UIForumDescription.class).setForum(forum);

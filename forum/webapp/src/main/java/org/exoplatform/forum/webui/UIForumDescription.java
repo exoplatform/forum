@@ -17,10 +17,9 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -35,39 +34,67 @@ import org.exoplatform.webui.core.UIContainer;
     template = "app:/templates/forum/webui/UIForumDescription.gtmpl"
 )
 public class UIForumDescription extends UIContainer {
+  private ForumService forumService;
+
   private String  forumId;
 
   private String  categoryId;
+
+  private Category   category   = null;
 
   private Forum   forum   = null;
 
   private boolean isForum = false;
 
-  private Log     log     = ExoLogger.getLogger(UIForumDescription.class);
+  private boolean hasUpdate = false;
 
   public UIForumDescription() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+    this.hasUpdate = false;
   }
 
   public void setForum(Forum forum) {
     this.forum = forum;
-    this.isForum = false;
+    this.hasUpdate = false;
   }
 
-  public void setForumIds(String categoryId, String forumId) {
-    this.isForum = true;
+  
+  public void setCategoryId(String categoryId) {
+    this.hasUpdate = true;
+    this.categoryId = categoryId;
+  }
+
+  public void setForumId(String categoryId, String forumId) {
+    this.hasUpdate = true;
     this.forumId = forumId;
     this.categoryId = categoryId;
   }
 
-  protected Forum getForum() throws Exception {
-    if (forum == null || isForum) {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      try {
-        return forumService.getForum(categoryId, forumId);
-      } catch (Exception e) {
-        log.debug(forumId + " must exist: " + e.getMessage() + "\n" + e.getCause());
-        return null;
-      }
+  public String getName() {
+    return (isForum && getForum() != null) ? forum.getForumName() :
+              ((!isForum && getCategory() != null) ? category.getCategoryName() : null);
+  }
+
+  public String getDescription() {
+    return (isForum && getForum() != null) ? forum.getDescription() :
+      ((!isForum && getCategory() != null) ? category.getDescription() : null);
+  }
+
+  private Category getCategory() {
+    if (this.category == null || hasUpdate) {
+      return forumService.getCategory(categoryId);
+    } else {
+      return this.category;
+    }
+  }
+
+  private Forum getForum() {
+    if (forum == null || hasUpdate) {
+      return forumService.getForum(categoryId, forumId);
     } else {
       return this.forum;
     }
