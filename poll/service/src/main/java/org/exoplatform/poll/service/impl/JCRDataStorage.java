@@ -32,7 +32,9 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.PropertyReader;
 import org.exoplatform.forum.common.jcr.SessionManager;
@@ -217,7 +219,17 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     pollNew.setIsMultiCheck(reader.bool(EXO_IS_MULTI_CHECK));
     pollNew.setIsAgainVote(reader.bool(EXO_IS_AGAIN_VOTE, false));
     pollNew.setIsClosed(reader.bool(EXO_IS_CLOSED, false));
+    pollNew.setInTopic(pollNode.getParent().isNodeType(EXO_TOPIC));
+    setPollLink(pollNode, pollNew);
     return pollNew;
+  }
+  
+  private void setPollLink(Node pollNode, Poll poll) throws Exception {
+    Node parent = pollNode.getParent();
+    PropertyReader reader = new PropertyReader(parent);
+    if(parent.isNodeType("exo:topic")) {
+      poll.setLink (reader.string(EXO_LINK));
+    }
   }
 
   public List<Poll> getPagePoll() throws Exception {
@@ -490,6 +502,8 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
         pollNode.setProperty(EXO_IS_CLOSED, poll.getIsClosed());
         pollNode.setProperty(EXO_IS_AGAIN_VOTE, poll.getIsAgainVote());
       }
+      setPollLink(pollNode, poll);
+      poll.setInTopic(pollNode.getParent().isNodeType(EXO_TOPIC));
       if (parentNode.isNew())
         parentNode.getSession().save();
       else
@@ -519,5 +533,30 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       sProvider.close();
     }
   }
+  
+  @Override
+  public void saveActivityIdForOwner(String ownerId, String activityId) {
+    try {
+      SessionProvider provider = CommonUtils.createSystemProvider();
+      Node ownerNode = getParentNode(provider, ownerId);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
+    }
+  }
+
+  @Override
+  public String getActivityIdForOwner(String ownerId) {
+    try {
+      SessionProvider provider = CommonUtils.createSystemProvider();
+      Node ownerNode = getParentNode(provider, ownerId);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.error(String.format("Failed to get attach activityId for %s ", ownerId), e);
+    }
+    return null;
+  }
+
 
 }

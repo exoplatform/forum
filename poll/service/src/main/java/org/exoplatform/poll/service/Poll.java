@@ -61,6 +61,8 @@ public class Poll {
 
   private boolean  showVote     = true;
 
+  private boolean  isInTopic    = false;
+
   private String   votes;
 
   private String[] infoVote;
@@ -68,6 +70,8 @@ public class Poll {
   private String   expire;
 
   private String   isAdmin      = "false";
+  
+  private String   link;
 
   public Poll() {
     id = PollNodeTypes.POLL + IdGenerator.generate();
@@ -299,4 +303,33 @@ public class Poll {
   public String getExpire() {
     return expire;
   }
+
+  /**
+   * @return the link
+   */
+  public String getLink() {
+    return link;
+  }
+
+  /**
+   * @param link the link to set
+   */
+  public void setLink(String link) {
+    this.link = link;
+  }
+
+  /**
+   * @return the isInTopic
+   */
+  public boolean isInTopic() {
+    return isInTopic;
+  }
+
+  /**
+   * @param isInTopic the isInTopic to set
+   */
+  public void setInTopic(boolean isInTopic) {
+    this.isInTopic = isInTopic;
+  }
+
 }

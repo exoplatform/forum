@@ -504,7 +504,7 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     faqService_.deleteAnswerQuestionLang(questionId, answerId, "VietNam");
     assertNull("Answer2 in question language is not deleted.", faqService_.getAnswerById(questionId, answerId, "VietNam"));
     // Delete comment in question language.
-    faqService_.deleteCommentQuestionLang(questionId, commentId, "VietNam");
+    faqService_.deleteCommentQuestionLang(questionId, commentId, "VietNam", false);
     assertNull("Comment in question language is not deleted.", faqService_.getCommentById(questionId, commentId, "VietNam"));
   }
 

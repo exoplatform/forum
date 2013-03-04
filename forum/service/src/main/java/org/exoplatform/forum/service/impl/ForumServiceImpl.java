@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,8 +29,11 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
@@ -328,6 +332,22 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Category removeCategory(String categoryId) throws Exception {
+    List<Forum> listForums = getForums(categoryId, null);
+    for (Forum forum : listForums) {
+      String forumId = forum.getId();
+      List<Topic> listTopics = getTopics(categoryId, forumId);
+      for (Topic topic : listTopics) {
+        String topicId = topic.getId();
+        String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+        for (ForumEventLifeCycle f : listeners_) {
+          if (topic.getIsPoll()) {
+            String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+            f.removeActivity(pollActivityId);
+          }
+          f.removeActivity(topicActivityId);
+        }
+      }
+    }
     return storage.removeCategory(categoryId);
   }
 
@@ -342,7 +362,33 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyForum(Forum forum, int type) throws Exception {
+    List<Topic> oldTopics = getTopics(forum.getCategoryId(), forum.getId());
+    List<Topic> editedTopics = new ArrayList<Topic>();
+    for (Topic topic : oldTopics) {
+      switch (type) {
+        case Utils.CLOSE: {
+          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+          editedTopic.setIsClosed(forum.getIsClosed());
+          topic.setIsClosed(!topic.getIsActiveByForum());
+          topic.setEditedIsClosed(editedTopic.getIsClosed());
+          editedTopics.add(topic);
+          break;
+        }
+        case Utils.LOCK: {
+          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+          editedTopic.setIsLock(forum.getIsLock());
+          topic.setEditedIsLock(editedTopic.getIsLock());
+          editedTopics.add(topic);
+          break;
+        }
+      }
+    }
     storage.modifyForum(forum, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Topic topic : editedTopics) {
+        f.updateTopic(topic);
+      }
+    }
   }
 
   /**
@@ -397,6 +443,18 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Forum removeForum(String categoryId, String forumId) throws Exception {
+    List<Topic> listTopics = getTopics(categoryId, forumId);
+    for (Topic topic : listTopics) {
+      String topicId = topic.getId();
+      String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+      for (ForumEventLifeCycle f : listeners_) {
+        if (topic.getIsPoll()) {
+          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+          f.removeActivity(pollActivityId);
+        }
+        f.removeActivity(topicActivityId);
+      }
+    }
     return storage.removeForum(categoryId, forumId);
   }
 
@@ -404,6 +462,69 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyTopic(List<Topic> topics, int type) {
+    //update case
+    List<Topic> editeds = new ArrayList<Topic>();
+    Topic edited = null;
+    for(Topic topic : topics) {
+      //
+      try {
+        edited = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
+      } catch (Exception e) {
+       log.warn("Ca not get Topic for " + topic.getId());
+      }
+      
+      //
+      switch (type) {
+        case Utils.CLOSE: {
+          edited.setEditedIsClosed(topic.getIsClosed());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.LOCK: {
+          edited.setEditedIsLock(topic.getIsLock());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.WAITING: {//CENSORING
+          edited.setEditedIsWaiting(topic.getIsWaiting());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.ACTIVE: {//HIDDEN & Showing
+          edited.setEditedIsActive(topic.getIsActive());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.APPROVE: {
+          edited.setEditedIsApproved(topic.getIsApproved());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.CHANGE_NAME: {
+          edited.setEditedTopicName(topic.getTopicName());
+          editeds.add(edited);
+          break;
+        }
+        case Utils.VOTE_RATING: {
+          edited.setEditedVoteRating(topic.getVoteRating());
+          editeds.add(edited);
+          break;
+        }
+      }
+    }
+    
+    storage.modifyTopic(topics, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Topic topic : editeds) {
+        f.updateTopic(topic);
+      }
+    }
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public void modifyMergedTopic(List<Topic> topics, int type) {
     storage.modifyTopic(topics, type);
   }
 
@@ -417,12 +538,26 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
+    //update case
+    Topic edited = null;
+    if(isNew == false) {
+      edited = getTopic(categoryId, forumId, topic.getId(), "");
+      edited.setEditedDescription(topic.getDescription());
+      edited.setEditedTopicName(topic.getTopicName());
+      edited.setEditedIsClosed(topic.getIsClosed());
+      edited.setEditedIsLock(topic.getIsLock());
+      edited.setEditedIsWaiting(topic.getIsWaiting());
+    }
+    
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
-      if (isNew)
-        f.addTopic(topic, categoryId, forumId);
-      else
-        f.updateTopic(topic, categoryId, forumId);
+      if (isNew) {
+        f.addTopic(topic);
+      } else {
+        if (edited != null) {
+          f.updateTopic(edited);
+        }
+      }
     }
   }
 
@@ -484,6 +619,14 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
     storage.moveTopic(topics, destForumPath, mailContent, link);
+    String toForumName = ((Forum) storage.getObjectNameByPath(destForumPath)).getForumName();
+    String toCategoryName = ((Category) storage.getObjectNameByPath(Utils.getCategoryPath(destForumPath))).getCategoryName();
+    for (ForumEventLifeCycle f : listeners_) {
+      for (Topic topic : topics) {
+        topic.setPath(destForumPath.concat("/").concat(topic.getId()));
+        f.moveTopic(topic, toCategoryName, toForumName);
+      }
+    }
     CacheUserProfile.clearCache();
   }
 
@@ -491,8 +634,17 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
+    String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    Topic topic = storage.removeTopic(categoryId, forumId, topicId);
+    for (ForumEventLifeCycle f : listeners_) {
+      if (topic.getIsPoll()) {
+        String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+        f.removeActivity(pollActivityId);
+      }
+      f.removeActivity(topicActivityId);
+    }
     CacheUserProfile.clearCache();
-    return storage.removeTopic(categoryId, forumId, topicId);
+    return topic;
   }
 
   /**
@@ -543,9 +695,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
     for (ForumEventLifeCycle f : listeners_) {
       if (isNew)
-        f.addPost(post, categoryId, forumId, topicId);
+        f.addPost(post);
       else
-        f.updatePost(post, categoryId, forumId, topicId);
+        f.updatePost(post);
     }
   }
 
@@ -554,19 +706,22 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void modifyPost(List<Post> posts, int type){
     storage.modifyPost(posts, type);
+    for (ForumEventLifeCycle f : listeners_) {
+      for(Post post : posts) {
+        f.updatePost(post, type);
+      }
+    }
   }
 
   /**
    * {@inheritDoc}
    */
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-    String[] postPaths = new String[posts.size()];
-    int i = 0;
+    List<String> postPaths = new ArrayList<String>();
     for (Post p : posts) {
-      postPaths[i] = p.getPath();
-      ++i;
+      postPaths.add(p.getPath());
     }
-    movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+    movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
   /**
@@ -580,9 +735,30 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception {
+    String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
+    String destActivityId = storage.getActivityIdForOwner(destTopicPath);
+    //
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
+    
+    Topic newTopic = storage.getTopicByPath(destTopicPath, false);
+    newTopic.setTopicName(topicMergeTitle);
+    for (ForumEventLifeCycle f : listeners_) {
+      f.mergeTopic(newTopic, srcActivityId, destActivityId);
+    }
+    //
+    
     CacheUserProfile.clearCache();
+  }
+
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    String srcTopicPath = Utils.getTopicPath(postPathMove.get(0));
+    storage.splitTopic(newTopic, fistPost, postPathMove, mailContent, link);
+    String srcActivityId = storage.getActivityIdForOwner(srcTopicPath);
+    Topic srcTopic = storage.getTopicByPath(srcTopicPath, false);
+    for (ForumEventLifeCycle f : listeners_) {
+      f.splitTopic(newTopic, srcTopic, srcActivityId);
+    }
   }
 
   /**
@@ -590,7 +766,16 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) {
     CacheUserProfile.clearCache();
-    return storage.removePost(categoryId, forumId, topicId, postId);
+    String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
+    String postActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(postId));
+    Post deleted = storage.removePost(categoryId, forumId, topicId, postId);
+    
+    //
+    for (ForumEventLifeCycle f : listeners_) {
+      f.removeComment(topicActivityId, postActivityId);
+    }
+    
+    return deleted;
   }
 
   /**
@@ -1418,10 +1603,42 @@ public class ForumServiceImpl implements ForumService, Startable {
     listeners_.add(listener);
   }
   
-  public void removeCacheUserProfile(String userName) throws Exception {
+  public void removeCacheUserProfile(String userName) {
     UserProfile userProfile = CacheUserProfile.getFromCache(userName);
     if (userProfile != null && UserProfile.USER_DELETED != userProfile.getUserRole()) {
       CacheUserProfile.removeInCache(userName);
     }
+  }
+
+  public void saveActivityIdForOwnerId(String ownerId,  String activityId) {
+    storage.saveActivityIdForOwner(ownerId, Utils.TOPIC, activityId);
+  }
+
+  public void saveActivityIdForOwnerPath(String ownerPath, String activityId) {
+    storage.saveActivityIdForOwner(ownerPath, activityId);
+  }
+
+  public String getActivityIdForOwnerId(String ownerId) {
+    return storage.getActivityIdForOwner(ownerId, Utils.TOPIC);
+  }
+
+  public String getActivityIdForOwnerPath(String ownerPath) {
+    return storage.getActivityIdForOwner(ownerPath);
+  }
+  
+  public void saveCommentIdForOwnerId(String ownerId,  String commentId) {
+    storage.saveActivityIdForOwner(ownerId, Utils.POST, commentId);
+  }
+
+  public void saveCommentIdForOwnerPath(String ownerPath, String commentId) {
+    storage.saveActivityIdForOwner(ownerPath, commentId);
+  }
+
+  public String getCommentIdForOwnerId(String ownerId) {
+    return storage.getActivityIdForOwner(ownerId, Utils.POST);
+  }
+
+  public String getCommentIdForOwnerPath(String ownerPath) {
+    return storage.getActivityIdForOwner(ownerPath);
   }
 }

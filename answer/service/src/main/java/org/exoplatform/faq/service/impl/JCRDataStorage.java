@@ -60,6 +60,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
@@ -763,7 +764,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node answerNode = getFAQServiceHome(sProvider).getNode(questionId).getNode(Utils.ANSWER_HOME).getNode(answerid);
       return getAnswerByNode(answerNode);
     } catch (Exception e) {
-      log.error("Failed to get answer by id.", e);
+      log.debug("Failed to get answer by id.", e);
     }
     return null;
   }
@@ -3971,5 +3972,100 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   protected static void logDebug(String message) {
     logDebug(message, null);
+  }
+  
+  @Override
+  public void saveActivityIdForQuestion(String questionId, String activityId) {
+    try {
+      Node ownerNode = getQuestionNodeById(questionId);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, questionId), e);
+    }
+  }
+
+  @Override
+  public String getActivityIdForQuestion(String questionId) {
+    try {
+      Node ownerNode = getQuestionNodeById(questionId);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.debug(String.format("Failed to get attach activityId for %s ", questionId), e);
+    }
+    return null;
+  }
+  
+  @Override
+  public void saveActivityIdForAnswer(String questionId, Answer answer, String activityId) {
+    try {
+      Node ownerNode = getAnswerNode(questionId, answer);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, answer.getId()), e);
+    }
+  }
+
+  @Override
+  public String getActivityIdForAnswer(String questionId, Answer answer) {
+    try {
+      Node ownerNode = getAnswerNode(questionId, answer);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.debug(String.format("Failed to get attach activityId for %s ", answer.getId()), e);
+    }
+    return null;
+  }
+  
+  @Override
+  public void saveActivityIdForComment(String questionId, String commentId, String language, String activityId) {
+    try {
+      Node ownerNode = getCommentNode(questionId, commentId, language);
+      ActivityTypeUtils.attachActivityId(ownerNode, activityId);
+      ownerNode.save();
+    } catch (Exception e) {
+      log.debug(String.format("Failed to attach activityId %s for node %s ", activityId, commentId), e);
+    }
+  }
+
+  @Override
+  public String getActivityIdForComment(String questionId, String commentId, String language) {
+    try {
+      Node ownerNode = getCommentNode(questionId, commentId, language);
+      return ActivityTypeUtils.getActivityId(ownerNode);
+    } catch (Exception e) {
+      log.debug(String.format("Failed to get attach activityId for %s ", commentId), e);
+    }
+    return null;
+  }
+  
+  public Node getAnswerNode(String questionId, Answer answer) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
+    String defaultLang = questionNode.getProperty(EXO_LANGUAGE).getString();
+    Node answerHome;
+    String language = answer.getLanguage();
+    if (language == null || language.equals(defaultLang)) {
+      answerHome = questionNode.getNode(Utils.ANSWER_HOME);
+    } else { // answer for other languages
+      Node langNode = getLanguageNodeByLanguage(questionNode, answer.getLanguage());
+      answerHome = langNode.getNode(Utils.ANSWER_HOME);
+    }
+    return answerHome.getNode(answer.getId());
+  }
+  
+  public Node getCommentNode(String questionId, String commentId, String language) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
+    String defaultLang = questionNode.getProperty(EXO_LANGUAGE).getString();
+    Node commentHome;
+    if (language != null && !language.equals(defaultLang) && language.length() > 0) {
+      Node languageNode = getLanguageNodeByLanguage(questionNode, language);
+      commentHome = languageNode.getNode(Utils.COMMENT_HOME);
+    } else {
+      commentHome = questionNode.getNode(Utils.COMMENT_HOME);
+    }
+    return commentHome.getNode(commentId);
   }
 }

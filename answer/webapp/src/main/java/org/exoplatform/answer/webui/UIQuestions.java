@@ -984,7 +984,7 @@ public class UIQuestions extends UIContainer {
       UIQuestions questions = event.getSource();
       String commentId = event.getRequestContext().getRequestParameter(OBJECTID);
       if (questions.checkExistingQuestion(event.getRequestContext(), questions.viewingQuestionId_)) {
-        questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_);
+        questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_, false);
         questions.updateCurrentLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(questions);
       }
@@ -1010,7 +1010,7 @@ public class UIQuestions extends UIContainer {
           answer.setActivateAnswers(true);
           answer.setApprovedAnswers(true);
           questions.getFAQService().saveAnswer(questions.viewingQuestionId_, answer, questions.language_);
-          questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_);
+          questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_, true);
         } else {
           questions.showMessageDeletedQuestion(event.getRequestContext());
           return;

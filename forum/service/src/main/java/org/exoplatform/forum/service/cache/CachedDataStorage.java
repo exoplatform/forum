@@ -1263,6 +1263,10 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
   }
 
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    storage.splitTopic(newTopic, fistPost, postPathMove, mailContent, link);
+  }
+
   public void updateUserProfileInfo(String name) throws Exception {
     storage.updateUserProfileInfo(name);
   }
@@ -1273,5 +1277,21 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public InputStream createUserRss(String userId, String link) throws Exception {
     return storage.createUserRss(userId, link);
+  }
+
+  public void saveActivityIdForOwner(String ownerId,  String type, String activityId) {
+    storage.saveActivityIdForOwner(ownerId, type, activityId);
+  }
+
+  public void saveActivityIdForOwner(String ownerPath, String activityId) {
+    storage.saveActivityIdForOwner(ownerPath, activityId);
+  }
+
+  public String getActivityIdForOwner(String ownerId, String type) {
+    return storage.getActivityIdForOwner(ownerId, type);
+  }
+
+  public String getActivityIdForOwner(String ownerPath) {
+    return storage.getActivityIdForOwner(ownerPath);
   }
 }

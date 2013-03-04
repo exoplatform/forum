@@ -226,4 +226,16 @@ public interface DataStorage {
   void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
 
   public void calculateDeletedUser(String userName) throws Exception;
+  
+  void saveActivityIdForQuestion(String ownerPath, String activityId);
+
+  String getActivityIdForQuestion(String ownerPath);
+  
+  void saveActivityIdForAnswer(String ownerPath, Answer answer, String activityId);
+
+  String getActivityIdForAnswer(String ownerPath, Answer answer);
+  
+  void saveActivityIdForComment(String ownerPath, String commentId, String language, String activityId);
+
+  String getActivityIdForComment(String ownerPath, String commentId, String language);
 }

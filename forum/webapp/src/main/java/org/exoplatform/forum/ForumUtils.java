@@ -112,6 +112,8 @@ public class ForumUtils {
 
   public static final String HAS_CREATE_POLL          = "hasCreatePoll";
 
+  public static final String VIEW_LAST_POST           = "lastpost";
+
   private static String buildForumLink(String url, String type, String id) {
     StringBuilder link = new StringBuilder(url);
     if (!isEmpty(type) && !isEmpty(id)) {

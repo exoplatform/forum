@@ -338,6 +338,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @param type the type
    */
   void modifyTopic(List<Topic> topics, int type);
+  
+  /**
+   * Modify merged new topic.
+   * 
+   * @param topics the topics
+   * @param type the type
+   */
+  void modifyMergedTopic(List<Topic> topics, int type);
 
   /**
    * Save topic.
@@ -379,9 +387,23 @@ public interface ForumService extends ForumServiceLegacy {
    * @param destTopicPath the target of topic
    * @param mailContent mail to send notification
    * @param link to topic
+   * @param topicMergeTitle new topic's name
    * @throws Exception the exception
    */
-  void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
+  void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception;
+
+  /**
+   * Split topic.
+   * 
+   * @param newTopic - the new topic create when split topic.
+   * @param fistPost - the fist post of new topic.
+   * @param postPathMove - the list path's posts move to new topic
+   * @param mailContent - the mail content to send notification
+   * @param link to topic
+   * @throws Exception
+   * @since 4.0
+   */
+  void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception;
 
   /**
    * Gets the posts.
@@ -1449,4 +1471,84 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception 
    */
   public void removeCacheUserProfile(String userName) throws Exception;
+  
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into Node what is owner created activity via Id
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForOwnerId(String ownerId, String activityId);
+
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForOwnerPath(String ownerPath, String activityId);
+
+  /**
+   * Get value of exo:activityId property in specified node via Id. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForOwnerId(String ownerId);
+
+  /**
+   * Get value of exo:activityId property in specified node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForOwnerPath(String ownerPath);
+  
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into post's Node what is owner created activity via Id
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveCommentIdForOwnerId(String ownerId, String commentId);
+
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into post's Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveCommentIdForOwnerPath(String ownerPath, String commentId);
+
+  /**
+   * Get value of exo:activityId property in specified post's node via Id. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerId - the Id's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getCommentIdForOwnerId(String ownerId);
+
+  /**
+   * Get value of exo:activityId property in specified post's node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getCommentIdForOwnerPath(String ownerPath);
 }

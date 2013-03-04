@@ -16,16 +16,22 @@
  */
 package org.exoplatform.forum.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.NodeIterator;
+
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
-
-import javax.jcr.NodeIterator;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -188,12 +194,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-    @Override
-    public Category getCategoryIncludedSpace() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
+  public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
 
     return null;
   }
@@ -503,7 +504,7 @@ public class FakeForumService implements ForumService {
     return false;
   }
 
-  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception {
   }
 
   public void modifyForum(Forum forum, int type) throws Exception {
@@ -729,52 +730,100 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  @Override
   public void calculateDeletedUser(String userName) throws Exception {
 
     
   }
 
-  @Override
   public void addListenerPlugin(ForumEventListener listener) throws Exception {
 
     
   }
 
-  @Override
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
 
     return null;
   }
 
-  @Override
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
 
     
   }
 
-  @Override
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
 
     
   }
 
-  @Override
   public List<Post> getRecentPostsForUser(String userName, int number) throws Exception {
     return null;
   }
 
-  @Override
   public void removeCacheUserProfile(String userName) throws Exception {
     
   }
 
-  @Override
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     
   }
 
+  public void saveActivityIdForOwnerId(String ownerId, String activityId) {
+    
+  }
+
+  public void saveActivityIdForOwnerPath(String ownerPath, String activityId) {
+    
+  }
+
+  public String getActivityIdForOwnerId(String ownerId) {
+    return null;
+  }
+
+  public String getActivityIdForOwnerPath(String ownerPath) {
+    return null;
+  }
+
+  public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
+    
+  }
+
+  @Override
+  public void saveCommentIdForOwnerId(String ownerId, String commentId) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void saveCommentIdForOwnerPath(String ownerPath, String commentId) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public String getCommentIdForOwnerId(String ownerId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getCommentIdForOwnerPath(String ownerPath) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void modifyMergedTopic(List<Topic> topics, int type) {
+    // TODO Auto-generated method stub
+    
+  }
+  
   public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Category getCategoryIncludedSpace() {
     // TODO Auto-generated method stub
     return null;
   }

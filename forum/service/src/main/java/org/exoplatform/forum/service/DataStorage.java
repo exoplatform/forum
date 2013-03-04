@@ -372,10 +372,20 @@ public interface DataStorage {
   void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
 
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
+  
+  void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception;
 
   void updateUserProfileInfo(String name) throws Exception;
 
   public InputStream createForumRss(String objectId, String link) throws Exception;
 
   public InputStream createUserRss(String userId, String link) throws Exception;
+  
+  public void saveActivityIdForOwner(String ownerId,  String type, String activityId);
+
+  public void saveActivityIdForOwner(String ownerPath, String activityId);
+
+  public String getActivityIdForOwner(String ownerId, String type);
+
+  public String getActivityIdForOwner(String ownerPath);
 }

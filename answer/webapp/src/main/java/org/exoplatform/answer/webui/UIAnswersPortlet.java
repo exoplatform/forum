@@ -142,20 +142,10 @@ public class UIAnswersPortlet extends UIPortletApplication {
       PortalRequestContext portalContext = Util.getPortalRequestContext();
       String cateId = getSpaceCategoryId();
       if (portalContext.getRequestParameter(OBJECTID) == null && !portalContext.useAjax()) {
-        if (!FAQUtils.isFieldEmpty(cateId)) {
-          UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
-          UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
-          UICategories categories = findFirstComponentOfType(UICategories.class);
-          uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME + "/" + cateId);
-          uiBreadcums.setRenderSearch(true);
-          uiQuestions.setCategoryId(Utils.CATEGORY_HOME + "/" + cateId);
-          categories.setPathCategory(Utils.CATEGORY_HOME + "/" + cateId);
-        } else {
-          String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
-          String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
-          if (!FAQUtils.isFieldEmpty(questionId)) {
-            viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
-          }
+        String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
+        String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
+        if (!FAQUtils.isFieldEmpty(questionId)) {
+          viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
         }
       }
     } catch (Exception e) {

@@ -113,6 +113,14 @@ public class Post {
     return null;
   }
 
+  public String getCategoryId() {
+    if (path != null && path.length() > 0) {
+      String[] arr = path.split("/");
+      return arr[arr.length - 4];
+    }
+    return null;
+  }
+
   public String getOwner() {
     return owner;
   }

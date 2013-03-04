@@ -93,4 +93,28 @@ public interface PollService {
    * @throws Exception the exception
    */
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception;
+
+  /**
+   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
+   * into Node what is owner created activity via patch
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @param activityId - the Id's activity created. 
+   * @since 4.0
+   */
+  public void saveActivityIdForOwner(String ownerPath, String activityId);
+
+  /**
+   * Get value of exo:activityId property in specified node via path. 
+   * If property is not existing then return null.
+   * 
+   * @param ownerPath - the Path's Node what is owner created activity
+   * @return String - the Id's activity created. 
+   * @since 4.0
+   */
+  public String getActivityIdForOwner(String ownerPath);
+  
+  public void addListenerPlugin(PollEventListener listener) throws Exception;
+  
+  public void removeListenerPlugin(PollEventListener listener) throws Exception; 
 }

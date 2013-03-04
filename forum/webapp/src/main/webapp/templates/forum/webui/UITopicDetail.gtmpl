@@ -711,7 +711,7 @@
         </tbody>
       </table>
     <% }//end for
-      ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 700);");
+      ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
      } else {
      uicomponent.renderPoll();
      if(canEdit){
