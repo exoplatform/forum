@@ -157,7 +157,7 @@
                   <span class="Text StickyIcon FL"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
                 <% } %>
                   <a onclick="$link; return false;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
-                  <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent CancelEvent" style="display:none; left:80px;">
+                  <div id="UIPopupCategory${rCNB}" data-bookmark="$actionBookmark" class="ClickPopupContent CancelEvent" style="display:none; left:80px;">
                   </div>
                 </div>
                     <% ++rCNB; %>
@@ -304,19 +304,17 @@
   
 	<%if(isShowMenu){%>
   <% //Begin RightClick Bookmark  %>
-  <div class="UIPopupCategory" id="RightClickContainer" style="display: none;">
-    <ul class="UIRightClickPopupMenu" style="display:block;">
-      <li class="MenuItem AddBookmark">
-        <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-      </li>
-      <li class="MenuItem AddWatching">
-        <a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-      </li>
-      <li class="MenuItem AddRSS">
-        <a class="ItemIcon ForumRSSFeed" href="#" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-      </li>
-    </ul>     
-  </div>
+  <ul id="RightClickContainer" style="display:none;">
+     <li>
+       <a class="watching" href="#"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+     </li>
+     <li>
+       <a class="bookmark" href="#"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+     </li>
+     <li>
+       <a class="rssfeed" href="#"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+     </li>
+  </ul>
   <% //End RightClick Bookmark %>
   <% } %>
 </div>

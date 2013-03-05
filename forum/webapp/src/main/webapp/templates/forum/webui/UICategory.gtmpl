@@ -314,12 +314,12 @@
 									<i class="$classIconStatusForum" title="$titleIconForum"></i>
 									<% ++rCNB; %>
 									<%if(uicomponent.useAjax){%>
-											<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+											<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 									<%} else {%>
 											<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 									<%}%>
-										<div id="UIPopupMenu${rCNB}" style="display:none;">
-											<ul rel="tooltip" data-placement="bottom" title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+										<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
+											<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
 										</div>
 									<div class="ForumDescription">$forumDescription</div>
 								</td>
@@ -344,13 +344,13 @@
 										
 									<% ++rCNB; %>
 									<%if(uicomponent.useAjax){%>
-										<a id="UIContextPopupMenu${rCNB}" rel="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										<a class="ActionLink" id="UIContextPopupMenu${rCNB}" data-link="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 									<%} else {%>
-										<a id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 									<%}%>
 									
-									<div id="UIPopupMenu${rCNB}" style="display:none;">
-										<ul rel="tooltip" data-placement="bottom" title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+									<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
+										<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
 									</div>
 									<div class="DateTime">&nbsp;$dateTime</div>
 									
@@ -403,15 +403,15 @@
 	<%if(uicomponent.userProfile.getUserRole() < 3){%>
 	<% //Begin RightClick Bookmark	%>
 	<ul id="RightClickContainer" style="display:none;">
-		<li class="MenuItem AddBookmark">
-			<a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-		</li>
-		<li class="MenuItem AddWatching">
-			<a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
- 		</li>
- 		<li class="MenuItem AddRSS">
-			<a class="ItemIcon ForumRSSFeed" href=""><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-		</li>
+      <li>
+        <a class="watching" href="#"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+      </li>
+      <li>
+        <a class="bookmark" href="#"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+      </li>
+      <li>
+        <a class="rssfeed" href="#"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+      </li>
 	</ul>
 	<% //End RightClick Bookmark%>
 	<% } %>

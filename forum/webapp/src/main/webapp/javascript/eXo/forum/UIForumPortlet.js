@@ -641,15 +641,15 @@
       var popupContainer = $('#RightClickContainer');
       if (!popupContainer.exists())
         return;
-      var itemmenuBookMark = popupContainer.find('a.AddLinkToBookIcon:first');
-      var itemmenuWatching = popupContainer.find('a.AddWatchingIcon:first');
-      var itemmenuRSS = popupContainer.find('a.ForumRSSFeed:first');
+      var itemmenuBookMark = popupContainer.find('a.bookmark:first');
+      var itemmenuWatching = popupContainer.find('a.watching:first');
+      var itemmenuRSS = popupContainer.find('a.rssfeed:first');
       if (!itemmenuWatching.exists() || !itemmenuBookMark.exists())
         return;
       var labelWatchings = String(itemmenuWatching.html()).split(";");
       for ( var i = 0; i < popupContents.length; i++) {
         var popupContent = popupContents.eq(i);
-        var action = popupContent.attr('title');
+        var action = popupContent.attr('data-bookmark');
         if(action == null) continue;
         if (action.indexOf(";") < 0) {
           itemmenuBookMark.attr('href', action);
@@ -678,8 +678,12 @@
           }
           itemmenuWatching.parent().show();
         }
-        popupContent.removeAttr('title');
+        popupContent.removeAttr('data-bookmark');
         popupContent.html(popupContainer.html());
+        popupContent.on('mouseover', function(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
+        });
       }
     },
 
@@ -853,10 +857,11 @@
       }
     },
 
-    executeLink : function(evt) {
-      var onclickAction = String($(this).attr("rel"));
+    executeLink : function(elm, evt) {
+      var onclickAction = String($(elm).attr("data-link"));
       eval(onclickAction);
-      utils.cancelEvent(evt);
+      evt.preventDefault();
+      evt.stopPropagation();
       return false;
     },
 
@@ -874,7 +879,9 @@
     addLink : function(cpId, clazzAction) {
       var links = findId(cpId).find('a.' + clazzAction);
       if (links.exists()) {
-        links.on('click', UIForumPortlet.executeLink);
+        links.on('click', function(e) {
+          UIForumPortlet.executeLink(this, e);
+        });
       }
     },
 
