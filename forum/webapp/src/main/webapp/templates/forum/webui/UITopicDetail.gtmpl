@@ -84,11 +84,11 @@
 <div class="uiTopicDetail">
 <% uiform.begin() %>
   <% if(!isNull) {%>
-  <div class="ButtomAndPageListContainer ClearFix">
+  <div class="clearfix">
   <%if(isCanReply || isNotLogin) { %>
-    <div class="UIActionForum FL">
+    <div class="pull-left">
     <% } else { %>
-      <div class="LockActionForum UIActionForum FL BntPostReply">
+      <div class="LockActionForum pull-left BntPostReply">
     <% } %>
           <% if(isCanReply) { %>
                 <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
@@ -102,7 +102,7 @@
         List<Tag> tags = uicomponent.getTagsByTopic();
         if(!tags.isEmpty()){
       %>
-      <div class="FL TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
+      <div class="pull-left TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
       <%}%>
       <ul class="TagContainer FL TagContent" id="TagContainer">
         <%
@@ -183,14 +183,22 @@
 					  
 					<ul class="dropdown-menu" id="AddTagId">
 					  <li>
-						<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-						<div class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
-						  <div class="TagNameItem Selected"></div>
-						</div>
-						<div class="UIActionForum FL">
-						  <div class="NormalButtomBT">
-							 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><label for="<%=uicomponent.FIELD_ADD_TAG%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></label></div>
-						  </div>
+						<div class="searchAdvance">
+							<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
+							<button class="btn btn-primary" onclick="<%=uicomponent.event("AddTagTopic")%>">
+								<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
+							</button>
+							
+							<div class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
+								<div class="TagNameItem Selected"></div>
+							</div>
+							
+							<div class="dropdown">
+								<ul class="dropdown-menu">
+									<li><a href="#">abc</a></li>
+								</ul>
+							</div>
+							
 						</div>
 					  </li>
 					</ul>
@@ -569,6 +577,7 @@
 			  <% if(canEdit) {%>
 				<div class="postViewTitle pull-left"><i class="$classIconPost"></i>$namePost $alert</div>
 				<div class="pull-right">
+				
 					<span class="postTime pull-left"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
 					
 					<%
@@ -598,19 +607,20 @@
 					   }
 				%>
 					<div class="pull-right dropdown">
+						
 						<i  data-toggle="dropdown" class="uiIconForumBanIp uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="IP: $ip"></i>
 				
 					<% /*Begin Popup Menu*/ %>
 					  
 						<ul class="dropdown-menu">
-							<li rel="tooltip" data-placement="bottom" title="$title1" class="MenuItem" onclick="$link2">   
+							<li rel="tooltip" data-placement="bottom" title="$title1" onclick="$link2">   
 								<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
 							</li>
 						  <% 
 							if(userProfile.getUserRole() == 0) {
 							String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
 						  %>
-							<li class="MenuItem" onclick="$link">  
+							<li onclick="$link">  
 								<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
 							</li>
 						<% } %>
@@ -631,6 +641,7 @@
 				</div>
 				<% } %>
 			  </div>
+			  
 			<div class="PostContentContainer">
 			<% 
 			boolean hasAttachment = false ;
@@ -746,6 +757,8 @@
 				</div>
 			</div>
 <!-- End PostViewContainer -->
+		
+		
 		</div>
 			
     <% }//end for
@@ -764,9 +777,9 @@
 <!-- End PostsInThreadContainer -->
   <div class="ButtomAndPageListContainer">
   <%if(isCanReply || isNotLogin) { %>
-    <div class="UIActionForum FL">
+    <div class="pull-left">
   <% } else { %>
-    <div class="LockActionForum UIActionForum FL BntPostReply">
+    <div class="LockActionForum pull-left BntPostReply">
   <% } %>
         <% if(isCanReply) { %>
               <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
@@ -794,17 +807,17 @@
   </div>
 <% if(isCanReply && uicomponent.isShowQuickReply()){ %>
 
-  <div class="ForumCategory ForumQuickReply">
-    <div class="ForumToolbar ForumActionToolbar ClearFix">
-      <span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-      <h6 class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
-    </div>
-    <div class="ContentContainer">
-      <div class="ForumList" id="QuickReply">
+  <div class="uiBox forumQuickReply">
+    <h5 class="title">
+		<i class="uiIconArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+		<%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
+    </h5>
+    <div class="uiContentBox textQuickReply">
+     
         <label for="<%=uicomponent.FIELD_MESSAGE_TEXTAREA%>"><%=_ctx.appRes("UITopicDetail.label.Message");%>:</label>
         <%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
-      </div>
-      <div class="uiAction">
+     
+		<div class="uiAction">
       <% for(action in uicomponent.getActions()) { 
              String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
              String link = uicomponent.event(action);
@@ -812,7 +825,7 @@
         %>
       <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
-    </div>
+		</div>
     </div>
   </div>
           
