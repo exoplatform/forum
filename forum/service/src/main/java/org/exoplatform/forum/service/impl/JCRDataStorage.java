@@ -1390,8 +1390,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           forumId = node.getName();
 
           //can create topic in category/forum
-          if((isAdminRole(userName)) || (( canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId))
-              && (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) && !categoryId.equals(Utils.CATEGORY + Utils.CATEGORY_SPACE)) ) {
+          if(canAddForum(userName, categoryId, forumId, canCreateTopicIds, categoryPrivates)) {
             
             if(categoryFilters.containsKey(categoryId)) {
               categoryFilter = categoryFilters.get(categoryId);
@@ -1420,6 +1419,24 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     }
     return new ArrayList<CategoryFilter>();
+  }
+  
+  private boolean canAddForum(String userName, String categoryId, String forumId, 
+                              List<String> canCreateTopicIds, List<String> categoryPrivates) throws Exception {
+    //
+    String categorySpace = Utils.CATEGORY + Utils.CATEGORY_SPACE;
+    if(categoryId.equals(categorySpace)) return false;
+
+    //
+    if(isAdminRole(userName)) return true;
+    
+    //
+    if( (canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId)) && 
+        (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
+      return true;
+    }
+    
+    return false;
   }
 
   public Forum getForum(String categoryId, String forumId){
