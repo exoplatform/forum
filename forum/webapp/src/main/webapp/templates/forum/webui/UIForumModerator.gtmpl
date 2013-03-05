@@ -10,7 +10,7 @@
 		<%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
 	</h5>
 	<div class="uiContentBox">
-		<ul>
+		
 			<% boolean isMod = false ;
 			int i = 1;
 			String userView;
@@ -18,7 +18,7 @@
 				userView = uicomponent.getScreenName(moderator);
 				isMod = true ;
 			%>
-			<li class="pull-left">
+			<div class="elementModerator">
 			<%
 				if(i == moderators.size()) {
 			%>
@@ -27,38 +27,37 @@
 				<a href="javaScript:void(0)">${userView}</a><span>,</span>&nbsp;
 			<%}%>
 			
-			<div class="UIPopupInfoMenu">
-			  <div class="UIPopupInfoContent">
-				<div class="Arrow"><span></span></div>
-				<ul>
-				  <%
-					for(viewAction in menuViewInfos) {
-					  if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-					  String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
-					  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-					  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-						itemLabelView = itemLabelView + " " + userView ;
-					  }
-				  %>
-						<li class="MenuItem" onclick="$linkView">
-						  <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-						</li>
-				  <%
-					}
-				  %>
-				</ul>
-			  </div>
-			</div>				
+				<div class="UIPopupInfoMenu">
+				  <div class="UIPopupInfoContent">
+					<div class="Arrow"><span></span></div>
+					<ul>
+					  <%
+						for(viewAction in menuViewInfos) {
+						  if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+						  String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
+						  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+						  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+							itemLabelView = itemLabelView + " " + userView ;
+						  }
+					  %>
+							<li class="MenuItem" onclick="$linkView">
+							  <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
+							</li>
+					  <%
+						}
+					  %>
+					</ul>
+				  </div>
+				</div>				
 		
-			</li>
+			</div>
 			<%
 			 ++i;
 			}	
 			%>
 	
 			<%if(!isMod){%>
-			<li><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></li>
+			<div class="elementModerator"><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
 			<% } %>
-		</ul>
 	</div>
 </div>
