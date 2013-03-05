@@ -2797,7 +2797,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
               results.add(getResultObj(node));
             }
             for (Node node : listAnswerandComment.values()) {
-              if (mergeQuestion.containsKey(node.getName())) {
+              if (!mergeQuestion.containsKey(node.getName())) {
                 results.add(getResultObj(node));
               }
             }

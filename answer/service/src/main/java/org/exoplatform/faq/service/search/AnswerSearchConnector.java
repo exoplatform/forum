@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
@@ -52,6 +53,8 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   private static final String ANSWER_PORTLET_NAME     = "AnswerPortlet";
 
   private static final String ANSWER_PAGE_NAGVIGATION = "answers";
+  
+  private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
   private JCRDataStorage storage;
   private LocaleConfigService localeConfigService;
@@ -107,12 +110,12 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     try {
       List<ObjectSearchResult> searchResults = storage.getUnifiedSearchResults(eventQuery);
       for (ObjectSearchResult searchResult : searchResults) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(searchResult.getName());
-        sb.append(" - ").append(searchResult.getNumberOfAnswer()).append(" answers");
+        StringBuilder sb = new StringBuilder();        
+        sb.append(searchResult.getNumberOfAnswer()).append(" answers");
         sb.append(" - ").append(searchResult.getNumberOfComment()).append(" comments");
         sb.append(" - ").append(searchResult.getRatingOfQuestion());
-        sb.append(" - ").append(searchResult.getCreatedDate());
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);        
+        sb.append(" - ").append(sdf.format(searchResult.getCreatedDate()));        
         String url = buildLink(context, portalName, searchResult.getPath(), siteName, searchResult.getLink()); 
         SearchResult result = new SearchResult(
             url,
