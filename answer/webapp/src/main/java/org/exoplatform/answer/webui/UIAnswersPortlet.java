@@ -24,9 +24,11 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.RequestContext;
@@ -85,7 +87,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
         String url = pref.getValue(SPACE_URL, null);
         Space space = sService.getSpaceByUrl(url);
         spaceGroupId = space.getGroupId();
-        String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getPrettyName();
+        String categoryId = Utils.CATE_SPACE_ID_PREFIX 
+                           + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
         if (fService.isExisting(Utils.CATEGORY_HOME + SLASH + categoryId)) {
           return categoryId;
         }
@@ -142,10 +145,20 @@ public class UIAnswersPortlet extends UIPortletApplication {
       PortalRequestContext portalContext = Util.getPortalRequestContext();
       String cateId = getSpaceCategoryId();
       if (portalContext.getRequestParameter(OBJECTID) == null && !portalContext.useAjax()) {
-        String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
-        String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
-        if (!FAQUtils.isFieldEmpty(questionId)) {
-          viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
+        if (!FAQUtils.isFieldEmpty(cateId)) {
+          UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
+          UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
+          UICategories categories = findFirstComponentOfType(UICategories.class);
+          uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME + SLASH + cateId);
+          uiBreadcums.setRenderSearch(true);
+          uiQuestions.setCategoryId(Utils.CATEGORY_HOME + SLASH + cateId);
+          categories.setPathCategory(Utils.CATEGORY_HOME + SLASH + cateId);
+        } else {
+          String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
+          String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
+          if (!FAQUtils.isFieldEmpty(questionId)) {
+            viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
+          }
         }
       }
     } catch (Exception e) {
