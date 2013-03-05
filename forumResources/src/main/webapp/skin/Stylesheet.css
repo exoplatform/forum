@@ -1,237 +1,245 @@
-@import	url('../syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import url('../syntaxhighlighter/Styles/SyntaxHighlighter.css');
+
 /**************************** UIPopupInfoMenu *********************************/
 
-.UIPopupInfoMenu ul,li {
-  margin: 0px;
-  padding: 0px;
-  list-style-type: none;
+.UIPopupInfoMenu ul, li {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
 }
 
 .UIPopupInfoMenu {
-  float: none;
-  display: inline;
-  visibility: hidden;
-  top: 0; left : 0; 
-  margin : 0px; 
-  width: auto;
-  z-index: 4;
-  position: relative;
-  margin: 0px;
-  left: 0;
+    float: none;
+    display: inline;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    margin: 0px;
+    width: auto;
+    z-index: 4;
+    position: relative;
+    margin: 0px;
+    left: 0;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent {
-  box-shadow: none;
-  border-radius: 0px;
-  background: none;
-  border: none;
-  padding: 0px;
-  position: absolute;
-  top: 0; left : 0; 
+    box-shadow: none;
+    border-radius: 0px;
+    background: none;
+    border: none;
+    padding: 0px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent ul {
-  box-shadow: -1px 2px 3px #D5D5D5;
-  border-radius: 4px;
-  background: #fff;
-  border: 1px solid #D3D3D3;
-  padding: 8px;
+    box-shadow: -1px 2px 3px #D5D5D5;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #D3D3D3;
+    padding: 8px;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent .Arrow {
-  background: url('background/Arrow.png') no-repeat right top;
-  width: 50px;
-  height: 12px;
-  margin-bottom: -1px;
-  position: relative;
+    background: url('background/Arrow.png') no-repeat right top;
+    width: 50px;
+    height: 12px;
+    margin-bottom: -1px;
+    position: relative;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent .ItemIcon {
-  background-position: 6px 50%;
-  display: block;
-  line-height: 24px;
-  margin: 0;
-  min-width: 60px;
-  padding: 0 5px 0 28px;
-  text-align: left;
-  white-space: nowrap;
-  color: black;
+    background-position: 6px 50%;
+    display: block;
+    line-height: 24px;
+    margin: 0;
+    min-width: 60px;
+    padding: 0 5px 0 28px;
+    text-align: left;
+    white-space: nowrap;
+    color: black;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent .MenuItem:hover {
-  background-color: #DEE4F2;
+    background-color: #DEE4F2;
 }
 
 .UIPopupInfoMenu .UIPopupInfoContent .ItemIcon a:hover {
-  color: #F7941D;
+    color: #F7941D;
 }
 
 .ParentMaskLayer {
-	position:relative ;
-	z-index:0;
+    position: relative;
+    z-index: 0;
 }
 
 .ParentMaskLayer .KSMaskLayer {
-	left:0px;	top:0px;
-	z-index:5;
-	position:absolute ;
-	visibility:visible;
-	background:url('background/Point1x1.png') no-repeat top center ;
-	user-select: none;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-o-user-select: none;
+    left: 0px;
+    top: 0px;
+    z-index: 5;
+    position: absolute;
+    visibility: visible;
+    background: url('background/Point1x1.png') no-repeat top center;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar {
-	height: auto;
-	border: medium none;
-	background: none;
+    height: auto;
+    border: medium none;
+    background: none;
 }
 
 .UIGroupMembershipSelector .UIBreadcumbs .LeftBlock {
-	line-height: 25px;
-	padding: 0px 2px;
+    line-height: 25px;
+    padding: 0px 2px;
 }
 
 .UICreate {
-	width: 300px;
+    width: 300px;
 }
 
 .UICreate .UIForm .HorizontalLayout select {
-	width: 140px;
+    width: 140px;
 }
 
 .UICreate .ActionButton {
-	float:left;
-	width: 80px;
+    float: left;
+    width: 80px;
 }
 
 .UICreate .UIAction {
-	clear: left;
+    clear: left;
 }
 
 .uiForumFilter {
-	width: 150px;
-	height: 24px;
-	line-height: 23px;
-	background: gray;
-  border: 1px solid #D3D3D3;
-	position:relative;
-  box-shadow: -1px 2px 3px #D5D5D5;
-  border-radius: 4px;
+    width: 150px;
+    height: 24px;
+    line-height: 23px;
+    background: gray;
+    border: 1px solid #D3D3D3;
+    position: relative;
+    box-shadow: -1px 2px 3px #D5D5D5;
+    border-radius: 4px;
 }
 
 .uiForumFilter > span {
-	width: 128px;
-	text-align: left;
-	font-weight: bold;
-	float: left;
-	white-space: nowrap;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
+    width: 128px;
+    text-align: left;
+    font-weight: bold;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
 }
 
 .uiForumFilter .rightArrow {
-	cursor: pointer;
-	width: 20px;
-	height: 22px;
-	border-left: 1px solid  #D3D3D3;
-	background: #777;
-	float: right;
+    cursor: pointer;
+    width: 20px;
+    height: 22px;
+    border-left: 1px solid #D3D3D3;
+    background: #777;
+    float: right;
 }
 
 .uiForumFilter .filterMenu {
-	position:absolute;
-	top: 24px; left: -5px;
-	width: 180px; height: 0px;
-	visibility:hidden;
-	border: solid 1px #D3D3D3;
-  border-radius: 4px;
-  background: #fff;
+    position: absolute;
+    top: 24px;
+    left: -5px;
+    width: 180px;
+    height: 0px;
+    visibility: hidden;
+    border: solid 1px #D3D3D3;
+    border-radius: 4px;
+    background: #fff;
+    z-index: 1;
 }
 
 .uiForumFilter .filterMenu input {
-	width: 150px;
-	margin: auto;
-	padding: 2px 5px;
+    width: 150px;
+    margin: auto;
+    padding: 2px 5px;
 }
 
 .uiForumFilter .filterMenu > ul {
-	overflow-y: auto;
-	overflow-x: hidden;
-	max-height: 302px; /* 13x23+3 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 302px; /* 13x23+3 */
 }
 
 .uiForumFilter .filterMenu > ul > li {
-	border-bottom: solid 1px #D3D3D3;
+    border-bottom: solid 1px #D3D3D3;
 }
 
 .uiForumFilter .filterMenu li {
-	padding-left: 10px;
-	white-space: nowrap;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
+    padding-left: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
 }
 
 .uiForumFilter .filterMenu > ul > li:last-child {
-	border-bottom: none;
+    border-bottom: none;
 }
 
 .uiForumFilter .filterMenu .item li {
-	cursor: pointer;
-}
-
-
-.uiFormScrollSelectBox {
+    cursor: pointer;
 }
 
 .uiFormScrollSelectBox {
-	width: 150px;
-	height: 24px;
-	line-height: 23px;
-	background: gray;
-  border: 1px solid #D3D3D3;
-	position:relative;
-  box-shadow: -1px 2px 3px #D5D5D5;
-  border-radius: 4px;
+}
+
+.uiFormScrollSelectBox {
+    width: 150px;
+    height: 24px;
+    line-height: 23px;
+    background: gray;
+    border: 1px solid #D3D3D3;
+    position: relative;
+    box-shadow: -1px 2px 3px #D5D5D5;
+    border-radius: 4px;
 }
 
 .uiFormScrollSelectBox .uiFormScrollMenu > span {
-	width: 128px;
-	text-align: left;
-	font-weight: bold;
-	float: left;
-	white-space: nowrap;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
+    width: 128px;
+    text-align: left;
+    font-weight: bold;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
 }
 
 .uiFormScrollSelectBox .rightArrow {
-	cursor: pointer;
-	width: 20px;
-	height: 22px;
-	border-left: 1px solid  #D3D3D3;
-	background: #777;
-	float: right;
+    cursor: pointer;
+    width: 20px;
+    height: 22px;
+    border-left: 1px solid #D3D3D3;
+    background: #777;
+    float: right;
 }
 
 .uiFormScrollSelectBox .optionMenu {
-	position:absolute;
-	top: 24px; left: -5px;
-	width: 180px; height: 0px;
-	visibility:hidden;
-	border: solid 1px #D3D3D3;
-  border-radius: 4px;
-  background: #fff;
-  z-index: 9000;
+    position: absolute;
+    top: 24px;
+    left: -5px;
+    width: 180px;
+    height: 0px;
+    visibility: hidden;
+    border: solid 1px #D3D3D3;
+    border-radius: 4px;
+    background: #fff;
+    z-index: 9000;
 }
 
 .uiFormScrollSelectBox .scroll-menu {
-	overflow-y: auto;
-	overflow-x: hidden;
-	max-height: 286px; /* 12x23+7 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 286px; /* 12x23+7 */
 }
 
 .uiFormScrollSelectBox .optionMenu > ul {
@@ -239,28 +247,28 @@
 }
 
 .uiFormScrollSelectBox .optionMenu > ul > li {
-	border-bottom: solid 1px #D3D3D3;
+    border-bottom: solid 1px #D3D3D3;
 }
 
 .uiFormScrollSelectBox .optionMenu li {
-	padding-left: 10px;
-	background-color: #fff;
-	white-space: nowrap;
-	text-overflow:ellipsis;
-	overflow-x: hidden;
-	cursor: pointer;
+    padding-left: 10px;
+    background-color: #fff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    cursor: pointer;
 }
 
 .uiFormScrollSelectBox .optionMenu li:hover {
-	background-color: blue;
+    background-color: blue;
 }
 
 .uiFormScrollSelectBox .optionMenu > ul > li:last-child {
-	border-bottom: none;
+    border-bottom: none;
 }
 
 .uiFormScrollSelectBox .optionMenu li.selected {
-	background-color: gray;
+    background-color: gray;
 }
 
 
