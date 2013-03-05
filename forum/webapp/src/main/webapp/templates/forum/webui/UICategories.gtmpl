@@ -267,10 +267,10 @@
 					<td>
 						<div class="clearfix">
 							<%if(topicNewPost.getIsPoll()){%>
-							<i class="$topicNewPostIcon" style="width: 16px; height: 16px; display: inline-block;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+							<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 							
 							<%} else {%>
-							<i class="$topicNewPostIcon" style="width: 16px; height: 16px; display: inline-block;"></i>
+							<i class="uiIconForumTopic uiIconForumLightGray"></i>
 							
 							<%}%>
 							

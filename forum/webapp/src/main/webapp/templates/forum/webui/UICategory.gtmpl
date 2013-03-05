@@ -162,22 +162,22 @@
 		</caption>
 			
 		<thead>
-				<tr>
-					<th style="width:15px;">&nbsp;</th>
-					<th style="width:40%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
-					<th style="width:25%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-					<th style="width:100px;"><%=_ctx.appRes("UICategory.label.author");%></th>
-					<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
-					<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
-					<% if(isShowMenu){ %>
-					<th style="width:15px;" class="center">
-						<span class="uiCheckbox">
-							<input type="checkbox" class="checkbox" name="checkAll" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" onclick="eXo.forum.UIForumPortlet.checkAll(this);"/><span></span>
-						</span>
-					</th>
-					<% } %>
-				</tr>
-			</thead>
+			<tr>
+				<th style="width:15px;">&nbsp;</th>
+				<th style="width:40%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
+				<th style="width:25%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+				<th style="width:100px;"><%=_ctx.appRes("UICategory.label.author");%></th>
+				<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
+				<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
+				<% if(isShowMenu){ %>
+				<th style="width:15px;" class="center">
+					<span class="uiCheckbox">
+						<input type="checkbox" class="checkbox" name="checkAll" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" onclick="eXo.forum.UIForumPortlet.checkAll(this);"/><span></span>
+					</span>
+				</th>
+				<% } %>
+			</tr>
+		</thead>
 		<tbody>
 			<% 
 				List forums = uicomponent.getForumList();
@@ -309,8 +309,7 @@
 								<td class="center">
 									<i class="$classIconReadForum" rel="tooltip" data-placement="bottom" title="$titleNoNewPostForum"></i>
 								</td>
-								<td >
-									
+								<td>
 									<i class="$classIconStatusForum" title="$titleIconForum"></i>
 									<% ++rCNB; %>
 									<%if(uicomponent.useAjax){%>
@@ -335,11 +334,10 @@
 								}
 					 %>
 								<td>
-									
 									<%if(topicNewPost.getIsPoll()){%>
-									<i style="display:inline-block; width: 16px; height:16px;" class="$topicNewPostIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+									<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 									<%} else {%>
-									<i style="display:inline-block; width: 16px; height: 16px;" class="$topicNewPostIcon"></i>
+									<i class="uiIconForumTopic uiIconForumLightGray"></i>
 									<%}%>
 										
 									<% ++rCNB; %>
@@ -352,7 +350,7 @@
 									<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
 										<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
 									</div>
-									<div class="DateTime">&nbsp;$dateTime</div>
+									<div class="dateTimeForum">$dateTime</div>
 									
 								</td>
 								<td>	
