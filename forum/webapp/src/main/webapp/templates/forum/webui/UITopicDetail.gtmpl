@@ -224,11 +224,11 @@
 					<ul class="dropdown-menu">
 					<% 
 					  if(!isUserCreatedTopic) {
-						String[] menuTopicActions = ["EditTopic", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
+						String[] menuTopicActions = ["EditTopic", "PrintPage", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
 						"SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SplitTopic", 
 						"SetApproveTopic", "SetMoveTopic", "SetDeleteTopic", "WatchOption"] ;
 						
-						String[] menuTopicIcons = ["uiIconEdit", "uiIconPoll", "uiIconOpen", "uiIconMinus", 
+						String[] menuTopicIcons = ["uiIconEdit", "uiIconPrint", "uiIconPoll", "uiIconOpen", "uiIconMinus", 
 						"uiIconLockMedium", "uiIconUnlockMedium", "uiIconForumStick", "uiIconForumUnStick", "uiIconForumSplit", 
 						"uiIconForumApprove", "uiIconMove", "uiIconDelete", "uiIconWatch"] ;
 						
@@ -272,7 +272,7 @@
 						  } 
 						  if(!isView){ 
 					  %>
-							<li>
+							<li style="display:none;">
 							  <a href="javaScript:void(0)"><i class="$classIcon"></i> $itemLabel</a>
 							</li>
 					  <% } else { %>
