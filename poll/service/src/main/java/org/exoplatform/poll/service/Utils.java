@@ -122,22 +122,22 @@ public class Utils {
     String[] options = poll.getOption();
     if (infoVote == null) {
       for (int j=0; j<options.length; j++) {
-        sb.append(options[j]).append(" : 0% (0 vote)|");
+        sb.append(options[j]).append(":0%:0|");
       }
-      sb.append("0 vote");
+      sb.append("0");
     } else {
       for (int i=0; i<infoVote.length-1; i++) {
         String[] list = infoVote[i].split(":");
         if (Integer.parseInt(list[1].split("\\.")[0]) > 1) {
-          sb.append(options[i]).append(" : ").append(list[0]).append("% (").append(list[1].split("\\.")[0]).append(" votes)|");
+          sb.append(options[i]).append(":").append(list[0]).append("%:").append(list[1].split("\\.")[0]).append("|");
         } else {
-          sb.append(options[i]).append(" : ").append(list[0]).append("% (").append(list[1].split("\\.")[0]).append(" vote)|");
+          sb.append(options[i]).append(":").append(list[0]).append("%:").append(list[1].split("\\.")[0]).append("|");
         }
       }
       if (Integer.parseInt(infoVote[infoVote.length-1]) > 1) {
-        sb.append(infoVote[infoVote.length-1]).append(" votes");
+        sb.append(infoVote[infoVote.length-1]);
       } else {
-        sb.append(infoVote[infoVote.length-1]).append(" vote");
+        sb.append(infoVote[infoVote.length-1]);
       }
     }
     return sb.toString();
