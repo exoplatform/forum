@@ -36,9 +36,9 @@
 .dropdown-menu > li > a:hover > [class^="uiIconForum"],
 .dropdown-menu > .active > a > [class^="uiIconForum"],
 .uiDropdownWithIcon .dropdown-submenu:hover > a > [class^="uiIconForum"],
-.btn:hover [class^="uiIconForum"], .actionIcon:hover [class^="uiIconForum"], 
-.uiActionWithLabel:hover [class^="uiIconForum"],
-[class^="uiIconForum"]:hover, .uiIconForumBlue
+.btn:hover [class^="uiIconForum"], .actionIcon:hover > [class^="uiIconForum"], 
+[class^="uiIconForum"]:hover, .actionIcon:hover > div > [class^="uiIconForum"],
+.uiIconForumBlue
 {
   background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumBlue.png");
 
@@ -49,7 +49,7 @@
 
 .dropdown-menu > li > a > [class^="uiIconForum"],
 .dropdown-menu > .active > a > [class^="uiIconForum"],
-.uiDropdownWithIcon .dropdown-submenu> a > [class^="uiIconForum"],
+.uiDropdownWithIcon .dropdown-submenu > a > [class^="uiIconForum"],
 .uiActionBar [class^="uiIconForum"], .uiIconForumLightGray
 {
   background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumLightGray.png");
@@ -89,7 +89,7 @@
   background-repeat: no-repeat;
 }
 
-.dropdown > a:hover > [class^="uiIconForumColor"], [class^="uiIconForumColor"]:hover {
+.dropdown > a:hover > [class^="uiIconForumColor"], a:hover > [class^="uiIconForumColor"]:hover {
 	background-image: url("/forum/skin/DefaultSkin/images/Icons/uiIconsForumColor.png");
 }
 
@@ -183,6 +183,10 @@
 
 .uiIconForumApprove{
 	background-position: -40px -40px;
+}
+
+.uiIconForumStar{
+	background-position: -60px -40px;
 }
 
 /* icons for Color */

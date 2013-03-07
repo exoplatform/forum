@@ -15,7 +15,7 @@
 					iconActions = ["uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
 				} else {
 					actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
-					iconActions = ["uiIconCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+					iconActions = ["uiIconAddCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
 				}
 			} else {
 				actions = ["EditProfile","OpenBookMark"];
@@ -30,18 +30,18 @@
 				} else isAdm = false;
 		  if(!isAdm){
 		%>
-		  <li class="defaultStyle forumSeparatorLine ControlButton" id="$action">
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
 			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
 				<i class="$icon"></i>
 				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 			</a>
 		  </li>
 		  <%} else {%>
-		  <li class="defaultStyle forumSeparatorLine ControlButton" id="$action">
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
 			 <div class="dropdown uiDropdownWithIcon actionIcon">
-				<a data-toggle="dropdown">
+				<div data-toggle="dropdown">
 				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
-				</a>
+				</div>
 				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
 				<% 
 				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumTopic", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];

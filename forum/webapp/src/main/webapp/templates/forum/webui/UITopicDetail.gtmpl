@@ -84,92 +84,84 @@
 <div class="uiTopicDetail">
 <% uiform.begin() %>
   <% if(!isNull) {%>
-  <div class="clearfix">
-  <%if(isCanReply || isNotLogin) { %>
-    <div class="pull-left">
-    <% } else { %>
-      <div class="LockActionForum pull-left BntPostReply">
-    <% } %>
-          <% if(isCanReply) { %>
-                <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-          <% } else if(isNotLogin) {  %>
-                  <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-          <% } else {%>
-                <a class="uiLockIcon btn btn-primary" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-          <% } %>
-      </div>
-      <%  
-        List<Tag> tags = uicomponent.getTagsByTopic();
-        if(!tags.isEmpty()){
-      %>
-      <div class="pull-left TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
-      <%}%>
-      <ul class="TagContainer FL TagContent" id="TagContainer">
-        <%
-          for(tag in tags) {
-            String tagName = tag.getName();
-        %>
-          <li class="FL MenuItem">
-            <a class="TagIcon FL BlueTagIcon" rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
-            <span class="UntagIcon FL" rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
-          </li>
-        <%} %>
-          <li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-                  <% /*Begin Popup Menu*/ %>
-            <div class="UIPopupCategory" style="display: none;">
-              <ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
-              </ul>
-            </div>
-            <% /*End Popup Menu*/ %>
-          </li>
-      </ul>
-      <% if(uicomponent.maxPage > 1) { %>
-      <div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
-        <% /*Begin Popup Menu*/ %>
-        <div id="goPage1" class="UIPopupCategory CancelEvent" style="display:none">
-          <ul class="UIRightClickPopupMenu" style="display:block;">
-            <li>
-              <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
-              <label for="<%=ForumUtils.GOPAGE_ID_T%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
-            </li>
-          </ul>
-        </div>
-        <% /*End Popup Menu*/ %>
-      </div>
-      <% } %>
-      <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
-    </div>
+	<div class="clearfix">
+		<div class="pull-left">
+		  <% if(isCanReply) { %>
+				<button class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+		  <% } else if(isNotLogin) {  %>
+				<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+		  <% } else {%>
+				<button class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+		  <% } %>
+		</div>
+		<div class="pull-left">  
+		  
+		  <%  
+			List<Tag> tags = uicomponent.getTagsByTopic();
+			if(!tags.isEmpty()){
+		  %>
+
+			<div class="pull-left TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
+		  <%}%>
+			<ul class="TagContainer FL TagContent" id="TagContainer">
+			<%
+			  for(tag in tags) {
+				String tagName = tag.getName();
+			%>
+				<li class="FL MenuItem">
+					<a class="TagIcon FL BlueTagIcon" rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+					<span class="UntagIcon FL" rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
+				</li>
+				<%} %>
+				<li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+					<% /*Begin Popup Menu*/ %>
+				<div class="UIPopupCategory" style="display: none;">
+					<ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
+					</ul>
+				</div>
+				<% /*End Popup Menu*/ %>
+				</li>
+			</ul>
+		  
+		  
+		</div>
+
+		<div class="pull-right">
+		<% 
+		  if(uicomponent.maxPage > 1) { 
+			_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+		  } 
+		%>
+		</div>
+
+	</div>
+
+ 
+
 <!-- Start PostsInThreadContainer -->
   <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
-  <div class="uiBox">
+
+  <div class="uiBox contentTopicDetail">
     <div class="title clearfix">
 		<ul class="pull-right">
 		
 			<li class="defaultStyle forumSeparatorLine">
 			<% if(uicomponent.isWatching(topic.getPath())){ %>
-				<div class="actionIcon">
-					<a href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-				</div>
+				<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 			<% } else { %>
-				<div class="actionIcon">
-					<a href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
-				</div>
+				<a class="actionIcon" href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 			<% } %>
 			</li>
 			
 			
 			<%if(uicomponent.userProfile.getUserRole() < 3){%>
 			<li class="defaultStyle forumSeparatorLine">
-				<div class="actionIcon">
-					<a href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-				</div>
+				<a class="actionIcon" href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 			</li>
 			
 			
 			<li class="defaultStyle forumSeparatorLine">
-				<div class="actionIcon">
-					<a href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i>RSS</a>
-				</div>
+				<a class="actionIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i>RSS</a>
 			</li>
 			
 		
@@ -206,16 +198,14 @@
 				</div>
 			</li>
 			<li class="defaultStyle forumSeparatorLine"  onclick="<%=uicomponent.event("RatingTopic")%>">
-				<div class="actionIcon">
-					<a href="javaScript:void(0)"><i class="uiIconVote uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
-				</div>
+				<a class="actionIcon" href="javaScript:void(0)"><i class="uiIconForumStar uiIconForumLightGray"></i><%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
 			</li>
 			<%}%>
 			
 			
 			<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %> 
 			<li class="defaultStyle forumSeparatorLine">                
-				  <div class="dropdown uiDropdown uiActionWithLabel">
+				  <div class="dropdown uiDropdownWithIcon actionIcon">
 					<div data-toggle="dropdown">
 						<i class="uiIconSettings uiIconLightGray"></i>
 						  <%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
@@ -328,7 +318,7 @@
 			<% } %> 
 			
 			<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
-				<div class="dropdown uiDropdown uiActionWithLabel">
+				<div class="dropdown uiDropdownWithIcon actionIcon">
 					<div data-toggle="dropdown">
 						<i class="uiIconSearch uiIconLightGray"></i>
 						<%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
@@ -349,7 +339,7 @@
 			
 			<% if(isShowMenu && canEdit) { %> 
 			<li class="defaultStyle forumSeparatorLine">
-				<div class="dropdown uiDropdown uiActionWithLabel pull-right">
+				<div class="dropdown uiDropdownWithIcon actionIcon pull-right">
 				  <div data-toggle="dropdown">
 					<i class="uiIconForumModerator uiIconForumLightGray"></i>
 					<%=_ctx.appRes("UITopicDetail.label.Moderation");%>
@@ -775,36 +765,28 @@
 <!-- End ContentContainer -->
   </div>  
 <!-- End PostsInThreadContainer -->
-  <div class="ButtomAndPageListContainer">
-  <%if(isCanReply || isNotLogin) { %>
-    <div class="pull-left">
-  <% } else { %>
-    <div class="LockActionForum pull-left BntPostReply">
-  <% } %>
-        <% if(isCanReply) { %>
-              <a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-        <% } else if(isNotLogin) {  %>
-              <a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-        <% } else {%>
-              <a class="IconButton LockIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
-        <% } %>
-    </div>
-    <% if(uicomponent.maxPage > 1) { %>
-    <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon ClearFix" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-      <% /*Begin Popup Menu*/ %>
-        <div id="goPage2" class="UIPopupCategory CancelEvent" style="display:none;">
-          <ul class="UIRightClickPopupMenu" style="display:block;">
-            <li>
-              <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
-              <label for="<%=ForumUtils.GOPAGE_ID_B%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
-            </li>
-          </ul>
-        </div>
-      <% /*End Popup Menu*/ %>
-    </div>
-    <% } %>
-    <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
-  </div>
+  
+	<div class="clearfix">
+		<div class="pull-left">
+	  <% if(isCanReply) { %>
+			<button class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+	  <% } else if(isNotLogin) {  %>
+			<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+	  <% } else {%>
+			<button class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+	  <% } %>
+		</div>
+
+		<div class="pull-right">
+		  
+		<% 
+		  if(uicomponent.maxPage > 1) { 
+			_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+		  } 
+		%>
+		</div>
+	</div>
+  
 <% if(isCanReply && uicomponent.isShowQuickReply()){ %>
 
   <div class="uiBox forumQuickReply">
