@@ -41,38 +41,32 @@
 							userView = uicomponent.getScreenName(user);
 						 ++t;
 					%>
-						<div class="pull-left">
+						<div class="pull-left dropdown uiUserInfo">
+							<span>&nbsp;</span>
+							<a href="javaScript:void(0)">${userView}</a>
+							<ul class="dropdown-menu uiUserMenuInfo">
+								<li class="uiIconTopArrowUp"><span></span></li>
+								<%
+								for(viewAction in menuViewInfos) {
+									if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+									String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
+									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+										itemLabelView = itemLabelView + " " + userView ;
+									}
+								%>
+									<li onclick="$linkView">
+										<a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+									</li>
+								<%
+								}
+								%>
+							</ul>
 							<% if(t != size){ %>
-							<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a><span>,</span>
-							<% } else {%>
-							<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a>
-							<% } %>					
-							<div class="UIPopupInfoMenu">
-								<div class="UIPopupInfoContent">
-									<div class="Arrow"><span></span></div>
-									<ul>
-									  <%
-										for(viewAction in menuViewInfos) {
-										  if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-										  String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
-										  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-										  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-											itemLabelView = itemLabelView + " " + userView ;
-										  }
-									  %>
-											<li class="MenuItem" onclick="$linkView">
-											  <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-											</li>
-									  <%
-										}
-									  %>
-									</ul>
-								</div>
-							</div>
-							
+							<span>,</span>
+							<% } %>		 
 						</div>
 					<% } %>
-						
 					</div>
 				</td>
 			</tr>
@@ -84,34 +78,33 @@
 						<span><%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, </span>
 						<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>: $activeUsers</span>
 					</div>
-					<div class="textInfo">
-						<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
-						<a href="javaScript:void(0)" class="UserMenuInfo">$viewNewMember</a>
-						<div class="UIPopupInfoMenu">
-							<div class="UIPopupInfoContent">
-							  <div class="Arrow"><span></span></div>
-							  <ul>
-								<%
-								  for(viewAction in menuViewInfos) {
-									if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-									String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
-									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-									  itemLabelView = itemLabelView + " " + viewNewMember ;
-									}
-								%>
-									  <li class="MenuItem" onclick="$linkView">
-										<a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-									  </li>
-								<%
-								  }
-								%>
-							  </ul>
-							</div>
+					<div class="textInfo clearfix">
+						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>:&nbsp;</div>
+						<div class="dropdown uiUserInfo pull-left">
+							<a href="javaScript:void(0)" class="UserMenuInfo">$viewNewMember</a>
+							<ul class="dropdown-menu uiUserMenuInfo">
+								<li class="uiIconTopArrowUp"><span></span></li>
+									<%
+										for(viewAction in menuViewInfos) {
+										if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+										String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
+										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+											itemLabelView = itemLabelView + " " + viewNewMember ;
+										}
+									%>
+											<li onclick="$linkView">
+												<a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+											</li>
+									<%
+										}
+									%>
+							</ul>
 						</div>
 					</div>
+					
 				</td>
 			</tr>
 		</tbody>
-	</table>							
+	</table>
 </div>

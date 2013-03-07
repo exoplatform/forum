@@ -288,30 +288,27 @@
 					</td>
 					<td>
 						<% String screemNamePost =	uicomponent.getScreenName(lastPostBy);%>
-						<span class="avatarMini"><img src="<%=ForumSessionUtils.getUserAvatarURL(lastPostBy, null);%>"/></span>
-						<a href="javaScript:void(0)" class="UserMenuInfo">$screemNamePost</a>
-							
-						<div class="UIPopupInfoMenu">
-							<div class="UIPopupInfoContent">
-							<div class="Arrow"><span></span></div>
-								<ul>
-									<%
-									for(viewAction in menuViewInfos) {
-										if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-										String linkView = uicomponent.getActionViewInfoUser(viewAction, lastPostBy) ;
-										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-										itemLabelView = itemLabelView + " " + screemNamePost ;
+						<div class="dropdown uiUserInfo">
+						  <span class="avatarMini"><img src="<%=ForumSessionUtils.getUserAvatarURL(lastPostBy, null);%>"/></span>
+							<a href="javaScript:void(0)">$screemNamePost</a>
+							<ul class="dropdown-menu uiUserMenuInfo">
+	                <li class="uiIconTopArrowUp"><span></span></li>
+										<%
+										for(viewAction in menuViewInfos) {
+											if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+											String linkView = uicomponent.getActionViewInfoUser(viewAction, lastPostBy) ;
+											String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+											if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+											itemLabelView = itemLabelView + " " + screemNamePost ;
+											}
+										%>
+											<li onclick="$linkView">
+												<a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+											</li>
+										<%
 										}
-									%>
-										<li class="MenuItem" onclick="$linkView">
-											<a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-										</li>
-									<%
-									}
-									%>
-								</ul>
-							</div>
+										%>
+							</ul>
 						</div>
 					</td>
 					<%} else { %> 

@@ -102,26 +102,25 @@
     showUserMenu : function(evt) {
       var evt = evt || window.event;
       event = gj.event.fix(evt); 
-      var obj = this.parentNode;
-      var jobj = gj(obj);
-      var jPopup = jobj.find(".UIPopupInfoMenu");
+      var jobj = gj(this);
+      var jPopup = jobj.find(".uiUserMenuInfo");
       if (!jPopup.exists()) {
         return;
       }
       ForumUtils.hideElements();
-      var uiPopup = jPopup.find(".UIPopupInfoContent");
-      uiPopup.on('click', ForumUtils.cancelEvent);
+      jPopup.on('click', ForumUtils.cancelEvent);
       jPopup.css('visibility', 'inherit').css('display', 'inline');
       if (ForumUtils.isChrome()) {
         jPopup.css('float', 'right');
       }
       var Browser = eXo.core.Browser;
-      var X = Browser.findMouseRelativeX(jPopup, event, false);
-      var Y = Browser.findMouseRelativeY(jPopup, event);
-      uiPopup.css('left', (X - 37) + 'px');
-      uiPopup.css('top', (Y + 5) + 'px');
+      var X = Browser.findMouseRelativeX(jobj, event, false);
+      var Y = Browser.findMouseRelativeY(jobj, event);
+      jPopup.css('left', (X - 37) + 'px');
+      jPopup.css('top', (Y + 5) + 'px');
       ForumUtils.addhideElement(jPopup);
       ForumUtils.cancelEvent(evt);
+      jPopup.find('li').on('click', ForumUtils.hideElements);
     }
   };
 
