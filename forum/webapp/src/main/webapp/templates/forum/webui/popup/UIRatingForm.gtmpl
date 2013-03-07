@@ -2,10 +2,9 @@
   org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initVote('$uicomponent.id', 5) ;");
 %>
 	<% uiform.begin() %>
-<div class="UIRatingForm">
-	<div class="VoteFormContainer">
-		<div class="RatingInfoContainer">
-			<div class="OptionsContainer ClearFix">
+<div class="uiVoteForm">
+	<div class="voteFormContainer">
+		<div class="uiRatingInfoContainer optionsContainer">
 				<%	
 				int i = 0; 
 				while(i < 5) {
@@ -13,15 +12,14 @@
 					String onclick = uicomponent.event("VoteTopic", number);
 					String title = _ctx.appRes("UIRatingForm.title.rank" + number); 
 				%>
-				<div class="NormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"><span></span></div>
+				<i class="uiIconNormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"></i>
 			 <% i = i + 1;
 				 } %>
 				
-			</div>
 		</div>
 			
-		<div class="uiAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></a>
+	<div class="uiAction uiActionBorder">
+		<button href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></button>
     </div>	
 	</div>
 </div>

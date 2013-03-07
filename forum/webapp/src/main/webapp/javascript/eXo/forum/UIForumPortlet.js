@@ -363,47 +363,45 @@
 
     initVote : function(voteId, rate) {
       var vote = findId(voteId);
-      vote.attr('rate', rate);
       rate = parseInt(rate);
-      var optsContainer = vote.find('div.OptionsContainer:first');
-      var options = optsContainer.children('div');
+      var optsContainer = vote.find('div.optionsContainer:first');
+	  optsContainer.attr('data-rate', rate);
+      var options = optsContainer.children('i');
       options.on('mouseover', UIForumPortlet.overVote);
       options.on('blur', UIForumPortlet.overVote);
-      for ( var i = 0; i < options.length; i++) {
-        if (i < rate)
-          options.eq(i).attr('class', 'RatedVote');
-      }
+
       vote.on('mouseover', UIForumPortlet.parentOverVote);
-      vote.on('blur', UIForumPortlet.parentOverVote);
+      //vote.on('blur', UIForumPortlet.parentOverVote);
       optsContainer.on('mouseover', utils.cancelEvent);
       optsContainer.on('blur', utils.cancelEvent);
     },
 
     parentOverVote : function(event) {
-      var optsCon = $(this).find('div.OptionsContainer:first');
-      var opts = optsCon.children('div');
-      var rate = $(this).attr('rate');
+      var optsCon = $(this).find('div.optionsContainer:first');
+      var opts = optsCon.children('i');
+      var rate = optsCon.attr('data-rate');
       for ( var j = 0; j < opts.length; j++) {
         if (j < rate)
-          opts.eq(j).addClass('RatedVote').removeClass('NormalVote');
+          opts.eq(j).attr('class', 'uiIconRatedVote');
         else
-          opts.eq(j).addClass('NormalVote').removeClass('RatedVote');
+          opts.eq(j).attr('class', 'uiIconNormalVote');
       }
     },
 
     overVote : function(event) {
-      var optsCon = $(this).parents('div.OptionsContainer:first');
-      var opts = optsCon.children('div');
+      var optsCon = $(this).parents('div.optionsContainer:first');
+      var opts = optsCon.children('i');
       var i = opts.length;
       for (--i; i >= 0; i--) {
         if (opts[i] == $(this)[0])
           break;
-        opts.eq(i).attr('class', 'NormalVote');
+        opts.eq(i).attr('class', 'uiIconNormalVote');
       }
-      if (opts.eq(i).attr('class') == "OverVote")
+	  optsCon.attr('data-rate', (i+1));
+      if (opts.eq(i).attr('class') == "uiIconOverVote")
         return;
       for (; i >= 0; i--) {
-        opts.eq(i).attr('class', 'OverVote');
+        opts.eq(i).attr('class', 'uiIconOverVote');
       }
     },
 
