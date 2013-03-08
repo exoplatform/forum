@@ -9,7 +9,10 @@
 </style>
 <div class="UICreate">
   <% uiform.begin() %>
-    <div class="HorizontalLayout layout">
+
+    <div class="horizontalLayout layout">
+
+
       <div class="UIFormInput">
         <div class="CreateName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
        <% 
