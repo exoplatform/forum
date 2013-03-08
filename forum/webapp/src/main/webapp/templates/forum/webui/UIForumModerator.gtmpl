@@ -4,13 +4,13 @@
   int i = 0;
   String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
-<div class="uiForumModerator uiBox" id="uicomponent.id">
+<div class="uiForumModerator uiBox uiCollapExpand" id="uicomponent.id">
   <h5 class="title">
     <i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
     <i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
     <%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
   </h5>
-  <div class="uiContentBox elementModerator">
+  <div class="uiContentBox uiExpandContainer">
   <% 
     
     for(moderator in moderators) {

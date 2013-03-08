@@ -65,7 +65,7 @@
 						String styleForumToolBar = "";
 						if(uicomponent.isCollapCategories(categoryId)){
 							titleCollap = _ctx.appRes("UIForumPortlet.label.Expand");
-							classCssCollap = "uiIconArrowUp";
+							classCssCollap = "uiIconArrowRight";
 							isDisplay = false;
 							styleForumToolBar = "style=\"border-bottom:solid 1px #b7b7b7;\""; 
 						}

@@ -305,15 +305,15 @@
 
     expandCollapse : function(obj) {
       var jobject = $(obj)
-      var forumToolbar = jobject.parents(".uiBox");
-      var contentContainer = forumToolbar.find('.uiContentBox');
+      var forumToolbar = jobject.parents(".uiCollapExpand");
+      var contentContainer = forumToolbar.find('.uiExpandContainer');
       jobject.hide();
       $('div.tooltip').remove();
       if (contentContainer.css('display') != "none") {
-        contentContainer.hide();
+        contentContainer.hide(200);
         forumToolbar.find('.uiIconArrowRight').show().tooltip();
       } else {
-        contentContainer.show(100);
+        contentContainer.show(200);
         forumToolbar.find('.uiIconArrowDown').show().tooltip();
       }
     },

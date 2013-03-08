@@ -49,10 +49,11 @@
 <% uicomponent.renderChild(UIForumDescription.class) %>
 <%uiform.begin()%>
 	<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
-	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
+	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped uiCollapExpand">
 		<caption class="rounded-corners-top">
 			<span class="pull-right actionExpandCollapse">
-				<i class="uiIconArrowDown" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+				<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+        <i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 			</span>
 			<ul class="forumToolbar pull-right">
 
@@ -172,7 +173,7 @@
 				<% } %>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody class="uiExpandContainer">
 			<% 
 				List forums = uicomponent.getForumList();
 				if(forums.size() == 0) {
