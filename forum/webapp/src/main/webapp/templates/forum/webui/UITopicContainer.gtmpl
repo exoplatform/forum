@@ -60,9 +60,9 @@
   <div class="clearfix">
   
   <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-	<button class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
+	<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
 		<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-	</button>
+	</div>
   <% } else { %>
 	<button class="uiAddTheradIcon btn btn-primary pull-left" style="display:block;" onclick="<%=uicomponent.event("AddTopic")%>">
 		<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
@@ -161,7 +161,7 @@
 					<% } %> 
 					
 					<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
-						<div class="dropdown uiDropdown uiActionWithLabel">
+						<div class="dropdown uiDropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiActionWithLabel">
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
@@ -426,7 +426,7 @@
 						
 					  <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
 					  <div class="dropdown uiUserInfo">
-							<span class="avatarMini"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></span>
+							<div class="avatarMini pull-left"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></div>
 							<a href="javaScript:void(0)">$viewTopicBy</a>
 							<ul class="dropdown-menu uiUserMenuInfo">
 							  <%
@@ -507,7 +507,7 @@
 				  <% } else { %>
 					<td colspan="10" class="center">
 				  <% } %>
-					  <strong style="display: block; margin:15px 0px 20px 0px; text-align:center"><%=_ctx.appRes("UICategory.label.availableTheard");%></strong>
+						<div class="emptyForum center"><%=_ctx.appRes("UICategory.label.availableTheard");%></div>
 					</td>
 				  </tr>
 			   <%} 
@@ -519,7 +519,7 @@
 				  <% } else { %>
 					<td colspan="10" align="center">
 				  <% } %>
-					  <strong style="display: block; margin:15px 0px 20px 0px; text-align:center"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong>
+						<div class="emptyForum center"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></div>
 					</td>
 				  </tr>
 			<%}%>
@@ -530,9 +530,9 @@
     <div class="clearfix">
   
 	  <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-		<button class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
+		<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
 			<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-		</button>
+		</div>
 	  <% } else { %>
 		<button class="uiAddTheradIcon btn btn-primary pull-left" style="display:block;" onclick="<%=uicomponent.event("AddTopic")%>">
 			<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>

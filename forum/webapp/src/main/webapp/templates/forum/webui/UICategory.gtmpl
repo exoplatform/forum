@@ -183,8 +183,8 @@
 					<td><%=_ctx.appRes("UICategory.label.noForum");%></td>
 					<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
 					<td></td>
-					<td>0</td>
-					<td>0</td>
+					<td class="center">0</td>
+					<td class="center">0</td>
 					<% if(isShowMenu){ %>
 					<td></td>
 					<% } %>

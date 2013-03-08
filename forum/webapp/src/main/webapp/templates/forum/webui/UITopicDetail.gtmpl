@@ -91,7 +91,7 @@
 		  <% } else if(isNotLogin) {  %>
 				<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
 		  <% } else {%>
-				<button class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+				<div class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 		  <% } %>
 		</div>
 		<div class="pull-left">  
@@ -318,7 +318,7 @@
 			<% } %> 
 			
 			<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
-				<div class="dropdown uiDropdownWithIcon actionIcon">
+				<div class="dropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiDropdownWithIcon actionIcon">
 					<div data-toggle="dropdown">
 						<i class="uiIconSearch uiIconLightGray"></i>
 						<%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
@@ -773,7 +773,7 @@
 	  <% } else if(isNotLogin) {  %>
 			<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
 	  <% } else {%>
-			<button class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+			<div class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 	  <% } %>
 		</div>
 
