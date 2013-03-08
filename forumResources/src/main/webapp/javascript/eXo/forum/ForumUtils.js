@@ -116,8 +116,8 @@
       var Browser = eXo.core.Browser;
       var X = Browser.findMouseRelativeX(jobj, event, false);
       var Y = Browser.findMouseRelativeY(jobj, event);
-      jPopup.css('left', (X - 30) + 'px');
-      jPopup.css('top', (Y + 5) + 'px');
+      jPopup.css('left', (X - 46) + 'px');
+      jPopup.css('top', (Y + 6) + 'px');
       ForumUtils.addhideElement(jPopup);
       ForumUtils.cancelEvent(evt);
       jPopup.find('li').on('click', ForumUtils.hideElements);
