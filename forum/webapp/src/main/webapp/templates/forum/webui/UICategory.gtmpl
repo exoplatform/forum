@@ -353,7 +353,6 @@
 										<span class="avatarMini"><img src="<%=ForumSessionUtils.getUserAvatarURL(lastPostBy, null);%>"/></span>
 			              <a href="javaScript:void(0)">$screemNamePost</a>
 			              <ul class="dropdown-menu uiUserMenuInfo">
-			                <li class="uiIconTopArrowUp"><span></span></li>
 											<%
 											  for(viewAction in menuViewInfos) {
 												if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;

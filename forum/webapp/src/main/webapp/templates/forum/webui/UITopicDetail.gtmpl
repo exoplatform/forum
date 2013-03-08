@@ -141,7 +141,7 @@
 <!-- Start PostsInThreadContainer -->
   <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 
-  <div class="uiBox contentTopicDetail">
+  <div class="uiBox containerTopicDetail">
     <div class="title clearfix">
 		<ul class="pull-right">
 		
@@ -481,22 +481,22 @@
 				   titleSmile = "Online";
 				}
 			%>
-				<div class="dropdown">
-					<a href="javascript:void(0)" class="textTitleProfile" data-toggle="dropdown">
-						<i class="$userSmile" rel="tooltip" data-placement="bottom" title="${screenName}'s $titleSmile"></i>$viewScreenName
+				<div class="dropdown uiUserInfo">
+					<a href="javascript:void(0)" class="textTitleProfile">
+						<i class="$userSmile"></i>$viewScreenName
 					</a>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu uiUserMenuInfo">
 						<%
 						  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 						  for(viewAction in menuViewInfos) {
-							if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-							String linkView = uicomponent.event(viewAction, owner) ;
-							String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-							if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
+								if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+								String linkView = uicomponent.event(viewAction, owner) ;
+								String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+								if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 						%>
-								<li onclick="$linkView">
-									<a href="javaScript:void(0)"><i class="$viewAction"></i>$itemLabelView</a>
-								</li>
+							<li onclick="$linkView">
+								<a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+							</li>
 						<%
 						  }
 						%>
@@ -507,12 +507,12 @@
 				<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
 				  if(isDisplayAvatar) {
 				%>
-				<div class="dropdown">
-					<a href="javascript:void(0)" class="avatarXLarge" data-toggle="dropdown">
+				<div class="dropdown uiUserInfo avatarXLarge">
+					<a href="javascript:void(0)">
 						<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 					</a>
 					
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu uiUserMenuInfo">
 						<%
 						  for(viewAction in menuViewInfos) {
 							if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
@@ -521,7 +521,7 @@
 							if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 						%>
 						  <li onclick="$linkView">
-							<a href="javaScript:void(0)"><i class="$viewAction"></i>$itemLabelView</a>
+							  <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
 						  </li>
 						<%
 						  }

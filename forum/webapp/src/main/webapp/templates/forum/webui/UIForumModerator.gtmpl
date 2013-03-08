@@ -1,63 +1,47 @@
 <%
-	import org.exoplatform.forum.ForumUtils;
 	List moderators =	uicomponent.getModeratorsForum() ;
 	int total = moderators.size();
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div class="uiForumModerator uiBox" id="uicomponent.id">
 	<h5 class="title">
-		<i class="uiIconArrowDown pull-right" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+		<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+		<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 		<%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
 	</h5>
-	<div class="uiContentBox">
-		
-			<% boolean isMod = false ;
-			int i = 1;
-			String userView;
-			for(moderator in moderators) {
-				userView = uicomponent.getScreenName(moderator);
-				isMod = true ;
-			%>
-			<div class="elementModerator">
-			<%
-				if(i == moderators.size()) {
-			%>
-				<a href="javaScript:void(0)">${userView}</a>
-			<%}else {%> 
-				<a href="javaScript:void(0)">${userView}</a><span>,</span>&nbsp;
-			<%}%>
-			
-				<div class="UIPopupInfoMenu">
-				  <div class="UIPopupInfoContent">
-					<div class="Arrow"><span></span></div>
-					<ul>
-					  <%
-						for(viewAction in menuViewInfos) {
-						  if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-						  String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
-						  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-						  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-							itemLabelView = itemLabelView + " " + userView ;
-						  }
-					  %>
-							<li class="MenuItem" onclick="$linkView">
-							  <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-							</li>
-					  <%
-						}
-					  %>
-					</ul>
-				  </div>
-				</div>				
-		
-			</div>
-			<%
-			 ++i;
-			}	
-			%>
+	<div class="uiContentBox elementModerator">
+	<% 
+		for(moderator in moderators) {
+		  String userView = uicomponent.getScreenName(moderator);
+	%>
+			<div class="pull-left dropdown uiUserInfo">
+        <span>&nbsp;</span>
+        <a href="javaScript:void(0)">${userView}</a>
+        <ul class="dropdown-menu uiUserMenuInfo">
+		  <%
+			for(viewAction in menuViewInfos) {
+			  if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+			  String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
+			  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+			  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+			    itemLabelView = itemLabelView + " " + userView ;
+			  }
+		  %>
+					<li onclick="$linkView">
+					  <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+					</li>
+	 <% } %>
+				</ul>
+		  </div>
+    <%
+      if(!viewAction.equals("ViewThreadByUser")) {
+        print("<span>,</span>");
+      }
+		}
+		%>
 	
-			<%if(!isMod){%>
-			<div class="elementModerator"><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
-			<% } %>
+		<% if(total <= 0) {%>
+		    <span><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></span>
+		<% }%>
 	</div>
 </div>

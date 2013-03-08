@@ -186,24 +186,23 @@
                 <div class="dropdown uiUserInfo">
                   <a href="javaScript:void(0)">$screemNamePost</a>
                   <ul class="dropdown-menu uiUserMenuInfo">
-                    <li class="uiIconTopArrowUp"><span></span></li>
-                        <%
-                          for(viewAction in menuViewInfos) {
-                            if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-                            String linkView = uicomponent.getActionViewInfoUser(viewAction, topicBy) ;
-                            String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-                            if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-                              itemLabelView = itemLabelView + " " + screemNamePost ;
-                            }
-                        %>
-                            <li onclick="$linkView">
-                              <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
-                            </li>
-                        <%
-                          }
-                        %>
-                      </ul>
-                  </div>
+                   <%
+                     for(viewAction in menuViewInfos) {
+                       if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                       String linkView = uicomponent.getActionViewInfoUser(viewAction, topicBy) ;
+                       String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+                       if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+                         itemLabelView = itemLabelView + " " + screemNamePost ;
+                       }
+                   %>
+                       <li onclick="$linkView">
+                         <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+                       </li>
+                   <%
+                     }
+                   %>
+                  </ul>
+                </div>
               </td>
               <td class="Tdbox">$attachment</td>
               <td class="Tdbox">
@@ -233,23 +232,22 @@
                   <div class="dropdown uiUserInfo" style="display:inline">
 	                  <a href="javaScript:void(0)">$viewPostNewBy</a>
 	                  <ul class="dropdown-menu uiUserMenuInfo">
-	                    <li class="uiIconTopArrowUp"><span></span></li>
-                        <%
-                          for(viewAction in menuViewInfos) {
-                            if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-                            String linkView = uicomponent.getActionViewInfoUser(viewAction, postNewBy) ;
-                            String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-                            if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-                              itemLabelView = itemLabelView + " " + viewPostNewBy ;
-                            }
-                        %>
-                              <li onclick="$linkView">
-                                <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
-                              </li>
-                        <%
+                      <%
+                        for(viewAction in menuViewInfos) {
+                          if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                          String linkView = uicomponent.getActionViewInfoUser(viewAction, postNewBy) ;
+                          String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+                          if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+                            itemLabelView = itemLabelView + " " + viewPostNewBy ;
                           }
-                        %>
-                      </ul>
+                      %>
+                          <li onclick="$linkView">
+                            <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+                          </li>
+                      <%
+                        }
+                      %>
+                    </ul>
                   </div>
                 </div>
               </td>

@@ -10,7 +10,7 @@
       var jportlet = findId(id);
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
-        jportlet.find('.uiUserInfo').on('click', utils.showUserMenu);
+        UIForumPortlet.initShowUserInfo();
         UIForumPortlet.initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
@@ -21,7 +21,16 @@
         })
       });
     },
-    
+
+    initShowUserInfo : function(id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
+      } else {
+        jportlet.find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
+      }
+    },
+
     initTooltip : function(id) {
       var jportlet = findId(UIForumPortlet.id);
       if(id != null) {
@@ -298,14 +307,13 @@
       var jobject = $(obj)
       var forumToolbar = jobject.parents(".uiBox");
       var contentContainer = forumToolbar.find('.uiContentBox');
+      jobject.hide();
       if (contentContainer.css('display') != "none") {
         contentContainer.hide();
-        jobject.attr( 'class', 'uiIconArrowRight pull-right');
-        jobject.attr("title", jobject.attr("expand"));
+        forumToolbar.find('.uiIconArrowRight').show();
       } else {
         contentContainer.show(100);
-        jobject.attr( 'class', 'uiIconArrowDown pull-right');
-        jobject.attr("title", jobject.attr("collapse"));
+        forumToolbar.find('.uiIconArrowDown').show();
       }
     },
 
