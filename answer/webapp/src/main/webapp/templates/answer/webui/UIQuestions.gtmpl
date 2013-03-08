@@ -733,8 +733,9 @@
                               owner = answer.getResponseBy();
                               responseBy = FAQUtils.getScreenName(owner, answer.getFullName());
                               String userProfile = uicomponent.event("ViewUserProfile", owner);
+                              String answerId = answer.getId();
                             %>
-                            <div class="ResponseItemContainer ClearFix">
+                            <div class="ResponseItemContainer ClearFix" id="$answerId">
                                   <!--  View user who answered quesetion  -->
                                   <div class="ImgItemContainer">
                                     <%
@@ -888,8 +889,9 @@
                               String owner = comment.getCommentBy();
                               if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
                               else canEditComment = false;
+                              String commentId = comment.getId();
                           %>
-                                <div class="ResponseItemContainer ClearFix">
+                                <div class="ResponseItemContainer ClearFix" id="$commentId">
                                     
 	                                <div class="ImgItemContainer">
 	                                <!--  View user who comment for quesetion  -->
