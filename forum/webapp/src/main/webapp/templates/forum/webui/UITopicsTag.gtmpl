@@ -196,7 +196,7 @@
                        }
                    %>
                        <li onclick="$linkView">
-                         <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+                         <a href="javaScript:void(0)">$itemLabelView</a>
                        </li>
                    <%
                      }
@@ -242,7 +242,7 @@
                           }
                       %>
                           <li onclick="$linkView">
-                            <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+                            <a href="javaScript:void(0)">$itemLabelView</a>
                           </li>
                       <%
                         }

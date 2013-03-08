@@ -615,9 +615,3 @@
 	border: 1px solid white;
 	border-top: none;
 }
-
-.uiUserMenuInfo   .uiIconTopArrowUp {
-  position:absolute;
-  top:-9px;
-  left:37px;
-}

@@ -308,12 +308,13 @@
       var forumToolbar = jobject.parents(".uiBox");
       var contentContainer = forumToolbar.find('.uiContentBox');
       jobject.hide();
+      $('div.tooltip').remove();
       if (contentContainer.css('display') != "none") {
         contentContainer.hide();
-        forumToolbar.find('.uiIconArrowRight').show();
+        forumToolbar.find('.uiIconArrowRight').show().tooltip();
       } else {
         contentContainer.show(100);
-        forumToolbar.find('.uiIconArrowDown').show();
+        forumToolbar.find('.uiIconArrowDown').show().tooltip();
       }
     },
 

@@ -60,7 +60,7 @@ public class BaseForumForm extends BaseUIForm {
   }
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
+    this.getUserProfile();
     if (getTemplate() != null)
     {
        super.processRender(context);
@@ -88,7 +88,13 @@ public class BaseForumForm extends BaseUIForm {
   }
   
   public UserProfile getUserProfile() {
-    userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    if (userProfile == null) {
+      try {
+        userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+      } catch (Exception e) {
+        userProfile = new UserProfile();
+      }
+    }
     return userProfile;
   }
 

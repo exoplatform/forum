@@ -1,47 +1,50 @@
 <%
-	List moderators =	uicomponent.getModeratorsForum() ;
-	int total = moderators.size();
-	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+  List moderators = uicomponent.getModeratorsForum() ;
+  int total = moderators.size();
+  int i = 0;
+  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div class="uiForumModerator uiBox" id="uicomponent.id">
-	<h5 class="title">
-		<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
-		<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
-		<%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
-	</h5>
-	<div class="uiContentBox elementModerator">
-	<% 
-		for(moderator in moderators) {
-		  String userView = uicomponent.getScreenName(moderator);
-	%>
-			<div class="pull-left dropdown uiUserInfo">
-        <span>&nbsp;</span>
-        <a href="javaScript:void(0)">${userView}</a>
+  <h5 class="title">
+    <i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+    <i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+    <%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %>
+  </h5>
+  <div class="uiContentBox elementModerator">
+  <% 
+    
+    for(moderator in moderators) {
+      String userView = uicomponent.getScreenName(moderator);
+      ++i;
+  %>
+      <div class="pull-left dropdown uiUserInfo">
+        <a href="javaScript:void(0)">&nbsp;${userView}</a>
         <ul class="dropdown-menu uiUserMenuInfo">
-		  <%
-			for(viewAction in menuViewInfos) {
-			  if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-			  String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
-			  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-			  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-			    itemLabelView = itemLabelView + " " + userView ;
-			  }
-		  %>
-					<li onclick="$linkView">
-					  <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
-					</li>
-	 <% } %>
-				</ul>
-		  </div>
+      <%
+      for(viewAction in menuViewInfos) {
+        if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+        String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
+        String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+        if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+          itemLabelView = itemLabelView + " " + userView ;
+        }
+      %>
+          <li onclick="$linkView">
+            <a href="javaScript:void(0)">$itemLabelView</a>
+          </li>
+   <% } %>
+        </ul>
     <%
-      if(!viewAction.equals("ViewThreadByUser")) {
+      if(total != i) {
         print("<span>,</span>");
       }
-		}
-		%>
-	
-		<% if(total <= 0) {%>
-		    <span><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></span>
-		<% }%>
-	</div>
+    %>
+      </div>
+    <%
+    }
+    %>
+    <% if(total <= 0) {%>
+        <span><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></span>
+    <% }%>
+  </div>
 </div>

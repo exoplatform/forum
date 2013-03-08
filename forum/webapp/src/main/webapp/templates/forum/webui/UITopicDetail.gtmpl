@@ -495,7 +495,7 @@
 								if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 						%>
 							<li onclick="$linkView">
-								<a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+								<a href="javaScript:void(0)">$itemLabelView</a>
 							</li>
 						<%
 						  }
@@ -521,7 +521,7 @@
 							if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 						%>
 						  <li onclick="$linkView">
-							  <a class="actionIcon" href="javaScript:void(0)">$itemLabelView</a>
+							  <a href="javaScript:void(0)">$itemLabelView</a>
 						  </li>
 						<%
 						  }

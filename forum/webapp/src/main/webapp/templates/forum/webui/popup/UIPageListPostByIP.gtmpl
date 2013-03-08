@@ -74,7 +74,7 @@
 								}
 								%>
 								<td class="center">
-									<a class="actionIcon" href="javascript:void(0)" onclick="$link_"><i class="uiIconDelete uiIconLightGray"></i></a>
+									<a href="javascript:void(0)" onclick="$link_"><i class="uiIconDelete uiIconLightGray"></i></a>
 								</td>
 							</tr>
 						<% i = i + 1;}
