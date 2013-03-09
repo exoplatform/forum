@@ -27,6 +27,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIPollRadioBoxInput;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumPollPortlet;
@@ -44,7 +45,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -122,7 +122,7 @@ public class UITopicPoll extends BaseForumForm {
   private void init() throws Exception {
     List<UIComponent> children = new ArrayList<UIComponent>(getChildren());
     for (UIComponent child : children) {
-      if (child instanceof UIFormRadioBoxInput || child instanceof UIForumCheckBoxInput) {
+      if (child instanceof UIPollRadioBoxInput || child instanceof UIForumCheckBoxInput) {
         removeChild(child.getClass());
       }
     }
@@ -132,7 +132,7 @@ public class UITopicPoll extends BaseForumForm {
         for (String s : poll_.getOption()) {
           options.add(new SelectItemOption<String>(s, s));
         }
-        UIFormRadioBoxInput input = new UIFormRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
+        UIPollRadioBoxInput input = new UIPollRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
         addUIFormInput(input);
       } else {
@@ -250,9 +250,9 @@ public class UITopicPoll extends BaseForumForm {
         int i = 0;
         if (!topicPoll.poll_.getIsMultiCheck()) {
           for (UIComponent child : children) {
-            if (child instanceof UIFormRadioBoxInput) {
-              for (SelectItemOption<String> option : ((UIFormRadioBoxInput) child).getOptions()) {
-                if (option.getValue().equalsIgnoreCase(((UIFormRadioBoxInput) child).getValue())) {
+            if (child instanceof UIPollRadioBoxInput) {
+              for (SelectItemOption<String> option : ((UIPollRadioBoxInput) child).getOptions()) {
+                if (option.getValue().equalsIgnoreCase(((UIPollRadioBoxInput) child).getValue())) {
                   values.append(i);
                   if (i >= maxOption) {
                     isFailed = true;
@@ -325,7 +325,7 @@ public class UITopicPoll extends BaseForumForm {
           topicPoll.removeChild(UIForumCheckBoxInput.class);
         }
       } else {
-        topicPoll.removeChild(UIFormRadioBoxInput.class);
+        topicPoll.removeChild(UIPollRadioBoxInput.class);
       }
       try {
         UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) topicPoll.getParent();
