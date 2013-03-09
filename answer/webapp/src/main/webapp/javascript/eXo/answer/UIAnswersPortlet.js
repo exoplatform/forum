@@ -40,6 +40,85 @@
       });
     }
   };
+
+  UIAnswersPortlet.resizeLineBar = function(idPr) {
+    var parent = $('#' + idPr).find('#resizeLineBar');
+    var line = parent.find('div.line');
+
+    var pageBody = $('#UIPageBody');
+    var trContainer = pageBody.parents('tr.TRContainer');
+    var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
+    var rightContainer = trContainer.find('div.UIContainer:first');
+    var leftHeight = leftTDContainer.outerHeight();
+    var delta = leftHeight - rightContainer.outerHeight();
+
+    var answerContainer = $('#' + idPr).find('#UIAnswersContainer');
+    var height = answerContainer.outerHeight();
+
+    if (delta > 0) {
+      height += delta;
+    }
+    line.css('height', (height + 36) + 'px');
+
+    UIAnswersPortlet.currentPosW = 0;
+    UIAnswersPortlet.currentW = 0;
+    UIAnswersPortlet.isDownLine = false;
+
+    line.on('mousedown', function(e) {
+      UIAnswersPortlet.currentPosW = e.clientX;
+      var portlet = findId(UIAnswersPortlet.portletId);
+      var leftColumn = portlet.find('.leftColumn:first');
+      UIAnswersPortlet.currentW = leftColumn.width();
+      UIAnswersPortlet.isDownLine = true;
+    });
+    $(document).on('mouseover', function(e) {
+        if (UIAnswersPortlet.isDownLine) {
+          var next = e.clientX;
+          var deltaMove = next - UIAnswersPortlet.currentPosW;
+          if (deltaMove != 0) {
+            var leftColumn = findId(UIAnswersPortlet.portletId).find(
+                '.leftColumn:first');
+            var width = (UIAnswersPortlet.currentW + deltaMove);
+            if (width < 100 && deltaMove < 0) {
+              leftColumn.css('width', '10px').hide(300);
+            } else {
+              leftColumn.css('width', width + 'px').show();
+            }
+          }
+        }
+      })
+    .on('mouseup', function(e) {
+      UIAnswersPortlet.isDownLine = false;
+      var portlet = findId(UIAnswersPortlet.portletId);
+      portlet.on('selectstart', function() {
+        return true;
+      });
+      portlet.on('dragstart', function() {
+        return true;
+      });
+      portlet[0].unselectable = "yes";
+    });
+
+    var iconArrow = answerContainer.find('i.iconControll:first');
+    iconArrow.on('click', function() {
+      var leftColumn = findId(UIAnswersPortlet.portletId).find('.leftColumn:first');
+      if (leftColumn.css('display') === 'block') {
+        leftColumn.css({
+          'overflow' : 'hidden',
+          'width' : '10px',
+          'height' : (leftColumn.height() + 'px')
+        }).hide(300);
+        iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
+      } else {
+        leftColumn.css({
+          'overflow' : 'visible',
+          'width' : '200px',
+          'height' : 'auto'
+        }).show(300);
+        iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left iconControll');
+      }
+    })
+  };
   
   UIAnswersPortlet.selectCateInfor = function (number) {
     var obj = null;

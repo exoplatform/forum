@@ -423,7 +423,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
         popupAction.deActivate();
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+        event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
       } else {
         UIQuestionManagerForm questionManagerForm = responseForm.getParent();
         UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class);
