@@ -87,9 +87,9 @@
 	<div class="clearfix">
 		<div class="pull-left">
 		  <% if(isCanReply) { %>
-				<button class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+				<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 		  <% } else if(isNotLogin) {  %>
-				<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+				<a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 		  <% } else {%>
 				<div class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 		  <% } %>
@@ -769,9 +769,9 @@
 	<div class="clearfix">
 		<div class="pull-left">
 	  <% if(isCanReply) { %>
-			<button class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+			<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 	  <% } else if(isNotLogin) {  %>
-			<button class="uiPostReplyIcon btn btn-primary" onclick="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></button>
+			<a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 	  <% } else {%>
 			<div class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 	  <% } %>
