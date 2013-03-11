@@ -2,12 +2,9 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	uicomponent.setLanguages();
 %>
-<div class="UIQuestionForm $uicomponent.id">
+<div class="uiQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="padding:10px 0px;">
-			<div class="UIFormInput">
-				<table class="UIFormGrid" style="width:95%">
-					<tbody>
+		<div class="form-horizontal resizable">
 					<% 
 					for(field in uiform.getChildren()) { 
 						if(field.getName().equals(uicomponent.ATTACHMENTS) || 
@@ -17,58 +14,47 @@
 						} else if(field.isRendered()) {
 					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
 					%>
-							  <tr>
-							    <td class="FieldLabel" style="width:100px; text-align:right">
-							      <label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
-							    </td>
-							    <td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
+							  <div class="control-group">
+							    <label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+							    
+							    <div class="controls">
 										<% uiform.renderField(field) %>
-							    </td>
-							  </tr>
+							    </div>
+							  </div>
 							
 						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
 							if(!uicomponent.isRenderSelectLang) continue;
 								String link = uiform.event(uicomponent.DELETE_LANGUAGE_ACTION, uicomponent.id,"delete question");
 						%>
-								<tr>
-									<td class="FieldLabel" style="width:100px; text-align:right">
-										<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
-									</td>
-									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
-										<div class="ClearFix">
-											<div style="float:left;"><% uiform.renderField(field) %></div>
-											<div onclick="$link" style="float:left; width:24px;">
-												<div class="DustBinIcon"><span></span></div>
-											</div>
-										</div>
-									</td>
-								</tr>
+								<div class="control-group">
+									<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+									<div class="controls">
+										<% uiform.renderField(field) %>
+										<i onclick="$link" class="uiIconDelete"></i>
+									</div>
+								</div>
 						<%} else {%>
-								<tr>
+								<div class="control-group">
 									<%fieldName = uicomponent.getLabel(field.getName());
-										if(!fieldName.equals(uicomponent.getId())) {%>												
-											<td class="FieldLabel" style="width:100px">
-												<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
-											</td>
-											<td class="FieldComponent" style="white-space:normal;">
+										if(!fieldName.equals(uicomponent.getId())) {%>		
+											<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+											<div class="controls">
 													<% uiform.renderField(field) %>
 													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br/>
-											</td>
+											</div>
 									<%} else {%>
-											<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+											<div class="controls-full"><% uiform.renderField(field) %></div>
 									<%}%>
-								</tr>
+								</div>
 					<%  }
 					  }
 					}
 					if(uiform.isAddCheckBox) {
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
-						<tr>
-							<td class="FieldLabel" style="width:100px">
-								<%=_ctx.appRes("UIQuestionForm.label.Validation")%> :
-							</td>
-							<td class="FieldComponent" style="white-space:normal;">
+						<div class="control-group">
+							<label class="control-label"><%=_ctx.appRes("UIQuestionForm.label.Validation")%> : </label>
+							<div class="controls">
 								<div style="float:left;">
 									<div style="float:left; padding:0px 4px 0px 4px;">
 										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
@@ -79,15 +65,15 @@
 										<label for="<%=uicomponent.IS_ACTIVATED%>"><%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
 									</div>
 								</div>
-							</td>
-						</tr>
+							</div>
+						</div>
 					<%}%>
 					<!-- ======================= Attachment =========================== -->
-					<tr>
-						<td class="FieldLabel" style="white-space:nowrap; width:100px">
+					<div class="control-group">
+						<label class="control-label">
 							<%=_ctx.appRes("UIQuestionForm.label.Attachment")%> :
-						</td>
-						<td class="FieldComponent" style="white-space:normal;">
+						</label>
+						<div class="controls">
 							<%
 							if(!uicomponent.getListFile().isEmpty()) {
 								String name = "" ;
@@ -105,11 +91,11 @@
 						     			$name
 						     	<%} else {%>
 							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
-							     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
+							     		<a href="javaScript:void(0);" rel="tooltip" data-placement="bottom" title="$name" style="color:black;">
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
-											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
+											<a href="$link" style="color:#058EE6; font-size:12px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
 												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>"/>
 											</a>
 										</div>
@@ -120,20 +106,18 @@
 							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href="<%=uicomponent.event("Attachment")%>">
 								<%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
 							</a>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
+						</div>
+					</div>
+				
 		</div>
 		
-		<div class="UIAction">
+		<div class="uiAction uiActionBorder">
     <% for(action in uicomponent.getActions()) { 
 	        		 if(action.indexOf("Remove") >= 0) continue ; 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-      <a href="javascript:void(0);" onmousedown="$link" onkeydown="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$link" class="btn">$actionLabel</button>
        <%}%>
     </div>
 	<%uiform.end()%>

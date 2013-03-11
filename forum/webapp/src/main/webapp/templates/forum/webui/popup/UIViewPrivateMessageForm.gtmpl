@@ -3,8 +3,8 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.ForumUtils ;
 %>
-<div class="UIViewMemberProfile UIViewPrivateMessageForm">
 <% uiform.begin() %>
+<div class="UIViewMemberProfile UIViewPrivateMessageForm resizable">
 <%	
 	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
 	String title = privateMessage.getName() ;
@@ -23,11 +23,11 @@
 			</div>
 		</div>
  	</div>
-	 <div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-    </div>
 <%
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
 %>
-<%uiform.end()%>
 </div>
+<div class="uiAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+    </div>
+<%uiform.end()%>

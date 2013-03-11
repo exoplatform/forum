@@ -1,72 +1,49 @@
 <div class="UIForumForm UICategoryForm">	
-	<% uiform.begin() %>	
-	<div class="UIFormTabPane">
-		<div class="UITabPane">
-			<div class="TabPaneContent" style="padding:0px;">
-				
-				<div class="WorkingArea">
-					 <div class="UIHorizontalTabs">
-						 <div class="LeftHorizontalTabs">
-							 <div class="RightHorizontalTabs">
-								 <div class="CenterHorizontalTabs">
-									<div class="TabsContainer">
-										<%String classCss = "SelectedTab" ; 
-										int i = 0;
-										for(tabconten in uiform.getChildren()){ 
-											String link = "javascript:void(0);";
-											if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
-											else {
-												classCss = "NormalTab" ;
-												link = uicomponent.event("SelectTab",""+i) ;
-											}
-										%>	
-										<div class="UITab NormalTabStyle">
-											<div class="$classCss">
-												<div class="LeftTab">
-													<div class="RightTab">
-														<div onclick="$link">
-															<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									<%	 ++i;
-										} %>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="UIForm">
-						<div class="HorizontalLayout">
-							<div class="UITabContentContainer">
-								<% 
-									String display =	"block";
-									int j = 0;
-									for(tabconten in uiform.getChildren()){
-										if(uiform.getIsSelected(j))display =	"block";
-										else display = "none";
-								%>
-								<div style="display:$display;" id="UITabContent" class="UITabContent">
-									<% uiform.renderChild(tabconten.id) ; %>
-								</div>
-							<% ++j;} %>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>	
-		</div>	
-	</div>
-	 <div class="UIAction">
-  <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
-      <%}%>
+	<% uiform.begin() %>
+  <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+    <ul class="nav nav-tabs">
+      <%
+        String classCss = "" ; 
+        int i = 0;
+        for(String tabcontent : uicomponent.getChildren()){ 
+          String link = "javascript:void(0);";
+          String tabId = tabcontent.getId();
+          String paneId = uicomponent.getId();
+          if(uiform.getIsSelected(i)) classCss = "active" ;
+          else {
+            classCss = "" ;
+            link = uicomponent.event("SelectTab",""+i) ;
+          }
+      %> 
+        <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');$link">              
+            <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+        </li>   
+      <% i++; } %>
+    </ul>
+    <div class="tab-content">
+      <% 
+        def active = "";
+        int j = 0;
+        for(tabcontent in uiform.getChildren()){
+          if(uiform.getIsSelected(j)) active =  "in active";
+          else active = "";
+          println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\">" ;
+          println "<div class='resizable'>";
+          uiform.renderChild(tabcontent.id) ;
+          println "</div>";
+          println "</div>" ;
+          j++ ;
+        }
+        %>
     </div>
+  </div>
+  <div class="uiAction">
+    <%for(action in uicomponent.getActions()) {
+      String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+      String link = uicomponent.event(action);
+    %>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+    <%} %>
+  </div>
 	<%uiform.end()%>
 </div>

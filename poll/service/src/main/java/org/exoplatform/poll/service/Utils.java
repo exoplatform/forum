@@ -108,4 +108,70 @@ public class Utils {
 
     return poll;
   }
+  
+  /**
+   * Get a string from infoVote of poll
+   * 
+   * @param poll
+   * @return
+   */
+  public static String getInfoVote(Poll poll) {
+    //String s = "";
+    StringBuilder sb = new StringBuilder();
+    String[] infoVote = poll.getInfoVote();
+    String[] options = poll.getOption();
+    if (infoVote == null) {
+      for (int j=0; j<options.length; j++) {
+        sb.append(options[j]).append(":0%:0|");
+      }
+      sb.append("0");
+    } else {
+      for (int i=0; i<infoVote.length-1; i++) {
+        String[] list = infoVote[i].split(":");
+        if (Integer.parseInt(list[1].split("\\.")[0]) > 1) {
+          sb.append(options[i]).append(":").append(list[0]).append("%:").append(list[1].split("\\.")[0]).append("|");
+        } else {
+          sb.append(options[i]).append(":").append(list[0]).append("%:").append(list[1].split("\\.")[0]).append("|");
+        }
+      }
+      if (Integer.parseInt(infoVote[infoVote.length-1]) > 1) {
+        sb.append(infoVote[infoVote.length-1]);
+      } else {
+        sb.append(infoVote[infoVote.length-1]);
+      }
+    }
+    return sb.toString();
+  }
+  
+  /**
+   * Convert userVote of poll to s string
+   * 
+   * @param poll
+   * @param userName
+   * @return
+   */
+  public static String getUserVote(Poll poll, String userName) {
+    StringBuilder sb = new StringBuilder();
+    String[] votes = poll.getUserVote();
+    String[] options = poll.getOption();
+    if (votes.length == 0) return sb.toString().trim();
+    for (String element : votes) {
+      String[] userVote = element.split(":");
+      if (userVote[0].equals(userName)) {
+        for (int i=1;i<userVote.length;i++) {
+          int j = Integer.parseInt(userVote[i]);
+          sb.append(" ").append(options[j]);
+        }
+      }
+    }
+    return sb.toString().trim();
+  }
+  
+  public static String getCurrentUserVote(Poll poll) {
+    String[] votes = poll.getUserVote();
+    if (votes.length == 0) {
+      return poll.getOwner();
+    }
+    return votes[votes.length-1].split(":")[0];
+  }
 }

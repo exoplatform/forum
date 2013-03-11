@@ -656,4 +656,34 @@ public class Utils implements ForumNodeTypes {
     return null;
   }
 
+  /**
+   * Get Topic ID from post path.
+   * @param path
+   * @return
+   * @since 4.0
+   */
+  public static String getTopicId(String path) {
+    if (isEmpty(path) == false && path.lastIndexOf(TOPIC) != -1) {
+      String topicId = path.substring(path.lastIndexOf(TOPIC));
+      if (topicId.indexOf("/") != -1) {
+        topicId = topicId.substring(0, topicId.indexOf("/"));
+      }
+      return topicId;
+    }
+    return null;
+  }
+  
+  /**
+   * Get Topic path.
+   * @param path
+   * @return
+   * @since 4.0
+   */
+  public static String getTopicPath(String path) {
+    if (isEmpty(path) == false  && path.lastIndexOf(TOPIC) != -1) {
+      return path.substring(0, path.lastIndexOf(TOPIC) + getTopicId(path).length());
+    }
+    return null;
+  }
+
 }

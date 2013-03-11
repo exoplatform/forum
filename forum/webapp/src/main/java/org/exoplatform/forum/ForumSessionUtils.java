@@ -19,6 +19,7 @@ package org.exoplatform.forum;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -57,6 +58,9 @@ public class ForumSessionUtils {
   public static String getUserAvatarURL(String userName, ForumService forumService) {
     String url = null;
     try {
+      if (forumService == null) {
+        forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      }
       ForumAttachment attachment = forumService.getUserAvatar(userName);
       url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
     } catch (Exception e) {

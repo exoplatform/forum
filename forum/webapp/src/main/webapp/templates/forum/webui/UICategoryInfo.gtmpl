@@ -18,111 +18,92 @@
 	String userView;
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
-<div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
-	<div class="ForumToolbar ClearFix">
-		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-		<h6 class="Title"><%=_ctx.appRes("UICategoryInfo.label.What")%></h6>
-	</div>
-	<div class="ContentContainer">
-		<div class="ForumStatsList">
-			<table cellspacing="0px" cellpadding="0px" border="0px" id="UIListUsers" class="UIGrid">
-				<tbody>
-					<!--tr>
-						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;"><div class="UserIcon"><span></span></div></td>
-					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
-		 			</tr-->
-					<tr class="OddRow">
-						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
-					 	<td >
-							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
-							<div class="text ClearFix" style="padding-bottom:5px;">
-								<div class="FloatLeft"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
-							<% int t = 0 ;
-								for(user in userOnlines) {
-									userView = uicomponent.getScreenName(user);
-								 ++t;
-							%>
-								<div class="FloatLeft">
-									<% if(t != size){ %>
-									<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a><span>,</span>
-									<% } else {%>
-									<span>&nbsp;</span><a href="javaScript:void(0)" class="UserMenuInfo">${userView}</a>
-									<% } %>					
-									<div class="UIPopupInfoMenu">
-                    <div class="UIPopupInfoContent">
-                      <div class="Arrow"><span></span></div>
-                      <ul>
-                        <%
-                          for(viewAction in menuViewInfos) {
-                            if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-                            String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
-                            String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-                            if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-                              itemLabelView = itemLabelView + " " + userView ;
-                            }
-                        %>
-                              <li class="MenuItem" onclick="$linkView">
-                                <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-                              </li>
-                        <%
-                          }
-                        %>
-                      </ul>
-                    </div>
-                  </div>
-									
-								</div>
-							<% } %>
-								
-							</div>
-						</td>
-		 			</tr>
-					<tr>
-						<td style="width:40px; border-right:1px solid #ffffff;">
-							<div class="ChartIcon"><span></span></div>
-						</td>
-					 	<td class="text"><%=_ctx.appRes("UICategoryInfo.label.ForumStatistics");%></td>
-		 			</tr>
-					<tr class="OddRow">
-						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
-					 	<td class="text">
-					 		<div class="text">
-					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics,</span> 
-					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, </span>
-					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, </span>
-					 			<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>: $activeUsers</span>
-					 		</div>
-							<div class="text" style="padding-bottom:5px;">
-								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
-								<a href="javaScript:void(0)" class="UserMenuInfo">$viewNewMember</a>
-								<div class="UIPopupInfoMenu">
-                  <div class="UIPopupInfoContent">
-                    <div class="Arrow"><span></span></div>
-                    <ul>
-                      <%
-                        for(viewAction in menuViewInfos) {
-                          if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-                          String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
-                          String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-                          if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-                            itemLabelView = itemLabelView + " " + viewNewMember ;
-                          }
-                      %>
-                            <li class="MenuItem" onclick="$linkView">
-                              <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
-                            </li>
-                      <%
-                        }
-                      %>
-                    </ul>
-                  </div>
-                </div>
-
-							</div>
-					 	</td>
-		 			</tr>
-				</tbody>
-			</table>							
-		</div>
-	</div>
+<div id="$uicomponent.id" class="uiCategoryInfo">
+	<table id="UIListUsers" class="uiGrid table no-border-cell rounded-corners table-striped uiCollapExpand">
+		<thead>
+			<tr>
+				<th>
+					<div class="pull-right actionExpandCollapse">
+						<i class="uiIconArrowDown" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+            <i style="display:none" class="uiIconArrowRight" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+					</div>
+					<div class="textTitleCategories pull-left"><%=_ctx.appRes("UICategoryInfo.label.What")%></div>
+				</th>
+			</tr>
+		</thead>
+		<tbody class="uiExpandContainer">
+			<tr>
+				<td>
+					<div class="textInfo"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
+					<div class="textInfo clearfix" >
+						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
+					<% int t = 0 ;
+						for(user in userOnlines) {
+							userView = uicomponent.getScreenName(user);
+						 ++t;
+					%>
+						<div class="pull-left dropdown uiUserInfo">
+							<span>&nbsp;</span>
+							<a href="javaScript:void(0)">${userView}</a>
+							<ul class="dropdown-menu uiUserMenuInfo">
+								<%
+								for(viewAction in menuViewInfos) {
+									if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+									String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
+									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+										itemLabelView = itemLabelView + " " + userView ;
+									}
+								%>
+									<li onclick="$linkView">
+										<a href="javaScript:void(0)">$itemLabelView</a>
+									</li>
+								<%
+								}
+								%>
+							</ul>
+							<% if(t != size){ %>
+							<span>,</span>
+							<% } %>		 
+						</div>
+					<% } %>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="textInfo">
+						<span><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics,</span> 
+						<span><%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, </span>
+						<span><%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, </span>
+						<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>: $activeUsers</span>
+					</div>
+					<div class="textInfo clearfix">
+						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>:&nbsp;</div>
+						<div class="dropdown uiUserInfo pull-left">
+							<a href="javaScript:void(0)" class="UserMenuInfo">$viewNewMember</a>
+							<ul class="dropdown-menu uiUserMenuInfo">
+								<%
+									for(viewAction in menuViewInfos) {
+										if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+										String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
+										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+											itemLabelView = itemLabelView + " " + viewNewMember ;
+										}
+								%>
+									<li onclick="$linkView">
+										<a href="javaScript:void(0)">$itemLabelView</a>
+									</li>
+								<%
+									}
+								%>
+							</ul>
+						</div>
+					</div>
+					
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

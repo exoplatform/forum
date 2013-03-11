@@ -28,7 +28,7 @@
             <span><%=_ctx.appRes("UIPoll.label.Poll"); %>:</span>
             <span>${question}</span>
           </div>
-          <div class="IconRight CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>"><span></span></div>
+          <div class="IconRight CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>"><span></span></div>
         <% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
           
           <div class="ContentAction ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">

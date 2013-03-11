@@ -5,6 +5,7 @@ import org.exoplatform.forum.service.Forum;
 %>
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
+    <div class="resizable">
 		<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
@@ -18,7 +19,7 @@ import org.exoplatform.forum.service.Forum;
 							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.SelectForums");%></legend>
 						<%}%>
 							<div style="height:160px; overflow:auto;">
-								<table class="UIGrid" style="margin:2px auto; width:95%;">
+								<table class="uiGrid table table-hover table-striped" style="margin:2px auto; width:95%;">
 									<thead>
 										<tr>
 											<th style="width:16px;"><span></span></th>
@@ -73,13 +74,13 @@ import org.exoplatform.forum.service.Forum;
 				</table>
 			</div>
 		</div>
-		
-		<div class="UIAction">
+		</div>
+		<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 					%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

@@ -1,0 +1,120 @@
+@import "variables.less"; 
+@import "mixins.less";
+@import "answers/Sprites/Style.less";
+
+.uiAnswersPortlet {
+	padding: 20px 20px 0px 20px;
+	
+	.uiAnswersBreadcumbs {
+		padding-top: 3px;
+	}
+	.uiAnserContainer {
+		.answersContainer  {
+			padding: 20px 10px;
+		}
+		.leftColumn {
+			width: 220px;
+			& + .rightColumn {
+					margin-left: 250px;
+				}
+		}
+		.avatarMini  {
+			.square(18px);
+			img { 
+				width: 18px;
+			}
+		}
+	}
+
+	.line {
+    width:2px; 
+    border-left: 1px solid #cfcfcf; 
+    margin:auto; 
+    min-height: 300px;
+    cursor: col-resize;
+  }
+
+	.normalQuest  {
+		margin-bottom: 10px;
+		.leftContent {
+			margin:0;
+			& + .rightContent {
+				margin-left: 160px;
+			}
+		}
+		.rightContent .titleWithBorder {
+			margin: 0 0 10px 0;
+		}
+		.time {
+			color: @grayLight;
+		} 
+	}
+	.uiAnserContainer .resize {
+		width: 30px;
+	}
+	.uiAnserContainer .rightColumn {
+		overflow: hidden;
+	}
+	
+	.uiCategories {
+		.listCategories > li {
+			margin: 5px 0;
+			cursor: pointer;
+		} 
+	}
+
+	.uiQuestions {
+		margin: 10px 0;	
+		.answerToolbar {
+			.nav-pills > li > a {
+				padding-top: 5px;
+				padding-bottom: 0;
+			}
+			.uiDropdownWithIcon {
+				margin: 4px 0;
+			}
+			.nav  {
+				margin-bottom: 0;
+			}
+		}
+	}
+	
+	.uiQuestionInfo {
+		.select-category {
+			label {
+				display: inline-block;
+			}
+			.uiSelectbox {
+				width: 75px;
+				select.selectbox {
+					width: 100px;
+				}
+			}
+		}
+	}
+}
+
+.boxNum {
+	border: 1px solid @borderColor;
+	text-align:center;
+	background: @white;
+    float: left;
+    min-width: 68px;
+    padding: 2px 0;
+    text-align: center;
+	h5{
+		margin: 0 ;
+	}
+	&:first-child {
+		.border-radius(@borderRadiusSmall 0 0 @borderRadiusSmall);
+	}
+	&:last-child {
+		.border-radius(0  @borderRadiusSmall @borderRadiusSmall  0 );
+	}
+	&.boxNumGray {
+		background: @grayWhiteSmoke;
+	}
+	& + .boxNum {
+		border-left: 1px solid #e9e9e9;
+	}
+}

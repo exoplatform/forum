@@ -2,8 +2,8 @@
 	import org.exoplatform.forum.webui.UIPostRules ;
 	import org.exoplatform.forum.webui.UIForumModerator;
 %>
-<div class="UIForumInfos ClearFix">
-	<div class="ThreadsStartsList RightStartsList">
+<div class="uiForumInfos clearfix">
+	<div class="rightStartsList pull-right">
 		<% 
 		UIPostRules postRules = uicomponent.getChild(UIPostRules.class);
 		if(postRules.isRendered()) {
@@ -11,7 +11,7 @@
 		}
 		%>
 	</div>
-	<div class="ThreadsStartsList LeftStartsList">
+	<div class="leftStartsList">
 		<% 
 		UIForumModerator forumModerator = uicomponent.getChild(UIForumModerator.class);
 		if(forumModerator.isRendered()) {

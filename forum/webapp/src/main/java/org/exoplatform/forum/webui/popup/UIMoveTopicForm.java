@@ -113,7 +113,7 @@ public class UIMoveTopicForm extends BaseDataForm implements UIPopupComponent {
             String[] strs = forumPath.split(ForumUtils.SLASH);
             String catgoryId = strs[strs.length - 2], forumId=strs[strs.length - 1];
             UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
-            forumDescription.setForumIds(catgoryId, forumId);
+            forumDescription.setForumId(catgoryId, forumId);
             UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
             topicDetail.setUpdateForum(uiForm.getForumService().getForum(catgoryId, forumId));
             topicDetail.setUpdateTopic(catgoryId, forumId, uiForm.topics.get(0).getId());

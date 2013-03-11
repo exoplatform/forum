@@ -1,0 +1,20 @@
+<%import org.exoplatform.forum.webui.UIPermissionPanel;%>
+
+<div id="$uicomponent.id">
+  <%
+    uicomponent.renderChild("PermissionGrid");
+    uicomponent.renderChild("PermissionInput");
+  %>
+  <span>
+    <a href="<%= uicomponent.event("OpenUserPopup")%>">
+      <i class="uiIconUser"></i>
+    </a>
+    <a href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>">
+      <i class="uiIconMembership"></i>
+    </a>
+    <a href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
+      <i class="uiIconGroup"></i>
+    </a>
+    <a class="btn" onclick="<%= uicomponent.event("AddPermission")%>">Add</a>
+  </span>
+</div>

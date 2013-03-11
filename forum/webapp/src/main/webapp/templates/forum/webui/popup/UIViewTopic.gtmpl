@@ -16,8 +16,8 @@
   ForumUtils.addScripts(null, null, scripts);
   ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 %>
-<div class="UIViewTopic UITopicDetail" id="SizeImage">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIViewTopic UITopicDetail resizable" id="SizeImage">
 <%	
 	uicomponent.initPage() ;
 	Topic topic = uicomponent.getTopic();
@@ -106,7 +106,7 @@
 											 titleSmile = "Online";
 										}
 								%>
-								<h4 class="State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h4>
+								<h4 class="State $userSmile" rel="tooltip" data-placement="bottom" title="${screenName}'s $titleSmile">$viewScreenName</h4>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
@@ -174,7 +174,7 @@
 										%>
 											<a href="#" class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
 						 					<div class="LabelBox">
-						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" title="$titleFile">$fileName</a>
+						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						 						<div class="Action">
 						 							<a href="#" class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>
@@ -219,19 +219,20 @@
 			<%} %>
 		</div>
 	</div>
-	<div class="UIAction">
+</div>
+
+<div class="uiAction">
   <%  
-					String []actions = uicomponent.getActions();
-					int l = actions.length;
-				%>
+          String []actions = uicomponent.getActions();
+          int l = actions.length;
+        %>
         <div style="width:<%=(l*100)%>px;">
         <% for(action in actions) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
       </div>
     </div>
-	<%uiform.end()%>
-</div>
+<%uiform.end()%>

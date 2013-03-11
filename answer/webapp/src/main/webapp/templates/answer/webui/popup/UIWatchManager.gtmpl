@@ -46,9 +46,9 @@
 		 										<%		 										
 						 							String linkCurrent = uicomponent.event("OpenCategory", categoryId)
 						 						%>
-	 											<a onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="LinkWatchIcon ActionIcon"><span></span></a>
-	 											<a onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="EditWatchIcon ActionIcon"><span></span></a>
-	 											<a onclick="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="DeleteWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkCurrent" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="LinkWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="EditWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="DeleteWatchIcon ActionIcon"><span></span></a>
 		 									</td>
 		 								</tr>
 	 								<% 

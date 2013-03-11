@@ -2,76 +2,70 @@
   import org.exoplatform.answer.webui.FAQUtils;
   import org.exoplatform.faq.service.Utils;
 
-  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
-  requireJS.addScripts("eXo.answer.UIAnswersPortlet.loadBreadcumbScroll();");
+ // def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+ // requireJS.addScripts("eXo.answer.UIAnswersPortlet.loadBreadcumbScroll();");
 %>
-<div class="UIBreadcumbs" id="$uicomponent.id">
-  <div class="BreadcumbsInfoBar">
-    <table class="TableLayout" border="0" cellspacing="0" cellpadding="0">
-      <tbody>
-        <tr>
-          <td class="ControlButtonContainer">
+<div class="uiGrayLightBox clearfix" id="$uicomponent.id">
+  <ul class="uiAnswersBreadcumbs breadcrumb pull-left">
+    
+	  <%  
+	    if(uicomponent.getBreadcumbs().size() > 1){
+	  %>
+	  <% int t = 1 ;
+	    String image = "";
+	    for(namePath in uicomponent.getBreadcumbs()) {
+	      String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+	      String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
+	      String title = "" ;
+	      image = "";
+	      if(t == 1){
+	        image = "/answer/skin/DefaultSkin/webui/background/HomeIcon.gif";
+	      }
+	      if(t < uicomponent.getMaxPath()) {
+	     %>
+	        <li class=" <%=(t > 1) ? "" : ""%>">
+	     <%
+	        if(namePath.length() > 30) {
+	          title = FAQUtils.getTitle(namePath) ; 
+	          namePath = FAQUtils.getSubString(namePath,30);
+	        %>
+	          <a href="$url" onclick="$link; return false;" rel="tooltip" data-placement="bottom" title="$title">$namePath</a>
+	      <%} else { 
+	          if(image.length() > 0){
+	      %>
+	          <a href="$url" onclick="$link; return false;">Home</a>
+	          
+	        <%} else { %>
+	          <a href="$url" onclick="$link; return false;">$namePath</a>
+	        <%} %>
+	      <%} %>
+			      <span class="uiIconMiniArrowRight">&nbsp;</span>
+	        </li>
+	    <%} else {
+	         if(namePath.length() > 30) {
+	            title = FAQUtils.getTitle(namePath) ; 
+	            namePath = FAQUtils.getSubString(namePath,30);
+	            
+	    %>
+	            <li class="active" rel="tooltip" data-placement="bottom" title="$title">$namePath</li>
+	      <% } else { %>
+	            <li class="active">$namePath</li>
+	      <% } 
+	      }
+	    t = t + 1 ;
+	  } %>
+	 <div class="ScrollButtonContainer" style="display: none">
+	   <div class="ScrollButtons">
+	     <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
+	       <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
+	     </div>
+	   </div>
+	 </div>
+	
+	  <% } %>
 
-              <%  
-                if(uicomponent.getBreadcumbs().size() > 1){
-              %>
-              <% int t = 1 ;
-                String image = "";
-                for(namePath in uicomponent.getBreadcumbs()) {
-                  String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
-                  String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
-                  String title = "" ;
-                  image = "";
-                  if(t == 1){
-                    image = "/answer/skin/DefaultSkin/webui/background/HomeIcon.gif";
-                  }
-                  if(t < uicomponent.getMaxPath()) {
-                 %>
-                    <div class="RightArrowIcon <%=(t > 1) ? "ControlButton" : ""%>"><span></span>
-                 <%
-                    if(namePath.length() > 30) {
-                      title = FAQUtils.getTitle(namePath) ; 
-                      namePath = FAQUtils.getSubString(namePath,30);
-                    %>
-                      <a href="$url" onclick="$link; return false;" class="Selected" title="$title">$namePath</a>
-                  <%} else { 
-                      if(image.length() > 0){
-                  %>
-                      <a href="$url" onclick="$link; return false;" class="AnswerHomeIcon"><img src="$image" alt="$namePath"/></a>
-                    <%} else { %>
-                      <a href="$url" onclick="$link; return false;" class="Selected">$namePath</a>
-                    <%} %>
-                  <%} %>
-                    </div>
-                <%} else {
-                     if(namePath.length() > 30) {
-                        title = FAQUtils.getTitle(namePath) ; 
-                        namePath = FAQUtils.getSubString(namePath,30);
-                        
-                %>
-                        <div class="Selected ControlButton LastItem" title="$title">$namePath</div>
-                  <% } else { %>
-                        <div class="Selected ControlButton LastItem">$namePath</div>
-                  <% } 
-                  }
-                t = t + 1 ;
-              } %>
-             <div class="ScrollButtonContainer">
-               <div class="ScrollButtons">
-                 <div title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
-                   <div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
-                 </div>
-               </div>
-             </div>
+ </ul>      
+  <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 
-              <% } %>
-
-          </td>
-          <td class="RightBreadcumbsInfoBar">
-              <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  
 </div>

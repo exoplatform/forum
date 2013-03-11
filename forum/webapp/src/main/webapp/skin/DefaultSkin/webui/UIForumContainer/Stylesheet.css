@@ -1,5 +1,5 @@
 .UIForumContainer {
-	padding: 10px;
+	
 }
 
 .UIForumContainer .AddTheradIcon {
@@ -39,16 +39,6 @@
 	color: #204aa0;
 	font-size: 12px;
 	font-weight: bold;
-}
-
-.UIForumContainer .ContentContainer .UITopicList .TitleNorman {
-	color: #204aa0;
-	font-size: 12px;
-}
-
-.UIForumContainer .ContentContainer .TitleNorman {
-	color: #204aa0;
-	font-size: 12px;
 }
 
 .UIForumContainer .ContentContainer .TitleNewpost {

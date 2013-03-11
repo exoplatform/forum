@@ -112,6 +112,8 @@ public class ForumUtils {
 
   public static final String HAS_CREATE_POLL          = "hasCreatePoll";
 
+  public static final String VIEW_LAST_POST           = "lastpost";
+
   private static String buildForumLink(String url, String type, String id) {
     StringBuilder link = new StringBuilder(url);
     if (!isEmpty(type) && !isEmpty(id)) {
@@ -614,16 +616,27 @@ public class ForumUtils {
     return builder.toString();
   }
   
-  static public void addScripts(String module, String alias, String... scripts) {
+  static public RequireJS addScripts(String module, String alias, String... scripts) {
     PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     RequireJS requireJS;
     if (!isEmpty(module)) {
-      requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+      if (!isEmpty(alias)) {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+      } else {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module);
+      }
     } else {
       requireJS = pContext.getJavascriptManager().getRequireJS();
     }
-    for (int i = 0; i < scripts.length; i++) {
-      requireJS.addScripts(scripts[i]);
+    if(scripts != null) {
+      String script;
+      for (int i = 0; i < scripts.length; i++) {
+        script = scripts[i];
+        if (!isEmpty(script)) {
+          requireJS.addScripts(script + ";");
+        }
+      }
     }
+    return requireJS;
   }
 }

@@ -551,16 +551,6 @@
 	cursor: pointer;
 }
 
-.UIForumPortlet #PendingJob {
-	line-height: 24px;
-	white-space: nowrap;
-	height: 24px;
-	cursor: pointer;
-	padding-left: 18px;
-	display: block;
-	background: url('icons/PendingJob.gif') no-repeat left center;
-}
-
 .UIForumPortlet .PermLink {
 	line-height: 24px;
 	white-space: nowrap;

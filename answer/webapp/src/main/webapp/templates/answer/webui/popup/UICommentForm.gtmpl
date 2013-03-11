@@ -1,61 +1,39 @@
-<div class="UIResponse $uicomponent.id">
+<div class="uiResponse uiCommentForm uiForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<table>
-					<tbody>
-						<tr>
-							<td class="FieldLabel">
-								<p><label for="<%=uicomponent.TITLE_USERNAME%>"><%=_ctx.appRes("UICommentForm.title.Author")%>:</label></p>
-							</td>
-							<td>
-								<p><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></p>
-							</td>
-						</tr>
-						<tr>
-							<td class="FieldLabel">
-								<p><%=_ctx.appRes("UICommentForm.title.Language")%>: </p>
-							</td>
-							<td>
-								<p><%=uicomponent.languageSelected%></p>
-							</td>
-						</tr>
-						<tr>
-							<td class="FieldLabel">
-								<p><%=_ctx.appRes("UICommentForm.title.Question")%>: </p>
-							</td>
-							<td>
-								<p><%=uicomponent.questionContent%></p>
-							</td>
-						</tr>
-						<tr>
-							<td class="FieldLabel">
-								<p><%=_ctx.appRes("UICommentForm.title.Detail")%>: </p>
-							</td>
-							<td>
-								<p class="QuestionDetail">
-									<span><%=uicomponent.getQuestionDetail();%></span>
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<td class="FieldLabel">
-								<p><%=_ctx.appRes("UICommentForm.title.Comment")%>: </p>
-							</td>
-							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
-						</tr>
-					</tbody>
-				</table>
+		<div class="form-horizontal resizable">
+				
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.TITLE_USERNAME%>">
+					<%=_ctx.appRes("UICommentForm.title.Author")%>:
+				</label>
+				<div class="controls"><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></div>
 			</div>
+			<div class="control-group">
+				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Language")%>:</label>
+				<div class="controls"><%=uicomponent.languageSelected%></div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Question")%>:</label>
+				<div class="controls"><strong><%=uicomponent.questionContent%></strong></div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Detail")%>:</label>
+				<div class="controls"><%=uicomponent.getQuestionDetail();%></div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Comment")%>:</label>
+				<div class="controls"><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></div>
+			</div>
+					
+		</div>
 			
-			<div class="UIAction">
+		<div class="uiAction uiActionBorder">
       <% for(action in uicomponent.getActions()) { 
 		        	 String actionLabel = _ctx.appRes("UICommentForm.action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
-      <a href="javascript:void(0);"  onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$link" class="btn">$actionLabel</button>
       <%}%>
     </div>
-		</div>
 	<%uiform.end()%>
 </div>

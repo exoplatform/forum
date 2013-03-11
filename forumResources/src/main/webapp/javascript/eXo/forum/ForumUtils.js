@@ -1,5 +1,5 @@
 (function (gj) {
-	var ForumUtils = {
+  var ForumUtils = {
     hideElementList : new Array(),
     currWidth : 0,
     cancelEvent : function(evt) {
@@ -55,11 +55,7 @@
         gj(window).resize(function() {
           eXo.core.Browser.managerResize();
           if (ForumUtils.currWidth != document.documentElement.clientWidth) {
-            try {
-              callback.call();
-            } catch (e) {
-            }
-            ;
+            try{callback.call();}catch(e){};
           }
           ForumUtils.currWidth = document.documentElement.clientWidth;
         });
@@ -77,10 +73,9 @@
         var jpopupWindow = jpopupAction.find('.UIPopupWindow');
         if (jpopupWindow.exists()) {
           if (jpopupWindow.css('display') == 'block') {
-            jmaskLayer.css('width', (portlet.outerWidth() - 3) + 'px').css(
-                'height', (portlet.outerHeight() - 3) + 'px');
+            jmaskLayer.css('width', (portlet.outerWidth() - 3) + 'px').css('height', (portlet.outerHeight() - 3) + 'px');
           }
-          var closeButton = jpopupAction.find('.CloseButton');
+          var closeButton = jpopupAction.find('.uiIconClose');
           if (closeButton.exists()) {
             var newDiv = closeButton.find('div.ClosePopup');
             if (!newDiv.exists()) {
@@ -106,27 +101,26 @@
     // show users menu
     showUserMenu : function(evt) {
       var evt = evt || window.event;
-      event = gj.event.fix(evt);
-      var obj = this.parentNode;
-      var jobj = gj(obj);
-      var jPopup = jobj.find(".UIPopupInfoMenu");
+      event = gj.event.fix(evt); 
+      var jobj = gj(this);
+      var jPopup = jobj.find(".uiUserMenuInfo");
       if (!jPopup.exists()) {
         return;
       }
       ForumUtils.hideElements();
-      var uiPopup = jPopup.find(".UIPopupInfoContent");
-      uiPopup.on('click', ForumUtils.cancelEvent);
+      jPopup.on('click', ForumUtils.cancelEvent);
       jPopup.css('visibility', 'inherit').css('display', 'inline');
       if (ForumUtils.isChrome()) {
         jPopup.css('float', 'right');
       }
       var Browser = eXo.core.Browser;
-      var X = Browser.findMouseRelativeX(jPopup, event, false);
-      var Y = Browser.findMouseRelativeY(jPopup, event);
-      uiPopup.css('left', (X - 37) + 'px');
-      uiPopup.css('top', (Y + 5) + 'px');
+      var X = Browser.findMouseRelativeX(jobj, event, false);
+      var Y = Browser.findMouseRelativeY(jobj, event);
+      jPopup.css('left', (X - 46) + 'px');
+      jPopup.css('top', (Y + 6) + 'px');
       ForumUtils.addhideElement(jPopup);
       ForumUtils.cancelEvent(evt);
+      jPopup.find('li').on('click', ForumUtils.hideElements);
     }
   };
 
@@ -142,16 +136,16 @@
     }
   };
 
-  window.Array.prototype.contains = function(element) {
-    for ( var i = 0; i < this.length; i++) {
+  window.Array.prototype.contains = function (element) {
+    for (var i = 0; i < this.length; i++) {
       if (this[i] == element) {
-        return true;
+        return true ;
       }
     }
-    return false;
-  };
+    return false ;
+  } ;
 
- gj('body').click(ForumUtils.hideElements);
+  gj('body').click(ForumUtils.hideElements);
  
  return ForumUtils;
 })(gj);

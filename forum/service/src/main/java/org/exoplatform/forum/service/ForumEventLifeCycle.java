@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.service;
 
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -41,27 +42,92 @@ public interface ForumEventLifeCycle {
    * @param topic
    * @param forumId
    */
-  public void addTopic(Topic topic, String categoryId, String forumId);
+  public void addTopic(Topic topic);
 
   /**
    * This will be call after update topic
    * @param topic
    * @param forumId
+   * @since 4.0
    */
-  public void updateTopic(Topic topic, String categoryId, String forumId);
+  public void updateTopic(Topic topic);
+  
+  /**
+   * This will be call after moved topic to other forum.
+   *    + Add new comment of activity's topic
+   *      width message has content Category Name > Forum Name 
+   * 
+   * @param topic
+   * @param toCategoryName
+   * @param toForumName
+   * @since 4.0
+   */
+  public void moveTopic(Topic topic, String toCategoryName, String toForumName);
 
+  /**
+   * This will be call after merge two topics into new topic.
+   *   + Activity is removed from the activity stream. 
+   *   + Make new activity for 2 topics merged is created.
+   * 
+   * @param newTopic - the new topic merged.
+   * @param removeActivityId1 - the activityId of source topic.
+   * @param removeActivityId2 - the activityId of destination topic.
+   * @since 4.0
+   */
+  public void mergeTopic(Topic newTopic, String removeActivityId1, String removeActivityId2);
+
+  /**
+   * This will be call after split one topic to two topics.
+   *    + Activity is removed from the activity stream. 
+   *    + Two new activities are created for two topics created with the splitting.
+   * 
+   * @param newTopic - the new topic make by split.
+   * @param splitedTopic - the source topic that split. 
+   * @param removeActivityId - the old activity's ID of source topic.
+   * @since 4.0
+   */
+  public void splitTopic(Topic newTopic, Topic splitedTopic, String removeActivityId);
+  
+  /**
+   * This will be call after save post
+   * 
+   * @param post
+   * @param categoryId
+   * @param forumId
+   * @param topicId
+   */
+  public void addPost(Post post);
+  
   /**
    * This will be call after save post
    * @param post
    * @param forumId
+   * @since 4.0
    */
-  public void addPost(Post post, String categoryId, String forumId, String topicId);
+  public void updatePost(Post post);
+  
+  /**
+   * This will be call after modify post
+   * @param post
+   * @param type
+   * @since 4.0
+   */
+  public void updatePost(Post post, int type);
 
   /**
-   * This will be call after save post
-   * @param post
-   * @param forumId
+   * This will be call after topics removed.
+   * 
+   * @param activityId - the activity Id will remove.
+   * @since 4.0
    */
-  public void updatePost(Post post, String categoryId, String forumId, String topicId);
-
+  public void removeActivity(String activityId);
+  
+  /**
+   * This will be call after posts removed.
+   * 
+   * @param activityId - the activity Id.
+   * @param commentId - the comment Id will be remove
+   * @since 4.0
+   */
+  public void removeComment(String activityId, String commentId);
 }

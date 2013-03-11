@@ -9,12 +9,12 @@
 	margin: auto;
 }
 
-.UIPrivateMessageForm .UITabPane .UIGrid {
+.UIPrivateMessageForm .UITabPane .uiGrid {
 	width: 97%;
 	margin: auto;
 }
 
-.UIPrivateMessageForm .ForumMail .UIGrid .IconContent {
+.UIPrivateMessageForm .ForumMail .uiGrid .IconContent {
 	margin: auto;
 	overflow: auto;
 	width: 40px;

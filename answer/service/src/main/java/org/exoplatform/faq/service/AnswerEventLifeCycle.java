@@ -30,6 +30,16 @@ public interface AnswerEventLifeCycle {
 
   public void saveAnswer(String questionId, Answer[] answers, boolean isNew);
 
-  public void saveComment(String questionId, Comment comment, boolean isNew);
-
+  public void saveComment(String questionId, Comment comment, String language);
+  
+  public void voteQuestion(String questionId);
+  
+  public void unVoteQuestion(String questionId);
+  
+  public void removeQuestion(String questionActivityId);
+  
+  public void removeAnswer(String questionId, String answerActivityId);
+  
+  public void removeComment(String questionActivityId, String commentActivityId, String questionPath);
+  
 }

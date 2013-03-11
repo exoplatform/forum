@@ -1,5 +1,6 @@
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
+  <div class="resizable">
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
@@ -23,13 +24,13 @@
 				</table>
 			</div>
 		</div>
-		
-		<div class="UIAction">
+		</div>
+		<div class="uiAction">
     <% for(action in uicomponent.getActions()) { 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

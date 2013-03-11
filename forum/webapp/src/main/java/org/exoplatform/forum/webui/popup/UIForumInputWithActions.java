@@ -147,7 +147,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
           }
           w.write("<a title=\"" + actionLabel + "\" href=\"" + actionLink + "\">");
           if (action.getActionType() == ActionData.TYPE_ICON) {
-            w.write("<img src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" alt=\"" + ForumUtils.getSubString(actionLabel, 30) + "\" class=\"" + action.getCssIconClass() + "\"/>");
+            w.write("<i alt=\"" + ForumUtils.getSubString(actionLabel, 30) + "\" class=\"" + action.getCssIconClass() + "\"></i>");
             if (action.isShowLabel)
               w.write(ForumUtils.getSubString(actionLabel, 30));
           } else if (action.getActionType() == ActionData.TYPE_LINK) {
@@ -177,7 +177,9 @@ public class UIForumInputWithActions extends UIFormInputSet {
         }
       }
       if (inputEntry.getId().equals(actionIdAddItem)) {
-        w.write("<div class=\"AddActionItem\"><a href=\"" + ((UIComponent) getParent()).event(actionAddItem) + "\">" + labelActionAddItem + "</a></div>");
+    	  w.write("<button class=\"btn\" type=\"button\" onclick=\"" + ((UIComponent) getParent()).event(actionAddItem) + "\">" +
+          "<i class=\"uiIconAttach uiIconLightGray\"></i> " + labelActionAddItem + "</button>");
+        //w.write("<div class=\"AddActionItem\"><a href=\"" + ((UIComponent) getParent()).event(actionAddItem) + "\">" + labelActionAddItem + "</a></div>");
       }
       w.write("</td>");
       w.write("</tr>");

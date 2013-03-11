@@ -1,8 +1,8 @@
-<div class="UIBBCodeManagerForm UITopicTypeManagerForm">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="UIBBCodeManagerForm UITopicTypeManagerForm resizable">
 	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
 		<div style="padding:0px 16px 0px 1px;">
-			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 				<thead>
 					<tr>
 						<th style="width:60px; text-align:center"><%=_ctx.appRes("UITopicTypeManagerForm.label.Icon");%></th>
@@ -13,7 +13,7 @@
 			</table>
 		</div>
 		<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
-			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped" id="UIGrid">
 				<tbody>
 				<% 
 						List topicTypes = uicomponent.getTopicTypes();
@@ -30,10 +30,10 @@
 						<td width="80px">
 							<div class="ActionContainer ClearFix" style="margin:0px auto; width:60px;">
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
-									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
+									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
 								</div>
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
-									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
+									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
 								</div>
 
 							</div>
@@ -44,15 +44,16 @@
 			</table>
 		</div>
 	<%
-    org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');");
+    org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','uiGrid');");
 	%>
-		<div class="UIAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+     String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
   %>
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	</div>
-	<%uiform.end()%>			
-</div>
+  </div>
+<%uiform.end()%>

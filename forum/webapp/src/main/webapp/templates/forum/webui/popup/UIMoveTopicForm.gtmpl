@@ -3,8 +3,9 @@
 	import org.exoplatform.forum.service.Forum ;
 %>
 
+<% uiform.begin() %>
 <div class="UIMoveTopicForm">
-	<% uiform.begin() %>
+  <div class="resizable">
 	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum")%>:</div>
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
@@ -54,9 +55,10 @@
 		<% } %>	
 		 </div>	
 	</div>
-	<div class="UIAction">
+  </div>
+	<div class="uiAction">
   <% String link = uicomponent.event("Cancel") ; %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%></a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%></a>
     </div>
-	<%uiform.end()%>
 </div>
+<%uiform.end()%>

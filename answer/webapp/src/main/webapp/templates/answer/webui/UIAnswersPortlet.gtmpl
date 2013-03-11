@@ -2,7 +2,7 @@
   def rcontext = _ctx.getRequestContext();
   def requireJS = rcontext.getJavascriptManager().require("SHARED/UIAnswersPortlet", "answer");
 %>
-<div class="UIAnswersPortlet" id="$uicomponent.id">
+<div class="UIAnswersPortlet uiAnswersPortlet" id="$uicomponent.id">
 	<% requireJS.addScripts("eXo.answer.UIAnswersPortlet.init('"+uicomponent.id+"');"); %>  
   <div class="ParentMaskLayer">
     <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>

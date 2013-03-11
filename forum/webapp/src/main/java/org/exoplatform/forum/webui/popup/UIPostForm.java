@@ -41,6 +41,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -174,8 +175,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
-      fileUpload.setActionType(ActionData.TYPE_ATT);
-      fileUpload.setCssIconClass("AttachmentIcon");
+      fileUpload.setActionType(ActionData.TYPE_LINK);
       String size = ForumUtils.getSizeFile(attachdata.getSize());
       fileUpload.setActionName(attachdata.getName() + "(" + size + ")");
       fileUpload.setShowLabel(true);
@@ -185,7 +185,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       removeAction.setActionName(ACT_REMOVE);
       removeAction.setActionParameter(attachdata.getId());
       removeAction.setActionType(ActionData.TYPE_ICON);
-      removeAction.setCssIconClass("DustBin");
+      removeAction.setCssIconClass("uiIconDelete uiIconLightGray");
       removeAction.setBreakLine(true);
       uploadedFiles.add(removeAction);
     }
@@ -525,7 +525,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   static public class SelectTabActionListener extends BaseEventListener<UIPostForm> {
     public void onEvent(Event<UIPostForm> event, UIPostForm postForm, String id) throws Exception {
       postForm.tabId = Integer.parseInt(id);
-      event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent());
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 

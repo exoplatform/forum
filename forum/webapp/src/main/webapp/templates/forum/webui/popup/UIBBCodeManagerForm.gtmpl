@@ -6,7 +6,7 @@
 <div class="UIBBCodeManagerForm" style=".width: 95%; margin:auto;">
 	<% uiform.begin() %>
 	<div style="padding:0px 16px 0px 1px;">
-		<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+		<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 			<thead>
 				<tr>
 					<th style="width:80px; text-align:center"><%=_ctx.appRes("UIBBCodeManagerForm.label.TAG");%></th>
@@ -17,8 +17,8 @@
 			</thead>
 		</table>
 	</div>
-	<div class="BBCodeContainer">
-		<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+	<div class="BBCodeContainer resizable">
+		<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 			<tbody>
 			<%
 				int l = 0;
@@ -42,10 +42,10 @@
 					<td style="width:60px;text-align:center">
 						<div class="ActionContainer ClearFix" style="margin:0px auto; width:42px;">
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", bbcodeId)%>">
-								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
+								 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
 							</div>
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
-								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
+								 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
 							</div>
 
 						</div>
@@ -55,12 +55,12 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="UIAction">
+	<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes("UIBBCodeManagerForm.action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 				 

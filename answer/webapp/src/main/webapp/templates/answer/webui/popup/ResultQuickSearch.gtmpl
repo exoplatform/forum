@@ -42,13 +42,13 @@
  												
  												<% if(result.getType().equals("faqCategory")) {
  												 %>
- 												 	<td class="text"><a href="$categoryLink" title="$title">$name</a></td>
+ 												 	<td class="text"><a href="$categoryLink" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
  												 	<td>$date</td>
  													<td>
  														<div onclick="$categoryLink"><div class="FAQViewIcon"></div></div>
  													</td>	
  													<% } else { %>
- 													<td class="text"><a href="$linkQuestion" title="$title">$name</a></td>
+ 													<td class="text"><a href="$linkQuestion" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
  												 	<td>$date</td>
  													<td>
  														<div onclick="$linkQuestion"><div class="FAQViewIcon"></div></div>

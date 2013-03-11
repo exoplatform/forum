@@ -1,4 +1,4 @@
-<div class="UIForumPortlet" id="$uicomponent.id">
+<div class="UIForumPortlet uiForumPortlet" id="$uicomponent.id">
 <%
 	if(uicomponent.forumSpDeleted) {
 	  print("<div style=\"padding: 20px\">" + 
@@ -7,6 +7,7 @@
 		return; 
 	}
 //
+  org.exoplatform.forum.ForumUtils.addScripts("bts_tooltip", null, null);
 	org.exoplatform.forum.ForumUtils.addScripts("UIForumPortlet", "forum", "eXo.forum.UIForumPortlet.init('"+uicomponent.id+"');");
 %>
 

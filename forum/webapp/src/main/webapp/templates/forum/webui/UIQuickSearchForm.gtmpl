@@ -3,17 +3,14 @@
   String [] scripts = ["eXo.forum.UIForumPortlet.submitSearch('"+uicomponent.id+"') ;"];
   ForumUtils.addScripts(null, null, scripts);
 %>
-<div class="UIQuickSearchForm">
+<div class="uiSearchInput">
   <% uiform.begin() %>  
-	<div class="SearchForm ClearFix">
-		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
-		<a class="SearchLink SearchForumIcon" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
-		<div class="Input">
+	<div>
+		<a class="AdvancedSearch" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
+		<a class="SearchLink" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
 		<%  
 			uiform.renderChildren() ;
 		%>
-		</div>
-		<div class="Label"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:</label></div>
 	</div>
   <%uiform.end()%>
 </div>

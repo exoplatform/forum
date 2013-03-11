@@ -1,20 +1,21 @@
 <%
 	_ctx.getRequestContext().getJavascriptManager().require("SHARED/uiForm");
+  boolean hasForum = uiform.hasForum();
 %>
 <style>
-.Action .DisableButton {
-  color: gray;
-  background: #E7E7E7;
-  cursor: auto;
+.UICreate .layout {
+  margin: <%=((hasForum) ? "5" : "15")%>px;
 }
 </style>
 <div class="UICreate">
   <% uiform.begin() %>
-    <div class="HorizontalLayout">
+
+    <div class="horizontalLayout layout">
+
+
       <div class="UIFormInput">
-        <div class="CreateName"><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></div>
+        <div class="CreateName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
        <% 
-         boolean hasForum = uiform.hasForum();
          if(hasForum) {
        %>
         <table class="UIFormGrid">
@@ -50,19 +51,21 @@
       </div>
     </div>
     <center>
-	    <div class="Action uiActionBorder">
+       <div class="uiAction uiActionBorder">
 	  <% for(action in uicomponent.getActions()) { 
 	           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
 	           String link = uicomponent.event(action);
-	           String clazz = "";
+	           String clazz = "btn";
 	           if(!uicomponent.hasNext() && action.equals("Next")) {
 	             link = "void(0)" ;
-	             clazz = " DisableButton";
+	             clazz = "btn disabled";
 	           }
 	        %>
-	      <input type="button" onclick="$link" class="btn$clazz" value="$actionLabel"/>
+
+	      <input type="button" onclick="$link" class="$clazz" value="$actionLabel"/>
+
 	      <%}%>
-	    </div>
+        </div>
     </center>
   <%uiform.end()%>
 </div>

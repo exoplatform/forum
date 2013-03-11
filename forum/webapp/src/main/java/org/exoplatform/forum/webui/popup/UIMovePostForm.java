@@ -112,7 +112,7 @@ public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
           topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
           topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
           UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
-          forumDescription.setForumIds(temp[temp.length - 3], temp[temp.length - 2]);
+          forumDescription.setForumId(temp[temp.length - 3], temp[temp.length - 2]);
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         } catch (ItemExistsException e) {
           warning("UIImportForm.msg.ObjectIsExist");

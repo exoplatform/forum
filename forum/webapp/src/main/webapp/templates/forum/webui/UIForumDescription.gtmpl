@@ -1,24 +1,19 @@
 <%  
-	import org.exoplatform.forum.service.Forum ;
-  Forum forum = uicomponent.getForum();
+  String name = uicomponent.getName();
+  String description = uicomponent.getDescription(); 
 %>
-<% if(forum != null) {  %>
-<div class="UIForumDescription" id="$uicomponent.id">
-	<div class="LeftDescription">
-		<div class="RightDescription">
-			<div class="CenterDescription">
-				<span class="ForumLabel"> </span> 
-				<span class="NameForum"><%=forum.getForumName()%></span>
+<% if(name != null) {  %>
+<div class="uiForumDescription uiBox" id="$uicomponent.id">
+	<div class="centerDescription">
+		<span class="forumLabel"></span>
+		<span class="nameForum"><strong><%=name%></strong></span>
 		<%
-			String des = forum.getDescription();
-			if(des != null && des.trim().length() > 0) {
+		if(description != null && description.trim().length() > 0) {
 		%>
-				<span class="Description">: $des</span>
+		<span class="description"> $description</span>
 		<%} %>
-			</div>
-		</div>
 	</div>
 </div>
 <% }else{ %>
-<div class="ForumDescription"><span></span></div>
+<div class="forumDescription"><span></span></div>
 <% } %>

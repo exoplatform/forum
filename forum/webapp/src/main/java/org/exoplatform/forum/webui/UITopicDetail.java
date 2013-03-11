@@ -479,7 +479,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   public String getIdPostView() {
-    if (this.IdPostView.equals("lastpost")) {
+    if (this.IdPostView.equals(ForumUtils.VIEW_LAST_POST)) {
       this.IdPostView = "normal";
       return this.IdLastPost;
     }
@@ -601,7 +601,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         maxPost = 10;
       pageList.setPageSize(maxPost);
       maxPage = pageList.getAvailablePage();
-      if (IdPostView.equals("lastpost") || this.pageSelect > maxPage) {
+      if (IdPostView.equals(ForumUtils.VIEW_LAST_POST) || this.pageSelect > maxPage) {
         this.pageSelect = maxPage;
       }
     } catch (Exception e) {
@@ -1568,7 +1568,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               }
               topicDetail.IdPostView = "normal";
             } else {
-              topicDetail.IdPostView = "lastpost";
+              topicDetail.IdPostView = ForumUtils.VIEW_LAST_POST;
             }
           } else {
             topicDetail.topic = null;

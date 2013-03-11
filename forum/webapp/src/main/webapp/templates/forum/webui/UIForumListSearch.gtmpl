@@ -19,7 +19,7 @@
 				</table>
 			</div>
 			<div class="SearchResult">
-				<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+				<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
 					<thead>
 						<tr>
 							<th style="width:80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
@@ -40,7 +40,7 @@
 							String type = _ctx.appRes("UIForumPortlet.label."+searchEvent.getType()) ;
 					%>
 						<tr class="$classRow">
-							<td class="Tdbox"><div class="" title=""><%=type%></div></td>
+							<td class="Tdbox"><div class="" rel="tooltip" data-placement="bottom" title="<%=type%>"><%=type%></div></td>
 							<td class="Tdbox $classIcon">&nbsp;</td>
 							<td><a href="<%=uicomponent.event("OpentContent",objId);%>"><%=searchEvent.getName()%></a></td>
 						</tr>

@@ -1,4 +1,4 @@
-(function(maskLayer, contextMenu, checkBoxManager, utils, $, window, document) {
+(function(maskLayer, contextMenu, utils, $, window, document) {
   var UIForumPortlet = {
     obj : null,
     event : null,
@@ -10,9 +10,34 @@
       var jportlet = findId(id);
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
-        jportlet.find('.UserMenuInfo').on('click', utils.showUserMenu);
+        UIForumPortlet.initShowUserInfo();
+        UIForumPortlet.initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
+
+      $.each($('ul.dropdown-menu').find('a'), function(i, item){
+        $(item).on('click', function(){
+          $(this).parents('.dropdown').removeClass('open');
+        })
+      });
+    },
+
+    initShowUserInfo : function(id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
+      } else {
+        jportlet.find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
+      }
+    },
+
+    initTooltip : function(id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
+      } else {
+        jportlet.find('[rel=tooltip]').tooltip();
+      }
     },
 
     resizeCallback : function() {
@@ -280,18 +305,16 @@
 
     expandCollapse : function(obj) {
       var jobject = $(obj)
-      var forumToolbar = jobject.parents(".ForumToolbar");
-      var contentContainer = forumToolbar.next('div');
+      var forumToolbar = jobject.parents(".uiCollapExpand");
+      var contentContainer = forumToolbar.find('.uiExpandContainer');
+      jobject.hide();
+      $('div.tooltip').remove();
       if (contentContainer.css('display') != "none") {
-        contentContainer.hide();
-        jobject.addClass('ExpandButton').removeClass('CollapseButton');
-        jobject.attr("title", jobject.attr("expand"));
-        forumToolbar.css('border-bottom', 'solid 1px #b7b7b7');
+        contentContainer.hide(200);
+        forumToolbar.find('.uiIconArrowRight').show().tooltip();
       } else {
-        contentContainer.show(100);
-        jobject.addClass('CollapseButton').removeClass('ExpandButton');
-        jobject.attr("title", jobject.attr("collapse"));
-        forumToolbar.css('border-bottom', 'none');
+        contentContainer.show(200);
+        forumToolbar.find('.uiIconArrowDown').show().tooltip();
       }
     },
 
@@ -349,47 +372,45 @@
 
     initVote : function(voteId, rate) {
       var vote = findId(voteId);
-      vote.attr('rate', rate);
       rate = parseInt(rate);
-      var optsContainer = vote.find('div.OptionsContainer:first');
-      var options = optsContainer.children('div');
+      var optsContainer = vote.find('div.optionsContainer:first');
+	  optsContainer.attr('data-rate', rate);
+      var options = optsContainer.children('i');
       options.on('mouseover', UIForumPortlet.overVote);
       options.on('blur', UIForumPortlet.overVote);
-      for ( var i = 0; i < options.length; i++) {
-        if (i < rate)
-          options.eq(i).attr('class', 'RatedVote');
-      }
+
       vote.on('mouseover', UIForumPortlet.parentOverVote);
-      vote.on('blur', UIForumPortlet.parentOverVote);
+      //vote.on('blur', UIForumPortlet.parentOverVote);
       optsContainer.on('mouseover', utils.cancelEvent);
       optsContainer.on('blur', utils.cancelEvent);
     },
 
     parentOverVote : function(event) {
-      var optsCon = $(this).find('div.OptionsContainer:first');
-      var opts = optsCon.children('div');
-      var rate = $(this).attr('rate');
+      var optsCon = $(this).find('div.optionsContainer:first');
+      var opts = optsCon.children('i');
+      var rate = optsCon.attr('data-rate');
       for ( var j = 0; j < opts.length; j++) {
         if (j < rate)
-          opts.eq(j).addClass('RatedVote').removeClass('NormalVote');
+          opts.eq(j).attr('class', 'uiIconRatedVote');
         else
-          opts.eq(j).addClass('NormalVote').removeClass('RatedVote');
+          opts.eq(j).attr('class', 'uiIconNormalVote');
       }
     },
 
     overVote : function(event) {
-      var optsCon = $(this).parents('div.OptionsContainer:first');
-      var opts = optsCon.children('div');
+      var optsCon = $(this).parents('div.optionsContainer:first');
+      var opts = optsCon.children('i');
       var i = opts.length;
       for (--i; i >= 0; i--) {
         if (opts[i] == $(this)[0])
           break;
-        opts.eq(i).attr('class', 'NormalVote');
+        opts.eq(i).attr('class', 'uiIconNormalVote');
       }
-      if (opts.eq(i).attr('class') == "OverVote")
+	  optsCon.attr('data-rate', (i+1));
+      if (opts.eq(i).attr('class') == "uiIconOverVote")
         return;
       for (; i >= 0; i--) {
-        opts.eq(i).attr('class', 'OverVote');
+        opts.eq(i).attr('class', 'uiIconOverVote');
       }
     },
 
@@ -627,15 +648,16 @@
       var popupContainer = $('#RightClickContainer');
       if (!popupContainer.exists())
         return;
-      var itemmenuBookMark = popupContainer.find('a.AddLinkToBookIcon:first');
-      var itemmenuWatching = popupContainer.find('a.AddWatchingIcon:first');
-      var itemmenuRSS = popupContainer.find('a.ForumRSSFeed:first');
+      var itemmenuBookMark = popupContainer.find('a.bookmark:first');
+      var itemmenuWatching = popupContainer.find('a.watching:first');
+      var itemmenuRSS = popupContainer.find('a.rssfeed:first');
       if (!itemmenuWatching.exists() || !itemmenuBookMark.exists())
         return;
       var labelWatchings = String(itemmenuWatching.html()).split(";");
       for ( var i = 0; i < popupContents.length; i++) {
         var popupContent = popupContents.eq(i);
-        var action = popupContent.attr('title');
+        var action = popupContent.attr('data-bookmark');
+        if(action == null) continue;
         if (action.indexOf(";") < 0) {
           itemmenuBookMark.attr('href', action);
           itemmenuWatching.parent().hide();
@@ -663,8 +685,12 @@
           }
           itemmenuWatching.parent().show();
         }
-        popupContent.removeAttr('title');
+        popupContent.removeAttr('data-bookmark');
         popupContent.html(popupContainer.html());
+        popupContent.on('mouseover', function(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
+        });
       }
     },
 
@@ -700,7 +726,7 @@
         uiNav.scrollMgr = new navigation.ScrollManager("UIForumActionBar");
         uiNav.scrollMgr.initFunction = uiNav.initScroll;
         uiNav.scrollMgr.mainContainer = container.find('td.ControlButtonContainer:first')[0];
-        uiNav.scrollMgr.arrowsContainer = container.find('div.ScrollButtons:first')[0];
+        uiNav.scrollMgr.arrowsContainer = container.find('li.ScrollButtons:first')[0];
         uiNav.scrollMgr.loadElements("ControlButton", true);
 
         var button = $(uiNav.scrollMgr.arrowsContainer).find('div');
@@ -838,10 +864,11 @@
       }
     },
 
-    executeLink : function(evt) {
-      var onclickAction = String($(this).attr("rel"));
+    executeLink : function(elm, evt) {
+      var onclickAction = String($(elm).attr("data-link"));
       eval(onclickAction);
-      utils.cancelEvent(evt);
+      evt.preventDefault();
+      evt.stopPropagation();
       return false;
     },
 
@@ -859,7 +886,9 @@
     addLink : function(cpId, clazzAction) {
       var links = findId(cpId).find('a.' + clazzAction);
       if (links.exists()) {
-        links.on('click', UIForumPortlet.executeLink);
+        links.on('click', function(e) {
+          UIForumPortlet.executeLink(this, e);
+        });
       }
     },
 
@@ -963,6 +992,14 @@
           return false;
         }
       }
+    },
+
+    calculateWidthOfActionBar : function(uiRightActionBar) {
+      var uiRightActionBar = findId(uiRightActionBar);
+      var textContent = uiRightActionBar.text();
+      textContent = textContent.replace(/\n/g, '').replace(/\s\s|\t\t|\r\r/g, '');
+      var l = (textContent.length) * 1 + 1;
+      uiRightActionBar.css('width', ((l * 6.5) + 65) + "px");
     }
   };
 
@@ -970,5 +1007,4 @@
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
   return UIForumPortlet;
-})(maskLayer, contextMenu, checkBoxManager, utils, gj, window, document);
-
+})(maskLayer, contextMenu, utils, gj, window, document);

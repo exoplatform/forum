@@ -119,6 +119,7 @@
         <values-param>
           <name>autoCreatedInNewRepository</name>
           <description>Node types configuration file</description>
+          <value>jar:/conf/portal/activity-extension-nodetypes.xml</value>
           <value>jar:/conf/standalone/test-forum-nodetypes.xml</value>
         </values-param>
       </init-params>

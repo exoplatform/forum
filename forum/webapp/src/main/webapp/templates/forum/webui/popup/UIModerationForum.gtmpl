@@ -4,8 +4,8 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 %>
-<div class="$uicomponent.id">
-	<% uiform.begin() %>
+<% uiform.begin() %>
+<div class="$uicomponent.id resizable">
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
@@ -24,7 +24,7 @@
 						<div class="UITabContentContainer">
 							<div id="UITabContent" class="UITabContent">
 								<div class="UITopicList">
-									<table cellspacing="0" cellpadding="0" border="0" id="" class="UIGrid">
+									<table cellspacing="0" cellpadding="0" border="0" id="" class="uiGrid table table-hover table-striped">
 										<thead>
 											<tr>
 												<th style="width:60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
@@ -53,10 +53,10 @@
 														String titleType = _ctx.appRes("UIForumPortlet.label."+type) ;
 											%>
 												<tr class="$classRow">
-													<td class="Tdbox" align="center"><div class="$classType Icon24x24" style="margin:auto;" title="$titleType"><span></span></div></td>
+													<td class="Tdbox" align="center"><div class="$classType Icon24x24" style="margin:auto;" rel="tooltip" data-placement="bottom" title="$titleType"><span></span></div></td>
 													<td>
 														<div>
-															<a href="<%=uicomponent.event("Open", objectId)%>" title="$titlePost">$objectTitle</a>
+															<a href="<%=uicomponent.event("Open", objectId)%>" rel="tooltip" data-placement="bottom" title="$titlePost">$objectTitle</a>
 														</div>
 													</td>
 												 	<td class="Tdbox" align="center"><div>$createdDate</div></td>
@@ -87,14 +87,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="UIAction">
+</div>
+
+<div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
-	
-	<%uiform.end()%>
-</div>
+  
+  <%uiform.end()%>

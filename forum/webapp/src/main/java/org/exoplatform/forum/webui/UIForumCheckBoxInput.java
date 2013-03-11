@@ -38,7 +38,12 @@ public class UIForumCheckBoxInput extends UICheckBoxInput {
 
   public void processRender(WebuiRequestContext context) throws Exception {
     Writer w = context.getWriter();
-    w.write("<input type=\"checkbox\" class=\"checkbox\" name=\"");
+    
+    w.write("<tr>\n");
+    w.write("  <td>\n");
+    w.write("    <span class=\"uiCheckbox\">\n");
+
+    w.write("      <input type=\"checkbox\" class=\"checkbox\" name=\"");
     w.write(name);
     w.write("\" id=\"");
     w.write(name);
@@ -51,9 +56,16 @@ public class UIForumCheckBoxInput extends UICheckBoxInput {
     }
     renderHTMLAttributes(w);
     w.write("/>");
-    w.write("<label for=\"" + name + "\"> " + label + "</label><br/>");
+    
+    w.write("<span>" + label + "</span>\n");
+
+    w.write("    </span>");   
+    
     if (this.isMandatory()) {
       w.write(" *");
     }
+
+    w.write("  </td>\n");
+    w.write("</tr>\n");
   }
 }

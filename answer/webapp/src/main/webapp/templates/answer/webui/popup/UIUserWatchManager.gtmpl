@@ -41,7 +41,7 @@
 		      </div>
 		      <% END RECOMMENT TAB FOR WATCH QUESTION */%>
 		      <% uiform.begin() %>
-	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" title="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
+	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" rel="tooltip" data-placement="bottom" title="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
 
 	        	<!-- div class="UITabContentContainer" -->
 	        	<div class="UITabContentContainer">
@@ -84,12 +84,12 @@
 						 											String title = path ;
 						 											path = uicomponent.getSubString(path,120);
 						 									 %>
-						 										<td class="text"><a title="$title" href="$link">$path</a></td>
+						 										<td class="text"><a rel="tooltip" data-placement="bottom" title="$title" href="$link">$path</a></td>
 						 									<% } else { %>
 						 										<td class="text"><a href="$link">$path</a></td>
 						 									<% } %>
 						 									<td>
-						 											<a onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
+						 											<a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
 						 									</td>
 						 								</tr>
 						 								<% 
@@ -153,12 +153,12 @@
 						 											String title = path ;
 						 											questionContent = uicomponent.getSubString(questionContent,120)
 						 									 %>
-						 											<td class="text"><a title="$title" href="$link">$questionContent</a></td>
+						 											<td class="text"><a rel="tooltip" data-placement="bottom" title="$title" href="$link">$questionContent</a></td>
 						 									<% } else { %>
 						 												<td class="text"><a href="$link">$questionContent</a></td>
 						 									<% } %>
 						 									<td>
-						 											<a onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
+						 											<a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
 						 									</td>
 						 								</tr>
 					 								<% 

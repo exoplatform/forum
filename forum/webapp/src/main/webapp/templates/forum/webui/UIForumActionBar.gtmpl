@@ -5,109 +5,106 @@
 	boolean isAdmin = (userProfile.getUserRole() == 0) ;
 	uicomponent.initJavaScripts();
 %>
-<div class="UIForumActionBar" id="UIForumActionBar">
-
-	<table>
-		<tr>
-			<td class="ControlButtonContainer">
-				<%String[] actions = [""];
-					if(isAdmin) {
-						if(uicomponent.isSpace()) {
-							actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
-						} else {
-							actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];						
-						}
-					} else {
-						actions = ["EditProfile","OpenBookMark"];
-					}
-					boolean isAdm = false;
-					for(action in actions){	
-						if(action.equals("Administrations")){
-							isAdm = true;
-						} else isAdm = false;
-				%>
-
-					<div class="DefaultStyle ControlButton SeparatorLineForum" id="$action">
-						<%if(isAdm){%>
-							<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-						<%}%>
-								<div class="Icon $action">
-								<%if(isAdm){%>
-									<a class="DownArrow1Icon" style="padding-right:16px;" href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
-								<%} else {%>
-									<a href="<%=uicomponent.event(action)%>" style="display:block;"><%= _ctx.appRes("UIForumActionBar.label." + action); %></a>
-								<%}%>
-								</div>
-						<%if(isAdm){%>
-							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display: none; left:-5px;">
-									<ul class="UIRightClickPopupMenu" style="display:block;">
-									<% for(ac in uicomponent.getActionMenu()){ %>
-										<li class="MenuItem">
-											<a class="ItemIcon ${ac}Icon" href="<%=uicomponent.event(ac)%>" style="display:block">
-												<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
-											</a>
-										</li>
-									<% } %>
-									</ul>			
-								</div>
-							<% /*End Popup Menu*/ %>
-							</div>
-						<%}%>
-					</div>
-				<% }%>
-				<div class="ScrollButtons" style="width:35px;">
-					<div title="Previous">
-						<div title="Next"><span></span></div>
-					</div>
+<div class="uiForumActionBar uiBox clearfix" id="${uicomponent.id}">
+	<ul >
+		<%	String[] actions = [""];
+			String[] iconActions = [""];
+			if(isAdmin) {
+				if(uicomponent.isSpace()) {
+					actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
+					iconActions = ["uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+				} else {
+					actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
+					iconActions = ["uiIconAddCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+				}
+			} else {
+				actions = ["EditProfile","OpenBookMark"];
+				iconActions = ["uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
+			}
+			boolean isAdm = false;
+			int i = 0;
+			for(action in actions){
+				String icon = iconActions[i];
+				if(action.equals("Administrations")){
+					isAdm = true;
+				} else isAdm = false;
+		  if(!isAdm){
+		%>
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
+			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
+				<i class="$icon"></i>
+				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+			</a>
+		  </li>
+		  <%} else {%>
+		  <li class="defaultStyle forumSeparatorLine" id="$action">
+			 <div class="dropdown uiDropdownWithIcon actionIcon">
+				<div data-toggle="dropdown">
+				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
 				</div>
-			</td>
-			<% 
-				long numberOfNewMessage = uicomponent.getNewMessage();
-				String priMessage="", pending="";
-				int total = 0;
-			%>
-			<td style="width:245px;" id="tdWidth">
-				<div style="width:245px;" id="divWidth">
-				
-			<%
-				if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
-					priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
-					String newMessage;
-					if(numberOfNewMessage > 0) {
-						newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
-					} else {
-						newMessage = "<span>" + priMessage + "</span>" ;
-					}
-					if(userProfile.getUserRole() <= 1) {
-						total = uicomponent.getTotalJobWattingForModerator();
-						pending = _ctx.appRes("UIBreadcumbs.label.Pending");
-						String style = (total > 0)?"text-decoration:blink;":"";
+				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
+				<% 
+				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumTopic", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];
+				int j = 0;
+				for(ac in uicomponent.getActionMenu()){ 
+				  classIcon = classIcons[j];
+				  ++j;
 				%>
-					<div class="RightLine" style="padding-left:5px;">
-						<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<span style="font-weight:bold; $style">$total</span>)</a>
-					</div>
-				<%}%>
-					<div class="SeparatorLineForum RightLine">
-						<a class="PrivateMessage PMStyle" href="<%=uicomponent.event("PrivateMessage");%>">
-							 $newMessage
-						</a>
-					</div>
-					<% 
-						int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length();
-						lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
-						lengths = (total > 0)?lengths+3:lengths;
-					%>
-					<div id="lengthStr" style="display:none; float:right;">$lengths</div>
-					<script type="text/javascript">
-						function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*7.2)+65) + "px"; document.getElementById('divWidth').style.width = ((l*7.2)+65) + "px";}
-						setWitdh();
-					</script>
-				<% } %>
-				</div>
-			</td>
-		</tr>
-	</table>
+				  <li>
+					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="actionIcon">
+						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
+					</a>
+				   </li>
+				<%} %>
+				</ul>
+			 </div>
+		  </li>
+		  <%} 
+		   i = i + 1;
+		  %>
+		<% }%>
+		<li class="ScrollButtons clearfix" style="width:35px;">
+			<div class="ScrollLeftButton pull-left" rel="tooltip" data-placement="bottom" title="Previous"><span></span></div>
+			<div class="ScrollRightButton pull-left" rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
+		</li>
+	</ul>
+	<% 
+		long numberOfNewMessage = uicomponent.getNewMessage();
+		String priMessage="", pending="";
+		int total = 0;
 
+		if(!UserHelper.isAnonim() && numberOfNewMessage >= 0) {
+			priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
+			String newMessage;
+			if(numberOfNewMessage > 0) {
+				newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
+			} else {
+				newMessage = "<span>" + priMessage + "</span>" ;
+			}
+	%>
+
+	<ul class="pull-right" id="uiRightActionBar">
+		<li>	
+		<%
+			if(userProfile.getUserRole() <= 1) {
+				total = uicomponent.getTotalJobWattingForModerator();
+				pending = _ctx.appRes("UIBreadcumbs.label.Pending");
+				String style = (total > 0)?"text-decoration:blink;":"";
+		%>
+			<div class="pull-right forumSeparatorLine">
+				<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+			</div>
+		<%}%>
+			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
+			<div class="pull-right">
+				<a href="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
+					<i class="uiIconMail uiIconLightGray"></i> $newMessage
+				</a>
+			</div>
+		</li>
+	</ul>
+  <% 
+  org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.calculateWidthOfActionBar('uiRightActionBar');");
+  } %>
 	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
 </div>

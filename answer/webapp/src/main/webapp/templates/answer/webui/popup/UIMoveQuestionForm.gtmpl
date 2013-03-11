@@ -42,7 +42,7 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" rel="tooltip" data-placement="bottom" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -67,7 +67,7 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" rel="tooltip" data-placement="bottom" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -91,7 +91,7 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" rel="tooltip" data-placement="bottom" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -117,7 +117,7 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 						    			<div id="FAQCate$i" style="float:left">
-						    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+						    				<a href="javaScript:void(0)" onclick="eXo.answer.AnswerUtils.treeView('FAQViewChild$id')" rel="tooltip" data-placement="bottom" title="$title" ondblclick="$link">
 						    					$categoryName
 						    				</a>
 						    			</div>

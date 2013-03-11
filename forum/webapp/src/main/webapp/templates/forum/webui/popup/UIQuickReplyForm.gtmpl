@@ -1,9 +1,9 @@
 <div class="UITopicDetail">
 <% uiform.begin() %>
-	<div class="UIAction"> 
+	<div class="uiAction"> 
 		<div class="ForumCategory ForumQuickReply">
 			<div class="ForumToolbar ClearFix">
-				<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+				<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
 				<h6 class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
 			</div>
 			<div class="ContentContainer">
@@ -17,7 +17,7 @@
 					 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
 					 String link = uicomponent.event(action) ;
 			%>
-					<a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+					<a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
 			<%}%>
 				</div>
 			</div>
