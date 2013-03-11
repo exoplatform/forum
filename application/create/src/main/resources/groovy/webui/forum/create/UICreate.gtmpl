@@ -3,7 +3,7 @@
   boolean hasForum = uiform.hasForum();
 %>
 <style>
-.UICreate .layout {
+.uiCreate .layout {
   margin: <%=((hasForum) ? "5" : "15")%>px;
 }
 </style>
@@ -18,7 +18,7 @@
        <% 
          if(hasForum) {
        %>
-        <table class="UIFormGrid">
+        <table >
           <tbody>           
         <% 
           for(field in uiform.getChildren()) { 
@@ -27,14 +27,14 @@
               <tr>
                 <%fieldName = uiform.getLabel(field.getName());%>
                 <%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>                        
-                  <td class="FieldLabel">
+                  <td >
                       <label for="<%=field.getId()%>"><%=fieldName%></label>
                   </td>
-                  <td class="FieldComponent">
+                  <td >
                       <% uiform.renderField(field) %>
                   </td>
                 <%} else {%>
-                  <td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+                  <td  colspan="2"><% uiform.renderField(field) %></td>
                 <%}%>
               </tr>
         <%
@@ -50,8 +50,8 @@
        %>
       </div>
     </div>
-    <center>
-       <div class="uiAction uiActionBorder">
+
+   <div class="uiAction uiActionBorder">
 	  <% for(action in uicomponent.getActions()) { 
 	           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
 	           String link = uicomponent.event(action);
@@ -66,6 +66,6 @@
 
 	      <%}%>
         </div>
-    </center>
+
   <%uiform.end()%>
 </div>

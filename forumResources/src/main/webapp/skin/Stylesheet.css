@@ -100,7 +100,7 @@
 }
 
 .UICreate {
-    width: 300px;
+    width: 250px;
 }
 
 .UICreate .UIForm .HorizontalLayout select {
@@ -271,9 +271,35 @@
     background-color: gray;
 }
 
+.UICreate .UIFormInput .CreateName{
+	margin-bottom: 10px;
+}
 
+.UICreate .UIFormInput{
+	margin-bottom:15px;
+	padding: 0 10px;
+}
 
+.UICreate .UIFormInput .btn-group{
+	font-size: 13px;
+}
 
+.UICreate .UIFormInput .btn-group li > a.selected{
+    background-color: #517ABE;
+    background-image: linear-gradient(to bottom, #628ACC, #3763AA);
+ 	background-image: -webkit-linear-gradient(to bottom, #628ACC, #3763AA);
+ 	background-image: -ms-linear-gradient(to bottom, #628ACC, #3763AA);
+    background-repeat: repeat-x;
+    color: #fff;
+}
+
+.UICreate .uiAction{
+	text-align: right;
+}
+
+.UICreate .uiAction .btn:last-child{
+	margin-right: 15px;
+}
 
 
 
