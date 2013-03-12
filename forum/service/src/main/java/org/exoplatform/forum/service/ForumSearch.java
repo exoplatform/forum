@@ -36,6 +36,10 @@ public class ForumSearch {
   private String content;
 
   private String icon;
+  
+  private String excerpt;
+
+  private Long relevancy;
 
   private Date   createdDate;
 
@@ -96,5 +100,21 @@ public class ForumSearch {
 
   public void setCreatedDate(Date createdDate) {
     this.createdDate = createdDate;
+  }
+
+  public String getExcerpt() {
+    return excerpt;
+  }
+
+  public void setExcerpt(String excerpt) {
+    this.excerpt = excerpt;
+  }
+
+  public Long getRelevancy() {
+    return relevancy;
+  }
+
+  public void setRelevancy(long relevancy) {
+    this.relevancy = relevancy;
   }
 }

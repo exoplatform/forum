@@ -1,12 +1,14 @@
 package org.exoplatform.forum.search;
 
 import java.io.InputStream;
-import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.commons.api.search.data.SearchContext;
 import org.exoplatform.commons.api.search.data.SearchResult;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
@@ -41,6 +43,19 @@ import org.exoplatform.web.controller.router.RouterConfigException;
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
+
+@ConfiguredBy({
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.test.jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/test-portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.core.test.configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.forum.component.service.test.configuration.xml")
+  
+})
+
 public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase {
   private final static String CONTROLLER_PATH = "conf/standalone/controller.xml";
 
@@ -70,7 +85,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     forumService_.saveCategory(cat, true);
     
     Forum forum = createdForum();
-    forum.setId("space_test");
+    forum.setId(Utils.FORUM + "space_test");
     forum.setForumName("Space test");
     forumService_.saveForum(spCatId, forum, true);
     
@@ -89,7 +104,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     forumService_.saveForum(cateId, forum, true);
 
     topic = createdTopic(USER_ROOT);
-    topic.setTopicName("Topic A");
+    topic.setTopicName("Topic TEST");
     forumService_.saveTopic(cateId, forum.getId(), topic, true, false, new MessageBuilder());
 
     postA = new Post();
@@ -186,7 +201,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     List<SearchResult> aResults = (List<SearchResult>) discussionSearchConnector.search(context, "A", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
     SearchResult aResult = aResults.get(0);
     assertEquals("Post A", aResult.getTitle());
-    assertEquals("This is the A message", aResult.getExcerpt());
+    assertTrue(aResult.getExcerpt().indexOf("<strong>A</strong>") >= 0);
     String gotURL = aResult.getUrl();
     assertTrue(gotURL.indexOf("/portal/classic/forum/topic/topic") >= 0);
     assertTrue(aResult.getDate() > 0);
@@ -198,7 +213,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     List<SearchResult> aResults = (List<SearchResult>) discussionSearchConnector.search(context, "G", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
     SearchResult aResult = aResults.get(0);
     assertEquals(postG.getName(), aResult.getTitle());
-    assertEquals(postG.getMessage(), aResult.getExcerpt());
+    assertTrue(aResult.getExcerpt().indexOf("<strong>G</strong>") >= 0);
     String gotURL = aResult.getUrl();
     log.info(gotURL);
 //    assertTrue(gotURL.indexOf("/portal/classic/forum/topic/topic") >= 0);

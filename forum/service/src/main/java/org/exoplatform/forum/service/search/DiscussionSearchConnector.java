@@ -1,15 +1,13 @@
 package org.exoplatform.forum.service.search;
 
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
-import java.text.SimpleDateFormat;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
@@ -20,7 +18,6 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
@@ -45,7 +42,6 @@ import org.exoplatform.services.security.ConversationState;
  */
 public class DiscussionSearchConnector extends SearchServiceConnector {
 
-  private Pattern pattern;
   private JCRDataStorage storage;
   private String FIX_ICON = "/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
   private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
@@ -64,7 +60,6 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   public DiscussionSearchConnector(InitParams initParams, JCRDataStorage storage) {
     super(initParams);
     this.storage = storage;
-    this.pattern = Pattern.compile("/");
   }
   
   @Override
@@ -78,31 +73,33 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
     List<SearchResult> results = new ArrayList<SearchResult>();
     String currentUser = getCurrentUserName();
     try {
-      List<ForumSearch> searchResults = storage.getQuickSearch(query, "false,post", null, currentUser, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, offset, limit, sort, order);
+      List<ForumSearch> searchResults = storage.getUnifiedSearch(query, currentUser, offset, limit, sort, order);
       for (ForumSearch searchResult : searchResults) {
-        PostId id = new PostId(pattern, searchResult.getPath());
+        PostId id = new PostId(searchResult.getPath());
         Forum forum = storage.getForum(id.getCategoryId(), id.getForumId());
         Topic topic = storage.getTopic(id.getCategoryId(), id.getForumId(), id.getTopicId(), currentUser);
-        Post post = storage.getPost(id.getCategoryId(), id.getForumId(), id.getTopicId(), id.getPostId());
         StringBuilder sb = new StringBuilder();
         sb.append(forum.getForumName());
         sb.append(" - " + topic.getPostCount() + " replies");
         sb.append(" - " + topic.getVoteRating());
         SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);
-        sb.append(" - " + sdf.format(post.getCreatedDate()));        
+        sb.append(" - " + sdf.format(searchResult.getCreatedDate()));        
         String uri = buildLink(context, portalName, id.getCategoryId(), id.getForumId(), id.getTopicId(), siteName, topic.getLink());
-        SearchResult result = new SearchResult(
-            uri,
-            post.getName(),
-            post.getMessage(),
+        String postUri = (searchResult.getType().equals(Utils.POST) ? CommonUtils.SLASH + searchResult.getId() : CommonUtils.EMPTY_STR); 
+        UnifiedSearchResult result = new UnifiedSearchResult(
+            uri + postUri,
+            searchResult.getName(),
+            searchResult.getExcerpt(),
             sb.toString(),
             FIX_ICON,
-            post.getCreatedDate().getTime(),
-            0);
+            searchResult.getCreatedDate().getTime(),
+            searchResult.getRelevancy(),
+            topic.getVoteRating());
         results.add(result);
       }
 
     } catch (Exception e) {
+      e.printStackTrace();
       LOG.error(e);
     }
 
