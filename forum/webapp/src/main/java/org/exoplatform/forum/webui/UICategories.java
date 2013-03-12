@@ -68,8 +68,6 @@ public class UICategories extends UIContainer {
 
   private Map<String, List<Forum>> mapListForum      = new HashMap<String, List<Forum>>();
 
-  private Map<String, Topic>       maptopicLast      = new HashMap<String, Topic>();
-
   private List<Category>           categoryList      = new ArrayList<Category>();
 
   private Map<String, Forum>       AllForum          = new HashMap<String, Forum>();
@@ -264,23 +262,16 @@ public class UICategories extends UIContainer {
     return forum_;
   }
 
+  protected boolean isCanViewTopic(Category cate, Forum forum, Topic topic) throws Exception {
+    return getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic);
+  }
+
   protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
-      String topicId = topicPath;
-      if (topicId.indexOf(ForumUtils.SLASH) >= 0)
-        topicId = topicId.substring(topicPath.lastIndexOf(ForumUtils.SLASH) + 1);
+      topicPath = topicPath.substring(topicPath.indexOf(Utils.CATEGORY));
       topic = forumService.getTopicSummary(topicPath);
-      if (topic != null) {
-        if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
-          maptopicLast.put(topic.getId(), topic);
-        else {
-          if (maptopicLast.containsKey(topicId))
-            maptopicLast.remove(topicId);
-          return null;
-        }
-      }
     }
     return topic;
   }
@@ -336,7 +327,6 @@ public class UICategories extends UIContainer {
         uiCategory.update(uiContainer.getCategory(categoryId), list);
         categoryContainer.updateIsRender(false);
         forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
-        uiContainer.maptopicLast.clear();
       } catch (Exception e) {        
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
                                                                                        new String[] { ForumUtils.EMPTY_STR },
@@ -368,7 +358,6 @@ public class UICategories extends UIContainer {
         uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0);
         forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
       }
-      categories.maptopicLast.clear();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -399,7 +388,6 @@ public class UICategories extends UIContainer {
         uiTopicDetail.setIdPostView("lastpost");
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
         forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
-        categories.maptopicLast.clear();
       }
       context.addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -452,7 +440,6 @@ public class UICategories extends UIContainer {
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
           forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
-          categories.maptopicLast.clear();
           context.addUIComponentToUpdateByAjax(forumPortlet);
         } else {
           categories.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
@@ -483,8 +470,8 @@ public class UICategories extends UIContainer {
           Category category = uiContainer.getCategory(path);
           path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
         } else {
-          path = path.substring(path.lastIndexOf(ForumUtils.SLASH)+1);
-          Topic topic = uiContainer.maptopicLast.get(path);
+          path = path.split("//")[1];
+          Topic topic = uiContainer.forumService.getTopicSummary(path);
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
         }
         uiContainer.forumService.saveUserBookmark(userName, path, true);

@@ -7,18 +7,16 @@
   margin: <%=((hasForum) ? "5" : "15")%>px;
 }
 </style>
-<div class="UICreate">
+<div class="uiCreate">
   <% uiform.begin() %>
-
     <div class="horizontalLayout layout">
 
-
-      <div class="UIFormInput">
-        <div class="CreateName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
+      <div class="uiFormInput">
+        <div class="createName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
        <% 
          if(hasForum) {
        %>
-        <table >
+        <table>
           <tbody>           
         <% 
           for(field in uiform.getChildren()) { 
@@ -62,7 +60,7 @@
 	           }
 	        %>
 
-	      <input type="button" onclick="$link" class="$clazz" value="$actionLabel"/>
+	      <a href="javascript:void(0);" onclick="$link" class="$clazz" />$actionLabel</a>
 
 	      <%}%>
         </div>

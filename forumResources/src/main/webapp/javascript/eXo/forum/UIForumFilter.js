@@ -17,11 +17,13 @@
         this.input = this.parent.find('input.filterInput:first');
         
         this.menu = this.parent.find('.filterMenu:first');
+		
+		this.dropdownMenu = this.menu.find('ul.dropdown-menu:first');
         
         var jOnchange = this.parent.find('div.forumFilterData');
         this.onChange = jOnchange.attr('data-onchange');
         
-        var arrow = this.parent.find('.rightArrow:first');
+        var arrow = this.parent.find('.uiForumFilter:first');
         
         arrow.off('click').on('click', function(e) {
           e.stopPropagation();
@@ -30,10 +32,11 @@
           UIForumFilter.filter(e);
           
           //
-          UIForumFilter.menu.css('height', 'auto');
-          var h = UIForumFilter.menu.height();
-          UIForumFilter.menu.css({'height': '0px','visibility' :'visible'})
-            .animate({height: h + 'px'}, 200, function() {
+          UIForumFilter.dropdownMenu.css('height', 'auto');
+          var h = UIForumFilter.dropdownMenu.height();
+		  UIForumFilter.dropdownMenu.css('height', '0px');
+          UIForumFilter.menu.css({'visibility' :'visible'});
+          UIForumFilter.dropdownMenu.animate({height: h + 'px'}, 300, function() {
               gj(this).css('height', 'auto');
               UIForumFilter.input.focus();
             });
@@ -48,8 +51,8 @@
         var uiForm = this.parent.parents('.UIForm:first');
         function parentClick() {
           var pr = gj(this);
-          pr.find('.filterMenu').animate({'height': '0px'}, 400, function() {
-            gj(this).css({'visibility' :'hidden'});
+          pr.find('.filterMenu:first').find('ul.dropdown-menu:first').animate({'height': '0px'}, 400, function() {
+            gj(this).parents('.filterMenu:first').css({'visibility' :'hidden'});
           });
         }
         uiForm.off('click', parentClick).on('click', parentClick);
@@ -102,7 +105,7 @@
         for(var i = 0; i < forums.length; ++i) {
           var forum = forums[i];
           var li2 = gj('<li></li>');
-          li2.html(forum.forumName);
+          li2.append(gj('<a href="javascript:void(0)"></a>').html(forum.forumName));
           li2.attr('data-forid', forum.forumId);
           li2.attr('data-catid', cate.categoryId);
           li2.on('click', function(e) {
@@ -117,8 +120,9 @@
 
             UIForumFilter.input.val('');
             
-            UIForumFilter.menu.animate({'height': '0px'}, 400, function() {
-              gj(this).css({'visibility' :'hidden'});
+            
+			UIForumFilter.dropdownMenu.animate({'height': '0px'}, 400, function() {
+              UIForumFilter.menu.css({'visibility' :'hidden'});
               if(UIForumFilter.onChange != null && UIForumFilter.onChange.length > 0){
                 gj('<div onclick="'+UIForumFilter.onChange+'"></div>').trigger('click');
               }

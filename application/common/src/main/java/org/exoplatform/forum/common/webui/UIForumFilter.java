@@ -131,15 +131,20 @@ public class UIForumFilter extends UIFormInputBase<String> {
     w.write(renderOnChangeEvent(uiForm));
     w.write("\"></div>\n");
 
-    w.write("  <div class=\"uiForumFilter ClearFix\" style=\"position:relative\" ");
+    w.write("  <div class=\"uiForumFilter btn-group uiDropdownWithIcon clearfix\" ");
     renderHTMLAttributes(w);
     w.write(">\n");
-    w.write("    <span>");
+    
+    w.write("  <div class=\"btn dropdown-toggle\">");
+    w.write("    <span class=\"titleForum\">");
     w.write(getForumName());
     w.write("    </span>\n");
-    w.write("    <div class=\"rightArrow\"></div>\n");
-    w.write("    <div class=\"filterMenu\" style=\"position:absolute; visibility:hidden\">\n");
-    w.write("      <ul>\n");
+    w.write("    <span class=\"spiter\"></span>\n");
+    w.write("    <span class=\"caret\"></span>\n");
+    w.write("</div>\n");
+    
+    w.write("    <div class=\"filterMenu open\" style=\"position:absolute; visibility:hidden\">\n");
+    w.write("      <ul class=\"dropdown-menu\">\n");
     w.write("        <li>\n");
     w.write("          <input type=\"text\" class=\"filterInput\" placeholder=\"" + getFilerPlaceholder() + "\"/>\n");
     w.write("        </li>\n");

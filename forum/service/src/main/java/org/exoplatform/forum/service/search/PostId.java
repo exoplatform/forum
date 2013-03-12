@@ -1,33 +1,28 @@
 package org.exoplatform.forum.service.search;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.exoplatform.forum.service.Utils;
 
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
 public class PostId {
+  
+  String path;
 
-  private String[] pathParts;
-
-  public PostId(Pattern pattern, String path) {
-    pathParts = pattern.split(path);
-  }
-
-  public String getPostId() {
-    return pathParts[pathParts.length - 1];
+  public PostId(String path) {
+    this.path = path;
   }
 
   public String getTopicId() {
-    return pathParts[pathParts.length - 2];
+    return Utils.getTopicId(path);
   }
 
   public String getForumId() {
-    return pathParts[pathParts.length - 3];
+    return Utils.getForumId(path);
   }
 
   public String getCategoryId() {
-    return pathParts[pathParts.length - 4];
+    return Utils.getCategoryId(path);
   }
 
 }

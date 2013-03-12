@@ -66,15 +66,21 @@
 	.uiQuestions {
 		margin: 10px 0;	
 		.answerToolbar {
-			.nav-pills > li > a {
-				padding-top: 5px;
-				padding-bottom: 0;
+			> ul > li{				
+				float: left;
+				margin: 0 10px 0 0;
+				a {
+					color: @textColor;
+					&.actionIcon {
+						padding: 3px 7px;
+					}
+				}
 			}
-			.uiDropdownWithIcon {
-				margin: 4px 0;
+			> .menuRight > li {
+				margin: 0 0 0 10px;
 			}
-			.nav  {
-				margin-bottom: 0;
+			.dropdown-menu li a:hover {
+				color: @white;
 			}
 		}
 	}
@@ -90,6 +96,17 @@
 					width: 100px;
 				}
 			}
+		}
+	}
+	.questionRight {
+		.iconContainer  {
+			text-align: right;
+		}
+	}
+	
+	.responseItemContainer  {
+		.avatarXSmall  + .responseItemContainerRight {
+			margin-left: 50px;
 		}
 	}
 }

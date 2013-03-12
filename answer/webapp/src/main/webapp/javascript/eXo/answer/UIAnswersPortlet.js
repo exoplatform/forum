@@ -42,7 +42,8 @@
   };
 
   UIAnswersPortlet.resizeLineBar = function(idPr) {
-    var parent = $('#' + idPr).find('#resizeLineBar');
+    var answerContainer = $('#' + idPr); 
+    var parent = answerContainer.find('#resizeLineBar');
     var line = parent.find('div.line');
 
     var pageBody = $('#UIPageBody');
@@ -52,7 +53,6 @@
     var leftHeight = leftTDContainer.outerHeight();
     var delta = leftHeight - rightContainer.outerHeight();
 
-    var answerContainer = $('#' + idPr).find('#UIAnswersContainer');
     var height = answerContainer.outerHeight();
 
     if (delta > 0) {
