@@ -11,10 +11,6 @@
   <name>Forum FAQ service</name>
   <dependencies>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-component-common</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
@@ -75,16 +71,16 @@
       <artifactId>exo.kernel.container</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.gatein.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.json</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.rest.core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
     </dependency>
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
