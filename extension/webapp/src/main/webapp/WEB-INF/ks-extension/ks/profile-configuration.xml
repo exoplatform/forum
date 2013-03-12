@@ -7,8 +7,8 @@
 
   <component>
     <key>org.exoplatform.forum.common.user.ContactProvider</key>
-    <type>org.exoplatform.forum.common.user.DefaultContactProvider</type>
-<!--<type>org.exoplatform.forum.ext.common.SocialContactProvider</type> -->
+    <!-- <type>org.exoplatform.forum.common.user.DefaultContactProvider</type> -->
+    <type>org.exoplatform.forum.ext.common.SocialContactProvider</type>
   </component>
  
 </configuration>
