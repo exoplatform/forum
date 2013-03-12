@@ -20,8 +20,8 @@
   boolean isViewRootCate = uicomponent.isViewRootCate;
 %>
 <div class="uiQuestions uiBox" id="$uicomponent.id">
-  <div class="answerToolbar title">
-  	<ul class="nav nav-pills">
+  <div class="answerToolbar title clearfix">
+  	<ul class="menuLeft pull-left">
 	      <!--  CustomView action 
 	        <div class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.answer.UIAnswersPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
 	          	<a class="Icon FAQCustomView" id="FAQCustomView">
@@ -41,7 +41,7 @@
 		        String linkRss = uicomponent.getRSSLink() ;
 	      %>
 	      	<li> 
-	          <a href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
+	          <a class="actionIcon" href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
 	        </li>
 		    <%} %>
 
@@ -51,10 +51,10 @@
 					<li>
 	          <div class="uiDropdownWithIcon dropdown">
 	            <!--a class="dropdown-toggle" data-toggle="dropdown" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"-->
-							<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">							
+							<a class="actionIcon  dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">							
                 <i class="uiIconAnsManageCategory"></i>
-                <%=_ctx.appRes("UIQuestions.action.ManageCategory"); %>
-								
+                <%=_ctx.appRes("UIQuestions.action.ManageCategory"); %>&nbsp;
+				<i class="uiIconMiniArrowDown"></i>				
 	            </a>
 	            
 				          
@@ -80,26 +80,26 @@
 		      </li>
 		      
 		      <li>
-		        <a href="javascript:void(0);" onclick="<%=uicomponent.event("QuestionManagament", cateId);%>" type="button"><i class="uiIconAnsManageQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.QuestionManagament");%></a>
+		        <a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("QuestionManagament", cateId);%>" type="button"><i class="uiIconAnsManageQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.QuestionManagament");%></a>
 		    	</li>
 	    <%
 	    }
 	    %>
-	   
-	   	<!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
-	    <li class="pull-right">
-        <a onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
-  		</li>
+	   </ul>
+	   <ul class="pull-right menuRight">	   	
   		
 	  <%String currentUser = FAQUtils.getCurrentUser() ; 
 	    if(currentUser != null && currentUser.trim().length() > 0) {
 	      String actionSetting = uicomponent.event("Setting");
 	  %>
-	  	<li class="pull-right">
-       	<a onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Settings")%></a>
+	  	<li>
+       	<a class="actionIcon" onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Settings")%></a>
       </li>
 	    <% } %>
-	     
+	    <!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
+	    <li>
+        <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
+  		</li> 
   	</ul>
   </div>
 
@@ -269,7 +269,7 @@
             String responseBy = "..." ;
             String date = "..." ;
           %>          
-            <div class="QuestionSelect">
+            <div class="questionSelect">
                   
                     <div class="QuestionContainer clearfix" id="$questionId">
                       
@@ -717,8 +717,7 @@
                         </div>
                         
                         <!-- View all answer for this question -->
-                        <div class="Response $classResponsse" id="SetWidthContent">
-                          <div>
+                        <div class="response $classResponsse" id="SetWidthContent">
                           <%
                           if(answers != null && answers.length > 0){
                             String actionAnswer = "";
@@ -735,137 +734,163 @@
                               String userProfile = uicomponent.event("ViewUserProfile", owner);
                               String answerId = answer.getId();
                             %>
-                            <div class="ResponseItemContainer ClearFix" id="$answerId">
-                                  <!--  View user who answered quesetion  -->
-                                  <div class="ImgItemContainer">
+                            <div class="ResponseItemContainer  responseItemContainer clearfix" id="$answerId">
+								<div class="clearfix">
+									<div class=" moreAction">
+									<div class="pull-right uiDropdownWithIcon dropdown">
+										<!--a class="dropdown-toggle" data-toggle="dropdown" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"-->
+										<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon  dropdown-toggle">							
+											<i class="uiIconSettings uiIconLightGray"></i>
+											More Actions&nbsp;
+											<i class="uiIconMiniArrowDown uiIconLightGray"></i>				
+										</a>            
+				          
+									  <!--  Begin popup menu  -->
+										<!--ul class="dropdown-menu" onmouseover="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();" onblur="eXo.answer.UIAnswersPortlet.setCheckEvent(true); eXo.answer.UIAnswersPortlet.checkAction();"-->
+										<ul class="dropdown-menu">	           
+				              
+											  <% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)){%>
+                                    
+												
+												  <li>
+													<a  rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
+														<i class="uiIconLightGray uiIconEdit"  ></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>
+													</a>
+												  </li>
+												
+												<%if(uicomponent.canEditQuestion) { %>
+													
+												<%
+												  actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
+												  if(answer.getApprovedAnswers()) {
+												  %>
+													<li>
+														<a  href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
+															<i class="uiIconAnsLightGray uiIconAnsApprove" ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>
+														</a>
+													</li>
+												  <%} else {
+												  %>
+													<li>
+														<a  href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
+															<i class="uiIconAnsLightGray uiIconAnsDisapprove" ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>
+														</a>
+													</li>
+												  <%}%>
+												
+												
+												  <%
+													actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Activate");
+													if(answer.getActivateAnswers()) {
+												  %>
+													<li>
+														<a href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
+															<i class="uiIconAnsLightGray uiIconAnsEnable"  ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>
+														</a>
+													</li>
+												  <%} else {
+												  %>
+													<li>
+														<a  href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
+															<i class="uiIconAnsLightGray uiIconAnsDisable"  ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>
+														</a>
+														</a>
+													</li>
+												  <%}%>
+												
+												<%} %>
+												<li>
+													<a  href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
+														<i class="uiIconLightGray uiIconTrash"></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>
+													</a>
+												</li>
+												
+											  <%}%>             
+				          
+									  </ul>
+								  <!--  End popup menu  -->
+									</div>
+						
+									</div>
+								</div>
+									
+								<div class="clearfix responseItem">
+								 <!--  View user who answered quesetion  -->
+                                  <div class="avatarXSmall pull-left">
                                     <%
                                     if(uicomponent.faqSetting_.isEnableViewAvatar()) {
                                     %> 
-                                      <img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+                                      <img src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
                                    
                                     <%}%>
-                                  </div>
-                                  
-                                  <div class="IconContainer ClearFix">
-                                  <% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)){%>
-                                    
-                                    <a class="ItemIcon DeleteAnswer" href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
-                                      <span></span>
-                                    </a>
-                                    
-                                    <%if(uicomponent.canEditQuestion) { %>
-                                    
-                                    <%
-                                      actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
-                                      if(answer.getApprovedAnswers()) {
-                                      %>
-                                        <a class="ItemIcon ApprovedQuestion" href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
-                                        	<span></span>
-                                        </a>
-                                      <%} else {
-                                      %>
-                                        <a class="ItemIcon UnApprovedQuestion" href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
-                                          <span></span>
-                                        </a>
-                                      <%}%>
-                                    
-                                    
-                                      <%
-                                        actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Activate");
-                                        if(answer.getActivateAnswers()) {
-                                      %>
-                                        <a class="ItemIcon ActivateQuestion" href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
-                                          <span></span>
-                                        </a>
-                                      <%} else {
-                                      %>
-                                        <a class="ItemIcon DeActivateQuestion" href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
-                                          <span></span>
-                                        </a>
-                                      <%}%>
-                                    
-                                    <%} %>
-                                    
-                                      <a class="ItemIcon Edit" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
-                                            <span></span>
-                                      </a>
-                                    
-                                  <%}%>
-                           				 </div>
-                                  
-                                  <div class="ResponseItemContainerRight ClearFix">
-                                    
+                                  </div><!--avatar-->  
+
+								  
+                                  <div class="responseItemContainerRight">                                    
                                       <%
                                       if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
                                       %>
-                                      <div class="AnswerContent ClearFix">
-	                                      <a class="AuthorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="UserName">$responseBy</span></a> 
+                                      <div class="answerContent">
+	                                      <a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="UserName">$responseBy</span></a> 
 	                                      $res
                                       </div>
                                       <%
                                       } else {
                                       %>
-                                    	<div class="AnswerContent ClearFix">
-	                                      <a class="AuthorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="UserName">$responseBy</span></a> 
+                                    	<div class="answerContent">
+	                                      <a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="UserName">$responseBy</span></a> 
 	                                      $res
                                       </div>
-                                      <%} %>
-                                      <div class="Date">$date</div>
-                                    
-                                    
-                                    <!--  View mark vote answer  -->
-                                    <div class="VoteAnswerContainer ClearFix">
-                                      <%
-                                      if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-                                          String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
-                                          String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
-                                          if(uicomponent.currentUser_ != null){
-                                            userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getPath() + "/up");
-                                            userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getPath() + "/down");
-                                          }
-                                          String idVote = "FAQVoteAnswerUp" + i;
-                                        %>
+                                      <%} %>  
+										<div class="voteAnswerContainer">
+											<span class="date">$date</span>&nbsp;
+										  <%
+										  if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+											  String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+											  String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+											  if(uicomponent.currentUser_ != null){
+												userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getPath() + "/up");
+												userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getPath() + "/down");
+											  }
+											  String idVote = "FAQVoteAnswerUp" + i;
+											%>
                       
-                                              <a class="VoteAnswerUp" href="$userVoteUpAnswer" rel="tooltip" data-placement="bottom" title="+1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
-                                                <span></span>
+                                              <a  href="$userVoteUpAnswer" rel="tooltip" data-placement="bottom" title="+1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
+                                                <i class="uiIconAnsThumbUpMini"></i>
                                               </a>
                                            
-                                          <%
-                                            idVote = "FAQVoteAnswerDown" + i;
-                                            ++i;
-                                          %>
-      
-                                              <a class="VoteAnswerDown" href="$userVotedownAnswer" rel="tooltip" data-placement="bottom" title="-1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
-                                                <span></span>
-                                              </a>
-                                           
-                                            <div class="TextVoteAnswer">
-
+											  <%
+												idVote = "FAQVoteAnswerDown" + i;
+												++i;
+											  %>      
+                                              <a  href="$userVotedownAnswer" rel="tooltip" data-placement="bottom" title="-1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
+                                                 <i class="uiIconAnsThumbDownMini"></i>
+                                              </a>                                           
+                                            <span class="textVoteAnswer">
                                               <%=answer.getMarkVotes()%>
-                                            </div>
+                                            </span>
                                             
                                         <%
-                                        }%>
-                                        
-                                    </div>
-                                    
-                                  </div>
-                            
+                                        }%>                                        
+                                    </div> <!-- end voteAnswerContainer-->                                    
+                                  </div> <!--end responseItemContainerRight-->
+								</div> 	 <!-- end responseItem--> 
+                             </div> <!--end responseItemContainer-->
                           <%}
                             if(uicomponent.getChildById(uicomponent.ANSWER_ITER + question.getId())!= null){
                           %>
-                              <div style="overflow:auto" class="ClearFix">
+                              <div style="overflow:auto" class="clearfix">
                                 <% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
                                
                               </div>  
                         <%  }
                           } else { %>
-                        <div class="NotResponse">
-                          <%=_ctx.appRes("UIQuestions.label.QuestionNotYetAnswered")%>
-                        </div>
+								<div class="NotResponse notResponse">
+								  <%=_ctx.appRes("UIQuestions.label.QuestionNotYetAnswered")%>
+								</div>
                         <%}%>
-                          </div>
-                        </div>
+                          
+                        </div> <!--end response-->
                         <!-- finish View all answer for this question -->
                         
                         <!--  View question's commnets  -->
@@ -877,7 +902,7 @@
                           if(comments.length > 0) {
                             classComment = "CommentExternal";
                         %>
-                            <h5 class="TitleCommentContent">
+                            <h5>
                               <%=_ctx.appRes("UIQuestions.label.Comments")%>
                             </h5>
                         <% } %>
