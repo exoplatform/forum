@@ -182,20 +182,21 @@
 									openLinkLastPost = "javascript:void(0)";
 									titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 								}
-							} else {
-								if(forum.getIsModerateTopic()) {
-									if(isAdmin || hasModerators || topicNewPost.getIsApproved()){
-										openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-										urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-									} else {
-										openLinkLastPost = "javascript:void(0)";
-										titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
-									}
-								} else {
-									openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-									urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-								}
-							}
+							} else if(forum.getIsModerateTopic()) {
+                if(isAdmin || hasModerators || topicNewPost.getIsApproved()){
+                  openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+                  urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
+                } else {
+                  openLinkLastPost = "javascript:void(0)";
+                  titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
+                }
+              } else if(uicomponent.isCanViewTopic(category, forum, topicNewPost)){
+                openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+                urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
+              } else {
+                openLinkLastPost = "javascript:void(0)";
+                titleTopic = _ctx.appRes("UIForumPortlet.msg.do-not-permission-view-topic") ;
+              }
 							titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 						}
 						String isLock = "false";

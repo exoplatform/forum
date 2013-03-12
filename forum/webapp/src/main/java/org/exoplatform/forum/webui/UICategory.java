@@ -99,9 +99,7 @@ public class UICategory extends BaseForumForm {
 
   private List<Forum>        forums          = new ArrayList<Forum>();
 
-  private Map<String, Topic> MaptopicLast    = new HashMap<String, Topic>();
-
-  static public boolean      isUnWatch       = false;
+  static public boolean     isUnWatch       = false;
 
   public UICategory() throws Exception {
     addChild(UIForumDescription.class, null, null);
@@ -258,31 +256,18 @@ public class UICategory extends BaseForumForm {
     return null;
   }
 
+  protected boolean isCanViewTopic(Forum forum, Topic topic) throws Exception {
+    return getAncestorOfType(UIForumPortlet.class).checkCanView(this.category, forum, topic);
+  }
+
   protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
+      topicPath = topicPath.substring(topicPath.indexOf(Utils.CATEGORY));
       topic = getForumService().getTopicSummary(topicPath);
-      if (topic != null) {
-        String topicId = topic.getId();
-        if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic)) {
-          this.MaptopicLast.put(topicId, topic);
-        } else {
-          if (this.MaptopicLast.containsKey(topicId)) {
-            this.MaptopicLast.remove(topicId);
-          }
-          return null;
-        }
-      }
     }
     return topic;
-  }
-
-  private Topic getTopic(String topicId) throws Exception {
-    if (this.MaptopicLast.containsKey(topicId)) {
-      return this.MaptopicLast.get(topicId);
-    }
-    return null;
   }
 
   private List<Forum> getForumsChecked(boolean isBreak) throws Exception {
@@ -647,10 +632,9 @@ public class UICategory extends BaseForumForm {
           Category category = uiCategory.getCategory();
           path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
         } else {
-          path = path.substring(t + 2);
-          String topicId = path.substring(path.lastIndexOf(ForumUtils.SLASH) + 1);
-          Topic topic = uiCategory.getTopic(topicId);
-          path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topicId;
+          path = path.split("//")[1];
+          Topic topic = uiCategory.getForumService().getTopicSummary(path);
+          path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
         }
         String userName = uiCategory.userProfile.getUserId();
         uiCategory.getForumService().saveUserBookmark(userName, path, true);

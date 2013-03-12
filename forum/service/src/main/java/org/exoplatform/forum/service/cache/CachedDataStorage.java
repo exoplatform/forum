@@ -144,9 +144,8 @@ public class CachedDataStorage implements DataStorage, Startable {
   
   private void clearTopicsCache(List<Topic> topics) throws Exception {
     for(Topic t : topics) {
-      topicData.remove(new TopicKey(t.getPath(), true));
+      clearTopicCache(t);
     }
-    
   }
   
   private void clearTopicCache(String topicPath) throws Exception {
@@ -156,6 +155,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
     Topic topic = getTopic(categoryId, forumId, topicId, null);
     clearTopicCache(topic);
+    clearTopicCache(topic.getPath());
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
@@ -662,12 +662,16 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     clearForumCache(categoryId, forumId, false);
     clearForumListCache();
+    if(!isNew) {
+      clearTopicCache(topic);
+    }
   }
 
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
     try {
       clearForumCache(categoryId, forumId, false);
       clearForumListCache();
+      clearTopicCache(categoryId, forumId, topicId);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
