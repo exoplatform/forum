@@ -3729,7 +3729,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           default:
             break;
           }
-          if (!post.getIsHidden() && post.getIsApproved() && !post.getIsWaiting()) {
+          if (!post.getIsHidden() && post.getIsApproved() && (Utils.WAITING != type)) {
             if (postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
               topicNode.setProperty(EXO_LAST_POST_DATE, postDate);
               topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
