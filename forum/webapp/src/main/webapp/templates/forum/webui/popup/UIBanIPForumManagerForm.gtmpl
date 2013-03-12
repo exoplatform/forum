@@ -1,7 +1,7 @@
 <%
 	import org.exoplatform.forum.ForumUtils;
   import org.exoplatform.forum.webui.UIForumPageIterator;
-	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.SearchIpBan.init();");
+	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.init();");
 	String forumId = uicomponent.forumId.replaceAll("/",".") ;
 	String linkOp = uicomponent.event("OpenPosts", "OBJIP");
 %>
