@@ -14,16 +14,16 @@
       <artifactId>commons-lang</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-component-common</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.core</groupId>
@@ -35,11 +35,11 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-component-common</artifactId>
+      <artifactId>forum-application-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
-      <artifactId>forum-application-common</artifactId>
+      <artifactId>forum-component-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.forum</groupId>
