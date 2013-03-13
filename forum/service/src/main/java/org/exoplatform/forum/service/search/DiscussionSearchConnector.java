@@ -81,7 +81,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         StringBuilder sb = new StringBuilder();
         sb.append(forum.getForumName());
         sb.append(" - " + topic.getPostCount() + " replies");
-        sb.append(" - " + topic.getVoteRating());
+        //sb.append(" - " + topic.getVoteRating());
         SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);
         sb.append(" - " + sdf.format(searchResult.getCreatedDate()));        
         String uri = buildLink(context, portalName, id.getCategoryId(), id.getForumId(), id.getTopicId(), siteName, topic.getLink());
