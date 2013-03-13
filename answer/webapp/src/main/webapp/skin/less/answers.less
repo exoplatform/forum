@@ -64,7 +64,8 @@
 	}
 
 	.uiQuestions {
-		margin: 10px 0;	
+		margin: 10px 0 0 0;
+		padding-bottom: 0;
 		.answerToolbar {
 			> ul > li{				
 				float: left;
@@ -90,16 +91,25 @@
 		& >.responseItemContainer {
 			.border-radius(@borderRadiusSmall @borderRadiusSmall  0 0);
 			background: @grayWhiteSmoke;
+			.languageContainer  {
+				margin: 3px 20px 0 0
+			}
 		}
 		& + .questionContainer  {
 			margin-top: 20px;
+		}
+		.voteResult {
+			margin: 10px 0 5px 0;
+			.ratingInfoContainer  {
+				margin :1x 5px 0 0;
+			}
 		}
 	}
 	.uiFAQContent  + .questionContainer   {
 			margin-top: 20px;
 	}
 	 .notResponse {
-	 padding:10px 16px;
+		padding:10px 16px;
 	 }
 	.uiQuestionInfo {
 		.select-category {
@@ -124,7 +134,11 @@
 		.avatarXSmall  + .responseItemContainerRight {
 			margin-left: 50px;
 		}
-		
+		&.itemFirst {
+			.uiDropdownWithIcon  {
+				margin-top: -26px;
+			}
+		}
 	}
 		.responseItemContainer {
 			padding:12px 16px;
@@ -132,11 +146,14 @@
 				border-top: 1px solid @tableBorder;
 			}
 			p {
-				margin: 0;
+				margin: 2px 0;
 			}
 			.date{
 				color: @grayLight;
 				font-size: 12px;
+			}
+			.avatarXSmall {
+				margin-top: 5px;
 			}
 		}
 		.questionSelect .questionContainer  {
@@ -144,12 +161,16 @@
 				.square(70px);
 				img {
 					.square(70px);
+					 border: 1px solid @white;
 				}
 				& + .questionRight {
 					margin-left: 90px;
 				}
 			}
-			
+			h6 {
+				margin: 0 0 2px 0;
+				line-height: 18px;
+			}
 		}
 		.titleResponseContent {
 			border-top: 1px solid @tableBorder;
