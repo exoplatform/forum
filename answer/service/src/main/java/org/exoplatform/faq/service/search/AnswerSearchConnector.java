@@ -21,7 +21,6 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.service.search.UnifiedSearchResult;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
