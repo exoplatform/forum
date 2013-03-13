@@ -1,12 +1,10 @@
 package org.exoplatform.faq.service.search;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.text.SimpleDateFormat;
 
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
@@ -23,7 +21,6 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.portal.config.UserPortalConfig;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
@@ -32,8 +29,6 @@ import org.exoplatform.portal.mop.navigation.NavigationService;
 import org.exoplatform.portal.mop.navigation.NodeContext;
 import org.exoplatform.portal.mop.navigation.NodeModel;
 import org.exoplatform.portal.mop.navigation.Scope;
-import org.exoplatform.portal.mop.user.UserNavigation;
-import org.exoplatform.portal.mop.user.UserPortalContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.resources.LocaleConfigService;
@@ -76,7 +71,6 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   @Override
   public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
 
-    String siteName = (sites == null || sites.isEmpty()) ? "" : sites.iterator().next();
     ExoContainerContext eXoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer()
         .getComponentInstanceOfType(ExoContainerContext.class);
     String portalName = eXoContext.getPortalContainerName();
@@ -116,7 +110,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
         sb.append(" - ").append(searchResult.getRatingOfQuestion());
         SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);        
         sb.append(" - ").append(sdf.format(searchResult.getCreatedDate()));        
-        String url = buildLink(context, portalName, searchResult.getPath(), siteName, searchResult.getLink()); 
+        String url = buildLink(context, portalName, searchResult.getPath(), searchResult.getLink()); 
         SearchResult result = new SearchResult(
             url,
             searchResult.getName(),
@@ -144,7 +138,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @param defaultLink
    * @return
    */
-  private String buildLink(SearchContext context, String portalName, String questionPath, String siteName, String defaultLink) {
+  private String buildLink(SearchContext context, String portalName, String questionPath, String defaultLink) {
     try {
       String answersURI = "#";
       String categoryId = getCategoryId(questionPath);
@@ -153,7 +147,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
       if (categoryId.indexOf(Utils.CATE_SPACE_ID_PREFIX) == 0) {
         answersURI = makeURIForSpaceContext(context, portalName, categoryId);
       } else {
-        answersURI = makeURIForPortalContext(context, portalName, categoryId, siteName);
+        answersURI = makeURIForPortalContext(context, portalName, categoryId);
       }
       if(!CommonUtils.isEmpty(answersURI)){
         answersURI = String.format("%s/%s%s", answersURI, Utils.QUESTION_ID, questionId);
@@ -176,23 +170,24 @@ public class AnswerSearchConnector extends SearchServiceConnector {
    * @return
    * @throws Exception
    */
-  private String makeURIForPortalContext(SearchContext context, String portalName, String categoryId, String siteName) throws Exception {
+  private String makeURIForPortalContext(SearchContext context, String portalName, String categoryId) throws Exception {
     //
     String path = "";
     String siteType = "";
+    String siteName = "";
     
-    UserPortalConfig prc = getUserPortalConfig();
-    
+    List<String> allSites = getAllPortalSites();
     //
-    
-    siteName = CommonUtils.isEmpty(siteName) ? prc.getPortalConfig().getName() : siteName;
-    SiteKey siteKey = SiteKey.portal(siteName);
-    
-    //
-    siteType = SiteType.PORTAL.getName();
-    
-    //
-    path = getSiteName(siteKey);
+    for(String siteName_ : allSites) {
+      SiteKey siteKey = SiteKey.portal(siteName_);
+      siteType = SiteType.PORTAL.getName();
+      path = getSiteName(siteKey);
+
+      if(!CommonUtils.isEmpty(path)) {
+        break;
+      }
+    }
+
     
     //
     if (CommonUtils.isEmpty(path)) {
@@ -258,31 +253,16 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   }
   
   /**
-   * Get user portal config.
-   * 
    * @return
-   * @throws Exception
-   * @since 1.2.9
    */
-  private UserPortalConfig getUserPortalConfig() throws Exception {
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-    UserPortalConfigService userPortalConfigSer = (UserPortalConfigService)
-                                                  container.getComponentInstanceOfType(UserPortalConfigService.class);
-
-    UserPortalContext NULL_CONTEXT = new UserPortalContext() {
-      public ResourceBundle getBundle(UserNavigation navigation) {
-        return null;
-      }
-
-      public Locale getUserLocale() {
-        return Locale.ENGLISH;
-      }
-    };
-    
-    String remoteId = getCurrentUserName();
-    UserPortalConfig userPortalCfg = userPortalConfigSer.
-                                     getUserPortalConfig(userPortalConfigSer.getDefaultPortal(), remoteId, NULL_CONTEXT);
-    return userPortalCfg;
+  private List<String> getAllPortalSites() {
+    UserPortalConfigService dataStorage = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
+                                                                                       .getComponentInstanceOfType(UserPortalConfigService.class);
+    try {
+      return dataStorage.getAllPortalNames();
+    } catch (Exception e) {
+      return new ArrayList<String>();
+    }
   }
 
   /**
