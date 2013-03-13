@@ -49,6 +49,10 @@ public class ObjectSearchResult {
   private int    numberOfComment  = 0;
 
   private Date   createdDate;
+  
+  private String excerpt = null;
+  
+  private long relevancy = 0;
 
   /**
    * Instantiates a new object form search.
@@ -232,4 +236,38 @@ public class ObjectSearchResult {
   public void setLink(String link) {
     this.link = link;
   }
+
+  /**
+   * gets excerpt
+   * @return
+   */
+  public String getExcerpt() {
+    return excerpt;
+  }
+
+  /**
+   * sets excerpt
+   * @param excerpt
+   */
+  public void setExcerpt(String excerpt) {
+    this.excerpt = excerpt;
+  }
+
+  /**
+   * gets relevancy
+   * @return
+   */
+  public long getRelevancy() {
+    return relevancy;
+  }
+
+  /**
+   * sets relevancy
+   * @param relevancy
+   */
+  public void setRelevancy(long relevancy) {
+    this.relevancy = relevancy;
+  }
+  
+  
 }

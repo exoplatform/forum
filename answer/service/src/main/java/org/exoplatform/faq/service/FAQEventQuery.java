@@ -634,7 +634,7 @@ public class FAQEventQuery implements FAQNodeTypes {
       }
     }
 
-    queryString.append("]"); // close property constraint
+    queryString.append("]/(rep:excerpt())"); // close property constraint
 
     // order
       if ("date".equalsIgnoreCase(sort)) {

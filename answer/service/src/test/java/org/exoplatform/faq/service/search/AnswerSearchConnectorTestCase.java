@@ -82,7 +82,14 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     Answer answer = createAnswer(USER_ROOT, "new reponses");
     answer.setNew(true);
 
+    //the same answer in the same question.
     faqService_.saveAnswer(question.getPath(), answer, true);
+    
+    answer = createAnswer(USER_ROOT, "new reponses 1");
+    answer.setNew(true);
+
+    faqService_.saveAnswer(question.getPath(), answer, true);
+
     
     Comment comment = createComment(USER_ROOT, "comment test");
     comment.setNew(true);
@@ -106,10 +113,17 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   }
 
   public void testFilter() throws Exception {
-    assertEquals(3, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(2, answerSearchConnector.search(context, "foo", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 0, "relevancy", "ASC").size());
+    assertEquals(3, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    
+    //offset =1 && limit =10
+    assertEquals(2, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 1, 10, "relevancy", "ASC").size());
+    
+    //offset =2 && limit =10
+    assertEquals(1, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 2, 10, "relevancy", "ASC").size());
+    
+    assertEquals(2, answerSearchConnector.search(context, "foo", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
 
   }
 

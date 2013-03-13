@@ -52,9 +52,13 @@ public class AnswerSearchConnector extends SearchServiceConnector {
   private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
   private JCRDataStorage storage;
+  
   private LocaleConfigService localeConfigService;
 
-  private String FIX_ICON = "/answer/skin/DefaultSkin/webui/skinIcons/48x48/defaultQuestion.png";
+  /** */
+  private static final String FIX_ICON = "/answer/skin/DefaultSkin/webui/skinIcons/48x48/defaultQuestion.png";
+  
+  /** */
   private static final Log LOG = ExoLogger.getLogger(AnswerSearchConnector.class);
 
 
@@ -114,11 +118,11 @@ public class AnswerSearchConnector extends SearchServiceConnector {
         SearchResult result = new SearchResult(
             url,
             searchResult.getName(),
-            searchResult.getDescription(),
+            searchResult.getExcerpt(),
             sb.toString(),
             FIX_ICON,
             searchResult.getCreatedDate().getTime(),
-            0);
+            searchResult.getRelevancy());
         results.add(result);
       }
 

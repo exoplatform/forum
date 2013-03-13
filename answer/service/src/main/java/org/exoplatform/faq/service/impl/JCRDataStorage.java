@@ -58,6 +58,8 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.query.Row;
+import javax.jcr.query.RowIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
@@ -84,6 +86,7 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.service.search.AnswerSearchResult;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.EmailNotifyPlugin;
 import org.exoplatform.forum.common.NotifyInfo;
@@ -2660,190 +2663,91 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return new ArrayList<ObjectSearchResult>();
   }
   
+  
   public List<ObjectSearchResult> getUnifiedSearchResults(FAQEventQuery eventQuery) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-
     eventQuery.setViewingCategories(getViewableCategoryIds(sProvider));
+    
+    //
+    boolean isAdmin = isAdminRole(eventQuery.getUserId());
+    
+    //
     List<String> retrictedCategoryList = new ArrayList<String>();
-    if (!eventQuery.isAdmin())
+    if (isAdmin == false) {
       retrictedCategoryList = getRetrictedCategories(eventQuery.getUserId(), eventQuery.getUserMembers());
+    }
+      
 
+    //
     Node categoryHome = getCategoryHome(sProvider, null);
     eventQuery.setPath(categoryHome.getPath());
+    
+    
     try {
+      
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH);
       QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
-      Node nodeObj = null;
       
-      List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult>();
-      LinkedHashMap<String, Node> mergeQuestion = new LinkedHashMap<String, Node>();
-      LinkedHashMap<String, Node> mergeQuestion2 = new LinkedHashMap<String, Node>();
-      List<Node> listQuestion = new ArrayList<Node>();
-      List<Node> listLanguage = new ArrayList<Node>();
-      LinkedHashMap<String, Node> listAnswerandComment = new LinkedHashMap<String, Node>();
-      while (iter.hasNext()) {
+      //
+      NodeIterator iter = result.getNodes();
+      RowIterator rowIter = result.getRows();
+      
+      
+      AnswerSearchResult searchResult = new AnswerSearchResult(eventQuery.getOffset(), eventQuery.getLimit(), iter.getSize());
+      
+      
+      Node nodeObj = null;
+      Row rowObj = null;
+      Node questionNode = null;
+      
+      //
+      if (eventQuery.getOffset() > 0) {
+        
+      }
+      
+      while (iter.hasNext() && rowIter.hasNext()) {
         nodeObj = iter.nextNode();
-        if (!eventQuery.isAdmin()) {
-          try {
-            Node questionNode = null;
-            if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
-              questionNode = nodeObj;
-            } else if (nodeObj.isNodeType(EXO_FAQ_RESOURCE)) {
-              questionNode = nodeObj.getParent().getParent();
-            }
-            if (questionNode != null && checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList)) {
-              listQuestion.add(questionNode);
-            } else if (nodeObj.isNodeType(EXO_FAQ_LANGUAGE)) {
-              if (checkQuestionHasApproved(nodeObj.getParent().getParent(), eventQuery, retrictedCategoryList)) {
-                listLanguage.add(questionNode);
-              }
-            } else if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) { // answers of default language
-              questionNode = getQuestionNode(nodeObj);
-              if (!listAnswerandComment.containsKey(questionNode.getName())) {
-                if (checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList)) {
-                  listAnswerandComment.put(questionNode.getName(), questionNode);
-                }
-              }
-            }
-          } catch (Exception e) {
-            log.error("Failed to add item in list search", e);
-          }
-
-        } else {
-          if (nodeObj.isNodeType(EXO_FAQ_QUESTION))
-            listQuestion.add(nodeObj);
-          if (nodeObj.isNodeType(EXO_FAQ_RESOURCE))
-            listQuestion.add(nodeObj.getParent().getParent());
-          if (nodeObj.isNodeType(EXO_FAQ_LANGUAGE))
-            listLanguage.add(nodeObj);
-          if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) {
-            Node questionNode = getQuestionNode(nodeObj);
-            listAnswerandComment.put(questionNode.getName(), questionNode);
-          }
+        rowObj = rowIter.nextRow();
+        questionNode = null;
+        
+        if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
+          questionNode = nodeObj;
+        } else if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) { // answers of default language
+          questionNode = getQuestionNode(nodeObj);
         }
-      }
-
-      boolean isInitiated = false;
-      if (eventQuery.isQuestionLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isLanguageLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
-          List<String> list = new ArrayList<String>();
-          for (Node node : listQuestion) {
-            if (list.contains(node.getName()))
-              continue;
-            else
-              list.add(node.getName());
-            results.add(getResultObj(node));
-          }
-          return results;
+        
+        
+        //
+        if (isAdmin == false) {
+          questionNode = checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList) ? questionNode : null;
+        } 
+        
+        //
+        if (questionNode == null) continue;
+        
+        //
+        if (searchResult.contains(questionNode.getName())) continue;
+        
+        //
+        ObjectSearchResult objectResult = getResultObj(questionNode);
+        
+        //
+        if (rowObj != null) {
+          objectResult.setRelevancy(rowObj.getValue(JCR_SCORE).getLong());
+          objectResult.setExcerpt(rowObj.getValue(REP_EXCERPT).getString());
         }
-        // merging results
-        if (!listQuestion.isEmpty()) {
-          isInitiated = true;
-          for (Node node : listQuestion) {
-            mergeQuestion.put(node.getName(), node);
-          }
-        }
-      }
-      if (eventQuery.isLanguageLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
-          for (Node node : listLanguage) {
-            results.add(getResultObj(node));
-          }
-          return results;
-        }
-
-        // merging results
-        if (isInitiated) {
-          for (Node node : listLanguage) {
-            String id = node.getProperty(EXO_QUESTION_ID).getString();
-            if (mergeQuestion.containsKey(id)) {
-              mergeQuestion2.put(id, mergeQuestion.get(id));
-            }
-          }
-        } else {
-          for (Node node : listLanguage) {
-            mergeQuestion2.put(node.getProperty(EXO_QUESTION_ID).getString(), node);
-          }
-          isInitiated = true;
-        }
-      }
-
-      if (eventQuery.isAnswerCommentLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isLanguageLevelSearch() && !eventQuery.isQuestionLevelSearch()) {
-          for (Node node : listAnswerandComment.values()) {
-            results.add(getResultObj(node));
-          }
-          return results;
-        }
-        // merging results
-        if (isInitiated) {
-          if (eventQuery.isLanguageLevelSearch()) {
-            if (mergeQuestion2.isEmpty())
-              return results;
-            for (Node node : listAnswerandComment.values()) {
-              if (mergeQuestion2.containsKey(node.getName())) {
-                results.add(getResultObj(node));
-              }
-            }
-          } else { // search on question level
-            if (mergeQuestion.isEmpty())
-              return results;
-            
-            for (Node node : mergeQuestion.values()) {
-              results.add(getResultObj(node));
-            }
-            for (Node node : listAnswerandComment.values()) {
-              if (!mergeQuestion.containsKey(node.getName())) {
-                results.add(getResultObj(node));
-              }
-            }
-          }
-        } else {
-          for (Node node : listAnswerandComment.values()) {
-            results.add(getResultObj(node));
-          }
-        }
-      }
-      // mix all result for fultext search on questions
-      if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch() && !eventQuery.isLanguageLevelSearch()) {
-        Map<String, ObjectSearchResult> tmpResult = new HashMap<String, ObjectSearchResult>();
-        ObjectSearchResult rs;
-        for (Node node : listQuestion) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        for (Node node : listAnswerandComment.values()) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        for (Node node : listLanguage) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        results.addAll(tmpResult.values());
-      }
-
-      // TODO: improve in next version. (4.0.0-Beta2)
-      int offset = eventQuery.getOffset();
-      int limit = eventQuery.getLimit();
-      if (limit > 0) {
-        int size = results.size();
-        if (size > offset) {
-          if (limit > size) {
-            limit = size;
-          }
-          results = results.subList(offset, limit);
-        } else {
-          results.clear();
+        
+        searchResult.add(objectResult);
+        
+        //
+        if (searchResult.addMore() == false) {
+          break;
         }
       }
      
-      return results;
+      return searchResult.result();
+      
     } catch (Exception e) {
       return new ArrayList<ObjectSearchResult>();
     }
