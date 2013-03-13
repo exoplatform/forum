@@ -43,7 +43,8 @@ import org.junit.runners.Suite.SuiteClasses;
   PostTestCase.class,
   SearchTestCase.class,
   JCRDataStorageTestCase.class,
-  ForumWebserviceTestCase.class
+  ForumWebserviceTestCase.class,
+  DiscussionSearchConnectorTestCase.class
 })
 @ConfigTestCase(BaseForumServiceTestCase.class)
 public class BaseForumTestSuite extends BaseExoContainerTestSuite {

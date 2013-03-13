@@ -16,8 +16,8 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.JobExecutionContext;

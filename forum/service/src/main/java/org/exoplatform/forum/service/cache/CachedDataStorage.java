@@ -600,13 +600,13 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getTopic(categoryId, forumId, topicId, userRead);
   }
 
-  public Topic getTopicSummary(final String topicPath, final boolean isLastPost) throws Exception {
+  public Topic getTopicSummary(final String topicPath) {
 
     return topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
             try {
-              Topic got = storage.getTopicSummary(topicPath, isLastPost);
+              Topic got = storage.getTopicSummary(topicPath);
               if (got != null) {
                 return new TopicData(got);
               }
@@ -618,9 +618,16 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(topicPath, isLastPost)
+        new TopicKey(topicPath, false)
     ).build();
 
+  }
+
+  public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
+    if(isLastPost == false) {
+      return getTopicSummary(topicPath);
+    }
+    return storage.getTopicSummary(topicPath, isLastPost);
   }
 
   public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
@@ -655,6 +662,17 @@ public class CachedDataStorage implements DataStorage, Startable {
       clearTopicsCache(topics);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
+    }
+    
+    //
+    if(type == Utils.CLOSE || type == Utils.ACTIVE || type == Utils.WAITING) {
+      for(Topic topic : topics) {
+        try {
+          clearForumCache(topic.getCategoryId(), topic.getForumId(), false);
+        } catch (Exception e) {
+          LOG.error(e.getMessage(), e);
+        }
+      }
     }
   }
 

@@ -1585,8 +1585,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forum.setPath(forumNode.getPath());
       forum.setTopicCount(reader.l(EXO_TOPIC_COUNT));
       forum.setPostCount(reader.l(EXO_POST_COUNT));
-      String lastTopicPath = reader.string(EXO_LAST_TOPIC_PATH);
-      forum.setLastTopicPath(Utils.isEmpty(lastTopicPath) ? null : lastTopicPath);
+      forum.setLastTopicPath(reader.string(EXO_LAST_TOPIC_PATH));
       forum.setModerators(strModerators);
 
       try {
@@ -1610,9 +1609,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         savePruneSetting(pruneSetting);
       } else {
         id.append(forum.getCreatedDate().getTime());
-//        if (isModerateTopic != isNewModerateTopic) {
-//          queryLastTopic(sProvider, forumNode.getPath());
-//        }
+        if (isModerateTopic != isNewModerateTopic) {
+          queryLastTopic(sProvider, forumNode.getPath());
+        }
         // updatePruneId
         Node pruneSetting = forumNode.getNode(Utils.PRUNESETTING);
         pruneSetting.setProperty(EXO_ID, id.toString());
@@ -1804,7 +1803,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private String getLastTopicPath(PropertyReader reader, Forum forum) {
     String lastTopic = reader.string(EXO_LAST_TOPIC_PATH, CommonUtils.EMPTY_STR);
     if (!Utils.isEmpty(lastTopic)) {
-      lastTopic = (lastTopic.lastIndexOf(CommonUtils.SLASH) > 0) ? lastTopic.substring(lastTopic.lastIndexOf(CommonUtils.SLASH)) : lastTopic;
+      lastTopic = Utils.getTopicId(lastTopic);
       lastTopic = new StringBuilder(forum.getPath()).append(CommonUtils.SLASH).append(lastTopic).toString();
     }
     return lastTopic;
@@ -2116,38 +2115,23 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
-    Topic topic = null;
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+  public Topic getTopicSummary(String topicPath) {
     try {
-      Node cateHomeNode = getCategoryHome(sProvider);
-      if (topicPath == null || topicPath.length() <= 0)
-        return null;
-      if (topicPath.indexOf(cateHomeNode.getName()) < 0)
-        topicPath = cateHomeNode.getPath() + "/" + topicPath;
-
-      Node topicNode = (Node) cateHomeNode.getSession().getItem(topicPath);
-      topic = getTopicNodeSummary(topicNode);
-      if (topic == null && isLastPost) {
-        if (topicPath != null && topicPath.length() > 0) {
-          String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
-          topic = getTopicNodeSummary(queryLastTopic(sProvider, forumPath));
-        }
-      }
-      return topic;
-    } catch (RepositoryException e) {
-      if (topicPath != null && topicPath.length() > 0 && isLastPost) {
-        String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
-        topic = getTopicNodeSummary(queryLastTopic(sProvider, forumPath));
-      }
-      return topic;
+      return getTopicSummary(topicPath, false);
     } catch (Exception e) {
       return null;
     }
   }
 
+  public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
+    return getTopicNodeSummary(getTopicNodeByPath(topicPath, isLastPost));
+  }
+
   public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
-    Topic topic = null;
+    return getTopicNode(getTopicNodeByPath(topicPath, isLastPost));
+  }
+  
+  private Node getTopicNodeByPath(String topicPath, boolean isLastPost) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node catogoryHome = getCategoryHome(sProvider);
@@ -2157,23 +2141,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicPath = catogoryHome.getPath() + "/" + topicPath;
 
       Node topicNode = (Node) catogoryHome.getSession().getItem(topicPath);
-      topic = getTopicNode(topicNode);
-      if (topic == null && isLastPost) {
-        if (topicPath != null && topicPath.length() > 0) {
-          String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
-          topic = getTopicNode(queryLastTopic(sProvider, forumPath));
-        }
+      if (topicNode == null && isLastPost) {
+          String forumPath = Utils.getForumPath(topicPath);
+          topicNode = queryLastTopic(sProvider, forumPath);
       }
-      return topic;
+      return topicNode;
     } catch (RepositoryException e) {
       if (topicPath != null && topicPath.length() > 0 && isLastPost) {
-        String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
-        topic = getTopicNode(queryLastTopic(sProvider, forumPath));
+        String forumPath = Utils.getForumPath(topicPath);
+        return queryLastTopic(sProvider, forumPath);
       }
-      return topic;
     } catch (Exception e) {
       return null;
     }
+    return null;
   }
 
   private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
@@ -2182,8 +2163,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
       QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-//      String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
-      String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic) order by @exo:lastPostDate descending";
+      String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
       Query query = qm.createQuery(queryString, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -2487,9 +2467,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong() + 1);
             }
           }
-//          if (type != Utils.LOCK && type != Utils.STICKY && type != Utils.CHANGE_NAME && type != Utils.VOTE_RATING && forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) || Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
-//            queryLastTopic(sProvider, forumNode.getPath());
-//          }
+          if ((type == Utils.APPROVE || type == Utils.WAITING || type == Utils.ACTIVE || type == Utils.CLOSE) ||
+               forumNode.hasProperty(EXO_LAST_TOPIC_PATH) || (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) || 
+                   Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
+            queryLastTopic(sProvider, forumNode.getPath());
+          }
         } catch (PathNotFoundException e) {
           if (log.isDebugEnabled()){
             log.debug("Failed to get node by path", e);
@@ -2515,6 +2497,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
       Node topicNode;
+      boolean isChangeClose = false;
       if (isNew) {
         topicNode = forumNode.addNode(topic.getId(), EXO_TOPIC);
         topicNode.setProperty(EXO_ID, topic.getId());
@@ -2562,6 +2545,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         sendNotification(forumNode, topic, null, messageBuilder, true);
       } else {
         topicNode = forumNode.getNode(topic.getId());
+        isChangeClose = (topic.getIsClosed() != topicNode.getProperty(EXO_IS_CLOSED).getBoolean());
       }
       topicNode.setProperty(EXO_NAME, topic.getTopicName());
       topicNode.setProperty(EXO_MODIFIED_BY, topic.getModifiedBy());
@@ -2578,7 +2562,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
       topicNode.setProperty(EXO_IS_WAITING, topic.getIsWaiting());
       topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
-      boolean isGetLastTopic = setTopicPemission(topicNode, EXO_CAN_VIEW, topic.getCanView(), isNew);
       String[] cPost = topic.getCanPost();
       if (Utils.isEmpty(cPost)) {
         cPost = new String[] { "" };
@@ -2599,13 +2582,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //
       if (topic.getIsWaiting() || !topic.getIsApproved()) {
         getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
-//        isGetLastTopic = true;
       }
-      if (isNew || (isGetLastTopic || topic.getIsActive() || topic.getIsClosed())) {
-//        queryLastTopic(sProvider, forumNode.getPath());
-      }
-      if(isNew) {
-        forumNode.setProperty(EXO_LAST_TOPIC_PATH, topic.getId());
+      if (isNew || isChangeClose) {
+        queryLastTopic(sProvider, forumNode.getPath());
       }
       if (!isMove) {
         if (isNew) {
@@ -2645,21 +2624,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       log.error("Failed to save topic", e);
     }
   }
-  
-  private boolean setTopicPemission(Node topicNode, String property, String[] values, boolean isNew) throws Exception {
-    if (Utils.isEmpty(values)) {
-      values = new String[] { "" };
-    }
-    boolean ret = false;
-    if (!isNew) {
-      String[] cView = new PropertyReader(topicNode).strings(property, new String[] { "" });
-      if (Utils.arraysHaveDifferentContent(cView, values)) {
-        ret = true;
-      }
-    }
-    topicNode.setProperty(property, values);
-    return ret;
-  }
+
 
   private Map<String, Long> getDeletePostByUser(Node node) throws Exception {
     Map<String, Long> userPostMap = new HashMap<String, Long>();
@@ -2750,11 +2715,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (!topic.getIsActive() || !topic.getIsApproved() || topic.getIsWaiting()) {
         getTotalJobWatting(sProvider, new HashSet<String>(readerFor.list(EXO_MODERATORS, new ArrayList<String>())));
       }
-      try {
-        queryLastTopic(sProvider, forumNode.getPath());
-      } catch (Exception e) {
-        log.trace("\nThe last topic is null: " + e.getMessage() + "\n" + e.getCause());
-      }
+      queryLastTopic(sProvider, forumNode.getPath());
       try {
         calculateLastRead(sProvider, null, forumId, topicId);
       } catch (Exception e) {
@@ -3323,11 +3284,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               // set InfoPost for Forum
               if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
                 forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-//                if (canView) {
-//                  forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-//                }
-              } else if (canView && topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
-//                forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
               }
               // set InfoPost for Topic
               if (!post.getIsHidden()) {
@@ -3336,31 +3292,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                 topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
                 topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
               }
-            } else if (canView) {
-              if (forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
-                if (topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
-//                  if (!topicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean()) {
-//                    forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-//                  }
-                }
-              } else {
-//                if (!topicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean()) {
-//                  forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-//                } else if (post.getIsApproved()) {
-//                  forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-//                }
-              }
-
-              if (post.getIsApproved()) {
-                // set InfoPost for Topic
-                if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
-                  forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-                  topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
-                  topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-                  topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
-                  topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
-                }
-              }
+            } else if (canView && post.getIsApproved() && !post.getIsHidden()
+                                && post.getUserPrivate().length != 2) {
+              forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
+              topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+              topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
+              topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
+              topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
             } else {
               // update post count
               forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
@@ -3386,8 +3324,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       
       //
       if (isNew) {
-        forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
         forumNode.getSession().save();
+        queryLastTopic(sProvider, forumNode.getPath());
       } else {
         forumNode.save();
       }
@@ -7339,7 +7277,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topic.save();
         try {
           Node forumN = topic.getParent();
-          if (new PropertyReader(forumN).string(EXO_LAST_TOPIC_PATH, "").equals(topic.getName())) {
+          if (new PropertyReader(forumN).string(EXO_LAST_TOPIC_PATH, "").indexOf(topic.getName()) >= 0) {
             queryLastTopic(sProvider, forumN.getPath());
           }
         } catch (Exception e) {

@@ -17,9 +17,7 @@
 package org.exoplatform.forum.webui;
   
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
@@ -261,13 +259,15 @@ public class UICategory extends BaseForumForm {
   }
 
   protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
-    Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
       topicPath = topicPath.substring(topicPath.indexOf(Utils.CATEGORY));
-      topic = getForumService().getTopicSummary(topicPath);
+      Topic topic = getForumService().getLastPostOfForum(topicPath);
+      if (isCanViewTopic(forum, topic)) {
+        return topic;
+      }
     }
-    return topic;
+    return null;
   }
 
   private List<Forum> getForumsChecked(boolean isBreak) throws Exception {

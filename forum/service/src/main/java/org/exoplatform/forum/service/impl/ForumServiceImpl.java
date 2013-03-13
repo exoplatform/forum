@@ -601,8 +601,15 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public Topic getTopicSummary(String topicPath) throws Exception {
+  public Topic getLastPostOfForum(String topicPath) throws Exception {
     return storage.getTopicSummary(topicPath, true);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Topic getTopicSummary(String topicPath) throws Exception {
+    return storage.getTopicSummary(topicPath);
   }
 
   /**

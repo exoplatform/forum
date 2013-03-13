@@ -267,13 +267,15 @@ public class UICategories extends UIContainer {
   }
 
   protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
-    Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
       topicPath = topicPath.substring(topicPath.indexOf(Utils.CATEGORY));
-      topic = forumService.getTopicSummary(topicPath);
+      Topic topic = forumService.getLastPostOfForum(topicPath);
+      if(isCanViewTopic(cate, forum, topic)) {
+        return topic;
+      }
     }
-    return topic;
+    return null;
   }
 
   private Category getCategory(String categoryId) throws Exception {

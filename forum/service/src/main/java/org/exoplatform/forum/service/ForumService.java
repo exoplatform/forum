@@ -313,6 +313,15 @@ public interface ForumService extends ForumServiceLegacy {
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
   /**
+   * Gets the topic is last post of forum.
+   * 
+   * @param lastTopicPath
+   * @return the topic contain last post of forum.
+   * @throws Exception
+   */
+  Topic getLastPostOfForum(String lastTopicPath) throws Exception;
+  
+  /**
    * Get main informations of topic
    * 
    * @param topicPath the topic path
