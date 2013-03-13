@@ -21,6 +21,7 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.service.search.UnifiedSearchResult;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
@@ -111,18 +112,19 @@ public class AnswerSearchConnector extends SearchServiceConnector {
         StringBuilder sb = new StringBuilder();        
         sb.append(searchResult.getNumberOfAnswer()).append(" answers");
         sb.append(" - ").append(searchResult.getNumberOfComment()).append(" comments");
-        sb.append(" - ").append(searchResult.getRatingOfQuestion());
+        //sb.append(" - ").append(searchResult.getRatingOfQuestion());
         SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);        
         sb.append(" - ").append(sdf.format(searchResult.getCreatedDate()));        
-        String url = buildLink(context, portalName, searchResult.getPath(), searchResult.getLink()); 
-        SearchResult result = new SearchResult(
+        String url = buildLink(context, portalName, searchResult.getPath(), searchResult.getLink());
+        UnifiedSearchResult result = new UnifiedSearchResult(
             url,
             searchResult.getName(),
             searchResult.getExcerpt(),
             sb.toString(),
             FIX_ICON,
             searchResult.getCreatedDate().getTime(),
-            searchResult.getRelevancy());
+            searchResult.getRelevancy(),
+            searchResult.getRatingOfQuestion());
         results.add(result);
       }
 
