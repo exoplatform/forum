@@ -587,7 +587,7 @@
               <string>QUOTE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;">{param}</div>]]></string>
+              <string><![CDATA[<div class="contentQuote">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [quote] tag allows attribute content of post.</string>
@@ -612,7 +612,7 @@
               <string>QUOTE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;"><div>Originally Posted by <strong>{option}</strong></div><div>{param}</div></div>]]></string>
+              <string><![CDATA[<div class="contentQuote"><div class="titleQuote">{option}:</div><div class="textContent">{param}</div></div>]]></string>
             </field>
             <field name="description">
               <string>The [quote=option] tag allows attibute content and user name of poster.</string>

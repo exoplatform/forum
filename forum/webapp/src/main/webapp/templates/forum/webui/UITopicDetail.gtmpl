@@ -432,6 +432,9 @@
         String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
         String message = uicomponent.renderPost(post) ;
         String editBy = post.getModifiedBy() ;
+		
+		UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
+		String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
         String editDate ;
         if(!ForumUtils.isEmpty(editBy)) {
           editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
@@ -632,22 +635,28 @@
 				<% } %>
 			  </div>
 			  
-			<div class="PostContentContainer">
+			<div class="postContentContainer">
 			<% 
 			boolean hasAttachment = false ;
 			if(attachments != null && attachments.size() > 0) hasAttachment = true;
 			if(isDisplayAvatar && !hasAttachment) { 
 			%>  
-			  <div class="PostContent">
+			  <div class="postContent">
 			<% } else { %>
-			  <div class="PostContentNote">
+			  <div class="postContentNote">
 			<% } %>
-				<div id="$idMessage">$message</div>
+				<div id="$idMessage" class="containerQuote">$message</div>
 			  </div>
-			  <% if(hasAttachment) {%>
-			  <div class="AttachmentContainer">
-				<h6 class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h6>
-				<div class="AttachmentContent ClearFix">
+			
+			<!--- Start Attachment   -->
+			  
+			 <% if(hasAttachment) {%>
+			<div class="attachmentContainer">
+				<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
+				
+				<!-- Start Attach Have Images -->
+				
+				<div class="attachmentContentImage clearfix">
 				<% for(attachment in attachments) {
 					 String urlFile = uicomponent.getFileSource(attachment) ;
 					 String titleFile = attachment.getName();
@@ -657,94 +666,150 @@
 					 String typeFile = attachment.mimeType ;
 					 String pathAtt = urlFile.replaceAll("&","(omu)");
 				%>
-					<div class="AttachmentBox">
+					
 					<% if(typeFile.indexOf("image") >= 0) {
 					   String attLink = uicomponent.getImageUrl(attachment.getPath());
 					%>
-					  <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
-					  <div class="LabelBox">
-						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
-						<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
-						<div class="Action">
-						  <a class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></a>
-							<a class="Icon Download" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
+					<div class="imageAttachmentBox pull-left">
+						<a class="imgAttach"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
+						
+						<!--
+							<a class="attachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
+							<div class="size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
+						-->
+						<div class="actionAttachImg">
+							<a onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i><%=_ctx.appRes(uiformId + ".action.View");%></a>
+							<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><i class="uiIconDownload uiIconWhite"></i><%=_ctx.appRes(uiformId + ".action.Download");%></a>
 						</div>
-					  </div>
-				  <% }else { 
-						String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
-				  %>
-					  <a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
-					  <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
+					</div>  
 				  <% } %>
-				  </div>
+					
 				<% } %>
 				</div>
-			  </div>
-			  <% } %>
+				
+				<!-- End Attach Have Images -->
+				
+				<!-- Start Attach File -->
+				
+				<div class="attachmentContent clearfix">
+				<% for(attachment in attachments) {
+					 String urlFile = uicomponent.getFileSource(attachment) ;
+					 String titleFile = attachment.getName();
+					 String fileName = ForumUtils.getSubString(titleFile, 30);
+					 long sizeNumber = attachment.getSize() ;
+					 String size = ForumUtils.getSizeFile(sizeNumber) ;
+					 String typeFile = attachment.mimeType ;
+					 String pathAtt = urlFile.replaceAll("&","(omu)");
+				%>
+					
+					<% if(typeFile.indexOf("image") < 0) {
+					   String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+					%>
+					<div class="otherAttachmentBox">
+						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><i class="uiIcon${typeFileIcon}"></i> $fileName</a>
+						(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
+					</div>  
+				  <% } %>
+					
+				<% } %>
+				
+				</div>
+				
+				<!-- End Attach File -->
+				
+			</div>
+			<% } %>
+			
+			
+			<!--- End Attachment   -->
+			  
 			  <%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
 				  post.setMessage(userInfo.getSignature());
 				  post.setId(uicomponent.SIGNATURE);
 				  String signature = uicomponent.renderPost(post);
 			  %>
-				  <div class="Signature">__________________<br/>$signature</div>
+				<div class="signature"><span></span><br/>$signature</div>
 			  <%} %>
 			</div>
-				<div class="FootPost ClearFix">
+				<div class="footPost clearfix">
 				  <%  
 					  if(!ForumUtils.isEmpty(editBy)) {
+					  
 				  %>
-				<div class="TxtLastEdit">
-					  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="TxtRoot">$editBy</span> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
-					  <%
-						String reason = post.getEditReason() ;
-						if(!ForumUtils.isEmpty(reason)) { 
-						  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
-					  %>
-					  <br>
-					  $reason
-					  <% } %>
-				</div>
+					<div class="txtLastEdit">
+						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> 
+							<div class="dropdown uiUserInfo">
+								<a href="javascript:void(0);" class="txtEditBy">$editByScreeName</a> 
+							  
+								<ul class="dropdown-menu uiUserMenuInfo">
+									<%
+									for(viewAction in menuViewInfos) {
+										if((userProfile.getUserRole() >= 3 || userEditByInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+										String linkView = uicomponent.event(viewAction, editBy) ;
+										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + editByScreeName ;
+									%>
+										<li onclick="$linkView">
+											<a href="javaScript:void(0)">$itemLabelView</a>
+										</li>
+									<%
+									}
+									%>
+								</ul>
+							</div>
+						  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
+						  <%
+							String reason = post.getEditReason() ;
+							if(!ForumUtils.isEmpty(reason)) { 
+							  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+						  %>
+						  <br/>
+						  $reason
+						  <% } %>
+					</div>
 				<% } %>
-				
-				  <%
-				  if(isShowMenu) {
-					String[] actions = ["Quote","PrivatePost","Delete","Edit"] ; 
-					boolean isShowAction = true, isShowPri = true ;
-					for(action in actions) {
-					  isShowAction = true;
-					  isShowPri = true ;
-					  String title = _ctx.appRes("UITopicDetail.title." + action);
-					  String label = _ctx.appRes("UITopicDetail.action." + action);
-					  if(!(userLogin.equals(owner))) {
-						if(!canEdit){
-						  if(action.equals("Edit")||action.equals("Delete")){
+					<div class="btnDetailTopic">
+					  <%
+					  if(isShowMenu) {
+						String[] actions = ["Quote","PrivatePost","Delete","Edit"] ; 
+						boolean isShowAction = true, isShowPri = true ;
+						for(action in actions) {
+						  isShowAction = true;
+						  isShowPri = true ;
+						  String title = _ctx.appRes("UITopicDetail.title." + action);
+						  String label = _ctx.appRes("UITopicDetail.action." + action);
+						  if(!(userLogin.equals(owner))) {
+							if(!canEdit){
+							  if(action.equals("Edit")||action.equals("Delete")){
+								isShowAction = false;
+							  }
+							}
+						  }
+						  if(isShowAction && checked == 0){ 
+							if(action.equals("Edit")||action.equals("Delete")){
+							  isShowAction = false;
+							}
+						  }
+						  if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
 							isShowAction = false;
 						  }
-						}
-					  }
-					  if(isShowAction && checked == 0){ 
-						if(action.equals("Edit")||action.equals("Delete")){
-						  isShowAction = false;
-						}
-					  }
-					  if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
-						isShowAction = false;
-					  }
-					  if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
-						isShowAction = false;
-						isShowPri = false;
-					  }
-					  String actionLink = uicomponent.event(action,uiformId,postId);
-					  if(isShowAction) {
-				  %>
-					  <div class="FR">
-						<a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
-					  </div>
-					<%}
-					} 
-				  checked = 1; 
-				  } %>
+						  if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
+							isShowAction = false;
+							isShowPri = false;
+						  }
+						  String actionLink = uicomponent.event(action,uiformId,postId);
+						  if(isShowAction) {
+					  %>
+						
+							<a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
+						
+						<%}
+						} 
+					  checked = 1; 
+					  } %>
+					</div>
 				</div>
+				
 			</div>
 <!-- End PostViewContainer -->
 		

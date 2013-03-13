@@ -64,9 +64,9 @@
 		<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 	</div>
   <% } else { %>
-	<button class="uiAddTheradIcon btn btn-primary pull-left" style="display:block;" onclick="<%=uicomponent.event("AddTopic")%>">
+	<a class="uiAddTheradIcon btn btn-primary pull-left" href="<%=uicomponent.event("AddTopic")%>">
 		<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-	</button>
+	</a>
   <% } %>
 
 	
@@ -463,7 +463,7 @@
 							  for(className in classNames) {
 								if(className.equals("star")) className = "voted" ;
 								if(className.equals("notStar")) className = "unvoted" ;
-								if(className.equals("halfStar")) className = "HalfVoted" ;
+								if(className.equals("halfStar")) className = "votedHaft" ;
 								if(className.equals(classNames[5])) break ;
 							%>
 								<i class="$className"></i>
@@ -534,9 +534,9 @@
 			<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 		</div>
 	  <% } else { %>
-		<button class="uiAddTheradIcon btn btn-primary pull-left" style="display:block;" onclick="<%=uicomponent.event("AddTopic")%>">
+		<a class="uiAddTheradIcon btn btn-primary pull-left" href="<%=uicomponent.event("AddTopic")%>">
 			<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-		</button>
+		</a>
 	  <% } %>
 
 		
