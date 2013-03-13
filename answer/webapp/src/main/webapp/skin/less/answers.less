@@ -84,7 +84,23 @@
 			}
 		}
 	}
-	
+	.questionSelect {
+		border: 1px solid @tableBorder;
+		.border-radius(@borderRadiusSmall);
+		& >.responseItemContainer {
+			.border-radius(@borderRadiusSmall @borderRadiusSmall  0 0);
+			background: @grayWhiteSmoke;
+		}
+		& + .questionContainer  {
+			margin-top: 20px;
+		}
+	}
+	.uiFAQContent  + .questionContainer   {
+			margin-top: 20px;
+	}
+	 .notResponse {
+	 padding:10px 16px;
+	 }
 	.uiQuestionInfo {
 		.select-category {
 			label {
@@ -99,7 +115,7 @@
 		}
 	}
 	.questionRight {
-		.iconContainer  {
+		.iconContainer ,.sortAnswer {
 			text-align: right;
 		}
 	}
@@ -108,7 +124,42 @@
 		.avatarXSmall  + .responseItemContainerRight {
 			margin-left: 50px;
 		}
+		
 	}
+		.responseItemContainer {
+			padding:12px 16px;
+			& + .responseItemContainer {
+				border-top: 1px solid @tableBorder;
+			}
+			p {
+				margin: 0;
+			}
+			.date{
+				color: @grayLight;
+				font-size: 12px;
+			}
+		}
+		.questionSelect .questionContainer  {
+			.avatarLarge  {
+				.square(70px);
+				img {
+					.square(70px);
+				}
+				& + .questionRight {
+					margin-left: 90px;
+				}
+			}
+			
+		}
+		.titleResponseContent {
+			border-top: 1px solid @tableBorder;
+			margin: 0;
+			padding:12px 16px 0 16px;
+		}
+		
+		.responseComment .responseItemContainer:last-child {
+			.border-radius(0 0 @borderRadiusSmall @borderRadiusSmall);
+		}
 }
 
 .boxNum {

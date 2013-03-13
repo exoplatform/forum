@@ -41,29 +41,37 @@
     }
   };
 
+  UIAnswersPortlet.processHeightLine = function() {
+	var portlet = findId(UIAnswersPortlet.portletId);
+	var pageBody = $('#UIPageBody');
+	var trContainer = pageBody.parents('tr.TRContainer');
+	var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
+	//var rightContainer = trContainer.find('div.UIContainer:first');
+	var leftHeight = leftTDContainer.outerHeight();
+	var delta = leftHeight - pageBody.outerHeight();
+	var answerContainer = portlet.find('div.uiAnserContainer:first');;
+    var line = answerContainer.find('#resizeLineBar').find('div.line');
+	var height = answerContainer.outerHeight();
+	
+	if (delta > 0) {
+	  height += delta;
+	}
+	line.css('height', (height + 36) + 'px');
+  };
+
   UIAnswersPortlet.resizeLineBar = function(idPr) {
-    var answerContainer = $('#' + idPr); 
-    var parent = answerContainer.find('#resizeLineBar');
-    var line = parent.find('div.line');
-
-    var pageBody = $('#UIPageBody');
-    var trContainer = pageBody.parents('tr.TRContainer');
-    var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
-    var rightContainer = trContainer.find('div.UIContainer:first');
-    var leftHeight = leftTDContainer.outerHeight();
-    var delta = leftHeight - rightContainer.outerHeight();
-
-    var height = answerContainer.outerHeight();
-
-    if (delta > 0) {
-      height += delta;
-    }
-    line.css('height', (height + 36) + 'px');
+	var timeout = setTimeout(function() {
+		UIAnswersPortlet.processHeightLine();
+		clearTimeout(timeout);
+	}, 500);
 
     UIAnswersPortlet.currentPosW = 0;
     UIAnswersPortlet.currentW = 0;
     UIAnswersPortlet.isDownLine = false;
 
+	var answerContainer = $('#' + idPr); 
+    var parent = answerContainer.find('#resizeLineBar');
+    var line = parent.find('div.line');
     line.on('mousedown', function(e) {
       UIAnswersPortlet.currentPosW = e.clientX;
       var portlet = findId(UIAnswersPortlet.portletId);
@@ -118,6 +126,36 @@
         iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left iconControll');
       }
     })
+  };
+  
+  UIAnswersPortlet.initVoteQuestion = function(id) {
+	var parent = findId(id);
+	var voted = parent.find('div.inforVoted:first');
+	var voting = parent.find('div.voting:first');
+	voted.on('mouseover', function() {
+		var thiz = $(this);
+		thiz.hide();
+		thiz.parent().find('div.voting:first').show();
+	});
+	voting.on('mouseout', function() {
+		var thiz = $(this);
+		thiz.hide();
+		thiz.parent().find('div.inforVoted:first').show();
+	});
+	
+	var stars = voting.find('> i');
+	stars.on('mouseover', function(e) {
+		var thiz = $(this);
+		var index = thiz.attr('data-index');
+		var stars = thiz.parent().find(' > i');
+		stars.attr('class', 'unvoted');
+		for(var i = 0; i < index; ++i) {
+			stars.eq(i).attr('class', 'voted');
+		}		
+	} )
+	.on('mouseout', function() {
+		$(this).parent().find(' > i').attr('class', 'unvoted');
+	});
   };
   
   UIAnswersPortlet.selectCateInfor = function (number) {
