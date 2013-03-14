@@ -370,7 +370,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // checking data
     assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
     assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
-    assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+    topic = forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null);
+    assertEquals(ArrayToString(groupUser), ArrayToString(topic.getCanView()));
     // deleted group in system
     forumService_.calculateDeletedGroup(groupId, groupName);
     // checking again data

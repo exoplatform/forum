@@ -2562,14 +2562,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
       topicNode.setProperty(EXO_IS_WAITING, topic.getIsWaiting());
       topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
-      String[] cPost = topic.getCanPost();
-      if (Utils.isEmpty(cPost)) {
-        cPost = new String[] { "" };
-      }
-      topicNode.setProperty(EXO_CAN_POST, cPost);
       topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
       topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
       topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, topic.getNumberAttachment());
+      topicNode.setProperty(EXO_CAN_POST, Utils.isEmpty(topic.getCanPost()) ? new String[] { "" } : topic.getCanPost());
+      topicNode.setProperty(EXO_CAN_VIEW, Utils.isEmpty(topic.getCanView()) ? new String[] { "" } : topic.getCanView());
       if (isNew) {
         forumNode.getSession().save();
       } else {
