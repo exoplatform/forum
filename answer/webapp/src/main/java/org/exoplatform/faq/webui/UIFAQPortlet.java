@@ -24,6 +24,7 @@ import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
@@ -61,7 +62,7 @@ public class UIFAQPortlet extends UIPortletApplication {
         Space space = sService.getSpaceByUrl(url);
         return space.getDisplayName();
       }
-      return null;
+      return CommonUtils.AMP_SPACE;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
