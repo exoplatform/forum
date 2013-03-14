@@ -236,6 +236,10 @@ public class ForumUtils {
     return className;
   }
 
+  public static String[] getClassIconWithAction() {
+    return new String[] { "uiIconUser uiIconLightGray", "uiIconMembership uiIconLightGray", "uiIconGroup uiIconLightGray" };
+  }
+
   public static String getOrderBy(String strOrderBy, String param) {
     // In case : user have sort before
     if (!isEmpty(strOrderBy)) {

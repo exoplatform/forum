@@ -234,7 +234,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     moderationOptions.addUIFormInput(checkWhenAddTopic);
     
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
-    
+    String[] icons = ForumUtils.getClassIconWithAction();
     
     int i;
     List<ActionData> actions = new ArrayList<ActionData>();
@@ -246,7 +246,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
        else
           ad.setActionListener("AddValuesUser");
        ad.setActionParameter(FIELD_MODERATOR_MULTIVALUE + ForumUtils.SLASH + String.valueOf(i));
-       ad.setCssIconClass(string + "Icon");
+       ad.setCssIconClass(icons[i]);
        ad.setActionName(string);
        actions.add(ad);
        ++i;

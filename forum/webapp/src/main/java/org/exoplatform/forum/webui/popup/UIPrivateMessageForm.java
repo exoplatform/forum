@@ -46,7 +46,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -118,6 +117,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     sendMessageTab.addUIFormInput(formWYSIWYGInput);
 
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
+    String[] icons = ForumUtils.getClassIconWithAction();
     ActionData ad;
     int i = 0;
     List<ActionData> actions = new ArrayList<ActionData>();
@@ -128,7 +128,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       else
         ad.setActionListener("AddValuesUser");
       ad.setActionParameter(String.valueOf(i));
-      ad.setCssIconClass(string + "Icon");
+      ad.setCssIconClass(icons[i]);
       ad.setActionName(string);
       actions.add(ad);
       ++i;

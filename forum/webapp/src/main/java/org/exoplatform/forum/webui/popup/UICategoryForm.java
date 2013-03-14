@@ -135,6 +135,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     detailTab.addUIFormInput(description);
 
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
+    String[] icons = ForumUtils.getClassIconWithAction();
     List<ActionData> actions = new ArrayList<ActionData>();
 
     ActionData ad;
@@ -146,7 +147,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       else
         ad.setActionListener("AddPrivate");
       ad.setActionParameter(String.valueOf(i) + ForumUtils.COMMA + FIELD_USERPRIVATE_MULTIVALUE);
-      ad.setCssIconClass(string + "Icon");
+      ad.setCssIconClass(icons[i]);
       ad.setActionName(string);
       actions.add(ad);
       ++i;
