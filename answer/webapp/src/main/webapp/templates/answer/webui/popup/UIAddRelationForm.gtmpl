@@ -1,4 +1,4 @@
-<% eXo.answer.AnswerUtils.treeView
+<%
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.service.Utils;

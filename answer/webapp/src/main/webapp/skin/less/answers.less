@@ -12,13 +12,11 @@
 	.uiAnserContainer {
 		.answersContainer  {
 			padding: 20px 10px 10px;
-			min-height: 150px;
+		
 		}
 		.leftColumn {
 			width: 220px;
-			& + .rightColumn {
-					margin-left: 250px;
-				}
+			 
 		}
 		.avatarMini  {
 			.square(18px);
@@ -55,7 +53,10 @@
 		width: 30px;
 	}
 	.uiAnserContainer .rightColumn {
-		overflow: hidden;
+		margin-left: 250px;
+		.uiGrayLightBox ,.metaContent{
+				overflow: hidden;
+			}
 	}
 	
 	.uiCategories {
@@ -69,6 +70,7 @@
 		margin: 10px 0 0 0;
 		padding-bottom: 0;
 		.answerToolbar {
+			min-height: 28px;
 			> ul > li{				
 				float: left;
 				margin: 0 10px 0 0;
@@ -144,6 +146,9 @@
 	}
 		.responseItemContainer {
 			padding:12px 16px;
+			.actionBar {
+				height: 28px;
+			}
 			& + .responseItemContainer {
 				border-top: 1px solid @tableBorder;
 			}
