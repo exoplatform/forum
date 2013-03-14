@@ -76,7 +76,9 @@
       UIAnswersPortlet.currentPosW = e.clientX;
       var portlet = findId(UIAnswersPortlet.portletId);
       var leftColumn = portlet.find('.leftColumn:first');
+      var rightColumn = portlet.find('.rightColumn:first');
       UIAnswersPortlet.currentW = leftColumn.width();
+      UIAnswersPortlet.currentMargin = rightColumn.css('margin-left');
       UIAnswersPortlet.isDownLine = true;
     });
     $(document).on('mouseover', function(e) {
@@ -84,45 +86,46 @@
           var next = e.clientX;
           var deltaMove = next - UIAnswersPortlet.currentPosW;
           if (deltaMove != 0) {
-            var leftColumn = findId(UIAnswersPortlet.portletId).find(
-                '.leftColumn:first');
+            var portlet = findId(UIAnswersPortlet.portletId);
+            var leftColumn = portlet.find('.leftColumn:first');
+            var rightColumn = portlet.find('.rightColumn:first');
+
+            var magrinL = (UIAnswersPortlet.currentMargin + deltaMove);
             var width = (UIAnswersPortlet.currentW + deltaMove);
             if (width < 100 && deltaMove < 0) {
               leftColumn.css('width', '10px').hide(300);
+              rightColumn.css('margin-left', '31px');
             } else {
               leftColumn.css('width', width + 'px').show();
+              rightColumn.css('margin-left', magrinL + 'px');
             }
           }
         }
       })
     .on('mouseup', function(e) {
       UIAnswersPortlet.isDownLine = false;
-      var portlet = findId(UIAnswersPortlet.portletId);
-      portlet.on('selectstart', function() {
-        return true;
-      });
-      portlet.on('dragstart', function() {
-        return true;
-      });
-      portlet[0].unselectable = "yes";
     });
 
     var iconArrow = answerContainer.find('i.iconControll:first');
     iconArrow.on('click', function() {
-      var leftColumn = findId(UIAnswersPortlet.portletId).find('.leftColumn:first');
+      var portlet = findId(UIAnswersPortlet.portletId);
+      var leftColumn = portlet.find('.leftColumn:first');
+      var rightColumn = portlet.find('.rightColumn:first');
       if (leftColumn.css('display') === 'block') {
         leftColumn.css({
           'overflow' : 'hidden',
           'width' : '10px',
           'height' : (leftColumn.height() + 'px')
         }).hide(300);
+        rightColumn.css('margin-left', '31px');
         iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
       } else {
         leftColumn.css({
           'overflow' : 'visible',
-          'width' : '200px',
+          'width' : '220px',
           'height' : 'auto'
         }).show(300);
+        rightColumn.css('margin-left', '250px');
         iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left iconControll');
       }
     })
