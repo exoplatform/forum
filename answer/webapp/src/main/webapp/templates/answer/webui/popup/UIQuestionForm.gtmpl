@@ -55,14 +55,14 @@
 						<div class="control-group">
 							<label class="control-label"><%=_ctx.appRes("UIQuestionForm.label.Validation")%> : </label>
 							<div class="controls">
-								<div class="pull-left">
-									<div  class="pull-left" style="padding:0px 4px 0px 4px;">
-										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
-										<label for="<%=uicomponent.IS_APPROVED%>"><%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
+								<div class="clearfix areaCheckbox">
+									<div  class="pull-left" >
+										<label for="<%=uicomponent.IS_APPROVED%>"><%uiform.renderChild(uicomponent.IS_APPROVED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
 									</div>
-									<div class="pull-left" style="padding:0px 4px 0px 4px;">
-										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
-										<label for="<%=uicomponent.IS_ACTIVATED%>"><%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
+									<div class="pull-left" >
+										<label for="<%=uicomponent.IS_ACTIVATED%>"><%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
 									</div>
 								</div>
 							</div>
