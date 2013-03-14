@@ -242,7 +242,7 @@
                                     String link = FAQUtils.getLinkDiscuss(topicIdDiscuss);
                                     if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
                                       if(topicIdDiscuss.equals(uicomponent.discussId)) {
-                                        jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
+                                        requireJS.addScripts("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
                                         uicomponent.discussId = "";
                                       }
                                     }
@@ -325,8 +325,8 @@
 											String link = FAQUtils.getLinkDiscuss(topicIdDiscuss);
 											if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 											  if(topicIdDiscuss.equals(uicomponent.discussId)) {
-												jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
-												uicomponent.discussId = "";
+											    requireJS.addScripts("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
+											    uicomponent.discussId = "";
 											  }
 											}
 									  %>						  
