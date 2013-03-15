@@ -194,15 +194,15 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return getForumService().isAdminRole(userId);
   }
 
-  protected String getIsBanned(UserProfile userProfile) throws Exception {
+  protected boolean getIsBanned(UserProfile userProfile) throws Exception {
     if (userProfile.getBanUntil() > 0) {
       Calendar calendar = CommonUtils.getGreenwichMeanTime();
       if (calendar.getTimeInMillis() >= userProfile.getBanUntil()) {
         userProfile.setIsBanned(false);
-        return "false";
+        return false;
       }
     }
-    return "true";
+    return true;
   }
 
   @SuppressWarnings("unchecked")
