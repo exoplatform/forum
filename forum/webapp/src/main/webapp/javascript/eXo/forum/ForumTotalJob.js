@@ -22,9 +22,13 @@
       var a = JSON.parse(eventObj.data);
       var pr = $('#PendingJob');
       if (pr.exists()) {
-        var str = pr.html();
-        str = str.substring(0, str.indexOf('=') + 1);
-        pr.html(str + (((a.categoryName) * 1 > 0) ? '"font-weight:bold; text-decoration:blink;">' : '"font-weight:bold;">') + a.categoryName + "</span>)");
+        var span = pr.find('span');
+        span.html(a.categoryName);
+        if(parseInt(a.categoryName) > 0) {
+          span.css('text-decoration', 'blink');
+        } else {
+          span.css('text-decoration', 'none');
+        }
       }
       return;
     }
