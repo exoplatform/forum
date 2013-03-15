@@ -3,7 +3,7 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	import org.exoplatform.forum.common.user.CommonContact;
 %>
-<div class="UIViewUserProfile $uicomponent.id">
+<div class="uiViewUserProfile">
 <% uiform.begin() %>
 <%	
 	User user = uiform.getUser() ;
@@ -32,28 +32,25 @@
 	  fullName = firstName + " " + lastName;
 	}
 %>
-	<div class="ViewUserProfileContainer">
-		<div class="TitleBar">
-			<div class="TitleIcon">
-				<%=_ctx.appRes("UIViewUserProfile.label.ViewUserProfileOf");%>: <span class="UserLabel " >$fullName</span>
-			</div>
-		</div>
-		<div class="ViewContainer">
-			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
-				<tbody>
-					<tr>
-						<td class="UserContainer">
-							<div class="UserContent">
-								<img src="<%=uiform.getAvatarUrl(userName);%>" class="ImgAvatarBorder" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
-								<div class="Rank">$fullName</div>
-								<div class="InfoUser">
+	<div class="viewUserProfile resizable">			
+		<div class="viewContainer row">
+						<div class="span3">
+							<div class="userContent ">
+								<div class="titleBar">
+									<i class="uiIconAnwserColorBusy pull-left"></i><div class="userName">$fullName</div>
+								</div>
+								
+								<p>
+									<a class="avatarLarge" href="javascript:void(0)" ><img src="<%=uiform.getAvatarUrl(userName);%>"  alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/></a>
+								</p>								
+								<div class="infoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
 									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: <%=FAQUtils.getLongDateFormat(user.getLastLoginTime()) + dateFormatter.format(user.getLastLoginTime());%> </div>
 								</div>
 							</div>
-						</td>
-						<td class="ProfileContainer">
-							<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
+						</div>
+						<div class="profileContainer">
+							<table class="tablePost" cellspacing="0" border="0" cellpadding="0">
 								<tbody>
 								<% 
 									if(!FAQUtils.isFieldEmpty(email)) {
@@ -77,21 +74,18 @@
 										++i ;
 								%>
 									<tr>
-										<td class="Label">$label:</td>
-										<td class="LabelProfile"><span>$content</span></td>
+										<td width="100" align="right">$label:</td>
+										<td>$content</td>
 									</tr>
 								<%} %>
 								</tbody>
 							</table>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+						</div>
 		</div>
 	</div>
 	
-	<div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
+	<div class="uiAction uiActionBorder">
+      <button type="button"  onclick="<%=uicomponent.event("Close");%>" class="btn"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></button>
     </div>
 <%uiform.end()%>
 </div>
