@@ -9,7 +9,7 @@
     init : function(userName) {
       SearchIpBan.jSearchIpBan = gj('#searchIpBan');
       if (SearchIpBan.jSearchIpBan.exists()) {
-        SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.parent('.UITabContent');
+        SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.parents('div.restInfo:first');
         SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.uiGrid');
         SearchIpBan.jSearchIpBan.on('keydown', SearchIpBan.searchIpBanWrapper);
       }
@@ -26,31 +26,32 @@
     searchIpBan : function(keyword) {
       // Get data from service, url: /portal/rest/ks/forum/filter/{strIP}/
       keyword = keyword || 'all';
-      var restPath = SearchIpBan.jTabContent.attr("restPath");
-      var url = restPath + '/ks/forum/filter/' + keyword + '/';
-      var forumId = SearchIpBan.jTabContent.attr("forumId");
+      var restPath = SearchIpBan.jTabContent.attr("data-restPath");
+      var restUrl = restPath + '/ks/forum/filter/' + keyword + '/';
+      var forumId = SearchIpBan.jTabContent.attr("data-forumId");
       if (forumId != 'null') {
-        url = restPath + '/ks/forum/filterIpBanforum/' + forumId + '/' + keyword + '/';
+        restUrl = restPath + '/ks/forum/filterIpBanforum/' + forumId + '/' + keyword + '/';
       }
-      SearchIpBan.url_ = url;
-      SearchIpBan.request = gj.getJSON(url);
-      setTimeout(SearchIpBan.processing, 200);
-    },
-    processing : function() {
-      var txt = String(SearchIpBan.request.responseText);
-      if (txt != 'undefined' && txt.trim().length > 0) {
-        SearchIpBan.data = eXo.core.JSON.parse(txt);
+      SearchIpBan.url_ = restUrl;
+      $.ajax({
+     type: "GET",
+     url: restUrl
+    }).complete(function (jqXHR) {
+     if (jqXHR.readyState === 4) {
+        SearchIpBan.data = $.parseJSON(jqXHR.responseText);
         if (SearchIpBan.data.jsonList) {
-          SearchIpBan.updateIpBanList();
-        }
+        SearchIpBan.updateIpBanList();
       }
+     }
+    });
     },
+
     updateIpBanList : function() {
       // Remove all old items
-      SearchIpBan.JUIGrid.find('tr.IpBanItem').remove();
+      var tBodyNode = SearchIpBan.JUIGrid.find('tbody');
+      tBodyNode.find('tr').remove();
       
       // Fill up with new list
-      var tBodyNode = SearchIpBan.JUIGrid.find('tbody');
       var length_ = SearchIpBan.data.jsonList.length;
       var pageIter = gj('#IpBanPageIterator');
       if (pageIter.exists()) {
@@ -78,7 +79,7 @@
       JipBanItem.append(JfieldLabel[0].cloneNode(true));
       
       JfieldLabel.attr('align', 'center');
-      var link = SearchIpBan.jTabContent.attr('link');
+      var link = SearchIpBan.jTabContent.attr('data-link');
       link = String(link).replace('OBJIP', ip);
       var link2 = String(link).replace('OpenPosts', 'UnBan');
       JfieldLabel.html('[<a href="' + link + '">Posts</a>]&nbsp;[<a style="color: red;" href="' + link2 + '">X</a>]');
