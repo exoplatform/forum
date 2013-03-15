@@ -6,19 +6,19 @@
 				<label class="control-label" for="<%=uicomponent.TITLE_USERNAME%>">
 					<%=_ctx.appRes("UICommentForm.title.Author")%>:
 				</label>
-				<div class="controls"><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></div>
+				<div class="controls pdt5">Vu Duy Tu</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Language")%>:</label>
-				<div class="controls"><%=uicomponent.languageSelected%></div>
+				<div class="controls pdt5"><%=uicomponent.languageSelected%></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Question")%>:</label>
-				<div class="controls"><strong><%=uicomponent.questionContent%></strong></div>
+				<div class="controls pdt5"><strong><%=uicomponent.questionContent%></strong></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Detail")%>:</label>
-				<div class="controls"><%=uicomponent.getQuestionDetail();%></div>
+				<div class="controls pdt5"><%=uicomponent.getQuestionDetail();%></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Comment")%>:</label>
