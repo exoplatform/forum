@@ -11,6 +11,8 @@ import org.exoplatform.commons.api.search.data.SearchResult;
  */
 public class UnifiedSearchResult extends SearchResult {
 
+  private String appName = "AppForumPortlet";
+
   private Double rating = 0.0;
 
   public UnifiedSearchResult(String url,
@@ -31,6 +33,14 @@ public class UnifiedSearchResult extends SearchResult {
 
   public void setRating(Double rating) {
     this.rating = rating;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public void setAppName(String appName) {
+    this.appName = appName;
   }
 
 }

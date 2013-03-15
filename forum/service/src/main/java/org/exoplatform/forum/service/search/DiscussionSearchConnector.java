@@ -36,10 +36,11 @@ import org.exoplatform.services.security.ConversationState;
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
 public class DiscussionSearchConnector extends SearchServiceConnector {
+  private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
 
   private JCRDataStorage storage;
-  private String FIX_ICON = "/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
-  private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
+                              //"/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
+  private String FIX_ICON = "/eXoResources/skin/images/Icons/AppIcons/uiIconAppGray.png";
   
   public static final String  SPACES_GROUP           = "spaces";
 

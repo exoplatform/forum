@@ -42,21 +42,22 @@
   };
 
   UIAnswersPortlet.processHeightLine = function() {
-	var portlet = findId(UIAnswersPortlet.portletId);
-	var pageBody = $('#UIPageBody');
-	var trContainer = pageBody.parents('tr.TRContainer');
-	var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
-	//var rightContainer = trContainer.find('div.UIContainer:first');
-	var leftHeight = leftTDContainer.outerHeight();
-	var delta = leftHeight - pageBody.outerHeight();
-	var answerContainer = portlet.find('div.uiAnserContainer:first');;
+    var portlet = findId(UIAnswersPortlet.portletId);
+    var pageBody = $('#UIPageBody');
+    var trContainer = pageBody.parents('tr.TRContainer');
+    var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
+
+    var leftHeight = leftTDContainer.outerHeight();
+    var delta = leftHeight - pageBody.outerHeight();
+    var answerContainer = portlet.find('div.uiAnserContainer:first');
+
     var line = answerContainer.find('#resizeLineBar').find('div.line');
-	var height = answerContainer.outerHeight();
-	
-	if (delta > 0) {
-	  height += delta;
-	}
-	line.css('height', (height + 36) + 'px');
+    var height = answerContainer.outerHeight();
+
+    if (delta > 0) {
+      height += delta;
+    }
+    line.css('height', (height + 36) + 'px');
   };
 
   UIAnswersPortlet.resizeLineBar = function(idPr) {
