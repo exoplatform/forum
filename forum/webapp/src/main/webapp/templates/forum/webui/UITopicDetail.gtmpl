@@ -101,7 +101,7 @@
 			if(!tags.isEmpty()){
 		  %>
 
-			<div class="pull-left TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
+			<div class="pull-left titleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
 		  <%}%>
 			<ul class="TagContainer FL TagContent" id="TagContainer">
 			<%
@@ -135,8 +135,6 @@
 		</div>
 
 	</div>
-
- 
 
 <!-- Start PostsInThreadContainer -->
   <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
@@ -177,9 +175,9 @@
 					  <li>
 						<div class="searchAdvance">
 							<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-							<button class="btn btn-primary" onclick="<%=uicomponent.event("AddTagTopic")%>">
+							<a class="btn btn-primary" href="<%=uicomponent.event("AddTagTopic")%>">
 								<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
-							</button>
+							</a>
 							
 							<div class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
 								<div class="TagNameItem Selected"></div>
@@ -678,8 +676,8 @@
 							<div class="size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 						-->
 						<div class="actionAttachImg">
-							<a onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i><%=_ctx.appRes(uiformId + ".action.View");%></a>
-							<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><i class="uiIconDownload uiIconWhite"></i><%=_ctx.appRes(uiformId + ".action.Download");%></a>
+							<p><i class="uiIconSearch uiIconWhite"></i> <a href="eXo.forum.UIForumPortlet.showPicture('$attLink');"> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
+							<p><i class="uiIconDownload uiIconWhite"></i> <a href="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
 						</div>
 					</div>  
 				  <% } %>

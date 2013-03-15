@@ -233,10 +233,10 @@
 				<tr>
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:15px;">&nbsp;</th>
-					<th>
+					<th style="width:40%;">
 						<%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
 					</th>
-					<th>
+					<th style="width:20%;">
 						<%=_ctx.appRes("UITopicContainer.label.authorPost");%>
 					</th>
 					<th style="width:100px;">
@@ -426,7 +426,7 @@
 						
 					  <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
 					  <div class="dropdown uiUserInfo">
-							<div class="avatarMini pull-left"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></div>
+							<span class="avatarMini"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></span>
 							<a href="javaScript:void(0)">$viewTopicBy</a>
 							<ul class="dropdown-menu uiUserMenuInfo">
 							  <%
