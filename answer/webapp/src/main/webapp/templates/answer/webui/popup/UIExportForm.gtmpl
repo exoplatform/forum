@@ -1,4 +1,4 @@
-<div class="uiQuestionForm $uicomponent.id">
+<div class="uiQuestionFormExport $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 			<% 
