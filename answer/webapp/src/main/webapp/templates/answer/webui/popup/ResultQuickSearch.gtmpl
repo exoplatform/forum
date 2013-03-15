@@ -2,21 +2,27 @@
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.answer.webui.FAQUtils;
+	long totalPages = uicomponent.getTotalpages("LIST_RESULT_SEARCH") ;
 %>
-<div class="ResultQuickSearch">
+<div class="resultQuickSearch">		
+		<div class="resizable">
 		<% uiform.begin() %>
-		<div class="UIForm">
-					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultQuickSearch.title.result"); %></div>
- 					<div class="UIHorizontalLayout">
- 							<div class="UIPermissionManager">
- 								<div class="UIPermissionInfo">
- 									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
+		<div class="clearfix actionBar">			
+			<% 
+			 if(totalPages > 1) {
+			%>
+			 	<div class="pull-right">
+					<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
+				</div>
+			<% } %>
+			<button type="button" class="btn btn-primary" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><%= _ctx.appRes("UIQuickSeach.title.advance-search"); %></button>
+		</div>
+ 									<table class="uiGrid table  no-border-cell table-hover table-striped" cellspacing="0" border="0" cellpadding="0">
  										<thead>
  											<tr>
- 												<th class="IconContainer">&nbsp;</th>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
- 												<th class="DateContainer"><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
- 												<th class="PreviewContainer"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
+ 												<th class="center">answer</th>
  											</tr>
  										</thead>
  										<tbody>
@@ -31,8 +37,8 @@
 						 						String categoryLink = uicomponent.event("OpenCategory",Id);
 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
  										 %>
- 											<tr class="EvenRow">
- 												<td><div class="$icon"><span></span></div></td>
+ 											<tr>
+ 												
  												<%
  												String title = name;
 												if(name.length()>90) {
@@ -42,46 +48,35 @@
  												
  												<% if(result.getType().equals("faqCategory")) {
  												 %>
- 												 	<td class="text"><a href="$categoryLink" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
- 												 	<td>$date</td>
- 													<td>
- 														<div onclick="$categoryLink"><div class="FAQViewIcon"></div></div>
- 													</td>	
+ 												 	<td><a href="$categoryLink" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
+ 												 	<td>$date</td> 													
+ 													<td class="center">-</td>
  													<% } else { %>
- 													<td class="text"><a href="$linkQuestion" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
+ 													<td><a href="$linkQuestion" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
  												 	<td>$date</td>
- 													<td>
- 														<div onclick="$linkQuestion"><div class="FAQViewIcon"></div></div>
- 													</td>
+ 													<td class="center">1111</td>
  													<% } %>
  											</tr>
  											<% 
  												}
  											} else {
  										 %>
- 										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="4">
-													<div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div>
-												</td>
-			  							</tr>
-										<% } %> 
+ 										 <tr>	
+											<td class="tdbox" colspan="3">
+												<%= _ctx.appRes("ResultSearch.title.no-matches"); %>
+											</td>
+  										</tr>
+						<% } %> 
  									</tbody>
  								</table>
- 								<% 
- 								long totalPages = uicomponent.getTotalpages("LIST_RESULT_SEARCH") ;
+ 						<% 
 					       if(totalPages > 1) {
-					       %>
- 								<div style="overflow:auto;" class="ClearFix">
-									<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
-								</div>
-								<% } %>
- 						</div>
- 					</div>
- 				</div>
- 		</div>
- 	
-		 <div class="UIAction">
-	      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
+					    %>
+						<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
+						<% } %>
+ 	</div>
+		 <div class="uiAction uiActionBorder">
+	      <button onclick="<%=uicomponent.event("Close")%>" type="button" class="btn"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></button>
 	    </div>
 		<%uiform.end()%>
 </div>

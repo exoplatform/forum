@@ -561,8 +561,8 @@
   UIAnswersPortlet.submitOnKey = function (event) {
     var key = utils.getKeynum(event);
     if (key == 13) {
-      $(this).find('div.ActionSearch:first').click();
-      eXo.core.EventManager.cancelEvent(event);
+      $(this).parents('div.uiAnswersSearchBox:first').find('div.actionAnswerSearch:first').click();
+      utils.cancelEvent(event);
       return false;
     }
   };
