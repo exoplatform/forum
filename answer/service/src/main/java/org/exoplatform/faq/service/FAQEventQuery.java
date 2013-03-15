@@ -85,7 +85,7 @@ public class FAQEventQuery implements FAQNodeTypes {
 
   private boolean            isAdmin                    = false;
 
-  private List<String>       viewingCategories;
+  private boolean            isExcerpt                 = false;
 
   private boolean            isQuestionLevelSearch      = false;
 
@@ -94,6 +94,8 @@ public class FAQEventQuery implements FAQNodeTypes {
   private boolean            isAnswerCommentLevelSearch = false;
 
   private boolean            isSearchOnDefaultLanguage  = false;
+
+  private List<String>       viewingCategories;
 
   private int                offset                     = 0;
 
@@ -634,13 +636,19 @@ public class FAQEventQuery implements FAQNodeTypes {
       }
     }
 
-    queryString.append("]/(rep:excerpt())"); // close property constraint
+    queryString.append("]"); // close property constraint
+
+    if(isExcerpt) {
+      queryString.append("/(").append(REP_EXCERPT).append(")");
+    }
 
     // order
       if ("date".equalsIgnoreCase(sort)) {
         queryString.append(" order by @").append(EXO_CREATED_DATE);
-      } else if ("title".equalsIgnoreCase(sort) || "relevancy".equalsIgnoreCase(sort) || CommonUtils.isEmpty(sort)) {
+      } else if ("title".equalsIgnoreCase(sort) || CommonUtils.isEmpty(sort)) {
         queryString.append(" order by @").append(EXO_TITLE);
+      } else if("relevancy".equalsIgnoreCase(sort)) {
+        queryString.append(" order by @").append(JCR_SCORE);
       }
 
       if ("DESC".equalsIgnoreCase(order)) {
@@ -753,6 +761,14 @@ public class FAQEventQuery implements FAQNodeTypes {
 
   public boolean isLanguageLevelSearch() {
     return isLanguageLevelSearch;
+  }
+
+  public boolean isExcerpt() {
+    return isExcerpt;
+  }
+
+  public void setExcerpt(boolean isExcerpt) {
+    this.isExcerpt = isExcerpt;
   }
 
   public void setComment(String comment) {

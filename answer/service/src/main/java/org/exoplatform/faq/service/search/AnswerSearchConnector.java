@@ -103,6 +103,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     eventQuery.setLimit(limit);
     eventQuery.setSort(sort);
     eventQuery.setOrder(order);
+    eventQuery.setExcerpt(true);
     
     
     try {
