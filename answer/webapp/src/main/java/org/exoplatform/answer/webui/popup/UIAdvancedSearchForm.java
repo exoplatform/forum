@@ -42,6 +42,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
+import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -127,14 +128,17 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     list.add(new SelectItemOption<String>(ITEM_EMPTY, "categoryAndQuestion"));
     list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory"));
     list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion"));
-    UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list);
-    searchType.setOnChange("Onchange");
+    UIFormRadioBoxInput searchType = new UIFormRadioBoxInput(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list);
+    searchType.setDefaultValue(ITEM_EMPTY);
+    
+    //searchType.setOnChange("Onchange");
     UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null);
     list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTY2, "AllCategories"));
     list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_TRUE, "true"));
     list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_FALSE, "false"));
-    UIFormSelectBox modeQuestion = new UIFormSelectBox(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list);
+    UIFormRadioBoxInput modeQuestion = new UIFormRadioBoxInput(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list);
+    
     UIFormStringInput moderator = new UIFormStringInput(FIELD_CATEGORY_MODERATOR, FIELD_CATEGORY_MODERATOR, null);
     UIFormDateTimeInput fromDate = new UIFormDateTimeInput(FIELD_FROM_DATE, FIELD_FROM_DATE, null, false);
     UIFormDateTimeInput toDate = new UIFormDateTimeInput(FIELD_TO_DATE, FIELD_TO_DATE, null, false);
