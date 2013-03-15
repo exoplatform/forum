@@ -42,35 +42,34 @@
   };
 
   UIAnswersPortlet.processHeightLine = function() {
-    var portlet = findId(UIAnswersPortlet.portletId);
-    var pageBody = $('#UIPageBody');
-    var trContainer = pageBody.parents('tr.TRContainer');
-    var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
-
-    var leftHeight = leftTDContainer.outerHeight();
-    var delta = leftHeight - pageBody.outerHeight();
-    var answerContainer = portlet.find('div.uiAnserContainer:first');
-
+  var portlet = findId(UIAnswersPortlet.portletId);
+  var pageBody = $('#UIPageBody');
+  var trContainer = pageBody.parents('tr.TRContainer');
+  var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
+  //var rightContainer = trContainer.find('div.UIContainer:first');
+  var leftHeight = leftTDContainer.outerHeight();
+  var delta = leftHeight - pageBody.outerHeight();
+  var answerContainer = portlet.find('div.uiAnserContainer:first');;
     var line = answerContainer.find('#resizeLineBar').find('div.line');
-    var height = answerContainer.outerHeight();
-
-    if (delta > 0) {
-      height += delta;
-    }
-    line.css('height', (height + 36) + 'px');
+  var height = answerContainer.outerHeight();
+  
+  if (delta > 0) {
+    height += delta;
+  }
+  line.css('height', (height + 36) + 'px');
   };
 
   UIAnswersPortlet.resizeLineBar = function(idPr) {
-	var timeout = setTimeout(function() {
-		UIAnswersPortlet.processHeightLine();
-		clearTimeout(timeout);
-	}, 500);
+  var timeout = setTimeout(function() {
+    UIAnswersPortlet.processHeightLine();
+    clearTimeout(timeout);
+  }, 500);
 
     UIAnswersPortlet.currentPosW = 0;
     UIAnswersPortlet.currentW = 0;
     UIAnswersPortlet.isDownLine = false;
 
-	var answerContainer = $('#' + idPr); 
+  var answerContainer = $('#' + idPr); 
     var parent = answerContainer.find('#resizeLineBar');
     var line = parent.find('div.line');
     line.on('mousedown', function(e) {
@@ -79,7 +78,7 @@
       var leftColumn = portlet.find('.leftColumn:first');
       var rightColumn = portlet.find('.rightColumn:first');
       UIAnswersPortlet.currentW = leftColumn.width();
-      UIAnswersPortlet.currentMargin = rightColumn.css('margin-left');
+      UIAnswersPortlet.currentMargin = parseInt(rightColumn.css('margin-left'));
       UIAnswersPortlet.isDownLine = true;
     });
     $(document).on('mouseover', function(e) {
@@ -113,53 +112,53 @@
       var leftColumn = portlet.find('.leftColumn:first');
       var rightColumn = portlet.find('.rightColumn:first');
       if (leftColumn.css('display') === 'block') {
-        leftColumn.css({
-          'overflow' : 'hidden',
+        leftColumn.css({'overflow' : 'hidden'}).animate({
           'width' : '10px',
           'height' : (leftColumn.height() + 'px')
-        }).hide(300);
-        rightColumn.css('margin-left', '31px');
+        }, 300, function() { $(this).hide(); });
+        rightColumn.animate({'margin-left': '31px'}, 300, function(){});
         iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
       } else {
-        leftColumn.css({
-          'overflow' : 'visible',
+        leftColumn.css({'visibility': 'hidden', 'height' : 'auto'}).show();
+        var h = leftColumn.height();
+        leftColumn.css('visibility', 'visible').animate({
           'width' : '220px',
-          'height' : 'auto'
-        }).show(300);
-        rightColumn.css('margin-left', '250px');
+          'height' : (h+'px')
+        }, 300, function() { $(this).css({'overflow' : 'visible', 'height' : 'auto'});});
+        rightColumn.animate({'margin-left': '250px'}, 300, function(){});
         iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left iconControll');
       }
     })
   };
   
   UIAnswersPortlet.initVoteQuestion = function(id) {
-	var parent = findId(id);
-	var voted = parent.find('div.inforVoted:first');
-	var voting = parent.find('div.voting:first');
-	voted.on('mouseover', function() {
-		var thiz = $(this);
-		thiz.hide();
-		thiz.parent().find('div.voting:first').show();
-	});
-	voting.on('mouseout', function() {
-		var thiz = $(this);
-		thiz.hide();
-		thiz.parent().find('div.inforVoted:first').show();
-	});
-	
-	var stars = voting.find('> i');
-	stars.on('mouseover', function(e) {
-		var thiz = $(this);
-		var index = thiz.attr('data-index');
-		var stars = thiz.parent().find(' > i');
-		stars.attr('class', 'unvoted');
-		for(var i = 0; i < index; ++i) {
-			stars.eq(i).attr('class', 'voted');
-		}		
-	} )
-	.on('mouseout', function() {
-		$(this).parent().find(' > i').attr('class', 'unvoted');
-	});
+  var parent = findId(id);
+  var voted = parent.find('div.inforVoted:first');
+  var voting = parent.find('div.voting:first');
+  voted.on('mouseover', function() {
+    var thiz = $(this);
+    thiz.hide();
+    thiz.parent().find('div.voting:first').show();
+  });
+  voting.on('mouseout', function() {
+    var thiz = $(this);
+    thiz.hide();
+    thiz.parent().find('div.inforVoted:first').show();
+  });
+  
+  var stars = voting.find('> i');
+  stars.on('mouseover', function(e) {
+    var thiz = $(this);
+    var index = thiz.attr('data-index');
+    var stars = thiz.parent().find(' > i');
+    stars.attr('class', 'unvoted');
+    for(var i = 0; i < index; ++i) {
+      stars.eq(i).attr('class', 'voted');
+    }   
+  } )
+  .on('mouseout', function() {
+    $(this).parent().find(' > i').attr('class', 'unvoted');
+  });
   };
   
   UIAnswersPortlet.selectCateInfor = function (number) {
@@ -202,12 +201,16 @@
     var cookie = eXo.core.Browser.getCookie('FAQCustomView');
     cookie = (cookie == 'none' || cookie == '' && isNotSpace == 'false') ? 'none' : '';
     $('#FAQViewCategoriesColumn').css('display', cookie);
-    
+
     var title = $('#FAQTitlePanels');
+    var portlet = findId(UIAnswersPortlet.portletId);
+    var rightColumn = portlet.find('.rightColumn:first');
     if (cookie == 'none') {
+      rightColumn.css('margin-left', '31px');
       $('#FAQCustomView').addClass('FAQCustomViewRight');
       title.attr('title', showTitle);
     } else {
+      rightColumn.css('margin-left', '250px');
       title.attr('title', hideTitle);
       cookie = 'block';
     }
@@ -562,8 +565,8 @@
   UIAnswersPortlet.submitOnKey = function (event) {
     var key = utils.getKeynum(event);
     if (key == 13) {
-      $(this).parents('div.uiAnswersSearchBox:first').find('div.actionAnswerSearch:first').click();
-      utils.cancelEvent(event);
+      $(this).find('div.ActionSearch:first').click();
+      eXo.core.EventManager.cancelEvent(event);
       return false;
     }
   };
