@@ -12,6 +12,10 @@ import org.exoplatform.commons.api.search.data.SearchResult;
 public class UnifiedSearchResult extends SearchResult {
 
   private Double rating = 0.0;
+  
+  private String content;
+
+  private String type;
 
   public UnifiedSearchResult(String url,
                              String title,
@@ -31,6 +35,22 @@ public class UnifiedSearchResult extends SearchResult {
 
   public void setRating(Double rating) {
     this.rating = rating;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
 }

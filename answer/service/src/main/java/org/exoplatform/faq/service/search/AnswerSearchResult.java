@@ -71,12 +71,22 @@ public class AnswerSearchResult implements Collection<ObjectSearchResult> {
   public boolean contains(Object o) {
     if (o instanceof ObjectSearchResult) {
       ObjectSearchResult a = (ObjectSearchResult) o;
-      return ArrayUtils.indexOf(ids, a.getId()) >= 0;
+      return contains(a.getId());
     }
     
     //
     return false;
   }
+
+  /**
+   * Checks the id whether is existing or not in result list.
+   * @param id specified id
+   * @return TRUE: existing otherwise FALSE
+   */
+  public boolean contains(String id) {
+    return ArrayUtils.indexOf(ids, id) >= 0;
+  }
+
   /**
    * Add more element into List or not
    * @return

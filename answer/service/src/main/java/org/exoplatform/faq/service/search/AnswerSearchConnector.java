@@ -126,6 +126,8 @@ public class AnswerSearchConnector extends SearchServiceConnector {
             searchResult.getCreatedDate().getTime(),
             searchResult.getRelevancy(),
             searchResult.getRatingOfQuestion());
+        result.setContent(searchResult.getDescription());
+        result.setType(searchResult.getType());
         results.add(result);
       }
 

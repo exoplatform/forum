@@ -58,6 +58,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   public void setUp() throws Exception {
     super.setUp();
     loadController();
+    removeData();
 
     //
     Category cat = createCategory("Category A", 0);
@@ -79,13 +80,13 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     faqService_.saveQuestion(question, true, new FAQSetting());
 
     question = faqService_.getQuestionById(question.getId());
-    Answer answer = createAnswer(USER_ROOT, "new reponses");
+    Answer answer = createAnswer(USER_ROOT, "new reponses 1");
     answer.setNew(true);
 
     //the same answer in the same question.
     faqService_.saveAnswer(question.getPath(), answer, true);
     
-    answer = createAnswer(USER_ROOT, "new reponses 1");
+    answer = createAnswer(USER_ROOT, "new reponses 2");
     answer.setNew(true);
 
     faqService_.saveAnswer(question.getPath(), answer, true);
@@ -122,7 +123,9 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertEquals(1, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 2, 10, "relevancy", "ASC").size());
     
     assertEquals(2, answerSearchConnector.search(context, "foo", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    
+    //return 2 result for 2 answer.
+    assertEquals(2, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
     assertEquals(1, answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
 
   }
@@ -135,7 +138,22 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertTrue(aResult.getExcerpt().indexOf("kool") >= 0);
     String url = aResult.getUrl();
     assertTrue(url.indexOf("/portal/classic/answers/?&questionId") >= 0);
+    // content is question
     assertEquals(questionTest.getCreatedDate().getTime(), aResult.getDate());
+    assertEquals(questionTest.getDetail(), ((UnifiedSearchResult)aResult).getContent());
+    
+    // content is answer
+    aResults = (List<SearchResult>)answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    aResult = aResults.get(0);
+    assertEquals("new reponses 1", ((UnifiedSearchResult)aResult).getContent());
+    aResult = aResults.get(1);
+    assertEquals("new reponses 2", ((UnifiedSearchResult)aResult).getContent());
+    
+    // content is comment
+    aResults = (List<SearchResult>)answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    aResult = aResults.get(0);
+    assertEquals("comment test", ((UnifiedSearchResult)aResult).getContent());
+
   }
 
   public void testOrder() throws Exception {

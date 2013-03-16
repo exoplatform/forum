@@ -402,7 +402,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return values;
   }
 
-  private boolean questionHasAnswer(Node questionNode) throws Exception {
+  private static boolean questionHasAnswer(Node questionNode) throws Exception {
     if (questionNode.hasNode(Utils.ANSWER_HOME) && questionNode.getNode(Utils.ANSWER_HOME).hasNodes())
       return true;
     return false;
@@ -792,7 +792,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
   }
 
-  private int getCommentSize(Node questionNode) {
+  private static int getCommentSize(Node questionNode) {
     try {
       if (questionNode == null || !questionNode.hasNode(Utils.COMMENT_HOME))
         return 0;
@@ -2676,7 +2676,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     if (isAdmin == false) {
       retrictedCategoryList = getRetrictedCategories(eventQuery.getUserId(), eventQuery.getUserMembers());
     }
-      
 
     //
     Node categoryHome = getCategoryHome(sProvider, null);
@@ -2699,47 +2698,37 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       
       Node nodeObj = null;
       Row rowObj = null;
-      Node questionNode = null;
       
-      //
-      if (eventQuery.getOffset() > 0) {
-        
-      }
-      
+      ObjectSearchResult objectResult = null;
+
       while (iter.hasNext() && rowIter.hasNext()) {
         nodeObj = iter.nextNode();
         rowObj = rowIter.nextRow();
-        questionNode = null;
         
-        if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
-          questionNode = nodeObj;
-        } else if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) { // answers of default language
-          questionNode = getQuestionNode(nodeObj);
+        //
+        if (searchResult.contains(nodeObj.getName())) {
+          continue;
         }
-        
-        
+
+        if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
+          objectResult = ResultType.QUESTION.get(nodeObj, eventQuery, retrictedCategoryList);
+        } else if (nodeObj.isNodeType(EXO_ANSWER)) {
+          objectResult = ResultType.ANSWER.get(nodeObj, eventQuery, retrictedCategoryList);
+        } else if (nodeObj.isNodeType(EXO_COMMENT)) {
+          objectResult = ResultType.COMMENT.get(nodeObj, eventQuery, retrictedCategoryList);
+        }
+
         //
-        if (isAdmin == false) {
-          questionNode = checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList) ? questionNode : null;
-        } 
-        
-        //
-        if (questionNode == null) continue;
-        
-        //
-        if (searchResult.contains(questionNode.getName())) continue;
-        
-        //
-        ObjectSearchResult objectResult = getResultObj(questionNode);
-        
+        if (objectResult == null) continue;
+
         //
         if (rowObj != null) {
           objectResult.setRelevancy(rowObj.getValue(JCR_SCORE).getLong());
           objectResult.setExcerpt(rowObj.getValue(REP_EXCERPT).getString());
         }
-        
+
         searchResult.add(objectResult);
-        
+
         //
         if (searchResult.addMore() == false) {
           break;
@@ -2752,6 +2741,66 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       return new ArrayList<ObjectSearchResult>();
     }
   }
+  
+  private enum ResultType {
+
+    QUESTION() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        if(checkQuestionHasApproved(node, eventQuery, retrictedCategoryList) == true) {
+          return getQuestionObjectSearchResult(node);
+        }
+        return null;
+      }
+      
+    },
+    ANSWER() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        Node questionNode = getQuestionNode(node);
+        ObjectSearchResult objectResult = ResultType.QUESTION.get(questionNode, eventQuery, retrictedCategoryList);
+        if(objectResult == null) return null;
+        objectResult.setId(node.getName());
+        objectResult.setType("faqAnswer");
+        PropertyReader reader = new PropertyReader(node);
+        objectResult.setDescription(reader.string(EXO_RESPONSES));
+        objectResult.setCreatedDate(reader.date(EXO_DATE_RESPONSE));
+        return objectResult;
+      }
+      
+    },
+    COMMENT() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        Node questionNode = getQuestionNode(node);
+        ObjectSearchResult objectResult = ResultType.QUESTION.get(questionNode, eventQuery, retrictedCategoryList);
+        if(objectResult == null) return null;
+        objectResult.setId(node.getName());
+        objectResult.setType("faqComment");
+        PropertyReader reader = new PropertyReader(node);
+        objectResult.setDescription(reader.string(EXO_COMMENTS));
+        objectResult.setCreatedDate(reader.date(EXO_DATE_COMMENT));
+        return objectResult;
+      }
+      
+    };
+    
+    /**
+     * Get the data from the node and 
+     * put this one into ObjectSearchResult.
+     * 
+     * @param node
+     * @param eventQuery
+     * @param retrictedCategoryList
+     * @return
+     * @throws Exception
+     */
+    protected abstract ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception;
+  }
+  
 
   private ObjectSearchResult getResultObj(Node node) throws Exception {
     ObjectSearchResult objectResult = new ObjectSearchResult();
@@ -2775,7 +2824,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return objectResult;
   }
   
-  private boolean checkQuestionHasApproved(Node questionNode, FAQEventQuery eventQuery,List<String>  retrictedCategoryList) throws Exception {
+  private static boolean checkQuestionHasApproved(Node questionNode, FAQEventQuery eventQuery,List<String>  retrictedCategoryList) throws Exception {
     if (questionNode != null && ((questionNode.getProperty(EXO_IS_APPROVED).getBoolean() == true && questionNode.getProperty(EXO_IS_ACTIVATED).getBoolean() == true)
         || (questionNode.getProperty(EXO_AUTHOR).getString().equals(eventQuery.getUserId()) && questionNode.getProperty(EXO_IS_ACTIVATED).getBoolean() == true)))
       // for retricted audiences
@@ -2796,7 +2845,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return false;
   }
 
-  private Node getQuestionNode(Node node) throws RepositoryException {
+  private static Node getQuestionNode(Node node) throws RepositoryException {
     if(node.isNodeType(EXO_FAQ_QUESTION)) {
       return node;
     } else {
@@ -2810,7 +2859,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return null;
   }
 
-  private ObjectSearchResult getQuestionObjectSearchResult(Node questionNode) throws Exception {
+  private static ObjectSearchResult getQuestionObjectSearchResult(Node questionNode) throws Exception {
     if(questionNode == null) return null;
     ObjectSearchResult objectResult = new ObjectSearchResult();
     objectResult.setType("faqQuestion");
