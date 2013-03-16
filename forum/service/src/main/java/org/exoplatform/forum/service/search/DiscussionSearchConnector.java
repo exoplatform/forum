@@ -157,6 +157,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
       path = getSiteName(siteKey);
 
       if(!CommonUtils.isEmpty(path)) {
+        siteName = siteKey.getName();
         break;
       }
     }

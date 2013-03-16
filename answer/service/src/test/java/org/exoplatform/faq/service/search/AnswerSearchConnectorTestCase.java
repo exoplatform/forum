@@ -134,8 +134,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertEquals(questionTest.getQuestion(), aResult.getTitle());
     assertTrue(aResult.getExcerpt().indexOf("kool") >= 0);
     String url = aResult.getUrl();
-    log.info(url);
-    assertTrue(url.indexOf("?&questionId=") >= 0);
+    assertTrue(url.indexOf("/portal/classic/answers/?&questionId") >= 0);
     assertEquals(questionTest.getCreatedDate().getTime(), aResult.getDate());
   }
 

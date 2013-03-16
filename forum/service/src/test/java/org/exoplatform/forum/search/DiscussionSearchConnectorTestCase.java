@@ -200,8 +200,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals("Post A", aResult.getTitle());
     assertTrue(aResult.getExcerpt().indexOf("<strong>A</strong>") >= 0);
     String gotURL = aResult.getUrl();
-    log.info("testSiteData: "+gotURL);
-//    assertTrue(gotURL.indexOf("/portal/classic/forum/topic/topic") >= 0);
+    assertTrue(gotURL.indexOf("/portal/classic/forum/topic/topic") >= 0);
     assertTrue(aResult.getDate() > 0);
     assertEquals(postA.getCreatedDate().getTime(), aResult.getDate());
   }
