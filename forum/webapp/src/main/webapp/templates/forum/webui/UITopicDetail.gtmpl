@@ -73,7 +73,7 @@
   	String []scripts = [
   	         	"eXo.forum.UIForumPortlet.controlWorkSpace();",
   	         	"eXo.forum.UIForumPortlet.loadTagScroll();",
-  	         	"eXo.forum.UIForumPortlet.submitSearch('SearchInTopic');",
+  	         	"eXo.forum.UIForumPortlet.submitSearch('searchAdvance');",
   	         	"eXo.forum.UIForumPortlet.ReloadImage();",
   	         	"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
   	         	"eXo.forum.UIForumPortlet.disableOnClickMenu('SearchForm');",
@@ -328,7 +328,7 @@
 					<ul class="dropdown-menu">
 						<li>
 							<div class="searchAdvance">
-								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%ForumUtils.SEARCHFORM_ID%>"/>
+								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
 								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 								<br/>
 								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>

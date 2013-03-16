@@ -983,9 +983,23 @@
     },
 
     submitSearch : function(id) {
-      var parentElm = document.getElementById(id);
-      if (parentElm) {
-        parentElm.onkeydown = UIForumPortlet.submitOnKey;
+
+      var parentElm = $('.' + id);
+      if (parentElm.length > 0) {
+        parentElm.on('keydown', function(event) {
+          var key = utils.getKeynum(event);
+          if (key == 13) {
+            var searchLinkElm = $(this).find('a:first');
+            if (searchLinkElm.exists()) {
+              var link = String(searchLinkElm.attr('href')).replace(
+                  "javascript:", "");
+              eval(link);
+              utils.cancelEvent(event);
+              event.preventDefault();
+              return false;
+            }
+          }
+        });
       }
     },
 

@@ -163,6 +163,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (!UserHelper.isAnonim())
       isLogin = true;
     isLink = true;
+    
+    setSubmitAction("return false;");
   }
   
   public UserProfile getQuickProfile(String userName) throws Exception {
