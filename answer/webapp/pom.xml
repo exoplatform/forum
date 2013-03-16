@@ -136,7 +136,7 @@
   </dependencies>
   <build>
     <!-- see is we can remove this -->
-    <finalName>answer</finalName>
+    <finalName>faq</finalName>
     <plugins>
       <!-- Copy project less files -->
       <plugin>

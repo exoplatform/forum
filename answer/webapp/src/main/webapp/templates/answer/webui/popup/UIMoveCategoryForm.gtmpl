@@ -16,7 +16,7 @@
   <div class="ViewCategoryToSelect">
 		<div>
 			<a href="javaScript: void(0)" ondblclick="$linkRoot">
-				<img alt="<%= _ctx.appRes("UICategoryForm.label.category-home"); %>" src="/answer/skin/DefaultSkin/webui/background/HomeIcon.gif"/>
+				<img alt="<%= _ctx.appRes("UICategoryForm.label.category-home"); %>" src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif"/>
 			</a>
 		</div>
 		<div class="TreeContainer">

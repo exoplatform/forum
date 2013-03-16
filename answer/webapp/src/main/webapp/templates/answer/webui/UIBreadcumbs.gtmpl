@@ -19,7 +19,7 @@
 	      String title = "" ;
 	      image = "";
 	      if(t == 1){
-	        image = "/answer/skin/DefaultSkin/webui/background/HomeIcon.gif";
+	        image = "/faq/skin/DefaultSkin/webui/background/HomeIcon.gif";
 	      }
 	      if(t < uicomponent.getMaxPath()) {
 	     %>

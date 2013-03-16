@@ -3,8 +3,8 @@
 @import url('UIMoveCategoryForm/Stylesheet.css');
 @import url('popup/Stylesheet.css');
 
-@import url('/answer/skin/css/answers.css');
-@import url('/answer/skin/css/faq.css');
+@import url('/faq/skin/css/answers.css');
+@import url('/faq/skin/css/faq.css');
 
 .UIWindow .UIAnswersPortlet {
 	min-width: 900px;
