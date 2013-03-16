@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
   
 import java.util.ArrayList;
 import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
@@ -98,7 +97,7 @@ public class UICategory extends BaseForumForm {
   private List<Forum>        forums          = new ArrayList<Forum>();
 
   static public boolean     isUnWatch       = false;
-
+  
   public UICategory() throws Exception {
     addChild(UIForumDescription.class, null, null);
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
@@ -110,6 +109,10 @@ public class UICategory extends BaseForumForm {
     useAjax = forumPortlet.isUseAjax();
     dayForumNewPost = forumPortlet.getDayForumNewPost();
     setListWatches();
+  }
+  
+  public UserProfile getQuickProfile(String userName) throws Exception {
+    return getForumService().getQuickProfile(userName);
   }
 
   protected boolean useAjax() {

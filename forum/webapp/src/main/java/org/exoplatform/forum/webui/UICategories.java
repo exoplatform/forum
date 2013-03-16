@@ -87,7 +87,7 @@ public class UICategories extends UIContainer {
   private List<String>             collapCategories  = null;
 
   private List<Watch>              listWatches       = new ArrayList<Watch>();
-
+  
   public UICategories() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild);
@@ -96,6 +96,10 @@ public class UICategories extends UIContainer {
   public void setIsRenderChild(boolean isRenderChild) {
     this.getChild(UIForumListSearch.class).setRendered(isRenderChild);
     this.isRenderChild = isRenderChild;
+  }
+  
+  public UserProfile getQuickProfile(String userName) throws Exception {
+    return forumService.getQuickProfile(userName);
   }
 
   public boolean getIsRendered() throws Exception {

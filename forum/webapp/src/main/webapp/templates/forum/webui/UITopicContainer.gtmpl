@@ -424,9 +424,15 @@
 				   
 					<td>
 						
-					  <% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
+					  <% String viewTopicBy = uicomponent.getScreenName(topicBy); 
+						   String userId = userProfile.getUserId();
+	             UserProfile userInfo = uicomponent.getQuickProfile(userId);
+	             boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
+					  %>
 					  <div class="dropdown uiUserInfo">
+					    <% if (isDisplayAvatar) { %>
 							<span class="avatarMini"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></span>
+							<% } %>
 							<a href="javaScript:void(0)">$viewTopicBy</a>
 							<ul class="dropdown-menu uiUserMenuInfo">
 							  <%

@@ -155,7 +155,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private Map<String, Integer>   pageTopicRemember = new HashMap<String, Integer>();
 
   private Map<String, String>    cssClassMap       = new HashMap<String, String>();
-
+  
   public UITopicContainer() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null));
@@ -163,6 +163,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (!UserHelper.isAnonim())
       isLogin = true;
     isLink = true;
+  }
+  
+  public UserProfile getQuickProfile(String userName) throws Exception {
+    return getForumService().getQuickProfile(userName);
   }
 
   public boolean isNull() {
