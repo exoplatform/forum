@@ -411,4 +411,23 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.exportXML(cat.getId(), forum.getId(), new ArrayList<String>(), forum.getPath(), bos, false);
     assertEquals("can't export Forum into XML file", bos.size() > 0, true);
   }
+  
+  public void testGetScreenName() throws Exception {
+    String userName = "demo";
+    UserProfile userProfile = createdUserProfile(userName);
+    userProfile.setScreenName("Jack Miller");
+
+    // save UserProfile
+    forumService_.saveUserProfile(userProfile, true, true);
+
+    // getUserInfo
+    userProfile = forumService_.getUserInfo(userName);
+    assertEquals("Jack Miller",forumService_.getScreenName("demo"));
+    
+    // change screenName
+    userProfile.setScreenName("John Smith");
+    forumService_.saveUserSettingProfile(userProfile);
+    userProfile = forumService_.getUserInfo(userName);
+    assertEquals("John Smith",forumService_.getScreenName("demo"));
+  }
 }

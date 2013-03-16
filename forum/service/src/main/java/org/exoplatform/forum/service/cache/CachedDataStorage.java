@@ -849,6 +849,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
+    miscData.remove(new SimpleCacheKey("screen", userProfile.getUserId()));
   }
 
   public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {
