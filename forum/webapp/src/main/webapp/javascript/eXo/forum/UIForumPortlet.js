@@ -11,6 +11,7 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         UIForumPortlet.initShowUserInfo();
+        UIForumPortlet.disableOnClickMenu('SearchForm');
         UIForumPortlet.initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
@@ -20,6 +21,13 @@
           $(this).parents('.dropdown').removeClass('open');
         })
       });
+    },
+    
+    disableOnClickMenu : function (id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).off('click mousedown mouseover').on('click mousedown mouseover', utils.cancelEvent);
+      }
     },
 
     initShowUserInfo : function(id) {

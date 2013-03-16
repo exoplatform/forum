@@ -74,7 +74,10 @@
   	         	"eXo.forum.UIForumPortlet.controlWorkSpace();",
   	         	"eXo.forum.UIForumPortlet.loadTagScroll();",
   	         	"eXo.forum.UIForumPortlet.submitSearch('SearchInTopic');",
-  	         	"eXo.forum.UIForumPortlet.ReloadImage();"
+  	         	"eXo.forum.UIForumPortlet.ReloadImage();",
+  	         	"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
+  	         	"eXo.forum.UIForumPortlet.disableOnClickMenu('SearchForm');",
+              "eXo.forum.UIForumPortlet.disableOnClickMenu('AddTag');"
   	         	];
   	ForumUtils.addScripts(null, null, scripts);
   	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init();");
@@ -315,7 +318,7 @@
 			</li>
 			<% } %> 
 			
-			<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
+			<li class="defaultStyle forumSeparatorLine">
 				<div class="dropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiDropdownWithIcon actionIcon">
 					<div data-toggle="dropdown">
 						<i class="uiIconSearch uiIconLightGray"></i>
@@ -431,12 +434,6 @@
         String message = uicomponent.renderPost(post) ;
         String editBy = post.getModifiedBy() ;
 		
-		UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
-		String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
-        String editDate ;
-        if(!ForumUtils.isEmpty(editBy)) {
-          editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
-        }
         List attachments = post.getAttachments() ;
         String idMessage = "Id" + postId.substring(15);
         String joinDate = "";
@@ -732,7 +729,9 @@
 				<div class="footPost clearfix">
 				  <%  
 					  if(!ForumUtils.isEmpty(editBy)) {
-					  
+					    UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
+					    String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
+			        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 				  %>
 					<div class="txtLastEdit">
 						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> 

@@ -160,7 +160,7 @@
 					  </li>
 					<% } %> 
 					
-					<li class="defaultStyle forumSeparatorLine" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+					<li class="defaultStyle forumSeparatorLine">
 						<div class="dropdown uiDropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiActionWithLabel">
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
