@@ -31,7 +31,7 @@
 				 String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$action</a>
+      <button onclick="$link" class="btn" type="button">$action</button>
       <%}%>
     </div>
 	<%uiform.end()%>

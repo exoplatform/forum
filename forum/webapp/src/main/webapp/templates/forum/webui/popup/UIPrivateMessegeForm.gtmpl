@@ -67,7 +67,7 @@
 				  uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
 				%>
 				<div class="uiAction">
-					<a href="javascript:void(0);" onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></a>
+					<button onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>
 				</div>
 			</div>
 		</div>
@@ -82,8 +82,8 @@
   <%
 			if(!uiform.isFullMessage()) {
 	%>
-    <a href="javascript:void(0);" onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></a>
-    <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+	    <button onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>
+	    <button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
     <% } %>
 	</div>
 	<%uiform.end()%>

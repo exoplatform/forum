@@ -28,6 +28,6 @@
 %>
 </div>
 <div class="uiAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-    </div>
+	<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
+</div>
 <%uiform.end()%>

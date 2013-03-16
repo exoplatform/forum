@@ -61,6 +61,6 @@
 		</div>
 </div>
 <div class="uiAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></a>
-    </div>
+	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></button>
+</div>
 <%uiform.end()%>

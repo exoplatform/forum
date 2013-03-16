@@ -5,16 +5,14 @@
     uicomponent.renderChild("PermissionGrid");
     uicomponent.renderChild("PermissionInput");
   %>
-  <span>
-    <a href="<%= uicomponent.event("OpenUserPopup")%>">
-      <i class="uiIconUser"></i>
-    </a>
-    <a href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>">
-      <i class="uiIconMembership"></i>
-    </a>
-    <a href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
-      <i class="uiIconGroup"></i>
-    </a>
-    <a class="btn" onclick="<%= uicomponent.event("AddPermission")%>">Add</a>
-  </span>
+	<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>">
+		<i class="uiIconUser uiIconLightGray"></i>
+	</a>
+	<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>">
+		<i class="uiIconMembership uiIconLightGray"></i>
+	</a>
+	<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
+		<i class="uiIconGroup uiIconLightGray"></i>
+	</a>
+	<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button">Add</button>
 </div>

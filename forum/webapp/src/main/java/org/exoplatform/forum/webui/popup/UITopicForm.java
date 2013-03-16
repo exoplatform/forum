@@ -223,7 +223,7 @@ public class UITopicForm extends BaseForumForm {
     List<ActionData> actions = new ArrayList<ActionData>();
     ActionData ad = new ActionData();
     ad.setActionListener("AddTypeTopic");
-    ad.setCssIconClass("AddIcon16x16");
+    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
     ad.setActionName("AddTypeTopic");
     actions.add(ad);
     UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);

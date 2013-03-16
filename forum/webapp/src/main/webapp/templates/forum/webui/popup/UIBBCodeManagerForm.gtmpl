@@ -60,7 +60,7 @@
 					 String actionLabel = _ctx.appRes("UIBBCodeManagerForm.action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+      <button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>
 				 

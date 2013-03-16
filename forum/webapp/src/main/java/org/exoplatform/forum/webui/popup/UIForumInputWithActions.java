@@ -102,7 +102,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
     UIForm uiForm = getAncestorOfType(UIForm.class);
     Writer w = context.getWriter();
     w.write("<div id=\"" + getId() + "\" class=\"UIFormInputSet " + getId() + "\">");
-    w.write("<table class=\"UIFormGrid\">");
+    w.write("<div class=\"form-horizontal\">");
     ResourceBundle res = context.getApplicationResourceBundle();
 
     for (UIComponent inputEntry : getChildren()) {
@@ -118,17 +118,16 @@ public class UIForumInputWithActions extends UIFormInputSet {
         log.info("\n " + uiForm.getId() + ".label." + inputEntry.getId() + " not found value");
       }
       if (!mapLabelInfo.isEmpty() && mapLabelInfo.containsKey(inputEntry.getId())) {
-        w.write("<tr>");
-        w.write("  <td colspan=\"2\">");
-        w.write("    <div style=\"height:18px;\"><div class=\"InfoMessageIcon\" id=\"" + inputEntry.getId() + "Info\">" + mapLabelInfo.get(inputEntry.getId()) + "</div></div>");
-        w.write("  </td>");
-        w.write("</tr>");
+        w.write("<div class=\"control-group\">");
+        w.write("  <div class=\"InfoMessageIcon\" id=\"" + inputEntry.getId() + "Info\">" + mapLabelInfo.get(inputEntry.getId()) + "</div>");
+        w.write("</div>");
       }
-      w.write("<tr>");
-      w.write("<td class=\"FieldLabel\">");
+      
+      w.write("<div class=\"control-group\">");
+      w.write("<label class=\"control-label\" for=\"" + inputEntry.getId() + "\">");
       w.write(label);
-      w.write("</td>");
-      w.write("<td class=\"FieldComponent\">");
+      w.write("</label>");
+      w.write("<div class=\"controls\">");
       renderUIComponent(inputEntry);
       List<ActionData> actions = actionField.get(inputEntry.getName());
       if (actions != null) {
@@ -145,7 +144,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
           } else {
             actionLink = ((UIComponent) getParent()).event(action.getActionListener());
           }
-          w.write("<a title=\"" + actionLabel + "\" href=\"" + actionLink + "\">");
+          w.write("<a title=\"" + actionLabel + "\" class=\"actionIcon\" href=\"" + actionLink + "\">");
           if (action.getActionType() == ActionData.TYPE_ICON) {
             w.write("<i alt=\"" + ForumUtils.getSubString(actionLabel, 30) + "\" class=\"" + action.getCssIconClass() + "\"></i>");
             if (action.isShowLabel)
@@ -164,9 +163,9 @@ public class UIForumInputWithActions extends UIFormInputSet {
               type = actionLabel.substring(dot);
               actionLabel = actionLabel.substring(0, dot);
             }
-            String alt = actionLabel;
+
             actionLabel = ForumUtils.getSubString(actionLabel, 30) + type + size;
-            w.write("<img alt=\"" + alt + "\" src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" class=\"" + action.getCssIconClass() + "\"/>");
+            w.write("<i class=\"" + action.getCssIconClass() + "\"></i>");
             if (action.isShowLabel)
               w.write(actionLabel);
           }
@@ -179,12 +178,11 @@ public class UIForumInputWithActions extends UIFormInputSet {
       if (inputEntry.getId().equals(actionIdAddItem)) {
     	  w.write("<button class=\"btn\" type=\"button\" onclick=\"" + ((UIComponent) getParent()).event(actionAddItem) + "\">" +
           "<i class=\"uiIconAttach uiIconLightGray\"></i> " + labelActionAddItem + "</button>");
-        //w.write("<div class=\"AddActionItem\"><a href=\"" + ((UIComponent) getParent()).event(actionAddItem) + "\">" + labelActionAddItem + "</a></div>");
       }
-      w.write("</td>");
-      w.write("</tr>");
+      w.write("</div>");
+      w.write("</div>");
     }
-    w.write("</table>");
+    w.write("</div>");
     w.write("</div>");
   }
 

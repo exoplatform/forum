@@ -58,7 +58,7 @@
   </div>
 	<div class="uiAction">
   <% String link = uicomponent.event("Cancel") ; %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%></a>
+      <button onclick="$link" class="btn" type="button"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%></button>
     </div>
 </div>
 <%uiform.end()%>

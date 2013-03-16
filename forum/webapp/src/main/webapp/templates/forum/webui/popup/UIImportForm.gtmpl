@@ -1,36 +1,28 @@
-<div class="UIFormForum $uicomponent.id" style="padding:10px;">
+<div class="uiFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
   <div class="resizable">
-		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<table class="UIFormGrid">
-					<tbody>				
-					<% 
-					for(field in uiform.getChildren()) { 
-						if(field.isRendered()) {
-							fieldName = uicomponent.getLabel(field.getName());
-					%>
-							<tr>
-								<td class="FieldLabel" style="white-space:nowrap; line-height:20px;">
-									<span>$fieldName</span>
-								</td>
-								<td class="FieldComponent"><% uiform.renderField(field) %></td>
-							</tr>
-					<% 
-					  }
-					}
-					%>						
-					</tbody>
-				</table>
+		<div class="form-horizontal">
+		<% 
+		for(field in uiform.getChildren()) { 
+			if(field.isRendered()) {
+				fieldName = uicomponent.getLabel(field.getName());
+		%>
+			<div class="control-group">
+				<label class="control-label" for="$fieldName">$fieldName</label>
+				<div class="controls"><% uiform.renderField(field) %></div>
 			</div>
+		<% 
+		  }
+		}
+		%>
 		</div>
-		</div>
-		<div class="uiAction">
+	</div>
+	<div class="uiAction">
     <% for(action in uicomponent.getActions()) { 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+		<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>

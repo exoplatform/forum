@@ -33,49 +33,47 @@
           <%
           if(tabcontent.id.equals("ForumUserProfile")){
           %>
-            <table>
+			<div class="form-horizontal">
               <%
               for(tabChildConten in tabcontent.getChildren()){
                 if(tabChildConten.id.equals("IsDisplayAvatar")){%>
-                  <tr>
-                    <td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
+                <div class="control-group">
+                    <label class="control-label" class="control-label">
                       <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> :
-                    </td>
-                    <td class="FieldComponent" style="padding:2px 0px 3px 0px;" align="left;">
-                      <div style="text-align:center; color:blue; float:left; text-align:center;">
-                        <span class="avatarMedium">
-							<img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
-						</span>
-                        <br>
-                        <a href="javaScript:void(0);" onclick="<%=uiform.event("Attachment")%>" style="color:blue;">
-                          <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
-                        </a>
-                        <%
-                        if(!org.exoplatform.forum.ForumSessionUtils.DEFAULT_AVATAR.equals(uicomponent.getAvatarUrl())){
-                        %>
-                          |
-                          <a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
-                            <%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
-                          </a>
-                        <%
-                        }%>
-                      </div>
-                    </td>
-                  </tr>
+                    </label>
+                    <div class="controls">
+						<div style="text-align:center; color:blue; float:left;">
+							<span class="avatarMedium">
+								<img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
+							</span>
+							<br>
+							<a href="javaScript:void(0);" onclick="<%=uiform.event("Attachment")%>" style="color:blue;">
+							  <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
+							</a>
+							<%
+							if(!org.exoplatform.forum.ForumSessionUtils.DEFAULT_AVATAR.equals(uicomponent.getAvatarUrl())){
+							%>
+							  |
+							  <a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
+								<%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
+							  </a>
+							<%
+							}%>
+						</div>
+                    </div>
+				</div>
                 <%
                 }%>
-                <tr>
-                  <td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
-                    <label for="<%=tabChildConten.getId()%>"><%=uicomponent.getLabel(tabChildConten.getId()) %> :</label>
-                  </td>
-                  <td class="FieldComponent" style="padding:2px 0px 3px 4px;">
-                    <% uiform.renderField(tabChildConten) %>
-                  </td>
-                </tr>
+                <div class="control-group">
+					<label class="control-label" for="<%=tabChildConten.getId()%>"><%=uicomponent.getLabel(tabChildConten.getId()) %> :</label>
+					<div class="controls"> 
+						<% uiform.renderField(tabChildConten) %>
+					</div>
+                </div>
               <%
               }
               %>
-            </table>
+			</div>
           <%
           } else if(tabcontent.id.equals("ForumUserWatches")){%>
             <table class="uiGrid table table-hover table-striped">
@@ -136,34 +134,22 @@
                 </tr>
               </tbody>
             </table>
-            <table>
-              <tr>
-                <td align="left" style="padding-top:8px;">
-                  <div class="Icon ForumRSS" style="height:24px; line-height:16px; text-algin:left;padding-left:32px;">
-                    <label for="<%=uicomponent.RSS_LINK%>"><%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
-                  </div>
-                </td>
-                <td align="left" style="padding-top:8px;">
-                  <%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS_LINK))%>
-                </td>
-                <td align="left"> </td>
-              </tr>
-              <tr>
-                <td align="left" style="padding-top:6px;">
-                  <div class="Icon HotThreadNoNewPost" style="height:24px; line-height:22px; text-algin:left;padding-left:32px;">
-                    <label for="<%=uicomponent.EMAIL_ADD%>"><%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
-                  </div>
-                </td>
-                <td align="left" style="padding-top:8px;">
-                  <%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
-                </td>
-                <td>
-                  <div class="uiAction">
-                    <a href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></a>
-                  </div>
-                </td>
-              </tr>
-            </table>
+			
+            <div class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="<%=uicomponent.RSS_LINK%>"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
+					<div class="controls">
+						<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS_LINK))%>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconHotThread"></i><%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
+					<div class="controls">
+						<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
+						<button href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="btn btn-primary" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
+					</div>
+				</div>
+            </div>
           <%
           } else if(!tabcontent.id.equals("WatchChesPageIterator")){%>
             <% uiform.renderChild(tabcontent) ; %>
@@ -181,7 +167,7 @@
 					 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
 					 String link = uiform.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+      <button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>

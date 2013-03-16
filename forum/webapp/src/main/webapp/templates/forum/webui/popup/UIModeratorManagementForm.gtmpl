@@ -133,7 +133,7 @@
 	</div>
 	
 	<div class="uiAction uiActionBorder">
-		<a href="javascript:void(0);"  onclick="<%=uicomponent.event("Close");%>" class="btn"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+		<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
 	</div>
 	
 	<%uiform.end()%>

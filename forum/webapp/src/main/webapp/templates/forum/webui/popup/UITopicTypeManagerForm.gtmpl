@@ -52,7 +52,7 @@
   <% for(action in uicomponent.getActions()) { 
      String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
   %>
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn LightBlueStyle">$actionLabel</a>
+      <button onclick="<%=uicomponent.event(action);%>" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>
   </div>

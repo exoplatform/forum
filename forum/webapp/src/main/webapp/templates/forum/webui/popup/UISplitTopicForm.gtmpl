@@ -12,24 +12,23 @@
 %>
 <% uiform.begin() %>
 <div class="UISplitTopicForm resizable" style="padding:10px;">
-	<table class="ActionContainer">
-		<tr>
-			<td style="width:150px;" align="right">
-				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</div>
-			</td>
-			<td>
-				<div class="label"><strong><%=topic.getTopicName();%></strong></div>
-			</td>
-		</tr>
-		<tr>
-			<td style="width:150px;" align="right">
-				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:</div>
-			</td>
-			<td>
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%>"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</label>
+			<div class="controls">
+				<strong><%=topic.getTopicName();%></strong>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>">
+				<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:
+			</label>
+			<div class="controls">
 				<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>
-			</td>
-		</tr>
- 	</table> 
+			</div>
+		</div>
+	</div>
 	<div class="ListPost">
 	  <div style="overflow:auto; margin:2px 0px;" class="ClearFix">
 			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
@@ -81,10 +80,10 @@
 
 <div class="uiAction">
   <% for(action in uicomponent.getActions()) { 
-           String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
-           String link = uicomponent.event(action) ;
+   String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
+   String link = uicomponent.event(action) ;
         %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+	<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
-    </div>
+</div>
 <%uiform.end()%>
