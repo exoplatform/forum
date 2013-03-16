@@ -3,6 +3,15 @@
 @import "answers/Sprites/Style.less";
 @import "answers/Popup/Style.less";
 
+//drag drog
+.faqDnDCategory {
+	position: absolute;
+	padding:0px 0px 4px 20px;
+	line-height:14px;
+	height:14px;
+	border: 1px solid @tableBorder;
+	.opacity(50);	        
+}
 .uiAnswersPortlet {
 	padding: 20px 20px 0px 20px;
 	
@@ -28,7 +37,7 @@
 
 	.line {
     width:2px; 
-    border-left: 1px solid #cfcfcf; 
+    border-left: 1px solid @tableBorder; 
     margin:auto; 
     min-height: 300px;
     cursor: col-resize;
@@ -59,26 +68,19 @@
 			}
 	}
 	
+	// drapdrop categories
 	.uiCategories {
 		.listCategories > li {
-			cursor: pointer;
-			// drapdrop categories
-			.faqDnDCategory {
-        position: absolute;
-        padding:0px 0px 4px 20px;
-        line-height:14px;
-        height:14px;
-        border: solid 1px #333333;
-        opacity:0.5;
-        filter: Alpha(Opacity=50);
-      }
-      .faqHighlightCategory {
-        height:20px;
-      }
-      .faqTmpCategory {
-			  min-height:8px;
+			cursor: pointer;			
+     		 &.faqTmpCategory {
+  				min-height:8px;
 			}
+      		&.faqHighlightCategory {
+		        height:20px;
+		      }
 		} 
+		
+      		
 	}
 
 	.uiQuestions {

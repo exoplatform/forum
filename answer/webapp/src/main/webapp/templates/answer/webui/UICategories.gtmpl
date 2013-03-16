@@ -82,7 +82,7 @@
 							<input type="hidden" class="infoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
 							
 							<a onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
-								<i class="uiIconArrowRight"></i><%=FAQUtils.getSubString(category.getName(), 20);%>
+								<i class="uiIconArrowRight"></i>&nbsp;<%=FAQUtils.getSubString(category.getName(), 20);%>
 							</a>
 							<%
 							String linkWacth = uicomponent.event("WatchManager", category.getPath());
@@ -90,7 +90,7 @@
 								 <a href="$linkWacth" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>"><i class="uiIconWatch"></i></a>
 							<%}%>
 							 <!-- action of this category -->
-							<ul class="uiRightClickPopupMenu dropdown-menu" id="UIPopupMenu$i" style="display: none;">
+							<ul class="uiRightClickPopupMenu dropdownArrowTop dropdown-menu" id="UIPopupMenu$i" style="display: none;">
 								<%
 									if(canEdit) {
 										categoryAction = uicomponent.getActionCategory(category.getPath()) ;
@@ -113,13 +113,13 @@
 									}
 									icon += viewAction;
 								%>
-								<li><a href="javascript:void(0);" onclick="$linkView"><i class="$icon"></i>$itemLabelView</a></li>
+								<li><a href="javascript:void(0);" onclick="$linkView"><i class="$icon"></i>&nbsp;$itemLabelView</a></li>
 							<%
 								}
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									String rssLink = uicomponent.getRSSLink(category.getPath()) ;
 							%>
-								<li><a href="$rssLink" onclick="window.open(this.href); return false;"><i class="uiIconRss"></i><%=_ctx.appRes("UICategories.label.RSS");%></a></li>
+								<li><a href="$rssLink" onclick="window.open(this.href); return false;"><i class="uiIconRss"></i>&nbsp;<%=_ctx.appRes("UICategories.label.RSS");%></a></li>
 							<%
 								}
 							%>

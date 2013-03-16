@@ -17,7 +17,7 @@
     attach : function(evt) {
       var dnd = eXo.answer.DragDrop;
       var dragObject = this.cloneNode(true);
-      $(dragObject).attr('class', 'faqDnDCategory').css('border', 'solid 1px #333333');
+      $(dragObject).attr('class', 'faqDnDCategory');
       $('body').append(dragObject);
       $(dragObject).css('width', $(this).width());
       dnd.rootNode = this;
@@ -60,7 +60,7 @@
         if ($(target).hasClass('faqTmpCategory')) {
           $(dnd.lastTarget).addClass('faqHighlightCategory');
         }
-        $(target).css('border', 'dotted 1px #cccccc');
+        $(target).css('border', 'dotted 1px #cfcfcf');
         if (!dnd.hided)
           dnd.hideElement(dnd.rootNode);
       }
