@@ -1,10 +1,10 @@
-<div class="UIFormForum">
+<div class="uiFormForum">
 	<% uiform.begin() 
     println "<div class='resizable'>";
 		uicomponent.renderChildren();
     println "</div>";
 	%>
-	<div class="uiAction">
+	<div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
