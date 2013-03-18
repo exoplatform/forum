@@ -2,7 +2,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.UIPollPortlet.privateField('DivCheckBox');");
+	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.privateField('DivCheckBox');");
 %>
 
 <div class="UIAddPollForm">
