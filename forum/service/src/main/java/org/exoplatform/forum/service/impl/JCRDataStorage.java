@@ -1585,7 +1585,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forum.setPath(forumNode.getPath());
       forum.setTopicCount(reader.l(EXO_TOPIC_COUNT));
       forum.setPostCount(reader.l(EXO_POST_COUNT));
-      forum.setLastTopicPath(reader.string(EXO_LAST_TOPIC_PATH));
+      forum.setLastTopicPath(getLastTopicPath(reader, forum));
       forum.setModerators(strModerators);
 
       try {

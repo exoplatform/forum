@@ -483,7 +483,7 @@
 					<a href="javascript:void(0)" class="textTitleProfile">
 						<i class="$userSmile"></i>$viewScreenName
 					</a>
-					<ul class="dropdown-menu uiUserMenuInfo">
+					<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 						<%
 						  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 						  for(viewAction in menuViewInfos) {
@@ -510,7 +510,7 @@
 						<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 					</a>
 					
-					<ul class="dropdown-menu uiUserMenuInfo">
+					<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 						<%
 						  for(viewAction in menuViewInfos) {
 							if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
@@ -738,7 +738,7 @@
 							<div class="dropdown uiUserInfo">
 								<a href="javascript:void(0);" class="txtEditBy">$editByScreeName</a> 
 							  
-								<ul class="dropdown-menu uiUserMenuInfo">
+								<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 									<%
 									for(viewAction in menuViewInfos) {
 										if((userProfile.getUserRole() >= 3 || userEditByInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;

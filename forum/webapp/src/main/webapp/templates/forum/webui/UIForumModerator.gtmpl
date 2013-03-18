@@ -19,7 +19,7 @@
   %>
       <div class="pull-left dropdown uiUserInfo">
         <a href="javaScript:void(0)">&nbsp;${userView}</a>
-        <ul class="dropdown-menu uiUserMenuInfo">
+        <ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
       <%
       for(viewAction in menuViewInfos) {
         if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;

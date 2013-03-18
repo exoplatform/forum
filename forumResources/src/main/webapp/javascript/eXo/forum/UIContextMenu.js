@@ -53,8 +53,8 @@
       var X = Browser.findMouseRelativeX(context, event, false) || 2;
       var Y = Browser.findMouseRelativeY(context, event) + 6 || 2;
       jobj.css('position', 'absolute').show();
-      jobj.css('left', X + 'px');
-      jobj.css('top', Y + 'px');
+      jobj.css('left', (X - 37) + 'px');
+      jobj.css('top', (Y + 3) + 'px');
     },
 
     show : function(evt) {

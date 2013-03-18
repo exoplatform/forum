@@ -5,7 +5,7 @@
 
   <portal-skin>
     <skin-name>Default</skin-name>
-    <skin-module>forum</skin-module>
+    <skin-module>forumResources</skin-module>
     <css-path>/skin/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portal-skin>

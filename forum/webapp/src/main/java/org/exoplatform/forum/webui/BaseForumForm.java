@@ -60,7 +60,8 @@ public class BaseForumForm extends BaseUIForm {
   }
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    this.getUserProfile();
+    getUserProfile();
+    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');");
     if (getTemplate() != null)
     {
        super.processRender(context);
@@ -72,7 +73,6 @@ public class BaseForumForm extends BaseUIForm {
     renderChildren(context);
     end();
     writer.append("</div>");
-    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');");
   }
 
   /**
