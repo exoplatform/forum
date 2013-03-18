@@ -37,8 +37,8 @@
 	                      </a>   
 	                </li>
 									 <!-- View list categories -->
-							    <li class="pull-right select-category">
-							    	<label for="<%=uicomponent.LIST_CATEGORIES%>"><%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;</label>
+							    <li class="pull-right selectboxSmall">
+							    	<label class="pull-left pdt5" for="<%=uicomponent.LIST_CATEGORIES%>"><%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;</label>
 										<% uicomponent.renderChild(uicomponent.LIST_CATEGORIES) ; %>
 									</li>
 		                 
@@ -53,13 +53,18 @@
 	              	<div class="tab-pane fade $active" id="QuestionManagerment-tab"> 
 						
 										<table class="uiGrid table table-hover table-striped">
+											<thead>
+											
 											<tr>
 												<th><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></th>
 												<th><%=_ctx.appRes("UIUserWatchManager.label.pathCategory");%></th>
-												<th><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsApproved")%></th>
-												<th><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsActivated")%></th>
-												<th><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></th>
+												<th class="center"><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsApproved")%></th>
+												<th class="center"><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsActivated")%></th>
+												<th class="center"><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></th>
 											</tr>
+											</thead>
+											<tbody>
+											
 											<%
 											List questionList = uicomponent.getListQuestion() ;
 											if(!questionList.isEmpty()) {
@@ -70,23 +75,27 @@
 													linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
 													linkEdit = uicomponent.event("EditQuestion", question.getPath()) ;
 													actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getPath()) ;
-													if(!mapPath.containsKey(question.getCategoryId()))
-														mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(question.getPath()));
+													if(!mapPath.containsKey(question.getCategoryId())){
+														String categoryPathName = uicomponent.getCategoryPath(question.getPath());
+														categoryPathName = categoryPathName.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
+														mapPath.put(question.getCategoryId(), categoryPathName);
+													}
 												%>
 													<tr>
 														<td><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
-														<td><%=mapPath.get(question.getCategoryId())%></td>
-														<td class="center">
+														<td class="pathCategory"><%=mapPath.get(question.getCategoryId())%></td>
+														<td class="center actionContainer">
 														<%if(question.isApproved()) {%>
-																<div class="TrueIcon">
-																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnApprove")%>" style="cursor:pointer;">
-																		<%=_ctx.appRes("UIQuestionsInfo.label.IsApproved")%>
+																
+																<div class="anable">
+																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnApprove")%>" >
+																		<span class="uiCheckbox"><input type="checkbox" checked name="allDay" class="checkbox" id="allDay"><span></span></span>
 																	</div>
 																</div>
 														<%} else {%>
-																<div class="FalseIcon">
-																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Approve")%>" style="cursor:pointer;">
-																		<%=_ctx.appRes("UIQuestionsInfo.label.IsNotApproved")%>
+																<div class="disable">
+																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Approve")%>" >
+																			<span class="uiCheckbox"><input type="checkbox"  name="allDay" class="checkbox" id="allDay"><span></span></span>
 																	</dvi>
 																</div>
 														<%}%>
@@ -95,36 +104,37 @@
 														<%
 														actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getPath()) ;
 														if(question.isActivated()) {%>
-																<div class="TrueIcon">
-																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnActivated")%>" style="cursor:pointer;">
-																		<%=_ctx.appRes("UIQuestionsInfo.label.IsActivated")%>
+																<div class="anable">
+																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnActivated")%>" >
+																			<span class="uiCheckbox"><input checked type="checkbox"  name="allDay" class="checkbox" id="allDay"><span></span></span>
 																	</div>
 																</div>
 														<%} else {%>
-																<div class="FalseIcon">
-																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Activate")%>" style="cursor:pointer;">
-																		<%=_ctx.appRes("UIQuestionsInfo.label.IsNotActivated")%>
+																<div class="disable">
+																	<div onclick="$actionChangeStatus" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Activate")%>" >
+																			<span class="uiCheckbox"><input type="checkbox"  name="allDay" class="checkbox" id="allDay"><span></span></span>
 																	</div>
 																</div>
 														<%}%>
 														</td>
 														<td class="center">
 																<a class="actionIcon" href="javascript:void(0)" onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.EditQuestion")%>" >
-									               	<i class="uiIconEdit"></i>
-									              </a>
-									              <a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
-									               	<i class="uiIconDelete"></i>
-									              </a>
+												               		<i class="uiIconEdit uiIconLightGray"></i>
+												              	</a>
+												              	<a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
+												               		<i class="uiIconDelete uiIconLightGray"></i>
+												             	 </a>
 														</td>
 													</tr>
 											<%}
 											} else {%>
-												<tr>
-													<td colspan="4" class="center">
+												<tr class="info">
+													<td colspan="5" class="center ">
 														<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 													</td>
 												</tr>
 										<%}%>
+										</tbody>
 										</table>
 													
 											
@@ -145,12 +155,15 @@
 	              	<div class="tab-pane fade $active" id="QuestionNotAnswered-tab">
 
 										<table class="uiGrid table table-hover table-striped">
+											<thead>
 											<tr>
 												<th><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></th>
 												<th>Category</th>
 												<th><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></th>
-												<th><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></th>
+												<th class="center"><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></th>
 											</tr>
+											</thead>
+											<tbody>
 											<%
 											List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
 											if(!questionNotAnswered.isEmpty()) {
@@ -159,41 +172,45 @@
 												for(Question question in questionNotAnswered) {
 													linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
 													linkResponse = uicomponent.event("ResponseQuestion", question.getPath()+"/"+question.getLanguage()) ;
-													if(!mapPath.containsKey(question.getCategoryId()))
-														mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(question.getPath()));
+													if(!mapPath.containsKey(question.getCategoryId())) {
+														String categoryPathName = uicomponent.getCategoryPath(question.getPath());
+														categoryPathName = categoryPathName.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
+														mapPath.put(question.getCategoryId(), categoryPathName);
+													}
 												%>
 													<tr>
 														<td><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-														<td><%=mapPath.get(question.getCategoryId())%></td>
+														<td class="pathCategory"><%=mapPath.get(question.getCategoryId())%></td>
 														<td>
 														<%
 															String linkResponseByLanguage = "";
 															for(String language :question.getLanguagesNotYetAnswered().split(",")){
 																linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getPath() + "/" + language ) ;
 														%>
-															<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
-																<div style="padding:0px 4px 4px 0px;">- &nbsp;$language</div>
-															</div>
+															<a onclick="$linkResponseByLanguage" href="javascript:void(0)" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
+																-&nbsp;$language &nbsp;
+															</a>
 
 														<%}%>
 														</td>
 														<td class="center">
 															<a class="actionIcon" href="javascript:void(0)" onclick="$linkResponse" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>" >
-								               	<i class="uiIconEdit"></i>
+								               	<i class="uiIconAnsAnswer uiIconAnsLightGray"></i>
 								              </a>
 								              <a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
-								               	<i class="uiIconDelete"></i>
+								               	<i class="uiIconDelete uiIconLightGray"></i>
 								              </a>
 														</td>
 													</tr>
 											<%}
 											} else {%>
 												<tr>
-													<td colspan="2" class="center">
+													<td colspan="4" class="center">
 														<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 													</td>
 												</tr>
 										<%}%>
+										</tbody>
 										</table>
 											
 										<%

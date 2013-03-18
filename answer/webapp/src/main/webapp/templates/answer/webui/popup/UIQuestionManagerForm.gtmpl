@@ -3,23 +3,22 @@
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.FAQChangeHeightToAuto();");
 %>
 
-<div class="FAQUIQuestionManagerForm $uicomponent.id" style="height:auto;" id="Parent$uicomponent.id">
-	<div class="ClearFix">
-		<div id="FAQViewTabContent" style="float:left; width:100%; min-width:625px;">
-			<% uicomponent.renderChild("QuestionInfo") ; %>
+<div class="questionManagerForm uiQuestionManagerForm" id="Parent$uicomponent.id">
+		<div class="resizable questionManagerContainer">
+			<div id="faqViewTabContent" class="faqViewTabContent">
+				<% uicomponent.renderChild("QuestionInfo") ; %>
+			</div>
+			<div id="FAQViewFormContent">
+				<%
+				if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
+					 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
+				}
+				if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
+					 uicomponent.renderChild(uicomponent.UI_RESPONSE_FORM) ;
+				}
+				%>
+			</div>
 		</div>
-		<div id="FAQViewFormContent" style="float:left; padding-top:10px; width:100%; min-width:625px;">
-			<%
-			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
-				 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
-			}
-			if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
-				 uicomponent.renderChild(uicomponent.UI_RESPONSE_FORM) ;
-			}
-			%>
-		</div>
-
-	</div>
 	<% uiform.begin() %>
 	 <div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
