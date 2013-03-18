@@ -174,6 +174,8 @@ public class UIQuestions extends UIContainer {
 
   private String[]                      moderatorActionQues_  = new String[] { "CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion" };
 
+  private Map<String, String>           iconActionQuesion     = new HashMap<String, String>();
+  
   private String[]                      moderatorActionQues2_ = new String[] { "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion" };
 
   private String[]                      userActionQues_       = new String[] { "CommentQuestion", "ResponseQuestion", "SendQuestion" };
@@ -203,6 +205,13 @@ public class UIQuestions extends UIContainer {
       faqService_ = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
     if (FAQUtils.isFieldEmpty(getId()))
       setId("UIQuestions");
+
+    //"CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"
+    String[] icons = new String[]{"uiIconComment", "uiIconAnsAnswer", "uiIconEdit", "uiIconTrash", "uiIconMove", "uiIconAnsSentMail"}; 
+    iconActionQuesion.clear();
+    for(int i = 0; i < moderatorActionQues_.length; ++i) {
+      iconActionQuesion.put(moderatorActionQues_[i], icons[i]);
+    }
   }
 
   protected boolean isNotInSpace() {
@@ -325,6 +334,10 @@ public class UIQuestions extends UIContainer {
 
   protected String[] getActionQuestion() {
     return (canEditQuestion) ? ((faqSetting_.isEnanbleVotesAndComments()) ? moderatorActionQues_ : moderatorActionQues2_) : ((FAQUtils.isFieldEmpty(currentUser_)) ? userActionQues2_ : ((faqSetting_.isEnanbleVotesAndComments()) ? userActionQues_ : userActionQues3_));
+  }
+
+  protected String getIconActionQuestion(String action) {
+    return iconActionQuesion.get(action);
   }
 
   public void updateCurrentQuestionList() throws Exception {
@@ -760,10 +773,12 @@ public class UIQuestions extends UIContainer {
   static public class ViewQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       WebuiRequestContext context = event.getRequestContext();
+      UIQuestions uiQuestions = event.getSource();
       String questionId = context.getRequestParameter(OBJECTID);
       String asn = context.getRequestParameter(Utils.ANSWER_NOW_PARAM);
-      event.getSource().getAncestorOfType(UIAnswersPortlet.class)
+      uiQuestions.getAncestorOfType(UIAnswersPortlet.class)
                        .viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
+      context.addUIComponentToUpdateByAjax(uiQuestions);
     }
   }
 

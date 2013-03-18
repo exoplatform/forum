@@ -32,44 +32,61 @@
     setTimeout(UIAnswersPortlet.reSizeImages, 1500);
   };
   
+  UIAnswersPortlet.rightClickQuestionMenu = function () {
+    console.log('rightClickQuestionMenu ');
+    var oncontextmenus = $('.questionRightClickMenu');
+    oncontextmenus.off('contextmenu').on('contextmenu', function(evt) {
+       var thiz = $(this);
+       var menu = $('#'+thiz.attr('data-contextid'));
+       if(menu.exists) {
+         menu.parent().css('position', 'absolute');
+         utils.hideElements();
+         contextMenu.setPosition(thiz, menu, evt);
+         utils.addhideElement(menu);
+         utils.cancelEvent(evt);
+         evt.preventDefault();
+       }
+    });
+    
+  };
+
   UIAnswersPortlet.disableContextMenu = function (id) {
-    var oncontextmenus = findId(id + ' .disableContextMenu');
-    for (var i = 0; i < oncontextmenus.length; i++) {
-      oncontextmenus.eq(i).on('contextmenu', function() {
-        return false;
-      });
-    }
+    var oncontextmenus = findId(id).find('.disableContextMenu');
+    oncontextmenus.on('contextmenu', function() {
+      return false;
+    });
   };
 
   UIAnswersPortlet.processHeightLine = function() {
-  var portlet = findId(UIAnswersPortlet.portletId);
-  var pageBody = $('#UIPageBody');
-  var trContainer = pageBody.parents('tr.TRContainer');
-  var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
-  //var rightContainer = trContainer.find('div.UIContainer:first');
-  var leftHeight = leftTDContainer.outerHeight();
-  var delta = leftHeight - pageBody.outerHeight();
-  var answerContainer = portlet.find('div.uiAnserContainer:first');;
-    var line = answerContainer.find('#resizeLineBar').find('div.line');
-  var height = answerContainer.outerHeight();
-  
-  if (delta > 0) {
-    height += delta;
-  }
-  line.css('height', (height + 36) + 'px');
+    console.log('processHeightLine ');
+    var portlet = findId(UIAnswersPortlet.portletId);
+    var pageBody = $('#UIPageBody');
+    var trContainer = pageBody.parents('tr.TRContainer');
+    var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
+    //var rightContainer = trContainer.find('div.UIContainer:first');
+    var leftHeight = leftTDContainer.outerHeight();
+    var delta = leftHeight - pageBody.outerHeight();
+    var answerContainer = portlet.find('div.uiAnserContainer:first');;
+      var line = answerContainer.find('#resizeLineBar').find('div.line');
+    var height = answerContainer.outerHeight();
+    
+    if (delta > 0) {
+      height += delta;
+    }
+    line.css('height', (height) + 'px');
+    
+     console.log('height ' + height + '  delta ' + delta);
   };
+  
+ 
 
   UIAnswersPortlet.resizeLineBar = function(idPr) {
-  var timeout = setTimeout(function() {
-    UIAnswersPortlet.processHeightLine();
-    clearTimeout(timeout);
-  }, 500);
 
     UIAnswersPortlet.currentPosW = 0;
     UIAnswersPortlet.currentW = 0;
     UIAnswersPortlet.isDownLine = false;
 
-  var answerContainer = $('#' + idPr); 
+    var answerContainer = $('#' + idPr); 
     var parent = answerContainer.find('#resizeLineBar');
     var line = parent.find('div.line');
     line.on('mousedown', function(e) {
