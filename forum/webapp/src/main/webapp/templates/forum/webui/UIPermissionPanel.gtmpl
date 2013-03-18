@@ -1,4 +1,14 @@
-<%import org.exoplatform.forum.webui.UIPermissionPanel;%>
+<%
+  import org.exoplatform.forum.webui.UIPermissionPanel;
+  def rcontext = _ctx.getRequestContext();
+  def url = uicomponent.event("EnterPermission");
+
+  String eventURL = uicomponent.event("EnterPermission");
+  eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
+  
+  rcontext.getJavascriptManager().require("SHARED/jquery")
+  .addScripts("\$(\"#$uicomponent.id #PermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + \$(this).val(); javascript:ajaxGet(eventURL); });");
+%>
 
 <div id="$uicomponent.id">
   <%

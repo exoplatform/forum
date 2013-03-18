@@ -19,12 +19,16 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.container.UIContainer;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -48,7 +52,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
       events = { 
          @EventConfig(listeners = UIPermissionPanel.OpenUserPopupActionListener.class),
          @EventConfig(listeners = UIPermissionPanel.OpenRoleAndGroupPopupActionListener.class),
-         @EventConfig(listeners = UIPermissionPanel.AddPermissionActionListener.class)
+         @EventConfig(listeners = UIPermissionPanel.AddPermissionActionListener.class),
+         @EventConfig(listeners = UIPermissionPanel.EnterPermissionActionListener.class)
       }
    ),
    
@@ -112,6 +117,18 @@ public class UIPermissionPanel extends UIContainer implements UISelector
       context.addUIComponentToUpdateByAjax(popupWindow.getParent());
    }
    
+   public static class EnterPermissionActionListener extends EventListener<UIPermissionPanel>
+   {
+
+    @Override
+    public void execute(Event<UIPermissionPanel> event) throws Exception {
+        UIPermissionPanel panel = event.getSource();
+        UIFormStringInput input = panel.getChildById(PERMISSION_INPUT);
+        input.setValue(event.getRequestContext().getRequestParameter(OBJECTID));
+        Util.getPortalRequestContext().setResponseComplete(true);
+    }
+   }
+   
    public static class AddPermissionActionListener extends EventListener<UIPermissionPanel>
    {
       @Override
@@ -120,7 +137,15 @@ public class UIPermissionPanel extends UIContainer implements UISelector
          UIPermissionPanel panel = event.getSource();
          UIFormStringInput input = panel.getChildById(PERMISSION_INPUT);
          UIPermissionGrid grid = panel.getChildById(PERMISSION_GRID);
-         grid.setOwners(ForumUtils.splitForForum(input.getValue()));
+         String value = input.getValue();
+         String errorUser = UserHelper.checkValueUser(value);
+         if (!ForumUtils.isEmpty(errorUser)) {
+             WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+             context.getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", new String[] { errorUser }, ApplicationMessage.WARNING));
+             ((PortalRequestContext) context.getParentAppRequestContext()).ignoreAJAXUpdateOnPortlets(true);
+           return;
+         }
+         grid.setOwners(ForumUtils.splitForForum(value));
          input.setValue(null);
          event.getRequestContext().addUIComponentToUpdateByAjax(panel);
       }
