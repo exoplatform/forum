@@ -16,10 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.answer.webui.popup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +37,7 @@ import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UISelectComponent;
 import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -52,7 +51,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
@@ -71,12 +69,13 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
     {
         @ComponentConfig(
           lifecycle = UIFormLifecycle.class, 
-          template = "system:/groovy/webui/form/UIForm.gtmpl", 
+          template = "app:/templates/answer/webui/popup/UICategoryForm.gtmpl", 
           events = {
               @EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
               @EventConfig(listeners = UICategoryForm.SelectPermissionActionListener.class, phase = Phase.DECODE), 
               @EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase = Phase.DECODE), 
-              @EventConfig(listeners = UICategoryForm.AddValuesUserActionListener.class, phase = Phase.DECODE) 
+              @EventConfig(listeners = UICategoryForm.AddValuesUserActionListener.class, phase = Phase.DECODE),
+              @EventConfig(listeners = UICategoryForm.SelectTabActionListener.class, phase=Phase.DECODE)
         }
       ), 
         @ComponentConfig(id = "UICategoryUserPopupWindow", type = UIPopupWindow.class, 
@@ -122,6 +121,14 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
   private long                oldIndex_                        = 1l;
 
   private Category            currentCategory_                 = new Category();
+  
+  public static final String PERMISSION_TAB      = "PermissionTab";
+  
+  public static final String MODERAROR   = "Is Moderator";
+
+  public static final String VIEWER      = "Can View";
+
+  private int                id                           = 0;
 
   public UICategoryForm() throws Exception {
     setActions(new String[] { "Save", "Cancel" });
@@ -129,6 +136,8 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 
   public void updateAddNew(boolean isAddNew) throws Exception {
     isAddNew_ = isAddNew;
+    
+    
     UIFormInputWithActions inputset = new UIFormInputWithActions(CATEGORY_DETAIL_TAB);
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class));
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null);
@@ -137,17 +146,26 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       index.setValue(String.valueOf(getFAQService().getMaxindexCategory(parentId_) + 1));
     }
     inputset.addUIFormInput(index);
-    inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null));
+    
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null));
     inputset.addUIFormInput(new UICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false));
     inputset.addUIFormInput(new UICheckBoxInput(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false));
     inputset.addUIFormInput(new UICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX, FIELD_MODERATE_ANSWERS_CHECKBOX, false));
+    addUIFormInput(inputset);
+    
+    UIPermissionPanel tmp = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
+    tmp.setPermission(MODERAROR, VIEWER);
+    addChild(tmp);
+    
+    /*UIFormInputWithActions permissionTab = new UIFormInputWithActions(PERMISSION_TAB);
+    permissionTab.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null));
+    
     UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null);
     if (isAddNew) {
       moderator.setValue(FAQUtils.getCurrentUser());
     }
     moderator.addValidator(MandatoryValidator.class);
-    inputset.addUIFormInput(moderator);
+    permissionTab.addUIFormInput(moderator);
     List<ActionData> actionData;
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
     ActionData ad;
@@ -169,9 +187,10 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         actionData.add(ad);
         ++j;
       }
-      inputset.setActionField(files[i], actionData);
+      permissionTab.setActionField(files[i], actionData);
     }
-    addChild(inputset);
+    
+    addChild(permissionTab);*/
   }
 
   public void activate() {
@@ -213,7 +232,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       }
       String userPrivate = (!CommonUtils.isEmpty(cat.getUserPrivate())) ? StringUtils.join(cat.getUserPrivate(), CommonUtils.COMMA) : 
                             CommonUtils.EMPTY_STR;
-      getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate);
+      //getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate);
       getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(cat.getIndex()));
       getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription());
       getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions());
@@ -221,7 +240,11 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       getUICheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor());
       String moderator = (!CommonUtils.isEmpty(cat.getModerators())) ? StringUtils.join(cat.getModerators(), CommonUtils.COMMA) : 
                           FAQUtils.getCurrentUser();
-      getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator);
+      //getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator);
+      
+      UIPermissionPanel permissionTab = getChildById(PERMISSION_TAB);
+      permissionTab.addPermissionForOwners(MODERAROR, cat.getModerators());
+      permissionTab.addPermissionForOwners(VIEWER, cat.getUserPrivate());
     }
   }
 
@@ -236,6 +259,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         return;
       }
       UIFormInputWithActions inputset = uiCategory.getChildById(CATEGORY_DETAIL_TAB);
+      UIPermissionPanel permissionTab = uiCategory.getChildById(PERMISSION_TAB);
       long index = uiCategory.oldIndex_;
       String strIndex = inputset.getUIStringInput(FIELD_INDEX_INPUT).getValue();
       if (!CommonUtils.isEmpty(strIndex)) {
@@ -248,8 +272,8 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         index = uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_) + 1;
       }
       String description = inputset.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
-      String moderator = inputset.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).getValue();
-      String userPrivate = inputset.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).getValue();
+      String moderator = permissionTab.getOwnersByPermission(FIELD_MODERATOR_INPUT);
+      String userPrivate = permissionTab.getOwnersByPermission(FIELD_USERPRIVATE_INPUT);
       String erroUser = UserHelper.checkValueUser(userPrivate);
       if (!FAQUtils.isFieldEmpty(erroUser)) {
         uiCategory.warning("UICateforyForm.sms.user-not-found", new String[] { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser });
@@ -294,6 +318,25 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 
       answerPortlet.cancelAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
+    }
+  }
+  
+  protected boolean getIsSelected(int id) {
+    if (this.id == id)
+      return true;
+    return false;
+  }
+  
+  static public class SelectTabActionListener extends BaseEventListener<UICategoryForm> {
+    public void onEvent(Event<UICategoryForm> event, UICategoryForm uiForm, String id) throws Exception {
+      uiForm.id = Integer.parseInt(id);
+      UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+      if (uiForm.id == 1) {
+        popupWindow.setWindowSize(550, 440);
+      } else {
+        popupWindow.setWindowSize(550, 380);
+      }
+      Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 
@@ -369,12 +412,12 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       UIAnswersPortlet answerPortlet = uiUserSelector.getAncestorOfType(UIAnswersPortlet.class);
       UICategoryForm categoryForm = answerPortlet.findFirstComponentOfType(UICategoryForm.class);
       String id = uiUserSelector.getPermisionType();
-      UIFormInputWithActions inputset = categoryForm.getChildById(CATEGORY_DETAIL_TAB);
+      UIFormInputWithActions permissionTab = categoryForm.getChildById(PERMISSION_TAB);
       if (id.equals(FIELD_USERPRIVATE_INPUT)) {
-        UIFormTextAreaInput textAreaInput = inputset.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT);
+        UIFormTextAreaInput textAreaInput = permissionTab.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT);
         textAreaInput.setValue(categoryForm.getUserSelect(textAreaInput.getValue(), values));
       } else {
-        UIFormTextAreaInput stringInput = inputset.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT);
+        UIFormTextAreaInput stringInput = permissionTab.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT);
         stringInput.setValue(categoryForm.getUserSelect(stringInput.getValue(), values));
       }
       UIPopupWindow popupWindow = uiUserSelector.getParent();
