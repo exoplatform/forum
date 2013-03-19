@@ -1674,7 +1674,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.getTopic();
         StringBuffer buffer = new StringBuffer();
-        buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topic.getId());
+        buffer.append("uiIconForumTopic//").append(topic.getTopicName()).append("//").append(topic.getId());
         String userName = topicDetail.userProfile.getUserId();
         topicDetail.getForumService().saveUserBookmark(userName, buffer.toString(), true);
       } catch (Exception e) {

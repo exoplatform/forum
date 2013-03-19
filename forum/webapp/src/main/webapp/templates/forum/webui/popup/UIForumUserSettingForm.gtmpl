@@ -97,13 +97,13 @@
                     <td class="text" style="text-align:left">
                       <%
                       if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
-                        <div class="CategoryIcon" style="height:24px; width:24px;"><span></span></div>
+                        <i class="uiIconCategory uiIconLightGray"></i>
                       <%  
                       } else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
-                        <div class="ForumNormalIcon" style="height:24px; width:24px;"><span></span></div>
+                        <i class="uiIconUIForms uiIconLightGray"></i>
                       <%
                       } else {%>
-                        <div class="ThreadNoNewPost" style="height:24px; width:24px;"><span></span></div>
+                       <i class="uiIconForumTopic uiIconForumLightGray"></i>
                       <%
                       }%>
                     </td>

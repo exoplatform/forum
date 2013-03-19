@@ -6,61 +6,68 @@
   List bookMarks = uiform.getBookMark();
 %>
 <% uiform.begin() %>
-<div class="UIShowBookMarkForm resizable">
-		<div class="HorizontalLayout">
-		  <div style="overflow:auto; padding-bottom:2px;" class="ClearFix">
-				<% 
-				  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
+<div class="uiShowBookMarkForm resizable">
+	<div class="horizontalLayout">
+		<% 
+		  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
+		%>
+		
+		<table class="uiGrid table table-hover table-striped">
+			<thead>
+				<th style="width:35px;" class="center"></th>
+				<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
+				<th style="width:40px;" class="center"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
+			</thead>
+			<tbody>
+				<%
+				  if(bookMarks.size() > 0) {
+						String linkName = "";
+						String linkPath = "";
+						String icon = "";
+						String linkBm = "";
+						String typeLink = "";
+						int index = 0, lastIndex = 0;
+						for(links in bookMarks){
+							index = links.indexOf("//") ;
+							icon = links.substring(0, index);
+							lastIndex = links.lastIndexOf("//") ;
+							linkName = links.substring(index+2,lastIndex);
+							linkPath = links.substring(lastIndex + 2);
+							links = "topicIcon//topicName//"+linkPath;
+							typeLink = uiform.getType(linkPath);
+							if(typeLink.equals(ForumUtils.TOPIC)) {
+								icon += " uiIconForumLightGray";
+							} else {
+								icon += " uiIconLightGray";
+							}
+							linkBm = ForumUtils.createdForumLink(typeLink, linkPath, false);					
 				%>
-
-			</div>
-			<table class="uiGrid table table-hover table-striped">
-				<thead>
-					<th style="width:35px;"></th>
-					<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
-					<th style="width:40px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
-				</thead>
-				<tbody>
-					<%
-					  if(bookMarks.size() > 0) {
-							String linkName = "";
-							String linkPath = "";
-							String icon = "";
-							String linkBm = "";
-							int index = 0, lastIndex = 0;
-							for(links in bookMarks){
-								index = links.indexOf("//") ;
-								icon = links.substring(0, index);
-								lastIndex = links.lastIndexOf("//") ;
-								linkName = links.substring(index+2,lastIndex);
-								linkPath = links.substring(lastIndex + 2);
-								links = "topicIcon//topicName//"+linkPath;
-								linkBm = ForumUtils.createdForumLink(uiform.getType(linkPath), linkPath, false);					
-					%>
-					<tr>
-						<td><div class="$icon" style="width:24px;height:24px;"><span></span></div></td>
-						<td>
-							<a class="ActionLink" rel="<%=uiform.event("OpenLink",linkPath);%>;" href="$linkBm">$linkName</a>
-						</td>
-						<td>
-							<div onclick="<%=uiform.event("DeleteLink", linkPath);%>" style="cursor:pointer; margin:0 auto; width:18px;">
-								<div class="DeleteIcon"><span></span></div>
-							</div>
-						</td>
-					</tr>
-					<%   }
-					   } else {%>
-					<tr>
-						<td colspan="3" align="center">
-							<div><strong><%=_ctx.appRes("UIShowBookMarkForm.label.NoLinks");%></strong></div>
-						</td>
-					</tr>
-					<% } %>
-				</tbody>
-			</table>
-		</div>
+				<tr>
+					<td class="center">
+						<i class="$icon "></i>
+					</td>
+					<td>
+						<a class="ActionLink" data-link="<%=uiform.event("OpenLink",linkPath);%>;" href="$linkBm">$linkName</a>
+					</td>
+					<td class="center">
+						<a class="actionIcon" href="<%=uiform.event("DeleteLink", linkPath);%>" rel="tooltip" data-placement="bottom" title="Delete">
+							<i class="uiIconDelete uiIconLightGray"></i>
+						</a>
+					</td>
+				</tr>
+				<%   }
+				   } else {%>
+				<tr>
+					<td colspan="3" class="center">
+						<div class="emptyForum"><%=_ctx.appRes("UIShowBookMarkForm.label.NoLinks");%></div>
+					</td>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+	</div>
 </div>
-<div class="uiAction">
+<div class="uiAction uiActionBorder">
 	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></button>
 </div>
 <%uiform.end()%>

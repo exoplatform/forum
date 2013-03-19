@@ -1243,10 +1243,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       if (!ForumUtils.isEmpty(topicId)) {
         StringBuffer buffer = new StringBuffer();
         if (topicId.equals("forum")) {
-          buffer.append("ForumNormalIcon//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
+          buffer.append("uiIconUIForms//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
         } else {
           Topic topic = uiTopicContainer.getTopic(topicId);
-          buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topicId);
+          buffer.append("uiIconForumTopic//").append(topic.getTopicName()).append("//").append(topicId);
         }
         String userName = uiTopicContainer.userProfile.getUserId();
         uiTopicContainer.getForumService().saveUserBookmark(userName, buffer.toString(), true);

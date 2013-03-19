@@ -629,15 +629,15 @@ public class UICategory extends BaseForumForm {
           path = path.substring(t + 2);
           String forumId = path.substring(path.indexOf(ForumUtils.SLASH) + 1);
           Forum forum = uiCategory.getForum(forumId);
-          path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
+          path = "uiIconUIForms//" + forum.getForumName() + "//" + forumId;
         } else if (type.equals("category")) {
           path = path.substring(path.indexOf("//") + 2);
           Category category = uiCategory.getCategory();
-          path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
+          path = "uiIconCategory//" + category.getCategoryName() + "//" + path;
         } else {
           path = path.split("//")[1];
           Topic topic = uiCategory.getForumService().getTopicSummary(path);
-          path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
+          path = "uiIconForumTopic//" + topic.getTopicName() + "//" + topic.getId();
         }
         String userName = uiCategory.userProfile.getUserId();
         uiCategory.getForumService().saveUserBookmark(userName, path, true);

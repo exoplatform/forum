@@ -296,7 +296,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         String path = topic.getPath();
         path = path.substring(path.indexOf(Utils.CATEGORY));
         StringBuffer buffer = new StringBuffer();
-        buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path);
+        buffer.append("uiIconForumTopic//").append(topic.getTopicName()).append("//").append(path);
         String userName = topicTag.userProfile.getUserId();
         topicTag.getForumService().saveUserBookmark(userName, buffer.toString(), true);
       }
