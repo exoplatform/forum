@@ -3,6 +3,7 @@
   def rcontext = _ctx.getRequestContext();
   def requireJS = rcontext.getJavascriptManager().require("SHARED/UIAnswersPortlet", "answer");
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.resizeLineBar('"+uicomponent.id+"');");
+  requireJS.addScripts("setTimeout( function() {eXo.answer.UIAnswersPortlet.processHeightLine();}, 300);");
  %>
 <div id="${uicomponent.id}" class="UIAnswersContainer uiAnserContainer clearfix">
   <% if(uicomponent.isRenderChild) { %>

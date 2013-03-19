@@ -68,6 +68,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryInfo;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.DataStorage;
 import org.exoplatform.faq.service.FAQEventQuery;
@@ -1560,6 +1561,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         log.debug("Updating moderator for child category failed: ", e);
       }
     }
+    category.setPath(getCagoryPath(categoryNode.getPath()));
     if (categoryNode.isNew())
       categoryNode.getSession().save();
     else
@@ -1693,7 +1695,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         cateList.add(cate);
         if (cat.hasNodes()) {
           cateList.addAll(listingSubTree(cat, j));
-          ;
         }
       }
     }
@@ -1708,6 +1709,51 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     List<Cate> cateList = new ArrayList<Cate>();
     cateList.addAll(listingSubTree(cateHome, i));
     return cateList;
+  }
+  
+  private Category readeCategoryTree(Node categoryNode) throws Exception {
+    Category cate = new Category();
+    PropertyReader reader = new PropertyReader(categoryNode);
+    cate.setId(categoryNode.getName());
+    cate.setPath(categoryNode.getPath());
+    cate.setName(reader.string(EXO_NAME));
+    cate.setIndex(reader.l(EXO_INDEX));
+    return cate;
+  }
+  
+  public CategoryTree buildCategoryTree(String categoryId) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    CategoryTree categoryTree = new CategoryTree();
+    Node cateNode;
+    if (CommonUtils.isEmpty(categoryId)) {
+      cateNode = getCategoryHome(sProvider, null);
+    } else {
+      cateNode = getCategoryNode(sProvider, categoryId);
+      if (cateNode == null)
+        return null;
+    }
+
+    categoryTree.setCategory(readeCategoryTree(cateNode));
+    categoryTree.setSubCategory(getCategoryTree(cateNode));
+
+    return categoryTree;
+  }
+  
+  private List<CategoryTree> getCategoryTree(Node categoryNode) throws Exception {
+    List<CategoryTree> categoryTrees = new ArrayList<CategoryTree>();
+    NodeIterator iter = categoryNode.getNodes();
+    Node cateNode;
+    CategoryTree categoryTree;
+    while (iter.hasNext()) {
+      cateNode = iter.nextNode();
+      if (cateNode.isNodeType(EXO_FAQ_CATEGORY)) {
+        categoryTree = new CategoryTree();
+        categoryTree.setCategory(readeCategoryTree(cateNode));
+        categoryTree.setSubCategory(getCategoryTree(cateNode));
+        categoryTrees.add(categoryTree);
+      }
+    }
+    return categoryTrees;
   }
 
   @Override
@@ -1742,9 +1788,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     category.setViewAuthorInfor(reader.bool(EXO_VIEW_AUTHOR_INFOR));
     category.setIndex(reader.l(EXO_INDEX, 1));
     category.setView(reader.bool(EXO_IS_VIEW, true));
-    String path = categoryNode.getPath();
-    category.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+    category.setPath(getCagoryPath(categoryNode.getPath()));
     return category;
+  }
+  
+  private String getCagoryPath(String path) {
+    return path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1);
   }
 
   @Override
@@ -2029,9 +2078,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       Node faqHome = getFAQServiceHome(sProvider);
       Node srcNode = faqHome.getNode(categoryId);
+      String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
+      
+      if(srcNode.getPath().equals(destPath)) return;
+      
       Node parentNode = srcNode.getParent();
       String srcPath = srcNode.getPath();
-      String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
       faqHome.getSession().move(srcPath, destPath);
       faqHome.getSession().save();
       Node destNode = faqHome.getNode(destCategoryId + "/" + srcNode.getName());
@@ -3224,7 +3276,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       path = Utils.CATEGORY_HOME;
     }
     try {
-      NodeIterator iter = getFAQServiceHome(sProvider).getNode(path).getNodes();
+      NodeIterator iter = getCategoryNode(sProvider, path).getNodes();
       while (iter.hasNext()) {
         Node catNode = iter.nextNode();
         if (catNode.isNodeType(EXO_FAQ_CATEGORY)) {
@@ -3234,7 +3286,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Cheking whether catagory is exist: ", e);
+      return false;
     }
     return false;
   }

@@ -616,9 +616,8 @@ public class UICategories extends BaseUIFAQForm {
       }
       try {
         popupContainer.setId("MoveCategoryForm");
-        uiMoveCategoryForm.setCategoryID(categoryId);
+        uiMoveCategoryForm.setCategoryId(categoryId);
         uiMoveCategoryForm.setFAQSetting(uiCategories.faqSetting_);
-        uiMoveCategoryForm.setListCate();
         popupAction.activate(popupContainer, 600, 400);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } catch (Exception e) {

@@ -24,7 +24,6 @@
   UIAnswersPortlet.updateContainersHeight = function () {
     var viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.CategoriesContainer');
     if(!viewQuestionContentEl.exists()) viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.ViewQuestionContent');
-    //viewQuestionContentEl.css('height', viewQuestionContentEl.height() - 67);
   };
   
   UIAnswersPortlet.controlWorkSpace = function () {
@@ -33,7 +32,6 @@
   };
   
   UIAnswersPortlet.rightClickQuestionMenu = function () {
-    console.log('rightClickQuestionMenu ');
     var oncontextmenus = $('.questionRightClickMenu');
     oncontextmenus.off('contextmenu').on('contextmenu', function(evt) {
        var thiz = $(this);
@@ -47,7 +45,6 @@
          evt.preventDefault();
        }
     });
-    
   };
 
   UIAnswersPortlet.disableContextMenu = function (id) {
@@ -58,12 +55,10 @@
   };
 
   UIAnswersPortlet.processHeightLine = function() {
-    console.log('processHeightLine ');
     var portlet = findId(UIAnswersPortlet.portletId);
     var pageBody = $('#UIPageBody');
     var trContainer = pageBody.parents('tr.TRContainer');
     var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
-    //var rightContainer = trContainer.find('div.UIContainer:first');
     var leftHeight = leftTDContainer.outerHeight();
     var delta = leftHeight - pageBody.outerHeight();
     var answerContainer = portlet.find('div.uiAnserContainer:first');;
@@ -74,8 +69,6 @@
       height += delta;
     }
     line.css('height', (height) + 'px');
-    
-     console.log('height ' + height + '  delta ' + delta);
   };
   
  
@@ -554,26 +547,36 @@
   };
   
   // Remove UIAnswersPortlet.createLink function.
+  UIAnswersPortlet.initTreeNode = function(componentId) {
+    var container = findId(componentId);
+    var treeContainer = container.find('div.treeContainer:first');
+    treeContainer.find('.nodeGroup').hide();
+    treeContainer.find('.nodeGroup:first').show();
+  };
   
-  UIAnswersPortlet.showTreeNode = function (obj, isShow) {
-    if (isShow === "false") return;
-    var parentNode = $(obj).parents('.ParentNode');
-    var nodes = parentNode.find('div.Node');
-    var selectedNode = obj.parents('.Node');
-    var nodeSize = nodes.length;
-    var childrenContainer = null;
-    for (var i = 0; i < nodeSize; i++) {
-      childrenContainer = $(nodes.eq(i)).find('div.ChildNodeContainer:first');
-      if (nodes.eq(i) === selectedNode) {
-        childrenContainer.css('display', 'block');
-        $(nodes.eq(i)).attr('class', 'Node SmallGrayPlus');
-      } else {
-        childrenContainer.css('display', 'none');
-        if ($(nodes.eq(i)).attr('class') === "Node SmallGrayPlus false") continue;
-        $(nodes.eq(i)).attr('class', 'Node SmallGrayMinus');
-      }
+  UIAnswersPortlet.showTreeNode = function (obj) {
+    var thiz = $(obj);
+    var parentNode = thiz.parents('li.node:first');
+    var childrenNodeGroup = parentNode.find('ul.nodeGroup:first').show();
+    
+    var treeContainer = thiz.parents('div.treeContainer:first');
+    var allNodes = treeContainer.find('a.uiIconNode');
+    allNodes.attr('class', 'uiIconNode collapseIcon');
+    thiz.attr('class', 'uiIconNode expandIcon nodeSelected');
+    UIAnswersPortlet.showNode(thiz);
+  };
+  
+  UIAnswersPortlet.showNode = function (obj) {
+    if(!obj.parents('div.treeContainer').exists()) return;
+console.log(obj.parents('ul.nodeGroup:first').length)
+    var parentNode = obj.parents('ul.nodeGroup:first').parents('li.node:first');
+    console.log(parentNode.attr('class'));
+    if(parentNode.exists()) {
+      var nThiz = parentNode.find('a.uiIconNode:first').attr('class', 'uiIconNode expandIcon');
+      UIAnswersPortlet.showNode(nThiz);
     }
   };
+  
   
   UIAnswersPortlet.submitSearch = function (id) {
     findId(id).on('keydown', UIAnswersPortlet.submitOnKey);

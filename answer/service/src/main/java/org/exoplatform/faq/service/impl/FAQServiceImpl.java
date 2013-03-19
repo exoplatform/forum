@@ -33,6 +33,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryInfo;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
@@ -515,6 +516,10 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public void saveCategory(String parentId, Category cat, boolean isAddNew) {
     jcrData_.saveCategory(parentId, cat, isAddNew);
+  }
+
+  public CategoryTree buildCategoryTree(String categoryId) throws Exception {
+    return jcrData_.buildCategoryTree(categoryId);
   }
 
   public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception {

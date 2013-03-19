@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.answer.webui.popup;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.ItemExistsException;
@@ -28,9 +28,12 @@ import org.exoplatform.answer.webui.UIBreadcumbs;
 import org.exoplatform.answer.webui.UICategories;
 import org.exoplatform.answer.webui.UIQuestions;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Cate;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -62,19 +65,14 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
 
   private boolean           isCateSelect = false;
 
-  private List<Cate>        listCate     = new ArrayList<Cate>();
-
-  private static FAQService faqService_  = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+  private static FAQService faqService_;
 
   public UIMoveCategoryForm() throws Exception {
+    faqService_  = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
   }
 
-  private String getCategoryID() {
-    return categoryId_;
-  }
-
-  public void setCategoryID(String s) {
-    categoryId_ = s;
+  public void setCategoryId(String categoryId) {
+    categoryId_ = categoryId;
   }
 
   public void activate() {
@@ -83,10 +81,39 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() {
   }
 
-  public List<Cate> getListCate() {
-    return this.listCate;
+  protected CategoryTree getCategoryTree() throws Exception {
+    return faqService_.buildCategoryTree(null);
   }
 
+  protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    builder.append("<a href=\"javascript:void(0);\"")
+           .append(" ondblclick=\"").append(event("Save", category.getId())).append("\"");
+    if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
+        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+    } else {
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+    }
+    builder.append("</a>");
+
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    if(categoryTrees.size() > 0) {
+      builder.append("<ul class=\"nodeGroup\">");
+      for(CategoryTree subTree : categoryTrees) {
+        if (subTree.getCategory().getPath().indexOf(categoryId_) >= 0)
+          continue;
+        builder.append("<li class=\"node\">");
+        builder.append(renderCategoryTree(subTree));
+        builder.append("</li>");
+      }
+      builder.append("</ul>");
+    }
+    
+    return builder.toString();
+  }
+  
   public void setIsCateSelect(boolean isCateSelect) {
     this.isCateSelect = isCateSelect;
   }
@@ -95,26 +122,18 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
     this.faqSetting_ = faqSetting;
   }
 
-  public void setListCate() throws Exception {
-    listCate.clear();
-    List<Cate> temp = faqService_.listingCategoryTree();
-    for (Cate cat : temp) {
-      if (cat.getCategory().getPath().indexOf(categoryId_) < 0) {
-        listCate.add(cat);
-      }
-    }
-  }
-
   static public class SaveActionListener extends BaseEventListener<UIMoveCategoryForm> {
     public void onEvent(Event<UIMoveCategoryForm> event, UIMoveCategoryForm moveCategory, String destCategoryId) throws Exception {
       UIAnswersPortlet answerPortlet = moveCategory.getAncestorOfType(UIAnswersPortlet.class);
-      String categoryId = moveCategory.getCategoryID();
+      String categoryId = moveCategory.categoryId_;
       try {
+        Category category = faqService_.getCategoryById(destCategoryId);
         boolean canMove = moveCategory.faqSetting_.isAdmin();
-        if (!canMove)
-          canMove = faqService_.isCategoryModerator(destCategoryId, null);
+        if (!canMove){
+          canMove = Utils.hasPermission(Arrays.asList(category.getModerators()), UserHelper.getAllGroupAndMembershipOfUser(null));
+        }
         if (canMove) {
-          if (!faqService_.isCategoryExist(faqService_.getCategoryNameOf(categoryId), destCategoryId)) {
+          if (!faqService_.isCategoryExist(faqService_.getCategoryNameOf(categoryId), category.getPath())) {
             faqService_.moveCategory(categoryId, destCategoryId);
           } else {
             warning("UIQuestions.msg.can-not-move-category-same-name");
