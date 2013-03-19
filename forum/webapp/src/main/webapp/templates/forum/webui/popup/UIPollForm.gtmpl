@@ -1,4 +1,4 @@
-<div class="UIAddPollForm">
+<div class="uiAddPollForm">
 	<% uiform.begin() %>
 	<div class="resizable">
 		<div class="form-horizontal">
@@ -8,18 +8,14 @@
 					<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
 				</div>
 			</div>
-				
-			<div class="Line"><span></span></div>
-			
+
 			<div class="control-group">
 				<label class="control-label" for="<%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>"><%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_OPTIONS) %>
 				</div>
 			</div>
-			
-			<div class="Line"><span></span></div>
-	
+
 			<div class="control-group">
 				<label class="control-label" for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</label>
 				<div class="controls">
@@ -45,7 +41,7 @@
 		</div>
 	</div>
 	
-	<div class="uiAction">
+	<div class="uiAction uiActionBorder">
 	<% for(action in uicomponent.getActions()) { 
 		String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		String link = uicomponent.event(action) ;

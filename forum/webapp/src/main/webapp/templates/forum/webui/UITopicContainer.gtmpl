@@ -236,10 +236,10 @@
 					<th style="width:40%;">
 						<%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
 					</th>
-					<th style="width:20%;">
+					<th style="width:18%;">
 						<%=_ctx.appRes("UITopicContainer.label.authorPost");%>
 					</th>
-					<th style="width:100px;">
+					<th style="width:145px;">
 						<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
 					</th>
 				   
@@ -455,7 +455,7 @@
 					</td>
 					
 					<td>
-						<div class="DateTime">$lastPostDate</div>
+						$lastPostDate
 					</td>
 				  
 					<td>
