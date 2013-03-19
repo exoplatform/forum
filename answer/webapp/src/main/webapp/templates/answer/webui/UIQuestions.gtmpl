@@ -196,7 +196,7 @@
                            String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
                            String linkView = uicomponent.event("EditQuestion", questionPath);
                          %>  
-                           <li">
+                           <li>
                              <a href="$linkView"><i class="uiIconEdit uiIconLightGray"></i> $itemLabelView</a>
                            </li>
                          <%  
@@ -272,7 +272,20 @@
           %>          
             <div class="questionSelect">                  
                     <div class="questionContainer responseItemContainer" id="$questionId">
-            <div class="actionBar">              
+            
+            <div class="itemContainerFirst">
+                        <% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
+                          <div class="avatarLarge pull-left ">
+                            <%
+                              if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+                            %> 
+                            <img  src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+                            <%}%>                         
+                          </div>
+                        <%}%>
+                        <div class="questionRight">           
+                <!-- Action -->
+                <div class="actionBar">              
                 <div class=" moreAction pull-right">
                     <div class="pull-right uiDropdownWithIcon dropdown">                      
                       <a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon  dropdown-toggle">             
@@ -395,20 +408,17 @@
                   }
                   %>
                 </div> <!-- end action translation question -->
+				<h6>
+					<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion;">
+						$questionContent
+					 </a>
+				</h6>
             </div>
-            <div class="itemContainerFirst">
-                        <% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
-                          <div class="avatarLarge pull-left ">
-                            <%
-                              if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-                            %> 
-                            <img  src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
-                            <%}%>                         
-                          </div>
-                        <%}%>
-                        <div class="questionRight">           
-                <!-- Action -->
-                <div class="pull-right">                
+            
+                            
+              
+                <div class="questionContent">
+                 <div class="pull-right">                
                    <%
                   if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
                   %>                          
@@ -513,29 +523,14 @@
                   </a>
                   </p>
                 <%}%>                 
-                </div>              
-              
-                <div class="questionContent">
+                </div> 
                               <div class="leftQuestionContainer disableContextMenu">
                 
-                                <h6 class="authorInfor" id="UIContextPopupQuestion$questionIndex">
-                <!--  view author's infor  -->
-                    <%
-                      if(uicomponent.viewAuthorInfor){
-                      String email = question.getEmail();
-                      
-                    %>                      <a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
-                        <span class="userName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
-                      </a>                       
-                    <%}%>
-                <!-- question content -->                                      
-                                </h6>
+                             
                                 
                                   <!--  view Detail  -->
                                 <div class="theContent">
-                  <a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion;">
-                                        $questionContent
-                                 </a>
+								
                                   <%
                                     String questionDetail = uicomponent.render(uicomponent.getQuestionDetail());
                                   %>
@@ -696,7 +691,7 @@
                               String answerId = answer.getId();
                             %>
                             <div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
-                  <div class=" moreAction">
+                  <div class="clearfix moreAction">
                     <div class="pull-right uiDropdownWithIcon dropdown">                      
                       <a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon  dropdown-toggle">             
                         <i class="uiIconSettings uiIconLightGray"></i>
@@ -876,7 +871,7 @@
                 ++commentCount;
                           %>
                                 <div class="responseItemContainer  <%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
-                                    <div class=" moreAction ">
+                                    <div class="clearfix moreAction ">
                     <div class="pull-right uiDropdownWithIcon dropdown">                      
                       <a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon  dropdown-toggle">             
                         <i class="uiIconSettings uiIconLightGray"></i>
