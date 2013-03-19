@@ -1,41 +1,33 @@
-<div class="UIWatchForm $uicomponent.id">
+<div class="uiWatchForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
- 				<div class="UIFormGrid">
- 					<div class="UIFormInputSetWithAction">
- 						<div class="FormContainer">
- 							<table class="UIFormGrid">
+		<div class="form-horizontal resizable"> 			
  							<% 
 									for(field in uiform.getChildren()) { 
 										if(field.isRendered()) {
 								%>
-											<tr>
+												<div class="control-group">
 												<%fieldName = uicomponent.getLabel(field.getName());%>										
-													<td class="FieldLabel">
+													<label class="control-label">
 														<%if(fieldName != null && fieldName.length() > 0) {%> 
 															<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %></label>
 														<%}%>
-													</td>
-													<td class="FieldComponent">
+													</label>
+													<div class="controls">
 															<% uiform.renderField(field) %>
-													</td>
-											</tr>
+													</div>
+											</div>
 								<%
 										}
 									}
-								%>						
- 							</table>
- 						</div>
- 					</div>
- 				</div>
+								%>	
  			</div>
- 	<div class="UIAction">
+ 		 <div class="uiAction uiActionBorder">
       <% for(action in uicomponent.getActions()) {
 						 if(action.indexOf("Values") > 0) continue ; 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button"  onclick="$link" class="btn ">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>

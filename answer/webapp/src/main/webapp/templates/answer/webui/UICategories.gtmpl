@@ -62,7 +62,7 @@
 				<%
 				 if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
 					<div class="faqBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
-						<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"><i class="uiIconUpLevel"></i></a>
+						<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"><i class="uiIconUpLevel uiIconLightGray"></i></a>
 					</div>
 				<%}%>
 					
@@ -82,12 +82,12 @@
 							<input type="hidden" class="infoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
 							
 							<a onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
-								<i class="uiIconArrowRight"></i>&nbsp;<%=FAQUtils.getSubString(category.getName(), 20);%>
+								<i class="uiIconArrowRight uiIconLightGray"></i>&nbsp;<%=FAQUtils.getSubString(category.getName(), 20);%>
 							</a>
 							<%
 							String linkWacth = uicomponent.event("WatchManager", category.getPath());
 							if(canEdit && uicomponent.hasWatch(category.getPath())) {%>
-								 <a href="$linkWacth" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>"><i class="uiIconWatch"></i></a>
+								 <a href="$linkWacth" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>"><i class="uiIconWatch uiIconLightGray"></i></a>
 							<%}%>
 							 <!-- action of this category -->
 							<ul class="uiRightClickPopupMenu dropdownArrowTop dropdown-menu" id="UIPopupMenu$i" style="display: none;">
@@ -101,7 +101,7 @@
 								for(viewAction in categoryAction) {
 									String linkView = uicomponent.event(viewAction, category.getPath()) ;
 									String itemLabelView = _ctx.appRes("UICategories.action." + viewAction);
-									def icon = "uiIcon";
+									def icon = "uiIconLightGray uiIcon";
 									if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("EditCategory")))
 										continue;
 									if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || viewAction.equals("MoveCategory")))
@@ -109,7 +109,7 @@
 									if(viewAction.equals("DeleteCategory")) {
 										linkView = "javaScript:if(confirm('" + _ctx.appRes("UIQuestions.msg.confirm-delete-category") + "')) {" + linkView.replace("javascript:", "") + "}";
 									} else if(viewAction.equals("AddNewQuestion")) {
-										icon = "uiIconAns";
+										icon = "uiIconAnsLightGray uiIconAns";
 									}
 									icon += viewAction;
 								%>
@@ -119,7 +119,7 @@
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									String rssLink = uicomponent.getRSSLink(category.getPath()) ;
 							%>
-								<li><a href="$rssLink" onclick="window.open(this.href); return false;"><i class="uiIconRss"></i>&nbsp;<%=_ctx.appRes("UICategories.label.RSS");%></a></li>
+								<li><a href="$rssLink" onclick="window.open(this.href); return false;"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UICategories.label.RSS");%></a></li>
 							<%
 								}
 							%>
