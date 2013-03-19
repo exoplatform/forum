@@ -5,10 +5,12 @@
 %>
 <div class="uiForumListSearch">
 	<%uiform.begin();%>
+	<div style="margin-bottom: 10px;">
 	<% if(uicomponent.getIsShowIter()){ %>
 		<% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
 	<% } %>
-	<div class="searchResult">
+	</div>
+	<div class="searchResult forumContainer">
 		<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			<caption class="rounded-corners-top">
 				<div class="pull-right">
@@ -19,7 +21,7 @@
 			</caption>
 			<thead>
 				<tr>
-					<th style="width:80px;" class="center"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+					<th style="width:95px;" class="center"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
 					<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
 				</tr>
 			</thead>
@@ -52,8 +54,11 @@
 			</tbody>
 		</table>
 	</div>
+	<div style="margin-bottom: 10px;" class="clearfix">
+	<button onclick="<%=uicomponent.event("OpentContent", uicomponent.getPathLastVisit());%>" class="btn pull-left" type="button"><%=_ctx.appRes("UIForumListSearch.label.CloseSearch");%></button>
 	<% if(uicomponent.getIsShowIter()){ %>
 		<% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
 	<% } %>
+	</div>
 	<%uiform.end()%>
 </div>
