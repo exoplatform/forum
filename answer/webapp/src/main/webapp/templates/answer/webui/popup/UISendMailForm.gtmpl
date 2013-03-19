@@ -1,99 +1,44 @@
-<div class="FAQUISendEMailForm $uicomponent.id">
+<div class="uiSendEMailForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<table class="UIFormGrid">
-					<tbody>
-						<tr>
-							<td>
-						<% 
-						String name = "" ;
-						String display = "block" ;
-						for(input in  uiform.getChildren()) {
-							if(input.isRendered()) { %>
-								<%
-								fieldName = uicomponent.getLabel(input.getName());
-								if(!fieldName.equals(uicomponent.getId())) {
-									name = input.getName();
-									if((name.equals("AddCc") && !uicomponent.isViewCC) || (name.equals("AddBcc") && !uicomponent.isViewBCC) ){
-										display = "none" ;
-									} else {
-										display = "block" ;
-									}
-								%>
-									<div id="div$name" class="FieldContainer ClearFix" style="display:$display;">
-										<div class="FieldLabel">
-											<%
-											if(!fieldName.equals(uicomponent.getId())) {
-												name = input.getName();
-												if(name.equals("To")){
-													String linkActionTo = uicomponent.event("To") ;
-												%>
-													<label for="<%=name%>"><a href="$linkActionTo" class="link">$fieldName</a>:</label>
-									
-											<%
-											} else if(name.equals("AddCc")){
-													String linkActionCc = uicomponent.event("Cc") ;
-												%>
-													<label for="<%=name%>"><a href="$linkActionCc" class="link">$fieldName</a>:</label>
-											
-											<%
-											} else if(name.equals("AddBcc")){
-													String linkActionBcc= uicomponent.event("Bcc") ;
-												%>
-											
-													<label for="<%=name%>"><a href="$linkActionBcc" class="link">$fieldName</a>:</label>
-											
-											<%
-											} else {
-											%>
-											<label for="<%=name%>">$fieldName:</label>
-											<%
-											} 
-										}
-											 %>
-										</div>
-										<%
-										String width = "auto";
-										if(input.getName().equals(uicomponent.FILED_MESSAGE)) width = "480px"
-										else width = "auto";
-										%>
-										<div class="FieldComponent" style="width:$width;">
-												<%uiform.renderField(input) %>
-												<%if(!input.getName().equals(uicomponent.FILED_MESSAGE) &&
-															!input.getName().equals(uicomponent.FILED_ADD_CC) &&
-															!input.getName().equals(uicomponent.FILED_ADD_BCC) &&
-															!input.getName().equals(uicomponent.FILED_QUESTION_LANGUAGE)){%>
-														*
-												<%}
-													if(input.getName().equals("To")){%>
-													| <a href="#" onclick="eXo.answer.UIAnswersPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
-													| <a href="#" onclick="eXo.answer.UIAnswersPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
-												<%}%>
-										</div>
-										<%if(input.getName().equals(uicomponent.FILED_MESSAGE)){%>
-												<div class="Star">*</div>
-										<%}%>
-									</div>
+	<div class="resizable">
+		<div class="form-horizontal">
 
-							<%}
-							}
-						}
-						%>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+	<% 
+		for(field in uiform.getChildren()) { 
+			if(field.isRendered()) {
+	%>
+			<div class="control-group control-<%=field.getId()%>"  >
+				<%fieldName = uicomponent.getLabel(field.getName());%>
+				<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
+					<label class="control-label" for="<%=field.getId()%>">
+						<%if(field.getName().equals(uicomponent.FILED_TO)) { %>
+							<button type="button" class="btn linkTo" onclick="<%=uicomponent.event("To");%>"><%=fieldName%></button>
+						<%} else {%>
+						  <%=fieldName%>
+						<%} %>
+					</label>
+					<div class="controls">
+						<% uiform.renderField(field) %>
+					</div>
+				<%} else {%>
+					<div class="controls">
+						<label><% uiform.renderField(field) %></label>
+					</div>
+				<%}%>
 			</div>
-		</div>	
-		
-		<div class="UIAction">
+	<%
+			}
+		}
+	%>						
+		</div>
+    </div>
+	<div class="uiAction uiActionBorder">
     <%for(action in uicomponent.getActions()) { 
     		 		if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
 	        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           	String link = uicomponent.event(action) ;
 	        %>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$link" class="btn">$actionLabel</button>
        <%}%>
     </div>
 			

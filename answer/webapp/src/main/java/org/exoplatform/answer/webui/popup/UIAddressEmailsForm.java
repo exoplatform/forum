@@ -261,12 +261,6 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       if (uiAddressForm.getRecipientType().equals("To")) {
         uiSendMailForm.setFieldToValue(toAddress.toString());
         uiSendMailForm.setToUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
-      } else if (uiAddressForm.getRecipientType().equals("AddCc")) {
-        uiSendMailForm.setFieldCCValue(toAddress.toString());
-        uiSendMailForm.setAddCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
-      } else if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-        uiSendMailForm.setFieldBCCValue(toAddress.toString());
-        uiSendMailForm.setAddBCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
       }
       uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm);
@@ -292,24 +286,16 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
       for (User user : uiAddressForm.newCheckedList_.values()) {
         if (user.getEmail() != null) {
-          toAddress.append(user.getFullName()).append("<").append(user.getEmail()).append("> ,");
+          toAddress.append(user.getDisplayName()).append("<").append(user.getEmail()).append("> ,");
           if (sb.length() > 0)
             sb.append(",");
           sb.append(user.getEmail());
         }
       }
       UISendMailForm uiSendMailForm = uiPopupContainer.getChild(UISendMailForm.class);
-      if (uiAddressForm.getRecipientType().equals("to")) {
+      if (uiAddressForm.getRecipientType().equalsIgnoreCase("to")) {
         uiSendMailForm.setFieldToValue(toAddress.toString());
         uiSendMailForm.setToUsers(checkedUser);
-      }
-      if (uiAddressForm.getRecipientType().equals("AddCc")) {
-        uiSendMailForm.setFieldCCValue(toAddress.toString());
-        uiSendMailForm.setAddCCUsers(checkedUser);
-      }
-      if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-        uiSendMailForm.setFieldBCCValue(toAddress.toString());
-        uiSendMailForm.setAddBCCUsers(checkedUser);
       }
       uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm);

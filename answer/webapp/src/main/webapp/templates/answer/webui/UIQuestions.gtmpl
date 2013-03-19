@@ -402,8 +402,8 @@
                     }
                   %>
                   <span class="uiRadio"><input type="radio" name="language" $ischeck onclick="$linkView">
-                  <span></span>
-                 </span>$quesLanguage
+                  <span>$quesLanguage</span>
+                 </span>
                   <%
                   }
                   %>

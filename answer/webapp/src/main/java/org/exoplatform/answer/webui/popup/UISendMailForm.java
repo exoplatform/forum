@@ -49,6 +49,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -64,26 +65,17 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     events = {
         @EventConfig(listeners = UISendMailForm.SendActionListener.class), 
         @EventConfig(listeners = UISendMailForm.ToActionListener.class), 
-        @EventConfig(listeners = UISendMailForm.CcActionListener.class), 
-        @EventConfig(listeners = UISendMailForm.BccActionListener.class), 
         @EventConfig(listeners = UISendMailForm.CancelActionListener.class), 
         @EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class) 
     }
 )
 public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
-  protected boolean                      isViewCC                = false;
-
-  protected boolean                      isViewBCC               = false;
 
   private static final String            FILED_FROM_NAME         = "FromName";
 
   private static final String            FILED_FROM              = "From";
 
   private static final String            FILED_TO                = "To";
-
-  private static final String            FILED_ADD_CC            = "AddCc";
-
-  private static final String            FILED_ADD_BCC           = "AddBcc";
 
   private static final String            FILED_SUBJECT           = "Subject";
 
@@ -109,10 +101,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public List<User>                      toUsers                 = new ArrayList<User>();
 
-  public List<User>                      addCCUsers              = new ArrayList<User>();
-
-  public List<User>                      addBCCUsers             = new ArrayList<User>();
-
   private int                            posOfResponse           = 0;
 
   private List<String>                   listAnotherEmail        = new ArrayList<String>();
@@ -134,22 +122,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public void setToUsers(List<User> userList) {
     toUsers = userList;
-  }
-
-  public List<User> getAddCCUsers() {
-    return addCCUsers;
-  }
-
-  public void setAddCCUsers(List<User> userList) {
-    addCCUsers = userList;
-  }
-
-  public List<User> getAddBCCUsers() {
-    return addBCCUsers;
-  }
-
-  public void setAddBCCUsers(List<User> userList) {
-    addBCCUsers = userList;
   }
 
   protected List<SelectItemOption<String>> getListLanguageToSendFriend() {
@@ -195,11 +167,9 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
     listLanguageToReponse.add(new SelectItemOption<String>(language, language));
 
-    addChild(new UIFormStringInput(FILED_FROM_NAME, FILED_FROM_NAME, name));
-    addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email));
-    addChild(new UIFormStringInput(FILED_TO, FILED_TO, null));
-    addChild(new UIFormStringInput(FILED_ADD_CC, FILED_ADD_CC, null));
-    addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null));
+    addChild(new UIFormStringInput(FILED_FROM_NAME, FILED_FROM_NAME, name).addValidator(MandatoryValidator.class));
+    addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email).addValidator(MandatoryValidator.class));
+    addChild(new UIFormStringInput(FILED_TO, FILED_TO, null).addValidator(MandatoryValidator.class));
     UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, listLanguageToReponse);
     questionLanguages.setSelectedValues(new String[] { language });
     questionLanguages.setOptions(listLanguageToReponse);
@@ -233,11 +203,13 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       }
     }
 
-    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " " + contenQuestion.replaceAll("<br>", " ")));
+	addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT,
+			this.getLabel("change-title") + " " + contenQuestion.replaceAll("<br>", " ")).addValidator(MandatoryValidator.class));
     UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, "");
     filedMessage.setValue(stringBuffer.toString());
     filedMessage.setFCKConfig(WebUIUtils.getFCKConfig());
     filedMessage.setToolBarName("Basic");
+    filedMessage.addValidator(MandatoryValidator.class);
     addChild(filedMessage);
   }
 
@@ -268,28 +240,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         value = email + "," + value;
       }
     }
-    if (value != null && value.trim().length() > 0)
-      isViewCC = true;
-    getUIStringInput(FILED_ADD_CC).setValue(value);
-  }
-
-  public String getFieldCCValue() {
-    return getUIStringInput(FILED_ADD_CC).getValue();
-  }
-
-  public void setFieldBCCValue(String value) {
-    if (listAnotherEmail != null && listAnotherEmail.size() > 0) {
-      for (String email : listAnotherEmail) {
-        value = email + "," + value;
-      }
-    }
-    if (value != null && value.trim().length() > 0)
-      isViewBCC = true;
-    getUIStringInput(FILED_ADD_BCC).setValue(value);
-  }
-
-  public String getFieldBCCValue() {
-    return getUIStringInput(FILED_ADD_BCC).getValue();
   }
 
   static public class SendActionListener extends BaseEventListener<UISendMailForm> {
@@ -299,15 +249,9 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       String fullFrom = fromName + " (" + from + ") <" + sendMailForm.getServerConfig().get("account") + ">";
       String to = ((UIFormStringInput) sendMailForm.getChildById(FILED_TO)).getValue();
       String subject = ((UIFormStringInput) sendMailForm.getChildById(FILED_SUBJECT)).getValue();
-      String cc = ((UIFormStringInput) sendMailForm.getChildById(FILED_ADD_CC)).getValue();
-      String bcc = ((UIFormStringInput) sendMailForm.getChildById(FILED_ADD_BCC)).getValue();
       String body = ((UIFormWYSIWYGInput) sendMailForm.getChildById(FILED_MESSAGE)).getValue();
       if (to != null && to.indexOf(";") > -1)
         to = to.replace(';', ',');
-      if (cc != null && cc.indexOf(";") > -1)
-        cc = cc.replace(';', ',');
-      if (bcc != null && bcc.indexOf(";") > -1)
-        bcc = bcc.replace(';', ',');
       if (FAQUtils.isFieldEmpty(fromName)) {
         warning("UISendMailForm.msg.fromName-field-empty");
         return;
@@ -323,12 +267,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       } else if (!FAQUtils.isValidEmailAddresses(to)) {
         warning("UISendMailForm.msg.invalid-to-field");
         return;
-      } else if (!FAQUtils.isValidEmailAddresses(cc)) {
-        warning("UISendMailForm.msg.invalid-cc-field");
-        return;
-      } else if (!FAQUtils.isValidEmailAddresses(bcc)) {
-        warning("UISendMailForm.msg.invalid-bcc-field");
-        return;
       } else if (subject == null || subject.trim().length() < 0) {
         warning("UISendMailForm.msg.subject-field-empty");
         return;
@@ -337,8 +275,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       message.setMimeType(MIMETYPE_TEXTHTML);
       message.setFrom(fullFrom);
       message.setTo(to);
-      message.setCC(cc);
-      message.setBCC(bcc);
       message.setSubject(subject);
       message.setBody(body);
       try {
@@ -373,64 +309,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       }
       sendMailForm.listAnotherEmail.addAll(emailList);
       List<User> toUser = sendMailForm.getToUsers();
-      if (toUser != null && toUser.size() > 0) {
-        List<User> userList = new ArrayList<User>();
-        for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) {
-            userList.add(ct);
-            sendMailForm.listAnotherEmail.remove(ct.getEmail());
-          }
-        }
-        addressEmailsForm.setAlreadyCheckedUser(userList);
-      }
-    }
-  }
-
-  static public class CcActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
-      UISendMailForm sendMailForm = event.getSource();
-      UIPopupContainer popupContainer = sendMailForm.getAncestorOfType(UIPopupContainer.class);
-      UIAddressEmailsForm addressEmailsForm = sendMailForm.openPopup(popupContainer, UIAddressEmailsForm.class, 660, 0);
-      addressEmailsForm.setRecipientsType(FILED_ADD_CC);
-      String toAddressString = ((UIFormStringInput) sendMailForm.getChildById(FILED_ADD_CC)).getValue();
-      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString);
-      List<String> emailList = new ArrayList<String>();
-      sendMailForm.listAnotherEmail = new ArrayList<String>();
-      for (int i = 0; i < toAddresses.length; i++) {
-        if (toAddresses[i] != null)
-          emailList.add(toAddresses[i].getAddress());
-      }
-      sendMailForm.listAnotherEmail.addAll(emailList);
-      List<User> toUser = sendMailForm.getAddCCUsers();
-      if (toUser != null && toUser.size() > 0) {
-        List<User> userList = new ArrayList<User>();
-        for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) {
-            userList.add(ct);
-            sendMailForm.listAnotherEmail.remove(ct.getEmail());
-          }
-        }
-        addressEmailsForm.setAlreadyCheckedUser(userList);
-      }
-    }
-  }
-
-  static public class BccActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
-      UISendMailForm sendMailForm = event.getSource();
-      UIPopupContainer popupContainer = sendMailForm.getAncestorOfType(UIPopupContainer.class);
-      UIAddressEmailsForm addressEmailsForm = sendMailForm.openPopup(popupContainer, UIAddressEmailsForm.class, 660, 0);
-      addressEmailsForm.setRecipientsType(FILED_ADD_BCC);
-      String toAddressString = ((UIFormStringInput) sendMailForm.getChildById(FILED_ADD_BCC)).getValue();
-      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString);
-      List<String> emailList = new ArrayList<String>();
-      sendMailForm.listAnotherEmail = new ArrayList<String>();
-      for (int i = 0; i < toAddresses.length; i++) {
-        if (toAddresses[i] != null)
-          emailList.add(toAddresses[i].getAddress());
-      }
-      sendMailForm.listAnotherEmail.addAll(emailList);
-      List<User> toUser = sendMailForm.getAddBCCUsers();
       if (toUser != null && toUser.size() > 0) {
         List<User> userList = new ArrayList<User>();
         for (User ct : toUser) {
