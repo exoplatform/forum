@@ -585,7 +585,7 @@ console.log(obj.parents('ul.nodeGroup:first').length)
   UIAnswersPortlet.submitOnKey = function (event) {
     var key = utils.getKeynum(event);
     if (key == 13) {
-      $(this).find('div.ActionSearch:first').click();
+      $(this).find('div.actionAnswerSearch:first').click();
       eXo.core.EventManager.cancelEvent(event);
       return false;
     }
