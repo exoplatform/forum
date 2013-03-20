@@ -272,22 +272,34 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
     String content = privateMessage.getMessage();
-    String label = this.getLabel(FIELD_REPLY_LABEL);
+    
+    String replyLabel = getLabel(FIELD_REPLY_LABEL) + CommonUtils.COLON;
+    String forwardLabel = getLabel(FIELD_FORWARD_LABEL) + CommonUtils.COLON;
+
+    
     String title = CommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
-    if (title.indexOf(label) < 0) {
-      title = new StringBuffer(label).append(": ").append(title).toString();
-    }
+    title = getTitleMessage(getTitleMessage(title, replyLabel), forwardLabel);
+
     if (isReply) {
       UIFormStringInput areaInput = findComponentById(FIELD_SENDTO_TEXT);
       areaInput.setValue(privateMessage.getFrom());
-      stringInput.setValue(title);
+      stringInput.setValue(replyLabel + title);
       content = new StringBuffer("<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">").append(content).append("</div>").toString();
     } else {
-      label = this.getLabel(FIELD_FORWARD_LABEL);
-      stringInput.setValue(title);
+      stringInput.setValue(forwardLabel + title);
     }
     message.setValue(content);
     this.id = 2;
+  }
+
+  private String getTitleMessage(String title, String defautlLabel) {
+    if (CommonUtils.isEmpty(title) == true){
+      return CommonUtils.EMPTY_STR;
+    }
+    while (title.indexOf(defautlLabel) == 0) {
+      title = title.replaceFirst(defautlLabel, CommonUtils.EMPTY_STR);
+    }
+    return title;
   }
 
   public boolean isFullMessage() {
