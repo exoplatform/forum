@@ -1,4 +1,4 @@
-<div class="UIAddBBCodeForm uiAddBBCodeForm">
+<div class="uiAddBBCodeForm">
 	<% uiform.begin() %>
     <div class="resizable">
 		<div class="form-horizontal">
@@ -11,15 +11,18 @@
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 					<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
-					<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-						<span>&nbsp;&nbsp;</span>
-						<div id="$id" class="UIBBCodeHelpPopup">
-							<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
-							  <span class="LeftBBCodeHelp"></span>
-							  <div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+					
+					<div style="display:inline-block;">
+						<i class="uiIconQuestion uiIconLightGray"></i>
+						<div class="popover right" id="$id" style="display: block;left: 495px;top: 55px;">
+							<span class="arrow">
+							</span>
+							<div class="popover-content" id="${id}ID">
+								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
 							</div>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 			<div class="control-group">
@@ -27,13 +30,14 @@
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 					<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
-					<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-						<span>&nbsp;&nbsp;</span>
-						<div id="$id" class="UIBBCodeHelpPopup">
-						  <div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
-							  <span class="LeftBBCodeHelp"></span>
-							  <div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-						  </div>
+					<div style="display:inline-block;">
+						<i class="uiIconQuestion uiIconLightGray"></i>
+						<div class="popover right" id="$id" style="display: block;left: 495px;top: 115px;">
+							<span class="arrow">
+							</span>
+							<div class="popover-content" id="${id}ID">
+								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -43,11 +47,13 @@
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
-					<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-						<div id="$id" class="UIBBCodeHelpPopup">
-							<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
-								<span class="LeftBBCodeHelp"></span>
-								<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+					<div style="display:inline-block;">
+						<i class="uiIconQuestion uiIconLightGray"></i>
+						<div class="popover right" id="$id"  style="display: block;left: 485px;top: 205px;">
+							<span class="arrow">
+							</span>
+							<div class="popover-content" id="${id}ID">
+								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
 							</div>
 						</div>
 					</div>
@@ -58,16 +64,17 @@
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 					<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-					<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-						<span>&nbsp;&nbsp;</span>
-						<div id="$id" class="UIBBCodeHelpPopup">
-							<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
-								<span class="LeftBBCodeHelp"></span>
-								<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray"></i></a>
+					<div style="display:inline-block;">
+						<i class="uiIconQuestion uiIconLightGray"></i>
+						<div class="popover right" id="$id" style="display: block;left: 525px;top: 293px;">
+							<span class="arrow">
+							</span>
+							<div class="popover-content" id="${id}ID">
+								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
 							</div>
 						</div>
 					</div>
-					<button onclick="$actionPriview" class="btn btn-primary" type="button"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></button>
 				</div>
 			</div>
 			<div class="control-group">
@@ -75,12 +82,13 @@
 				<div class="controls">
 					<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 					<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
-					<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-						<span>&nbsp;&nbsp;</span>
-						<div id="$id" class="UIBBCodeHelpPopup">
-							<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
-								<span class="LeftBBCodeHelp"></span>
-								<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+					<div style="display:inline-block;">
+						<i class="uiIconQuestion uiIconLightGray"></i>
+						<div class="popover right" id="$id"  style="display: block;left: 229px;top: 356px;">
+							<span class="arrow">
+							</span>
+							<div class="popover-content" id="${id}ID">
+								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
 							</div>
 						</div>
 					</div>
@@ -102,8 +110,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<% String example = uiform.getReplaceByBBCode(); %>
-				<div class="PreviewContainer">$example</div>
+				<div class="controls"><%=uiform.getReplaceByBBCode();%></div>
 			</div>
 			<div class="control-group">
 				<div class="controls">
@@ -116,25 +123,25 @@
 				 if(uiform.getPriview()) {
 			%>
 				<div style="display:none;">
-				<label for="<%=uiform.FIELD_TAGNAME_INPUT%>">&nbsp;</label>
-				<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
-				<label for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>">&nbsp;</label>
-				<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
-				<label for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>">&nbsp;</label>
-				<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
+					<label for="<%=uiform.FIELD_TAGNAME_INPUT%>">&nbsp;</label>
+					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
+					<label for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>">&nbsp;</label>
+					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
+					<label for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>">&nbsp;</label>
+					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 				</div>
 			<% } %>
 
 		</div>
     </div>
-	<div class="uiAction">
+	<div class="uiAction uiActionBorder">
     <% for(action in uicomponent.getActions()) { 
 		String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		String onclick = uicomponent.event(action) ;
 		if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 	%>
 		<button onclick="$onclick" class="btn" type="button">$actionLabel</button>
-      <%}%>
+    <%}%>
     </div>
 	<%uiform.end()%>
 </div>
