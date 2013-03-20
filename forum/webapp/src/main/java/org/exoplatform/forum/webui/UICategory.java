@@ -290,7 +290,7 @@ public class UICategory extends BaseForumForm {
   static public class EditCategoryActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
       if(uiCategory.getCategory() != null) {
-        UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 550, 380);
+        UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 665, 380);
         categoryForm.setCategoryValue(uiCategory.getCategory(), true);
         uiCategory.isEditCategory = true;
       } else {
