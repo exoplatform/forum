@@ -19,9 +19,11 @@ package org.exoplatform.forum.webui;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
@@ -48,6 +50,7 @@ public class BaseForumForm extends BaseUIForm {
 
   public List<Watch>   listWatches = new ArrayList<Watch>();
 
+  private boolean isAddColonInLabel = false;
   /**
    * Get a reference to the forum service
    * @return
@@ -87,6 +90,23 @@ public class BaseForumForm extends BaseUIForm {
      return findComponentById(name);
   }
   
+  @Override
+  public String getLabel(ResourceBundle res, String id) {
+    String label = super.getLabel(res, id);
+    if(isAddColonInLabel) {
+      return String.format("%s%s", label, CommonUtils.COLON);
+    }
+    return label;
+  }
+
+  public boolean isAddColonInLabel() {
+    return isAddColonInLabel;
+  }
+
+  public void setAddColonInLabel(boolean isAddColonInLabel) {
+    this.isAddColonInLabel = isAddColonInLabel;
+  }
+
   public UserProfile getUserProfile() {
     if (userProfile == null) {
       try {

@@ -778,7 +778,7 @@ public class UIQuestions extends UIContainer {
       String asn = context.getRequestParameter(Utils.ANSWER_NOW_PARAM);
       uiQuestions.getAncestorOfType(UIAnswersPortlet.class)
                        .viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
-      context.addUIComponentToUpdateByAjax(uiQuestions);
+      context.addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
     }
   }
 

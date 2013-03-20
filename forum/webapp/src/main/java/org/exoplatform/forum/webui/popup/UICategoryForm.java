@@ -159,6 +159,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     tmp.setPermission(MODERAROR, TOPICABLE, POSTABLE, VIEWER);
     addChild(tmp);
     this.setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   protected boolean getIsSelected(int id) {

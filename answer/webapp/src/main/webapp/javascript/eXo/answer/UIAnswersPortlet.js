@@ -102,9 +102,13 @@
 
             var magrinL = (UIAnswersPortlet.currentMargin + deltaMove);
             var width = (UIAnswersPortlet.currentW + deltaMove);
-            if (width < 100 && deltaMove < 0) {
+            if (width < 50 && deltaMove < 0) {
               leftColumn.css('width', '10px').hide(300);
               rightColumn.css('margin-left', '31px');
+              portlet.css('padding-left', '0px');
+              portlet.find('.line:first').hide();
+              var iconArrow = portlet.find('i.iconControll:first');
+              iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
             } else {
               leftColumn.css('width', width + 'px').show();
               rightColumn.css('margin-left', magrinL + 'px');
@@ -118,6 +122,7 @@
 
     var iconArrow = answerContainer.find('i.iconControll:first');
     iconArrow.on('click', function() {
+      var thiz = $(this);
       var portlet = findId(UIAnswersPortlet.portletId);
       var leftColumn = portlet.find('.leftColumn:first');
       var rightColumn = portlet.find('.rightColumn:first');
@@ -125,10 +130,16 @@
         leftColumn.css({'overflow' : 'hidden'}).animate({
           'width' : '10px',
           'height' : (leftColumn.height() + 'px')
-        }, 300, function() { $(this).hide(); });
+        }, 300, function() { 
+          $(this).hide(); 
+          portlet.css('padding-left', '0px');
+          thiz.parent().find('.line').hide();
+        });
         rightColumn.animate({'margin-left': '31px'}, 300, function(){});
         iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
       } else {
+        portlet.css('padding-left', '20px');
+        thiz.parent().find('.line').show();
         leftColumn.css({'visibility': 'hidden', 'height' : 'auto'}).show();
         var h = leftColumn.height();
         leftColumn.css('visibility', 'visible').animate({
@@ -140,6 +151,7 @@
       }
     })
   };
+  
   
   UIAnswersPortlet.initVoteQuestion = function(id) {
   var parent = findId(id);

@@ -62,6 +62,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
   protected Topic[] load(Session session, int index, int length) throws Exception, IllegalArgumentException {
     QueryManager qm = session.getWorkspace().getQueryManager();
     QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
+    query.setCaseInsensitiveOrder(true);
     query.setOffset(index);
     query.setLimit(index + length);
     QueryResult result = query.execute();

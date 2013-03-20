@@ -1363,6 +1363,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl)query;
+      queryImpl.setCaseInsensitiveOrder(true);
       long totalSize, nextOffset = 0, gotItemNumber = 0, nextLimit;
       if(maxSize > 0){
         totalSize = maxSize;
@@ -5695,7 +5696,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           queryString.append(ASCENDING); // If no ascending but sort value : apply ascending as default value
         }
 
-        Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+        QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.XPATH);
+        query.setCaseInsensitiveOrder(true);
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
         RowIterator rowIterator = result.getRows();
