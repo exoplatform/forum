@@ -556,21 +556,23 @@
   
   UIAnswersPortlet.showTreeNode = function (obj) {
     var thiz = $(obj);
+    var treeContainer = thiz.parents('div.treeContainer:first');
+    treeContainer.find('.nodeGroup').hide();
+    treeContainer.find('.nodeGroup:first').show();
+    
     var parentNode = thiz.parents('li.node:first');
     var childrenNodeGroup = parentNode.find('ul.nodeGroup:first').show();
     
-    var treeContainer = thiz.parents('div.treeContainer:first');
     var allNodes = treeContainer.find('a.uiIconNode');
     allNodes.attr('class', 'uiIconNode collapseIcon');
+    
     thiz.attr('class', 'uiIconNode expandIcon nodeSelected');
     UIAnswersPortlet.showNode(thiz);
   };
   
   UIAnswersPortlet.showNode = function (obj) {
     if(!obj.parents('div.treeContainer').exists()) return;
-console.log(obj.parents('ul.nodeGroup:first').length)
-    var parentNode = obj.parents('ul.nodeGroup:first').parents('li.node:first');
-    console.log(parentNode.attr('class'));
+    var parentNode = obj.parents('ul.nodeGroup:first').show().parents('li.node:first');
     if(parentNode.exists()) {
       var nThiz = parentNode.find('a.uiIconNode:first').attr('class', 'uiIconNode expandIcon');
       UIAnswersPortlet.showNode(nThiz);
