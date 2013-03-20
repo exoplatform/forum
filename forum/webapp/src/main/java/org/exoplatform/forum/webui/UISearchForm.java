@@ -134,6 +134,8 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   private List<TopicType>     listTT                      = new ArrayList<TopicType>();
 
   private Locale              locale;
+  
+  private int                 currentType                 = 0;
 
   public UISearchForm() throws Exception {
     if (this.getId() == null)
@@ -197,7 +199,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
 
   public void initDefaultContent() throws Exception {
-    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(0));
+    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(currentType));
 
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(getLabel("Full"), ForumEventQuery.VALUE_IN_ENTIRE));
@@ -244,10 +246,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   public void setPath(String path) {
     this.path = path;
-    if(ForumUtils.isEmpty(path)) setOptionsType(0);
-    else if(path.indexOf(Utils.TOPIC) > 0) setOptionsType(3);
-    else if(path.indexOf(Utils.CATEGORY) > 0) setOptionsType(1);
-    else if(path.indexOf(Utils.FORUM) > 0) setOptionsType(2);
   }
   
   private  List<SelectItemOption<String>> optionsType(int type) {
@@ -259,7 +257,8 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     return list;
   }
   
-  private void setOptionsType(int type) {
+  private void setSearchOptionsType(int type) {
+    this.currentType = type;
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(type));
   }
 
@@ -281,12 +280,13 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
 
   public void setSelectType(String type){
-    this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
     if (type.equals(Utils.FORUM)) {
+      setSearchOptionsType(1);
       this.isSearchForum = true;
       this.isSearchTopic = false;
       this.isSearchCate = false;
     } else if (type.equals(Utils.TOPIC)) {
+      setSearchOptionsType(2);
       this.isSearchCate = false;
       this.isSearchForum = false;
       this.isSearchTopic = true;
@@ -298,15 +298,22 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       }
       this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
     } else if (type.equals(Utils.CATEGORY)) {
+      setSearchOptionsType(0);
       this.isSearchCate = true;
       this.isSearchForum = false;
       this.isSearchTopic = false;
     } else {
+      if (type.equals(Utils.POST)){
+        setSearchOptionsType(3);
+      } else {
+        setSearchOptionsType(0);
+      }
       this.isSearchCate = false;
       this.isSearchForum = false;
       this.isSearchTopic = false;
     }
-    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
+    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
+//    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
   }
 
   public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {

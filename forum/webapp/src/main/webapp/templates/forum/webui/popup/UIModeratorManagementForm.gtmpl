@@ -4,7 +4,9 @@
 	import org.exoplatform.forum.service.Utils;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ; 
-  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.setEnableInput();");
+	String [] scripts = ["eXo.forum.UIForumPortlet.setEnableInput();", 
+	                     "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;"];
+  ForumUtils.addScripts(null, null, scripts);
 %>
 <div class="uiModeratorManagementForm">
 	<% uiform.begin() %>
@@ -13,7 +15,7 @@
 		
 			<div class="uiSearchInput clearfix ">
 				<div class="pull-right">
-					<span onkeydown="javaScript: if(event.keyCode == 13){<%=uicomponent.event("SearchUser");%>; return false;}">
+					<span class="actionSubmitLink" data-link="<%=uicomponent.event("SearchUser");%>">
 						<%	
 							uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
 						%>

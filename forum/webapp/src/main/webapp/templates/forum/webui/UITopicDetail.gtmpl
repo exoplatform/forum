@@ -73,7 +73,7 @@
   	String []scripts = [
   	         	"eXo.forum.UIForumPortlet.controlWorkSpace();",
   	         	"eXo.forum.UIForumPortlet.loadTagScroll();",
-  	         	"eXo.forum.UIForumPortlet.submitSearch('searchAdvance');",
+  	         	"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
   	         	"eXo.forum.UIForumPortlet.ReloadImage();",
   	         	"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
   	         	"eXo.forum.UIForumPortlet.disableOnClickMenu('SearchForm');",
@@ -178,7 +178,7 @@
 					  <li>
 						<div class="searchAdvance">
 							<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-							<a class="btn btn-primary" href="<%=uicomponent.event("AddTagTopic")%>">
+							<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("AddTagTopic")%>">
 								<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
 							</a>
 							
@@ -329,7 +329,7 @@
 						<li>
 							<div class="searchAdvance">
 								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
-								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+								<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 								<br/>
 								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 							</div>

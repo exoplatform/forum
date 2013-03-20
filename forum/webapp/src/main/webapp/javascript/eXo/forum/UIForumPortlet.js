@@ -982,37 +982,27 @@
       }
     },
 
-    submitSearch : function(id) {
-
-      var parentElm = $('.' + id);
-      if (parentElm.length > 0) {
-        parentElm.on('keydown', function(event) {
-          var key = utils.getKeynum(event);
+    submitOnKey : function(id) {
+      var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
+      if (parentElm.exists()) {
+        parentElm.on('keydown', function(evt) {
+          var key = utils.getKeynum(evt);
           if (key == 13) {
-            var searchLinkElm = $(this).find('a:first');
+            var searchLinkElm = $(this).find('.actionSubmitLink');
             if (searchLinkElm.exists()) {
-              var link = String(searchLinkElm.attr('href')).replace(
-                  "javascript:", "");
+              var link = "";
+              if(searchLinkElm.is('a')) {
+                link = String(searchLinkElm.attr('href')).replace('javascript:', '');
+              } else {
+                link = String(searchLinkElm.attr('data-link')).replace('javascript:', '');
+              }
               eval(link);
-              utils.cancelEvent(event);
-              event.preventDefault();
-              return false;
+              utils.cancelEvent(evt);
+              evt.preventDefault();
             }
+            return false;
           }
         });
-      }
-    },
-
-    submitOnKey : function(event) {
-      var key = utils.getKeynum(event);
-      if (key == 13) {
-        var searchLinkElm = $(this).find('a.SearchLink');
-        if (searchLinkElm.exists()) {
-          var link = String(searchLinkElm.attr('href')).replace("javascript:", "");
-          eval(link);
-          utils.cancelEvent(event);
-          return false;
-        }
       }
     },
 

@@ -25,7 +25,7 @@
 					"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
 					"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 					"eXo.forum.UIForumPortlet.goLastPost('top');",
-					"eXo.forum.UIForumPortlet.submitSearch('searchAdvance');"
+					"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
           	];
   ForumUtils.addScripts(null, null, scripts);
                
@@ -95,7 +95,7 @@
 							<li>
 							  <div class="searchAdvance">
 								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
-								<a class="btn btn-primary" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+								<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 								<br/>
 								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 							  </div>

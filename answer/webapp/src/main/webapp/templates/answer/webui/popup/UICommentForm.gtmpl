@@ -3,10 +3,8 @@
 		<div class="form-horizontal resizable">
 				
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.TITLE_USERNAME%>">
-					<%=_ctx.appRes("UICommentForm.title.Author")%>:
-				</label>
-				<div class="controls">Vu Duy Tu</div>
+				<label class="control-label"> <%=_ctx.appRes("UICommentForm.title.Author")%>:</label>
+				<div class="controls"><%=uicomponent.getCurrentUserDisplayName();%></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Language")%>:</label>
