@@ -249,7 +249,7 @@
 										if (authorOfLastAct != null && !authorOfLastAct.isEmpty()) {%>
 										<div class="pull-right name">
 						<a class="avatarMini" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>">
-							<img src="/social-resources/skin/images/ShareImages/SpaceAvtDefault.png" alt="" title="">&nbsp;<!--hardcode-->	
+							<img src="<%=uicomponent.getAvatarUrl(authorOfLastAct)%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 							<span><%= FAQUtils.getFullName(authorOfLastAct);%></span>
 						</a> 
 					</div>				
@@ -282,8 +282,11 @@
 													<div class="avatarLarge pull-left ">
 														<%
 															if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-														%> 
+															  String author = question.getAuthor();
+														%>
+														<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", author)%>" > 
 														<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+														</a>
 														<%}%>												 
 													</div>
 												<%}%>
@@ -771,7 +774,9 @@
 																		<%
 																		if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																		%> 
+																		<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
 																			<img src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+																		</a>	
 																	 
 																		<%}%>
 																	</div><!--avatar-->	
@@ -926,8 +931,9 @@
 																				<%
 																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																				%>
+																				<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
 																					<img	src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
-																		 
+																		    </a>
 																				<%}%>
 										</div>
 										<div class="responseItemContainerRight">
