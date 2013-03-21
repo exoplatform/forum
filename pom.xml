@@ -5,7 +5,7 @@
     <artifactId>maven-parent-pom</artifactId>
     <groupId>org.exoplatform</groupId>
     <version>9-SNAPSHOT</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum</artifactId>
@@ -311,7 +311,7 @@
         <groupId>org.gatein.wci</groupId>
         <artifactId>wci-wci</artifactId>
         <version>${org.gatein.wci.version}</version>
-      </dependency>			
+      </dependency>
       <!-- Import versions from jcr project -->
       <dependency>
         <groupId>org.exoplatform.jcr</groupId>
@@ -343,7 +343,7 @@
         <version>${org.exoplatform.kernel.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>			
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <build>
