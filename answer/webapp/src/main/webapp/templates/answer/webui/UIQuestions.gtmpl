@@ -122,9 +122,7 @@
 					String questionId = question.getId();
 					String questionPath = question.getPath();
 					linkQuestion=uicomponent.event("OpenQuestion", questionPath);
-					String questionIcon = "" ;
-					String colorViewQuestion = "";
-					if(!question.isActivated() || !question.isApproved()) colorViewQuestion = "gray";
+					String questionIcon = "" ;					
 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 						questionIcon = "Question" ;
 					} else {
@@ -304,7 +302,7 @@
 											<ul class="dropdown-menu">	
 										 <!-- action print question -->									 
 											<li>
-												<a onclick="javaScript:eXo.answer.UIAnswersPortlet.printPreview(this);" rel="tooltip" data-placement="bottom"	title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>">
+												<a href="javascript:void(0);" onclick="javaScript:eXo.answer.UIAnswersPortlet.printPreview(this);" rel="tooltip" data-placement="bottom"	title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>">
 												<i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>
 												</a>
 										</li>										 
@@ -313,17 +311,17 @@
 										%>								
 										 
 											<li>
-											<a	onclick="<%=uicomponent.event("EditQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>">
+											<a	href="javascript:void(0);" onclick="<%=uicomponent.event("EditQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>">
 												<i class="uiIconEdit uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.EditQuestion")%>
 												</a>
 											</li>
 											 <li>
-												 <a	onclick="<%=uicomponent.event("DeleteQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>">
+												 <a	href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>">
 													<i class="uiIconTrash	uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>
 												</a>
 											</li>
 											 <li> 
-												<a onclick="<%=uicomponent.event("MoveQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>">
+												<a href="javascript:void(0);" onclick="<%=uicomponent.event("MoveQuestion", questionPath);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>">
 												<i class="uiIconMove uiIconLightGray" ></i><%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>
 												</a>
 											</li>
@@ -352,7 +350,7 @@
 													}
 												%>							
 												<li> 
-													<a class="MenuItem " onclick="window.open('$link'); return false;" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+													<a href="javascript:void(0);" class="MenuItem " onclick="window.open('$link'); return false;" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 													<i class="uiIconAnsDiscuss uiIconAnsLightGray" ></i><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>
 													</a>
 												</li>	
@@ -386,7 +384,7 @@
 												%>
 													
 												<li>	 
-													 <a onclick="$link" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.Back")%>">
+													 <a href="javascript:void(0);" onclick="$link" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.Back")%>">
 															<i class="uiIconAnsBackPageFAq uiIconAnsLightGray" ></i><%=_ctx.appRes("UIQuestions.action.Back")%>
 													 </a>
 												</li>		
@@ -417,7 +415,7 @@
 									%>
 								</div> <!-- end action translation question -->
 				<h6>
-					<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion;">
+					<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>" >
 						$questionContent
 					 </a>
 				</h6>
@@ -699,7 +697,7 @@
 															String answerId = answer.getId();
 														%>
 														<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
-									<div class="clearfix moreAction">
+									<div class=" moreAction">
 										<div class="pull-right uiDropdownWithIcon dropdown">											
 											<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon	dropdown-toggle">						 
 												<i class="uiIconSettings uiIconLightGray"></i>
@@ -881,7 +879,7 @@
 								++commentCount;
 													%>
 																<div class="responseItemContainer	<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
-																		<div class="clearfix moreAction ">
+																		<div class=" moreAction ">
 										<div class="pull-right uiDropdownWithIcon dropdown">											
 											<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon	dropdown-toggle">						 
 												<i class="uiIconSettings uiIconLightGray"></i>
