@@ -5,7 +5,7 @@
   if(forum == null || uicomponent.isNull()) {
     uicomponent.setNull(false);
 %>
-<div class="UITopicContainer">
+<div class="uiTopicContainer">
    <%uiform.begin();%>
    <div class="TopicDeleted">
     This Forum moved or deleted !
@@ -61,12 +61,12 @@
   
   <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 	<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
-		<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
+		<i class="uiIconLock"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 	</div>
   <% } else { %>
-	<a class="uiAddTheradIcon btn btn-primary pull-left" href="<%=uicomponent.event("AddTopic")%>">
-		<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-	</a>
+	<button type="button" class="btn btn-primary pull-left" onclick="<%=uicomponent.event("AddTopic")%>">
+		<i class="uiIconForumCreateTopic uiIconForumWhite"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
+	</button>
   <% } %>
 
 	
@@ -537,12 +537,12 @@
   
 	  <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 		<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
-			<i class="uiIconLock"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
+			<i class="uiIconLock"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 		</div>
 	  <% } else { %>
-		<a class="uiAddTheradIcon btn btn-primary pull-left" href="<%=uicomponent.event("AddTopic")%>">
-			<i class="uiIconForumCreateTopic uiIconForumWhite"></i><%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-		</a>
+		<button type="button" class="btn btn-primary pull-left" onclick="<%=uicomponent.event("AddTopic")%>">
+			<i class="uiIconForumCreateTopic uiIconForumWhite"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
+		</button>
 	  <% } %>
 
 		

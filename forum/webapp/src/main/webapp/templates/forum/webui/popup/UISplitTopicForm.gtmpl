@@ -11,7 +11,7 @@
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
 <% uiform.begin() %>
-<div class="UISplitTopicForm resizable" style="padding:10px;">
+<div class="uiSplitTopicForm resizable">
 	<div class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%>"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</label>
@@ -22,26 +22,24 @@
 		
 		<div class="control-group">
 			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>">
-				<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:
+				<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%> :
 			</label>
 			<div class="controls">
 				<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>
 			</div>
 		</div>
 	</div>
-	<div class="ListPost">
-	  <div style="overflow:auto; margin:2px 0px;" class="ClearFix">
-			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-
-		</div>
-		<table class="uiGrid table table-hover table-striped" border="0" cellpadding="0" cellspacing="0">
+	<div class="listPost">
+	  
+		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+		
+		<table class="uiGrid table table-hover table-striped">
 			<thead>
 				<tr>
-					<th style="width:30px"></th>
 					<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
 					<th style="width:120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
 					<th style="width:80px"><%=_ctx.appRes("UIForumPortlet.label.CreatedBy");%></th>
-					<th style="width:40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+					<th style="width:40px" class="center"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -55,21 +53,19 @@
 					if(classIconPost.length() <= 0) 
 						classIconPost = "NormalTopicIcon" ;
 			%>
-				<tr class="EvenRow">
-	 			 	<td class="text">
-	 			 		<div class="Icon24x24 $classIconPost"><span></span></div>
- 			 		</td>
-	 			 	<td class="text"><label for="$postId"><%=post.getName();%></label></td>
-	 			 	<td class="text">$createdDate</td>
-	 			 	<td class="text"><%=post.getOwner();%></td>
-	 			 	<td class="text">
+				<tr>
+	 			 	<td><%=post.getName();%></td>
+	 			 	<td>$createdDate</td>
+	 			 	<td><%=post.getOwner();%></td>
+	 			 	<td class="center">
 		 			 <% 
 						  String checked = "";
 						  if(checkeds.contains(postId)){
 						    checked = "checked=\"checked\"";
 						  }
 					 %>
-					 <div><input type="checkbox" class="checkbox" id="$postId" name="$postId" $checked/></div>
+						<span class="uiCheckbox"><input type="checkbox" class="checkbox" id="$postId" name="$postId" $checked/><span></span>
+						</span>
 		 			 </td>
 				</tr>
 			<%} %>
@@ -78,12 +74,12 @@
 	</div>
 </div>
 
-<div class="uiAction">
+<div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
    String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
    String link = uicomponent.event(action) ;
         %>
 	<button onclick="$link" class="btn" type="button">$actionLabel</button>
-      <%}%>
+	<%}%>
 </div>
 <%uiform.end()%>

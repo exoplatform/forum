@@ -97,33 +97,30 @@
 				<div class="uiLockIcon btn disabled" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 		  <% } %>
 		</div>
-		<div class="pull-left">  
+		<div class="pull-left tagsContainer">  
 		  
 		  <%  
 			List<Tag> tags = uicomponent.getTagsByTopic();
 			if(!tags.isEmpty()){
 		  %>
 
-			<div class="pull-left titleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
+			<span class="titleTag"><i class="uiIconTag uiIconLightGray"></i> <%=_ctx.appRes("UITopicContainer.label.Tag");%>(s):</span>
 		  <%}%>
-			<ul class="TagContainer FL TagContent" id="TagContainer">
+			<ul class="txtTags" id="TagContainer">
 			<%
 			  for(tag in tags) {
 				String tagName = tag.getName();
 			%>
-				<li class="FL MenuItem">
-					<a class="TagIcon FL BlueTagIcon" rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
-					<span class="UntagIcon FL" rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
+				<li>
+					<span class="tagItem">
+						<a rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">
+							$tagName
+						</a>
+						<i rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>" class="uiIconClose uiIconLightGray"></i>
+					</span>
 				</li>
-				<%} %>
-				<li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-					<% /*Begin Popup Menu*/ %>
-				<div class="UIPopupCategory" style="display: none;">
-					<ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
-					</ul>
-				</div>
-				<% /*End Popup Menu*/ %>
-				</li>
+			<%} %>
+				
 			</ul>
 		  
 		  
@@ -182,7 +179,7 @@
 								<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
 							</a>
 							
-							<div class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
+							<div style="border:solid 1px red" class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
 								<div class="TagNameItem Selected"></div>
 							</div>
 							
@@ -819,9 +816,9 @@
      uicomponent.renderPoll();
      if(canEdit){
     %>
-    <div class="ContentNotPost"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
+    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
     <% }else{ %>
-    <div class="ContentNotPost"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
+    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
     <% } %>
   <% } %>
 <!-- End ContentContainer -->
@@ -873,14 +870,11 @@
 		</div>
     </div>
   </div>
-          
 <% } %>
   <% } else { 
     uicomponent.renderPoll();
   %>
-  <div class="EmptyContent">
-    <span><%=_ctx.appRes("UIForumPortlet.msg.topicEmpty");%></span>
-  </div>
+  <div class="emptyForum"><%=_ctx.appRes("UIForumPortlet.msg.topicEmpty");%></div>
   <% }
   uicomponent.setPostRules(isNull) ;
   %>

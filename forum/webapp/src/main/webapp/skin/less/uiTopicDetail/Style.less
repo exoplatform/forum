@@ -76,34 +76,7 @@
 		
 		.postContentContainer{
 			min-height: 167px;
-			.postContent{
-				p{
-					margin: 0;
-				}
-				
-				.contentQuote{
-					padding: 15px;
-					background: #e6f3ff;
-					margin: 10px 0 0 15px;
-					.border-radius(2px);
-					.textContent{
-						border-left: solid 5px #aacded;
-						padding-left: 15px;
-						margin-top: 10px;
-					}
-					.textContent:first-child{
-						border-left: none;
-						padding-left: 0;
-					}
-				}
-				
-				.textContent {
-					.contentQuote{
-						padding-left: 0;
-						margin: 0;
-					}
-				}
-			}
+			
 		
 			.signature{
 				font-size: italic;
@@ -152,8 +125,62 @@
 	
 }
 
-.uiTopicDetail{
+.postContent{
+	p{
+		margin: 0;
+	}
+	
+	.contentQuote{
+		padding: 15px;
+		background: #e6f3ff;
+		margin: 10px 0 0 15px;
+		.border-radius(2px);
+		.textContent{
+			border-left: solid 5px #aacded;
+			padding-left: 15px;
+			margin-top: 10px;
+		}
+		.textContent:first-child{
+			border-left: none;
+			padding-left: 0;
+		}
+	}
+	
+	.textContent {
+		.contentQuote{
+			padding-left: 0;
+			margin: 0;
+		}
+	}
+}
 
+
+.uiTopicDetail{
+	.tagsContainer{
+		line-height: 28px;
+		
+		.tagItem{
+			background: #e0e8f5;
+			.border-radius(3px);
+			color: #2f5e92;
+			border: 1px solid #3f6fbb;
+			padding: 1px 5px;
+			display: inline-block;
+		}
+		
+		.titleTag{
+			margin-left: 10px;
+		}
+		
+		.txtTags{
+			display: inline-block;
+			li{
+				display: inline-block;
+			}
+		}
+		
+	}
+	
 	.uiBox {
 		&.uiPostRules{
 			margin-top: 10px;
