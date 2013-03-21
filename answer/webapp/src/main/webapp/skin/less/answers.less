@@ -34,15 +34,40 @@
 			}
 		}
 	}
-
-	.line {
-    width:2px; 
-    border-left: 1px solid @tableBorder; 
-    margin:auto; 
-    min-height: 300px;
-    cursor: col-resize;
-  }
-
+	.resize {
+		margin-top: 8px;
+		a {
+			#gradient > .vertical(@btnBackground,@btnBackgroundHighlight); 
+			border: 1px solid @tableBorder;
+			border-right: 0;		
+			padding: 4px 0;
+			display: block;
+			float: left;
+			margin-left: 2px;	
+			outline: none;		
+			.border-radius(@borderRadiusSmall 0  0 @borderRadiusSmall);
+		}
+		&.resizeLt {
+			a {	
+				.border-radius(0 @borderRadiusSmall @borderRadiusSmall 0);
+				border-right: 1px solid @tableBorder;	
+				border-left: 0;	
+				margin-left: 0px;		
+			}
+		}
+		
+		.iconControll {
+			cursor: pointer;
+		}
+		.line {
+		    width:2px; 
+		    border-left: 1px solid @tableBorder; 
+		    margin:auto; 
+		    min-height: 300px;
+		    cursor: col-resize;
+		  }
+	}
+	
 	.normalQuest  {
 		margin-bottom: 10px;
 		.leftContent {
@@ -62,7 +87,7 @@
 		width: 30px;
 	}
 	.uiAnserContainer .rightColumn {
-		margin-left: 250px;
+		margin-left: 255px;
 		.uiGrayLightBox ,.metaContent{
 				overflow: hidden;
 			}

@@ -107,11 +107,14 @@
               rightColumn.css('margin-left', '31px');
               portlet.css('padding-left', '0px');
               portlet.find('.line:first').hide();
-              var iconArrow = portlet.find('i.iconControll:first');
-              iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
+              var iconArrow = portlet.find('a.iconControll:first').find('i:first');
+			  console.log(iconArrow.length + '  ' + portlet.find('a.iconControll:first').length);
+              iconArrow.attr('class', 'uiIconMiniArrowRight pull-left');
+			  portlet.find('#resizeLineBar').addClass('resizeLt');
             } else {
               leftColumn.css('width', width + 'px').show();
               rightColumn.css('margin-left', magrinL + 'px');
+			  portlet.find('#resizeLineBar').removeClass('resizeLt');
             }
           }
         }
@@ -120,7 +123,7 @@
       UIAnswersPortlet.isDownLine = false;
     });
 
-    var iconArrow = answerContainer.find('i.iconControll:first');
+    var iconArrow = answerContainer.find('.iconControll:first');
     iconArrow.on('click', function() {
       var thiz = $(this);
       var portlet = findId(UIAnswersPortlet.portletId);
@@ -136,7 +139,8 @@
           thiz.parent().find('.line').hide();
         });
         rightColumn.animate({'margin-left': '31px'}, 300, function(){});
-        iconArrow.attr('class', 'uiIconMiniArrowRight pull-left iconControll');
+        iconArrow.find('i:first').attr('class', 'uiIconMiniArrowRight pull-left');
+        portlet.find('#resizeLineBar').addClass('resizeLt');
       } else {
         portlet.css('padding-left', '20px');
         thiz.parent().find('.line').show();
@@ -146,8 +150,9 @@
           'width' : '220px',
           'height' : (h+'px')
         }, 300, function() { $(this).css({'overflow' : 'visible', 'height' : 'auto'});});
-        rightColumn.animate({'margin-left': '250px'}, 300, function(){});
-        iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left iconControll');
+        rightColumn.animate({'margin-left': '255px'}, 300, function(){});
+        iconArrow.find('i:first').attr('class', 'uiIconMiniArrowLeft pull-left');
+        portlet.find('#resizeLineBar').removeClass('resizeLt');
       }
     })
   };
@@ -232,7 +237,7 @@
       $('#FAQCustomView').addClass('FAQCustomViewRight');
       title.attr('title', showTitle);
     } else {
-      rightColumn.css('margin-left', '250px');
+      rightColumn.css('margin-left', '255px');
       title.attr('title', hideTitle);
       cookie = 'block';
     }
