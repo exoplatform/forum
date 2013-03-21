@@ -54,7 +54,7 @@
  													<% } else { %>
  													<td><a href="$linkQuestion" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
  												 	<td>$date</td>
- 													<td class="center">1111</td>
+ 													<td class="center">$result.numberOfAnswer</td>
  													<% } %>
  											</tr>
  											<% 

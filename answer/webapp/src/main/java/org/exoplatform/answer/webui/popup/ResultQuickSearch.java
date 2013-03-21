@@ -19,6 +19,7 @@ package org.exoplatform.answer.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersContainer;
 import org.exoplatform.answer.webui.UIAnswersPageIterator;
@@ -26,6 +27,7 @@ import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIBreadcumbs;
 import org.exoplatform.answer.webui.UICategories;
 import org.exoplatform.answer.webui.UIQuestions;
+import org.exoplatform.answer.webui.UIQuickSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.ObjectSearchResult;
@@ -51,11 +53,12 @@ import org.exoplatform.webui.event.EventListener;
     template = "app:/templates/answer/webui/popup/ResultQuickSearch.gtmpl", 
     events = {
         @EventConfig(listeners = ResultQuickSearch.OpenCategoryActionListener.class), 
+        @EventConfig(listeners = ResultQuickSearch.AdvancedSearchActionListener.class),
         @EventConfig(listeners = ResultQuickSearch.LinkQuestionActionListener.class), 
         @EventConfig(listeners = ResultQuickSearch.CloseActionListener.class) 
     }
 )
-public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
+public class ResultQuickSearch extends BaseUIFAQForm implements UIPopupComponent {
   private List<ObjectSearchResult> searchResults_     = new ArrayList<ObjectSearchResult>();
 
   private String                   LIST_RESULT_SEARCH = "listResultSearch";
@@ -103,6 +106,13 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
   }
 
   public void deActivate() {
+  }
+  
+  static public class AdvancedSearchActionListener extends BaseEventListener<ResultQuickSearch> {
+    public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch uiForm, String objectId) throws Exception {
+      UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0);
+      uiAdvancedSearchForm.setIsSearch(false, false);
+    }
   }
 
   static public class OpenCategoryActionListener extends BaseEventListener<ResultQuickSearch> {

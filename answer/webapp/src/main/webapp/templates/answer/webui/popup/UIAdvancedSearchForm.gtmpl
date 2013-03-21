@@ -16,7 +16,27 @@
 											<label for="<%=field.getId()%>"><%=fieldName%></label>
 									</div>
 									<div class="controls">
-											<% uiform.renderField(field) %>
+									    <% if (field.getId().equals("SearchObject")) {
+									         List options = field.getOptions();
+										       String type = uicomponent.getType();
+									         for (option in options) {
+										         String ischeck = "";
+									           String value = option.getValue();
+									           String label = option.getLabel();
+									           String actionLabel = _ctx.appRes(uicomponent.getName() + ".label." + label); 
+									           if (value.equals(type)) {
+									             ischeck = "checked";
+									           }
+									           String link = uicomponent.event("Onchange", "$value"); %>
+                             <label class="uiRadio">
+                               <input class="radio" type="radio" name="SearchObject" $ischeck value="$value" onclick="$link">
+                               <span>$actionLabel</span>
+                             </label>
+									     <% 
+									          }
+									      } else { 
+									        uiform.renderField(field) 
+									      } %>
 									</div>
 								<%} else {%>
 									<div class="controls full-control"><% uiform.renderField(field) %></div>

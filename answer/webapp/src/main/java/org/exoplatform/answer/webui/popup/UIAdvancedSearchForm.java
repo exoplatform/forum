@@ -83,13 +83,11 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 
   final static private String FIELD_COMMENT                = "Comment";
 
-  final static private String ITEM_EMPTY                   = "empty";
+  final static private String ITEM_EMPTY                   = "categoryAndQuestion";
 
   final static private String ITEM_CATEGORY                = "faqCategory";
 
   final static private String ITEM_QUESTION                = "faqQuestion";
-
-  final static private String ITEM_MODERATEQUESTION_EMPTY2 = "empty2";
 
   final static private String ITEM_MODERATEQUESTION_TRUE   = "true";
 
@@ -98,6 +96,8 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
   private FAQSetting          faqSetting_                  = new FAQSetting();
 
   private String              defaultLanguage_             = "";
+  
+  private String              type                         = "categoryAndQuestion";
 
   public UIAdvancedSearchForm() throws Exception {
     faqSetting_ = new FAQSetting();
@@ -125,16 +125,15 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       listLanguage.add(displayName);
     }
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(ITEM_EMPTY, "categoryAndQuestion"));
-    list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory"));
-    list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion"));
+    list.add(new SelectItemOption<String>(getLabel(ITEM_EMPTY), ITEM_EMPTY));
+    list.add(new SelectItemOption<String>(getLabel(ITEM_CATEGORY), ITEM_CATEGORY));
+    list.add(new SelectItemOption<String>(getLabel(ITEM_QUESTION), ITEM_QUESTION));
     UIFormRadioBoxInput searchType = new UIFormRadioBoxInput(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list);
     searchType.setDefaultValue(ITEM_EMPTY);
     
     //searchType.setOnChange("Onchange");
     UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null);
     list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTY2, "AllCategories"));
     list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_TRUE, "true"));
     list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_FALSE, "false"));
     UIFormRadioBoxInput modeQuestion = new UIFormRadioBoxInput(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list);
@@ -195,10 +194,14 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
   public String getText() {
     return getUIStringInput(FIELD_TEXT).getValue();
   }
-
+  
+  public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
+    return (UIFormRadioBoxInput) findComponentById(name);
+  }
+  
   public void setIsSearch(boolean isCategory, boolean isQuestion) {
     UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(isCategory);
-    UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(isCategory);
+    UIFormRadioBoxInput modeQuestion = getUIFormRadioBoxInput(FIELD_ISMODERATEQUESTION).setRendered(isCategory);
     UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(isCategory);
     categoryName.setValue("");
     modeQuestion.setValue("");
@@ -228,10 +231,25 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     return calendar;
   }
 
+  /**
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * @param type the type to set
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
+
   static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
       UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource();
-      String type = uiAdvancedSearchForm.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
+      String type = uiAdvancedSearchForm.getUIFormRadioBoxInput(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
+      uiAdvancedSearchForm.setType(type);
       if (type.equals("faqCategory")) {
         uiAdvancedSearchForm.setIsSearch(true, false);
       } else if (type.equals("faqQuestion")) {
@@ -249,10 +267,10 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       /**
        * Get data from FormInput
        */
-      String type = advancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
+      String type = advancedSearch.getUIFormRadioBoxInput(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
       String text = advancedSearch.getUIStringInput(FIELD_TEXT).getValue();
       String categoryName = advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue();
-      String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue();
+      String modeQuestion = advancedSearch.getUIFormRadioBoxInput(FIELD_ISMODERATEQUESTION).getValue();
       String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue();
       String author = advancedSearch.getUIStringInput(FIELD_AUTHOR).getValue();
       String emailAddress = advancedSearch.getUIStringInput(FIELD_EMAIL_ADDRESS).getValue();
