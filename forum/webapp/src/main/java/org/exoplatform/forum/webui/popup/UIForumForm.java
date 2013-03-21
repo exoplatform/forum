@@ -163,6 +163,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 
   public UIForumForm() throws Exception {
     isDoubleClickSubmit = false;
+    setAddColonInLabel(true);
   }
 
   public boolean isMode() {

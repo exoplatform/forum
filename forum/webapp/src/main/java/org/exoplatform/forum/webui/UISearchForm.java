@@ -187,6 +187,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     addUIFormInput(viewCountMin);
     addUIFormInput(moderator);
     setActions(new String[] { "Search", "ResetField", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   protected void setLocale() throws Exception {
