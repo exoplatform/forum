@@ -4,7 +4,7 @@
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.id + "');");  
 %>
 
-<div class="UIMoveCategoryForm $uicomponent.id">
+<div class="uiMoveForm $uicomponent.id">
   <% uiform.begin() %>
   <div class="form-horizontal resizable">
       <p><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %></p>

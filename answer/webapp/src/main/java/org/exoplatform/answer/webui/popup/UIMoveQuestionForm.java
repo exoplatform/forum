@@ -24,7 +24,8 @@ import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersContainer;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIQuestions;
-import org.exoplatform.faq.service.Cate;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
@@ -45,43 +46,35 @@ import org.exoplatform.webui.event.EventListener;
  */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/answer/webui/popup/UIMoveQuestionForm.gtmpl", 
+    template = "app:/templates/answer/webui/popup/UIMoveForm.gtmpl", 
     events = {
-        @EventConfig(listeners = UIMoveQuestionForm.OkActionListener.class), 
+        @EventConfig(listeners = UIMoveQuestionForm.MoveActionListener.class), 
         @EventConfig(listeners = UIMoveQuestionForm.CancelActionListener.class) 
     }
 )
 public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   private String            questionId_      = "";
 
-  protected String          homeCategoryName = "";
-
   private String            categoryId_;
 
-  private FAQSetting        faqSetting_;
+  private FAQSetting faqSetting_;
 
-  private List<Cate>        listCate         = new ArrayList<Cate>();
 
   public UIMoveQuestionForm() throws Exception {
-    homeCategoryName = getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME);
   }
 
-  public String getCategoryID() {
-    return categoryId_;
+  protected CategoryTree getCategoryTree() throws Exception {
+    return getFAQService().buildCategoryTree(null);
   }
 
-  public void setCategoryID(String s) {
-    categoryId_ = s;
+  protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
+    return FAQUtils.renderCategoryTree(categoryTree, this, "Move", categoryId_, false);
   }
-
+  
   public void activate() {
   }
 
   public void deActivate() {
-  }
-
-  protected List<Cate> getListCate() {
-    return this.listCate;
   }
 
   public void setQuestionId(String questionId) throws Exception {
@@ -92,47 +85,34 @@ public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponen
 
   public void setFAQSetting(FAQSetting faqSetting) {
     this.faqSetting_ = faqSetting;
-    String orderType = faqSetting.getOrderType();
-    if (orderType.equals("asc"))
-      faqSetting.setOrderType("desc");
-    else
-      faqSetting.setOrderType("asc");
   }
 
-  public void updateSubCategory() throws Exception {
-    this.listCate.addAll(getFAQService().listingCategoryTree());
-    String orderType = faqSetting_.getOrderType();
-    if (orderType.equals("asc"))
-      faqSetting_.setOrderType("desc");
-    else
-      faqSetting_.setOrderType("asc");
-  }
-
-  static public class OkActionListener extends BaseEventListener<UIMoveQuestionForm> {
-    public void onEvent(Event<UIMoveQuestionForm> event, UIMoveQuestionForm moveQuestionForm, String catePath) throws Exception {
+  static public class MoveActionListener extends BaseEventListener<UIMoveQuestionForm> {
+    public void onEvent(Event<UIMoveQuestionForm> event, UIMoveQuestionForm moveQuestionForm, String destCategoryId) throws Exception {
       UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       try {
-        if (!moveQuestionForm.faqSetting_.isAdmin() && !questions.getFAQService().isCategoryModerator(catePath, null)) {
+        Category category = moveQuestionForm.getFAQService().getCategoryById(destCategoryId);
+        if (!moveQuestionForm.faqSetting_.isAdmin() && !questions.getFAQService().isCategoryModerator(category.getPath(), null)) {
           warning("UIQuestions.msg.can-not-move-question");
           return;
         }
         try {
           Question question = questions.getFAQService().getQuestionById(moveQuestionForm.questionId_);
-          String cateId = catePath.substring(catePath.lastIndexOf("/") + 1);
+          String cateId = category.getId();
           if (cateId.equals(question.getCategoryId())) {
             warning("UIMoveQuestionForm.msg.choice-orther");
             return;
           }
           question.setCategoryId(cateId);
-          question.setCategoryPath(catePath);
-          String link = FAQUtils.getQuestionURI(new StringBuffer(catePath).append("/").
+          question.setCategoryPath(category.getPath());
+          String link = FAQUtils.getQuestionURI(new StringBuffer(category.getPath()).append("/").
                                                 append(Utils.QUESTION_HOME).append("/").append(question.getId()).toString(), false);
           FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
           FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);
           List<String> questionList = new ArrayList<String>();
           questionList.add(question.getPath());
-          questions.getFAQService().moveQuestions(questionList, catePath, link, moveQuestionForm.faqSetting_);
+          questions.getFAQService().moveQuestions(questionList, category.getPath(), link, moveQuestionForm.faqSetting_);
           questions.updateCurrentQuestionList();
         } catch (Exception e) {
           moveQuestionForm.log.warn("Can not move this question. Exception: " + e.getMessage());

@@ -42,6 +42,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -562,6 +564,41 @@ public class FAQUtils {
         return vote2.compareTo(vote1);
       }
     }
+  }
+  
+  public static String renderCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String actionName,  String categoryId, boolean isAddSup) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    builder.append("<a href=\"javascript:void(0);\"");
+    if (isAddSup == false && category.getId().equals(categoryId) == true) {
+      String warning = uiForm.i18n("UIMoveQuestionForm.msg.choice-orther");
+      builder.append(" ondblclick=\"alert('").append(warning).append("');\"");
+    } else {
+      builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
+    }
+    if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
+        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>&nbsp;").append(category.getName());
+    } else {
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+    }
+    builder.append("</a>");
+
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    if(categoryTrees.size() > 0) {
+      builder.append("<ul class=\"nodeGroup\">");
+      for(CategoryTree subTree : categoryTrees) {
+        if (isAddSup && subTree.getCategory().getPath().indexOf(categoryId) >= 0){
+          continue;
+        }
+        builder.append("<li class=\"node\">");
+        builder.append(renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup));
+        builder.append("</li>");
+      }
+      builder.append("</ul>");
+    }
+    
+    return builder.toString();
   }
 
 }
