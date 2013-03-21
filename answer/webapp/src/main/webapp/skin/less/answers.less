@@ -266,3 +266,56 @@
 		border-left: 1px solid #e9e9e9;
 	}
 }
+//attachmentContainer
+
+.attachmentContainer{
+		background: @tableBackgroundAccent;
+		padding: 18px;
+		
+		.otherAttachmentBox + .otherAttachmentBox{
+			margin-top: 5px;
+		}
+		
+		.attachmentTitle{
+			margin-bottom: 15px;
+		}
+		.attachmentContentImage {
+			margin-bottom: 10px;
+			
+		.imageAttachmentBox{
+			display: inline-block;
+			.square(128px);
+			text-align: center;
+			margin-right: 15px;
+			margin-bottom: 15px;
+			position: relative;
+			&:hover{
+				.actionAttachImg{
+					display: block;
+				}
+			}
+			
+			.imgAttach{
+				line-height: 125px;
+			}
+			.actionAttachImg{
+				position: absolute;
+				display: none;
+				top: 0;
+				left: 0;
+				background-color: rgba(0,0,0,0.1);
+				.square(128px);
+				p{
+					a{
+						color: @white;
+					}
+					
+					margin: 45px 0 0 0;
+					&+p{
+						margin-top: 0;
+					}
+				}
+			}
+		}
+	}
+}
