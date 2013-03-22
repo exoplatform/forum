@@ -41,6 +41,7 @@ import org.exoplatform.answer.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.answer.webui.popup.UIResponseForm;
 import org.exoplatform.answer.webui.popup.UISendMailForm;
 import org.exoplatform.answer.webui.popup.UISettingForm;
+import org.exoplatform.answer.webui.popup.UIUserSettingForm;
 import org.exoplatform.answer.webui.popup.UIViewUserProfile;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
@@ -650,11 +651,11 @@ public class UIQuestions extends UIContainer {
       UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UISettingForm uiSetting = popupContainer.addChild(UISettingForm.class, null, null);
+      UIUserSettingForm uiSetting = popupContainer.addChild(UIUserSettingForm.class, null, null);
       uiSetting.setFaqSetting(question.faqSetting_);
       uiSetting.init();
       popupContainer.setId("CategorySettingForm");
-      popupAction.activate(popupContainer, 480, 0);
+      popupAction.activate(popupContainer, 650, 0);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

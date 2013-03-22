@@ -1,0 +1,86 @@
+<div class="uiFormInputWithActions">  
+  <% uiform.begin() %>
+  <div class="uiTabPane uiTabNormal">
+    <ul class="nav nav-tabs">
+      <%
+        String classCss = "" ; 
+        int i = 0;
+        for(String tabcontent : uicomponent.getChildren()){ 
+          String tabId = tabcontent.getId();
+          String paneId = uicomponent.getId();
+          if(uicomponent.tabId.equals(tabcontent.id)) classCss = "active" ;
+          else classCss = "" ; 
+      %> 
+        <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');<%=uiform.event("OpenTab",tabcontent.id)%>">
+          <a data-toggle="tab" data-target="#$tabId-tab"><%= _ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+        </li> 
+      <% } %>
+    </ul>
+    <div class="tab-content">
+      <% 
+      String active =  "";
+      for(tabcontent in uiform.getChildren()){
+        if(uicomponent.tabId.equals(tabcontent.id)) active = "in active" ;
+        else active = "" ; 
+    %>
+        <div id="$tabcontent.id-tab" class="tab-pane fade $active">
+          <div class="resizable">
+          
+          
+           <%
+          if(tabcontent.id.equals("DisplayTab")){
+          %>
+            <div class="form-horizontal">
+              <%
+              for(tabChildConten in tabcontent.getChildren()){
+                String label = tabChildConten.getId();
+                String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + label); %>
+                <div class="control-group">
+                  <label class="control-label" for="<%=tabChildConten.getId()%>"><%=actionLabel %></label>
+                  <div class="controls"> 
+                    <% uiform.renderField(tabChildConten) %>
+                  </div>
+                </div>
+                <% if(tabChildConten.id.equals("IsDeleteAvatar")){%>
+                <div class="control-group">
+                    <label class="control-label">
+                      <%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>
+                    </label>
+                    <div class="controls avatarLarge">
+                        <img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">
+                    <%=_ctx.appRes("UIUserSettingForm.label.UploadAvatar")%>
+                  </label>
+                  <div class="controls">
+                    <button onclick="<%=uiform.event("ChangeAvatar")%>" class="btn btn-mini" type="button"><%=_ctx.appRes("UIUserSettingForm.action.ChangeAvatar")%></button>
+                  </div>
+                </div>
+                <%}%>
+              <%}%>
+            </div>
+          <% } else {
+            uiform.renderChild(tabcontent.id) ;
+            } %>
+          
+          
+          
+          </div>
+        </div>
+        <% } %>
+    </div>
+    
+  <div class="uiAction">
+  <%for(action in uicomponent.getActions()) {
+    String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+    String link = uicomponent.event(action);
+  %>
+    <button onclick="$link" class="btn" type="button">$actionLabel</button>
+  <%} %>
+  </div>
+
+  </div>
+  <%uiform.end()%>
+</div>
