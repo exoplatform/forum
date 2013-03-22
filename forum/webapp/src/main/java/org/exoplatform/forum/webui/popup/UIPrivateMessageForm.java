@@ -111,6 +111,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
+    formWYSIWYGInput.setHeight("220px");
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(SendTo);
     sendMessageTab.addUIFormInput(MailTitle);
@@ -137,6 +138,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     addUIFormInput(sendMessageTab);
     addChild(UIListInBoxPrivateMessage.class, null, null);
     addChild(UIListSentPrivateMessage.class, null, null);
+    setAddColonInLabel(true);
   }
 
   public void activate() {

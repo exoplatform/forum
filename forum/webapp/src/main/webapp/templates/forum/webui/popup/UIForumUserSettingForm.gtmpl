@@ -144,7 +144,7 @@
 						<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconMail uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
 						<div class="controls">
 							<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
-							<button href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="btn" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
+							<button onclick="<%=uiform.event("UpdateEmail")%>" href="javaScript:void(0);" class="btn" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
 						</div>
 					</div>
 				</div>

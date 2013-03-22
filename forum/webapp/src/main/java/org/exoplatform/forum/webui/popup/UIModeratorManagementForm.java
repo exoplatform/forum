@@ -541,7 +541,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     ActionData ad = new ActionData();
     ad.setActionListener("AddValuesArea");
     ad.setActionParameter(string);
-    ad.setCssIconClass("AddIcon16x16");
+    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
     ad.setActionName(string);
     actions.add(ad);
     inputSetProfile.setActionField(string, actions);
@@ -551,7 +551,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     ad = new ActionData();
     ad.setActionListener("AddValuesModCategory");
     ad.setActionParameter(string);
-    ad.setCssIconClass("AddIcon16x16");
+    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
     ad.setActionName(string);
     actions.add(ad);
     inputSetProfile.setActionField(string, actions);
