@@ -73,7 +73,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
@@ -140,8 +139,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   public static final String  FIELD_MAXPOSTS_SELECTBOX           = "MaximumPosts";
 
-  public static final String  FIELD_FORUMJUMP_CHECKBOX           = "ShowForumJump";
-
   public static final String  FIELD_TIMEZONE                     = "timeZone";
 
   public static final String  FIELD_ISBANNED_CHECKBOX            = "IsBanned";
@@ -178,6 +175,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     for (int i = 0; i < titleUser.length; i++) {
       permissionUser[i] = titleUser[i].toLowerCase();
     }
+    setAddColonInLabel(true);
   }
 
   public void setValueSearch(String value) {
@@ -382,6 +380,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     moderateCategorys.setValue(stringProcess(valuesCate));
     moderateCategorys.setReadOnly(true);
 
+    UIAvatarContainer avatarContainer = createUIComponent(UIAvatarContainer.class, null, "Avatar");
+    avatarContainer.setUserProfile(this.userProfile);
+    avatarContainer.setForumService(getForumService());
     UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
     isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
     // Option
@@ -436,8 +437,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
     maximumPosts.setValue("id" + userProfile.getMaxPostInPage());
     boolean isJump = userProfile.getIsShowForumJump();
-    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, false);
-    isShowForumJump.setChecked(isJump);
     // Ban
     UICheckBoxInput isBanned = new UICheckBoxInput(FIELD_ISBANNED_CHECKBOX, FIELD_ISBANNED_CHECKBOX, false);
     boolean isBan = userProfile.getIsBanned();
@@ -535,7 +534,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     inputSetProfile.addUIFormInput(moderateForums);
     inputSetProfile.addUIFormInput(signature);
     inputSetProfile.addUIFormInput(isDisplaySignature);
+    
+    inputSetProfile.addUIFormInput(avatarContainer);
     inputSetProfile.addUIFormInput(isDisplayAvatar);
+
     String string = FIELD_MODERATEFORUMS_MULTIVALUE;
     List<ActionData> actions = new ArrayList<ActionData>();
     ActionData ad = new ActionData();
@@ -564,7 +566,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     inputSetOption.addUIFormInput(timeFormat);
     inputSetOption.addUIFormInput(maximumThreads);
     inputSetOption.addUIFormInput(maximumPosts);
-    inputSetOption.addUIFormInput(isShowForumJump);
     addUIFormInput(inputSetOption);
 
     UIFormInputWithActions inputSetBan = new UIFormInputWithActions(FIELD_USERBAN_FORM);
@@ -815,7 +816,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
       long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2));
       long maxPost = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX).getValue().substring(2));
-      boolean isShowForumJump = inputSetOption.getUICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).isChecked();
 
       UIFormInputWithActions inputSetBan = uiForm.getChildById(FIELD_USERBAN_FORM);
       boolean wasBanned = userProfile.getIsBanned();
@@ -868,7 +868,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       userProfile.setTimeFormat(timeFormat.replace('=', ' '));
       userProfile.setMaxPostInPage(maxPost);
       userProfile.setMaxTopicInPage(maxTopic);
-      userProfile.setIsShowForumJump(isShowForumJump);
+      userProfile.setIsShowForumJump(false);
 
       userProfile.setIsBanned(isBanned);
       userProfile.setBanUntil(banUntil);
@@ -906,17 +906,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UISelectItemForum selectItemForum = openPopup(popupContainer, UISelectItemForum.class, 400, 0);
       selectItemForum.setForumLinks(uiForm.setListForumIds());
-    }
-  }
-
-  static public class SetDeaultAvatarActionListener extends BaseEventListener<UIModeratorManagementForm> {
-    public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String objectId) throws Exception {
-      if (uiForm.userAvartarUrl.equals(ForumSessionUtils.DEFAULT_AVATAR))
-        return;
-      String userId = ((UIFormStringInput) uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
-      uiForm.getForumService().setDefaultAvatar(userId);
-      uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.getForumService());
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
 

@@ -4,170 +4,127 @@
  %>
 <div class="uiFormInputWithActions">
 	<% uiform.begin() %>
-  <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
-    <ul class="nav nav-tabs">
-      <%String classCss = "" ; 
-        for(tabcontent in uiform.getChildren()){
-          String tabId = tabcontent.getId();
-          String paneId = uicomponent.getId(); 
-          if(!"WatchChesPageIterator".equals(tabcontent.id)){
-          if(uicomponent.tabId.equals(tabcontent.id)) classCss = "active" ;
-          else classCss = "" ; 
-      %>
-		<li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');<%=uiform.event("OpenTab",tabcontent.id)%>">
-			<a data-toggle="tab" data-target="#$tabId-tab"><%= _ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
-		</li>  
-      <%    
-         }
-      } %>
-    </ul>
-    <div class="tab-content">
-    <% 
-      String active =  "";
-      for(tabcontent in uiform.getChildren()){
-        if(uicomponent.tabId.equals(tabcontent.id)) active = "in active" ;
-        else active = "" ; 
-    %>
-        <div id="$tabcontent.id-tab" class="tab-pane fade $active">
-          <div class="resizable">
-          <%
-          if(tabcontent.id.equals("ForumUserProfile")){
-          %>
-			<div class="form-horizontal">
-              <%
-              for(tabChildConten in tabcontent.getChildren()){
-                if(tabChildConten.id.equals("IsDisplayAvatar")){%>
-                <div class="control-group">
-                    <label class="control-label" class="control-label">
-                      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> :
-                    </label>
-                    <div class="controls">
-						<div class="avatarLarge">
-							<img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
-						</div>
-						<div class="btn-group" style="margin-top:15px;">
-							<a href="javaScript:void(0);" onclick="<%=uiform.event("Attachment")%>" class="btn btn-mini">
-							  <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
-							</a>
-							<%
-							if(!org.exoplatform.forum.ForumSessionUtils.DEFAULT_AVATAR.equals(uicomponent.getAvatarUrl())){
-							%>
-							<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" class="btn btn-mini">
-								<%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
-							</a>
-							<%
-							}%>
-						</div>
-                    </div>
-				</div>
-                <%
-                }%>
-				<div class="control-group">
-					<label class="control-label" for="<%=tabChildConten.getId()%>"><%=uicomponent.getLabel(tabChildConten.getId()) %> :</label>
-					<div class="controls"> 
-						<% uiform.renderField(tabChildConten) %>
-					</div>
-				</div>
-              <%
-              }
-              %>
-			</div>
-          <%
-          } else if(tabcontent.id.equals("ForumUserWatches")){%>
-			<div class="horizontalLayout">
-				<table class="uiGrid table table-hover table-striped">
-					<thead>
-						<tr>
-							<th style="width: 15px;"></th>
-							<th><%=_ctx.appRes("UIForumUserSettingForm.label.Path")%></th>
-							<th style="width: 15px;" class="center">
-								<i class="uiIconRss uiIconLightGray"></i>
-							</th>
-							<th>
-								<i class="uiIconMail uiIconLightGray"></i>
-							</th>
-							<th style="width: 15px;"></th>
-						</tr>
-					</thead>
-					<tbody>
+	<div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+		<ul class="nav nav-tabs">
+			<%String classCss = "" ; 
+				for(tabcontent in uiform.getChildren()){
+					String tabId = tabcontent.getId();
+					String paneId = uicomponent.getId(); 
+					if(!"WatchChesPageIterator".equals(tabcontent.id)){
+					if(uicomponent.tabId.equals(tabcontent.id)) classCss = "active" ;
+					else classCss = "" ; 
+			%>
+			<li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');<%=uiform.event("OpenTab",tabcontent.id)%>">
+				<a data-toggle="tab" data-target="#$tabId-tab"><%= _ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+			</li>	
+		 <%		
+				 }
+			} 
+		 %>
+		</ul>
+		<div class="tab-content">
+		<% 
+			String active =	"";
+			for(tabcontent in uiform.getChildren()) {
+				if(uicomponent.tabId.equals(tabcontent.id)) active = "in active" ;
+				else active = "" ; 
+		%>
+				<div id="$tabcontent.id-tab" class="tab-pane fade $active">
+					<div class="resizable">
+		 <%
+				if(!tabcontent.id.equals("ForumUserWatches")) {
+						uiform.renderChild(tabcontent) ;
+				} else if(tabcontent.id.equals("ForumUserWatches")) {
+		 %>
+							 <div class="horizontalLayout">
+									<table class="uiGrid table table-hover table-striped">
+										<thead>
+											<tr>
+												<th style="width: 15px;"></th>
+												<th><%=_ctx.appRes("UIForumUserSettingForm.label.Path")%></th>
+												<th style="width: 15px;" class="center">
+													<i class="uiIconRss uiIconLightGray"></i>
+												</th>
+												<th>
+													<i class="uiIconMail uiIconLightGray"></i>
+												</th>
+												<th style="width: 15px;"></th>
+											</tr>
+										</thead>
+										<tbody>
+										<%
+										for(Watch watch : uicomponent.getListWatch()){%>
+											<tr>
+												<td>
+													<%
+													if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
+													<i class="uiIconCategory uiIconLightGray"></i>
+													<%	
+													} else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
+													<i class="uiIconUIForms uiIconLightGray"></i>
+													<%
+													} else {%>
+													 <i class="uiIconForumTopic uiIconForumLightGray"></i>
+													<%
+													}%>
+												</td>
+												<td>
+													<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>" rel="tooltip" data-placement="bottom" title="<%=watch.getPath()%>">
+														<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
+													</a>
+												</td>
+												<td class="center"	style="padding:0 0 0 4px;">
+													<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS + watch.getId()))%>
+												</td>
+												<td style="padding-left:13px;">
+													<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL + watch.getId()))%>
+													<%=watch.getEmail()%>
+												</td>
+												<td class="center">
+													<a class="actionIcon" href="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getUserId() + "/" + watch.getNodePath() + "/" + watch.getEmail())%>}">
+														<i class="uiIconDelete uiIconLightGray"></i>
+													</a>
+												</td>
+											</tr>
+										<%	
+										}%>
+										</tbody>
+									</table>
+				
+									<%uiform.renderChild(uiform.WATCHES_ITERATOR);%>
+				
+									<div class="form-horizontal mySubscriptions">
+										<div class="control-group">
+											<label class="control-label" for="<%=uicomponent.RSS_LINK%>"><i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
+											<div class="controls">
+												<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS_LINK))%>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconMail uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
+											<div class="controls">
+												<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
+												<button onclick="<%=uiform.event("UpdateEmail")%>" class="btn" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
+											</div>
+										</div>
+									</div>
+							 </div>
 					<%
-					for(Watch watch : uicomponent.getListWatch()){%>
-						<tr>
-							<td>
-							  <%
-							  if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
-								<i class="uiIconCategory uiIconLightGray"></i>
-							  <%  
-							  } else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
-								<i class="uiIconUIForms uiIconLightGray"></i>
-							  <%
-							  } else {%>
-							   <i class="uiIconForumTopic uiIconForumLightGray"></i>
-							  <%
-							  }%>
-							</td>
-							<td>
-								<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>" rel="tooltip" data-placement="bottom" title="<%=watch.getPath()%>">
-									<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
-								</a>
-							</td>
-							<td class="center"  style="padding:0 0 0 4px;">
-								<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS + watch.getId()))%>
-							</td>
-							<td style="padding-left:13px;">
-								<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL + watch.getId()))%>
-								<%=watch.getEmail()%>
-							</td>
-							<td class="center">
-								<a class="actionIcon" href="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getUserId() + "/" + watch.getNodePath() + "/" + watch.getEmail())%>}">
-									<i class="uiIconDelete uiIconLightGray"></i>
-								</a>
-							</td>
-						</tr>
-					<%  
-					}%>
-				  </tbody>
-				</table>
-				
-				<%uiform.renderChild(uiform.WATCHES_ITERATOR);%>
-				
-				
-				
-				<div class="form-horizontal mySubscriptions">
-					<div class="control-group">
-						<label class="control-label" for="<%=uicomponent.RSS_LINK%>"><i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
-						<div class="controls">
-							<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS_LINK))%>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconMail uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
-						<div class="controls">
-							<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
-							<button onclick="<%=uiform.event("UpdateEmail")%>" href="javaScript:void(0);" class="btn" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
-						</div>
-					</div>
+					}
+					%>
+					 </div>
 				</div>
-			</div>
-          <%
-          } else if(!tabcontent.id.equals("WatchChesPageIterator")){%>
-            <% uiform.renderChild(tabcontent) ; %>
-          <%
-          }
-          %>
-			</div>
-        </div>
-  <% } %>
-    </div>
-  </div>
+	<% } %>
+		</div>
+	</div>
 	<!-- =============================================== Action of this form ====================================================== -->
 	<div class="uiAction">
-  <% for(action in uiform.getActions()) { 
+	<% for(action in uiform.getActions()) { 
 		 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
 		 String link = uiform.event(action) ;
 	%>
-		<button onclick="$link" class="btn" type="button">$actionLabel</button>
-      <%}%>
-    </div>
+			<button onclick="$link" class="btn" type="button">$actionLabel</button>
+			<%}%>
+		</div>
 	<%uiform.end()%>
 </div>

@@ -578,7 +578,7 @@ public class FAQUtils {
     }
     if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
         builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
-               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>&nbsp;").append(category.getName());
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
       builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
     }

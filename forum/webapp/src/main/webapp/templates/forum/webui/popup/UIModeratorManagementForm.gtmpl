@@ -1,142 +1,138 @@
 <%
-	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.forum.service.ForumLinkData ;
-	import org.exoplatform.forum.service.Utils;
-	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumUtils ; 
-	String [] scripts = ["eXo.forum.UIForumPortlet.setEnableInput();", 
-	                     "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;"];
+  import org.exoplatform.forum.service.UserProfile;
+  import org.exoplatform.forum.service.ForumLinkData ;
+  import org.exoplatform.forum.service.Utils;
+  import org.exoplatform.forum.webui.UIForumPageIterator ; 
+  import org.exoplatform.forum.ForumUtils ; 
+  String [] scripts = ["eXo.forum.UIForumPortlet.setEnableInput();", 
+                       "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;"];
   ForumUtils.addScripts(null, null, scripts);
 %>
 <div class="uiModeratorManagementForm">
-	<% uiform.begin() %>
-	<div class="resizable">
-		<div class="managementContent">
-		
-			<div class="uiSearchInput clearfix ">
-				<div class="pull-right">
-					<span class="actionSubmitLink" data-link="<%=uicomponent.event("SearchUser");%>">
-						<%	
-							uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
-						%>
-					</span>
-					
-					<%if(uicomponent.isViewSearchUser){%>
-					<a class="actionIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
-						<i class="uiIconRefresh uiIconLightGray"></i>
-					</a>
-					<%}%>
-					
-				</div>
-			</div>
-		 
-			<table id="PermissionInfo" class="uiGrid table  table-hover table-striped">
-				<thead>
-					<tr>
-						<th style="width:31%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
-						<th style="width:22%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
-						<th style="width:21%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
-						<th style="width:8%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
-						<th class="center" style="width:50px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
-					</tr>
-				</thead>
-				<tbody>
-				<% 
-					String classRowTable = "EvenRow";
-					List listUser = uiform.getListProFileUser() ;	
-					String userRole = "" ;
-					String userTitle = "";
-					for(user in listUser) {
-						userTitle = user.getUserTitle();
-						if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
-							userTitle = Utils.ADMIN;
-							user.setUserRole(0);
-						}
-						if(user.getUserRole() == 1 && userTitle.equals(Utils.USER)) userTitle = Utils.MODERATOR;
-						userRole = uicomponent.permissionUser[(int)user.getUserRole()];
-						
-						String isBanned = "false";
-						String checkedBan = "";
-						if(user.getIsBanned() && uicomponent.getIsBanned(user)){
-							isBanned = "true";
-							checkedBan = "checked=\"checked\"";
-						}
-				%>
-					<tr >
-						<td><%=user.getUserId();%></td>
-						<td>$userTitle</td>
-						<td><%=userRole;%></td>
-						<td class="center">
-							<span class="uiCheckbox"><input disabled type="checkbox" value="$isBanned" name="site" class="checkbox" $checkedBan readonly/><span>
-							</span></span>
-						</td>
-						<td class="center">				 
-							<a class="actionIcon" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
-								<i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="uiIconEdit uiIconLightGray"></i>							
-							</a>
-							<a class="actionIcon" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-								<i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="uiIconPreview uiIconLightGray"></i>							
-							</a>
-						</td>
-					</tr>
-				 <% 
-				 if(classRowTable.equals("EvenRow")) classRowTable = "OddRow";
-				 else classRowTable = "EvenRow"; 
-					} 
-				 %>
-				</tbody>
-			</table> 
-		
-			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+  <% uiform.begin() %>
+  <div class="resizable">
+    <div class="managementContent">
+    
+      <div class="uiSearchInput clearfix ">
+        <div class="pull-right">
+          <span class="actionSubmitLink" data-link="<%=uicomponent.event("SearchUser");%>">
+            <%  
+              uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
+            %>
+          </span>
+          
+          <%if(uicomponent.isViewSearchUser){%>
+          <a class="actionIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
+            <i class="uiIconRefresh uiIconLightGray"></i>
+          </a>
+          <%}%>
+          
+        </div>
+      </div>
+     
+      <table id="PermissionInfo" class="uiGrid table  table-hover table-striped">
+        <thead>
+          <tr>
+            <th style="width:31%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
+            <th style="width:22%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
+            <th style="width:21%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
+            <th style="width:8%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
+            <th class="center" style="width:50px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% 
+          String classRowTable = "EvenRow";
+          List listUser = uiform.getListProFileUser() ; 
+          String userRole = "" ;
+          String userTitle = "";
+          for(user in listUser) {
+            userTitle = user.getUserTitle();
+            if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
+              userTitle = Utils.ADMIN;
+              user.setUserRole(0);
+            }
+            if(user.getUserRole() == 1 && userTitle.equals(Utils.USER)) userTitle = Utils.MODERATOR;
+            userRole = uicomponent.permissionUser[(int)user.getUserRole()];
+            
+            String isBanned = "false";
+            String checkedBan = "";
+            if(user.getIsBanned() && uicomponent.getIsBanned(user)){
+              isBanned = "true";
+              checkedBan = "checked=\"checked\"";
+            }
+        %>
+          <tr >
+            <td><%=user.getUserId();%></td>
+            <td>$userTitle</td>
+            <td><%=userRole;%></td>
+            <td class="center">
+              <span class="uiCheckbox"><input disabled type="checkbox" value="$isBanned" name="site" class="checkbox" $checkedBan readonly/><span>
+              </span></span>
+            </td>
+            <td class="center">        
+              <a class="actionIcon" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
+                <i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="uiIconEdit uiIconLightGray"></i>             
+              </a>
+              <a class="actionIcon" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
+                <i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="uiIconPreview uiIconLightGray"></i>              
+              </a>
+            </td>
+          </tr>
+         <% 
+         if(classRowTable.equals("EvenRow")) classRowTable = "OddRow";
+         else classRowTable = "EvenRow"; 
+          } 
+         %>
+        </tbody>
+      </table> 
+    
+      <% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 
-			<% if(uiform.getIsEdit()) { %>
-			<div class="uiTabPane uiTabNormal" id="$uicomponent.id">
-				<ul class="nav nav-tabs">
-				  <%String classCss = "active" ; 
-					for(tabcontent in uiform.getChildren()){ 
-					  if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) continue;
-					  String tabId = tabcontent.getId();
-					  String paneId = uicomponent.getId();
-				  %>
-				  <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId')">              
-					<a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
-				  </li>  
-				  <% classCss=""; } %>    
-				</ul>
-				<div class="tab-content">
-				  <% 
-					String active =  "in active";
-					for(tabcontent in uiform.getChildren()){
-					  if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) continue;
-					  println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\" style=\"overflow:auto;\">" ;
-					  if(tabcontent.id.equals("ForumUserProfile")){%>
-						<div style="float:left; width:150px; text-align:center;">
-						  <img src="<%=uicomponent.userAvartarUrl%>" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
-						  <div style="color:blue; cursor:pointer;" onclick="javaScirpt:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>'))<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
-						</div>
-						<div style="float:left; width:500px;"><%uiform.renderChild(tabcontent.id);%></div>
-					  <%} else uiform.renderChild(tabcontent.id);
-						println "</div>" ;
-						active = "";
-					  }
-					  %>
-					  </div>
-				</div>
-				<div class="uiAction">
-				<% for(action in uiform.getActions()) { 
-					   if(action.equals("Cancel") || action.equals("Save")) {
-				  %>
-				  <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="btn"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
-				  <%   } 
-					 }%>
-				</div>
-			<% } %>
-			</div>
-	</div>
-	
-	<div class="uiAction uiActionBorder">
-		<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
-	</div>
-	
-	<%uiform.end()%>
+    <% if(uiform.getIsEdit()) { %>
+      <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+        <ul class="nav nav-tabs">
+          <%String classCss = "active" ; 
+          for(tabcontent in uiform.getChildren()){ 
+            if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) continue;
+            String tabId = tabcontent.getId();
+            String paneId = uicomponent.getId();
+          %>
+          <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId')">              
+          <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+          </li>  
+          <% classCss=""; } %>    
+        </ul>
+        <div class="tab-content">
+          <% 
+          String active =  "in active";
+          for(tabcontent in uiform.getChildren()){
+            if(tabcontent.id.equals("ForumUserPageIterator") || tabcontent.id.equals(uiform.FIELD_SEARCH_USER)) {
+              continue;
+            }
+            println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\" style=\"overflow:auto;\">" ;
+            uiform.renderChild(tabcontent.id);
+            println "</div>" ;
+            active = "";
+          }
+          %>
+        </div>
+      </div>
+      <div class="uiAction">
+      <% for(action in uiform.getActions()) { 
+           if(action.equals("Cancel") || action.equals("Save")) {
+        %>
+        <button type="button" onclick="<%=uicomponent.event(action);%>" class="btn"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></button>
+        <%   } 
+         }%>
+      </div>
+    <% } %>
+    </div>
+  </div>
+  
+  <div class="uiAction uiActionBorder">
+    <button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
+  </div>
+  
+  <%uiform.end()%>
 </div>

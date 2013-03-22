@@ -191,7 +191,7 @@ public class UIForumPortlet extends UIPortletApplication {
         addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
         addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
         addChild(UISearchForm.class, null, null).setRendered(isSearchRendered);
-        addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered);
+        addChild(UIForumLinks.class, null, null).setRendered(false);
         updateIsRendered(ForumUtils.CATEGORIES);
         categoryContainer.updateIsRender(true);
       }
@@ -325,25 +325,12 @@ public class UIForumPortlet extends UIPortletApplication {
     UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
     categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-    getChild(UIForumLinks.class).setUpdateForumLinks();
+//    getChild(UIForumLinks.class).setUpdateForumLinks();
     getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
   }
   
   public void setRenderForumLink() {
-    if (isShowForumJump) {
-      if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
-        isJumpRendered = false;
-      } else {
-        isJumpRendered = getUserProfile().getIsShowForumJump();
-      }
-    } else {
-      isJumpRendered = false;
-    }
-    UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered);
-    categoryContainer.setIsRenderJump(isJumpRendered);
-    if (!isCategoryRendered) {
-      getChild(UIForumLinks.class).setRendered(isJumpRendered);
-    }
+
   }
 
   public void setRenderQuickReply() {
