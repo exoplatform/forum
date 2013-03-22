@@ -569,7 +569,7 @@
 										<% 
 										Answer[] answers = uicomponent.getPageListAnswer(question.getPath());
 										String classResponsse = "";
-										if(answers != null && answers.length > 0)classResponsse = "ResponseExternal";
+										if(answers != null && answers.length > 0)classResponsse = "responseExternal";
 										%>
 										<div class="responseContent">
 										
@@ -666,14 +666,18 @@
 											<div class="responseContainer">										 
 												<!-- View all answer for this question -->
 												<div class="response $classResponsse" id="SetWidthContent">
-							<h5 class="titleResponseContent">
-															<%=_ctx.appRes("UIQuestions.label.Answers")%>
-														</h5>
+														
 													<%
 													if(answers != null && answers.length > 0){
 														String actionAnswer = "";
 														int i = 0;
 														String owner = "";
+														
+														%>
+														<h5 class="titleResponseContent">
+															<%=_ctx.appRes("UIQuestions.label.Answers")%>
+														</h5>
+														<%
 														for(Answer answer in answers) {
 															res = uicomponent.render(answer);
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
