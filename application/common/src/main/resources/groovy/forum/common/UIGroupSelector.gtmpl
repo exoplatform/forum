@@ -2,70 +2,67 @@
   import  org.exoplatform.webui.core.UIBreadcumbs;
   import  org.exoplatform.webui.core.UITree;
 %>
-<div class="UIGroupMembershipSelector" id="$uicomponent.id">
-  <div class="Container ClearFix">
-		<div class="SelectedGroupPath"><% uicomponent.renderChild(UIBreadcumbs.class); %></div>
-		<div class="GroupSelector">
-		  <div class="ContentContainer">
-			  <div class="MembershipTitle"><%=_ctx.appRes(uicomponent.id+".label.selectGroup")%></div>
-			  <%uicomponent.renderChild(UITree.class);%>
+<div class="uiGroupMembershipSelector" id="$uicomponent.id">
+	<div class="uiGrayLightBox uiBox noRounded"><% uicomponent.renderChild(UIBreadcumbs.class); %></div>
+	<div class="row-fluid">
+		<div class="span6">
+			<div class="uiBox selectGroup noRounded">
+				<h5 class="title"><%=_ctx.appRes(uicomponent.id+".label.selectGroup")%></h5>
+				<%uicomponent.renderChild(UITree.class);%>
 			</div>
 		</div>
-	  <div class="MembershipSelector">
-	    <div class="ContentContainer">
-		    <div class="MembershipTitle">
-		    	<%if(uicomponent.isSelectUser()){%>
-		    		<%=_ctx.appRes(uicomponent.id+".label.selectUser")%>
-		    	<%}%>
-		    	<%if(uicomponent.isSelectMemberShip()){%>
-		    	 	<%=_ctx.appRes(uicomponent.id+".label.selectMemberShip")%>
+		
+		<div class="span6">
+			<div class="uiBox noRounded childGoup">
+				<h5 class="title">
+				<%if(uicomponent.isSelectUser()){%>
+					<%=_ctx.appRes(uicomponent.id+".label.selectUser")%>
+				<%}%>
+				<%if(uicomponent.isSelectMemberShip()){%>
+					<%=_ctx.appRes(uicomponent.id+".label.selectMemberShip")%>
 				  <%}%>
 				  <%if(uicomponent.isSelectGroup()){%>
-				  	<%=_ctx.appRes(uicomponent.id+".label.selectGroup")%>
+					<%=_ctx.appRes(uicomponent.id+".label.selectGroup")%>
 				  <%}%>
-		    </div>
-	      <div class="OverflowContainer">
-		      <%
-		      boolean even = true ;
-		     if(uicomponent.getCurrentGroup() != null) {
-			      for(user in uicomponent.getList()){
-			        String rowCssClass = "OddRow" ;
-			        if(even) rowCssClass = "EvenRow" ;
-			        even = !even ;
-			        key = "" ;
-							if(uicomponent.isSelectMemberShip()){
-								key = user + ":" + uicomponent.getCurrentGroup().getId() ;
-							} else if(uicomponent.isSelectUser()){
-								key = user ;
-							} else if(uicomponent.isSelectGroup()){
-								if (_ctx.appRes(uicomponent.id + ".label.selectThisGroup").equals(user)) {
-									key = uicomponent.getCurrentGroup().getId();
-								} else {
-									key = uicomponent.getCurrentGroup().getId() + "/" + user;
-								}
-							} 
-		      %>
-				     <div class="$rowCssClass">
-				        	<a class="ItemIcon" href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>
-				      </div>
-		      <%}
-		      } else if (uicomponent.isSelectGroup()){
-		      	for(user in uicomponent.getList()){
-			        String rowCssClass = "OddRow" ;
-			        if(even) rowCssClass = "EvenRow" ; 
-			        even = !even ;
-				      key = "/" + user ;   
-		      %>
-				      <div class="$rowCssClass">
-				        	<a class="ItemIcon" href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>
-				      </div>
-		      <%}
+				</h5>
+				
+				<div class="uiContentBox">
+					<ul>
+				  <%
 
-		      }
-		      %>
-	      </div>
-	    </div>
-	  </div>
+				 if(uicomponent.getCurrentGroup() != null) {
+					  for(user in uicomponent.getList()){
+						key = "" ;
+								if(uicomponent.isSelectMemberShip()){
+									key = user + ":" + uicomponent.getCurrentGroup().getId() ;
+								} else if(uicomponent.isSelectUser()){
+									key = user ;
+								} else if(uicomponent.isSelectGroup()){
+									if (_ctx.appRes(uicomponent.id + ".label.selectThisGroup").equals(user)) {
+										key = uicomponent.getCurrentGroup().getId();
+									} else {
+										key = uicomponent.getCurrentGroup().getId() + "/" + user;
+									}
+								} 
+				  %>
+						<li>
+							<a href="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
+						</li>
+				  <%}
+				  } else if (uicomponent.isSelectGroup()){
+					for(user in uicomponent.getList()){
+						  key = "/" + user ;   
+				  %>
+						<li>
+							<a href="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
+						</li>
+				  <%}
 
+				  }
+				  %>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
