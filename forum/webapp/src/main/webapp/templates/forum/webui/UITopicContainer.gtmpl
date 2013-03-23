@@ -286,16 +286,7 @@
 				  long max_page = uicomponent.getSizePost(topic) ;
 				  String iconClassTopic = topic.getIcon();
 				  if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
-				  String topicType = topic.getTopicType();
-				  if(topicType != null && topicType.trim().length() > 0) {
-					String[]types = uicomponent.getIconTopicType(topicType);
-					if(types.length == 2) {
-					  iconClassTopic = types[0];
-					  topicType = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicType"),types[1]);
-					}
-				  } else {
-					topicType = "";
-				  }
+				 
 				  String topicTitle = topic.getTopicName();
 				  String topicBy = topic.getOwner();
 				  String postNewBy = topic.getLastPostBy() ;
@@ -366,7 +357,7 @@
 						<%if(topic.getIsPoll()){%>
 							  <i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 						<%} else {%>
-							<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$topicType"></i>
+							<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom"></i>
 						<%}%>
 					</td>
 				  

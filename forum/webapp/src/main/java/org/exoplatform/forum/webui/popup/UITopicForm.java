@@ -36,7 +36,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -79,8 +78,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
      @EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
      @EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
      @EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
-     @EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
-     @EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE)
+     @EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE)
    }
 )
 public class UITopicForm extends BaseForumForm {
@@ -98,8 +96,6 @@ public class UITopicForm extends BaseForumForm {
   final static public String    FIELD_MESSAGECONTENT             = "messageContent";
 
   public static final String    FIELD_TOPICSTATUS_SELECTBOX      = "TopicStatus";
-
-  public static final String    FIELD_TOPICTYPE_SELECTBOX        = "TopicType";
 
   public static final String    FIELD_TOPICSTATE_SELECTBOX       = "TopicState";
 
@@ -142,8 +138,6 @@ public class UITopicForm extends BaseForumForm {
 
   private Topic                 topic                            = new Topic();
 
-  private List<TopicType>       listTT                           = new ArrayList<TopicType>();
-
   private boolean               isDoubleClickSubmit              = false;
 
   public UITopicForm() throws Exception {
@@ -167,15 +161,6 @@ public class UITopicForm extends BaseForumForm {
     UIFormSelectBox topicStatus = new UIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX, ls1);
     topicStatus.setDefaultValue("unlock");
 
-    setTopicType();
-    ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
-    for (TopicType topicType : listTT) {
-      ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-    }
-    UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, ls);
-    topicType.setDefaultValue(TopicType.DEFAULT_ID);
-
     UICheckBoxInput moderatePost = new UICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
     UICheckBoxInput checkWhenAddPost = new UICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
     UICheckBoxInput sticky = new UICheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
@@ -196,7 +181,6 @@ public class UITopicForm extends BaseForumForm {
     threadContent.setLabelActionAddItem(getLabel("Attachment"));
 
     UIForumInputWithActions threadOption = new UIForumInputWithActions(FIELD_THREADOPTION_TAB);
-    threadOption.addUIFormInput(topicType);
     threadOption.addUIFormInput(topicState);
     threadOption.addUIFormInput(topicStatus);
     threadOption.addUIFormInput(moderatePost);
@@ -213,17 +197,6 @@ public class UITopicForm extends BaseForumForm {
     this.setActions(new String[] { "PreviewThread", "SubmitThread", "Cancel" });
   }
 
-  private void addActionAddTopicType() throws Exception {
-    List<ActionData> actions = new ArrayList<ActionData>();
-    ActionData ad = new ActionData();
-    ad.setActionListener("AddTypeTopic");
-    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
-    ad.setActionName("AddTypeTopic");
-    actions.add(ad);
-    UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
-    threadOption.setActionField(FIELD_TOPICTYPE_SELECTBOX, actions);
-  }
-
   public void setIsDetail(boolean isDetail) {
     this.isDetail = isDetail;
   }
@@ -235,26 +208,8 @@ public class UITopicForm extends BaseForumForm {
     this.forum = forum;
     UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
     threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false);
-    if (getUserProfile().getUserRole() == 0) {
-      addActionAddTopicType();
-    }
   }
 
-  private void setTopicType() throws Exception {
-    listTT.clear();
-    listTT.addAll(getForumService().getTopicTypes());
-  }
-
-  public void addNewTopicType() throws Exception {
-    setTopicType();
-    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
-    for (TopicType topicType : listTT) {
-      ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-    }
-    UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
-    threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(ls);
-  }
 
   public void activate() throws Exception {
   }
@@ -347,7 +302,6 @@ public class UITopicForm extends BaseForumForm {
       if (this.topic.getIsNotifyWhenAddPost() != null && this.topic.getIsNotifyWhenAddPost().trim().length() > 0) {
         threadOption.getUICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
       }
-      threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue(this.topic.getTopicType());
       threadOption.getUICheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 
       UIPermissionPanel permissionTab = this.getChildById(PERMISSION_TAB);
@@ -470,9 +424,6 @@ public class UITopicForm extends BaseForumForm {
             editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
 
             UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
-            String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
-            if (topicType.equals("none"))
-              topicType = " ";
             String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
             String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
             Boolean moderatePost = (Boolean) threadOption.getUICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
@@ -512,7 +463,6 @@ public class UITopicForm extends BaseForumForm {
             topicNew.setLastPostBy(userName);
             topicNew.setLastPostDate(new Date());
             topicNew.setDescription(message);
-            topicNew.setTopicType(topicType);
             topicNew.setLink(link);
             if (whenNewPost) {
               String email = userProfile.getEmail();
@@ -668,14 +618,6 @@ public class UITopicForm extends BaseForumForm {
         }
       }
       uiTopicForm.refreshUploadFileList();
-    }
-  }
-
-  static public class AddTypeTopicActionListener extends EventListener<UITopicForm> {
-    public void execute(Event<UITopicForm> event) throws Exception {
-      UITopicForm topicForm = event.getSource();
-      UIPopupContainer popupContainer = topicForm.getAncestorOfType(UIPopupContainer.class);
-      topicForm.openPopup(popupContainer, UIAddTopicTypeForm.class, "AddTopicTypeForm", 700, 0);
     }
   }
 

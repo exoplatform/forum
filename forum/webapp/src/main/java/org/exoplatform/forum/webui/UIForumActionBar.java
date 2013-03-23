@@ -40,7 +40,6 @@ import org.exoplatform.forum.webui.popup.UINotificationForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
 import org.exoplatform.forum.webui.popup.UISortSettingForm;
-import org.exoplatform.forum.webui.popup.UITopicTypeManagerForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,7 +71,6 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
         @EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
-        @EventConfig(listeners = UIForumActionBar.TopicTypeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
     }
 )
@@ -340,18 +338,6 @@ public class UIForumActionBar extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       popupContainer.addChild(UIAutoPruneForm.class, null, null);
       popupContainer.setId("AutoPruneForm");
-      popupAction.activate(popupContainer, 600, 400);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-    }
-  }
-
-  static public class TopicTypeManagerActionListener extends EventListener<UIForumActionBar> {
-    public void execute(Event<UIForumActionBar> event) throws Exception {
-      UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UITopicTypeManagerForm.class, null, null);
-      popupContainer.setId("TopicTypeManagerForm");
       popupAction.activate(popupContainer, 600, 400);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

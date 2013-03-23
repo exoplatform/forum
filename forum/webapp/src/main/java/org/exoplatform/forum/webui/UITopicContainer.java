@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIBanIPForumManagerForm;
@@ -146,11 +145,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private boolean                isShowActive      = false;
 
-  protected String               DEFAULT_ID        = TopicType.DEFAULT_ID;
-
   public String                   openTopicId      = ForumUtils.EMPTY_STR;
-
-  private Map<String, TopicType> topicTypeM        = new HashMap<String, TopicType>();
 
   private Map<String, Integer>   pageTopicRemember = new HashMap<String, Integer>();
 
@@ -222,40 +217,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   public boolean getIsAutoPrune() throws Exception {
     return isShowActive;
-  }
-
-  public void setTopicType(String typeId) throws Exception {
-    try {
-      TopicType topicType = getForumService().getTopicType(typeId);
-      if (topicType.getId().equals(TopicType.DEFAULT_ID)) {
-        if (topicTypeM.containsKey(typeId))
-          topicTypeM.remove(typeId);
-      } else
-        topicTypeM.put(typeId, topicType);
-    } catch (Exception e) {
-      if (topicTypeM.containsKey(typeId))
-        topicTypeM.remove(typeId);
-    }
-  }
-
-  public String[] getIconTopicType(String typeId) throws Exception {
-    try {
-      TopicType topicType = topicTypeM.get(typeId);
-      if (topicType != null) {
-        return new String[] { topicType.getIcon(), topicType.getName() };
-      } else {
-        topicType = getForumService().getTopicType(typeId);
-        if (!topicType.getId().equals(TopicType.DEFAULT_ID)) {
-          topicTypeM.put(typeId, topicType);
-          return new String[] { topicType.getIcon(), topicType.getName() };
-        } else {
-          return new String[] { " " };
-        }
-      }
-    } catch (Exception e) {
-      log.warn("\nThere is no icon for " + typeId + " type\n" + e.getCause());
-      return new String[] { " " };
-    }
   }
 
   public String getTitleInHTMLCode(String s) {

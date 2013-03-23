@@ -212,11 +212,6 @@ public class ForumEventQueryTestCase extends TestCase {
     predicate += " and (@exo:owner='root')";
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
 
-    // set topic type, with topic: admin
-    eventQuery.setTopicType("topicType");
-    predicate += " and (@exo:topicType='topicType')";
-    assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
-
     // Set Close, only use for administrator or moderator. they same x-path
     eventQuery.setUserPermission(0);
     // if value is 'all', not new x-path

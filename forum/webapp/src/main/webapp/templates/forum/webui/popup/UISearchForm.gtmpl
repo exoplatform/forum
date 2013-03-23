@@ -16,14 +16,6 @@
 					<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
 				</div>
 			</div>
-		<% if(uiform.getIsSearchTopic()){ %>	
-			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_TOPICTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_TOPICTYPE_SELECTBOX); %></label>
-				<div class="controls">
-					<%uiform.renderField(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
-				</div>
-			</div>
-		<% } %>	
 			<div class="control-group">
 				<label class="control-label" for="<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>">
 					<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>
