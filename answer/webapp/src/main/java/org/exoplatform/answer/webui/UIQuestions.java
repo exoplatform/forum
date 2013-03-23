@@ -961,6 +961,11 @@ public class UIQuestions extends UIContainer {
   static public class PrintAllQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource();
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+      Question question = null;
+      if (questionId != null) {
+        question = questions.getFAQService().getQuestionById(questionId);
+      }
       UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
@@ -976,7 +981,7 @@ public class UIQuestions extends UIContainer {
         return;
       }
       UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null);
-      uiPrintAll.setCategoryId(questions.categoryId_, questions.getFAQService(), questions.faqSetting_, questions.canEditQuestion);
+      uiPrintAll.setCategoryId(questions.categoryId_, questions.getFAQService(), questions.faqSetting_, questions.canEditQuestion, question);
       popupContainer.setId("FAQPrintAllQuestion");
       popupAction.activate(popupContainer, 800, 500);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);

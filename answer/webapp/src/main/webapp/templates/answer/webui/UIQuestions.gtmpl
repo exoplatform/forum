@@ -99,7 +99,7 @@
 			<% } %>
 			<!--<div onclick="eXo.answer.UIAnswersPortlet.printAll(this)">-->
 			<li>
-				<a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion")%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
+				<a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", null)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
 			</li> 
 		</ul>
 	</div>
@@ -302,10 +302,8 @@
 											<ul class="dropdown-menu">	
 										 <!-- action print question -->									 
 											<li>
-												<a href="javascript:void(0);" onclick="javaScript:eXo.answer.UIAnswersPortlet.printPreview(this);" rel="tooltip" data-placement="bottom"	title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>">
-												<i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>
-												</a>
-										</li>										 
+                        <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
+                      </li>					
 										<%if(uicomponent.currentUser_ != null) {
 											if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
 										%>								
