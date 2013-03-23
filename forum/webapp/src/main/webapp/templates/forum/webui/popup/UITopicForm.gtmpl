@@ -42,11 +42,20 @@
         <div class="resizable">
         <% 
           tabcontent.setRendered(true);
-          if(!tabcontent.id.equals("ThreadIcon")) {
+          if(tabcontent.id.equals("ThreadOption")) {
+            for(childInput in tabcontent.getChildren()) {
+        %>
+	        
+	        <div class="control-group">
+	          <div class="controls">
+	            <% uiform.renderField(childInput) %>
+	          </div>
+	        </div>
+         
+        <%  }
+         } else {
             uiform.renderChild(tabcontent.id) ; 
-          } else {
-            uiform.renderChild(UIFormInputIconSelector.class);
-          }
+         }
         %>
         </div>
       </div>

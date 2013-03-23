@@ -171,4 +171,4 @@
   window.eXo.answer.DragDrop = DragDrop;
 
   return DragDrop;
-})(gj, utils, eventManager, window, document);
+})(gj, forumUtils, forumEventManager, window, document);

@@ -42,6 +42,7 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
+import org.exoplatform.forum.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UIPermissionPanel;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -51,14 +52,11 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputInfo;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
@@ -148,22 +146,18 @@ public class UITopicForm extends BaseForumForm {
     topicTitle.addValidator(MandatoryValidator.class);
     UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
     editReason.setRendered(false);
-    // UIFormTextAreaInput message = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
 
-    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(getLabel("Open"), "open"));
-    ls.add(new SelectItemOption<String>(getLabel("Closed"), "closed"));
-    UIFormSelectBox topicState = new UIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, ls);
-    topicState.setDefaultValue("open");
-    List<SelectItemOption<String>> ls1 = new ArrayList<SelectItemOption<String>>();
-    ls1.add(new SelectItemOption<String>(getLabel("UnLock"), "unlock"));
-    ls1.add(new SelectItemOption<String>(getLabel("Locked"), "locked"));
-    UIFormSelectBox topicStatus = new UIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX, ls1);
-    topicStatus.setDefaultValue("unlock");
+    UIForumCheckBoxInput topicState = new  UIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, 
+                                                                getLabel(FIELD_TOPICSTATE_SELECTBOX), false);
+    UIForumCheckBoxInput topicStatus = new  UIForumCheckBoxInput(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX,
+                                                                 getLabel(FIELD_TOPICSTATUS_SELECTBOX), false);
+    UIForumCheckBoxInput moderatePost = new UIForumCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, 
+                                                                 getLabel(FIELD_MODERATEPOST_CHECKBOX), false);
+    UIForumCheckBoxInput checkWhenAddPost = new UIForumCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX,
+                                                                     getLabel(FIELD_NOTIFYWHENADDPOST_CHECKBOX), false);
+    UIForumCheckBoxInput sticky = new UIForumCheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, 
+                                                           getLabel(FIELD_STICKY_CHECKBOX), false);
 
-    UICheckBoxInput moderatePost = new UICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
-    UICheckBoxInput checkWhenAddPost = new UICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
-    UICheckBoxInput sticky = new UICheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
@@ -195,6 +189,7 @@ public class UITopicForm extends BaseForumForm {
     addChild(permissionTab);
     
     this.setActions(new String[] { "PreviewThread", "SubmitThread", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   public void setIsDetail(boolean isDetail) {
@@ -278,6 +273,12 @@ public class UITopicForm extends BaseForumForm {
   public void setMod(boolean isMod) {
     this.isMod = isMod;
   }
+  
+  private UIForumCheckBoxInput getUIForumCheckBoxInput(String id) {
+    UIForumInputWithActions threadOption = getChildById(FIELD_THREADOPTION_TAB);
+    UIForumCheckBoxInput boxInput = threadOption.findComponentById(id);
+    return boxInput;
+  }
 
   public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
     if (isUpdate) {
@@ -288,21 +289,15 @@ public class UITopicForm extends BaseForumForm {
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
       threadContent.getChild(UIFormWYSIWYGInput.class).setValue(this.topic.getDescription());
 
-      UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
-      String stat = "open";
-      if (this.topic.getIsClosed())
-        stat = "closed";
-      threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).setValue(stat);
-      if (this.topic.getIsLock())
-        stat = "locked";
-      else
-        stat = "unlock";
-      threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
-      threadOption.getUICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(this.topic.getIsModeratePost());
+      getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).setValue(topic.getIsClosed());
+      
+      getUIForumCheckBoxInput(FIELD_TOPICSTATUS_SELECTBOX).setValue(topic.getIsLock());
+
+      getUIForumCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(this.topic.getIsModeratePost());
       if (this.topic.getIsNotifyWhenAddPost() != null && this.topic.getIsNotifyWhenAddPost().trim().length() > 0) {
-        threadOption.getUICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
+        getUIForumCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
       }
-      threadOption.getUICheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
+      getUIForumCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 
       UIPermissionPanel permissionTab = this.getChildById(PERMISSION_TAB);
       permissionTab.addPermissionForOwners(CANVIEW, topic.getCanView());
@@ -423,12 +418,12 @@ public class UITopicForm extends BaseForumForm {
             topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
             editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
 
-            UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
-            String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
-            String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
-            Boolean moderatePost = (Boolean) threadOption.getUICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
-            Boolean whenNewPost = (Boolean) threadOption.getUICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
-            Boolean sticky = (Boolean) threadOption.getUICheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
+            boolean topicState = uiForm.getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).isChecked();
+            boolean topicStatus = uiForm.getUIForumCheckBoxInput(FIELD_TOPICSTATUS_SELECTBOX).isChecked();
+            boolean moderatePost = uiForm.getUIForumCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).isChecked();
+            boolean whenNewPost = uiForm.getUIForumCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).isChecked();
+            boolean sticky = uiForm.getUIForumCheckBoxInput(FIELD_STICKY_CHECKBOX).isChecked();
+
             UIPermissionPanel permissionTab = uiForm.getChildById(PERMISSION_TAB);
             String canPost = permissionTab.getOwnersByPermission(CANPOST);
             String canView = permissionTab.getOwnersByPermission(CANVIEW);
@@ -477,19 +472,11 @@ public class UITopicForm extends BaseForumForm {
             } else {
               topicNew.setIsNotifyWhenAddPost(ForumUtils.EMPTY_STR);
             }
-            topicNew.setIsModeratePost(moderatePost);
-            topicNew.setIsWaiting(isOffend);
             topicNew.setAttachments(uiForm.attachments_);
-            if (topicState.equals("closed")) {
-              topicNew.setIsClosed(true);
-            } else {
-              topicNew.setIsClosed(false);
-            }
-            if (topicStatus.equals("locked")) {
-              topicNew.setIsLock(true);
-            } else {
-              topicNew.setIsLock(false);
-            }
+            topicNew.setIsWaiting(isOffend);
+            topicNew.setIsClosed(topicState);
+            topicNew.setIsLock(topicStatus);
+            topicNew.setIsModeratePost(moderatePost);
             topicNew.setIsSticky(sticky);
 
             topicNew.setIcon("uiIconForumTopic uiIconForumLightGray");

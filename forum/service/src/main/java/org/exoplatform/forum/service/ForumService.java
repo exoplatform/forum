@@ -1329,6 +1329,7 @@ public interface ForumService extends ForumServiceLegacy {
    * get list types of topic
    * 
    * @return list of topic type
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   List<TopicType> getTopicTypes();
 
@@ -1338,6 +1339,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param Id id of topic
    * @return object topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   TopicType getTopicType(String Id) throws Exception;
 
@@ -1346,6 +1348,7 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param topicType object topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   void saveTopicType(TopicType topicType) throws Exception;
 
@@ -1354,6 +1357,7 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param topicTypeId id of topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   void removeTopicType(String topicTypeId) throws Exception;
 
@@ -1363,6 +1367,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param type type of topic
    * @return page list of topics
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   JCRPageList getPageTopicByType(String type) throws Exception;
 

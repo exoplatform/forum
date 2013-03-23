@@ -298,18 +298,11 @@
     }
   };
   
-  // Remove UIAnswersPortlet.FAQViewAllBranch function.
-  // Remove UIAnswersPortlet.hidePicture function.
-  
   UIAnswersPortlet.showPicture = function (src) {
     if (UIAnswersPortlet.viewImage) {
       maskLayer.showPicture(src);
     }
   };
-  
-  // Remove UIAnswersPortlet.getImageSize function.
-  // Remove UIAnswersPortlet.showFullScreen function.
-  // Remove UIAnswersPortlet.showMenu function.
   
   UIAnswersPortlet.printPreview = function (obj) {
     var uiPortalApplication = $("#UIPortalApplication");
@@ -508,7 +501,7 @@
   };
   
   UIAnswersPortlet.showImage = function () {
-    UIAnswersPortlet.showPicture(this.src);
+    UIAnswersPortlet.showPicture(this);
   };
   
   UIAnswersPortlet.FAQChangeHeightToAuto = function () {
@@ -622,4 +615,4 @@
   window.eXo.answer.UIAnswersPortlet = UIAnswersPortlet;
 
   return UIAnswersPortlet;
-})(dragDrop, maskLayer, contextMenu, checkBoxManager, utils, gj, document, window);
+})(answerDragDrop, forumMaskLayer, forumContextMenu, forumCheckBoxManager, forumUtils, gj, document, window);

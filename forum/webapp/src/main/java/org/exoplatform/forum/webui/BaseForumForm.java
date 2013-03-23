@@ -64,7 +64,7 @@ public class BaseForumForm extends BaseUIForm {
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
     getUserProfile();
-    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');");
+    ForumUtils.addScripts(null, null, "setTimeout(function(){eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');}, 200);");
     if (getTemplate() != null)
     {
        super.processRender(context);
@@ -93,7 +93,7 @@ public class BaseForumForm extends BaseUIForm {
   @Override
   public String getLabel(ResourceBundle res, String id) {
     String label = super.getLabel(res, id);
-    if(isAddColonInLabel && id.indexOf(".action.") < 0) {
+    if(isAddColonInLabel && id.indexOf("action.") < 0) {
       return String.format("%s&nbsp;%s", label, CommonUtils.COLON);
     }
     return label;

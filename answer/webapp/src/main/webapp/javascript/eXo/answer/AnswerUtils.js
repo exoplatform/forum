@@ -44,4 +44,4 @@
   window.eXo.answer = eXo.answer || {};
   window.eXo.answer.AnswerUtils = AnswerUtils;
   return AnswerUtils;
-})(utils, gj);
+})(forumUtils, gj);

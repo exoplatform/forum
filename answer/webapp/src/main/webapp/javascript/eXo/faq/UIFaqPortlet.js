@@ -47,4 +47,4 @@
     }
   };
   return FaqPortlet;
-})(gj, utils);
+})(gj, forumUtils);

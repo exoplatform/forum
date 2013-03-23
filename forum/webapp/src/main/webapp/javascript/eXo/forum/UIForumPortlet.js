@@ -635,7 +635,7 @@
     },
 
     showImage : function() {
-      UIForumPortlet.showPicture($(this).attr('src'));
+      UIForumPortlet.showPicture(this);
     },
 
     resetFielForm : function(idElm) {
@@ -1019,4 +1019,4 @@
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
   return UIForumPortlet;
-})(maskLayer, contextMenu, utils, gj, window, document);
+})(forumMaskLayer, forumContextMenu, forumUtils, gj, window, document);

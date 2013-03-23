@@ -138,8 +138,9 @@ public class UITopicPoll extends BaseForumForm {
       } else {
         String[] options = poll_.getOption();
         for (int i = 0; i < options.length; i++) {
-          addUIFormInput(new UIForumCheckBoxInput(POLL_OPTION_ID.concat(String.valueOf(i)), 
-                                                  POLL_OPTION_ID.concat(String.valueOf(i)), options[i], false));
+          UIForumCheckBoxInput checkBoxInput = new UIForumCheckBoxInput(POLL_OPTION_ID.concat(String.valueOf(i)), 
+                                                                        POLL_OPTION_ID.concat(String.valueOf(i)), options[i], false);
+          addUIFormInput(checkBoxInput.setInTable(true));
         }
       }
     }
