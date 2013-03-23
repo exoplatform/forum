@@ -1239,21 +1239,15 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      String id;
-      Node categoryNode;
-      if (categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) {
-        id = Utils.CATEGORY_HOME;
+      if (CommonUtils.isEmpty(categoryId)) {
         categoryId = Utils.CATEGORY_HOME;
-        categoryNode = getCategoryHome(sProvider, null);
-      } else {
-        id = categoryId.substring(categoryId.lastIndexOf("/") + 1);
-        categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);
       }
-      categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);
+      Node categoryNode = getCategoryNode(sProvider, categoryId);
+      categoryId = categoryNode.getName();
       QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
       String userId = faqSetting.getCurrentUser();
       StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME).append("/element(*,")
-                                 .append(EXO_FAQ_QUESTION).append(")[(@").append(EXO_CATEGORY_ID).append("='").append(id)
+                                 .append(EXO_FAQ_QUESTION).append(")[(@").append(EXO_CATEGORY_ID).append("='").append(categoryId)
                                  .append("') and (@").append(EXO_IS_ACTIVATED).append("='true')");
       if (!faqSetting.isCanEdit()) {
         queryString.append(" and (@").append(EXO_IS_APPROVED).append("='true'");
@@ -1947,7 +1941,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   /**
-   * Get node category by categoryId or category relative path.
+   * Get node category by categoryId or category full path or relative path.
    * 
    * @param: sProvider the SessionProvider.
    * @param: param the category id or category relative path.
@@ -1956,7 +1950,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private Node getCategoryNode(SessionProvider sProvider, String param) throws Exception {
     try {
       Node faqHome = getFAQServiceHome(sProvider);
-      return faqHome.getNode(param);
+      try {
+        return (Node) faqHome.getSession().getItem(param);
+      } catch (RepositoryException e) {
+        return faqHome.getNode(param);
+      }
     } catch (PathNotFoundException e) {
       param = (param.indexOf("/") > 0) ? param.substring(param.lastIndexOf("/") + 1) : param;
       Node categoryHome = getCategoryHome(sProvider, null);
