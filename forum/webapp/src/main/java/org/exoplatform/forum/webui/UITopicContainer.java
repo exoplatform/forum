@@ -789,7 +789,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
-      UIExportForm exportForm = uiTopicContainer.openPopup(UIExportForm.class, 380, 160);
+      UIExportForm exportForm = uiTopicContainer.openPopup(UIExportForm.class, 500, 160);
       exportForm.setObjectId(forum);
     }
   }
