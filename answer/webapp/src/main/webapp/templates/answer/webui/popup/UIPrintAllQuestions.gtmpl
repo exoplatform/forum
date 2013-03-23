@@ -337,7 +337,7 @@
 					   String link = uicomponent.event(action) ;
 					%>
 					<button type="button" onclick="window.print();" class="btn"><%=_ctx.appRes("UIQuestions.action.Print")%></button>
-					<button type="button" onclick="$link; gj('#UIAnswersPopupWindow').hide(); gj('#UIWorkingWorkspace').show();" class="btn">$actionLabel</button>
+					<button type="button" onclick="$link; window.parent.location.reload();" class="btn">$actionLabel</button>
 			  <%}%>
 			   </div><!--END uiAction-->		   
 	         </div><!--uiContentBox -->
