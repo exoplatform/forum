@@ -48,6 +48,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
@@ -605,6 +606,50 @@ public class FAQUtils {
     }
     
     return builder.toString();
+  }
+  
+  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, String questionId, FAQSetting faqSetting) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    String categoryId = category.getId();
+    builder.append("<a href=\"javascript:void(0);\"");
+    if(categoryId.equals(Utils.CATEGORY_HOME) == false) {
+      builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+             .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+    } else {
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+    }
+    builder.append("</a>");
+    
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting);
+    if (categoryTrees.size() > 0 || questions.size() > 0) {
+      builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
+      for (Question question : questions) {
+        if (!questionId.equals(question.getPath())) {
+          builder.append("<li class=\"node\">")
+                 .append("<span class=\"uiCheckBox\"><input name=\"")
+                 .append(question.getId())
+                 .append("\" type=\"checkbox\"><span></span></span>")
+                 .append(question.getQuestion());
+          builder.append("</li>");
+        }
+      }
+      for (CategoryTree subTree : categoryTrees) {
+        builder.append("<li class=\"node\">");
+        builder.append(renderQuestionsCategoryTree(subTree, questionId, faqSetting));
+        builder.append("</li>");
+      }
+      builder.append("</ul>");
+    }
+    
+    return builder.toString();
+  }
+  
+  public static List<Question> getQuestionsByCategoryId(String categoryId, FAQSetting faqSetting) throws Exception {
+    List<Question> listQuestions = new ArrayList<Question>();
+    listQuestions = getFAQService().getAllQuestionsByCatetory(categoryId, faqSetting).getAll();
+    return listQuestions;
   }
 
 }

@@ -27,6 +27,7 @@ import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -165,6 +166,14 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   
   protected List<Question> getQuestions(String cateId) {
     return mapQuestion_.get(cateId);
+  }
+  
+  protected CategoryTree getCategoryTree() throws Exception {
+    return getFAQService().buildCategoryTree(null);
+  }
+
+  protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
+    return FAQUtils.renderQuestionsCategoryTree(categoryTree, questionId_, faqSetting_);
   }
 
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
