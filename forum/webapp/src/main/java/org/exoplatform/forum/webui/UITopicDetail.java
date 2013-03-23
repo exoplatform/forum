@@ -1639,6 +1639,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(topicDetail.topic.getPath());
       searchForm.setSelectType(Utils.POST);
+      searchForm.setSearchOptionsObjectType(Utils.POST);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

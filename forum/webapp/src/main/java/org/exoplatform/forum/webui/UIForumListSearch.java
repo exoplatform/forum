@@ -195,6 +195,7 @@ public class UIForumListSearch extends BaseForumForm {
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(ForumUtils.EMPTY_STR);
       searchForm.setSelectType(Utils.CATEGORY);
+      searchForm.setSearchOptionsObjectType(Utils.CATEGORY);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

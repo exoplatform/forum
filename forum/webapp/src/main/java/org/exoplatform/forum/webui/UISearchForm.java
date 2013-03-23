@@ -258,9 +258,21 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     return list;
   }
   
-  private void setSearchOptionsType(int type) {
+  private void setSearchOptions(int type) {
     this.currentType = type;
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(type));
+  }
+
+  public void setSearchOptionsObjectType(String type) {
+    if (type.equals(Utils.FORUM)) {
+      setSearchOptions(1);
+    } else if (type.equals(Utils.TOPIC)) {
+      setSearchOptions(2);
+    } else if (type.equals(Utils.POST)) {
+      setSearchOptions(3);
+    } else {
+      setSearchOptions(0);
+    }
   }
 
   private void setTopicType() {
@@ -282,12 +294,10 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   public void setSelectType(String type){
     if (type.equals(Utils.FORUM)) {
-      setSearchOptionsType(1);
       this.isSearchForum = true;
       this.isSearchTopic = false;
       this.isSearchCate = false;
     } else if (type.equals(Utils.TOPIC)) {
-      setSearchOptionsType(2);
       this.isSearchCate = false;
       this.isSearchForum = false;
       this.isSearchTopic = true;
@@ -299,22 +309,15 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       }
       this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
     } else if (type.equals(Utils.CATEGORY)) {
-      setSearchOptionsType(0);
       this.isSearchCate = true;
       this.isSearchForum = false;
       this.isSearchTopic = false;
     } else {
-      if (type.equals(Utils.POST)){
-        setSearchOptionsType(3);
-      } else {
-        setSearchOptionsType(0);
-      }
       this.isSearchCate = false;
       this.isSearchForum = false;
       this.isSearchTopic = false;
     }
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
-//    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
   }
 
   public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {

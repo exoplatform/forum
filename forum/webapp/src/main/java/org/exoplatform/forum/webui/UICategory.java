@@ -672,6 +672,7 @@ public class UICategory extends BaseForumForm {
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(uiCategory.category.getPath());
       searchForm.setSelectType(Utils.FORUM);
+      searchForm.setSearchOptionsObjectType(Utils.FORUM);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

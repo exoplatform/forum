@@ -310,8 +310,8 @@ public class UIForumPortlet extends UIPortletApplication {
         isRenderActionBar = false;
       }
     }
+    getChild(UICategoryContainer.class).setRendered(isCategoryRendered);
     getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
-    setRenderForumLink();
     getChild(UIForumContainer.class).setRendered(isForumRendered);
     getChild(UITopicsTag.class).setRendered(isTagRendered);
     getChild(UISearchForm.class).setRendered(isSearchRendered);
@@ -667,6 +667,7 @@ public class UIForumPortlet extends UIPortletApplication {
       searchForm.setUserProfile(getUserProfile());
       searchForm.setPath(ForumUtils.EMPTY_STR);
       searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
+      searchForm.setSearchOptionsObjectType(ForumUtils.EMPTY_STR);
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
     } else if (path.lastIndexOf(Utils.TAG) >= 0) {
       updateIsRendered(ForumUtils.TAG);
