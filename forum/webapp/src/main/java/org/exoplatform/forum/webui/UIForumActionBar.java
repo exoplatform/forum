@@ -102,8 +102,8 @@ public class UIForumActionBar extends UIContainer {
 
   protected String[] getActionMenu() {
     return (ForumUtils.enableIPLogging()) ? 
-           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : 
-           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "OpenIPBan", "ExportCategory", "ImportCategory" }) : 
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "ExportCategory", "ImportCategory" });
   }
 
   protected int getTotalJobWattingForModerator() throws Exception {

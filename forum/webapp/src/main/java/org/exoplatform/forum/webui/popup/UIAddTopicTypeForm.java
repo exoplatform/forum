@@ -35,7 +35,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
@@ -66,10 +65,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
   public UIAddTopicTypeForm() throws Exception {
     UIFormStringInput topicTypeName = new UIFormStringInput(FIELD_TOPICTYPENAME_INPUT, FIELD_TOPICTYPENAME_INPUT, null);
     topicTypeName.addValidator(MandatoryValidator.class);
-    UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_TOPICTYPEICON_TAB, FIELD_TOPICTYPEICON_TAB);
-    uiIconSelector.setSelectedIcon("IconsView");
     addUIFormInput(topicTypeName);
-    addUIFormInput(uiIconSelector);
   }
 
   public void activate() {
@@ -82,7 +78,6 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
     this.topicType = topicType;
     this.isEdit = true;
     getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topicType.getName()));
-    ((UIFormInputIconSelector) getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
   }
 
   private boolean checkIsSameName(ForumService forumService, String name) throws Exception {
@@ -104,8 +99,6 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
     public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
       UIAddTopicTypeForm topicTypeForm = event.getSource();
       String typeName = topicTypeForm.getUIStringInput(FIELD_TOPICTYPENAME_INPUT).getValue();
-      UIFormInputIconSelector uiIconSelector = topicTypeForm.getChild(UIFormInputIconSelector.class);
-      String typeIcon = uiIconSelector.getSelectedIcon();
       TopicType topicType = new TopicType();
       if (topicTypeForm.isEdit) {
         topicType = topicTypeForm.topicType;
@@ -120,7 +113,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
         return;
       }
       topicType.setName(typeName.trim());
-      topicType.setIcon(typeIcon);
+      topicType.setIcon("uiIconForumTopic uiIconForumLightGray");
       forumService.saveTopicType(topicType);
       UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
       if (topicTypeForm.isEdit) {

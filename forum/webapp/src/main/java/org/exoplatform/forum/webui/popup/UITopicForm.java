@@ -16,6 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.jcr.PathNotFoundException;
+
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
@@ -50,19 +56,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.jcr.PathNotFoundException;
 
 /**
  * Created by The eXo Platform SARL
@@ -81,15 +80,12 @@ import javax.jcr.PathNotFoundException;
      @EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
      @EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
      @EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
-     @EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
      @EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE)
    }
 )
 public class UITopicForm extends BaseForumForm {
 
   public static final String    FIELD_THREADCONTEN_TAB           = "ThreadContent";
-
-  public static final String    FIELD_THREADICON_TAB             = "ThreadIcon";
 
   public static final String    FIELD_THREADOPTION_TAB           = "ThreadOption";
 
@@ -188,8 +184,6 @@ public class UITopicForm extends BaseForumForm {
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setWidth("98%");
-    UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB);
-    uiIconSelector.setSelectedIcon("IconsView");
 
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
     threadContent.addUIFormInput(topicTitle);
@@ -210,7 +204,6 @@ public class UITopicForm extends BaseForumForm {
     threadOption.addUIFormInput(sticky);
 
     addUIFormInput(threadContent);
-    addUIFormInput(uiIconSelector);
     addUIFormInput(threadOption);
     
     UIPermissionPanel permissionTab = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
@@ -366,7 +359,6 @@ public class UITopicForm extends BaseForumForm {
         this.attachments_ = post.getAttachments();
         this.refreshUploadFileList();
       }
-      getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
     }
   }
 
@@ -398,8 +390,7 @@ public class UITopicForm extends BaseForumForm {
         postNew.setModifiedBy(userName);
         postNew.setMessage(message);
         postNew.setAttachments(uiForm.attachments_);
-        UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-        postNew.setIcon(uiIconSelector.getSelectedIcon());
+        postNew.setIcon("uiIconForumTopic uiIconForumLightGray");
 
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
         UIViewPost viewPost = openPopup(popupContainer, UIViewPost.class, "ViewTopic", 670, 0);
@@ -551,8 +542,7 @@ public class UITopicForm extends BaseForumForm {
             }
             topicNew.setIsSticky(sticky);
 
-            UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-            topicNew.setIcon(uiIconSelector.getSelectedIcon());
+            topicNew.setIcon("uiIconForumTopic uiIconForumLightGray");
             String[] canPosts = ForumUtils.splitForForum(canPost);
             String[] canViews = ForumUtils.splitForForum(canView);
 
@@ -705,15 +695,4 @@ public class UITopicForm extends BaseForumForm {
     }
   }
 
-  static public class SelectIconActionListener extends EventListener<UITopicForm> {
-    public void execute(Event<UITopicForm> event) throws Exception {
-      String iconName = event.getRequestContext().getRequestParameter(OBJECTID);
-      UITopicForm topicForm = event.getSource();
-      UIFormInputIconSelector iconSelector = topicForm.getChild(UIFormInputIconSelector.class);
-      if (!iconSelector.getValue().equals(iconName)) {
-        iconSelector.setSelectedIcon(iconName);
-        event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent());
-      }
-    }
-  }
 }
