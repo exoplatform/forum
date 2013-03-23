@@ -187,6 +187,7 @@ public class UITopicForm extends BaseForumForm {
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     formWYSIWYGInput.setToolBarName("Basic");
+    formWYSIWYGInput.setWidth("98%");
     UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB);
     uiIconSelector.setSelectedIcon("IconsView");
 

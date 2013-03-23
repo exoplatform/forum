@@ -76,6 +76,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
 
   public UINotificationForm() {
     setActions(new String[] { "Save", "Close" });
+    setAddColonInLabel(true);
   }
 
   public void setInitForm() throws Exception {
@@ -104,7 +105,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     ActionData ad = new ActionData();
     ad.setActionListener("GetDefaultMail");
     ad.setActionParameter(param);
-    ad.setCssIconClass("Refresh");
+    ad.setCssIconClass("uiIconRefresh uiIconLightGray");
     ad.setActionName("TitleResetMail");
     actions.add(ad);
     notifyEmailTab.setActionField(param, actions);
@@ -118,6 +119,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     notifyEmailMoved.setToolBarName("Basic");
     notifyEmailMoved.setFCKConfig(WebUIUtils.getFCKConfig());
     notifyEmailMoved.setValue(value);
+    notifyEmailMoved.setWidth("94%");
     return notifyEmailMoved;
   }
 
@@ -129,6 +131,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     notifyEmail.setToolBarName("Basic");
     notifyEmail.setFCKConfig(WebUIUtils.getFCKConfig());
     notifyEmail.setValue(value);
+    notifyEmail.setWidth("94%");
     return notifyEmail;
   }
 

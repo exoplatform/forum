@@ -133,6 +133,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
+    formWYSIWYGInput.setWidth("98%");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);

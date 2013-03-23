@@ -112,6 +112,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     formWYSIWYGInput.setHeight("220px");
+    formWYSIWYGInput.setWidth("98%");
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(SendTo);
     sendMessageTab.addUIFormInput(MailTitle);
