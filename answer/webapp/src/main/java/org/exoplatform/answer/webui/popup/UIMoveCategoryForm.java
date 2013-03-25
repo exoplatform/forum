@@ -103,7 +103,7 @@ public class UIMoveCategoryForm extends BaseUIFAQForm implements UIPopupComponen
         }
         if (canMove) {
           if (!moveCategory.getFAQService().isCategoryExist(moveCategory.getFAQService().getCategoryNameOf(categoryId), category.getPath())) {
-            moveCategory.getFAQService().moveCategory(categoryId, destCategoryId);
+            moveCategory.getFAQService().moveCategory(categoryId, category.getPath());
           } else {
             warning("UIQuestions.msg.can-not-move-category-same-name");
             return;
