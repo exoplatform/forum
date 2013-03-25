@@ -660,10 +660,10 @@
 					   String attLink = uicomponent.getImageUrl(attachment.getPath());
 					%>
 					<div class="imageAttachmentBox pull-left">
-						<a class="imgAttach"><img class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
+						<a class="imgAttach"><img rel="tooltip" data-placement="bottom" id="imgView${fileName}" src="$attLink" alt="$titleFile"/></a> 
 						<div class="actionAttachImg">
-							<p><i class="uiIconSearch uiIconWhite"></i> <a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
-							<p><i class="uiIconDownload uiIconWhite"></i> <a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
+							<p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
+							<p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
 						</div>
 					</div>  
 				  <% } %>
@@ -689,8 +689,8 @@
 					   String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(typeFile.substring((typeFile.indexOf("/")+1)));
 					%>
 					<div class="otherAttachmentBox">
-						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><i class="uiIcon${typeFileIcon}"></i> $fileName</a>
-						(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
+						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+						<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
 					</div>  
 				  <% } %>
 					

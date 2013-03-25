@@ -3,21 +3,21 @@
 	<div class="resizable">
 		<div class="form-horizontal">
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>&nbsp;:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
 				</div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>"><%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>:</label>
+				<label class="control-label" for="<%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>"><%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>&nbsp;:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_OPTIONS) %>
 				</div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>&nbsp;:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
 					<%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%>
@@ -25,14 +25,14 @@
 			</div>
 			
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_AGAINVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_AGAINVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>&nbsp;:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_AGAINVOTE_CHECKBOX) %>
 				</div>
 			</div>
 			
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_MULTIVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_MULTIVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%> :</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
 				</div>
