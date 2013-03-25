@@ -4,7 +4,7 @@
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
  %>
-<div class="uiUserWatchManager">
+<div class="uiUserWatchManager" id="$uicomponent.id">
 		
 		
           <table class="uiGrid table table-hover table-striped">
