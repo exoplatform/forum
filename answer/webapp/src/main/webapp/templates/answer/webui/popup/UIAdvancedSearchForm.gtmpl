@@ -13,7 +13,7 @@
 								<%fieldName = uicomponent.getLabel(field.getName());%>
 								<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
 									<div class="control-label">
-											<label for="<%=field.getId()%>"><%=fieldName%></label>
+											<label for="<%=field.getId()%>"><%=fieldName%>: </label>
 									</div>
 									<div class="controls">
 									    <% if (field.getId().equals("SearchObject")) {

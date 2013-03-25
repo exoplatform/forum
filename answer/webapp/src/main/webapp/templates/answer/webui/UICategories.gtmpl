@@ -33,7 +33,7 @@
 		<%}%>
 		</h6>
 		
-		<div class="uiContentBox">
+		<div class="uiContentBox faqdashBoard">
 			<%
 			if(uicomponent.isShowInfo()) {
 				long[] cateInfo = uicomponent.getCategoryInfo() ;
@@ -42,13 +42,15 @@
 				long questionNotAnswer = cateInfo[2] ;
 				long questionNotApproved = cateInfo[3] ;
 			%>
-			<a id="uicategoriesCateInfors0" style="font-weight:<%=uicomponent.font_weight[0]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
-			<a id="uicategoriesCateInfors1" style="font-weight:<%=uicomponent.font_weight[1]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
+			<ul>
+			<li><a id="uicategoriesCateInfors0" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[0]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a></li>
+			<li><a id="uicategoriesCateInfors1" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[1]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a></li>
 			<%
 				if(uicomponent.isModerator) {%>
-				<a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.answer.UIAnswersPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
+			<li>	<a id="uicategoriesCateInfors2" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.answer.UIAnswersPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a></li>
+			<%} %>
+			</ul>
 			<%}
-			}
 			%>
 		</div>
 	</div>
