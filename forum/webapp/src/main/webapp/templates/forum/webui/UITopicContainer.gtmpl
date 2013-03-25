@@ -1,85 +1,85 @@
 <%
-  import org.exoplatform.forum.service.Forum ;
+	import org.exoplatform.forum.service.Forum ;
 
-  Forum forum = uicomponent.getForum() ;
-  if(forum == null || uicomponent.isNull()) {
-    uicomponent.setNull(false);
+	Forum forum = uicomponent.getForum() ;
+	if(forum == null || uicomponent.isNull()) {
+		uicomponent.setNull(false);
 %>
 <div class="uiTopicContainer">
-   <%uiform.begin();%>
-   <div class="TopicDeleted">
-    This Forum moved or deleted !
-   </div>
-   <%uiform.end() ;%>
+	 <%uiform.begin();%>
+	 <div class="TopicDeleted">
+		This Forum moved or deleted !
+	 </div>
+	 <%uiform.end() ;%>
 </div>
-<%  
-  return;
- }
-  import org.exoplatform.forum.common.UserHelper; 
-  import org.exoplatform.forum.service.UserProfile ;
-  import org.exoplatform.forum.service.Utils ;
-  import org.exoplatform.forum.TimeConvertUtils ;
-  import org.exoplatform.forum.ForumUtils ;
-  import org.exoplatform.forum.ForumSessionUtils;
-  
-  String forumSeparatorLine = UserHelper.isAnonim() ? "" : "forumSeparatorLine";
+<%	
+	return;
+	}
+	import org.exoplatform.forum.common.UserHelper; 
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.TimeConvertUtils ;
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumSessionUtils;
+	
+	String forumSeparatorLine = UserHelper.isAnonim() ? "" : "forumSeparatorLine";
  	uicomponent.initPage() ;
-  List topics = uicomponent.getTopicPageList() ;
-  String forumName = forum.getForumName();
-  String subForumName = ForumUtils.getSubString(forumName, 35);
-  UserProfile userProfile = uicomponent.getUserProfile();
-  boolean isShowMenu = true;
-  long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-  boolean canEdit = uicomponent.isModerator;
-  if(!canEdit && (userProfile.getIsBanned() || userProfile.getUserRole() == 3 || userProfile.getUserRole() == 4)) {
-    isShowMenu = false ;
-  }
-  boolean isLock = forum.getIsLock() ;
-  if(!isLock) isLock = forum.getIsClosed() ;
-  boolean isApproveTopic = forum.getIsModerateTopic();
-  boolean hasCreadTopic = true;
-  if(!canEdit) {
-    if(!isLock) hasCreadTopic = uicomponent.getCanAddNewThread() ;
-  }
-  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+	List topics = uicomponent.getTopicPageList() ;
+	String forumName = forum.getForumName();
+	String subForumName = ForumUtils.getSubString(forumName, 35);
+	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isShowMenu = true;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	boolean canEdit = uicomponent.isModerator;
+	if(!canEdit && (userProfile.getIsBanned() || userProfile.getUserRole() == 3 || userProfile.getUserRole() == 4)) {
+		isShowMenu = false ;
+	}
+	boolean isLock = forum.getIsLock() ;
+	if(!isLock) isLock = forum.getIsClosed() ;
+	boolean isApproveTopic = forum.getIsModerateTopic();
+	boolean hasCreadTopic = true;
+	if(!canEdit) {
+		if(!isLock) hasCreadTopic = uicomponent.getCanAddNewThread() ;
+	}
+	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 
-  // add script
-  String [] scripts = [
-          		"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
-          		"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
-          		"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
-          		"eXo.forum.UIForumPortlet.goLastPost('top');",
-          		"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
-          		"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
-          		];
-  ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
+	// add script
+	String [] scripts = [
+							"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+							"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
+							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
+							"eXo.forum.UIForumPortlet.goLastPost('top');",
+							"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
+							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
+							];
+	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
 	ForumUtils.addScripts("ForumCheckBoxManager", "checkBoxManager", "checkBoxManager.init('"+uicomponent.id+"') ;");
 %>
 <div class="uiTopicContainer">
-  <% uiform.begin() %>
-  <div class="clearfix">
-  
-  <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+	<% uiform.begin() %>
+	<div class="clearfix">
+	
+	<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 	<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
 		<i class="uiIconLock"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 	</div>
-  <% } else { %>
+	<% } else { %>
 	<button type="button" class="btn btn-primary pull-left" onclick="<%=uicomponent.event("AddTopic")%>">
 		<i class="uiIconForumCreateTopic uiIconForumWhite"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 	</button>
-  <% } %>
+	<% } %>
 
 	
 	<div class="pull-right">
 	<%
 		if(uicomponent.maxPage > 1) {
-		  _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+			_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
 		} 
 	%>
 	</div>
-   
-  </div>
-  <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
+	 
+	</div>
+	<div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span><%=uicomponent.getTotalChecked()%></span></div>
 	<div class="forumContainer" id="UITopicContent">
 		<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			<caption class="rounded-corners-top">
@@ -111,53 +111,53 @@
 								<%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
 								<i class="uiIconMiniArrowDown"></i>
 							</div>
-						  <ul class="dropdown-menu">
-							<% if(!isLock && hasCreadTopic) { %>   
+							<ul class="dropdown-menu">
+							<% if(!isLock && hasCreadTopic) { %>	 
 								<li>
-								  <a href="<%=uicomponent.event("AddTopic")%>">
+									<a href="<%=uicomponent.event("AddTopic")%>">
 									<i class="uiIconForumCreateTopic"></i><%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
-								  </a>
+									</a>
 								</li>
-							  
+								
 							 <% } 
-							  boolean isView = false ;
-							  String link , itemLabel, classIcon, classDisable="";
-							  String[] actionMenuForum = uicomponent.getActionMenuForum() ;
-							  String [] classIcons = ["uiIconEdit", "uiIconUnlockMedium", "uiIconLockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete", "uiIconExport", "uiIconWatch", "uiIconForumBanIp"];
-							  int id = 0;
-							  for(action in actionMenuForum) {
+								boolean isView = false ;
+								String link , itemLabel, classIcon, classDisable="";
+								String[] actionMenuForum = uicomponent.getActionMenuForum() ;
+								String [] classIcons = ["uiIconEdit", "uiIconUnlockMedium", "uiIconLockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete", "uiIconExport", "uiIconWatch", "uiIconForumBanIp"];
+								int id = 0;
+								for(action in actionMenuForum) {
 									link = uicomponent.event(action,uicomponent.getName(),"topic") ;
 									itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 									classIcon = classIcons[id];
 									id++;
 									
 									if(action.equals(actionMenuForum[1])){
-									  isView = forum.getIsLock() ;
+										isView = forum.getIsLock() ;
 									} else if(action.equals(actionMenuForum[2])){
-									  isView = !forum.getIsLock() ;
+										isView = !forum.getIsLock() ;
 									} else if(action.equals(actionMenuForum[3])){
-									  isView = forum.getIsClosed() ;
+										isView = forum.getIsClosed() ;
 									} else if(action.equals(actionMenuForum[4])){
-									  isView = !forum.getIsClosed() ;
+										isView = !forum.getIsClosed() ;
 									} else {
-									  isView = true ;
+										isView = true ;
 									}
 									classDisable = "" ;
 									if(!isView){
-									  link = "javaScript: void(0);" ;
-									  classDisable = "disabled" ;
+										link = "javaScript: void(0);" ;
+										classDisable = "disabled" ;
 									}
 									if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
-									  link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
+										link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
 									}
 							 %>
 								<li class="$classDisable">
 									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
 								</li>
 						 <% } %>
-						  </ul>
+							</ul>
 						</div>
-					  </li>
+						</li>
 					<% } %> 
 					
 					<li class="defaultStyle forumSeparatorLine">
@@ -165,7 +165,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-								<i class="uiIconMiniArrowDown"></i>          
+								<i class="uiIconMiniArrowDown"></i>					
 							</div>
 							<ul class="dropdown-menu">
 								<li>
@@ -192,35 +192,35 @@
 							<%
 							String []classIconsTopic = ["uiIconEdit", "uiIconOpen", "uiIconMinus", "uiIconLockMedium", "uiIconUnlockMedium", "uiIconForumStick", "uiIconForumUnStick", "uiIconMove", "uiIconDelete", "uiIconForumMerge", "uiIconForumCensor", "uiIconForumApprove", "uiIconActivateTopics"];
 							int idIc = 0;
-							  for(action in uicomponent.getActionMenuTopic()) {
+								for(action in uicomponent.getActionMenuTopic()) {
 								String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
 								String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 								String classIcon = classIconsTopic[idIc];
 								idIc++;
 								String classMenu = "";
 								if(!isApproveTopic && action.indexOf("Approve") > -1) { 
-								  continue;
+									continue;
 								}
 								if(action.indexOf("ActivateTopics") >= 0){
-								  if(!uicomponent.getIsAutoPrune()){
+									if(!uicomponent.getIsAutoPrune()){
 									continue; 
-								  }
+									}
 								}
 								if(!action.equals("SetDeleteTopic")){
 							 %> 
-							  <li>
+								<li>
 									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
-							  </li>
+								</li>
 							 <% 
 								} else {%>
-							  <li>
-								<a onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">   
-								  <i class="uiIconDelete"></i>$itemLabel
+								<li>
+								<a onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
+									<i class="uiIconDelete"></i>$itemLabel
 								</a>
-							  </li>
-							  <%}
+								</li>
+								<%}
 							 } %>
-						  </ul>
+							</ul>
 						</div>
 					</li>
 					<% } %>
@@ -242,14 +242,14 @@
 					<th style="width:145px;">
 						<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
 					</th>
-				   
+					 
 					<th style="width:120px;">
 						<%=_ctx.appRes("UITopicContainer.label.Rating");%>
 					</th>
-				  
+					
 					<th style="width:15px;" class="center"><i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i></th>
 					<th style="width:15px;" class="center">
-					   <i class="uiIconUIForms uiIconLightGray"></i>
+						 <i class="uiIconUIForms uiIconLightGray"></i>
 					</th>
 					
 					<th style="width:15px;" class="center">
@@ -265,206 +265,189 @@
 				</tr>
 			</thead>
 			<tbody>
-			  <%
-			  int rCNB = 0;
-			  List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
-			  if(checkeds == null) checkeds = new ArrayList<String>();
-			  if(!topics.isEmpty()) {
-				String classRow = "whileRow";
-				String uiformId = uiform.id;
-				int i = 0;
-				Date postDate = new Date();
-				String lastPostIdRead = "", linkProf, sendPrSms, viewPosted, viewThread;
-				for(topic in topics){
-				  postDate = topic.getLastPostDate();
-				  boolean isLockTopic = topic.getIsLock() ;
-				  if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
-				  if(i%2 == 0) classRow = "whileRow";
-				  else classRow = "OddRow";
-				  String topicId = topic.getId();
-				  lastPostIdRead = uicomponent.getLastPostIdReadOfTopic(topicId);
-				  long max_page = uicomponent.getSizePost(topic) ;
-				  String iconClassTopic = topic.getIcon();
-				  if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
-				 
-				  String topicTitle = topic.getTopicName();
-				  String topicBy = topic.getOwner();
-				  String postNewBy = topic.getLastPostBy() ;
-				  long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
-				  String title = "TitleNorman";
-				  String newPost = "NoNew"; 
-				  if(lastAccess < postDate.getTime()) {
-					title = "TitleBold";
-					newPost = "New";                  
-				  }
-				  String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);          
-				  String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
-				  titlePost = ForumUtils.getSubString(titlePost, 101);
-				  int att = topic.getNumberAttachment() ;
-				  if(att < 0) att = 0;
-				  String attachment = String.valueOf(att);
-				  long postCount = topic.getPostCount();
-				  if(postCount < 0) postCount = 0;
-				  String postView = String.valueOf(topic.getViewCount());
-				  String number = "0";
-				 
-				  String iconTopicStatus = newPost+"Post" ;
-				  if(topic.getPostCount() > 30) {
-					
-									iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
-								  } else {
-									iconTopicStatus = iconTopicStatus.replaceFirst("NoNewPost", "");
-									iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
-								  }
-				  String iconStatusTopic = "";
-				  if(topic.getIsLock() || isLock) {
-					iconStatusTopic = "uiIconForumColorLockTiny";
-				  }
-				  if(topic.getIsClosed()) {
-					iconStatusTopic = "uiIconForumColorCloseTiny";
-				  }
-				  String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
-				  String approved = "" ;
-				  if(canEdit){
-					if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor") ;
-					if(isApproveTopic && !topic.getIsApproved()) { 
-					  if(approved.length() > 0) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending") ;
-					  else approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval") ;
-					}
-					if(!topic.getIsActive())approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicInactivate");
-					if(approved.length() > 0) approved = approved +"</span>)</span>";
-				  }
-				  
-				  String actionBookmark;
-				  if(uicomponent.isLogin){
-					if(uicomponent.isWatching(topic.getPath())) {
-					  actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("UnWatch",topicId);
-					} else {
-					  actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
-					}
-				  }
-				  actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
-				  String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
-				  String url = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-				  String classSelect = "";
-				  if(checkeds.contains(topicId)){
-					classSelect = "SelectedItem";
-				  }
-			  %>
-				<tr >
+				<%
+				int rCNB = 0;
+				List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+				if(checkeds == null) checkeds = new ArrayList<String>();
+				if(!topics.isEmpty()) {
+					String classRow = "whileRow";
+					String uiformId = uiform.id;
+					Date postDate = new Date();
+					String lastPostIdRead = "", linkProf, sendPrSms, viewPosted, viewThread;
+					for(topic in topics){
+						postDate = topic.getLastPostDate();
+						boolean isLockTopic = topic.getIsLock() ;
+						if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
+						String topicId = topic.getId();
+						lastPostIdRead = uicomponent.getLastPostIdReadOfTopic(topicId);
+						long max_page = uicomponent.getSizePost(topic) ;
+					 
+						String topicTitle = topic.getTopicName();
+						String topicBy = topic.getOwner();
+						String postNewBy = topic.getLastPostBy() ;
+						
+						long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
+						String title = "";
+						String iconTopicStatus = "" ;
+						String titleTopicStatus = "";
+						if(lastAccess < postDate.getTime()) {
+							iconTopicStatus = "uiIconForumColorUnread";
+							titleTopicStatus = _ctx.appRes("UIForumIconState.label.ForumNewPost");
+							title = "titleBold";
+						}
+						
+						String textHotTopic = "";
+						if(topic.getPostCount() > 30) {
+							textHotTopic = "textHotTopic";
+						}
+						
+						String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);					
+						String titlePost = ForumUtils.getSubString(uicomponent.getTitleInHTMLCode(topic.getDescription()), 101);
+	
+						int att = topic.getNumberAttachment() ;
+						if(att < 0) att = 0;
+						String attachment = String.valueOf(att);
+	
+						long postCount = topic.getPostCount();
+						if(postCount < 0) postCount = 0;
+	
+						String postView = String.valueOf(topic.getViewCount());
+						String number = "0";
+	
+						String iconStatusTopic = "";
+						if(topic.getIsLock() || isLock) {
+						 iconStatusTopic = "uiIconForumColorLockTiny";
+						}
+						if(topic.getIsClosed()) {
+						 iconStatusTopic = "uiIconForumColorCloseTiny";
+						}
+	
+						String approved = "" ;
+						if(canEdit){
+							if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor") ;
+							if(isApproveTopic && !topic.getIsApproved()) {
+								if(approved.length() > 0) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending") ;
+								else approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval") ;
+							}
+							if(!topic.getIsActive()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicInactivate");
+							if(approved.length() > 0) approved = approved +"</span>)</span>";
+						}
+						
+						String actionBookmark;
+						if(uicomponent.isLogin){
+							if(uicomponent.isWatching(topic.getPath())) {
+								actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("UnWatch",topicId);
+							} else {
+								actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+							}
+						}
+						actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
+						String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
+						String url = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
+						String classSelect = "";
+						if(checkeds.contains(topicId)){
+							classSelect = "SelectedItem";
+						}
+				%>
+				<tr>
 					<td class="center"><i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i></td>
 					<td>
 						<%if(topic.getIsPoll()){%>
-							  <i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+								<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 						<%} else {%>
-							<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom"></i>
+							<i class="uiIconForumTopic uiIconForumLightGray"></i>
 						<%}%>
 					</td>
-				  
-				  <!-- --------------------------------- View name of topic ------------------------------------------------- -->
+					
+					<!-- --------------------------------- View name of topic ------------------------------------------------- -->
 					<td>
 					
 					<% if(topic.getIsSticky()) {%>
-					  <i class="uiIconForumStick"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
+						<i class="uiIconForumStick"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
 					<% } %>
-					  
-						<% ++rCNB; %>
-						<%if(uicomponent.isUseAjax){
-							if(topic.getPostCount() > 30) {
-							%>
-							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-							<%}%>
 						
-						<%} else {
-							if(topic.getPostCount() > 30) {
-							%>
-							<a class="ActionLink $title textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-							<%} else {%>
-							<a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-							<%}%>
-							
+						<% ++rCNB; %>
+						<%if(uicomponent.isUseAjax) { %>
+							<a class="ActionLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+						<%} else { %>
+							<a class="ActionLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 						<%}%>
 						$approved
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
 							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
 						</div>
 						<div>
-						<% if(max_page > 1) { %>
-						
-						<%  int t = 1;
-						  while(t <= max_page) {
-						  if(t <= 5) { 
-							number = String.valueOf(t) ;
+					<% if(max_page > 1) {
+							 int t = 1;
+							 while(t <= max_page) {
+								 if(t <= 5) {
+								 number = String.valueOf(t) ;
 						%>
-						<a rel="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink PopupMenu" href="${url+"/" + number}">$number</a>
+							<a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink" href="${url+"/" + number}">$number</a>
+						<%	 }
+									t = t + 1 ;
+							 }
+							 if(max_page> 5) { 
+								 number = String.valueOf(max_page) ;
+						%>
+							<span>...</span><a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"	class="ActionLink" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
 						<% }
-						t = t + 1 ;
-						}
-						if(max_page> 5) { 
-						  number = String.valueOf(max_page) ;
+						 }
 						%>
-						... <a rel="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
-						<%} else {%>
-						<%} 
-						} %>
-
-					  </div>
+						</div>
 					</td>
-				   
+					 
 					<td>
 						
-					  <% String viewTopicBy = uicomponent.getScreenName(topicBy); 
-						   String userId = userProfile.getUserId();
-	             UserProfile userInfo = uicomponent.getQuickProfile(userId);
-	             boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
-					  %>
-					  <div class="dropdown uiUserInfo">
-					    <% if (isDisplayAvatar) { %>
+						<% 
+							 String viewTopicBy = uicomponent.getScreenName(topicBy); 
+							 String userId = userProfile.getUserId();
+							 UserProfile userInfo = uicomponent.getQuickProfile(userId);
+							 boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
+						%>
+						<div class="dropdown uiUserInfo">
+							<% if (isDisplayAvatar) { %>
 							<span class="avatarMini"><img alt="$topicBy" src="<%=ForumSessionUtils.getUserAvatarURL(topicBy, null);%>"/></span>
 							<% } %>
 							<a href="javaScript:void(0)">$viewTopicBy</a>
 							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-							  <%
+								<%
 								for(viewAction in menuViewInfos) {
-								  if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-								  String linkView = uicomponent.getActionViewInfoUser(viewAction, topicBy) ;
-								  String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-								  if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-									itemLabelView = itemLabelView + " " + viewTopicBy ;
-								  }
-							  %>
+									if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+									String linkView = uicomponent.getActionViewInfoUser(viewAction, topicBy) ;
+									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+										itemLabelView = itemLabelView + " " + viewTopicBy ;
+									}
+								%>
 									<li onclick="$linkView">
-									  <a href="javaScript:void(0)">$itemLabelView</a>
+										<a href="javaScript:void(0)">$itemLabelView</a>
 									</li>
-							  <%
+								<%
 								}
-							  %>
+								%>
 							</ul>
 						</div>
 					</td>
 					
-					<td>
-						$lastPostDate
-					</td>
-				  
+					<td>$lastPostDate</td>
+					
 					<td>
 						<div class="uiVote">
 					
 							<% String[] classNames = uicomponent.getStarNumber(topic) ; 
-							   String SumVote = classNames[5] ;
+								 String SumVote = classNames[5] ;
 							%>
 							<div class="avgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
-							<%  
-							  for(className in classNames) {
-								if(className.equals("star")) className = "voted" ;
-								if(className.equals("notStar")) className = "unvoted" ;
-								if(className.equals("halfStar")) className = "votedHaft" ;
-								if(className.equals(classNames[5])) break ;
+							<%	
+								for(className in classNames) {
+									if(className.equals("star")) className = "voted" ;
+									if(className.equals("notStar")) className = "unvoted" ;
+									if(className.equals("halfStar")) className = "votedHaft" ;
+									if(className.equals(classNames[5])) break ;
 							%>
 								<i class="$className"></i>
-							 <% } %>
+						 <% } %>
 							</div>
 						</div>
 					
@@ -472,97 +455,97 @@
 					<td class="center">$attachment</td>
 					<td class="center">$postCount</td>
 					<td class="center">$postView</td>
-					  <% if(canEdit) { 
-						String checked = "";
-						if(checkeds.contains(topicId)){
-						  checked = "checked=\"checked\"";
-						}
-					  %>
+				 <% if(canEdit) { 
+							String checked = "";
+							if(checkeds.contains(topicId)){
+								checked = "checked=\"checked\"";
+							}
+						%>
 					<td class="center">
 						<span class="uiCheckbox"><input type="checkbox" class="checkbox" name="$topicId" $checked/>
 						<span></span>
 						</span>
 					</td>
-				  <% } %>
-				  <td class="center">
-            <%
-            if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
-              String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
-            %>
-            <a class="actionIconSmall" href="$lastPostLink" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
-          <% } %>
-          
-          </td>
+					<% } %>
+					<td class="center">
+						<%
+						if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
+							String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
+						%>
+						<a class="actionIconSmall" href="$lastPostLink" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
+					<% } %>
+					
+					</td>
 				</tr>
-			<% 
-				i = i + 1;}
-				if(rCNB == 0){
+				<% 
+					}
+					if(rCNB == 0){
 				%>
-				  <tr>
-				  <% if(canEdit){ %>
+					<tr>
+					<% if(canEdit){ %>
 					<td colspan="11" class="center">
-				  <% } else { %>
+					<% } else { %>
 					<td colspan="10" class="center">
-				  <% } %>
+					<% } %>
 						<div class="emptyForum center"><%=_ctx.appRes("UICategory.label.availableTheard");%></div>
 					</td>
-				  </tr>
-			   <%} 
-			  } else {
-				  %>
-				  <tr>
-				  <% if(canEdit){%>
+					</tr>
+				 <%} 
+				} else {
+					%>
+					<tr>
+					<% if(canEdit){%>
 					<td colspan="11" align="center">
-				  <% } else { %>
+					<% } else { %>
 					<td colspan="10" align="center">
-				  <% } %>
+					<% } %>
 						<div class="emptyForum center"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></div>
 					</td>
-				  </tr>
+					</tr>
 			<%}%>
 			</tbody>
 		</table> 
 	</div>
-  
-    <div class="clearfix">
-  
-	  <% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+	
+		<div class="clearfix">
+	
+		<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 		<div class="btn disabled pull-left" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>">
 			<i class="uiIconLock"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 		</div>
-	  <% } else { %>
+		<% } else { %>
 		<button type="button" class="btn btn-primary pull-left" onclick="<%=uicomponent.event("AddTopic")%>">
 			<i class="uiIconForumCreateTopic uiIconForumWhite"></i> <%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 		</button>
-	  <% } %>
+		<% } %>
 
 		
 		<div class="pull-right">
 		<%
 			if(uicomponent.maxPage > 1) {
-			  _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+				_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
 			} 
 		%>
 		</div>
-    </div>
-  
-  
+		</div>
+	
+	
 <%if(isShowMenu){%>
-  <% //Begin RightClick Bookmark  %>
-  <ul id="RightClickContainer" style="display:none;">
-      <li>
-        <a class="watching" href="#"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-      </li>
-      <li>
-        <a class="bookmark" href="#"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-      </li>
-      <li>
-        <a class="rssfeed" href="#"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-      </li>
-  </ul>
-  <% //End RightClick Bookmark %>
- <% }  %>
-  
-  <%uiform.end()%>
+	<% //Begin RightClick Bookmark	%>
+	<ul id="RightClickContainer" style="display:none;">
+			<li>
+				<a class="watching" href="#"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+			</li>
+			<li>
+				<a class="bookmark" href="#"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+			</li>
+			<li>
+				<a class="rssfeed" href="#"><i class="uiIconRss uiIconLightGray"></i><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+			</li>
+	</ul>
+	<% //End RightClick Bookmark %>
+ <% }	%>
+	
+	<%uiform.end()%>
 </div>
 

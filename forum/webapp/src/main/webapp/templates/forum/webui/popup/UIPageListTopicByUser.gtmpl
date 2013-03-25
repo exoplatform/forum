@@ -18,10 +18,9 @@
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 %>
 <div class="$uicomponent.id" id="$uicomponent.id">
-	
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 		<div class="forumContainer">
-			<table class="uiGrid table  no-border-cell table-hover table-striped">
+			<table class="uiGrid table	no-border-cell table-hover table-striped">
 				<thead>
 					<tr>
 						<th style="width:15px;"></th>
@@ -42,7 +41,7 @@
 							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
 						</th>
 						<%if(isAdmin){ %>
-						  <th style="width:20px;" class="center"><%=_ctx.appRes("UIPageListTopicByUser.label.Action");%></th>
+							<th style="width:20px;" class="center"><%=_ctx.appRes("UIPageListTopicByUser.label.Action");%></th>
 						<%}%>
 					</tr>
 				</thead>
@@ -57,8 +56,6 @@
 							postDate = topic.getLastPostDate();
 							String topicId = topic.getId();
 							String topicPath = topic.getPath() ;
-							String iconClassTopic = topic.getIcon();
-							if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 							String topicTitle = topic.getTopicName();
 							String topicBy = topic.getOwner();
 							String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
@@ -67,21 +64,19 @@
 							String postView = String.valueOf(topic.getViewCount());
 
 							long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
-							String title = "TitleNorman";
+							String title = "";
 							String iconTopicStatus = ""; 
 							String titleTopicStatus = "";
 							if(lastAccess < postDate.getTime()) {
-								title = "TitleBold";
+								title = "titleBold";
 								iconTopicStatus = "uiIconForumColorUnread";		
-								titleTopicStatus = _ctx.appRes("UITopicContainer.label.NewPost")						
+								titleTopicStatus = _ctx.appRes("UIForumIconState.label.ForumNewPost");
 							}
 							String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
-							String hot = ""; 
-
+							String textHotTopic = "";
 							if(topic.getPostCount() > 30) {
-							//	iconTopicStatus = iconTopicStatus.replaceFirst("NewPost", "uiIconForumColorUnread");
+								textHotTopic = "textHotTopic";
 							}
-							
 
 							String iconStatusTopic = "";
 							if(topic.getIsLock()) {
@@ -106,27 +101,20 @@
 							<td >
 								<% if(topic.getIsSticky()) {%>
 									<i class="uiIconForumStick"></i>
-								<%}
-								
-								if(topic.getPostCount() > 30) {%>
-									<a class="ActionLink $title textHotTopic" rel="tooltip" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-								<%} else {%>
-									<a class="ActionLink $title" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
-								<%}%>
-
+								<% } %>
+									<a class="ActionLink $title $textHotTopic" rel="tooltip" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							</td>
 							<td>
 								<div class="uiVote">
-									<% String[] classNames = uicomponent.getStarNumber(topic) ; 
-									   String SumVote = classNames[5] ;
-									%>
 									<div class="avgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
-									<%  
-									  for(className in classNames) {
-										if(className.equals("star")) className = "voted" ;
-										if(className.equals("notStar")) className = "unvoted" ;
-										if(className.equals("halfStar")) className = "votedHaft" ;
-										if(className.equals(classNames[5])) break ;
+									<% 
+										String[] classNames = uicomponent.getStarNumber(topic) ; 
+										String SumVote = classNames[5] ;
+										for(className in classNames) {
+											if(className.equals("star")) className = "voted" ;
+											if(className.equals("notStar")) className = "unvoted" ;
+											if(className.equals("halfStar")) className = "votedHaft" ;
+											if(className.equals(classNames[5])) break ;
 									%>
 										<i class="$className"></i>
 									 <% } %>

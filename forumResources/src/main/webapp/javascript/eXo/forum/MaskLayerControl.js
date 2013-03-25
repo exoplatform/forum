@@ -18,7 +18,7 @@
             .attr('id', 'UIPictutreContainer')
             .attr('style',
                 'position:absolute; top:0px; width:100%; height:100%; text-align:center')
-            .attr('title', 'Click to close').on('click',
+            .attr('title', 'Click to close or press key Esc.').on('click',
                 MaskLayerControl.hidePicture);
         gj("#UIPortalApplication").append(containerNode)
       }
@@ -56,7 +56,7 @@
         
         var imageNode = "<img src='" + imgSrcNode.src + "' style='height:"
             + imgHeight + ";width:" + imgWidth + ";margin-top:" + marginTop
-            + "px;' alt='Click to close'/>";
+            + "px;' alt='Click to close or press key Esc.'/>";
         var containerNode = MaskLayerControl.getContainerNode();
         containerNode.html(imageNode);
         var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication',
@@ -65,13 +65,20 @@
           MaskLayerControl.hidePicture();
         });
         this.scrollHandler();
-
+        gj(document).on('keydown', MaskLayerControl.hidePictureByKey);
       }
     },
 
     scrollHandler : function() {
       eXo.core.UIMaskLayer.object.style.top = gj('#MaskLayer').offset().top  + "px";
       MaskLayerControl.timer = setTimeout(MaskLayerControl.scrollHandler, 1);
+    },
+
+    hidePictureByKey : function(e) {
+      if(e.which && e.which === 27) {
+        MaskLayerControl.hidePicture();
+        gj(document).off('keydown', MaskLayerControl.hidePictureByKey);
+      }
     },
 
     hidePicture : function() {
@@ -81,7 +88,6 @@
       gj('#MaskLayer').remove();
       clearTimeout(MaskLayerControl.timer);
       delete MaskLayerControl.timer;
-     // eXo.core.Browser.onScrollCallback.remove('5439383');
     },
 
     getImageSize : function(img) {

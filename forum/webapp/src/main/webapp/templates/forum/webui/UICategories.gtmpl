@@ -72,7 +72,7 @@
 						String actionCollap = uicomponent.event("CollapCategory", categoryId + "," + isDisplay);
 		 %>
 	 
-		<table	cellspacing="0" cellpadding="0" border="0" class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
+		<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			<caption class="rounded-corners-top">
 				<span class="pull-right actionExpandCollapse">
 					<i class="$classCssCollap" rel="tooltip" data-placement="bottom" title="$titleCollap" onclick="$actionCollap;"></i>
