@@ -239,30 +239,20 @@
 
     visibleAction : function(id) {
       var parent = findId(id);
-      var addCategory = parent.find('div.AddCategory:first');
+      var addCategory = parent.find('#AddCategory');
       if (addCategory.exists()) {
-        var addForum = parent.find('div.AddForum:first');
+        addCategory = addCategory.find('a:first');
+        var addForum = parent.find('#AddForum').find('a:first');
         var isIE = document.all ? true : false;
         if ($("#UICategories").exists()) {
-          addCategory.attr('class', "Icon AddCategory");
-          addForum.attr('class', "Icon AddForum");
+          addCategory.attr('class', "actionIcon");//disabled
+          addForum.attr('class', "actionIcon");
         } else if ($("#UICategory").exists()) {
-          addCategory.attr('class', "Icon AddCategory DisableAction");
-          addForum.attr('class', "Icon AddForum");
-          if (isIE)
-            addCategory.find(':first-child').attr('href', "javascript:void(0);");
-          else
-            addCategory.children().eq(1).attr('href', "javascript:void(0);");
+          addCategory.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
+          addForum.attr('class', "actionIcon");
         } else {
-          addCategory.attr('class', "Icon AddCategory DisableAction");
-          addForum.attr('class', "Icon AddForum DisableAction");
-          if (isIE) {
-            addCategory.find(':first-child').attr('href', "javascript:void(0);");
-            addForum.find(':first-child').attr('href', "javascript:void(0);");
-          } else {
-            addCategory.children().eq(1).attr('href', "javascript:void(0);");
-            addForum.children().eq(1).attr('href', "javascript:void(0);");
-          }
+          addCategory.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
+          addForum.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
         }
       }
     },

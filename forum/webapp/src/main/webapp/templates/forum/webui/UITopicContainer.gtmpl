@@ -23,7 +23,7 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	
 	String forumSeparatorLine = UserHelper.isAnonim() ? "" : "forumSeparatorLine";
- 	uicomponent.initPage() ;
+	uicomponent.initPage() ;
 	List topics = uicomponent.getTopicPageList() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
@@ -53,7 +53,6 @@
 							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
 							];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
-	ForumUtils.addScripts("ForumCheckBoxManager", "checkBoxManager", "checkBoxManager.init('"+uicomponent.id+"') ;");
 %>
 <div class="uiTopicContainer">
 	<% uiform.begin() %>
@@ -165,7 +164,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-								<i class="uiIconMiniArrowDown"></i>					
+								<i class="uiIconMiniArrowDown"></i>				 
 							</div>
 							<ul class="dropdown-menu">
 								<li>
@@ -257,7 +256,8 @@
 					</th>
 					<% if(canEdit) { %>
 					<th style="width:15px;" class="center">
-						<span class="uiCheckbox"><input type="checkbox" name="checkAll" class="checkbox" /><span></span>
+						<span class="uiCheckbox">
+							<input type="checkbox" name="checkAll" class="checkbox"/><span></span>
 						</span>
 					</th>
 					<% } %>
@@ -390,7 +390,7 @@
 							 if(max_page> 5) { 
 								 number = String.valueOf(max_page) ;
 						%>
-							<span>...</span><a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"	class="ActionLink" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
+							<span>...</span><a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
 						<% }
 						 }
 						%>
@@ -544,7 +544,7 @@
 			</li>
 	</ul>
 	<% //End RightClick Bookmark %>
- <% }	%>
+ <% } %>
 	
 	<%uiform.end()%>
 </div>
