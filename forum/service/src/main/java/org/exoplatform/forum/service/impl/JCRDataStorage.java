@@ -1264,7 +1264,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         queryBuffer.append(", @exo:createdDate ascending");
       }
       QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
-      Query query = qm.createQuery(queryBuffer.toString(), Query.XPATH);
+      QueryImpl query = (QueryImpl)qm.createQuery(queryBuffer.toString(), Query.XPATH);
+      query.setCaseInsensitiveOrder(true);
+      
+      //
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       List<Forum> forums = new ArrayList<Forum>();

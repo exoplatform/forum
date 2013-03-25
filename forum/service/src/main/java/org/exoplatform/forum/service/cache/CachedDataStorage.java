@@ -38,6 +38,8 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.cache.loader.ServiceContext;
 import org.exoplatform.forum.service.cache.model.CacheType;
 import org.exoplatform.forum.service.cache.model.CachedData;
@@ -513,6 +515,10 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   // TODO : need range
   public List<Forum> getForums(final String categoryId, final String strQuery) throws Exception {
+    
+    SortSettings sort = storage.getForumSortSettings();
+    SortField orderBy = sort.getField();
+    Direction orderType = sort.getDirection();
 
     return buildForumOutput(
         forumListFuture.get(
@@ -525,7 +531,7 @@ public class CachedDataStorage implements DataStorage, Startable {
                 }
               }
             },
-            new ForumListKey(categoryId, strQuery)
+            new ForumListKey(categoryId, strQuery, orderBy, orderType)
         )
     );
 
