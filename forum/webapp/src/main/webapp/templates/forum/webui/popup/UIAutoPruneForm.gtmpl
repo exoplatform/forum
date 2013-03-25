@@ -1,101 +1,90 @@
 <% 
 	import org.exoplatform.forum.TimeConvertUtils;
 %>
-<div class="UIBBCodeManagerForm UIAutoPruneForm">
+<div class="uiBBCodeManagerForm uiAutoPruneForm">
 	<% uiform.begin() %>
-  <div class="resizable">
-	<div class="AutoPruneContainer"  id="AutoPruneContainer">
-		<div style="padding:0px 16px 0px 1px;">
-			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
-				<thead>
-					<tr>
-						<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumPortlet.label.category"); %></th>
-						<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumPortlet.label.forum"); %></th>
-						<th width="40px"><%=_ctx.appRes("UIAutoPruneForm.label.Active"); %></th>
-						<th><%=_ctx.appRes("UIAutoPruneForm.label.LastRun"); %></th>
-						<th width="60px"><%=_ctx.appRes("UIForumPortlet.label.Action"); %></th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
-			<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped" id="UIGrid">
-				<tbody>
-					<%  
+	<div class="resizable">
+		<div class="horizontalLayout"  id="AutoPruneContainer">
+			<div class="bbCodeContainer" id="TableContent">
+				<table class="uiGrid table table-hover table-striped" id="UIGrid">
+					<thead>
+						<tr>
+							<th style="width:21%;"><%=_ctx.appRes("UIForumPortlet.label.category"); %></th>
+							<th style="width:28%;"><%=_ctx.appRes("UIForumPortlet.label.forum"); %></th>
+							<th style="width:15px;" class="center"><%=_ctx.appRes("UIAutoPruneForm.label.Active"); %></th>
+							<th style="width:170px;"><%=_ctx.appRes("UIAutoPruneForm.label.LastRun"); %></th>
+							<th style="width:60px;" class="center"><%=_ctx.appRes("UIForumPortlet.label.Action"); %></th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<%  
 						List pruneSettings = uicomponent.getPruneSettings();
-						int t_ = 0;
-						String cateTemp = " ";
-						for(pruneSetting  in pruneSettings) {
-							String categoryName = pruneSetting.getCategoryName();
-							String forumName = pruneSetting.getForumName();
-							String pruneId = uicomponent.getForumIdOfPrune(pruneSetting);
-							String lastRun = "&nbsp;";
-							if(pruneSetting.getLastRunDate() != null){
-								lastRun = TimeConvertUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
-							}
-							if(t_%2 == 0) classCssInbox = "whileRow";
-							else classCssInbox = "OddRow";
-							++t_;
-							if(categoryName.equals(cateTemp)) {
-					%>
-					<tr class="$classCssInbox">
-						<td style="width:120px; text-align:center">$categoryName</td>
-						<td style="width:120px; text-align:center">$forumName</td>
-						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
-						<td>$lastRun</td>
-						<td width="60px">
-							<div class="ActionContainer ClearFix" style="margin:0px auto; width:52px;">
-								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
-									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
-								</div>
-								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
-									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
-								</div>
-
-							</div>
-						</td>
-					</tr>
-						<% } else { %>
-					<tr class="$classCssInbox">
-						<td style="width:120px; text-align:center"><strong>$categoryName</strong></td>
-						<td style="width:120px; text-align:center"> </td>
-						<td width="40px"> </td>
-						<td>&nbsp;</td>
-						<td width="60px"> </td>
-					</tr>
-							<% if(classCssInbox.equals("whileRow")) 
-										classCssInbox = "OddRow";
-								 else classCssInbox = "whileRow";
-								++t_;
-							%>
-					<tr class="$classCssInbox">
-						<td style="width:120px; text-align:center">$categoryName</td>
-						<td style="width:120px; text-align:center">$forumName</td>
-						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
-						<td>$lastRun</td>
-						<td width="60px">
-							<div class="ActionContainer ClearFix" style="margin:0px auto; width:52px;">
-								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
-									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
-								</div>
-								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
-									 <div rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
-								</div>
-
-							</div>
-						</td>
-					</tr>
-						<%}
-							cateTemp = categoryName;
+						if(pruneSettings.size() > 0) {
+							String cateTemp = " ";
+							for(pruneSetting  in pruneSettings) {
+								String categoryName = pruneSetting.getCategoryName();
+								String forumName = pruneSetting.getForumName();
+								String pruneId = uicomponent.getForumIdOfPrune(pruneSetting);
+								String lastRun = "&nbsp;";
+								if(pruneSetting.getLastRunDate() != null){
+									lastRun = TimeConvertUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
+								}
+								if(categoryName.equals(cateTemp)) {
 						%>
-					<%} %>
-				</tbody>
-			</table>
+						<tr>
+							<td>$categoryName</td>
+							<td>$forumName</td>
+							<td class="center"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
+							<td>$lastRun</td>
+							<td>
+								<a class="actionIcon" onclick="<%=uiform.event("PruneSetting", pruneId)%>" href="javascript:void(0);" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>">
+									<i class="uiIconForumPruneSettings uiIconForumLightGray"></i>						
+								</a>
+								<a class="actionIcon" onclick="<%=uiform.event("RunPrune", pruneId)%>" href="javascript:void(0);" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>">
+									<i class="uiIconForumPlay uiIconForumLightGray"></i>						
+								</a>
+							</td>
+						</tr>
+							<% } else { %>
+						<tr>
+							<td><strong>$categoryName</strong></td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						
+						<tr >
+							<td >$categoryName</td>
+							<td>$forumName</td>
+							<td class="center"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
+							<td>$lastRun</td>
+							<td>
+								<a class="actionIcon" href="javascript:void(0);" onclick="<%=uiform.event("PruneSetting", pruneId)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>">
+									<i class="uiIconForumPruneSettings uiIconForumLightGray"></i>
+								</a>
+								<a class="actionIcon" href="javascript:void(0);" onclick="<%=uiform.event("RunPrune", pruneId)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>">
+									<i class="uiIconForumPlay uiIconForumLightGray"></i>
+								</a>
+							</td>
+						</tr>
+							<%}
+								cateTemp = categoryName;
+							%>
+						<%} %>
+					 <% } else { %>
+						<tr>
+							<td colspan="5" class="empty center"><%=_ctx.appRes("UIAutoPruneForm.label.noPrune"); %></td>
+						</tr>
+					 <% } %>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-  </div>
-	<div class="uiAction">
-      <button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></button>
+	<div class="uiAction uiActionBorder">
+		<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></button>
     </div>
 	<%uiform.end()%>
 </div>

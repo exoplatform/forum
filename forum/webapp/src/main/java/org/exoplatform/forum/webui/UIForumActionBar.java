@@ -338,7 +338,7 @@ public class UIForumActionBar extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       popupContainer.addChild(UIAutoPruneForm.class, null, null);
       popupContainer.setId("AutoPruneForm");
-      popupAction.activate(popupContainer, 600, 400);
+      popupAction.activate(popupContainer, 750, 400);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

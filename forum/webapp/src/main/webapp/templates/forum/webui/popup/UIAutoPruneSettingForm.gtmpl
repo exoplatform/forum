@@ -1,40 +1,37 @@
-<div class="UIFormForum UIAutoPruneSettingForm">
+<div class="uiAutoPruneSettingForm">
 	<% uiform.begin() %>
 	<% uiform.setInitForm(); 
 		String topicsPruned = uiform.getTopicOld();
 	%>
   <div class="resizable">
-		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<div class="LabelContent"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Note");%></div>
-				<table class="UIFormGrid">
-					<tbody>						
-						<tr>
-							<td><label class="Label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></label></td>
-							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %></td>
-							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %></td>
-						</tr>
-						<tr>
-							<td><label class="Label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></label></td>
-							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %></td>
-							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %></td>
-						</tr>
-						<tr>
-							<td colspan="3">
-								<div class="UIAction TextAlignLeft">
-                  <span class="btn LightBlueStyle">
-                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
-                  </span>
-                </div>
-								<div class="Lightheight">$topicsPruned <%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+		<div class="horizontalLayout">
+			<p><%=_ctx.appRes("UIAutoPruneSettingForm.label.Note");%></p>
+			<div class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></label>
+					<div class="controls inputMini selectboxMini">
+						<%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %>
+						<%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></label>
+					<div class="controls inputMini selectboxMini">
+						<%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %>
+						<%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %>
+					</div>
+				</div>
 			</div>
+			<br/>
+			<button class="btn btn-primary" type="button" href="javascript:void(0);" onclick="<%=uiform.event("Run")%>">
+				<i class="uiIconForumPlay uiIconForumWhite"></i> <%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%>
+			</button>
+			<br/>
+			<br/>
+			<p><strong>$topicsPruned</strong>&nbsp;<%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></p>
 		</div>
     </div>
-	<div class="uiAction">
+	<div class="uiAction uiActionBorder">
     <% for(action in uicomponent.getActions()) { 
 		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		 String onclick = "onclick=\""+uicomponent.event(action) + "\"";
