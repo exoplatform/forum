@@ -135,11 +135,11 @@
 											<%
 												for(FileAttachment fileAttachment : attachments){
 													String fileType = fileAttachment.getMimeType();
-													if(fileType.indexOf("image") >= 0) {
+													String fileName = fileAttachment.getName();
+													if(fileType.indexOf("image") >= 0 && fileName.indexOf(".psd") < 0) {
 														long fileSize = fileAttachment.getSize();
 														String linkImage = FAQUtils.getFileSource(fileAttachment);
 														String attLink = uicomponent.getImageUrl(fileAttachment.getPath());
-														String fileName = fileAttachment.getName();
 												%>																																	
 													<div class="imageAttachmentBox" id="divId${fileAttachment.getId()}">
 															<img id="imgView${fileAttachment.getId()}" src="$attLink" class="AttachImage" height="100px" alt="$fileName"/>																															
