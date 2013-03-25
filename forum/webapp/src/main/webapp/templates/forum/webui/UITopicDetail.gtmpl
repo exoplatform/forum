@@ -656,7 +656,7 @@
 					 String pathAtt = urlFile.replaceAll("&","(omu)");
 				%>
 					
-					<% if(typeFile.indexOf("image") >= 0) {
+					<% if(typeFile.indexOf("image") >= 0 && titleFile.indexOf(".psd") < 0) {
 					   String attLink = uicomponent.getImageUrl(attachment.getPath());
 					%>
 					<div class="imageAttachmentBox pull-left">

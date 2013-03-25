@@ -5,7 +5,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	//jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInfo();");
 %>
-<div class="UITopicForm" style="width:auto;">
+<div class="uiTopicForm uiPostForm" style="width:auto;">
 	<% uiform.begin() %>
   <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
     <ul class="nav nav-tabs">

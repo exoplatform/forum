@@ -1,4 +1,4 @@
-<div class="UIPostForm UITopicForm">
+<div class="uiPostForm">
 	<% uiform.begin() %>
 	 <div class="resizable">
 			<% 
