@@ -540,7 +540,7 @@
 																	%>
 																			$questionDetail
 																</div>
-																<p class="date"><%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;*</p>
+																<p class="date"><%=FAQUtils.getLongDateFormat(question.getCreatedDate())%></p>
 																	<!--	view bottom	-->
 																<%
 																if(uicomponent.currentUser_ != null){

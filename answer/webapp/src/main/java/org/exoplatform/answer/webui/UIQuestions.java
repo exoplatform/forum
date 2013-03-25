@@ -655,7 +655,7 @@ public class UIQuestions extends UIContainer {
       uiSetting.setFaqSetting(question.faqSetting_);
       uiSetting.init();
       popupContainer.setId("CategorySettingForm");
-      popupAction.activate(popupContainer, 650, 0);
+      popupAction.activate(popupContainer, 500, 0);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

@@ -1,4 +1,4 @@
-<div id="$uicomponent.id">
+<div class="faqPermissionGrid" id="$uicomponent.id">
 <%
   for(String permission : uicomponent.getPermissions())
   {
@@ -14,7 +14,7 @@
         <% for(String permission : uicomponent.getPermissions()) { %>
         <th class="center">$permission</th>
         <% } %>
-        <th>Action</th>
+        <th class="center">Action</th>
       </tr>
     </thead>
     <tbody>

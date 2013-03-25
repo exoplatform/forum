@@ -117,7 +117,7 @@
 																</div>
 														<%}%>
 														</td>
-														<td class="center">
+														<td class="center actionContainer">
 																<a class="actionIcon" href="javascript:void(0)" onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.EditQuestion")%>" >
 												               		<i class="uiIconEdit uiIconLightGray"></i>
 												              	</a>
@@ -129,7 +129,7 @@
 											<%}
 											} else {%>
 												<tr class="info">
-													<td colspan="5" class="center ">
+													<td colspan="5" class="empty ">
 														<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 													</td>
 												</tr>
@@ -193,19 +193,19 @@
 
 														<%}%>
 														</td>
-														<td class="center">
+														<td class="center actionContainer">
 															<a class="actionIcon" href="javascript:void(0)" onclick="$linkResponse" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>" >
-								               	<i class="uiIconAnsAnswer uiIconAnsLightGray"></i>
-								              </a>
-								              <a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
-								               	<i class="uiIconDelete uiIconLightGray"></i>
-								              </a>
+												               	<i class="uiIconAnsAnswer uiIconAnsLightGray"></i>
+												              </a>
+												              <a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
+												               	<i class="uiIconDelete uiIconLightGray"></i>
+												              </a>
 														</td>
 													</tr>
 											<%}
 											} else {%>
 												<tr>
-													<td colspan="4" class="center">
+													<td colspan="4" class="center empty">
 														<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 													</td>
 												</tr>

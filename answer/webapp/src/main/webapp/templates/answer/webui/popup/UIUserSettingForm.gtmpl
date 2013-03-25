@@ -1,4 +1,4 @@
-<div class="uiFormInputWithActions">  
+<div class="uiUserSettingForm">  
   <% uiform.begin() %>
   <div class="uiTabPane uiTabNormal">
     <ul class="nav nav-tabs">
@@ -35,31 +35,50 @@
               for(tabChildConten in tabcontent.getChildren()){
                 String label = tabChildConten.getId();
                 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + label); %>
-                <div class="control-group">
+                
+                <% 
+                	if(tabChildConten.id.equals(uiform.ORDER_TYPE) == false){
+                %>
+				<div class="control-group">
                   <label class="control-label" for="<%=tabChildConten.getId()%>"><%=actionLabel %></label>
-                  <div class="controls"> 
+				  <div class="controls"> 
                     <% uiform.renderField(tabChildConten) %>
-                  </div>
-                </div>
-                <% if(tabChildConten.id.equals("IsDeleteAvatar")){%>
+                 
+                <%  } else {
+                		uiform.renderField(tabChildConten);
+						print(" </div> </div>");
+                	}
+					if(tabChildConten.id.equals(uiform.ORDER_TYPE) == false && tabChildConten.id.equals(uiform.ORDER_BY) == false) {
+				%>
+				 </div>
+				</div>
+				<% } %>
+				<%}%>	
                 <div class="control-group">
                     <label class="control-label">
                       <%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>
                     </label>
-                    <div class="controls avatarLarge">
-                        <img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
+                    <div class="controls ">
+                       <p class="avatarLarge">
+							<img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
+						</p>
+						<div class="btn-group">
+							<a href="javaScript:void(0);" onclick="<%=uiform.event("ChangeAvatar")%>" class="btn btn-mini">
+							  <%=_ctx.appRes("UIUserSettingForm.action.ChangeAvatar")%>
+							</a>
+							<%
+							if(!uicomponent.isDefaultAvatar()){
+							%>
+							<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" class="btn btn-mini">
+								<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>
+							</a>
+							<%
+							}%>
+						</div>
                     </div>
                 </div>
-                <div class="control-group">
-                  <label class="control-label">
-                    <%=_ctx.appRes("UIUserSettingForm.label.UploadAvatar")%>
-                  </label>
-                  <div class="controls">
-                    <button onclick="<%=uiform.event("ChangeAvatar")%>" class="btn btn-mini" type="button"><%=_ctx.appRes("UIUserSettingForm.action.ChangeAvatar")%></button>
-                  </div>
-                </div>
-                <%}%>
-              <%}%>
+				
+              
             </div>
           <% } else {
             uiform.renderChild(tabcontent.id) ;
@@ -72,6 +91,7 @@
         <% } %>
     </div>
     
+  </div>
   <div class="uiAction">
   <%for(action in uicomponent.getActions()) {
     String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
@@ -81,6 +101,5 @@
   <%} %>
   </div>
 
-  </div>
   <%uiform.end()%>
 </div>

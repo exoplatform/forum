@@ -14,7 +14,7 @@
 						<%if(field.getName().equals(uicomponent.FILED_TO)) { %>
 							<button type="button" class="btn linkTo" onclick="<%=uicomponent.event("To");%>"><%=fieldName%></button>
 						<%} else {%>
-						  <%=fieldName%>
+						  <%=fieldName%>: 
 						<%} %>
 					</label>
 					<div class="controls">

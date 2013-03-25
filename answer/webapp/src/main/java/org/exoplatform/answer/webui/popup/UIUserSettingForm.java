@@ -49,6 +49,8 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UIUserSettingForm.SaveActionListener.class),
       @EventConfig(listeners = UIUserSettingForm.ChangeAvatarActionListener.class),
       @EventConfig(listeners = UIUserSettingForm.OpenTabActionListener.class),
+      @EventConfig(listeners = UIUserSettingForm.SetDefaultAvatarActionListener.class), 
+      
       @EventConfig(listeners = UIUserSettingForm.CancelActionListener.class) 
 })
 
@@ -102,8 +104,6 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
     displayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 
     displayTab.addUIFormInput((new UICheckBoxInput(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
-    displayTab.addUIFormInput((new UICheckBoxInput(FIELD_IS_DELETE_AVATAR_CHECKBOX, FIELD_IS_DELETE_AVATAR_CHECKBOX, false)).setChecked(false));
-
     setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
     
     addChild(displayTab);
@@ -166,7 +166,14 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.getChild(UIAnswersContainer.class));
     }
   }
-  
+  static public class SetDefaultAvatarActionListener extends EventListener<UIUserSettingForm> {
+	    public void execute(Event<UIUserSettingForm> event) throws Exception {
+	    	UIUserSettingForm settingForm = event.getSource();
+	      settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
+	      settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
+	      event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent());
+	    }
+	  }
   protected boolean getIsSelected(int id) {
     if (this.id == id)
       return true;

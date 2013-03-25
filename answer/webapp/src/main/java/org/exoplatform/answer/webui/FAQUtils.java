@@ -628,7 +628,7 @@ public class FAQUtils {
       for (Question question : questions) {
         if (!questionId.equals(question.getPath())) {
           builder.append("<li class=\"node\">")
-                 .append("<span class=\"uiCheckBox\"><input name=\"")
+                 .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
                  .append(question.getId())
                  .append("\" type=\"checkbox\"><span></span></span>")
                  .append(question.getQuestion());
