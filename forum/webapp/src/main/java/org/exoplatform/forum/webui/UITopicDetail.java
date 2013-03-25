@@ -754,7 +754,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 520);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);
         postForm.setMod(topicDetail.isMod);
@@ -943,7 +943,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
       Post post = topicDetail.getPost(postId);
       if (post != null) {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 545);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 850, 545);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, false, false, post);
       } else {
@@ -968,7 +968,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
       Post post = topicDetail.getPost(postId);
       if (post != null) {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 520);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, true, false, post);
         postForm.setMod(topicDetail.isMod);

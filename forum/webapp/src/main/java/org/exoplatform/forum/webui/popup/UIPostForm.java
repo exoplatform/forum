@@ -91,8 +91,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   public static final String    FIELD_THREADCONTEN_TAB = "ThreadContent";
 
-  public static final String    FIELD_THREADICON_TAB   = "IconAndSmiley";
-
   public static String          STR_RE                 = "";
 
   private int                   tabId                  = 0;
@@ -131,7 +129,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
-    formWYSIWYGInput.setWidth("98%");
+    formWYSIWYGInput.setWidth("92%");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);
@@ -144,6 +142,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
     addUIFormInput(threadContent);
     this.setActions(new String[] { "PreviewPost", "SubmitPost", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   protected boolean tabIsSelected(int tabId) {

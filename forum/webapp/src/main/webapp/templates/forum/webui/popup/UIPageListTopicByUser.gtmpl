@@ -73,7 +73,7 @@
 								titleTopicStatus = _ctx.appRes("UIForumIconState.label.ForumNewPost");
 							}
 							String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
-							String textHotTopic = "";
+							String textHotTopic = " ";
 							if(topic.getPostCount() > 30) {
 								textHotTopic = "textHotTopic";
 							}
@@ -106,10 +106,12 @@
 							</td>
 							<td>
 								<div class="uiVote">
+								  <%
+	                  String[] classNames = uicomponent.getStarNumber(topic) ; 
+	                  String SumVote = classNames[5] ;
+								  %>
 									<div class="avgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 									<% 
-										String[] classNames = uicomponent.getStarNumber(topic) ; 
-										String SumVote = classNames[5] ;
 										for(className in classNames) {
 											if(className.equals("star")) className = "voted" ;
 											if(className.equals("notStar")) className = "unvoted" ;
