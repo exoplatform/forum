@@ -661,7 +661,9 @@
       var itemmenuRSS = popupContainer.find('a.rssfeed:first');
       if (!itemmenuWatching.exists() || !itemmenuBookMark.exists())
         return;
-      var labelWatchings = String(itemmenuWatching.html()).split(";");
+      var cloneWatching = itemmenuWatching.clone();
+      var iconWatching = $('<div></div>').append(cloneWatching.find('i')).html();
+      var labelWatchings = String(cloneWatching.html()).split(";");
       for ( var i = 0; i < popupContents.length; i++) {
         var popupContent = popupContents.eq(i);
         var action = popupContent.attr('data-bookmark');
@@ -676,9 +678,9 @@
             if (actions[1].indexOf("unwatch,") >= 0) {
               actions[1] = actions[1].replace('unwatch,', '');
             }
-            itemmenuWatching.html(labelWatchings[1]);
+            itemmenuWatching.html(iconWatching + labelWatchings[1]);
           } else {
-            itemmenuWatching.html(labelWatchings[0]);
+            itemmenuWatching.html(iconWatching + labelWatchings[0]);
           }
           itemmenuWatching.attr('href', actions[1]);
           if (itemmenuRSS.exists()) {
