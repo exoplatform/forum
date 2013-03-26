@@ -44,7 +44,7 @@
 				</div>
 				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
 				<% 
-				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumTopic", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];
+				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];
 				int j = 0;
 				for(ac in uicomponent.getActionMenu()){ 
 				  classIcon = classIcons[j];
