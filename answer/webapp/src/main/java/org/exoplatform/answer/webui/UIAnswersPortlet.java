@@ -31,6 +31,7 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -184,6 +185,11 @@ public class UIAnswersPortlet extends UIPortletApplication {
     return repository;
   }
   
+  private void showMessageDeletedQuestion(WebuiRequestContext context) throws Exception {
+    context.getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));    
+    context.addUIComponentToUpdateByAjax(this);
+  }
+  
   public void viewQuestionById(WebuiRequestContext context, String questionId, boolean isAnswerNow, boolean isAction) throws Exception {
     UIQuestions uiQuestions = this.findFirstComponentOfType(UIQuestions.class);
     FAQService faqService_ = (FAQService) getApplicationComponent(FAQService.class);
@@ -210,6 +216,13 @@ public class UIAnswersPortlet extends UIPortletApplication {
         }
       }
       Question question = faqService_.getQuestionById(questionId);
+      
+      if (question == null) {
+        showMessageDeletedQuestion(context);
+        return;
+      }
+      
+      //
       if (uiQuestions.checkQuestionToView(question, context)) {
         String questionPath = question.getPath();
         UIBreadcumbs breadcumbs = this.findFirstComponentOfType(UIBreadcumbs.class);
