@@ -455,6 +455,8 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Forum removeForum(String categoryId, String forumId) throws Exception {
     List<Topic> listTopics = getTopics(categoryId, forumId);
+    if (listTopics == null)
+      return null;
     for (Topic topic : listTopics) {
       String topicId = topic.getId();
       String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
