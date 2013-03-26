@@ -779,7 +779,7 @@ public class UIQuestions extends UIContainer {
       String asn = context.getRequestParameter(Utils.ANSWER_NOW_PARAM);
       UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);
       portlet.viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
-      context.addUIComponentToUpdateByAjax(portlet);
+      context.addUIComponentToUpdateByAjax(uiQuestions.getParent());
     }
   }
 
@@ -798,7 +798,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = questionId;
       uiQuestions.updateLanguageMap();
-      context.addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+      context.addUIComponentToUpdateByAjax(uiQuestions);
     }
   }
 
@@ -809,7 +809,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.language_ = FAQUtils.getDefaultLanguage();
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = "";
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions);
     }
   }
 
