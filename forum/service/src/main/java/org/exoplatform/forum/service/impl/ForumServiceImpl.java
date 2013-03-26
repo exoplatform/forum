@@ -669,13 +669,16 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public Topic removeTopic(String categoryId, String forumId, String topicId) {
+  public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
     String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
-    Topic topic = storage.removeTopic(categoryId, forumId, topicId);
+    Topic topic = getTopic(categoryId, forumId, topicId, "");
+    String pollActivityId = null;
+    if (topic.getIsPoll())
+      pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+    topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
       try {
-        if (topic.getIsPoll()) {
-          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+        if (pollActivityId != null) {
           f.removeActivity(pollActivityId);
         }
         f.removeActivity(topicActivityId);

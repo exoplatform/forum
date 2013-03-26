@@ -375,8 +375,9 @@ public interface ForumService extends ForumServiceLegacy {
    * @param forumId the forum id
    * @param topicId the topic id
    * @return the topic
+   * @throws Exception the exception
    */
-  Topic removeTopic(String categoryId, String forumId, String topicId);
+  Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
   /**
    * Move topic.
