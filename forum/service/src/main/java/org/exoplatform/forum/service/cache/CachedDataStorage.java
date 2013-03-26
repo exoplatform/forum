@@ -541,8 +541,18 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.filterForumByName(filterKey, userName, maxSize);
   }
 
-  public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
-    return getForums(categoryId, strQuery);
+  public List<Forum> getForumSummaries(final String categoryId, final String strQuery) throws Exception {
+
+    return buildForumOutput(forumListFuture.get(new ServiceContext<ListForumData>() {
+      public ListForumData execute() {
+        try {
+          return buildForumInput(storage.getForumSummaries(categoryId, strQuery));
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, new ForumListKey(categoryId, strQuery)));
+
   }
 
   public Forum getForum(final String categoryId, final String forumId) {
