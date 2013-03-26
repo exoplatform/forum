@@ -697,7 +697,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
     
     //
-    if(type == Utils.CLOSE || type == Utils.ACTIVE || type == Utils.WAITING) {
+    if(type == Utils.CLOSE || type == Utils.ACTIVE || type == Utils.WAITING || type == Utils.APPROVE) {
       for(Topic topic : topics) {
         try {
           clearForumCache(topic.getCategoryId(), topic.getForumId(), false);
