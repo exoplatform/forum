@@ -289,12 +289,13 @@ public class UICategory extends BaseForumForm {
 
   static public class EditCategoryActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
+      UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       if(uiCategory.getCategory() != null) {
         UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 665, 380);
+        categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
         categoryForm.setCategoryValue(uiCategory.getCategory(), true);
         uiCategory.isEditCategory = true;
       } else {
-        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
@@ -312,14 +313,16 @@ public class UICategory extends BaseForumForm {
 
   static public class AddForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
+      UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       if (uiCategory.getCategory() != null) {
+        String spaceGroupId = forumPortlet.getSpaceGroupId();
         UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "AddNewForumForm", 650, 480);
-        forumForm.initForm();
+        forumForm.setMode(false);
+        forumForm.initForm(spaceGroupId);
         forumForm.setCategoryValue(uiCategory.categoryId, false);
         forumForm.setForumUpdate(false);
         uiCategory.isEditForum = true;
       } else {
-        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
@@ -330,9 +333,10 @@ public class UICategory extends BaseForumForm {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
       List<Forum> forums = uiCategory.getForumsChecked(true);
       if (forums.size() > 0) {
+        String spaceGroupId = uiCategory.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
         UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
         forumForm.setMode(false);
-        forumForm.initForm();
+        forumForm.initForm(spaceGroupId);
         forumForm.setCategoryValue(uiCategory.categoryId, false);
         forumForm.setForumValue(forums.get(0), true);
         forumForm.setForumUpdate(false);

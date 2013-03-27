@@ -64,7 +64,6 @@ public class BaseForumForm extends BaseUIForm {
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
     getUserProfile();
-    log.info("\n\n\n Add script .........................\n\n\n");
     ForumUtils.addScripts("bts_tooltip", null, "setTimeout(function(){eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');}, 200);");
     if (getTemplate() != null)
     {

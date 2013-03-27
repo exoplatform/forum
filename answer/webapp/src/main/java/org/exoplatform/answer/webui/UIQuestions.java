@@ -40,7 +40,6 @@ import org.exoplatform.answer.webui.popup.UIQuestionForm;
 import org.exoplatform.answer.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.answer.webui.popup.UIResponseForm;
 import org.exoplatform.answer.webui.popup.UISendMailForm;
-import org.exoplatform.answer.webui.popup.UISettingForm;
 import org.exoplatform.answer.webui.popup.UIUserSettingForm;
 import org.exoplatform.answer.webui.popup.UIViewUserProfile;
 import org.exoplatform.container.PortalContainer;
@@ -586,7 +585,7 @@ public class UIQuestions extends UIContainer {
             uiPopupAction.activate(uiPopupContainer, 580, 500);
             uiPopupContainer.setId("SubCategoryForm");
             category.setParentId(categoryId);
-            category.updateAddNew(true);
+            category.updateAddNew(true, uiPortlet.getSpaceGroupId());
           } else {
             event.getRequestContext()
                  .getUIApplication()
@@ -702,7 +701,7 @@ public class UIQuestions extends UIContainer {
           uiPopupContainer.setId("EditCategoryForm");
           UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null);
           uiCategoryForm.setParentId(category.getPath().replaceFirst(CommonUtils.SLASH + category.getId(), CommonUtils.EMPTY_STR));
-          uiCategoryForm.updateAddNew(false);
+          uiCategoryForm.updateAddNew(false, uiPortlet.getSpaceGroupId());
           uiCategoryForm.setCategoryValue(category, true);
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
         } else {

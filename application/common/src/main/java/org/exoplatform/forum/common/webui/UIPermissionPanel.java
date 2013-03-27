@@ -16,17 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.answer.webui.popup;
+package org.exoplatform.forum.common.webui;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.UIGroupSelector;
-import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.common.webui.UISelector;
-import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.container.UIContainer;
 import org.exoplatform.portal.webui.util.Util;
@@ -37,6 +31,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupWindow;
+import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
@@ -50,7 +45,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 @ComponentConfigs({
    @ComponentConfig(
-      template = "app:/templates/answer/webui/popup/UIPermissionPanel.gtmpl",
+      template = "classpath:groovy/forum/common/UIPermissionPanel.gtmpl",
       events = { 
          @EventConfig(listeners = UIPermissionPanel.OpenUserPopupActionListener.class),
          @EventConfig(listeners = UIPermissionPanel.OpenRoleAndGroupPopupActionListener.class),
@@ -77,6 +72,8 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
   private static final String PERMISSION_GRID  = "PermissionGrid";
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
+  
+  private String              spaceGroupId     = null;
 
   public UIPermissionPanel() throws Exception {
     setId("UIPermissionPanel");
@@ -86,7 +83,17 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
     addChild(grid);
   }
 
-  public void setPermission(String... permissions) {
+  public String getSpaceGroupId() {
+    return spaceGroupId;
+  }
+
+  public void setSpaceGroupId(String spaceGroupId) {
+    this.spaceGroupId = spaceGroupId;
+  }
+
+  public void setPermission(String spaceGroupId, String... permissions) {
+    setSpaceGroupId(spaceGroupId);
+    //
     UIPermissionGrid grid = getChildById(PERMISSION_GRID);
     grid.setPermissions(permissions);
   }
@@ -107,13 +114,13 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   public static String[] splitValues(String str) {
     if (CommonUtils.isEmpty(str) == false) {
-      str = StringUtils.remove(str, " ");
+      str = StringUtils.remove(str, CommonUtils.SPACE);
       if (str.contains(CommonUtils.COMMA)) {
-        str = str.replaceAll(";", CommonUtils.COMMA);
+        str = str.replaceAll(CommonUtils.SEMICOLON, CommonUtils.COMMA);
         return str.trim().split(CommonUtils.COMMA);
       } else {
-        str = str.replaceAll(CommonUtils.COMMA, ";");
-        return str.trim().split(";");
+        str = str.replaceAll(CommonUtils.COMMA, CommonUtils.SEMICOLON);
+        return str.trim().split(CommonUtils.SEMICOLON);
       }
     } else
       return new String[] { CommonUtils.EMPTY_STR };
@@ -160,7 +167,9 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
   public static class OpenUserPopupActionListener extends EventListener<UIPermissionPanel> {
     @Override
     public void execute(Event<UIPermissionPanel> event) throws Exception {
-      UIPopupContainer uiPopupContainer = event.getSource().getAncestorOfType(UIPopupContainer.class);
+      UIPermissionPanel permissionPanel = event.getSource();
+
+      UIPopupContainer uiPopupContainer = permissionPanel.getAncestorOfType(UIPopupContainer.class);
       UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class);
       if (uiGroupSelector != null) {
         UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
@@ -176,7 +185,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       uiUserSelector.setShowSearch(true);
       uiUserSelector.setShowSearchUser(true);
       uiUserSelector.setShowSearchGroup(false);
-      uiUserSelector.setSpaceGroupId(event.getSource().getAncestorOfType(UIAnswersPortlet.class).getSpaceGroupId());
+      uiUserSelector.setSpaceGroupId(permissionPanel.getSpaceGroupId());
       uiPopupWindow.setUIComponent(uiUserSelector);
       uiPopupWindow.setShow(true);
       uiPopupWindow.setWindowSize(740, 400);
@@ -189,6 +198,8 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
   public static class OpenRoleAndGroupPopupActionListener extends EventListener<UIPermissionPanel> {
     @Override
     public void execute(Event<UIPermissionPanel> event) throws Exception {
+      UIPermissionPanel permissionPanel = event.getSource();
+
       UIPopupContainer uiPopupContainer = event.getSource().getAncestorOfType(UIPopupContainer.class);
       UIUserSelect user = uiPopupContainer.findFirstComponentOfType(UIUserSelect.class);
       if (user != null) {
@@ -210,7 +221,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       }
       UIGroupSelector group = uiPopupContainer.createUIComponent(UIGroupSelector.class, null, componentId);
       group.setType(type);
-      group.setSpaceGroupId(event.getSource().getAncestorOfType(UIAnswersPortlet.class).getSpaceGroupId());
+      group.setSpaceGroupId(permissionPanel.getSpaceGroupId());
       group.setComponent(event.getSource(), new String[] { PERMISSION_INPUT });
       group.getChild(UITree.class).setId(UIGroupSelector.TREE_GROUP_ID);
       group.getChild(org.exoplatform.webui.core.UIBreadcumbs.class).setId(UIGroupSelector.BREADCUMB_GROUP_ID);
@@ -229,8 +240,8 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
     public void execute(Event<UIUserSelect> event) throws Exception {
       UIUserSelect uiUserSelector = event.getSource();
       String values = uiUserSelector.getSelectedUsers();
-      UIAnswersPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIAnswersPortlet.class);
-      UIPermissionPanel uiPermission = forumPortlet.findFirstComponentOfType(UIPermissionPanel.class);
+      UIPermissionPanel uiPermission = uiUserSelector.getAncestorOfType(UIPortletApplication.class)
+          .findFirstComponentOfType(UIPermissionPanel.class);
       uiPermission.addValue(values);
 
       closePopup((UIPopupWindow) uiUserSelector.getParent());

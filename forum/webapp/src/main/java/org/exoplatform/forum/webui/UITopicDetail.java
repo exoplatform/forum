@@ -1002,6 +1002,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum);
         topicForm.setUpdateTopic(topicDetail.getTopic(), true);
         topicForm.setMod(topicDetail.isMod);
+        topicForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
         topicForm.setIsDetail(true);
         topicDetail.isEditTopic = true;
       } catch (Exception e) {

@@ -29,6 +29,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.BufferAttachment;
@@ -44,7 +45,6 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UIPermissionPanel;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
@@ -185,11 +185,15 @@ public class UITopicForm extends BaseForumForm {
     addUIFormInput(threadOption);
     
     UIPermissionPanel permissionTab = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionTab.setPermission(CANPOST, CANVIEW);
+    permissionTab.setPermission(null, new String[] { CANPOST, CANVIEW });
     addChild(permissionTab);
     
     this.setActions(new String[] { "PreviewThread", "SubmitThread", "Cancel" });
     setAddColonInLabel(true);
+  }
+
+  public void setSpaceGroupId(String spaceGroupId) {
+    getChild(UIPermissionPanel.class).setSpaceGroupId(spaceGroupId);
   }
 
   public void setIsDetail(boolean isDetail) {
@@ -427,24 +431,7 @@ public class UITopicForm extends BaseForumForm {
             UIPermissionPanel permissionTab = uiForm.getChildById(PERMISSION_TAB);
             String canPost = permissionTab.getOwnersByPermission(CANPOST);
             String canView = permissionTab.getOwnersByPermission(CANVIEW);
-            canPost = ForumUtils.removeSpaceInString(canPost);
-            canPost = ForumUtils.removeStringResemble(canPost);
-            canView = ForumUtils.removeSpaceInString(canView);
-            canView = ForumUtils.removeStringResemble(canView);
-            String erroUser = UserHelper.checkValueUser(canPost);
-            if (!ForumUtils.isEmpty(erroUser)) {
-              String[] args = { uiForm.getLabel(CANPOST), erroUser };
-              warning("NameValidator.msg.erroUser-input", args);
-              uiForm.isDoubleClickSubmit = false;
-              return;
-            }
-            erroUser = UserHelper.checkValueUser(canView);
-            if (!ForumUtils.isEmpty(erroUser)) {
-              String[] args = { uiForm.getLabel(CANVIEW), erroUser };
-              warning("NameValidator.msg.erroUser-input", args);
-              uiForm.isDoubleClickSubmit = false;
-              return;
-            }
+            
             // set link
             Topic topicNew = uiForm.topic;
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);

@@ -27,6 +27,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -43,7 +44,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -103,7 +103,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
     setActions(new String[] { "Save", "Cancel" });
   }
 
-  public void updateAddNew(boolean isAddNew) throws Exception {
+  public void updateAddNew(boolean isAddNew, String spaceGroupId) throws Exception {
     isAddNew_ = isAddNew;
     
     
@@ -123,7 +123,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
     addUIFormInput(inputset);
     
     UIPermissionPanel permissionPanel = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionPanel.setPermission(FIELD_MODERATOR_INPUT, FIELD_USERPRIVATE_INPUT);
+    permissionPanel.setPermission(spaceGroupId, new String[] { FIELD_MODERATOR_INPUT, FIELD_USERPRIVATE_INPUT });
     addChild(permissionPanel);
     
   }

@@ -179,7 +179,8 @@ public class UIForumActionBar extends UIContainer {
       UIForumPortlet forumPortlet = uiActionBar.getParent();
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UICategoryForm.class, null, null);
+      UICategoryForm categoryForm = popupContainer.addChild(UICategoryForm.class, null, null);
+      categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
       popupContainer.setId("AddCategoryForm");
       popupAction.activate(popupContainer, 665, 380);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
@@ -221,7 +222,8 @@ public class UIForumActionBar extends UIContainer {
         UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
         UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
         UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null);
-        forumForm.initForm();
+        forumForm.setMode(false);
+        forumForm.initForm(forumPortlet.getSpaceGroupId());
         UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
         if (category != null && category.isRendered()) {
           forumForm.setCategoryValue(category.getCategoryId(), true);

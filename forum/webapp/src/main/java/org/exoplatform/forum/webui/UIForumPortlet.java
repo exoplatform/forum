@@ -115,8 +115,6 @@ public class UIForumPortlet extends UIPortletApplication {
 
   private boolean      isJumpRendered      = false;
 
-  private boolean      isShowForumJump     = false;
-
   private boolean      isShowPoll          = false;
 
   private boolean      isShowModerators    = false;
@@ -370,7 +368,6 @@ public class UIForumPortlet extends UIPortletApplication {
     useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
     enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
     enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ForumUtils.EMPTY_STR));
-    isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ForumUtils.EMPTY_STR));
     isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ForumUtils.EMPTY_STR));
     isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ForumUtils.EMPTY_STR));
     isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ForumUtils.EMPTY_STR));
@@ -569,16 +566,19 @@ public class UIForumPortlet extends UIPortletApplication {
     if (getUserProfile().getUserRole() == 0) return true;
     if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
     try {
-      Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
+      Forum forum = (Forum) forumService.getForum(categoryId, forumId);
       if (forum.getIsClosed() || forum.getIsLock())
         return false;
-      Category cate = (Category) forumService.getObjectNameById(categoryId, Utils.CATEGORY);
+      if(userProfile.getUserRole() == 1 && ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId())) {
+        return true;
+      }
+      Category cate = (Category) forumService.getCategory(categoryId);
       boolean isAdd = true;
       if(!Utils.isEmpty(cate.getUserPrivate())) {
         isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
       }
       if(isAdd) {
-        if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
+        if (userProfile.getUserRole() > 1) {
           String[] canCreadTopic = ForumUtils.arraysMerge(forum.getCreateTopicRole(), cate.getCreateTopicRole());
           if (!Utils.isEmpty(canCreadTopic) && !canCreadTopic[0].equals(" ")) {
             return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());

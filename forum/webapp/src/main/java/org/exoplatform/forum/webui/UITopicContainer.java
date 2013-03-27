@@ -568,6 +568,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 520);
       topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
+      topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
       topicForm.setMod(uiTopicContainer.isModerator);
     }
   }
@@ -665,12 +666,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   static public class EditForumActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       Forum forum = uiTopicContainer.getForum();
+      String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
       UIForumForm forumForm = uiTopicContainer.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
-      boolean isMode = false;
-      if (uiTopicContainer.userProfile.getUserRole() == 1)
-        isMode = true;
-      forumForm.setMode(isMode);
-      forumForm.initForm();
+      if (uiTopicContainer.userProfile.getUserRole() == 1){
+        forumForm.setMode(true);
+      }
+      forumForm.initForm(spaceGroupId);
       forumForm.setCategoryValue(uiTopicContainer.categoryId, false);
       forumForm.setForumValue(forum, true);
       forumForm.setForumUpdate(true);
@@ -887,6 +888,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
         topicForm.setUpdateTopic(topic, true);
         topicForm.setMod(uiTopicContainer.isModerator);
+        topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
       } else {
         warning("UICategory.msg.notCheck");
       }
