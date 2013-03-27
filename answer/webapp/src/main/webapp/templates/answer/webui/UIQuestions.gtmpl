@@ -725,7 +725,11 @@
 								 			<div class="responseItemContainerRight">
 								 		<% if(answer.getApprovedAnswers() && answer.getActivateAnswers()) { %>
 												<div class="answerContent">
-													<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="userName">$responseBy</span></a>
+													<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
+													<span class="userName">
+															<%= FAQUtils.getFullName(owner);%>
+														</span>
+													</a>
 													<div class="theContent">$res</div>
 												</div>
 										<% } else { %>
@@ -746,6 +750,12 @@
 															userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getPath() + "/down");
 														}
 														String idVote = "FAQVoteAnswerUp" + i;
+														String markVote = "";
+								              if (answer.getMarkVotes() > 0) {
+								                markVote = "+" + answer.getMarkVotes();
+								              } else {
+								                markVote = "" + answer.getMarkVotes();
+								              }
 											%>
 													<a	href="$userVoteUpAnswer" rel="tooltip" data-placement="bottom" title="+1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
 														<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
@@ -758,7 +768,7 @@
 													<a	href="$userVotedownAnswer" rel="tooltip" data-placement="bottom" title="-1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
 														<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
 													</a>
-													<span class="textVoteAnswer"><%=answer.getMarkVotes()%></span>
+													<span class="textVoteAnswer">$markVote</span>
 											<%	}	%>
 												</div><!-- end voteAnswerContainer -->
 											</div> <!-- end responseItemContainerRight -->
@@ -864,7 +874,9 @@
 										<div class="responseItemContainerRight">
 											<div class="commentContent">
 												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
-													<span class="userName"><%=FAQUtils.getScreenName(owner, comment.getFullName())%></span>
+													<span class="userName">
+														<%= FAQUtils.getFullName(owner);%>
+													</span>
 												</a>
 												<div class="theContent">$commentDetail</div>
 												<div class="date"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>

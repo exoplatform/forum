@@ -88,7 +88,11 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     this.addChild(commentContent);
     User user = FAQUtils.getCurrentUserObject();
     if(user != null) {
+	String fullName = FAQUtils.getFullName(user.getUserName());
+    if (fullName == null || fullName.length() == 0)
       this.currentUserDisplayName = user.getUserName();
+    else
+      this.currentUserDisplayName = fullName;
     }
   }
 
