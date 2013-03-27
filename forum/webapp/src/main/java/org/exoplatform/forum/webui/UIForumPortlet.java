@@ -776,8 +776,8 @@ public class UIForumPortlet extends UIPortletApplication {
               this.getUserProfile().setLastTimeAccessTopic(topic.getId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
             }
           } else {
-            showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                               new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() });
+            showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-topic", 
+                               new String[] {});
             if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
               calculateRenderComponent(forumSpId, context);
             } else {
@@ -873,8 +873,8 @@ public class UIForumPortlet extends UIPortletApplication {
           }
          
         } else {
-          showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                             new String[] { forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase() });
+          showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-forum", 
+                             new String[] {});
           renderForumHome();
           path = Utils.FORUM_SERVICE;
         }
@@ -896,8 +896,8 @@ public class UIForumPortlet extends UIPortletApplication {
           categoryContainer.updateIsRender(false);
           this.updateIsRendered(ForumUtils.CATEGORIES);
         } else {
-          showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                             new String[] { category.getCategoryName(), res.getString("UIForumPortlet.label.category").toLowerCase() });
+          showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-category", 
+                             new String[] {});
           renderForumHome();
           path = Utils.FORUM_SERVICE;
         }
