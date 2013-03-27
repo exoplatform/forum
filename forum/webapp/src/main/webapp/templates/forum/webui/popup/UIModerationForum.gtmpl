@@ -6,96 +6,75 @@
 %>
 <% uiform.begin() %>
 <div class="$uicomponent.id resizable">
-	<div class="UITopicContainer">
-	 	<div class="UIForumContainer">
-			<div class="ContentContainer">
-			
-				<div class="UIForm">
+	<div class="horizontalLayout">
 				<% 
 					String display =	"block";
 					List objects = uicomponent.getListObject();
 					if(uicomponent.getIsShowIter()){ 
 				%>
-					<div style="overflow:auto;" class="ClearFix">
-					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-					</div>
+					
+					<% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
 				<% } %>	
-					<div class="HorizontalLayout" style="margin-top:3px;">
-						<div class="UITabContentContainer">
-							<div id="UITabContent" class="UITabContent">
-								<div class="UITopicList">
-									<table cellspacing="0" cellpadding="0" border="0" id="" class="uiGrid table table-hover table-striped">
-										<thead>
-											<tr>
-												<th style="width:60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
-												<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
-												<th style="width:140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
-											</tr>
-										</thead>
-										<tbody>
-											<% 
-												String classRow = "whileRow";
-												if(objects != null && objects.size() > 0) {
-													int j = 0;
-													String formatDate = uiform.userProfile.getShortDateFormat() + " " + uiform.userProfile.getTimeFormat() ;
-													long setTime = (long)(uiform.userProfile.getTimeZone()*3600000) ;
-													for(object in objects){
-														if(j%2 == 0) classRow = "whileRow";
-														else classRow = "OddRow";
-														String objectId = object.getId();
-														String type = object.getType();
-														String objectTitle = object.getName();
-														String titlePost = uiform.getTitleInHTMLCode(object.getContent());
-														String createdDate = TimeConvertUtils.convertXTimeAgo(object.getCreatedDate(), formatDate, setTime);
-														titlePost = ForumUtils.getSubString(titlePost, 100);
-														String classType = "HotThreadNoNewPost";
-														if(type.equals(Utils.POST)) classType = "PostIcon";
-														String titleType = _ctx.appRes("UIForumPortlet.label."+type) ;
-											%>
-												<tr class="$classRow">
-													<td class="Tdbox" align="center"><div class="$classType Icon24x24" style="margin:auto;" rel="tooltip" data-placement="bottom" title="$titleType"><span></span></div></td>
-													<td>
-														<div>
-															<a href="<%=uicomponent.event("Open", objectId)%>" rel="tooltip" data-placement="bottom" title="$titlePost">$objectTitle</a>
-														</div>
-													</td>
-												 	<td class="Tdbox" align="center"><div>$createdDate</div></td>
-									 			</tr>
-										 	<% j = j + 1;} 
-										 		} else {
-									 		%>
-									 			<tr>
-									 				<td colspan="3" align="center">
-									 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
-									 				</td>
-									 			</tr>
-									 		<%}%>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						
-						</div>
-					</div>
+					<table id="" class="uiGrid table table-hover table-striped">
+						<thead>
+							<tr>
+								<th style="width:15px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+								<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
+								<th style="width:140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+
+								if(objects != null && objects.size() > 0) {
+
+									String formatDate = uiform.userProfile.getShortDateFormat() + " " + uiform.userProfile.getTimeFormat() ;
+									long setTime = (long)(uiform.userProfile.getTimeZone()*3600000) ;
+									for(object in objects){
+
+										String objectId = object.getId();
+										String objectTitle = object.getName();
+										String titlePost = uiform.getTitleInHTMLCode(object.getContent());
+										String createdDate = TimeConvertUtils.convertXTimeAgo(object.getCreatedDate(), formatDate, setTime);
+										titlePost = ForumUtils.getSubString(titlePost, 100);
+										String titleType = _ctx.appRes("UIForumPortlet.label."+ object.getType()) ;
+							%>
+								<tr>
+									<td class="center">
+										<i class="uiIconForumTopic uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleType"></i>
+									</td>
+									<td>
+										<a href="<%=uicomponent.event("Open", objectId)%>" rel="tooltip" data-placement="bottom" title="$titlePost">$objectTitle</a>
+									</td>
+									<td>$createdDate</td>
+								</tr>
+							<%
+									}
+								} else {
+							%>
+								<tr>
+									<td colspan="3" class="empty center">
+										<%=_ctx.appRes("UIForumPortlet.label.NoThread");%>
+									</td>
+								</tr>
+							<%}%>
+						</tbody>
+					</table>	
 				<% if(uicomponent.getIsShowIter()){ %>
-					<div style="overflow:auto;" class="ClearFix">
+					
 					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-					</div>
-				<% } %>					
-				</div>
-				
-			</div>
-		</div>
+					
+				<% } %>	
 	</div>
 </div>
 
-<div class="uiAction">
+<div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
            String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String link = uicomponent.event(action) ;
         %>
-      <button onclick="$link" class="btn" type="button">$actionLabel</button>
+	<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
-    </div>
+</div>
   
   <%uiform.end()%>

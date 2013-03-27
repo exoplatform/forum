@@ -4,30 +4,32 @@
 	import org.exoplatform.forum.ForumUtils ;
 %>
 <% uiform.begin() %>
-<div class="UIViewMemberProfile UIViewPrivateMessageForm resizable">
+
 <%	
 	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
 	String title = privateMessage.getName() ;
 	String message = privateMessage.getMessage() ;
 	message = uicomponent.renderMessage(message);
 %>
-	<div class="ViewMemberProfileContainer ImageContentContainer">
-		<div class="MessageContent">
-			<div class="PlainTextMessage">
-				<div class="TitleBar"><%=_ctx.appRes("UIPrivateMessageForm.label.MailTitle");%>: <span class="UserLabel">$title</span></div>
-				<div class="MessageContent">
-					<div class="Content" style="padding:5px 0px; margin:auto;">$message</div>
-					<div class="line"><span></span></div>
-					<div class="MessageInfo"><span></span></div>
-				</div>
-			</div>
+
+<div class="uiBox">
+	<h5 class="title">
+		<a href="#" onclick="" class="uiIconClose pull-right"><div class="ClosePopup" style="width: 16px; height: 16px;"><span></span></div></a>
+		<span class="popupTitle"><%=_ctx.appRes("UIPrivateMessageForm.label.MailTitle");%>: $title </span>
+	</h5>
+	<div class="uiContentBox">
+		$message
+		<div class="uiActionDashed">
+			<button class="btn"  type="button">
+				<i class="uiIconReply uiIconLightGray"></i> <%=_ctx.appRes("UIPrivateMessageForm.label.Reply");%>
+			</button>&nbsp;
+			<button class="btn" type="button">
+				<i class="uiIconDelete uiIconLightGray"></i> <%=_ctx.appRes("UIPrivateMessageForm.label.Delete");%>
+			</button>
 		</div>
- 	</div>
+	</div>
+</div>
 <%
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
 %>
-</div>
-<div class="uiAction">
-	<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
-</div>
 <%uiform.end()%>

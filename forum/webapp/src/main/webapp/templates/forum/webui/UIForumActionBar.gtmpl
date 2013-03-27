@@ -70,16 +70,16 @@
 	</ul>
 	<% 
 		long numberOfNewMessage = uicomponent.getNewMessage();
-		String priMessage="", pending="";
-		int total = 0;
-
 		if(!UserHelper.isAnonim() && numberOfNewMessage >= 0) {
-			priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
-			String newMessage;
+			String newMessage = "";
 			if(numberOfNewMessage > 0) {
-				newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
-			} else {
-				newMessage = "<span>" + priMessage + "</span>" ;
+				String className = "numberMessageMore100";
+				if(numberOfNewMessage < 10) {
+					className = "numberMessageLittle10";
+				} else if(numberOfNewMessage < 100) {
+					className = "numberMessageMore10";
+				}
+				newMessage = "<span class=\"numberMessage " + className + "\">" + numberOfNewMessage + "</span>";
 			}
 	%>
 
@@ -87,8 +87,8 @@
 		<li>	
 		<%
 			if(userProfile.getUserRole() <= 1) {
-				total = uicomponent.getTotalJobWattingForModerator();
-				pending = _ctx.appRes("UIBreadcumbs.label.Pending");
+				int total = uicomponent.getTotalJobWattingForModerator();
+				String pending = _ctx.appRes("UIBreadcumbs.label.Pending");
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
 			<div class="pull-right forumSeparatorLine">
@@ -96,9 +96,9 @@
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
-			<div class="pull-right">
+			<div class="pull-right privateMessage">
 				<a href="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
-					<i class="uiIconMail uiIconLightGray"></i> $newMessage
+					<i class="uiIconMail uiIconLightGray"></i>$newMessage &nbsp;<%=_ctx.appRes("UIBreadcumbs.label.PrivateMessages");%>
 				</a>
 			</div>
 		</li>
