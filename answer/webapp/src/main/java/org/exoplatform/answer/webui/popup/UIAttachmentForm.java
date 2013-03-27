@@ -139,8 +139,14 @@ public class UIAttachmentForm extends BaseUIFAQForm implements UIPopupComponent 
         String currentUser = FAQUtils.getCurrentUser();
         attachMentForm.getFAQService().saveUserAvatar(currentUser, listFileAttachment.get(0));
         UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
-        settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
-        event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+        if (settingForm == null) {
+          UIUserSettingForm userSettingForm = portlet.findFirstComponentOfType(UIUserSettingForm.class);
+          userSettingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
+          event.getRequestContext().addUIComponentToUpdateByAjax(userSettingForm);
+        } else {
+          settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
+          event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+        }
       } else {
         UIQuestionForm questionForm = portlet.findFirstComponentOfType(UIQuestionForm.class);
         questionForm.setListFileAttach(listFileAttachment);

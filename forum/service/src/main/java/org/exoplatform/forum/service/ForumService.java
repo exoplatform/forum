@@ -313,6 +313,15 @@ public interface ForumService extends ForumServiceLegacy {
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
   /**
+   * Gets the topic is last post of forum.
+   * 
+   * @param lastTopicPath
+   * @return the topic contain last post of forum.
+   * @throws Exception
+   */
+  Topic getLastPostOfForum(String lastTopicPath) throws Exception;
+  
+  /**
    * Get main informations of topic
    * 
    * @param topicPath the topic path
@@ -366,8 +375,9 @@ public interface ForumService extends ForumServiceLegacy {
    * @param forumId the forum id
    * @param topicId the topic id
    * @return the topic
+   * @throws Exception the exception
    */
-  Topic removeTopic(String categoryId, String forumId, String topicId);
+  Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
   /**
    * Move topic.
@@ -1320,6 +1330,7 @@ public interface ForumService extends ForumServiceLegacy {
    * get list types of topic
    * 
    * @return list of topic type
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   List<TopicType> getTopicTypes();
 
@@ -1329,6 +1340,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param Id id of topic
    * @return object topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   TopicType getTopicType(String Id) throws Exception;
 
@@ -1337,6 +1349,7 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param topicType object topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   void saveTopicType(TopicType topicType) throws Exception;
 
@@ -1345,6 +1358,7 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param topicTypeId id of topic type
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   void removeTopicType(String topicTypeId) throws Exception;
 
@@ -1354,6 +1368,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param type type of topic
    * @return page list of topics
    * @throws Exception the exception
+   * @deprecated - Not use on 4.0. It will be removed in version 4.0.0-GA
    */
   JCRPageList getPageTopicByType(String type) throws Exception;
 

@@ -38,6 +38,8 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.cache.loader.ServiceContext;
 import org.exoplatform.forum.service.cache.model.CacheType;
 import org.exoplatform.forum.service.cache.model.CachedData;
@@ -114,8 +116,19 @@ public class CachedDataStorage implements DataStorage, Startable {
     
     this.storage = storage;
     this.service = service;
-
     
+  }
+
+  private void clearCategoryCache(String id) throws Exception {
+    categoryData.remove(new CategoryKey(id));
+  }
+
+  private void clearCategoryCache(Category category) throws Exception {
+    if (category != null) {
+      clearCategoryCache(category.getId());
+      objectNameData.remove(new ObjectNameKey(category.getPath()));
+      objectNameData.remove(new ObjectNameKey(category.getId(), Utils.CATEGORY));
+    }
   }
 
   private void clearForumCache(Forum forum, boolean isPutNewKey) throws Exception {
@@ -144,9 +157,8 @@ public class CachedDataStorage implements DataStorage, Startable {
   
   private void clearTopicsCache(List<Topic> topics) throws Exception {
     for(Topic t : topics) {
-      topicData.remove(new TopicKey(t.getPath(), true));
+      clearTopicCache(t);
     }
-    
   }
   
   private void clearTopicCache(String topicPath) throws Exception {
@@ -156,6 +168,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
     Topic topic = getTopic(categoryId, forumId, topicId, null);
     clearTopicCache(topic);
+    clearTopicCache(topic.getPath());
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
@@ -463,6 +476,9 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
     clearObjectCache(category, isNew);
+    if (isNew == false) {
+      clearCategoryCache(category);
+    }
   }
 
   public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
@@ -489,6 +505,8 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Category removeCategory(String categoryId) throws Exception {
+    ObjectNameKey key = new ObjectNameKey(categoryId);
+    objectNameData.remove(key);
     categoryData.remove(new CategoryKey(categoryId));
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
@@ -497,6 +515,10 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   // TODO : need range
   public List<Forum> getForums(final String categoryId, final String strQuery) throws Exception {
+    
+    SortSettings sort = storage.getForumSortSettings();
+    SortField orderBy = sort.getField();
+    Direction orderType = sort.getDirection();
 
     return buildForumOutput(
         forumListFuture.get(
@@ -509,7 +531,7 @@ public class CachedDataStorage implements DataStorage, Startable {
                 }
               }
             },
-            new ForumListKey(categoryId, strQuery)
+            new ForumListKey(categoryId, strQuery, orderBy, orderType)
         )
     );
 
@@ -519,8 +541,18 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.filterForumByName(filterKey, userName, maxSize);
   }
 
-  public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
-    return getForums(categoryId, strQuery);
+  public List<Forum> getForumSummaries(final String categoryId, final String strQuery) throws Exception {
+
+    return buildForumOutput(forumListFuture.get(new ServiceContext<ListForumData>() {
+      public ListForumData execute() {
+        try {
+          return buildForumInput(storage.getForumSummaries(categoryId, strQuery));
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, new ForumListKey(categoryId, strQuery)));
+
   }
 
   public Forum getForum(final String categoryId, final String forumId) {
@@ -600,13 +632,13 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getTopic(categoryId, forumId, topicId, userRead);
   }
 
-  public Topic getTopicSummary(final String topicPath, final boolean isLastPost) throws Exception {
+  public Topic getTopicSummary(final String topicPath) {
 
     return topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
             try {
-              Topic got = storage.getTopicSummary(topicPath, isLastPost);
+              Topic got = storage.getTopicSummary(topicPath);
               if (got != null) {
                 return new TopicData(got);
               }
@@ -618,9 +650,16 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(topicPath, isLastPost)
+        new TopicKey(topicPath, false)
     ).build();
 
+  }
+
+  public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
+    if(isLastPost == false) {
+      return getTopicSummary(topicPath);
+    }
+    return storage.getTopicSummary(topicPath, isLastPost);
   }
 
   public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
@@ -656,18 +695,35 @@ public class CachedDataStorage implements DataStorage, Startable {
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
+    
+    //
+    if(type == Utils.CLOSE || type == Utils.ACTIVE || type == Utils.WAITING || type == Utils.APPROVE) {
+      for(Topic topic : topics) {
+        try {
+          clearForumCache(topic.getCategoryId(), topic.getForumId(), false);
+        } catch (Exception e) {
+          LOG.error(e.getMessage(), e);
+        }
+      }
+    }
   }
 
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     clearForumCache(categoryId, forumId, false);
     clearForumListCache();
+
+    if(!isNew) {
+//      clearPostCache(categoryId, forumId, topic.getId(), topic.getId().replace(Utils.TOPIC, Utils.POST)); 
+      clearTopicCache(topic);
+    }
   }
 
   public Topic removeTopic(String categoryId, String forumId, String topicId) {
     try {
       clearForumCache(categoryId, forumId, false);
       clearForumListCache();
+      clearTopicCache(categoryId, forumId, topicId);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
@@ -811,6 +867,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
+    miscData.remove(new SimpleCacheKey("screen", userProfile.getUserId()));
   }
 
   public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {

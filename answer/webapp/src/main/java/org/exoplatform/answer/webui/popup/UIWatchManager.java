@@ -130,7 +130,7 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
   static public class EditEmailActionListener extends BaseEventListener<UIWatchManager> {
     public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String user) throws Exception {
       UIPopupContainer popupContainer = watchManager.getParent();
-      UIWatchForm watchForm = openPopup(popupContainer, UIWatchForm.class, 450, 0);
+      UIWatchForm watchForm = openPopup(popupContainer, UIWatchForm.class, 580, 0);
       watchForm.setCategoryID(watchManager.getCategoryID());
       if (!user.equals(ADD)) {
         for (Watch watch : watchManager.listWatchs_) {

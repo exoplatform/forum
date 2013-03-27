@@ -1,4 +1,4 @@
-<div class="uiQuestionForm $uicomponent.id">
+<div class="uiQuestionImportForm $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 					<% 
@@ -7,7 +7,7 @@
 							fieldName = uicomponent.getLabel(field.getName());
 					%>
 							<div class="control-group">
-								<label class="control-label" for="<%=field.getId()%>">$fieldName</label>
+								<label class="control-label" for="<%=field.getId()%>">$fieldName: </label>
 								<div class="controls"><% uiform.renderField(field) %></div>
 							</div>
 					<% 

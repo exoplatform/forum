@@ -41,7 +41,6 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.ws.ForumWebservice;
 import org.exoplatform.forum.webui.BaseForumForm;
-import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -102,8 +101,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   public static final String FIELD_MAXPOSTS_SELECTBOX           = "MaximumPosts";
 
-  public static final String FIELD_FORUMJUMP_CHECKBOX           = "ShowForumJump";
-
   public static final String FIELD_AUTOWATCHMYTOPICS_CHECKBOX   = "AutoWatchMyTopics";
 
   public static final String FIELD_AUTOWATCHTOPICIPOST_CHECKBOX = "AutoWatchTopicIPost";
@@ -142,6 +139,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   private JCRPageList        pageList;
 
+  private UserProfile        userProfileSetting           = new UserProfile();
+
   UIForumPageIterator        pageIterator;
 
   public UIForumUserSettingForm() throws Exception {
@@ -149,6 +148,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     ResourceBundle res = context.getApplicationResourceBundle();
     permissionUser = new String[] { res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(), res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(), res.getString("UIForumPortlet.label.PermissionUser").toLowerCase() };
     setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   public String getPortalName() {
@@ -158,9 +158,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   protected void initForumOption() throws Exception {
     try {
-      this.userProfile = getForumService().getUserSettingProfile(UserHelper.getCurrentUser());
+      userProfileSetting = getForumService().getUserSettingProfile(UserHelper.getCurrentUser());
     } catch (Exception e) {
-      log.error("Get userProfile setting fall for user: " + UserHelper.getCurrentUser(), e);
+      log.error("Get userProfileSetting setting fall for user: " + UserHelper.getCurrentUser(), e);
+      return;
     }
 
     List<SelectItemOption<String>> list;
@@ -170,7 +171,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       list.add(new SelectItemOption<String>(string + "/timeZone", ForumUtils.getTimeZoneNumberInString(string)));
     }
     UIFormSelectBoxForum timeZone = new UIFormSelectBoxForum(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list);
-    double timeZoneOld = -userProfile.getTimeZone();
+    double timeZoneOld = -userProfileSetting.getTimeZone();
     Date date = getNewDate(timeZoneOld);
     String mark = "-";
     if (timeZoneOld < 0) {
@@ -189,7 +190,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     }
 
     UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list);
-    shortdateFormat.setValue(userProfile.getShortDateFormat());
+    shortdateFormat.setValue(userProfileSetting.getShortDateFormat());
     list = new ArrayList<SelectItemOption<String>>();
     format = new String[] { "EEE, MMMM dd, yyyy", "EEEE, MMMM dd, yyyy", "EEEE, dd MMMM, yyyy", "EEE, MMM dd, yyyy", "EEEE, MMM dd, yyyy", "EEEE, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
     for (String idFrm : format) {
@@ -197,59 +198,59 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     }
 
     UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list);
-    longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
+    longDateFormat.setValue(userProfileSetting.getLongDateFormat().replaceFirst(" ", "="));
     list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>("12-hour", "hh:mm=a"));
     list.add(new SelectItemOption<String>("24-hour", "HH:mm"));
     UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list);
-    timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
+    timeFormat.setValue(userProfileSetting.getTimeFormat().replace(' ', '='));
     list = new ArrayList<SelectItemOption<String>>();
     for (int i = 5; i <= 45; i = i + 5) {
       list.add(new SelectItemOption<String>(String.valueOf(i), (ID + i)));
     }
     UIFormSelectBox maximumThreads = new UIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX, FIELD_MAXTOPICS_SELECTBOX, list);
-    maximumThreads.setValue(ID + userProfile.getMaxTopicInPage());
+    maximumThreads.setValue(ID + userProfileSetting.getMaxTopicInPage());
     list = new ArrayList<SelectItemOption<String>>();
     for (int i = 5; i <= 35; i = i + 5) {
       list.add(new SelectItemOption<String>(String.valueOf(i), (ID + i)));
     }
 
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
-    maximumPosts.setValue(ID + userProfile.getMaxPostInPage());
-    boolean isJump = userProfile.getIsShowForumJump();
-    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, isJump);
-    isShowForumJump.setChecked(isJump);
+    maximumPosts.setValue(ID + userProfileSetting.getMaxPostInPage());
 
     UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
-    userId.setValue(this.userProfile.getUserId());
+    userId.setValue(this.userProfileSetting.getUserId());
     userId.setReadOnly(true);
     userId.setDisabled(true);
     UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
-    String screenN = userProfile.getScreenName();
+    String screenN = userProfileSetting.getScreenName();
     if (ForumUtils.isEmpty(screenN))
-      screenN = userProfile.getUserId();
+      screenN = userProfileSetting.getUserId();
     screenName.setValue(screenN);
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
-    userTitle.setValue(this.userProfile.getUserTitle());
-    if (this.userProfile.getUserRole() > 0) {
+    userTitle.setValue(this.userProfileSetting.getUserTitle());
+    if (this.userProfileSetting.getUserRole() > 0) {
       userTitle.setReadOnly(true);
       userTitle.setDisabled(true);
     }
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-    String strSignature = this.userProfile.getSignature();
+    String strSignature = this.userProfileSetting.getSignature();
     if (ForumUtils.isEmpty(strSignature))
       strSignature = ForumUtils.EMPTY_STR;
     signature.setValue(strSignature);
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
-    isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
+    isDisplaySignature.setChecked(this.userProfileSetting.getIsDisplaySignature());
 
     UICheckBoxInput isAutoWatchMyTopics = new UICheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX, FIELD_AUTOWATCHMYTOPICS_CHECKBOX, false);
-    isAutoWatchMyTopics.setChecked(userProfile.getIsAutoWatchMyTopics());
+    isAutoWatchMyTopics.setChecked(userProfileSetting.getIsAutoWatchMyTopics());
     UICheckBoxInput isAutoWatchTopicIPost = new UICheckBoxInput(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, false);
-    isAutoWatchTopicIPost.setChecked(userProfile.getIsAutoWatchTopicIPost());
+    isAutoWatchTopicIPost.setChecked(userProfileSetting.getIsAutoWatchTopicIPost());
 
+    UIAvatarContainer avatarContainer = createUIComponent(UIAvatarContainer.class, null, "Avatar");
+    avatarContainer.setUserProfile(userProfileSetting);
+    avatarContainer.setForumService(getForumService());
     UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
-    isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
+    isDisplayAvatar.setChecked(userProfileSetting.getIsDisplayAvatar());
 
     UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM);
     inputSetProfile.addUIFormInput(userId);
@@ -257,6 +258,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     inputSetProfile.addUIFormInput(userTitle);
     inputSetProfile.addUIFormInput(signature);
     inputSetProfile.addUIFormInput(isDisplaySignature);
+    
+    inputSetProfile.addUIFormInput(avatarContainer);
     inputSetProfile.addUIFormInput(isDisplayAvatar);
     inputSetProfile.addUIFormInput(isAutoWatchMyTopics);
     inputSetProfile.addUIFormInput(isAutoWatchTopicIPost);
@@ -268,16 +271,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     inputSetOption.addUIFormInput(timeFormat);
     inputSetOption.addUIFormInput(maximumThreads);
     inputSetOption.addUIFormInput(maximumPosts);
-    inputSetOption.addUIFormInput(isShowForumJump);
 
     UIFormInputWithActions inputUserWatchManger = new UIFormInputWithActions(FIELD_USERWATCHMANGER_FORM);
-    listWatches = getForumService().getWatchByUser(this.userProfile.getUserId());
+    listWatches = getForumService().getWatchByUser(this.userProfileSetting.getUserId());
 
     UICheckBoxInput formCheckBoxRSS = null;
     UICheckBoxInput formCheckBoxEMAIL = null;
     String listObjectId = ForumUtils.EMPTY_STR, watchId;
     List<String> listId = new ArrayList<String>();
-    ForumSubscription forumSubscription = getForumService().getForumSubscription(userProfile.getUserId());
+    ForumSubscription forumSubscription = getForumService().getForumSubscription(userProfileSetting.getUserId());
     listId.addAll(Arrays.asList(forumSubscription.getCategoryIds()));
     listId.addAll(Arrays.asList(forumSubscription.getForumIds()));
     listId.addAll(Arrays.asList(forumSubscription.getTopicIds()));
@@ -311,14 +313,14 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();
     url = url.substring(0, url.indexOf(ForumUtils.SLASH, 8));
-    rssLink = url + CommonUtils.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
+    rssLink = url + CommonUtils.getUserRSSLink(ForumWebservice.APP_TYPE, userProfileSetting.getUserId());
     formStringInput.setValue(rssLink);
     formStringInput.setReadOnly(true);
 
     inputUserWatchManger.addChild(formStringInput);
 
-    formStringInput = new UIFormStringInput(EMAIL_ADD, userProfile.getEmail());
-    formStringInput.setValue(userProfile.getEmail());
+    formStringInput = new UIFormStringInput(EMAIL_ADD, userProfileSetting.getEmail());
+    formStringInput.setValue(userProfileSetting.getEmail());
     inputUserWatchManger.addChild(formStringInput);
 
     addUIFormInput(inputSetProfile);
@@ -360,7 +362,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     forumSubscription.setCategoryIds(cateIds.toArray(new String[] {}));
     forumSubscription.setForumIds(forumIds.toArray(new String[] {}));
     forumSubscription.setTopicIds(topicIds.toArray(new String[] {}));
-    getForumService().saveForumSubscription(forumSubscription, userProfile.getUserId());
+    getForumService().saveForumSubscription(forumSubscription, userProfileSetting.getUserId());
   }
 
   @SuppressWarnings("unchecked")
@@ -409,13 +411,13 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
-      UserProfile userProfile = uiForm.userProfile;
+      UserProfile userProfileSetting = uiForm.userProfileSetting;
       if (userTitle == null || userTitle.trim().length() < 1) {
-        userTitle = userProfile.getUserTitle();
+        userTitle = userProfileSetting.getUserTitle();
       } else {
         int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
-        if (newPos >= 0 && newPos < userProfile.getUserRole()) {
-          userTitle = userProfile.getUserTitle();
+        if (newPos >= 0 && newPos < userProfileSetting.getUserRole()) {
+          userTitle = userProfileSetting.getUserTitle();
         }
       }
       int maxText = ForumUtils.MAXSIGNATURE;
@@ -440,33 +442,29 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       String shortDateFormat = inputSetOption.getUIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX).getValue();
       String longDateFormat = inputSetOption.getUIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX).getValue();
       String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
-      boolean isJump = (Boolean) inputSetOption.getUICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      userProfile.setUserTitle(userTitle);
-      userProfile.setScreenName(screenName);
-      userProfile.setSignature(signature);
-      userProfile.setIsDisplaySignature(isDisplaySignature);
-      userProfile.setIsDisplayAvatar(isDisplayAvatar);
-      userProfile.setTimeZone(-timeZone);
-      userProfile.setTimeFormat(timeFormat.replace('=', ' '));
-      userProfile.setShortDateFormat(shortDateFormat);
-      userProfile.setLongDateFormat(longDateFormat.replace('=', ' '));
-      userProfile.setMaxPostInPage(maxPost);
-      userProfile.setMaxTopicInPage(maxTopic);
-      userProfile.setIsShowForumJump(isJump);
-      userProfile.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
-      userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
+      userProfileSetting.setUserTitle(userTitle);
+      userProfileSetting.setScreenName(screenName);
+      userProfileSetting.setSignature(signature);
+      userProfileSetting.setIsDisplaySignature(isDisplaySignature);
+      userProfileSetting.setIsDisplayAvatar(isDisplayAvatar);
+      userProfileSetting.setTimeZone(-timeZone);
+      userProfileSetting.setTimeFormat(timeFormat.replace('=', ' '));
+      userProfileSetting.setShortDateFormat(shortDateFormat);
+      userProfileSetting.setLongDateFormat(longDateFormat.replace('=', ' '));
+      userProfileSetting.setMaxPostInPage(maxPost);
+      userProfileSetting.setMaxTopicInPage(maxTopic);
+      userProfileSetting.setIsShowForumJump(false);
+      userProfileSetting.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
+      userProfileSetting.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 
-      uiForm.getForumService().saveUserSettingProfile(userProfile);
+      uiForm.getForumService().saveUserSettingProfile(userProfileSetting);
       try {
         uiForm.saveForumSubscription();
       } catch (Exception e) {
         uiForm.log.error("Can not save forum subscription, exception: ", e);
       }
       forumPortlet.setRenderForumLink();
-      UICategoryContainer categoryContainer = forumPortlet.findFirstComponentOfType(UICategoryContainer.class);
-      if (categoryContainer.isRendered())
-        categoryContainer.renderJump();
       forumPortlet.cancelAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -501,7 +499,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
   static public class SetDefaultAvatarActionListener extends EventListener<UIForumUserSettingForm> {
     public void execute(Event<UIForumUserSettingForm> event) throws Exception {
       UIForumUserSettingForm uiForm = event.getSource();
-      uiForm.getForumService().setDefaultAvatar(uiForm.userProfile.getUserId());
+      uiForm.getForumService().setDefaultAvatar(uiForm.userProfileSetting.getUserId());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
@@ -575,7 +573,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         }
       }
       if (listObjectId.size() > 0) {
-        uiForm.getForumService().updateEmailWatch(listObjectId, newEmailAdd, uiForm.userProfile.getUserId());
+        uiForm.getForumService().updateEmailWatch(listObjectId, newEmailAdd, uiForm.userProfileSetting.getUserId());
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent());
     }

@@ -14,7 +14,7 @@
 		<!-- <div class="IconForum ThreadNoNewPost"><i class=""></i><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div> -->
 		<i class="uiIconForumColorLockTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%>
 		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%>
-		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.TopicStick")%>
+		<i class="uiIconForumStick uiIconForumLightGray"></i><%=_ctx.appRes("UIForumIconState.label.TopicStick")%>
 	<% } %>
 	</div>
 </div>

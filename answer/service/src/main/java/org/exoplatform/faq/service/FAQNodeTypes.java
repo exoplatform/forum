@@ -184,6 +184,10 @@ public interface FAQNodeTypes {
   public static final String JCR_DATA                     = "jcr:data";
 
   public static final String NT_RESOURCE                  = "nt:resource";
+  
+  public static final String JCR_SCORE                    = "jcr:score";
+
+  public static final String REP_EXCERPT                  = "rep:excerpt()";
 
   public static final String AT                           = "@";
 

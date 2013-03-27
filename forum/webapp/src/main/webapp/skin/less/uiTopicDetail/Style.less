@@ -11,14 +11,108 @@
 	&+ .contentTopicDetail{
 		border-top: solid 1px #d9d9d9;
 	}
+	
 	.postViewContainer{
 		margin-left: 225px;
+		
+		.attachmentContainer{
+			background: #f9f9f9;
+			padding: 18px;
+			
+			.otherAttachmentBox + .otherAttachmentBox{
+				margin-top: 5px;
+			}
+			
+			.attachmentTitle{
+				margin-bottom: 15px;
+			}
+			
+			.attachmentContentImage {
+				margin-bottom: 20px;
+				
+				.imageAttachmentBox{
+					display: inline-block;
+					width: 128px;
+					height: 128px;
+					text-align: center;
+					margin-right: 15px;
+					margin-bottom: 15px;
+					position: relative;
+					&:hover{
+						.actionAttachImg{
+							display: block;
+						}
+					}
+					.imgAttach img{
+						max-width: 128px;
+						max-height: 128px;
+					}
+					.imgAttach{
+						line-height: 125px;
+					}
+					.actionAttachImg{
+						position: absolute;
+						display: none;
+						top: 0;
+						left: 0;
+						background-color: rgba(0,0,0,0.1);
+						width: 128px;
+						height: 128px;
+						p{
+							a{
+								color: #fff;
+							}
+							
+							margin: 45px 0 0 0;
+							&+p{
+								margin-top: 0;
+							}
+						}
+					}
+				}
+				
+			}
+		}	
+		
+		.postContentContainer{
+			min-height: 167px;
+			
+		
+			.signature{
+				font-size: italic;
+				span{
+					border-top: dotted 1px @borderColor;
+					width: 265px;
+					display: inline-block;
+				}
+			}
+		}
+		.footPost{
+			border-top: dotted 1px @borderColor;
+			margin-top: 20px;
+			padding-top: 5px;
+			color: #b3b3b3;
+			text-align: right;
+			.txtLastEdit{
+				font-size: @baseFontSize - 1;
+				.uiUserInfo{
+					display:inline-block; 
+					text-align: left;
+				}
+			}
+			.btnDetailTopic{
+				margin-top: 10px;
+			}
+		}
+		
 	}
 	
 	.postViewHeader{
 		background: #f9f9f9;
 		padding: 10px 15px;
 		height:20px;
+		margin-bottom: 5px;
+		.border-radius(2px);
 		.postViewTitle{
 			font-family: @sansBoldFontFamily;
 		}
@@ -31,8 +125,62 @@
 	
 }
 
-.uiTopicDetail{
+.postContent{
+	p{
+		margin: 0;
+	}
+	
+	.contentQuote{
+		padding: 15px;
+		background: #e6f3ff;
+		margin: 10px 0 0 15px;
+		.border-radius(2px);
+		.textContent{
+			border-left: solid 5px #aacded;
+			padding-left: 15px;
+			margin-top: 10px;
+		}
+		.textContent:first-child{
+			border-left: none;
+			padding-left: 0;
+		}
+	}
+	
+	.textContent {
+		.contentQuote{
+			padding-left: 0;
+			margin: 0;
+		}
+	}
+}
 
+
+.uiTopicDetail{
+	.tagsContainer{
+		line-height: 28px;
+		
+		.tagItem{
+			background: #e0e8f5;
+			.border-radius(3px);
+			color: #2f5e92;
+			border: 1px solid #3f6fbb;
+			padding: 1px 5px;
+			display: inline-block;
+		}
+		
+		.titleTag{
+			margin-left: 10px;
+		}
+		
+		.txtTags{
+			display: inline-block;
+			li{
+				display: inline-block;
+			}
+		}
+		
+	}
+	
 	.uiBox {
 		&.uiPostRules{
 			margin-top: 10px;

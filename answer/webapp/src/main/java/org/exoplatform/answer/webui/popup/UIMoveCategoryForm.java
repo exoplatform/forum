@@ -16,23 +16,23 @@
  ***************************************************************************/
 package org.exoplatform.answer.webui.popup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import javax.jcr.ItemExistsException;
 
+import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersContainer;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIBreadcumbs;
 import org.exoplatform.answer.webui.UICategories;
 import org.exoplatform.answer.webui.UIQuestions;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Cate;
-import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -49,32 +49,24 @@ import org.exoplatform.webui.event.EventListener;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/answer/webui/popup/UIMoveCategoryForm.gtmpl", 
+    template = "app:/templates/answer/webui/popup/UIMoveForm.gtmpl", 
     events = {
-        @EventConfig(listeners = UIMoveCategoryForm.SaveActionListener.class), 
+        @EventConfig(listeners = UIMoveCategoryForm.MoveActionListener.class), 
         @EventConfig(listeners = UIMoveCategoryForm.CancelActionListener.class) 
     }
 )
-public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
+public class UIMoveCategoryForm extends BaseUIFAQForm implements UIPopupComponent {
   private String            categoryId_;
 
   private FAQSetting        faqSetting_;
 
   private boolean           isCateSelect = false;
 
-  private List<Cate>        listCate     = new ArrayList<Cate>();
-
-  private static FAQService faqService_  = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-
   public UIMoveCategoryForm() throws Exception {
   }
 
-  private String getCategoryID() {
-    return categoryId_;
-  }
-
-  public void setCategoryID(String s) {
-    categoryId_ = s;
+  public void setCategoryId(String categoryId) {
+    categoryId_ = categoryId;
   }
 
   public void activate() {
@@ -83,10 +75,14 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() {
   }
 
-  public List<Cate> getListCate() {
-    return this.listCate;
+  protected CategoryTree getCategoryTree() throws Exception {
+    return getFAQService().buildCategoryTree(null);
   }
 
+  protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
+    return FAQUtils.renderCategoryTree(categoryTree, this, "Move", categoryId_, true);
+  }
+  
   public void setIsCateSelect(boolean isCateSelect) {
     this.isCateSelect = isCateSelect;
   }
@@ -95,27 +91,19 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
     this.faqSetting_ = faqSetting;
   }
 
-  public void setListCate() throws Exception {
-    listCate.clear();
-    List<Cate> temp = faqService_.listingCategoryTree();
-    for (Cate cat : temp) {
-      if (cat.getCategory().getPath().indexOf(categoryId_) < 0) {
-        listCate.add(cat);
-      }
-    }
-  }
-
-  static public class SaveActionListener extends BaseEventListener<UIMoveCategoryForm> {
+  static public class MoveActionListener extends BaseEventListener<UIMoveCategoryForm> {
     public void onEvent(Event<UIMoveCategoryForm> event, UIMoveCategoryForm moveCategory, String destCategoryId) throws Exception {
       UIAnswersPortlet answerPortlet = moveCategory.getAncestorOfType(UIAnswersPortlet.class);
-      String categoryId = moveCategory.getCategoryID();
+      String categoryId = moveCategory.categoryId_;
       try {
+        Category category = moveCategory.getFAQService().getCategoryById(destCategoryId);
         boolean canMove = moveCategory.faqSetting_.isAdmin();
-        if (!canMove)
-          canMove = faqService_.isCategoryModerator(destCategoryId, null);
+        if (!canMove){
+          canMove = Utils.hasPermission(Arrays.asList(category.getModerators()), UserHelper.getAllGroupAndMembershipOfUser(null));
+        }
         if (canMove) {
-          if (!faqService_.isCategoryExist(faqService_.getCategoryNameOf(categoryId), destCategoryId)) {
-            faqService_.moveCategory(categoryId, destCategoryId);
+          if (!moveCategory.getFAQService().isCategoryExist(moveCategory.getFAQService().getCategoryNameOf(categoryId), category.getPath())) {
+            moveCategory.getFAQService().moveCategory(categoryId, category.getPath());
           } else {
             warning("UIQuestions.msg.can-not-move-category-same-name");
             return;
@@ -136,7 +124,7 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
           questions.backPath_ = "";
           questions.setLanguage(FAQUtils.getDefaultLanguage());
           try {
-            questions.viewAuthorInfor = faqService_.isViewAuthorInfo(tmp);
+            questions.viewAuthorInfor = moveCategory.getFAQService().isViewAuthorInfo(tmp);
             questions.setCategoryId(tmp);
             questions.updateCurrentQuestionList();
             questions.viewingQuestionId_ = "";

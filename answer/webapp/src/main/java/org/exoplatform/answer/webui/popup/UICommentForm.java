@@ -35,13 +35,13 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -72,7 +72,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String       currentUser_    = "";
 
-  private final String TITLE_USERNAME  = "UserName";
+  private String       currentUserDisplayName    = "";
 
   private final String COMMENT_CONTENT = "CommentContent";
 
@@ -82,11 +82,22 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UICommentForm() throws Exception {
     currentUser_ = FAQUtils.getCurrentUser();
-    addUIFormInput((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setReadOnly(true));
     UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
     commentContent.setFCKConfig(WebUIUtils.getFCKConfig());
     commentContent.setToolBarName("Basic");
     this.addChild(commentContent);
+    User user = FAQUtils.getCurrentUserObject();
+    if(user != null) {
+      this.currentUserDisplayName = user.getUserName();
+    }
+  }
+
+  public String getCurrentUserDisplayName() {
+    return currentUserDisplayName;
+  }
+
+  public void setCurrentUserDisplayName(String currentUserDisplayName) {
+    this.currentUserDisplayName = currentUserDisplayName;
   }
 
   public String getQuestionContent() {

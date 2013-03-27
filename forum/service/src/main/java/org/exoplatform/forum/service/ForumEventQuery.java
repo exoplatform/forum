@@ -21,8 +21,6 @@ public class ForumEventQuery implements ForumNodeTypes {
 
   private String   valueIn;
 
-  private String   topicType;
-
   private String   path;
 
   private String   byUser;
@@ -99,13 +97,6 @@ public class ForumEventQuery implements ForumNodeTypes {
     this.valueIn = valueIn;
   }
 
-  public String getTopicType() {
-    return topicType;
-  }
-
-  public void setTopicType(String topicType) {
-    this.topicType = topicType;
-  }
 
   public String getPath() {
     return path;
@@ -256,14 +247,6 @@ public class ForumEventQuery implements ForumNodeTypes {
       String temp = setArrays(byUser, EXO_OWNER);
       if (temp != null && temp.length() > 0) {
         stringBuffer.append(temp);
-      }
-    }
-    if (type.equals(Utils.TOPIC)) {
-      if (topicType != null && topicType.length() > 0 && !topicType.equals("all")) {
-        if (isAnd)
-          stringBuffer.append(" and ");
-        stringBuffer.append("(@").append(EXO_TOPIC_TYPE).append("='").append(topicType).append("')");
-        isAnd = true;
       }
     }
     if (isAnd){

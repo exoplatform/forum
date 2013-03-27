@@ -115,8 +115,6 @@ public class UIForumPortlet extends UIPortletApplication {
 
   private boolean      isJumpRendered      = false;
 
-  private boolean      isShowForumJump     = false;
-
   private boolean      isShowPoll          = false;
 
   private boolean      isShowModerators    = false;
@@ -191,7 +189,7 @@ public class UIForumPortlet extends UIPortletApplication {
         addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
         addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
         addChild(UISearchForm.class, null, null).setRendered(isSearchRendered);
-        addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered);
+        addChild(UIForumLinks.class, null, null).setRendered(false);
         updateIsRendered(ForumUtils.CATEGORIES);
         categoryContainer.updateIsRender(true);
       }
@@ -310,8 +308,8 @@ public class UIForumPortlet extends UIPortletApplication {
         isRenderActionBar = false;
       }
     }
+    getChild(UICategoryContainer.class).setRendered(isCategoryRendered);
     getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
-    setRenderForumLink();
     getChild(UIForumContainer.class).setRendered(isForumRendered);
     getChild(UITopicsTag.class).setRendered(isTagRendered);
     getChild(UISearchForm.class).setRendered(isSearchRendered);
@@ -325,25 +323,12 @@ public class UIForumPortlet extends UIPortletApplication {
     UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
     categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-    getChild(UIForumLinks.class).setUpdateForumLinks();
+//    getChild(UIForumLinks.class).setUpdateForumLinks();
     getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
   }
   
   public void setRenderForumLink() {
-    if (isShowForumJump) {
-      if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
-        isJumpRendered = false;
-      } else {
-        isJumpRendered = getUserProfile().getIsShowForumJump();
-      }
-    } else {
-      isJumpRendered = false;
-    }
-    UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered);
-    categoryContainer.setIsRenderJump(isJumpRendered);
-    if (!isCategoryRendered) {
-      getChild(UIForumLinks.class).setRendered(isJumpRendered);
-    }
+
   }
 
   public void setRenderQuickReply() {
@@ -383,7 +368,6 @@ public class UIForumPortlet extends UIPortletApplication {
     useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
     enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
     enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ForumUtils.EMPTY_STR));
-    isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ForumUtils.EMPTY_STR));
     isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ForumUtils.EMPTY_STR));
     isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ForumUtils.EMPTY_STR));
     isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ForumUtils.EMPTY_STR));
@@ -582,16 +566,19 @@ public class UIForumPortlet extends UIPortletApplication {
     if (getUserProfile().getUserRole() == 0) return true;
     if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
     try {
-      Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
+      Forum forum = (Forum) forumService.getForum(categoryId, forumId);
       if (forum.getIsClosed() || forum.getIsLock())
         return false;
-      Category cate = (Category) forumService.getObjectNameById(categoryId, Utils.CATEGORY);
+      if(userProfile.getUserRole() == 1 && ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId())) {
+        return true;
+      }
+      Category cate = (Category) forumService.getCategory(categoryId);
       boolean isAdd = true;
       if(!Utils.isEmpty(cate.getUserPrivate())) {
         isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
       }
       if(isAdd) {
-        if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
+        if (userProfile.getUserRole() > 1) {
           String[] canCreadTopic = ForumUtils.arraysMerge(forum.getCreateTopicRole(), cate.getCreateTopicRole());
           if (!Utils.isEmpty(canCreadTopic) && !canCreadTopic[0].equals(" ")) {
             return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());
@@ -680,6 +667,7 @@ public class UIForumPortlet extends UIPortletApplication {
       searchForm.setUserProfile(getUserProfile());
       searchForm.setPath(ForumUtils.EMPTY_STR);
       searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
+      searchForm.setSearchOptionsObjectType(ForumUtils.EMPTY_STR);
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
     } else if (path.lastIndexOf(Utils.TAG) >= 0) {
       updateIsRendered(ForumUtils.TAG);
@@ -788,8 +776,8 @@ public class UIForumPortlet extends UIPortletApplication {
               this.getUserProfile().setLastTimeAccessTopic(topic.getId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
             }
           } else {
-            showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                               new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() });
+            showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-topic", 
+                               new String[] {});
             if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
               calculateRenderComponent(forumSpId, context);
             } else {
@@ -885,8 +873,8 @@ public class UIForumPortlet extends UIPortletApplication {
           }
          
         } else {
-          showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                             new String[] { forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase() });
+          showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-forum", 
+                             new String[] {});
           renderForumHome();
           path = Utils.FORUM_SERVICE;
         }
@@ -908,8 +896,8 @@ public class UIForumPortlet extends UIPortletApplication {
           categoryContainer.updateIsRender(false);
           this.updateIsRendered(ForumUtils.CATEGORIES);
         } else {
-          showWarningMessage(context, "UIBreadcumbs.msg.do-not-permission", 
-                             new String[] { category.getCategoryName(), res.getString("UIForumPortlet.label.category").toLowerCase() });
+          showWarningMessage(context, "UIForumPortlet.msg.do-not-permission-view-category", 
+                             new String[] {});
           renderForumHome();
           path = Utils.FORUM_SERVICE;
         }

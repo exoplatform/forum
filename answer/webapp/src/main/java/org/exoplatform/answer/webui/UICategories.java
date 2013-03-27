@@ -228,7 +228,7 @@ public class UICategories extends BaseUIFAQForm {
       }
       if (categoryId_.equals(Utils.CATEGORY_HOME)) {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
-        currentCategoryName = "<img src=\"/answer/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + currentCategoryName + "\"/>";
+        currentCategoryName = "<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + currentCategoryName + "\"/>";
       } else {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
       }
@@ -335,7 +335,7 @@ public class UICategories extends BaseUIFAQForm {
         if (uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(uiCategories.faqSetting_.getCurrentUser())) {
           UICategoryForm category = uiCategories.openPopup(UICategoryForm.class, (isSub) ? "SubCategoryForm" : "AddCategoryForm", 580, 500);
           category.setParentId(parentCategoryId);
-          category.updateAddNew(true);
+          category.updateAddNew(true, uiCategories.getAncestorOfType(UIAnswersPortlet.class).getSpaceGroupId());
         } else {
           UIAnswersPortlet uiPortlet = uiCategories.getAncestorOfType(UIAnswersPortlet.class);
           event.getRequestContext()
@@ -357,14 +357,14 @@ public class UICategories extends BaseUIFAQForm {
   static public class EditCategoryActionListener extends BaseEventListener<UICategories> {
     public void onEvent(Event<UICategories> event, UICategories uiCategories, String categoryId) throws Exception {
       try {
+        UIAnswersPortlet uiPortlet = uiCategories.getAncestorOfType(UIAnswersPortlet.class);
         Category category = uiCategories.getFAQService().getCategoryById(categoryId);
         if (uiCategories.faqSetting_.isAdmin() || category.getModeratorsCategory().contains(uiCategories.faqSetting_.getCurrentUser())) {
           UICategoryForm uiCategoryForm = uiCategories.openPopup(UICategoryForm.class, "EditCategoryForm", 580, 500);
           uiCategoryForm.setParentId(uiCategories.categoryId_);
-          uiCategoryForm.updateAddNew(false);
+          uiCategoryForm.updateAddNew(false, uiPortlet.getSpaceGroupId());
           uiCategoryForm.setCategoryValue(category, true);
         } else {
-          UIAnswersPortlet uiPortlet = uiCategories.getAncestorOfType(UIAnswersPortlet.class);
           event.getRequestContext()
                .getUIApplication()
                .addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action",
@@ -616,9 +616,8 @@ public class UICategories extends BaseUIFAQForm {
       }
       try {
         popupContainer.setId("MoveCategoryForm");
-        uiMoveCategoryForm.setCategoryID(categoryId);
+        uiMoveCategoryForm.setCategoryId(categoryId);
         uiMoveCategoryForm.setFAQSetting(uiCategories.faqSetting_);
-        uiMoveCategoryForm.setListCate();
         popupAction.activate(popupContainer, 600, 400);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } catch (Exception e) {

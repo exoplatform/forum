@@ -1,4 +1,4 @@
-<div class="UINotificationForm">
+<div class="uiNotificationForm">
 	<% uiform.begin() %>
   <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
     <ul class="nav nav-tabs">
@@ -42,7 +42,7 @@
       String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
       String link = uicomponent.event(action);
     %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+      <button onclick="$link" class="btn" type="button">$actionLabel</button>
     <%} %>
   </div>
 	<%uiform.end()%>

@@ -1,18 +1,12 @@
 
-<div class="UIForumForm">	
+<div class="uiForumForm">	
 	<% uiform.begin() %>	
-	<div class="UIForm AddForumInCategpry">
-		<div class="HorizontalLayout">
-			<table class="UIFormGrid">
-				<tbody>
-					<tr>
-						<td class="FieldLabel"><label for="<%=uiform.FIELD_CATEGORY_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</label></td>
-						<td class="FieldComponent">
-							<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="<%=uiform.FIELD_CATEGORY_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</label>
+			<div class="controls">
+				<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
+			</div>
 		</div>
 	</div>
   
@@ -59,7 +53,7 @@
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+		<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>

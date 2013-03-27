@@ -1,15 +1,19 @@
 .UIForumPortlet, .uiForumPortlet {
-	background: #fff;
+	background: none;
 	padding: 20px;
+	.pagination{
+		margin: 0;
+	} 
 	.uiBox{
 		.box-shadow(none);
 		margin-bottom: 10px;
 	}
-	.uiGrid.table td, .uiGrid.table th{
-		padding: 10px 5px;
-		vertical-align: top;
+	.uiCategories, .uiCategory, .forumContainer{
+		.uiGrid.table td, .uiGrid.table th{
+			padding: 10px 5px;
+			vertical-align: top;
+		}
 	}
-	
 }
 /******************************************** UIForumActionBar ****************************************/
 .uiForumActionBar {
@@ -56,9 +60,15 @@
 
 
 .uiForumPortlet {
-	.pagination{
-		margin: 0;
+	.uiFormInputWithActions{
+		.mySubscriptions{
+			.control-label{
+				width: 190px;
+				text-align: left;
+			}
+		}
 	}
+
 	.defaultStyle{
 	   	cursor: pointer;
 	    float: left;
@@ -109,7 +119,7 @@
 			padding: 0;
 		}
 		.textInfo{
-			padding: 0 45px;
+			padding: 0 30px;
 		}
 	}
 	
@@ -121,6 +131,7 @@
 		line-height: 36px;
 		font-family: @sansBoldFontFamily;
 		color: @linkColor;
+		font-weight: bold;
 	}
 	
 }
@@ -137,32 +148,5 @@
 	margin:15px 0px;
 	color: @grayLight;
 }
-
-.uiUserMenuInfo:after {
-    background: @white;
-    top: -7px;
-	left: 26%;
-    border: 1px solid #bababa;
-    content: "";
-    display: inline-block;
-    height: 12px;
-    position: absolute;
-    width: 11px;
-    .rotate(-45deg);
-    z-index: -2;
-}
-
-.uiUserMenuInfo:before {
-    background: @white;
-    top: 0;
-    content: "";
-    display: inline-block;
-    height: 12px;
-    position: absolute;
-    width: 30px;
-	left: 23%;
-    z-index: -1;
-}
-
 
 

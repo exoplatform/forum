@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIBanIPForumManagerForm;
@@ -146,16 +145,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private boolean                isShowActive      = false;
 
-  protected String               DEFAULT_ID        = TopicType.DEFAULT_ID;
-
   public String                   openTopicId      = ForumUtils.EMPTY_STR;
-
-  private Map<String, TopicType> topicTypeM        = new HashMap<String, TopicType>();
 
   private Map<String, Integer>   pageTopicRemember = new HashMap<String, Integer>();
 
   private Map<String, String>    cssClassMap       = new HashMap<String, String>();
-
+  
   public UITopicContainer() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null));
@@ -163,6 +158,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (!UserHelper.isAnonim())
       isLogin = true;
     isLink = true;
+    
+    setSubmitAction("return false;");
+  }
+  
+  public UserProfile getQuickProfile(String userName) throws Exception {
+    return getForumService().getQuickProfile(userName);
   }
 
   public boolean isNull() {
@@ -216,40 +217,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   public boolean getIsAutoPrune() throws Exception {
     return isShowActive;
-  }
-
-  public void setTopicType(String typeId) throws Exception {
-    try {
-      TopicType topicType = getForumService().getTopicType(typeId);
-      if (topicType.getId().equals(TopicType.DEFAULT_ID)) {
-        if (topicTypeM.containsKey(typeId))
-          topicTypeM.remove(typeId);
-      } else
-        topicTypeM.put(typeId, topicType);
-    } catch (Exception e) {
-      if (topicTypeM.containsKey(typeId))
-        topicTypeM.remove(typeId);
-    }
-  }
-
-  public String[] getIconTopicType(String typeId) throws Exception {
-    try {
-      TopicType topicType = topicTypeM.get(typeId);
-      if (topicType != null) {
-        return new String[] { topicType.getIcon(), topicType.getName() };
-      } else {
-        topicType = getForumService().getTopicType(typeId);
-        if (!topicType.getId().equals(TopicType.DEFAULT_ID)) {
-          topicTypeM.put(typeId, topicType);
-          return new String[] { topicType.getIcon(), topicType.getName() };
-        } else {
-          return new String[] { " " };
-        }
-      }
-    } catch (Exception e) {
-      log.warn("\nThere is no icon for " + typeId + " type\n" + e.getCause());
-      return new String[] { " " };
-    }
   }
 
   public String getTitleInHTMLCode(String s) {
@@ -601,6 +568,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 520);
       topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
+      topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
       topicForm.setMod(uiTopicContainer.isModerator);
     }
   }
@@ -698,12 +666,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   static public class EditForumActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       Forum forum = uiTopicContainer.getForum();
+      String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
       UIForumForm forumForm = uiTopicContainer.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
-      boolean isMode = false;
-      if (uiTopicContainer.userProfile.getUserRole() == 1)
-        isMode = true;
-      forumForm.setMode(isMode);
-      forumForm.initForm();
+      if (uiTopicContainer.userProfile.getUserRole() == 1){
+        forumForm.setMode(true);
+      }
+      forumForm.initForm(spaceGroupId);
       forumForm.setCategoryValue(uiTopicContainer.categoryId, false);
       forumForm.setForumValue(forum, true);
       forumForm.setForumUpdate(true);
@@ -822,7 +790,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
-      UIExportForm exportForm = uiTopicContainer.openPopup(UIExportForm.class, 380, 160);
+      UIExportForm exportForm = uiTopicContainer.openPopup(UIExportForm.class, 500, 160);
       exportForm.setObjectId(forum);
     }
   }
@@ -920,6 +888,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
         topicForm.setUpdateTopic(topic, true);
         topicForm.setMod(uiTopicContainer.isModerator);
+        topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
       } else {
         warning("UICategory.msg.notCheck");
       }
@@ -1237,10 +1206,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       if (!ForumUtils.isEmpty(topicId)) {
         StringBuffer buffer = new StringBuffer();
         if (topicId.equals("forum")) {
-          buffer.append("ForumNormalIcon//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
+          buffer.append("uiIconUIForms//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
         } else {
           Topic topic = uiTopicContainer.getTopic(topicId);
-          buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topicId);
+          buffer.append("uiIconForumTopic//").append(topic.getTopicName()).append("//").append(topicId);
         }
         String userName = uiTopicContainer.userProfile.getUserId();
         uiTopicContainer.getForumService().saveUserBookmark(userName, buffer.toString(), true);
@@ -1284,6 +1253,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(uiForm.forum.getPath());
       searchForm.setSelectType(Utils.TOPIC);
+      searchForm.setSearchOptionsObjectType(Utils.TOPIC);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

@@ -18,9 +18,9 @@
 				
 		</div>
 			
-	<div class="uiAction uiActionBorder">
-		<button href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></button>
-    </div>	
+		<div class="uiAction uiActionBorder">
+			<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></button>
+	    </div>	
 	</div>
 </div>
 <%uiform.end()%>

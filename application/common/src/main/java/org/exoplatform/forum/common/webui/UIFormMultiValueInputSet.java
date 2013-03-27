@@ -202,7 +202,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List> {
     writer.append("<div class=\"UIFormMultiValueInputSet\" id=\"").append(getId()).append("\">");
     for (int i = 0; i < size; i++) {
       UIFormInputBase uiInput = getChild(i);
-      writer.append("<div class=\"MultiValueContainer\">");
+      writer.append("<div class=\"multiValueContainer\">");
 
       uiInput.setReadOnly(readonly_);
       uiInput.setDisabled(!enable_);
@@ -210,15 +210,16 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List> {
       renderChild(uiInput.getId());
 
       if ((size >= 2) || ((size == 1) && (uiInput.getValue() != null))) {
-        writer.append("<img onclick=\"");
-        writer.append(uiForm.event("Remove", uiInput.getId())).append("\" title=\"").append(rmItem).append("\" alt=\"").append(rmItem).append("\"");
-        writer.append(" class=\"MultiFieldAction Remove16x16Icon\" src=\"/eXoResources/skin/sharedImages/Blank.gif\" />");
+        writer.append("<a class='actionIcon' onclick=\"").append(uiForm.event("Remove", uiInput.getId())).append("\"")
+          .append(" title='").append(rmItem).append("' alt='").append(rmItem).append("'")
+          .append(" rel='tooltip' data-placement='bottom'>");
+        writer.append("<i class='uiIconDelete uiIconLightGray'></i></a>");
       }
       if (i == size - 1) {
-
-        writer.append("<img onclick=\"");
-        writer.append(uiForm.event("Add", getId())).append("\" title=\"").append(addItem).append("\" alt=\"").append(addItem).append("\"");
-        writer.append(" class=\"MultiFieldAction AddNewNodeIcon\" src=\"/eXoResources/skin/sharedImages/Blank.gif\" />");
+        writer.append("<a class='actionIcon' onclick=\"").append(uiForm.event("Add", getId())).append("\"")
+          .append(" title='").append(addItem).append("' alt='").append(addItem).append("'")
+          .append(" rel='tooltip' data-placement='bottom'>");
+        writer.append("<i class='uiIconAddIcon uiIconLightGray'></i></a>");
       }
       writer.append("</div>");
     }

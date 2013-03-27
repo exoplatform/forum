@@ -11,6 +11,7 @@
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         UIForumPortlet.initShowUserInfo();
+        UIForumPortlet.disableOnClickMenu('SearchForm');
         UIForumPortlet.initTooltip();
       }
       utils.onResize(UIForumPortlet.resizeCallback);
@@ -20,6 +21,13 @@
           $(this).parents('.dropdown').removeClass('open');
         })
       });
+    },
+    
+    disableOnClickMenu : function (id) {
+      var jportlet = findId(UIForumPortlet.id);
+      if(id != null) {
+        jportlet.find('#'+id).off('click mousedown mouseover').on('click mousedown mouseover', utils.cancelEvent);
+      }
     },
 
     initShowUserInfo : function(id) {
@@ -231,30 +239,20 @@
 
     visibleAction : function(id) {
       var parent = findId(id);
-      var addCategory = parent.find('div.AddCategory:first');
+      var addCategory = parent.find('#AddCategory');
       if (addCategory.exists()) {
-        var addForum = parent.find('div.AddForum:first');
+        addCategory = addCategory.find('a:first');
+        var addForum = parent.find('#AddForum').find('a:first');
         var isIE = document.all ? true : false;
         if ($("#UICategories").exists()) {
-          addCategory.attr('class', "Icon AddCategory");
-          addForum.attr('class', "Icon AddForum");
+          addCategory.attr('class', "actionIcon");//disabled
+          addForum.attr('class', "actionIcon");
         } else if ($("#UICategory").exists()) {
-          addCategory.attr('class', "Icon AddCategory DisableAction");
-          addForum.attr('class', "Icon AddForum");
-          if (isIE)
-            addCategory.find(':first-child').attr('href', "javascript:void(0);");
-          else
-            addCategory.children().eq(1).attr('href', "javascript:void(0);");
+          addCategory.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
+          addForum.attr('class', "actionIcon");
         } else {
-          addCategory.attr('class', "Icon AddCategory DisableAction");
-          addForum.attr('class', "Icon AddForum DisableAction");
-          if (isIE) {
-            addCategory.find(':first-child').attr('href', "javascript:void(0);");
-            addForum.find(':first-child').attr('href', "javascript:void(0);");
-          } else {
-            addCategory.children().eq(1).attr('href', "javascript:void(0);");
-            addForum.children().eq(1).attr('href', "javascript:void(0);");
-          }
+          addCategory.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
+          addForum.attr('class', "btn actionIcon disabled").attr('href', "javascript:void(0);");
         }
       }
     },
@@ -627,7 +625,7 @@
     },
 
     showImage : function() {
-      UIForumPortlet.showPicture($(this).attr('src'));
+      UIForumPortlet.showPicture(this);
     },
 
     resetFielForm : function(idElm) {
@@ -653,7 +651,9 @@
       var itemmenuRSS = popupContainer.find('a.rssfeed:first');
       if (!itemmenuWatching.exists() || !itemmenuBookMark.exists())
         return;
-      var labelWatchings = String(itemmenuWatching.html()).split(";");
+      var cloneWatching = itemmenuWatching.clone();
+      var iconWatching = $('<div></div>').append(cloneWatching.find('i')).html();
+      var labelWatchings = String(cloneWatching.html()).split(";");
       for ( var i = 0; i < popupContents.length; i++) {
         var popupContent = popupContents.eq(i);
         var action = popupContent.attr('data-bookmark');
@@ -668,9 +668,9 @@
             if (actions[1].indexOf("unwatch,") >= 0) {
               actions[1] = actions[1].replace('unwatch,', '');
             }
-            itemmenuWatching.html(labelWatchings[1]);
+            itemmenuWatching.html(iconWatching + labelWatchings[1]);
           } else {
-            itemmenuWatching.html(labelWatchings[0]);
+            itemmenuWatching.html(iconWatching + labelWatchings[0]);
           }
           itemmenuWatching.attr('href', actions[1]);
           if (itemmenuRSS.exists()) {
@@ -974,23 +974,27 @@
       }
     },
 
-    submitSearch : function(id) {
-      var parentElm = document.getElementById(id);
-      if (parentElm) {
-        parentElm.onkeydown = UIForumPortlet.submitOnKey;
-      }
-    },
-
-    submitOnKey : function(event) {
-      var key = utils.getKeynum(event);
-      if (key == 13) {
-        var searchLinkElm = $(this).find('a.SearchLink');
-        if (searchLinkElm.exists()) {
-          var link = String(searchLinkElm.attr('href')).replace("javascript:", "");
-          eval(link);
-          utils.cancelEvent(event);
-          return false;
-        }
+    submitOnKey : function(id) {
+      var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
+      if (parentElm.exists()) {
+        parentElm.on('keydown', function(evt) {
+          var key = utils.getKeynum(evt);
+          if (key == 13) {
+            var searchLinkElm = $(this).find('.actionSubmitLink');
+            if (searchLinkElm.exists()) {
+              var link = "";
+              if(searchLinkElm.is('a')) {
+                link = String(searchLinkElm.attr('href')).replace('javascript:', '');
+              } else {
+                link = String(searchLinkElm.attr('data-link')).replace('javascript:', '');
+              }
+              eval(link);
+              utils.cancelEvent(evt);
+              evt.preventDefault();
+            }
+            return false;
+          }
+        });
       }
     },
 
@@ -1007,4 +1011,4 @@
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
   return UIForumPortlet;
-})(maskLayer, contextMenu, utils, gj, window, document);
+})(forumMaskLayer, forumContextMenu, forumUtils, gj, window, document);

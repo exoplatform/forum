@@ -72,6 +72,16 @@ public interface FAQService extends FAQServiceLegacy {
    * @see     list category
    */
   public void saveCategory(String parentId, Category cat, boolean isAddNew);
+  
+  
+  /**
+   * This method to build category tree.
+   * 
+   * @param categoryId
+   * @return the CategoryTree
+   * @throws Exception
+   */
+  CategoryTree buildCategoryTree(String categoryId) throws Exception;
 
   /**
    * This method should change view of category

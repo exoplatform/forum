@@ -134,6 +134,8 @@ public interface DataStorage {
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
 
   Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception;
+  
+  Topic getTopicSummary(String topicPath);
 
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 

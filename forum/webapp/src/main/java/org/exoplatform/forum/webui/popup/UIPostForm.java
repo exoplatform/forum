@@ -49,7 +49,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
@@ -70,7 +69,6 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
       @EventConfig(listeners = UIPostForm.AttachmentActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.SelectIconActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE)
     }
 )
@@ -92,8 +90,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   final static public String    FIELD_ORIGINALLY       = "Originally";
 
   public static final String    FIELD_THREADCONTEN_TAB = "ThreadContent";
-
-  public static final String    FIELD_THREADICON_TAB   = "IconAndSmiley";
 
   public static String          STR_RE                 = "";
 
@@ -133,6 +129,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
+    formWYSIWYGInput.setWidth("92%");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);
@@ -143,12 +140,9 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     threadContent.setActionAddItem("Attachment");
     threadContent.setLabelActionAddItem(getLabel("Attachment"));
 
-    UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB);
-    inputIconSelector.setSelectedIcon("IconsView");
-
     addUIFormInput(threadContent);
-    addUIFormInput(inputIconSelector);
     this.setActions(new String[] { "PreviewPost", "SubmitPost", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   protected boolean tabIsSelected(int tabId) {
@@ -232,10 +226,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
         String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
-        getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else if (isPP) {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
-        getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else {// edit
         editReason.setRendered(true);
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(post.getName()));
@@ -244,12 +236,10 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           this.refreshUploadFileList();
         }
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
-        getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
       }
     } else {
       if (!isQuote) {// reply
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
-        getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       }
     }
   }
@@ -295,8 +285,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         }
         post.setModifiedBy(userName);
         post.setRemoteAddr(ForumUtils.EMPTY_STR);
-        UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-        post.setIcon(uiIconSelector.getSelectedIcon());
+        post.setIcon("uiIconForumTopic uiIconForumLightGray");
         post.setIsApproved(false);
         post.setAttachments(uiForm.getAttachFileList());
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
@@ -399,8 +388,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             post.setMessage(message);
             post.setOwner(userName);
             post.setCreatedDate(new Date());
-            UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-            post.setIcon(uiIconSelector.getSelectedIcon());
+            post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());
             post.setIsWaiting(isOffend);
             post.setLink(link);
@@ -540,16 +528,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       UIForumInputWithActions threadContent = uiPostForm.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.setActionField(FIELD_ATTACHMENTS, uiPostForm.getUploadFileList());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPostForm);
-    }
-  }
-
-  static public class SelectIconActionListener extends BaseEventListener<UIPostForm> {
-    public void onEvent(Event<UIPostForm> event, UIPostForm postForm, String iconName) throws Exception {
-      UIFormInputIconSelector iconSelector = postForm.getChild(UIFormInputIconSelector.class);
-      if (!iconSelector.getValue().equals(iconName)) {
-        iconSelector.setSelectedIcon(iconName);
-        event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent());
-      }
     }
   }
 

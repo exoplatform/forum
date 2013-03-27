@@ -1,13 +1,10 @@
 <% 
 	import org.exoplatform.forum.ForumUtils;
-  String [] scripts = ["eXo.forum.UIForumPortlet.submitSearch('"+uicomponent.id+"') ;"];
-  ForumUtils.addScripts(null, null, scripts);
+  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;");
 %>
 <div class="uiSearchInput">
   <% uiform.begin() %>  
-	<div>
-		<a class="AdvancedSearch" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
-		<a class="SearchLink" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
+	<div class="actionSubmitLink" data-link="<%=uicomponent.event("Search");%>">
 		<%  
 			uiform.renderChildren() ;
 		%>

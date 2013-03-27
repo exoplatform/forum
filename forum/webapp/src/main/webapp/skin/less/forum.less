@@ -9,9 +9,13 @@
 @import "uiForumContainer/Style.less";
 @import "uiTopicDetail/Style.less";
 @import "uiTopicPoll/Style.less";
+@import "uiSearchForm/Style.less";
 @import "popup/uiViewPost/Style.less";
 @import "popup/uiViewMemberProfile/Style.less";
+@import "popup/uiPrivateMessageForm/Style.less";
+@import "popup/uiModeratorManagementForm/Style.less";
 @import "popup/Style.less";
+
 .rounded-corners-top{
 	.border-radius(@baseBorderRadius @baseBorderRadius 0 0);
 	background: @grayWhiteSmoke;
@@ -20,9 +24,12 @@
 	border-bottom: none;
 	text-align: left;
 }
-.uiGrid.table tr{
-	th {
-		background-color: #f8f8f8;
-		border-bottom: solid 1px #e6e6e6;
+
+.uiForumPortlet{
+	.uiGrid.table caption + thead tr{
+		th {
+			background-color: #f8f8f8;
+			border-bottom: solid 1px #e6e6e6;
+		}
 	}
 }

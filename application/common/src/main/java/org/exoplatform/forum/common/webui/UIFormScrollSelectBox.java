@@ -158,7 +158,7 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     String clazzMaxSize = (options_.size() > displayNumber_) ? " scroll-menu" : "";
 
     Writer w = context.getWriter();
-    w.write("<div class=\"uiFormScrollSelectBox\" id=\"ScrollSelect");
+    w.write("<div id=\"ScrollSelect");
     w.write(getId());
     w.write("\" ");
     renderHTMLAttributes(w);
@@ -190,16 +190,21 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     w.write("\"></div>\n");
 
     //
-    String clazzDisable = (isDisabled()) ? "disabled " : "";
-    w.write("<div class=\"uiFormScrollMenu " + clazzDisable + "ClearFix\" style=\"position:relative\" ");
+    String clazzDisable = (isDisabled()) ? "disabled " : " ";
+    w.write("<div class=\"uiFormScrollMenu btn-group uiDropdownWithIcon" + clazzDisable + "clearfix\" ");
     renderHTMLAttributes(w);
     w.write(">\n");
-    w.write("  <span>");
+    
+    w.write("	<div class=\"btn dropdown-toggle\">\n");
+    w.write("		<span>");
     w.write(getSelectedLabel());
-    w.write("  </span>\n");
-    w.write("  <div class=\"rightArrow\"></div>\n");
-    w.write("  <div class=\"optionMenu" + clazzMaxSize + "\" style=\"position:absolute; visibility:hidden\">\n");
-    w.write("    <ul class=\"option-list\">\n");
+    w.write("		</span>\n");
+    w.write("		<span class=\"spiter\"></span>\n");
+    w.write("		<span class=\"caret\"></span>\n");
+    w.write("  </div>\n");
+    
+    w.write("  <div class=\"optionMenu open" + clazzMaxSize + "\" style=\"position:absolute; visibility:hidden\">\n");
+    w.write("    <ul class=\"option-list dropdown-menu\">\n");
 
     for (SelectItemOption<String> item : options_) {
       String label = item.getLabel();
@@ -210,15 +215,18 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
 
       String value = item.getValue();
       value = HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value);
+
+
       if (item.isSelected()) {
-        w.write("      <li data-selected=\"true\" class=\"option selected\" data-value=\"");
+    	  w.write("      <li data-selected=\"true\" class=\"option\" data-value=\"" + value + "\">");
+    	  w.write("        <a class=\"selected\" href=\"javascript:void(0);\">\n");
       } else {
-        w.write("      <li data-selected=\"false\" class=\"option\" data-value=\"");
+    	  w.write("      <li class=\"option\" data-value=\"" + value + "\">");
+    	  w.write("        <a href=\"javascript:void(0);\">\n");
       }
-      w.write(value);
-      w.write("\">");
 
       w.write(label);
+      w.write("</a>\n");
       w.write("</li>\n");
     }
 

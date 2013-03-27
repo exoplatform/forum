@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
@@ -49,6 +50,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     events = {
       @EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
       @EventConfig(listeners = UIForumListSearch.ChangeNumberItemActionListener.class),
+      @EventConfig(listeners = UIForumListSearch.AdvancedSearchActionListener.class),
       @EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
     }
 )
@@ -180,6 +182,21 @@ public class UIForumListSearch extends BaseForumForm {
         uiForm.displayItemsStorage.put(userId, vl);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+    }
+  }
+  
+  static public class AdvancedSearchActionListener extends EventListener<UIForumListSearch> {
+    public void execute(Event<UIForumListSearch> event) throws Exception {
+      UIForumListSearch uiForm = event.getSource();
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
+      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
+      UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
+      searchForm.setUserProfile(forumPortlet.getUserProfile());
+      searchForm.setPath(ForumUtils.EMPTY_STR);
+      searchForm.setSelectType(Utils.CATEGORY);
+      searchForm.setSearchOptionsObjectType(Utils.CATEGORY);
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 }

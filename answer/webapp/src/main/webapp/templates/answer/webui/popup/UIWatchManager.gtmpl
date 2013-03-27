@@ -2,18 +2,15 @@
 	import org.exoplatform.faq.service.Watch ;
 %>
 
-<div class="UIWatchManager">
+<div class="uiWatchManager">
 		<% uiform.begin() %>
-		<div class="UIForm">
- 			<div class="UIHorizontalLayout">
- 				<div class="UIPermissionManager">
- 					<div class="UIPermissionInfo">
- 						<table class="UIGrid">
+		<div class="resizable">
+ 						<table class="uiGrid table table-hover table-striped">
  							<thead>
  								<tr>
 	 								<th><%= _ctx.appRes("UIWatchManager.label.user"); %></th>
 	 								<th><%= _ctx.appRes("UIWatchManager.label.email"); %></th>
-	 								<th style="width:85px;"><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
+	 								<th class="center"><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
  								</tr>
  							</thead>
  							<tbody>
@@ -42,20 +39,20 @@
 		 									<%}
 		 										%>
 		 									</td>
-		 									<td>
+		 									<td class="actionContainer center">
 		 										<%		 										
 						 							String linkCurrent = uicomponent.event("OpenCategory", categoryId)
 						 						%>
-	 											<a onclick="$linkCurrent" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="LinkWatchIcon ActionIcon"><span></span></a>
-	 											<a onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="EditWatchIcon ActionIcon"><span></span></a>
-	 											<a onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="DeleteWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkCurrent" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="actionIcon"><i class="uiIconWatch uiIconLightGray"></i></a>
+	 											<a onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="actionIcon"><i class="uiIconEdit uiIconLightGray"></i></a>
+	 											<a onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="actionIcon"><i class="uiIconTrash uiIconLightGray"></i></a>
 		 									</td>
 		 								</tr>
 	 								<% 
 	 									}
 	 								} else {
 	 									   %>
-		 							<tr class="EvenRow">
+		 							<tr>
 										<td class="Tdbox" colspan="3" align="center"><%= _ctx.appRes("UIWatchManager.title.no-matches"); %></td>
 		  						</tr>
 								<%}%>
@@ -64,19 +61,15 @@
  						<% 
  							long totalPages = uicomponent.getTotalpages("LIST_EMAILS_WATCH") ;
 					    if(totalPages > 1) {
-					   %>
- 							<div style="overflow:auto;" class="ClearFix">
-								<% uicomponent.renderChild(uicomponent.LIST_EMAILS_WATCH) ; %>
-
-							</div>
+					   %> 							
+						<% uicomponent.renderChild(uicomponent.LIST_EMAILS_WATCH) ; %>
+							
 					<% } %>
- 					</div>
- 				</div>
- 			</div>
  		</div>
-		 <div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("EditEmail", uicomponent.ADD);%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIWatchManager.title.add-watch");%></a>
-    </div>
+		 <div class="uiAction uiActionBorder">
+		 
+	      <button type="button" onclick="<%=uicomponent.event("EditEmail", uicomponent.ADD);%>" class="btn"><%=_ctx.appRes("UIWatchManager.title.add-watch");%></button>
+	      <button type="button" onclick="<%=uicomponent.event("Cancel");%>" class="btn"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></button>
+	    </div>
 		<%uiform.end()%>
 </div>

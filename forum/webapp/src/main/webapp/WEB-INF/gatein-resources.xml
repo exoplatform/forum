@@ -60,20 +60,20 @@
       <module>uiForm</module>
     </depends>
     <depends>
-      <module>MaskLayerControl</module>
-      <as>maskLayer</as>
+      <module>ForumMaskLayer</module>
+      <as>forumMaskLayer</as>
     </depends>
     <depends>
-      <module>UIContextMenu</module>
-      <as>contextMenu</as>
+      <module>UIForumContextMenu</module>
+      <as>forumContextMenu</as>
     </depends>
     <depends>
       <module>ForumCheckBoxManager</module>
-      <as>checkBoxManager</as>
+      <as>forumCheckBoxManager</as>
     </depends>
     <depends>
       <module>ForumUtils</module>
-      <as>utils</as>
+      <as>forumUtils</as>
     </depends>
     <depends>
       <module>popupCategory</module>

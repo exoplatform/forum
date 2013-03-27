@@ -455,6 +455,8 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public Forum removeForum(String categoryId, String forumId) throws Exception {
     List<Topic> listTopics = getTopics(categoryId, forumId);
+    if (listTopics == null)
+      return null;
     for (Topic topic : listTopics) {
       String topicId = topic.getId();
       String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
@@ -601,8 +603,15 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public Topic getTopicSummary(String topicPath) throws Exception {
+  public Topic getLastPostOfForum(String topicPath) throws Exception {
     return storage.getTopicSummary(topicPath, true);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Topic getTopicSummary(String topicPath) throws Exception {
+    return storage.getTopicSummary(topicPath);
   }
 
   /**
@@ -660,13 +669,16 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public Topic removeTopic(String categoryId, String forumId, String topicId) {
+  public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
     String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
-    Topic topic = storage.removeTopic(categoryId, forumId, topicId);
+    Topic topic = getTopic(categoryId, forumId, topicId, "");
+    String pollActivityId = null;
+    if (topic.getIsPoll())
+      pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+    topic = storage.removeTopic(categoryId, forumId, topicId);
     for (ForumEventLifeCycle f : listeners_) {
       try {
-        if (topic.getIsPoll()) {
-          String pollActivityId = getActivityIdForOwnerPath(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(topicId.replace(Utils.TOPIC, Utils.POLL)));
+        if (pollActivityId != null) {
           f.removeActivity(pollActivityId);
         }
         f.removeActivity(topicActivityId);

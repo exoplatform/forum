@@ -460,6 +460,8 @@ public class UtilsTestCase extends TestCase {
   
   public void testGetCategoryId() {
     assertEquals("forumCategorya77608b97f0001012e0f6c254a761b67",
+                 Utils.getCategoryId("forumCategorya77608b97f0001012e0f6c254a761b67"));
+    assertEquals("forumCategorya77608b97f0001012e0f6c254a761b67",
                  Utils.getCategoryId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));
     assertEquals("forumCategorya779f0d57f00010108ac0b087a59082f",
                  Utils.getCategoryId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00"));
@@ -478,6 +480,8 @@ public class UtilsTestCase extends TestCase {
 
   public void testGetForumId() {
     assertEquals("foruma77608da7f0001017c1031ba8c6197c2",
+                 Utils.getForumId("foruma77608da7f0001017c1031ba8c6197c2"));
+    assertEquals("foruma77608da7f0001017c1031ba8c6197c2",
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77608b97f0001012e0f6c254a761b67/foruma77608da7f0001017c1031ba8c6197c2"));
     assertEquals("foruma779f0ea7f00010162d38dbc5ae76721",
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00"));
@@ -492,5 +496,21 @@ public class UtilsTestCase extends TestCase {
                  Utils.getForumPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00"));
     assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9",
                  Utils.getForumPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
+  }
+
+  public void testGetTopicId() {
+    assertEquals("topicx77608da7f0001017c1031ba8c6197c2",
+                 Utils.getTopicId("topicx77608da7f0001017c1031ba8c6197c2"));
+    assertEquals("topicx77608da7f0001017c1031ba8c6197c2",
+                 Utils.getTopicId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topicx77608da7f0001017c1031ba8c6197c2"));
+    assertEquals("topicx77608da7f0001017c1031ba8c6197c2",
+                 Utils.getTopicId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topicx77608da7f0001017c1031ba8c6197c2/posta77c1c237f00010145419cee3ac29fe5"));
+  }
+  
+  public void testGetTopicPath() {
+    assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00",
+                 Utils.getTopicPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00"));
+    assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484",
+                 Utils.getTopicPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
 }

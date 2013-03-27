@@ -38,11 +38,10 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIPopupComponent;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormTabPane;
 
 /**
  * Created by The eXo Platform SARL
@@ -51,15 +50,14 @@ import org.exoplatform.webui.form.UIFormTabPane;
  * Oct 13, 2008, 11:30:44 AM
  */
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UIUserWatchManager.gtmpl", 
     events = {
         @EventConfig(listeners = UIUserWatchManager.LinkActionListener.class), 
-        @EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class, confirm = "UIUserWatchManager.msg.confirm-unwatch-category"), 
-        @EventConfig(listeners = UIUserWatchManager.CancelActionListener.class) 
+        @EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class, 
+                      confirm = "UIUserWatchManager.msg.confirm-unwatch-category") 
     }
 )
-public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponent {
+public class UIUserWatchManager extends UIContainer {
   private FAQSetting            faqSetting_            = null;
 
   protected UIAnswersPageIterator pageIteratorCate;
@@ -78,31 +76,19 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
 
   private String                LIST_CATES_WATCHED     = "listCatesWatch";
 
-  private int                   tabSelect              = 0;
-
   private String                emailAddress;
 
-  static private Log            log                    = ExoLogger.getLogger(UIWatchManager.class);
+  static private Log            LOG                    = ExoLogger.getLogger(UIWatchManager.class);
 
-  // private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
-  private static FAQService     faqService_            = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+  private static FAQService     faqService_;
 
   public UIUserWatchManager() throws Exception {
-    super("UIUswerWatchManager");
+    setId("UIUswerWatchManager");
     addChild(UIAnswersPageIterator.class, null, LIST_QUESTIONS_WATCHED);
     addChild(UIAnswersPageIterator.class, null, LIST_CATES_WATCHED);
     emailAddress = FAQUtils.getEmailUser(null);
-    this.setActions(new String[] { "Cancel" });
-  }
-
-  public void activate() {
-  }
-
-  public void deActivate() {
-  }
-
-  public int getTabSelect() {
-    return tabSelect;
+    faqService_ = (FAQService) PortalContainer.getInstance()
+                                              .getComponentInstanceOfType(FAQService.class);
   }
 
   public String getEmailAddress() {
@@ -158,7 +144,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       }
       return listCategories;
     } catch (Exception e) {
-      log.error("Fail to get list of category watch: ", e);
+      LOG.error("Fail to get list of category watch: ", e);
       return null;
     }
   }
@@ -186,7 +172,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       }
       return listQuestion_;
     } catch (Exception e) {
-      log.error("fail to get list of question watch: " + e.getMessage(), e);
+      LOG.error("fail to get list of question watch: " + e.getMessage(), e);
     }
     return null;
   }
@@ -196,7 +182,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
     try {
       return pageIterator.getInfoPage().get(3);
     } catch (Exception e) {
-      log.debug("Getting total page fail: ", e);
+      LOG.debug("Getting total page fail: ", e);
       return 1;
     }
   }
@@ -226,7 +212,6 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
       UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
-      uiPortlet.cancelAction();
     }
   }
 
@@ -239,23 +224,10 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
                                                                                        null,
                                                                                        ApplicationMessage.WARNING));        
-        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
         return;
       }
       faqService_.unWatchCategory(categoryId, FAQUtils.getCurrentUser());
       event.getRequestContext().addUIComponentToUpdateByAjax(watchManager);
-    }
-  }
-
-  static public class CancelActionListener extends EventListener<UIUserWatchManager> {
-    public void execute(Event<UIUserWatchManager> event) throws Exception {
-      UIUserWatchManager watchManager = event.getSource();
-      UIPopupAction uiPopupAction = watchManager.getAncestorOfType(UIPopupAction.class);
-      uiPopupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
     }
   }
 }

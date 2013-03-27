@@ -1,0 +1,22 @@
+<div id="$uicomponent.id">
+<%
+  String avatarUrl = uicomponent.getAvatarUrl();
+%>
+    <div class="avatarLarge">
+       <img src="$avatarUrl" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
+    </div>
+    <div class="btn-group" style="margin-top:15px;">
+      <button type="button" onclick="<%=uicomponent.event("UpdateAvatar")%>" class="btn btn-mini">
+        <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
+      </button>
+      <%
+      if(uicomponent.isDefaultAvatar() == false){
+      %>
+      <button type="button" onclick="<%=uicomponent.event("SetDeaultAvatar")%>" class="btn btn-mini">
+        <%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
+      </button>
+      <%
+      }%>
+    </div>
+
+</div>

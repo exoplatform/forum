@@ -5,7 +5,7 @@
     xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
 
   <portlet-skin>
-    <application-name>answer</application-name>
+    <application-name>faq</application-name>
     <portlet-name>AnswersPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
@@ -13,7 +13,7 @@
   </portlet-skin>
 
   <portlet-skin>
-    <application-name>answer</application-name>
+    <application-name>faq</application-name>
     <portlet-name>FAQPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
@@ -27,7 +27,7 @@
     </script>
    <depends>
       <module>ForumUtils</module>
-      <as>utils</as>
+      <as>forumUtils</as>
     </depends>
     <depends>
       <module>webui-ext</module>
@@ -54,11 +54,11 @@
     </script>
     <depends>
       <module>ForumUtils</module>
-      <as>utils</as>
+      <as>forumUtils</as>
     </depends>
     <depends>
       <module>ForumEventManager</module>
-      <as>eventManager</as>
+      <as>forumEventManager</as>
     </depends>
     <depends>
       <module>jquery</module>
@@ -73,7 +73,7 @@
     </script>
     <depends>
       <module>ForumUtils</module>
-      <as>utils</as>
+      <as>forumUtils</as>
     </depends>
     <depends>
       <module>jquery</module>
@@ -91,23 +91,23 @@
     </depends>
     <depends>
       <module>AnswerDragDrop</module>
-      <as>dragDrop</as>
+      <as>answerDragDrop</as>
     </depends>
     <depends>
       <module>ForumMaskLayer</module>
-      <as>maskLayer</as>
+      <as>forumMaskLayer</as>
     </depends>
     <depends>
-      <module>UIContextMenu</module>
-      <as>contextMenu</as>
+      <module>UIForumContextMenu</module>
+      <as>forumContextMenu</as>
     </depends>
     <depends>
       <module>ForumCheckBoxManager</module>
-      <as>checkBoxManager</as>
+      <as>forumCheckBoxManager</as>
     </depends>
     <depends>
       <module>ForumUtils</module>
-      <as>utils</as>
+      <as>forumUtils</as>
     </depends>
     <depends>
       <module>bts_button</module>

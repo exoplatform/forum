@@ -1,6 +1,6 @@
 <%
 	import org.exoplatform.forum.service.UserProfile;
-  import org.exoplatform.forum.service.Topic ;
+    import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.common.user.CommonContact;
@@ -15,224 +15,303 @@
             ];
   ForumUtils.addScripts(null, null, scripts);
   ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
-%>
-<% uiform.begin() %>
-<div class="UIViewTopic UITopicDetail resizable" id="SizeImage">
-<%	
+
 	uicomponent.initPage() ;
 	Topic topic = uicomponent.getTopic();
 	List posts = uicomponent.getPostPageList();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	boolean isModeratePost = topic.getIsModeratePost() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
-	<div class="ViewTopicContainer">
-		<div class="ViewTopicPageIterator ClearFix">
-			<% 
-			if(uicomponent.getIsRenderIter()) {
-				uicomponent.renderChild(UIForumPageIterator.class) ;
+
+<div class="uiTopicDetail resizable">
+<% uiform.begin() %>
+
+	<% 
+		if(uicomponent.getIsRenderIter()) {
+			uicomponent.renderChild(UIForumPageIterator.class) ;
+		%>
+	<%} %>
+<!-- Start PostsInThreadContainer -->
+
+  <div class="uiBox containerTopicDetail">
+    
+    
+<!-- Start ContentContainer -->
+    <%
+    
+    if(posts != null && posts.size() > 0) {
+      String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
+      String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+      String shortDateFormat = userProfile.getShortDateFormat() ;
+      for(post in posts) {
+        String postId = post.getId();
+        String owner = post.getOwner() ;
+        CommonContact contact = ForumSessionUtils.getPersonalContact(owner) ;
+        String location = "" ;
+        boolean isCity = false;
+        if(contact != null) {
+          if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
+          if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
+            if(isCity)location = location + ", ";
+            location = location + contact.getCountry() ;
+          }
+        }
+        UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+        screenName = userInfo.getScreenName() ;
+        String viewScreenName = uicomponent.getShortScreenName(screenName);
+        String classIconPost = post.getIcon() ;
+        if(ForumUtils.isEmpty(classIconPost)) 
+          classIconPost = "NormalTopicIcon" ;
+        String namePost = post.getName() ;
+        String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
+        String message = uicomponent.renderPost(post) ;
+        String editBy = post.getModifiedBy() ;
+		
+        List attachments = post.getAttachments() ;
+        String idMessage = "Id" + postId.substring(15);
+        String joinDate = "";
+        Date joinDate_ = userInfo.getJoinedDate();
+        if(joinDate_ != null) {
+          joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_, shortDateFormat, setTime) ;
+        }
+        String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
+        boolean isAnd = false ;
+        if(post.getUserPrivate().length > 1){
+          alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
+          isAnd = true;
+        }
+        if(post.getIsHidden()) {
+          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
+          alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
+          isAnd = true;
+        }
+        if(post.getIsWaiting()) {
+          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
+          alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
+          isAnd = true;
+        }
+        if(isModeratePost) {
+          if(!post.getIsApproved()) {
+            if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
+            else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
+            isAnd = true;
+          }
+        }
+        if(isAnd) alert = alert + "!</span>) "
+        else alert = " " ;
+    %>
+    
+		<div class="contentTopicDetail clearfix" id="$postId">
+  <!-- Start MemberContainer -->
+			<div class="memberContainer pull-left">
+			  
+			<%  String userSmile = "uiIconForumColorOffline";
+				String titleSmile = "Offline" ;
+				if(uicomponent.isOnline(owner)) {
+				   userSmile = "uiIconForumColorOnline";
+				   titleSmile = "Online";
+				}
 			%>
-			<%} %>
-		</div>
-	  <div class="ImageContentContainer">
-	<%	
-		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
-		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-		String screenName ="";
-		for(post in posts) {
-			String owner = post.getOwner() ;
-			CommonContact contact = ForumSessionUtils.getPersonalContact(owner) ;
-			String location = "" ;
-			boolean isCity = false;
-			if(contact != null) {
-				if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
-				if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
-					if(isCity)location = location + ", ";
-					location = location + contact.getCountry() ;
-				}
-			}
-			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
-			screenName = userInfo.getScreenName();
-			String viewScreenName = uicomponent.getScreenName(screenName);
-			String classIconPost = post.getIcon() ;
-			if(ForumUtils.isEmpty(classIconPost)) 
-				classIconPost = "NormalTopicIcon" ;
-			String namePost = post.getName() ;
-			String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
-			String message = uicomponent.renderPost(post) ;
-			
-			String editBy = post.getModifiedBy() ;
-			String editDate ;
-			if(!ForumUtils.isEmpty(editBy)) {
-				editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
-			}
-			
-			String idMessage = "Id" + post.getId().substring(15);
-			Date joinedDate =  userInfo.getJoinedDate();
-			String joinDate = "";
-			if(joinedDate != null) joinDate = TimeConvertUtils.convertXTimeAgo(joinedDate, shortDateFormat, setTime) ;
-			String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
-			boolean isAnd = false ;
-			if(post.getIsHidden()) {
-				alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
-				isAnd = true;
-			}
-			if(post.getUserPrivate().length > 1){
-				if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPrivate");
-				else alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
-				isAnd = true;
-			}
-			if(isModeratePost) {
-				if(!post.getIsApproved()) {
-					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
-					else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
-					isAnd = true;
-				}
-			}
-			if(isAnd) alert = alert + "!</span>) "
-			else alert = " " ;
-	%>
-			<table class="TablePost ContentContainer" cellspacing="0" border="0" cellpadding="0" id="<%=post.getId();%>">
-				<tbody>
-					<tr>
-<!-- Start MemberContainer -->
-						<td class="MemberContainer">
-							<div class="MemberContent">
-							
-								<%	String userSmile = "OfflineIcon";
-										String titleSmile = "Offline" ;
-										if(uicomponent.isOnline(owner)) {
-											 userSmile = "AvailableIcon";
-											 titleSmile = "Online";
-										}
-								%>
-								<h4 class="State $userSmile" rel="tooltip" data-placement="bottom" title="${screenName}'s $titleSmile">$viewScreenName</h4>
-								<div class="Rank"><%=userInfo.getUserTitle();%></div>
-								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
-									if(isDisplayAvatar) {
-								%>
-								<img src="<%=uiform.getAvatarUrl(owner);%>" class="ImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-								<% } %>
-								<div class="InfoMember">
-									<span><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</span>
-									<% long totalPost = userInfo.getTotalPost();
-										if(totalPost > 0) {
-											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(userInfo.getLastPostDate(), shortDateFormat, setTime) ;
-									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</span>
-									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
-									<% } else {%>
-									<span><strong>$owner</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></span>
-									<% } 
-									 if(!ForumUtils.isEmpty(location)) {
-									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</span>
-									<%}
-										String lastLoginUser = TimeConvertUtils.convertXTimeAgo(userInfo.getLastLoginDate(), shortDateFormat, setTime) ;
-									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</span>
-								</div>
-							</div>
-						</td>
 				
-	<!-- End MemberContainer -->
-	<!-- Start PostViewContainer -->
-						<td class="PostViewContainer">
-							<div class="PostViewHeader ClearFix">
-								<h5 class="PostViewIcon $classIconPost FL">$namePost $alert</h5>
-								<div class="PostTime FR">Posted: $createdDate</div>
-							</div>
-							<div class="PostContentContainer">
-						<% 
-							boolean hasAttachment = false ;
-							List attachments = post.getAttachments() ;
-							if(attachments != null && attachments.size() > 0) hasAttachment = true;
-							if(isDisplayAvatar && !hasAttachment) { 
-						%>	
-							<div class="PostContent">
-						<% } else { %>
-							<div class="PostContentNote">
-						<% } %>
-								<div id="$idMessage">$message</div>
-							</div>
-							<% if(hasAttachment) {%>
-							<div class="AttachmentContainer">
-								<h5 class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</h5>
-								<div class="AttachmentContent ClearFix">
-								<% for(attachment in attachments) {
-										 String urlFile = uicomponent.getFileSource(attachment) ;
-										 String titleFile = attachment.getName();
-							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
-								 		 long sizeNumber = attachment.getSize() ;
-								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
-								 		 String typeFile = attachment.mimeType ;
-								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
-								%>
-										<div class="AttachmentBox">
-										<% if(typeFile.indexOf("image") >= 0) {
-										   String attLink = uicomponent.getImageUrl(attachment.getPath());
-										%>
-											<a href="#" class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
-						 					<div class="LabelBox">
-						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
-						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
-						 						<div class="Action">
-						 							<a href="#" class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></a>
-													<a class="Icon Download" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
-						 						</div>
-						 					</div>
-									<% }else { 
-												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
-									%>
-										<div class="LabelBox">
-											<a class="AttachmentIcon ${typeFileIcon}Icon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
-												$fileName
-											</a>
-											<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
-										</div>
-									<% } %>
-									</div>
-								<% } %>
-								</div>
-							</div>
-							<% } %>
-							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-									post.setMessage(userInfo.getSignature());
-									post.setId(uicomponent.SIGNATURE);
-									String signature = uicomponent.renderPost(post);
-							%>
-									<div class="Signature">__________________<br/><%=signature;%></div>
-							<%} %>	
-								
-						</td>
-	<!-- End PostViewContainer-->
-					</tr>
-				</tbody>
-			</table>
-		<% } %>
-	</div>
-		<div class="ViewTopicPageIterator ClearFix">
+				<span class="textTitleProfile">
+					<i class="$userSmile"></i>$viewScreenName
+				</span>
+				<div class="rank"><%=userInfo.getUserTitle();%></div>
+				<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
+				  if(isDisplayAvatar) {
+				%>
+				<div class="avatarXLarge">
+					<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+				</div>
+				<% } %>
+				
+				<div class="infoMember">
+					<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
+				  <% long totalPost = userInfo.getTotalPost();
+					if(totalPost > 0) {
+					   Date lastPostOfUser = userInfo.getLastPostDate() ;
+					   String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
+				  %>
+					<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+					<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
+				  <% } else {%>
+					<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+				  <% } 
+				   if(!ForumUtils.isEmpty(location)) {
+				  %>
+					<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
+				  <%} 
+					Date lastLogin = userInfo.getLastLoginDate();
+					String lastLoginUser = "" ;
+					if(lastLogin != null){
+					  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
+					}
+				  %>
+					<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
+				</div>
+			</div>
+  <!-- End MemberContainer -->
+  <!-- Start PostViewContainer -->
+			<div class="postViewContainer">
+			  
+				<div class="postViewHeader clearfix"> 
+					<div class="postViewTitle pull-left"><i class="$classIconPost"></i>$namePost $alert</div>
+					<div class="pull-right">
+						<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
+					</div>
+				</div>
+			  
+			<div class="postContentContainer">
 			<% 
-			if(uicomponent.getIsRenderIter()) {
-				uicomponent.renderChild(UIForumPageIterator.class) ;
-			%>
-			<%} %>
+			boolean hasAttachment = false ;
+			if(attachments != null && attachments.size() > 0) hasAttachment = true;
+			if(isDisplayAvatar && !hasAttachment) { 
+			%>  
+			  <div class="postContent">
+			<% } else { %>
+			  <div class="postContentNote">
+			<% } %>
+				<div id="$idMessage" class="containerQuote">$message</div>
+			  </div>
+			
+			<!--- Start Attachment   -->
+			  
+			 <% if(hasAttachment) {%>
+			<div class="attachmentContainer">
+				<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
+				
+				<!-- Start Attach Have Images -->
+				
+				<div class="attachmentContentImage clearfix">
+				<% for(attachment in attachments) {
+					 String urlFile = uicomponent.getFileSource(attachment) ;
+					 String titleFile = attachment.getName();
+					 String fileName = ForumUtils.getSubString(titleFile, 30);
+					 long sizeNumber = attachment.getSize() ;
+					 String size = ForumUtils.getSizeFile(sizeNumber) ;
+					 String typeFile = attachment.mimeType ;
+					 String pathAtt = urlFile.replaceAll("&","(omu)");
+				%>
+					
+					<% if(typeFile.indexOf("image") >= 0 && titleFile.indexOf(".psd") < 0) {
+					   String attLink = uicomponent.getImageUrl(attachment.getPath());
+					%>
+					<div class="imageAttachmentBox pull-left">
+						<a class="imgAttach"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
+						
+						<!--
+							<a class="attachmentIcon JPGIcon" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" rel="tooltip" data-placement="bottom" title="$titleFile">$fileName</a>
+							<div class="size"><%=_ctx.appRes(uicomponent.getName() + ".label.Size");%>: ${size}</div>
+						-->
+						<div class="actionAttachImg">
+							<p><i class="uiIconSearch uiIconWhite"></i> <a href="eXo.forum.UIForumPortlet.showPicture('$attLink');"> <%=_ctx.appRes(uicomponent.getName() + ".action.View");%></a></p>
+							<p><i class="uiIconDownload uiIconWhite"></i> <a href="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><%=_ctx.appRes(uicomponent.getName() + ".action.Download");%></a></p>
+						</div>
+					</div>  
+				  <% } %>
+					
+				<% } %>
+				</div>
+				
+				<!-- End Attach Have Images -->
+				
+				<!-- Start Attach File -->
+				
+				<div class="attachmentContent clearfix">
+				<% for(attachment in attachments) {
+					 String urlFile = uicomponent.getFileSource(attachment) ;
+					 String titleFile = attachment.getName();
+					 String fileName = ForumUtils.getSubString(titleFile, 30);
+					 long sizeNumber = attachment.getSize() ;
+					 String size = ForumUtils.getSizeFile(sizeNumber) ;
+					 String typeFile = attachment.mimeType ;
+					 String pathAtt = urlFile.replaceAll("&","(omu)");
+				%>
+					
+					<% if(typeFile.indexOf("image") < 0) {
+					   String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+					%>
+					<div class="otherAttachmentBox">
+						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><i class="uiIcon${typeFileIcon}"></i> $fileName</a>
+						(<%=_ctx.appRes(uicomponent.getName() + ".label.Size");%>: ${size})
+					</div>  
+				  <% } %>
+					
+				<% } %>
+				
+				</div>
+				
+				<!-- End Attach File -->
+				
+			</div>
+			<% } %>
+			
+			
+			<!--- End Attachment   -->
+			  
+			  <%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
+				  post.setMessage(userInfo.getSignature());
+				  post.setId(uicomponent.SIGNATURE);
+				  String signature = uicomponent.renderPost(post);
+			  %>
+				<div class="signature"><span></span><br/>$signature</div>
+			  <%} %>
+			</div>
+				<div class="footPost clearfix">
+				  <%  
+					  if(!ForumUtils.isEmpty(editBy)) {
+					    UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
+					    String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
+			        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
+				  %>
+					<div class="txtLastEdit">
+						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="textTitleProfile">$editByScreeName</span>
+						  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
+						  <%
+							String reason = post.getEditReason() ;
+							if(!ForumUtils.isEmpty(reason)) { 
+							  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+						  %>
+						  <br/>
+						  $reason
+						  <% } %>
+					</div>
+				<% } %>
+					
+				</div>
+				
+			</div>
+<!-- End PostViewContainer -->
+		
+		
 		</div>
+			
+    <% }//end for
+     } 
+	%>
+<!-- End ContentContainer -->
+  </div>  
+<!-- End PostsInThreadContainer -->
+	<div style="margin-bottom: 10px">
+	<% 
+	if(uicomponent.getIsRenderIter()) {
+		uicomponent.renderChild(UIForumPageIterator.class) ;
+		%>
+	<%} %>
 	</div>
+	
+<%uiform.end()%>
+
 </div>
 
-<div class="uiAction">
-  <%  
-          String []actions = uicomponent.getActions();
-          int l = actions.length;
-        %>
-        <div style="width:<%=(l*100)%>px;">
-        <% for(action in actions) { 
-           String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-           String link = uicomponent.event(action) ;
-        %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
-      <%}%>
-      </div>
-    </div>
-<%uiform.end()%>
+<div class="uiAction uiActionBorder">
+
+	<% for(action in uicomponent.getActions()) { 
+	   String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	   String link = uicomponent.event(action) ;
+	%>
+		<button onclick="$link" class="btn" type="button">$actionLabel</button>
+  <%}%>
+
+</div>

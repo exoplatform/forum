@@ -6,62 +6,61 @@
 	import org.exoplatform.forum.service.UserProfile;
 %>
 
-<div class="UIMovePostForm UIMoveTopicForm">
+<div class="uiSelectCategoryForm horizontalLayout">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
-	<div class="UITree ScrollArea">
-		<div class="TreeContainer ParentNode">
-		<%			
-			UserProfile userProfile = uicomponent.getUserProfile();
-			List categories = uicomponent.getCategories(); 
-			for(category in categories) {
-				String display = "display:none;" ;
-				String iconClass = "SmallGrayMinus" ;
-				boolean selectForum = false ;
-				String isShow = "true";
-				String categoryName = category.getCategoryName() ;
-				selectForum = uicomponent.getSelectForum(category.getId()) ;
-				if(selectForum){ 
-					display = "display:block;" ;
-					iconClass = "SmallGrayPlus" ;
-				}
-					List forums =	uicomponent.getForums(category.getId());
-					if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
-		%>
-			<div class="Node $iconClass">
-				<div class="Icon CategoryNormalIcon"><span></span></div>	
-				<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
-					<div class="NodeSelected"><a>$categoryName</a></div> 
-				</div> 			
-				
-				<div class="ChildNodeContainer ParentNode" style="$display">
-				<% 
-					for(forum in forums) {
-						String forumName = forum.getForumName() ;
-						iconClass = "SmallGrayMinus" ;
-						display = "display:none;" ;
-						isShow = "true";
-						selectForum = uicomponent.getSelectForum(forum.getId()) ;
-						if(selectForum){ 
-							display = "display:block;" ;
-							iconClass = "SmallGrayPlus" ;
-						}
-						String classForumIcon = "ThreadsIcon";
-						if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
-						if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
-						boolean isMode = false;
-						isMode = ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()) ;
-					List topics = uicomponent.getTopics(category.getId(), forum.getId(), isMode) ;
-					if(topics.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
-				%>
-					<div class="Node $iconClass">
-						<div class="Icon $classForumIcon"><span></span></div>
-						<div class="NodeLabel"	onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'> 
-							<a>$forumName</a>
-						</div>
-						
-						<div class="ChildNodeContainer" style="$display">
-							<%	
+	<p>Choose a Destination Forum:</p>
+	<div class="uiTrees scrollArea">
+		<div class="treeContainer">
+			<ul class="nodeGroup">
+			<%			
+				UserProfile userProfile = uicomponent.getUserProfile();
+				List categories = uicomponent.getCategories(); 
+				for(category in categories) {
+					String display = "display:none;" ;
+					String iconClass = "SmallGrayMinus" ;
+					boolean selectForum = false ;
+					String isShow = "true";
+					String categoryName = category.getCategoryName() ;
+					selectForum = uicomponent.getSelectForum(category.getId()) ;
+					if(selectForum){ 
+						display = "display:block;" ;
+						iconClass = "SmallGrayPlus" ;
+					}
+						List forums =	uicomponent.getForums(category.getId());
+						if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+			%>
+				<li class="node">
+					<a class="uiIconNode collapseIcon" href="javascript:void(0);">
+						&nbsp;<i class="uiIconCategory uiIconLightGray"></i>$categoryName
+					</a> 			
+					
+					<ul class="nodeGroup">
+					<% 
+						for(forum in forums) {
+							String forumName = forum.getForumName() ;
+							iconClass = "SmallGrayMinus" ;
+							display = "display:none;" ;
+							isShow = "true";
+							selectForum = uicomponent.getSelectForum(forum.getId()) ;
+							if(selectForum){ 
+								display = "display:block;" ;
+								iconClass = "SmallGrayPlus" ;
+							}
+							String classForumIcon = "ThreadsIcon";
+							if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
+							if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
+							boolean isMode = false;
+							isMode = ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()) ;
+						List topics = uicomponent.getTopics(category.getId(), forum.getId(), isMode) ;
+						if(topics.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+					%>
+						<li class="node">
+							<a class="uiIconNode collapseIcon" href="javascript:void(0);"> 
+								<i class="uiIconUIForms uiIconLightGray"></i>$forumName
+							</a>
+							
+							<ul class="nodeGroup">
+								<%	
 								for(topic in topics) {
 									String link = uicomponent.event("Save", topic.getPath()) ;
 									String topicName = topic.getTopicName();
@@ -70,25 +69,25 @@
 									if(topic.getIsClosed())classForumIcon = "ClosePostsIcon";
 									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription()); 
 									titlePost = ForumUtils.getSubString(titlePost, 100);
-							%>
-								<div class="Node">
-									<div class="Icon $classForumIcon"><span></span></div>
-										<div class="NodeLabel"> 
-											<a href="$link" rel="tooltip" data-placement="bottom" title="$titlePost">$topicName</a>
-										</div>
-								</div>
-							 <% } %>
-						</div>
-					</div>
-				<% } %>		
-				</div>
-			</div>
-		<% } %>	
+								%>
+								<li class="node">
+									<div class="lastNode">
+										<a href="$link" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="uiIconForumTopic uiIconForumLightGray"></i> $topicName</a>
+									</div>
+								</li>
+								<% } %>
+							</ul>
+						</li>
+					<% } %>		
+					</ul>
+				</li>
+			<% } %>
+			</ul>
 		 </div>	
 	</div>
 	<div class="uiAction">
   <% String link = uicomponent.event("Cancel") ; %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle"><%=_ctx.appRes("UIMoveForumForm.action.Cancel");%></a>
+      <button onclick="$link" class="btn" type="button"><%=_ctx.appRes("UIMoveForumForm.action.Cancel");%></button>
     </div>
 	<%uiform.end()%>
 </div>

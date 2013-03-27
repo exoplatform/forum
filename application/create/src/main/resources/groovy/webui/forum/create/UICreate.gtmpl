@@ -3,22 +3,20 @@
   boolean hasForum = uiform.hasForum();
 %>
 <style>
-.UICreate .layout {
+.uiCreate .layout {
   margin: <%=((hasForum) ? "5" : "15")%>px;
 }
 </style>
-<div class="UICreate">
+<div class="uiCreate">
   <% uiform.begin() %>
-
     <div class="horizontalLayout layout">
 
-
-      <div class="UIFormInput">
-        <div class="CreateName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
+      <div class="uiFormInput">
+        <div class="createName"><strong><%=_ctx.appRes("UICreateList.label.CreateANew").replace('{1}', uiform.getParStatus()); %></strong></div>
        <% 
          if(hasForum) {
        %>
-        <table class="UIFormGrid">
+        <table>
           <tbody>           
         <% 
           for(field in uiform.getChildren()) { 
@@ -27,14 +25,14 @@
               <tr>
                 <%fieldName = uiform.getLabel(field.getName());%>
                 <%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>                        
-                  <td class="FieldLabel">
+                  <td >
                       <label for="<%=field.getId()%>"><%=fieldName%></label>
                   </td>
-                  <td class="FieldComponent">
+                  <td >
                       <% uiform.renderField(field) %>
                   </td>
                 <%} else {%>
-                  <td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+                  <td  colspan="2"><% uiform.renderField(field) %></td>
                 <%}%>
               </tr>
         <%
@@ -50,8 +48,8 @@
        %>
       </div>
     </div>
-    <center>
-       <div class="uiAction uiActionBorder">
+
+   <div class="uiAction uiActionBorder">
 	  <% for(action in uicomponent.getActions()) { 
 	           String actionLabel = _ctx.appRes("UICreateList.action." + action); 
 	           String link = uicomponent.event(action);
@@ -62,10 +60,10 @@
 	           }
 	        %>
 
-	      <input type="button" onclick="$link" class="$clazz" value="$actionLabel"/>
+	      <a href="javascript:void(0);" onclick="$link" class="$clazz" />$actionLabel</a>
 
 	      <%}%>
         </div>
-    </center>
+
   <%uiform.end()%>
 </div>

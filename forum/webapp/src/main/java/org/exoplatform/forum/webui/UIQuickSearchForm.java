@@ -26,7 +26,6 @@ import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -44,8 +43,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/UIQuickSearchForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIQuickSearchForm.SearchActionListener.class),      
-      @EventConfig(listeners = UIQuickSearchForm.AdvancedSearchActionListener.class)      
+      @EventConfig(listeners = UIQuickSearchForm.SearchActionListener.class)
     }
 )
 public class UIQuickSearchForm extends BaseUIForm {
@@ -101,20 +99,6 @@ public class UIQuickSearchForm extends BaseUIForm {
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         uiForm.warning("UIQuickSearchForm.msg.checkEmpty");
       }
-    }
-  }
-
-  static public class AdvancedSearchActionListener extends EventListener<UIQuickSearchForm> {
-    public void execute(Event<UIQuickSearchForm> event) throws Exception {
-      UIQuickSearchForm uiForm = event.getSource();
-      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
-      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
-      UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
-      searchForm.setUserProfile(forumPortlet.getUserProfile());
-      searchForm.setPath(ForumUtils.EMPTY_STR);
-      searchForm.setSelectType(Utils.CATEGORY);
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 }

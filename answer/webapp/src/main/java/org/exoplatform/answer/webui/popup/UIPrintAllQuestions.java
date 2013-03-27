@@ -56,6 +56,8 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   private String[]     sizes_          = new String[] { "bytes", "KB", "MB" };
 
   private String       categoryId      = null;
+  
+  private Question     question        = null;
 
   protected String     currentUser_;
 
@@ -126,8 +128,9 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     return result;
   }
 
-  public void setCategoryId(String cateId, FAQService service, FAQSetting setting, boolean canEdit) throws Exception {
+  public void setCategoryId(String cateId, FAQService service, FAQSetting setting, boolean canEdit, Question question) throws Exception {
     categoryId = cateId;
+    this.question = question;
     faqService_ = service;
     faqSetting_ = setting;
     viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
@@ -147,10 +150,16 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   }
 
   public List<Question> getListQuestion() {
-    try {
-      return faqService_.getQuestionsByCatetory(categoryId, faqSetting_).getAll();
-    } catch (Exception e) {
-      return new ArrayList<Question>();
+    List<Question> list = new ArrayList<Question>();
+    if (question == null) {
+      try {
+        return faqService_.getQuestionsByCatetory(categoryId, faqSetting_).getAll();
+      } catch (Exception e) {
+        return list;
+      }
+    } else {
+      list.add(question);
+      return list;
     }
   }
 

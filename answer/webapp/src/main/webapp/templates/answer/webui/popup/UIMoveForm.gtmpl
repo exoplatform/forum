@@ -1,0 +1,24 @@
+<%  
+  import org.exoplatform.faq.service.CategoryTree;
+  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+  requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.id + "');");  
+%>
+
+<div class="uiMoveForm $uicomponent.id">
+  <% uiform.begin() %>
+  <div class="form-horizontal resizable">
+      <p><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %></p>
+      <div class="uiTrees scrollArea" style="background: #fff; padding: 15px;">
+        <div class="treeContainer jsContainer">
+        <%
+        print(uicomponent.renderCategoryTree(uicomponent.getCategoryTree()));
+        %>
+        </div>
+      </div>
+
+  </div>
+  <div class="uiAction uiActionBorder">
+      <button type="button" onclick="<%=uicomponent.event("Cancel");%>" class="btn"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel");%></button>
+  </div>
+  <%uiform.end()%>
+</div>

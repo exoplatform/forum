@@ -43,7 +43,6 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -234,6 +233,10 @@ public class ForumUtils {
         className[5] = String.valueOf(star);
     }
     return className;
+  }
+
+  public static String[] getClassIconWithAction() {
+    return new String[] { "uiIconUser uiIconLightGray", "uiIconMembership uiIconLightGray", "uiIconGroup uiIconLightGray" };
   }
 
   public static String getOrderBy(String strOrderBy, String param) {
@@ -592,14 +595,6 @@ public class ForumUtils {
       Date date1 = ((Post) o1).getCreatedDate();
       Date date2 = ((Post) o2).getCreatedDate();
       return date1.compareTo(date2);
-    }
-  }
-
-  static public class SortComparatorDESC implements Comparator<Object> {
-    public int compare(Object o1, Object o2) throws ClassCastException {
-      String str1 = ((TopicType) o1).getName();
-      String str2 = ((TopicType) o2).getName();
-      return str1.compareTo(str2);
     }
   }
 

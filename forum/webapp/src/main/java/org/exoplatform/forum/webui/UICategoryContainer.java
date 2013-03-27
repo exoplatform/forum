@@ -31,18 +31,12 @@ import org.exoplatform.webui.core.UIContainer;
     template = "app:/templates/forum/webui/UICategoryContainer.gtmpl"
 )
 public class UICategoryContainer extends UIContainer {
-  boolean isRenderJump = true;
-
   boolean isRender_    = true;
 
   public UICategoryContainer() throws Exception {
     addChild(UICategories.class, null, null).setRendered(true);
     addChild(UICategory.class, null, null).setRendered(false);
     addChild(UICategoriesSummary.class, null, null);
-  }
-
-  public void setIsRenderJump(boolean isRenderJump) {
-    this.isRenderJump = isRenderJump;
   }
 
   public void updateIsRender(boolean isRender) {
@@ -56,15 +50,6 @@ public class UICategoryContainer extends UIContainer {
       forumPortlet.getChild(UIForumActionBar.class).setRendered(false);
     }
     this.findFirstComponentOfType(UICategoryInfo.class).setRendered(isRender);
-    renderJump();
   }
 
-  public void renderJump() {
-    UIForumLinks forumLinks = ((UIForumPortlet) this.getParent()).getChild(UIForumLinks.class);
-    if (isRenderJump) {
-      forumLinks.setRendered(!isRender_);
-    } else {
-      forumLinks.setRendered(false);
-    }
-  }
 }

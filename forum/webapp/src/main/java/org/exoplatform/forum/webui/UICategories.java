@@ -26,6 +26,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -34,6 +35,8 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -68,8 +71,6 @@ public class UICategories extends UIContainer {
 
   private Map<String, List<Forum>> mapListForum      = new HashMap<String, List<Forum>>();
 
-  private Map<String, Topic>       maptopicLast      = new HashMap<String, Topic>();
-
   private List<Category>           categoryList      = new ArrayList<Category>();
 
   private Map<String, Forum>       AllForum          = new HashMap<String, Forum>();
@@ -89,7 +90,7 @@ public class UICategories extends UIContainer {
   private List<String>             collapCategories  = null;
 
   private List<Watch>              listWatches       = new ArrayList<Watch>();
-
+  
   public UICategories() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild);
@@ -98,6 +99,10 @@ public class UICategories extends UIContainer {
   public void setIsRenderChild(boolean isRenderChild) {
     this.getChild(UIForumListSearch.class).setRendered(isRenderChild);
     this.isRenderChild = isRenderChild;
+  }
+  
+  public UserProfile getQuickProfile(String userName) throws Exception {
+    return forumService.getQuickProfile(userName);
   }
 
   public boolean getIsRendered() throws Exception {
@@ -225,6 +230,48 @@ public class UICategories extends UIContainer {
   public void setIsgetForumList(boolean isGetForumList) {
     this.isGetForumList = isGetForumList;
   }
+  
+  private Forum getForum(List<Forum> forums, String spacePrettyName) {
+    for (Forum forum : forums) {
+      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spacePrettyName)) {
+        return forum;
+      }
+    }
+    return null;
+  }
+  
+  private List<Forum> getAccessiblesForumOfCurrentUser() throws Exception {
+    List<Forum> listForums = new ArrayList<Forum>();
+    Category categoryIncludedSpace = forumService.getCategoryIncludedSpace();
+    if(categoryIncludedSpace != null) {
+      
+      String categoryIdOfSpaces = categoryIncludedSpace.getId();
+      // check permission
+      List<String> groupAndMembershipInfos = UserHelper.getAllGroupAndMembershipOfUser(null);
+      
+      StringBuilder strQuery = new StringBuilder();
+      if(!forumService.isAdminRole(groupAndMembershipInfos.get(0))){
+        strQuery.append("(")
+                .append(Utils.buildXpathByUserInfo(Utils.EXO_CREATE_TOPIC_ROLE, groupAndMembershipInfos))
+                .append(" or ").append(Utils.buildXpathByUserInfo(Utils.EXO_MODERATORS, groupAndMembershipInfos));
+        strQuery.append(") and ");
+      }
+      strQuery.append(Utils.getQueryByProperty("", Utils.EXO_IS_CLOSED, "false"));
+      
+      List<Forum> forums = forumService.getForumSummaries(categoryIdOfSpaces, strQuery.toString());
+      
+      SpaceService spaceService = getApplicationComponent(SpaceService.class);
+      String currentUser = UserHelper.getCurrentUser();
+      List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
+      for (Space space : spaces) {
+        Forum forum = getForum(forums, space.getPrettyName());
+        if (forum != null) {
+          listForums.add(forum);
+        }
+      }
+    }
+    return listForums;
+  }
 
   private List<Forum> getForumList(String categoryId) throws Exception {
     if (isCollapCategories(categoryId))
@@ -232,7 +279,14 @@ public class UICategories extends UIContainer {
     String strQuery = ForumUtils.EMPTY_STR;
     if (this.userProfile.getUserRole() > 0)
       strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-    List<Forum> forumList = forumService.getForumSummaries(categoryId, strQuery);
+    List<Forum> forumList = new ArrayList<Forum>();
+    
+    if (Utils.CATEGORY_SPACE_ID_PREFIX.equals(categoryId)) {
+      forumList = getAccessiblesForumOfCurrentUser();
+    } else {
+      forumList = forumService.getForumSummaries(categoryId, strQuery);
+    }
+    
     if (mapListForum.containsKey(categoryId)) {
       mapListForum.remove(categoryId);
     }
@@ -264,25 +318,20 @@ public class UICategories extends UIContainer {
     return forum_;
   }
 
+  protected boolean isCanViewTopic(Category cate, Forum forum, Topic topic) throws Exception {
+    return getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic);
+  }
+
   protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
-    Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
-      String topicId = topicPath;
-      if (topicId.indexOf(ForumUtils.SLASH) >= 0)
-        topicId = topicId.substring(topicPath.lastIndexOf(ForumUtils.SLASH) + 1);
-      topic = forumService.getTopicSummary(topicPath);
-      if (topic != null) {
-        if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
-          maptopicLast.put(topic.getId(), topic);
-        else {
-          if (maptopicLast.containsKey(topicId))
-            maptopicLast.remove(topicId);
-          return null;
-        }
+      topicPath = topicPath.substring(topicPath.indexOf(Utils.CATEGORY));
+      Topic topic = forumService.getLastPostOfForum(topicPath);
+      if(isCanViewTopic(cate, forum, topic)) {
+        return topic;
       }
     }
-    return topic;
+    return null;
   }
 
   private Category getCategory(String categoryId) throws Exception {
@@ -336,7 +385,6 @@ public class UICategories extends UIContainer {
         uiCategory.update(uiContainer.getCategory(categoryId), list);
         categoryContainer.updateIsRender(false);
         forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
-        uiContainer.maptopicLast.clear();
       } catch (Exception e) {        
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
                                                                                        new String[] { ForumUtils.EMPTY_STR },
@@ -368,7 +416,6 @@ public class UICategories extends UIContainer {
         uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0);
         forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
       }
-      categories.maptopicLast.clear();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -399,7 +446,6 @@ public class UICategories extends UIContainer {
         uiTopicDetail.setIdPostView("lastpost");
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
         forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
-        categories.maptopicLast.clear();
       }
       context.addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -452,7 +498,6 @@ public class UICategories extends UIContainer {
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
           forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
-          categories.maptopicLast.clear();
           context.addUIComponentToUpdateByAjax(forumPortlet);
         } else {
           categories.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
@@ -477,15 +522,15 @@ public class UICategories extends UIContainer {
           String categoryId = path.substring(0, path.indexOf(ForumUtils.SLASH));
           String forumId = path.substring(path.indexOf(ForumUtils.SLASH) + 1);
           Forum forum = uiContainer.getForumById(categoryId, forumId);
-          path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
+          path = "uiIconUIForms//" + forum.getForumName() + "//" + forumId;
         } else if (type.equals("category")) {
           path = path.substring(path.indexOf("//") + 2);
           Category category = uiContainer.getCategory(path);
-          path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
+          path = "uiIconCategory//" + category.getCategoryName() + "//" + path;
         } else {
-          path = path.substring(path.lastIndexOf(ForumUtils.SLASH)+1);
-          Topic topic = uiContainer.maptopicLast.get(path);
-          path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
+          path = path.split("//")[1];
+          Topic topic = uiContainer.forumService.getTopicSummary(path);
+          path = "uiIconForumTopic//" + topic.getTopicName() + "//" + topic.getId();
         }
         uiContainer.forumService.saveUserBookmark(userName, path, true);
       }

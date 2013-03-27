@@ -72,7 +72,7 @@
 						String actionCollap = uicomponent.event("CollapCategory", categoryId + "," + isDisplay);
 		 %>
 	 
-		<table	cellspacing="0" cellpadding="0" border="0" class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
+		<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			<caption class="rounded-corners-top">
 				<span class="pull-right actionExpandCollapse">
 					<i class="$classCssCollap" rel="tooltip" data-placement="bottom" title="$titleCollap" onclick="$actionCollap;"></i>
@@ -87,7 +87,7 @@
 					<%}%>
 						
 					<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-						<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" aria-labelledby="dLabel" role="menu" style="display:block;"><li></li></ul>
+						<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 					</div>
 				</div>
 			</caption>
@@ -174,29 +174,9 @@
 								}
 							} 
 							titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
-							if(topicNewPost.getIsClosed()) {
-								if(isAdmin || hasModerators) {
-									openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-									urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-								} else {
-									openLinkLastPost = "javascript:void(0)";
-									titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
-								}
-							} else {
-								if(forum.getIsModerateTopic()) {
-									if(isAdmin || hasModerators || topicNewPost.getIsApproved()){
-										openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-										urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-									} else {
-										openLinkLastPost = "javascript:void(0)";
-										titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
-									}
-								} else {
-									openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-									urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
-								}
-							}
 							titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
+							openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+							urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
 						}
 						String isLock = "false";
 						String isClose = "false";
@@ -243,7 +223,7 @@
 						<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
 							<%}%>
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" aria-labelledby="dLabel" role="menu" style="display:block;"><li></li></ul>
+							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 						</div>
 						
 						<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
@@ -282,17 +262,23 @@
 								<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 							<%}%>
 							<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none">
-								<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" aria-labelledby="dLabel" role="menu" style="display:block;"><li></li></ul>
+								<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 							</div>
 						</div>
 						<div class="dateTimeForum">$dateTime</div>
 					</td>
 					<td>
-						<% String screemNamePost =	uicomponent.getScreenName(lastPostBy);%>
+						<% String screemNamePost =	uicomponent.getScreenName(lastPostBy);
+					     String userId = userProfile.getUserId();
+               UserProfile userInfo = uicomponent.getQuickProfile(userId);
+               boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
+						%>
 						<div class="dropdown uiUserInfo">
+						  <% if (isDisplayAvatar) { %>
 						  <span class="avatarMini"><img src="<%=ForumSessionUtils.getUserAvatarURL(lastPostBy, null);%>"/></span>
+							<% } %>
 							<a href="javaScript:void(0)">$screemNamePost</a>
-							<ul class="dropdown-menu uiUserMenuInfo">
+							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 								<%
 								for(viewAction in menuViewInfos) {
 									if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;

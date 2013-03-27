@@ -42,10 +42,13 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
@@ -354,9 +357,15 @@ public class FAQUtils {
   public static void saveFAQPortletPreference(List<String> list, boolean useAjax) throws Exception {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    String str = list.toString();
-    str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
-    portletPref.setValue("displayCategories", str);
+    
+    //
+    if (list.size() > 0) {
+      String str = list.toString();
+      str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
+      portletPref.setValue("displayCategories", str);
+    }
+    
+    //
     portletPref.setValue("useAjax", String.valueOf(useAjax));
     portletPref.store();
   }
@@ -562,6 +571,85 @@ public class FAQUtils {
         return vote2.compareTo(vote1);
       }
     }
+  }
+  
+  public static String renderCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String actionName,  String categoryId, boolean isAddSup) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    builder.append("<a href=\"javascript:void(0);\"");
+    if (isAddSup == false && category.getId().equals(categoryId) == true) {
+      String warning = uiForm.i18n("UIMoveQuestionForm.msg.choice-orther");
+      builder.append(" ondblclick=\"alert('").append(warning).append("');\"");
+    } else {
+      builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
+    }
+    if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
+        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+    } else {
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+    }
+    builder.append("</a>");
+
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    if(categoryTrees.size() > 0) {
+      builder.append("<ul class=\"nodeGroup\">");
+      for(CategoryTree subTree : categoryTrees) {
+        if (isAddSup && subTree.getCategory().getPath().indexOf(categoryId) >= 0){
+          continue;
+        }
+        builder.append("<li class=\"node\">");
+        builder.append(renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup));
+        builder.append("</li>");
+      }
+      builder.append("</ul>");
+    }
+    
+    return builder.toString();
+  }
+  
+  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, String questionId, FAQSetting faqSetting) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    String categoryId = category.getId();
+    builder.append("<a href=\"javascript:void(0);\"");
+    if(categoryId.equals(Utils.CATEGORY_HOME) == false) {
+      builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+             .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+    } else {
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+    }
+    builder.append("</a>");
+    
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting);
+    if (categoryTrees.size() > 0 || questions.size() > 0) {
+      builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
+      for (Question question : questions) {
+        if (!questionId.equals(question.getPath())) {
+          builder.append("<li class=\"node\">")
+                 .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
+                 .append(question.getId())
+                 .append("\" type=\"checkbox\"><span></span></span>")
+                 .append(question.getQuestion());
+          builder.append("</li>");
+        }
+      }
+      for (CategoryTree subTree : categoryTrees) {
+        builder.append("<li class=\"node\">");
+        builder.append(renderQuestionsCategoryTree(subTree, questionId, faqSetting));
+        builder.append("</li>");
+      }
+      builder.append("</ul>");
+    }
+    
+    return builder.toString();
+  }
+  
+  public static List<Question> getQuestionsByCategoryId(String categoryId, FAQSetting faqSetting) throws Exception {
+    List<Question> listQuestions = new ArrayList<Question>();
+    listQuestions = getFAQService().getAllQuestionsByCatetory(categoryId, faqSetting).getAll();
+    return listQuestions;
   }
 
 }

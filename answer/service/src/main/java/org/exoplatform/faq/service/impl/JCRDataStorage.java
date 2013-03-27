@@ -58,6 +58,8 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.query.Row;
+import javax.jcr.query.RowIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
@@ -66,6 +68,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryInfo;
+import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.DataStorage;
 import org.exoplatform.faq.service.FAQEventQuery;
@@ -84,6 +87,7 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.service.search.AnswerSearchResult;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.EmailNotifyPlugin;
 import org.exoplatform.forum.common.NotifyInfo;
@@ -399,7 +403,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return values;
   }
 
-  private boolean questionHasAnswer(Node questionNode) throws Exception {
+  private static boolean questionHasAnswer(Node questionNode) throws Exception {
     if (questionNode.hasNode(Utils.ANSWER_HOME) && questionNode.getNode(Utils.ANSWER_HOME).hasNodes())
       return true;
     return false;
@@ -789,7 +793,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
   }
 
-  private int getCommentSize(Node questionNode) {
+  private static int getCommentSize(Node questionNode) {
     try {
       if (questionNode == null || !questionNode.hasNode(Utils.COMMENT_HOME))
         return 0;
@@ -1235,21 +1239,15 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      String id;
-      Node categoryNode;
-      if (categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) {
-        id = Utils.CATEGORY_HOME;
+      if (CommonUtils.isEmpty(categoryId)) {
         categoryId = Utils.CATEGORY_HOME;
-        categoryNode = getCategoryHome(sProvider, null);
-      } else {
-        id = categoryId.substring(categoryId.lastIndexOf("/") + 1);
-        categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);
       }
-      categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);
+      Node categoryNode = getCategoryNode(sProvider, categoryId);
+      categoryId = categoryNode.getName();
       QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
       String userId = faqSetting.getCurrentUser();
       StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME).append("/element(*,")
-                                 .append(EXO_FAQ_QUESTION).append(")[(@").append(EXO_CATEGORY_ID).append("='").append(id)
+                                 .append(EXO_FAQ_QUESTION).append(")[(@").append(EXO_CATEGORY_ID).append("='").append(categoryId)
                                  .append("') and (@").append(EXO_IS_ACTIVATED).append("='true')");
       if (!faqSetting.isCanEdit()) {
         queryString.append(" and (@").append(EXO_IS_APPROVED).append("='true'");
@@ -1557,6 +1555,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         log.debug("Updating moderator for child category failed: ", e);
       }
     }
+    category.setPath(getCagoryPath(categoryNode.getPath()));
     if (categoryNode.isNew())
       categoryNode.getSession().save();
     else
@@ -1690,7 +1689,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         cateList.add(cate);
         if (cat.hasNodes()) {
           cateList.addAll(listingSubTree(cat, j));
-          ;
         }
       }
     }
@@ -1705,6 +1703,51 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     List<Cate> cateList = new ArrayList<Cate>();
     cateList.addAll(listingSubTree(cateHome, i));
     return cateList;
+  }
+  
+  private Category readeCategoryTree(Node categoryNode) throws Exception {
+    Category cate = new Category();
+    PropertyReader reader = new PropertyReader(categoryNode);
+    cate.setId(categoryNode.getName());
+    cate.setPath(categoryNode.getPath());
+    cate.setName(reader.string(EXO_NAME));
+    cate.setIndex(reader.l(EXO_INDEX));
+    return cate;
+  }
+  
+  public CategoryTree buildCategoryTree(String categoryId) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    CategoryTree categoryTree = new CategoryTree();
+    Node cateNode;
+    if (CommonUtils.isEmpty(categoryId)) {
+      cateNode = getCategoryHome(sProvider, null);
+    } else {
+      cateNode = getCategoryNode(sProvider, categoryId);
+      if (cateNode == null)
+        return null;
+    }
+
+    categoryTree.setCategory(readeCategoryTree(cateNode));
+    categoryTree.setSubCategory(getCategoryTree(cateNode));
+
+    return categoryTree;
+  }
+  
+  private List<CategoryTree> getCategoryTree(Node categoryNode) throws Exception {
+    List<CategoryTree> categoryTrees = new ArrayList<CategoryTree>();
+    NodeIterator iter = categoryNode.getNodes();
+    Node cateNode;
+    CategoryTree categoryTree;
+    while (iter.hasNext()) {
+      cateNode = iter.nextNode();
+      if (cateNode.isNodeType(EXO_FAQ_CATEGORY)) {
+        categoryTree = new CategoryTree();
+        categoryTree.setCategory(readeCategoryTree(cateNode));
+        categoryTree.setSubCategory(getCategoryTree(cateNode));
+        categoryTrees.add(categoryTree);
+      }
+    }
+    return categoryTrees;
   }
 
   @Override
@@ -1739,9 +1782,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     category.setViewAuthorInfor(reader.bool(EXO_VIEW_AUTHOR_INFOR));
     category.setIndex(reader.l(EXO_INDEX, 1));
     category.setView(reader.bool(EXO_IS_VIEW, true));
-    String path = categoryNode.getPath();
-    category.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+    category.setPath(getCagoryPath(categoryNode.getPath()));
     return category;
+  }
+  
+  private String getCagoryPath(String path) {
+    return path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1);
   }
 
   @Override
@@ -1895,7 +1941,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   /**
-   * Get node category by categoryId or category relative path.
+   * Get node category by categoryId or category full path or relative path.
    * 
    * @param: sProvider the SessionProvider.
    * @param: param the category id or category relative path.
@@ -1904,7 +1950,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private Node getCategoryNode(SessionProvider sProvider, String param) throws Exception {
     try {
       Node faqHome = getFAQServiceHome(sProvider);
-      return faqHome.getNode(param);
+      try {
+        return (Node) faqHome.getSession().getItem(param);
+      } catch (RepositoryException e) {
+        return faqHome.getNode(param);
+      }
     } catch (PathNotFoundException e) {
       param = (param.indexOf("/") > 0) ? param.substring(param.lastIndexOf("/") + 1) : param;
       Node categoryHome = getCategoryHome(sProvider, null);
@@ -2026,9 +2076,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       Node faqHome = getFAQServiceHome(sProvider);
       Node srcNode = faqHome.getNode(categoryId);
+      String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
+      
+      if(srcNode.getPath().equals(destPath)) return;
+      
       Node parentNode = srcNode.getParent();
       String srcPath = srcNode.getPath();
-      String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
       faqHome.getSession().move(srcPath, destPath);
       faqHome.getSession().save();
       Node destNode = faqHome.getNode(destCategoryId + "/" + srcNode.getName());
@@ -2660,194 +2713,144 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return new ArrayList<ObjectSearchResult>();
   }
   
+  
   public List<ObjectSearchResult> getUnifiedSearchResults(FAQEventQuery eventQuery) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-
     eventQuery.setViewingCategories(getViewableCategoryIds(sProvider));
+    
+    //
+    boolean isAdmin = isAdminRole(eventQuery.getUserId());
+    
+    //
     List<String> retrictedCategoryList = new ArrayList<String>();
-    if (!eventQuery.isAdmin())
+    if (isAdmin == false) {
       retrictedCategoryList = getRetrictedCategories(eventQuery.getUserId(), eventQuery.getUserMembers());
+    }
 
+    //
     Node categoryHome = getCategoryHome(sProvider, null);
     eventQuery.setPath(categoryHome.getPath());
+    
+    
     try {
+      
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH);
       QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
-      Node nodeObj = null;
       
-      List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult>();
-      LinkedHashMap<String, Node> mergeQuestion = new LinkedHashMap<String, Node>();
-      LinkedHashMap<String, Node> mergeQuestion2 = new LinkedHashMap<String, Node>();
-      List<Node> listQuestion = new ArrayList<Node>();
-      List<Node> listLanguage = new ArrayList<Node>();
-      LinkedHashMap<String, Node> listAnswerandComment = new LinkedHashMap<String, Node>();
-      while (iter.hasNext()) {
+      //
+      NodeIterator iter = result.getNodes();
+      RowIterator rowIter = result.getRows();
+      
+      
+      AnswerSearchResult searchResult = new AnswerSearchResult(eventQuery.getOffset(), eventQuery.getLimit(), iter.getSize());
+      
+      
+      Node nodeObj = null;
+      Row rowObj = null;
+      
+      ObjectSearchResult objectResult = null;
+
+      while (iter.hasNext() && rowIter.hasNext()) {
         nodeObj = iter.nextNode();
-        if (!eventQuery.isAdmin()) {
-          try {
-            Node questionNode = null;
-            if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
-              questionNode = nodeObj;
-            } else if (nodeObj.isNodeType(EXO_FAQ_RESOURCE)) {
-              questionNode = nodeObj.getParent().getParent();
-            }
-            if (questionNode != null && checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList)) {
-              listQuestion.add(questionNode);
-            } else if (nodeObj.isNodeType(EXO_FAQ_LANGUAGE)) {
-              if (checkQuestionHasApproved(nodeObj.getParent().getParent(), eventQuery, retrictedCategoryList)) {
-                listLanguage.add(questionNode);
-              }
-            } else if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) { // answers of default language
-              questionNode = getQuestionNode(nodeObj);
-              if (!listAnswerandComment.containsKey(questionNode.getName())) {
-                if (checkQuestionHasApproved(questionNode, eventQuery, retrictedCategoryList)) {
-                  listAnswerandComment.put(questionNode.getName(), questionNode);
-                }
-              }
-            }
-          } catch (Exception e) {
-            log.error("Failed to add item in list search", e);
-          }
-
-        } else {
-          if (nodeObj.isNodeType(EXO_FAQ_QUESTION))
-            listQuestion.add(nodeObj);
-          if (nodeObj.isNodeType(EXO_FAQ_RESOURCE))
-            listQuestion.add(nodeObj.getParent().getParent());
-          if (nodeObj.isNodeType(EXO_FAQ_LANGUAGE))
-            listLanguage.add(nodeObj);
-          if (nodeObj.isNodeType(EXO_ANSWER) || nodeObj.isNodeType(EXO_COMMENT)) {
-            Node questionNode = getQuestionNode(nodeObj);
-            listAnswerandComment.put(questionNode.getName(), questionNode);
-          }
-        }
-      }
-
-      boolean isInitiated = false;
-      if (eventQuery.isQuestionLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isLanguageLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
-          List<String> list = new ArrayList<String>();
-          for (Node node : listQuestion) {
-            if (list.contains(node.getName()))
-              continue;
-            else
-              list.add(node.getName());
-            results.add(getResultObj(node));
-          }
-          return results;
-        }
-        // merging results
-        if (!listQuestion.isEmpty()) {
-          isInitiated = true;
-          for (Node node : listQuestion) {
-            mergeQuestion.put(node.getName(), node);
-          }
-        }
-      }
-      if (eventQuery.isLanguageLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
-          for (Node node : listLanguage) {
-            results.add(getResultObj(node));
-          }
-          return results;
+        rowObj = rowIter.nextRow();
+        
+        //
+        if (searchResult.contains(nodeObj.getName())) {
+          continue;
         }
 
-        // merging results
-        if (isInitiated) {
-          for (Node node : listLanguage) {
-            String id = node.getProperty(EXO_QUESTION_ID).getString();
-            if (mergeQuestion.containsKey(id)) {
-              mergeQuestion2.put(id, mergeQuestion.get(id));
-            }
-          }
-        } else {
-          for (Node node : listLanguage) {
-            mergeQuestion2.put(node.getProperty(EXO_QUESTION_ID).getString(), node);
-          }
-          isInitiated = true;
+        if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
+          objectResult = ResultType.QUESTION.get(nodeObj, eventQuery, retrictedCategoryList);
+        } else if (nodeObj.isNodeType(EXO_ANSWER)) {
+          objectResult = ResultType.ANSWER.get(nodeObj, eventQuery, retrictedCategoryList);
+        } else if (nodeObj.isNodeType(EXO_COMMENT)) {
+          objectResult = ResultType.COMMENT.get(nodeObj, eventQuery, retrictedCategoryList);
         }
-      }
 
-      if (eventQuery.isAnswerCommentLevelSearch()) {
-        // directly return because there is only one this type of search
-        if (!eventQuery.isLanguageLevelSearch() && !eventQuery.isQuestionLevelSearch()) {
-          for (Node node : listAnswerandComment.values()) {
-            results.add(getResultObj(node));
-          }
-          return results;
-        }
-        // merging results
-        if (isInitiated) {
-          if (eventQuery.isLanguageLevelSearch()) {
-            if (mergeQuestion2.isEmpty())
-              return results;
-            for (Node node : listAnswerandComment.values()) {
-              if (mergeQuestion2.containsKey(node.getName())) {
-                results.add(getResultObj(node));
-              }
-            }
-          } else { // search on question level
-            if (mergeQuestion.isEmpty())
-              return results;
-            
-            for (Node node : mergeQuestion.values()) {
-              results.add(getResultObj(node));
-            }
-            for (Node node : listAnswerandComment.values()) {
-              if (!mergeQuestion.containsKey(node.getName())) {
-                results.add(getResultObj(node));
-              }
-            }
-          }
-        } else {
-          for (Node node : listAnswerandComment.values()) {
-            results.add(getResultObj(node));
-          }
-        }
-      }
-      // mix all result for fultext search on questions
-      if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch() && !eventQuery.isLanguageLevelSearch()) {
-        Map<String, ObjectSearchResult> tmpResult = new HashMap<String, ObjectSearchResult>();
-        ObjectSearchResult rs;
-        for (Node node : listQuestion) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        for (Node node : listAnswerandComment.values()) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        for (Node node : listLanguage) {
-          rs = getResultObj(node);
-          tmpResult.put(rs.getId(), rs);
-        }
-        results.addAll(tmpResult.values());
-      }
+        //
+        if (objectResult == null) continue;
 
-      // TODO: improve in next version. (4.0.0-Beta2)
-      int offset = eventQuery.getOffset();
-      int limit = eventQuery.getLimit();
-      if (limit > 0) {
-        int size = results.size();
-        if (size > offset) {
-          if (limit > size) {
-            limit = size;
-          }
-          results = results.subList(offset, limit);
-        } else {
-          results.clear();
+        //
+        if (rowObj != null) {
+          objectResult.setRelevancy(rowObj.getValue(JCR_SCORE).getLong());
+          objectResult.setExcerpt(rowObj.getValue(REP_EXCERPT).getString());
+        }
+
+        searchResult.add(objectResult);
+
+        //
+        if (searchResult.addMore() == false) {
+          break;
         }
       }
      
-      return results;
+      return searchResult.result();
+      
     } catch (Exception e) {
       return new ArrayList<ObjectSearchResult>();
     }
   }
+  
+  private enum ResultType {
+
+    QUESTION() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        if(checkQuestionHasApproved(node, eventQuery, retrictedCategoryList) == true) {
+          return getQuestionObjectSearchResult(node);
+        }
+        return null;
+      }
+      
+    },
+    ANSWER() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        Node questionNode = getQuestionNode(node);
+        ObjectSearchResult objectResult = ResultType.QUESTION.get(questionNode, eventQuery, retrictedCategoryList);
+        if(objectResult == null) return null;
+        objectResult.setId(node.getName());
+        objectResult.setType("faqAnswer");
+        PropertyReader reader = new PropertyReader(node);
+        objectResult.setDescription(reader.string(EXO_RESPONSES));
+        objectResult.setCreatedDate(reader.date(EXO_DATE_RESPONSE));
+        return objectResult;
+      }
+      
+    },
+    COMMENT() {
+
+      @Override
+      public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        Node questionNode = getQuestionNode(node);
+        ObjectSearchResult objectResult = ResultType.QUESTION.get(questionNode, eventQuery, retrictedCategoryList);
+        if(objectResult == null) return null;
+        objectResult.setId(node.getName());
+        objectResult.setType("faqComment");
+        PropertyReader reader = new PropertyReader(node);
+        objectResult.setDescription(reader.string(EXO_COMMENTS));
+        objectResult.setCreatedDate(reader.date(EXO_DATE_COMMENT));
+        return objectResult;
+      }
+      
+    };
+    
+    /**
+     * Get the data from the node and 
+     * put this one into ObjectSearchResult.
+     * 
+     * @param node
+     * @param eventQuery
+     * @param retrictedCategoryList
+     * @return
+     * @throws Exception
+     */
+    protected abstract ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception;
+  }
+  
 
   private ObjectSearchResult getResultObj(Node node) throws Exception {
     ObjectSearchResult objectResult = new ObjectSearchResult();
@@ -2871,7 +2874,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return objectResult;
   }
   
-  private boolean checkQuestionHasApproved(Node questionNode, FAQEventQuery eventQuery,List<String>  retrictedCategoryList) throws Exception {
+  private static boolean checkQuestionHasApproved(Node questionNode, FAQEventQuery eventQuery,List<String>  retrictedCategoryList) throws Exception {
     if (questionNode != null && ((questionNode.getProperty(EXO_IS_APPROVED).getBoolean() == true && questionNode.getProperty(EXO_IS_ACTIVATED).getBoolean() == true)
         || (questionNode.getProperty(EXO_AUTHOR).getString().equals(eventQuery.getUserId()) && questionNode.getProperty(EXO_IS_ACTIVATED).getBoolean() == true)))
       // for retricted audiences
@@ -2892,7 +2895,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return false;
   }
 
-  private Node getQuestionNode(Node node) throws RepositoryException {
+  private static Node getQuestionNode(Node node) throws RepositoryException {
     if(node.isNodeType(EXO_FAQ_QUESTION)) {
       return node;
     } else {
@@ -2906,7 +2909,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return null;
   }
 
-  private ObjectSearchResult getQuestionObjectSearchResult(Node questionNode) throws Exception {
+  private static ObjectSearchResult getQuestionObjectSearchResult(Node questionNode) throws Exception {
     if(questionNode == null) return null;
     ObjectSearchResult objectResult = new ObjectSearchResult();
     objectResult.setType("faqQuestion");
@@ -3271,7 +3274,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       path = Utils.CATEGORY_HOME;
     }
     try {
-      NodeIterator iter = getFAQServiceHome(sProvider).getNode(path).getNodes();
+      NodeIterator iter = getCategoryNode(sProvider, path).getNodes();
       while (iter.hasNext()) {
         Node catNode = iter.nextNode();
         if (catNode.isNodeType(EXO_FAQ_CATEGORY)) {
@@ -3281,7 +3284,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Cheking whether catagory is exist: ", e);
+      return false;
     }
     return false;
   }

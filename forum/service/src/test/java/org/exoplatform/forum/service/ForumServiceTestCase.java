@@ -370,7 +370,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // checking data
     assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
     assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
-    assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+    topic = forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null);
+    assertEquals(ArrayToString(groupUser), ArrayToString(topic.getCanView()));
     // deleted group in system
     forumService_.calculateDeletedGroup(groupId, groupName);
     // checking again data
@@ -409,5 +410,24 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     forumService_.exportXML(cat.getId(), forum.getId(), new ArrayList<String>(), forum.getPath(), bos, false);
     assertEquals("can't export Forum into XML file", bos.size() > 0, true);
+  }
+  
+  public void testGetScreenName() throws Exception {
+    String userName = "demo";
+    UserProfile userProfile = createdUserProfile(userName);
+    userProfile.setScreenName("Jack Miller");
+
+    // save UserProfile
+    forumService_.saveUserProfile(userProfile, true, true);
+
+    // getUserInfo
+    userProfile = forumService_.getUserInfo(userName);
+    assertEquals("Jack Miller",forumService_.getScreenName("demo"));
+    
+    // change screenName
+    userProfile.setScreenName("John Smith");
+    forumService_.saveUserSettingProfile(userProfile);
+    userProfile = forumService_.getUserInfo(userName);
+    assertEquals("John Smith",forumService_.getScreenName("demo"));
   }
 }

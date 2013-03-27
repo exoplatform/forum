@@ -5,7 +5,7 @@
 	import org.exoplatform.forum.webui.popup.UIListInBoxPrivateMessage;
 	import org.exoplatform.forum.webui.popup.UIListSentPrivateMessage;
 %>
-<div class="UIFormForum UIPrivateMessageForm">
+<div class="UIFormForum uiPrivateMessageForm">
 	<% uiform.begin() %> 
 	<%	
 		if(uiform.isFullMessage()) {
@@ -14,89 +14,80 @@
 			int index = uiform.getIsSelected() ;
 			String active = "";
 	%>
-  <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
-    <ul class="nav nav-tabs">
-     <%
-      String classCss = "" ; 
-      int i = 0;
-      String[] tabcontents = ["inbox","send","sendMessage"];
-      for(tabcontent in tabcontents){ 
-        String link = "javascript:void(0);";
-        String tabId = tabcontent;
-        String paneId = uicomponent.getId(); 
-        if(index == i) classCss = "active" ;
-        else {
-          classCss = "" ;
-          link = uicomponent.event("SelectTab",String.valueOf(i)) ;
-        }
-        tabcontent = _ctx.appRes(uiform.id + ".label." + tabcontent);
-      %>
-      <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');$link">  
-        <a data-toggle="tab" data-target="#$tabId-tab"><%=tabcontent;%></a>
-      </li>
-    <%   ++i;
-      } %>
-    </ul>
-    <div class="tab-content">
-    <% if(index == 0){
-           active = "in active";
-         } else {
-           active = "";
-         }
-      %>
-      <div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
-        <div class="UIFormInputSet ForumUserProfile">
-          <% uicomponent.renderChild(UIListInBoxPrivateMessage.class) ; %>
-        </div>
-      </div>
-      <% if(index == 1){
-           active = "in active";
-         } else {
-           active = "";
-         }
-      %>
-      <div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
-        <div class="UIFormInputSet ForumUserProfile">
-          <% uicomponent.renderChild(UIListSentPrivateMessage.class) ; %>
-        </div>
-      </div>
-      <% if(index == 2){
-           active = "in active";
-         } else {
-           active = "";
-         }
-      %>
-      <div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
-        <div class="UIFormInputSet ForumUserProfile">
-          <div class="ForumMail Forwark">
-            <div class="HorizontalLayout">
-              <div class="UIFormInput">
-                <% 
-                  uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
-                %>
-              </div>
-            </div>
-            <div class="uiAction">
-                          <a href="javascript:void(0);" onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></a>
-                        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="horizontalLayout">
+		<div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+			<ul class="nav nav-tabs">
+			 <%
+			  String classCss = "" ; 
+			  int i = 0;
+			  String[] tabcontents = ["inbox","send","sendMessage"];
+			  for(tabcontent in tabcontents){ 
+				String link = "javascript:void(0);";
+				String tabId = tabcontent;
+				String paneId = uicomponent.getId(); 
+				if(index == i) classCss = "active" ;
+				else {
+				  classCss = "" ;
+				  link = uicomponent.event("SelectTab",String.valueOf(i)) ;
+				}
+				tabcontent = _ctx.appRes(uiform.id + ".label." + tabcontent);
+			  %>
+			  <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');$link">  
+				<a data-toggle="tab" data-target="#$tabId-tab"><%=tabcontent;%></a>
+			  </li>
+			<%   ++i;
+			  } %>
+			</ul>
+			<div class="tab-content">
+			<% if(index == 0){
+				   active = "in active";
+				 } else {
+				   active = "";
+				 }
+			  %>
+				<div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
+					<% uicomponent.renderChild(UIListInBoxPrivateMessage.class) ; %>
+				</div>
+			  <% if(index == 1){
+				   active = "in active";
+				 } else {
+				   active = "";
+				 }
+			  %>
+				<div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
+					<% uicomponent.renderChild(UIListSentPrivateMessage.class) ; %>
+				</div>
+			  <% if(index == 2){
+				   active = "in active";
+				 } else {
+				   active = "";
+				 }
+			  %>
+				<div id="<%=tabcontents[index]%>.id-tab" class="tab-pane fade $active">
+					<% 
+					  uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
+					%>
+					<div class="uiAction">
+						<button onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<% } else { 
      println "<div class='resizable'>";
 	   uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
      println "</div>";
 	 } %>
    
-	<div class="uiAction">
-  <%
-			if(!uiform.isFullMessage()) {
-	%>
-    <a href="javascript:void(0);" onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></a>
-    <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-    <% } %>
-  </div>
+	
+	<div class="uiAction<%=((uiform.isFullMessage() ==  false) ? " uiActionBorder" : "")%>">
+	
+	<% if(uiform.isFullMessage() ==  false) { %>
+	    <button onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>  
+	<%}%>
+		<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
+	</div>
+
 	<%uiform.end()%>
 </div>

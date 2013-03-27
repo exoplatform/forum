@@ -3,12 +3,11 @@
 
     init : function(root) {
       root = (typeof (root) == 'string') ? findId(root) : root;
-      var jnodeList = gj(root).find('span.ViewDownloadIcon');
-      for ( var i = 0; i < nodeList.length; i++) {
-        jnodeList.eq(i).find('a:first').on('click', function() {
-          MaskLayerControl.showPicture(this);
-        });
-      }
+      var jnodeList = gj(root).find('.AttachImage');
+      jnodeList.on('click', function() {
+        MaskLayerControl.showPicture(this);
+      });
+      
     },
 
     getContainerNode : function() {
@@ -19,7 +18,7 @@
             .attr('id', 'UIPictutreContainer')
             .attr('style',
                 'position:absolute; top:0px; width:100%; height:100%; text-align:center')
-            .attr('title', 'Click to close').on('click',
+            .attr('title', 'Click to close or press key Esc.').on('click',
                 MaskLayerControl.hidePicture);
         gj("#UIPortalApplication").append(containerNode)
       }
@@ -27,58 +26,66 @@
     },
 
     showPicture : function(node) {
-      if (typeof (node) == "string") {
+      if (typeof (node) === "string") {
         var imgSrcNode = new Image();
         imgSrcNode.src = node;
       } else {
-        var attachmentContent = gj(node).parents('.AttachmentContent');
-        var imgSrcNode = attachmentContent.find('img.AttachmentFile:first')[0];
+        var attachmentContent = gj(node).parents('div:first');
+        var imgSrcNode = attachmentContent.find('img:first')[0];
       }
       var src = imgSrcNode.src;
       if (String(src).length > 0) {
 
         var imgSize = this.getImageSize(imgSrcNode);
-        var windowHeight = document.documentElement.clientHeight;
-        var windowWidth = document.documentElement.clientWidth;
-        var marginTop = (windowHeight < parseInt(imgSize.height)) ? 0
-            : parseInt((windowHeight - parseInt(imgSize.height)) / 2);
-        var imgHeight = (windowHeight < parseInt(imgSize.height)) ? windowHeight
-            + "px"
-            : "auto";
-        var imgWidth = (windowWidth < parseInt(imgSize.width)) ? windowWidth
-            + "px" : "auto";
+        var windowHeight = parseInt(document.documentElement.clientHeight);
+        var windowWidth = parseInt(document.documentElement.clientWidth);
+        
+        var imgWidth = "auto";
+        if(windowWidth < parseInt(imgSize.width)) {
+          imgWidth = windowWidth + 'px';
+        }
+        
+        var marginTop = 0;
+        var imgHeight = "auto";
+        if(windowHeight < parseInt(imgSize.height)) {
+          imgHeight = windowHeight + 'px';
+          imgWidth = "auto";
+        } else {
+          marginTop = parseInt((windowHeight - parseInt(imgSize.height)) / 2)
+        }
+        
         var imageNode = "<img src='" + imgSrcNode.src + "' style='height:"
             + imgHeight + ";width:" + imgWidth + ";margin-top:" + marginTop
-            + "px;' alt='Click to close'/>";
+            + "px;' alt='Click to close or press key Esc.'/>";
         var containerNode = MaskLayerControl.getContainerNode();
         containerNode.html(imageNode);
         var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication',
             containerNode[0], 30, 'CENTER');
+        gj(containerNode).find('img:first').on('click', function() {
+          MaskLayerControl.hidePicture();
+        });
         this.scrollHandler();
-
+        gj(document).on('keydown', MaskLayerControl.hidePictureByKey);
       }
     },
 
-    reSizeImage : function() {
-
-    },
-
     scrollHandler : function() {
-      eXo.core.UIMaskLayer.object.style.top = document
-          .getElementById("MaskLayer").offsetTop
-          + "px";
+      eXo.core.UIMaskLayer.object.style.top = gj('#MaskLayer').offset().top  + "px";
       MaskLayerControl.timer = setTimeout(MaskLayerControl.scrollHandler, 1);
     },
 
+    hidePictureByKey : function(e) {
+      if(e.which && e.which === 27) {
+        MaskLayerControl.hidePicture();
+        gj(document).off('keydown', MaskLayerControl.hidePictureByKey);
+      }
+    },
+
     hidePicture : function() {
-      eXo.core.Browser.onScrollCallback.remove('MaskLayerControl');
+      
       var maskContent = eXo.core.UIMaskLayer.object;
-      var maskNode = document.getElementById("MaskLayer")
-          || document.getElementById("subMaskLayer");
-      if (maskContent)
-        maskContent.parentNode.removeChild(maskContent);
-      if (maskNode)
-        maskNode.parentNode.removeChild(maskNode);
+      gj('#UIPictutreContainer').remove();
+      gj('#MaskLayer').remove();
       clearTimeout(MaskLayerControl.timer);
       delete MaskLayerControl.timer;
     },

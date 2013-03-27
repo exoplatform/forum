@@ -4,33 +4,31 @@
 	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
 %>
 
-<div class="UIMoveForumForm UIMoveTopicForm">
+<div class="uiSelectCategoryForm horizontalLayout">
 	<% uiform.begin() %>
-  <div class="resizable">
-	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveForumForm.title.chooseCategory"); %></div>
-	<div class="UITree">
-		<div class="TreeContainer">
-		<% 
-			List categories = uicomponent.getCategories(); 
-			for(category in categories) {
-				String categoryName = category.getCategoryName() ;
-				String link = uicomponent.event("Save", category.getPath());
-		%>
-			<div class="Node ClearFix">
-			 	<div class="Icon CategoryNormalIcon"><span></span></div>
-				 	<div class="NodeLabel">
-				 		<div class="NodeSelected">
-				 			<a href="$link">$categoryName</a>
-				 		</div>
-					</div>
-
-			</div>
-		<% } %>
-		 </div>
-	</div>
+	<div class="resizable">
+		<p><%= _ctx.appRes("UIMoveForumForm.title.chooseCategory"); %></p>
+		<div class="uiTrees scrollArea">
+			<div class="treeContainer">
+				<ul class="nodeGroup">
+				<% 
+					List categories = uicomponent.getCategories(); 
+					for(category in categories) {
+						String categoryName = category.getCategoryName() ;
+						String link = uicomponent.event("Save", category.getPath());
+				%>
+					<li class="node">
+						<a href="javascript:void(0);" class="uiIconNode uiIconEmpty" onclick="$link">
+							<i class="uiIconCategory uiIconLightGray"></i>$categoryName
+						</a>
+					</li>
+				<% } %>
+				</ul>
+			 </div>
+		</div>
 	</div>
 	<div class="uiAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="btn LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
+		<button onclick="<%=uicomponent.event("Cancel");%>" class="btn" type="button"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></button>
     </div>
 	<%uiform.end()%>
 </div>

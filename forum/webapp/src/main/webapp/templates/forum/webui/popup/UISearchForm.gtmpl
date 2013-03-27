@@ -1,181 +1,329 @@
 <%
 	uicomponent.setLocale();
 %>
-<div class="UIFormForum UIAdvancedSearchForm">
+<div class="uiAdvancedSearchForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<table class="UIFormGrid">
-					<tbody>						
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FIELD_SEARCHVALUE_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %></label>
-									</td>
-									<td class="FieldComponent" colspan="2">
-											<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
-									</td>
-							</tr>
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FIELD_SEARCHTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %></label>
-									</td>
-									<td class="FieldComponent" colspan="2">
-											<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
-									</td>
-							</tr>
-						<% if(uiform.getIsSearchTopic()){ %>	
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FIELD_TOPICTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_TOPICTYPE_SELECTBOX); %></label>
-									</td>
-									<td class="FieldComponent" colspan="2">
-											<%uiform.renderField(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
-									</td>
-							</tr>
-						<% } %>	
-							<tr>
-									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>
-									</td>
-									<td class="FieldComponent" colspan="2">
-											<%uiform.renderField(uiform.FIELD_SCOPE_RADIOBOX); %>
-									</td>
-							</tr>
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FIELD_SEARCHUSER_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %></label>
-									</td>
-									<td class="FieldComponent FieldUserName" colspan="2">
-										<div style="float:left">
-									  	<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
-									  </div>
-									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_SEARCHUSER_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
-									    <img alt="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
-									  </div>
-
-									</td>
-							</tr>
-							<%  
-							if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.Status");%>
-									</td>
-									<td class="FieldComponent" colspan="2">
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div>
-									  <div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></label></div>
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div>
-									  <div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISUNLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></label></div>
-
-									</td>
-							</tr>
-							<%  
-							  if(uiform.getIsMod()){
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.State");%>
-									</td>
-									<td class="FieldComponent" colspan="2">
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISOPEN_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></label></div>
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISCLOSED_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></label></div>
-
-									</td>
-							</tr>
-							<%} 
-							}
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%></label>
-									</td>
-									<td class="FieldComponent FieldCalendar">
-										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div>
-										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATED%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
-
-									</td>
-									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
-							</tr>
-							<% if(uiform.getIsSearchTopic()){ %>
-							<tr>
-									<td class="FieldLabel">
-										<label for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%></label>
-									</td>
-									<td class="FieldComponent FieldCalendar">
-										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div>
-										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
-
-									</td>
-									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
-							</tr>
-							<% } 
-							  if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.Posts");%>
-									</td>
-									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_SLIDER); %>
-	   							</td>
-							</tr>
-							<%}  
-							if(uiform.getIsSearchForum()){
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.Topics");%>
-									</td>
-									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_SLIDER); %>
-									</td>
-							</tr>
-							<%}  
-							if(uiform.getIsSearchTopic()) {
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.Views");%>
-									</td>
-									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_SLIDER); %>
-									</td>
-							</tr>							<%}  
-								if(uiform.getIsSearchForum() || uiform.isSearchCate){
-							%>
-							<tr>
-									<td class="FieldLabel">
-											<label for="<%=uicomponent.FIELD_MODERATOR_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %></label>
-									</td>
-									<td class="FieldComponent" colspan="2">
-										<div style="float:left">
-									  	<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
-									  </div>
-									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_MODERATOR_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
-									    <img alt="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
-									  </div>
-
-									</td>
-							</tr>
-							<%} %>
-					</tbody>
-				</table>
+	<div class="uiBox">
+		<h5 class="title titleAdvancedForm"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></h5>
+		<div class="form-horizontal">				
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHVALUE_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
+				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>">
+					<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>
+				</label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_SCOPE_RADIOBOX); %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"  for="<%=uicomponent.FIELD_SEARCHUSER_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
+					<a class="actionIcon" href="<%=uicomponent.event("AddValuesUser", uiform.FIELD_SEARCHUSER_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
+						<i class="uiIconUser uiIconLightGray"></i>
+					</a>
+				</div>
+			</div>
+			<%  
+			if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Status");%>">
+					<%=_ctx.appRes("UISearchForm.label.Status");%>
+				</label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %>
+					<%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %>
+				</div>
+			</div>
+			<%  
+			  if(uiform.getIsMod()){
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.State");%>">
+					<%=_ctx.appRes("UISearchForm.label.State");%>
+				</label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %>
+					<%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %>
+				</div>
+			</div>
+			<%} 
+			}
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FROMDATECREATED); %>
+					<%=_ctx.appRes("UISearchForm.label.ToDateCreated");%>
+					<%uiform.renderField(uiform.TODATECREATED); %>
+				</div>
+			</div>
+			<% if(uiform.getIsSearchTopic()){ %>
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %>
+				</div>
+			</div>
+			<% } 
+			  if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Posts");%>"><%=_ctx.appRes("UISearchForm.label.Posts");%></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_SLIDER); %>
+				</div>
+			</div>
+			<%}  
+			if(uiform.getIsSearchForum()){
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Topics");%>">
+					<%=_ctx.appRes("UISearchForm.label.Topics");%>
+				</label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_SLIDER); %>
+				</div>
+			</div>
+			<%}  
+			if(uiform.getIsSearchTopic()) {
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Views");%>">
+					<%=_ctx.appRes("UISearchForm.label.Views");%>
+				</label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_SLIDER); %>
+				</div>
+			</div>							
+			<%}  
+				if(uiform.getIsSearchForum() || uiform.isSearchCate){
+			%>
+			<div class="control-group">
+				<label class="control-label" for="<%=uicomponent.FIELD_MODERATOR_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %></label>
+				<div class="controls">
+					<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
+					<a class="actionIcon" href="<%=uicomponent.event("AddValuesUser", uiform.FIELD_MODERATOR_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
+						<i class="uiIconUser uiIconLightGray"></i>
+					</a>
+				</div>
+			</div>
+			<%} %>
+			
+			<div style="display:none;">
+			
+			<div class="control-group">
+				<label class="control-label">Slide</label>
+				<div class="controls">
+					<div class="slideSearch">
+						<div class="slide slideContainer">
+							<div class="slideRange sllideHeader" style="width: 25%;"></div>
+							<a href="javascript:void(0);" class="circleDefault" style="left: 20%;"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label">Calendar</label>
+				<div class="controls">
+					
+					<div onclick="event.cancelBubble = true" class="uiCalendarComponent uiBox" id="BlockCalendar" style="display: block;">
+						<div style="cursor: default" onmousedown="event.cancelBubble = true">
+							<h5 class="title clearfix"><a data-original-title="Previous Month" class="actionIcon pull-left" onclick="eXo.webui.UICalendar.changeMonth(-1);" rel="tooltip" data-placement="right"><i class="uiIconMiniArrowLeft uiIconLightGray"></i></a><span>March, 2013</span><a data-original-title="Next Month" class="actionIcon pull-right" onclick="eXo.webui.UICalendar.changeMonth(1);" rel="tooltip" data-placement="right"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a></h5>
+							<table class="weekList">
+								<tbody>
+									<tr>
+										<td><font color="red">S</font>
+										</td>
+										<td>M</td>
+										<td>T</td>
+										<td>W</td>
+										<td>T</td>
+										<td>F</td>
+										<td>S</td>
+									</tr>
+								</tbody>
+							</table>
+							<hr>
+							<table cellspacing="0" cellpadding="0" class="weekDays" id="">
+								<tbody>
+									<tr>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,2,24)" class="otherMonth" href="#SelectDate">24</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,2,25)" class="otherMonth" href="#SelectDate">25</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,2,26)" class="otherMonth" href="#SelectDate">26</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,2,27)" class="otherMonth" href="#SelectDate">27</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,2,28)" class="otherMonth" href="#SelectDate">28</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,1)" href="#SelectDate" class="">1</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,2)" href="#SelectDate" class="">2</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,3)" href="#SelectDate" class="">3</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,4)" href="#SelectDate" class="">4</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,5)" href="#SelectDate" class="">5</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,6)" href="#SelectDate" class="">6</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,7)" href="#SelectDate" class="">7</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,8)" href="#SelectDate" class="">8</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,9)" href="#SelectDate" class="">9</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,10)" href="#SelectDate" class="">10</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,11)" href="#SelectDate" class="">11</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,12)" href="#SelectDate" class="">12</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,13)" href="#SelectDate" class="">13</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,14)" href="#SelectDate" class="">14</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,15)" href="#SelectDate" class="">15</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,16)" href="#SelectDate" class="">16</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,17)" href="#SelectDate" class="">17</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,18)" href="#SelectDate" class="">18</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,19)" href="#SelectDate" class="">19</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,20)" href="#SelectDate" class="">20</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,21)" href="#SelectDate" class="">21</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,22)" href="#SelectDate" class="">22</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,23)" href="#SelectDate" class="">23</a>
+										</td>
+									</tr>
+									<tr class="currentWeek">
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,24)" href="#SelectDate" class="">24</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,25)" href="#SelectDate" class="">25</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,26)" href="#SelectDate" class="highLight today">26</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,27)" href="#SelectDate" class="">27</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,28)" href="#SelectDate" class="">28</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,29)" href="#SelectDate" class="">29</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,30)" href="#SelectDate" class="">30</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,3,31)" href="#SelectDate" class="">31</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,1)" class="otherMonth" href="#SelectDate">1</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,2)" class="otherMonth" href="#SelectDate">2</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,3)" class="otherMonth" href="#SelectDate">3</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,4)" class="otherMonth" href="#SelectDate">4</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,5)" class="otherMonth" href="#SelectDate">5</a>
+										</td>
+										<td>
+											<a onclick="eXo.webui.UICalendar.setDate(2013,4,6)" class="otherMonth" href="#SelectDate">6</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+			</div>
+			
 		</div>
-		 <div class="uiAction">
-    <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action);
-					 String onclick = "" ;
-					 String style = "";
-					 if(action.indexOf("ResetField") >= 0) {
-					   onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
-					   link = "";
-					 }
-				%>
-      <a href="javascript:void(0);" onclick="$link; $onclick; return;" class="btn LightBlueStyle">$actionLabel</a>
-      <%}%>
-    </div>
+		
+		<div class="uiAction">
+		<% for(action in uicomponent.getActions()) { 
+				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+				 String link = uicomponent.event(action);
+				 String onclick = "" ;
+				 String style = "";
+				 if(action.indexOf("ResetField") >= 0) {
+				   onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+				   link = "";
+				 }
+			%>
+			<button onclick="$link; $onclick; return;" class="btn" type="button">$actionLabel</button>
+		  <%}%>
+		</div>
+	</div>
 	<%uiform.end()%>
 </div>

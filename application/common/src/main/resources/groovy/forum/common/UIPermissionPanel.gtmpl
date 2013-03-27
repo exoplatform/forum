@@ -1,0 +1,29 @@
+<%
+  def rcontext = _ctx.getRequestContext();
+  def url = uicomponent.event("EnterPermission");
+
+  String eventURL = uicomponent.event("EnterPermission");
+  eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
+  
+  rcontext.getJavascriptManager().require("SHARED/jquery")
+					.addScripts("\$(\"#$uicomponent.id #PermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + \$(this).val(); javascript:ajaxGet(eventURL); });");
+%>
+
+<div id="$uicomponent.id">
+  <%
+    uicomponent.renderChild("PermissionGrid");
+    uicomponent.renderChild("PermissionInput");
+  %>
+	<span style="vertical-align: top">
+		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>">
+			<i class="uiIconUser uiIconLightGray"></i>
+		</a>
+		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>">
+			<i class="uiIconMembership uiIconLightGray"></i>
+		</a>
+		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
+			<i class="uiIconGroup uiIconLightGray"></i>
+		</a>
+		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button">Add</button>
+	</span>
+</div>

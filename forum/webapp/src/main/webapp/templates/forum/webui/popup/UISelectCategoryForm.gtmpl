@@ -3,35 +3,34 @@
 	import org.exoplatform.forum.service.Utils ;
 %>
 
-<div class="UIMovePostForm UIMoveTopicForm">
+<div class="uiSelectCategoryForm horizontalLayout">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectCategoryForm.label.ChooseDestinationCategory");%>:</div>
-	<div class="UITree ScrollArea">
-		<div class="TreeContainer ParentNode">
-		<% 
-			List categories = uicomponent.getForumLinks(); 
-			for(category in categories) {
-			 if(category.getType().equals(Utils.CATEGORY)) {
-				String categoryId = category.getId() ;
-				String categoryName = category.getName() ;
-		%>
-			<div class="Node ClearFix">
-			 	<div class="Icon CategoryNormalIcon" style="background-position:20px 50%; width:40px;padding-top:2px;"><%uicomponent.renderChild(categoryId)%></div>	
-			 	<div class="NodeLabel">
-			 		<div class="NodeSelected" style="line-height:22px;"><label for="$categoryId">$categoryName</label></div> 
-				</div> 			
-
-			</div>
-		<% } 
-			}%>	
-		 </div>
+	<p><%=_ctx.appRes("UISelectCategoryForm.label.ChooseDestinationCategory");%>:</p>
+	<div class="uiTrees scrollArea">
+		<div class="treeContainer">
+			<ul class="nodeGroup">
+			<% 
+				List categories = uicomponent.getForumLinks(); 
+				for(category in categories) {
+				 if(category.getType().equals(Utils.CATEGORY)) {
+					String categoryId = category.getId() ;
+					String categoryName = category.getName() ;
+			%>
+				<li class="node">
+					<%uicomponent.renderChild(categoryId)%>
+					<i class="uiIconCategory uiIconLightGray"></i>&nbsp;$categoryName
+				</li>
+			<% } 
+				}%>
+			</ul>
+		</div>
 	</div>
 	<div class="uiAction">
-  <% for(action in uicomponent.getActions()) { 
-				 String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
-				 String link = uicomponent.event(action) ;
-			%>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$action</a>
+	<% for(action in uicomponent.getActions()) { 
+		String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
+		String link = uicomponent.event(action) ;
+	%>
+		<button onclick="$link" class="btn" type="button">$action</button>
       <%}%>
     </div>
 	<%uiform.end()%>

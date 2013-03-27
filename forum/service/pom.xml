@@ -238,6 +238,7 @@
             <includes>
               <include>**/NoContainerTestSuite.java</include>
               <include>**/BaseForumTestSuite.java</include>
+              <include>**/DiscussionSearchConnectorTestCase.java</include>
             </includes>
           </configuration>
         </plugin>

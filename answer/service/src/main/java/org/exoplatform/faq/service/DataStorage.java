@@ -120,6 +120,8 @@ public interface DataStorage {
   void saveCategory(String parentId, Category cat, boolean isAddNew);
 
   List<Cate> listingCategoryTree() throws Exception;
+  
+  CategoryTree buildCategoryTree(String categoryId) throws Exception;
 
   void removeCategory(String categoryId) throws Exception;
 

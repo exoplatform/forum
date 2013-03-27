@@ -25,6 +25,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
+import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
@@ -36,7 +37,6 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UIPermissionPanel;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -135,6 +135,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     detailTab.addUIFormInput(description);
 
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
+    String[] icons = ForumUtils.getClassIconWithAction();
     List<ActionData> actions = new ArrayList<ActionData>();
 
     ActionData ad;
@@ -146,7 +147,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       else
         ad.setActionListener("AddPrivate");
       ad.setActionParameter(String.valueOf(i) + ForumUtils.COMMA + FIELD_USERPRIVATE_MULTIVALUE);
-      ad.setCssIconClass(string + "Icon");
+      ad.setCssIconClass(icons[i]);
       ad.setActionName(string);
       actions.add(ad);
       ++i;
@@ -154,10 +155,16 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     detailTab.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
     addUIFormInput(detailTab);
     
-    UIPermissionPanel tmp = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    tmp.setPermission(MODERAROR, TOPICABLE, POSTABLE, VIEWER);
-    addChild(tmp);
-    this.setActions(new String[] { "Save", "Cancel" });
+    UIPermissionPanel permissionPanel = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
+    permissionPanel.setPermission(null, new String[] { MODERAROR, TOPICABLE, POSTABLE, VIEWER });
+    addChild(permissionPanel);
+    
+    setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
+  }
+  
+  public void setSpaceGroupId(String spaceGroupId) {
+    getChild(UIPermissionPanel.class).setSpaceGroupId(spaceGroupId);
   }
 
   protected boolean getIsSelected(int id) {

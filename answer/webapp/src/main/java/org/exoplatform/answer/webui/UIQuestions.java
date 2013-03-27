@@ -40,7 +40,7 @@ import org.exoplatform.answer.webui.popup.UIQuestionForm;
 import org.exoplatform.answer.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.answer.webui.popup.UIResponseForm;
 import org.exoplatform.answer.webui.popup.UISendMailForm;
-import org.exoplatform.answer.webui.popup.UISettingForm;
+import org.exoplatform.answer.webui.popup.UIUserSettingForm;
 import org.exoplatform.answer.webui.popup.UIViewUserProfile;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
@@ -174,6 +174,8 @@ public class UIQuestions extends UIContainer {
 
   private String[]                      moderatorActionQues_  = new String[] { "CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion" };
 
+  private Map<String, String>           iconActionQuesion     = new HashMap<String, String>();
+  
   private String[]                      moderatorActionQues2_ = new String[] { "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion" };
 
   private String[]                      userActionQues_       = new String[] { "CommentQuestion", "ResponseQuestion", "SendQuestion" };
@@ -203,6 +205,13 @@ public class UIQuestions extends UIContainer {
       faqService_ = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
     if (FAQUtils.isFieldEmpty(getId()))
       setId("UIQuestions");
+
+    //"CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"
+    String[] icons = new String[]{"uiIconComment", "uiIconAnsAnswer", "uiIconEdit", "uiIconTrash", "uiIconMove", "uiIconAnsSentMail"}; 
+    iconActionQuesion.clear();
+    for(int i = 0; i < moderatorActionQues_.length; ++i) {
+      iconActionQuesion.put(moderatorActionQues_[i], icons[i]);
+    }
   }
 
   protected boolean isNotInSpace() {
@@ -325,6 +334,10 @@ public class UIQuestions extends UIContainer {
 
   protected String[] getActionQuestion() {
     return (canEditQuestion) ? ((faqSetting_.isEnanbleVotesAndComments()) ? moderatorActionQues_ : moderatorActionQues2_) : ((FAQUtils.isFieldEmpty(currentUser_)) ? userActionQues2_ : ((faqSetting_.isEnanbleVotesAndComments()) ? userActionQues_ : userActionQues3_));
+  }
+
+  protected String getIconActionQuestion(String action) {
+    return iconActionQuesion.get(action);
   }
 
   public void updateCurrentQuestionList() throws Exception {
@@ -572,7 +585,7 @@ public class UIQuestions extends UIContainer {
             uiPopupAction.activate(uiPopupContainer, 580, 500);
             uiPopupContainer.setId("SubCategoryForm");
             category.setParentId(categoryId);
-            category.updateAddNew(true);
+            category.updateAddNew(true, uiPortlet.getSpaceGroupId());
           } else {
             event.getRequestContext()
                  .getUIApplication()
@@ -637,11 +650,11 @@ public class UIQuestions extends UIContainer {
       UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UISettingForm uiSetting = popupContainer.addChild(UISettingForm.class, null, null);
+      UIUserSettingForm uiSetting = popupContainer.addChild(UIUserSettingForm.class, null, null);
       uiSetting.setFaqSetting(question.faqSetting_);
       uiSetting.init();
       popupContainer.setId("CategorySettingForm");
-      popupAction.activate(popupContainer, 480, 0);
+      popupAction.activate(popupContainer, 500, 0);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
@@ -688,7 +701,7 @@ public class UIQuestions extends UIContainer {
           uiPopupContainer.setId("EditCategoryForm");
           UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null);
           uiCategoryForm.setParentId(category.getPath().replaceFirst(CommonUtils.SLASH + category.getId(), CommonUtils.EMPTY_STR));
-          uiCategoryForm.updateAddNew(false);
+          uiCategoryForm.updateAddNew(false, uiPortlet.getSpaceGroupId());
           uiCategoryForm.setCategoryValue(category, true);
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
         } else {
@@ -760,10 +773,12 @@ public class UIQuestions extends UIContainer {
   static public class ViewQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       WebuiRequestContext context = event.getRequestContext();
+      UIQuestions uiQuestions = event.getSource();
       String questionId = context.getRequestParameter(OBJECTID);
       String asn = context.getRequestParameter(Utils.ANSWER_NOW_PARAM);
-      event.getSource().getAncestorOfType(UIAnswersPortlet.class)
-                       .viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
+      UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);
+      portlet.viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
+      context.addUIComponentToUpdateByAjax(uiQuestions.getParent());
     }
   }
 
@@ -782,7 +797,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = questionId;
       uiQuestions.updateLanguageMap();
-      context.addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+      context.addUIComponentToUpdateByAjax(uiQuestions);
     }
   }
 
@@ -793,7 +808,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.language_ = FAQUtils.getDefaultLanguage();
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = "";
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions);
     }
   }
 
@@ -945,6 +960,11 @@ public class UIQuestions extends UIContainer {
   static public class PrintAllQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource();
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+      Question question = null;
+      if (questionId != null) {
+        question = questions.getFAQService().getQuestionById(questionId);
+      }
       UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
@@ -960,7 +980,7 @@ public class UIQuestions extends UIContainer {
         return;
       }
       UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null);
-      uiPrintAll.setCategoryId(questions.categoryId_, questions.getFAQService(), questions.faqSetting_, questions.canEditQuestion);
+      uiPrintAll.setCategoryId(questions.categoryId_, questions.getFAQService(), questions.faqSetting_, questions.canEditQuestion, question);
       popupContainer.setId("FAQPrintAllQuestion");
       popupAction.activate(popupContainer, 800, 500);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
@@ -1112,7 +1132,6 @@ public class UIQuestions extends UIContainer {
         popupContainer.setId("FAQMoveQuestion");
         moveQuestionForm.setFAQSetting(questions.faqSetting_);
         popupAction.activate(popupContainer, 600, 400);
-        moveQuestionForm.updateSubCategory();
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       }
     }

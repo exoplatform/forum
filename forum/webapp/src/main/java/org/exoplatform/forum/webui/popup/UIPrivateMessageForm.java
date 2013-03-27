@@ -46,7 +46,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -112,12 +111,15 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
+    formWYSIWYGInput.setHeight("220px");
+    formWYSIWYGInput.setWidth("98%");
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(SendTo);
     sendMessageTab.addUIFormInput(MailTitle);
     sendMessageTab.addUIFormInput(formWYSIWYGInput);
 
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
+    String[] icons = ForumUtils.getClassIconWithAction();
     ActionData ad;
     int i = 0;
     List<ActionData> actions = new ArrayList<ActionData>();
@@ -128,7 +130,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       else
         ad.setActionListener("AddValuesUser");
       ad.setActionParameter(String.valueOf(i));
-      ad.setCssIconClass(string + "Icon");
+      ad.setCssIconClass(icons[i]);
       ad.setActionName(string);
       actions.add(ad);
       ++i;
@@ -137,6 +139,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     addUIFormInput(sendMessageTab);
     addChild(UIListInBoxPrivateMessage.class, null, null);
     addChild(UIListSentPrivateMessage.class, null, null);
+    setAddColonInLabel(true);
   }
 
   public void activate() {
@@ -272,22 +275,34 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
     String content = privateMessage.getMessage();
-    String label = this.getLabel(FIELD_REPLY_LABEL);
+    
+    String replyLabel = getLabel(FIELD_REPLY_LABEL) + CommonUtils.COLON;
+    String forwardLabel = getLabel(FIELD_FORWARD_LABEL) + CommonUtils.COLON;
+
+    
     String title = CommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
-    if (title.indexOf(label) < 0) {
-      title = new StringBuffer(label).append(": ").append(title).toString();
-    }
+    title = getTitleMessage(getTitleMessage(title, replyLabel), forwardLabel);
+
     if (isReply) {
       UIFormStringInput areaInput = findComponentById(FIELD_SENDTO_TEXT);
       areaInput.setValue(privateMessage.getFrom());
-      stringInput.setValue(title);
+      stringInput.setValue(replyLabel + title);
       content = new StringBuffer("<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">").append(content).append("</div>").toString();
     } else {
-      label = this.getLabel(FIELD_FORWARD_LABEL);
-      stringInput.setValue(title);
+      stringInput.setValue(forwardLabel + title);
     }
     message.setValue(content);
     this.id = 2;
+  }
+
+  private String getTitleMessage(String title, String defautlLabel) {
+    if (CommonUtils.isEmpty(title) == true){
+      return CommonUtils.EMPTY_STR;
+    }
+    while (title.indexOf(defautlLabel) == 0) {
+      title = title.replaceFirst(defautlLabel, CommonUtils.EMPTY_STR);
+    }
+    return title;
   }
 
   public boolean isFullMessage() {

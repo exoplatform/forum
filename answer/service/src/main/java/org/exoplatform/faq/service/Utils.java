@@ -32,7 +32,7 @@ import org.exoplatform.forum.common.jcr.KSDataLocation;
 public class Utils {
   final public static String FAQ_APP              = "faqApp".intern();
 
-  final public static String DEFAULT_AVATAR_URL   = "/answer/skin/DefaultSkin/webui/background/Avatar1.gif";
+  final public static String DEFAULT_AVATAR_URL   = "/social-resources/skin/images/ShareImages/UserAvtDefault.png";
 
   final public static String QUESTION_HOME        = "questions".intern();
 

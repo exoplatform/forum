@@ -32,8 +32,8 @@
         this.optionListCont = this.menu.find('ul.option-list:first');
 
         if(String(this.dataConfig.isDisabled) === 'false') {
-          var arrow = this.menuContainer.find('.rightArrow:first');
-          arrow.off('click').on('click', function(e) {
+          var dropdownToggle = this.menuContainer.find('.dropdown-toggle:first');
+          dropdownToggle.off('click').on('click', function(e) {
             e.stopPropagation();
             gj('.filterMenu').css({'height': '0px','visibility' :'hidden'});
 
@@ -77,6 +77,23 @@
           
         });
         
+		var itemAs = this.optionListCont.find('a');
+		itemAs.on('mouseover', function(e) {
+			UIFormScrollSelectBox.optionListCont.find('a').attr('class', '');
+			e.stopPropagation();
+			var item = gj(this);
+			item.attr('class', 'selected');
+		})
+		.on('mouseout', function(e) {
+			e.stopPropagation();
+			gj(this).attr('class', '');
+			gj.each(opsList, function(id, elm) {
+				var jElm = gj(elm);
+				if(jElm.attr('data-selected') === 'true') {
+					jElm.find('a:first').attr('class', 'selected');
+				}
+			});
+		});
      
       }
     };

@@ -17,7 +17,7 @@
 							  <div class="control-group">
 							    <label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 							    
-							    <div class="controls">
+							    <div class="controls ">
 										<% uiform.renderField(field) %>
 							    </div>
 							  </div>
@@ -30,7 +30,7 @@
 									<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 									<div class="controls">
 										<% uiform.renderField(field) %>
-										<i onclick="$link" class="uiIconDelete"></i>
+										<i onclick="$link" class="uiIconDelete uiIconLightGray"></i>
 									</div>
 								</div>
 						<%} else {%>
@@ -40,7 +40,7 @@
 											<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 											<div class="controls">
 													<% uiform.renderField(field) %>
-													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br/>
+													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%>
 											</div>
 									<%} else {%>
 											<div class="controls-full"><% uiform.renderField(field) %></div>
@@ -55,14 +55,14 @@
 						<div class="control-group">
 							<label class="control-label"><%=_ctx.appRes("UIQuestionForm.label.Validation")%> : </label>
 							<div class="controls">
-								<div style="float:left;">
-									<div style="float:left; padding:0px 4px 0px 4px;">
-										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
-										<label for="<%=uicomponent.IS_APPROVED%>"><%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
+								<div class="clearfix areaCheckbox">
+									<div  class="pull-left" >
+										<label for="<%=uicomponent.IS_APPROVED%>"><%uiform.renderChild(uicomponent.IS_APPROVED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
 									</div>
-									<div style="float:left; padding:0px 4px 0px 4px;">
-										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
-										<label for="<%=uicomponent.IS_ACTIVATED%>"><%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
+									<div class="pull-left" >
+										<label for="<%=uicomponent.IS_ACTIVATED%>"><%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
 									</div>
 								</div>
 							</div>
@@ -87,24 +87,24 @@
 						      }
 						     	if(name.length() < 80){
 							     %>
-							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+							     	<div class="viewAttachFile attachmentIcon fileAttachmentIcon">
 						     			$name
 						     	<%} else {%>
-							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+							     	<div class="viewAttachFile attachmentIcon fileAttachmentIcon">
 							     		<a href="javaScript:void(0);" rel="tooltip" data-placement="bottom" title="$name" style="color:black;">
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
-											<a href="$link" style="color:#058EE6; font-size:12px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
-												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>"/>
+											<a href="$link"  rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
+												<i class="uiIconDelete uiIconLightGray" ></i>
 											</a>
-										</div>
+									</div>
 						    <%
 						  	}
 							}
 							%>
-							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href="<%=uicomponent.event("Attachment")%>">
-								<%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
+							<a  class="btn" href="<%=uicomponent.event("Attachment")%>">
+								<i class="uiIconAttach uiIconLightGray"></i> <%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
 							</a>
 						</div>
 					</div>

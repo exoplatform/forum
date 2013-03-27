@@ -12,8 +12,9 @@
   }
 %>
 
-<div class="pagination uiPageIterator clearfix" id="$uicomponent.id">
 <% if(totalPage > 1) {%>  
+<div class="pagination uiPageIterator clearfix" id="$uicomponent.id">
+
   <ul class="pull-right">
   <%if( currentPage > 1 ){%>        
   <li><a href="<%=uicomponent.event("GoPage","${currentPage - 1}")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAnswersPageIterator.label.PreviousPage")%>"><i class="uiIconPrevArrow"></i></a></li>
@@ -61,5 +62,7 @@
     <span><%=_ctx.appRes("UIAnswersPageIterator.label.TotalPages")%>:</span>
     <span class="pagesTotalNumber"><%=totalPage%></span>
   </p>
-<%}%>   
-</div>
+ </div> 
+<%} else {%>   
+<div id="$uicomponent.id"></div>
+<%}%>

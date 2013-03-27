@@ -15,7 +15,7 @@
 // <i class="iconinbox iconwhite"></i>
 
 [class^="uiIconAns"]{
-  background-image: url("/answer/skin/images/answers/Icons/uiIconsAnsDarkGray.png");
+  background-image: url("/faq/skin/images/answers/Icons/uiIconsAnsDarkGray.png");
 }
 
 /* Blue icons with optional class, or on hover/active states of certain elements */
@@ -27,10 +27,11 @@
 .dropdown-menu > li > a:hover > [class^="uiIconAns"],
 .dropdown-menu > .active > a > [class^="uiIconAns"],
 .uiDropdownWithIcon .dropdown-submenu:hover > a > [class^="uiIconAns"],
-.btn:hover [class^="uiIconAns"],
+.actionIcon.active [class^="uiIconAns"],
+.btn:hover [class^="uiIconAns"],a:hover  > [class^="uiIconAns"],
 [class^="uiIconAns"]:hover, .uiActionBar [class^="uiIconAns"]:hover, .uiIconAnsBlue
 {
-  background-image: url("/answer/skin/images/answers/Icons/uiIconsAnsBlue.png");
+  background-image: url("/faq/skin/images/answers/Icons/uiIconsAnsBlue.png");
 }
 
 /* light grey icons with optional class, or on  */
@@ -42,7 +43,7 @@
 .uiDropDownCal li a [class^="uiIconAns"], .uiActionBar [class^="uiIconAns"],
 .answerToolbar [class^="uiIconAns"], .uiIconAnsLightGray
 {
-  background-image: url("/answer/skin/images/answers/Icons/uiIconsAnsLightGray.png");
+  background-image: url("/faq/skin/images/answers/Icons/uiIconsAnsLightGray.png");
 }
 
 /* White icons with optional class, or on hover/active states of Drop down with Icons */
@@ -56,10 +57,13 @@
 .btn-primary [class^="uiIconAns"], 
 .btn-primary:hover [class^="uiIconAns"], .uiIconAnsWhite
 {
-  background-image: url("/answer/skin/images/answers/Icons/uiIconsAnsWhite.png");
+  background-image: url("/faq/skin/images/answers/Icons/uiIconsAnsWhite.png");
 }
 
-.uiIconAnsSubmitQuestion {
+[class^="uiIconAnwserColor"] {
+	background-image: url("/faq/skin/images/answers/Icons/uiIconsAnswerColor.png");
+}
+.uiIconAnsSubmitQuestion,.uiIconAnsAddNewQuestion {
 	background-position: -20px 0;
 }
 
@@ -73,4 +77,33 @@
 
 .uiIconAnsManageQuestion {
 	background-position: -40px 0;
+}
+.uiIconAnsThumbDownMini {
+	background-position: -20px -20px;
+}
+.uiIconAnsThumbUpMini {
+	background-position: 0px -20px;
+}
+.uiIconAnsAnswer {
+	background-position: -40px -20px;
+}
+.uiIconAnsApprove {
+	background-position: -100px 0px;
+}
+.uiIconAnsDisapprove {
+	background-position: -120px 0px;
+}
+.uiIconAnsPromte {
+	background-position: -180px 0px;
+}
+
+.uiIconAnsEnable {
+	background-position: -140px 0px;
+}  
+.uiIconAnsDisable {
+	background-position: -160px 0px;
+}  
+
+.uiIconAnwserColorBusy {
+	background-position: -102px 0;
 }

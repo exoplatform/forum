@@ -136,7 +136,7 @@
 	</div>
 	
 	<div class="uiAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Save");%>" class="btn LightBlueStyle"><%=_ctx.appRes("UICategoryForm.action.Save");%></a>
+  		<button onclick="<%=uicomponent.event("Save");%>" class="btn" type="button"><%=_ctx.appRes("UICategoryForm.action.Save");%></button>
     </div>
 	<%uiform.end()%>
 </div>

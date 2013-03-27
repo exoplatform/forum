@@ -1,9 +1,47 @@
 <?xml version="1.0"?>
 <!DOCTYPE configuration SYSTEM "http://www.exoplatform.org/dtd/indexing-configuration-1.0.dtd">
-<configuration xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0">
+<configuration xmlns:jcr="http://www.jcp.org/jcr/1.0" 
+               xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+               xmlns:exo="http://www.exoplatform.com/jcr/exo/1.0">
 
   <index-rule nodeType="nt:resource">
        <property useInExcerpt="false">jcr:encoding</property>
        <property useInExcerpt="false">jcr:mimeType</property>
   </index-rule>
+  
+  <!-- FORUM: topics -->
+  <index-rule nodeType="exo:topic">
+  	<!-- Topic: name -->
+  	<property boost="3.0">exo:name</property>
+  	<!-- Topic: description -->
+  	<property boost="2.0">exo:description</property>
+  </index-rule>
+  
+  <!-- FORUM: posts -->
+  <index-rule nodeType="exo:post">
+  	<!-- Topic: post name -->
+  	<property boost="3.0">exo:name</property>
+  	<!-- Topic: post description -->
+  	<property boost="2.0">exo:message</property>
+  </index-rule>
+  
+  <!-- ANSWER: Questions -->
+ 	<index-rule nodeType="exo:faqQuestion">
+ 		<!-- Questions: title -->
+ 		<property boost="3.0">exo:title</property>
+ 		<!-- Questions: details (exo:name) -->
+ 		<property boost="2.0">exo:name</property>
+ 	</index-rule>
+ 	
+ 	<!-- ANSWER: Answers -->
+ 	<index-rule nodeType="exo:answer">
+ 		<!-- Questions: title -->
+ 		<property boost="3.0">exo:responses</property>
+ 	</index-rule>
+ 	
+ 	<!-- ANSWER: Comments -->
+ 	<index-rule nodeType="exo:comment">
+ 		<!-- Questions: title -->
+ 		<property boost="1.5">exo:comments</property>
+ 	</index-rule>
 </configuration>

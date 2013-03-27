@@ -168,7 +168,12 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
     else
       formId = uiForm.getId();
 
+    isMultiple_ = isMultiple_ || Boolean.parseBoolean(getHTMLAttribute("multiple"));
+
     Writer w = context.getWriter();
+    if (!isMultiple_) {
+        w.write("<span class=\"uiSelectbox\">");
+    }
     w.write("<select class=\"selectbox\" id=\"");
     w.write(name);
     w.write("\" name=\"");
@@ -219,6 +224,11 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
       w.write("</option>\n");
     }
     w.write("</select>\n");
+    if (!isMultiple_) {
+      w.write("</span>\n");
+    }
+    if (this.isMandatory())
+      w.write(" *");
   }
 
 }

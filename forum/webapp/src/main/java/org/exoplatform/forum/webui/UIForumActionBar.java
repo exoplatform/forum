@@ -40,7 +40,6 @@ import org.exoplatform.forum.webui.popup.UINotificationForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
 import org.exoplatform.forum.webui.popup.UISortSettingForm;
-import org.exoplatform.forum.webui.popup.UITopicTypeManagerForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,7 +71,6 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
         @EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
-        @EventConfig(listeners = UIForumActionBar.TopicTypeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
     }
 )
@@ -102,8 +100,8 @@ public class UIForumActionBar extends UIContainer {
 
   protected String[] getActionMenu() {
     return (ForumUtils.enableIPLogging()) ? 
-           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : 
-           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "OpenIPBan", "ExportCategory", "ImportCategory" }) : 
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "ExportCategory", "ImportCategory" });
   }
 
   protected int getTotalJobWattingForModerator() throws Exception {
@@ -181,9 +179,10 @@ public class UIForumActionBar extends UIContainer {
       UIForumPortlet forumPortlet = uiActionBar.getParent();
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UICategoryForm.class, null, null);
+      UICategoryForm categoryForm = popupContainer.addChild(UICategoryForm.class, null, null);
+      categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
       popupContainer.setId("AddCategoryForm");
-      popupAction.activate(popupContainer, 550, 380);
+      popupAction.activate(popupContainer, 665, 380);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
@@ -223,7 +222,8 @@ public class UIForumActionBar extends UIContainer {
         UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
         UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
         UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null);
-        forumForm.initForm();
+        forumForm.setMode(false);
+        forumForm.initForm(forumPortlet.getSpaceGroupId());
         UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
         if (category != null && category.isRendered()) {
           forumForm.setCategoryValue(category.getCategoryId(), true);
@@ -340,19 +340,7 @@ public class UIForumActionBar extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       popupContainer.addChild(UIAutoPruneForm.class, null, null);
       popupContainer.setId("AutoPruneForm");
-      popupAction.activate(popupContainer, 600, 400);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-    }
-  }
-
-  static public class TopicTypeManagerActionListener extends EventListener<UIForumActionBar> {
-    public void execute(Event<UIForumActionBar> event) throws Exception {
-      UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UITopicTypeManagerForm.class, null, null);
-      popupContainer.setId("TopicTypeManagerForm");
-      popupAction.activate(popupContainer, 600, 400);
+      popupAction.activate(popupContainer, 750, 400);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

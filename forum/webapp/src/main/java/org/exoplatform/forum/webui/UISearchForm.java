@@ -31,7 +31,6 @@ import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -95,8 +94,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   final static private String FIELD_SEARCHTYPE_SELECTBOX  = "SearchType";
 
-  final static private String FIELD_TOPICTYPE_SELECTBOX   = "TopicType";
-
   final static private String FIELD_TOPICCOUNTMIN_SLIDER  = "TopicCountMax";
 
   final static private String FIELD_POSTCOUNTMIN_SLIDER   = "PostCountMax";
@@ -131,9 +128,9 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
 
-  private List<TopicType>     listTT                      = new ArrayList<TopicType>();
-
   private Locale              locale;
+  
+  private int                 currentType                 = 0;
 
   public UISearchForm() throws Exception {
     if (this.getId() == null)
@@ -148,7 +145,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list);
     searchType.setOnChange("Onchange");
 
-    UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, null);
     UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, null);
 
     UICheckBoxInput isLock = new UICheckBoxInput(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
@@ -168,7 +164,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
     addUIFormInput(searchValue);
     addUIFormInput(searchType);
-    addUIFormInput(topicType);
     addUIFormInput(boxInput);
     addUIFormInput(searchUser);
     addUIFormInput(isLock);
@@ -185,6 +180,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     addUIFormInput(viewCountMin);
     addUIFormInput(moderator);
     setActions(new String[] { "Search", "ResetField", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   protected void setLocale() throws Exception {
@@ -197,21 +193,13 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
 
   public void initDefaultContent() throws Exception {
-    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(0));
+    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(currentType));
 
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(getLabel("Full"), ForumEventQuery.VALUE_IN_ENTIRE));
     list.add(new SelectItemOption<String>(getLabel("Titles"), ForumEventQuery.VALUE_IN_TITLE));
     UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
     boxInput.setValue(ForumEventQuery.VALUE_IN_ENTIRE);
-
-    list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(getLabel("All"), "all"));
-    for (TopicType topicType : listTT) {
-      list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-    }
-    UIFormSelectBox topicType = this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
-    topicType.setValue(TopicType.DEFAULT_ID);
 
     if (userProfile == null)
       setUserProfile(null);
@@ -244,10 +232,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   public void setPath(String path) {
     this.path = path;
-    if(ForumUtils.isEmpty(path)) setOptionsType(0);
-    else if(path.indexOf(Utils.TOPIC) > 0) setOptionsType(3);
-    else if(path.indexOf(Utils.CATEGORY) > 0) setOptionsType(1);
-    else if(path.indexOf(Utils.FORUM) > 0) setOptionsType(2);
   }
   
   private  List<SelectItemOption<String>> optionsType(int type) {
@@ -259,13 +243,21 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     return list;
   }
   
-  private void setOptionsType(int type) {
+  private void setSearchOptions(int type) {
+    this.currentType = type;
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(type));
   }
 
-  private void setTopicType() {
-    listTT.clear();
-    listTT.addAll(getForumService().getTopicTypes());
+  public void setSearchOptionsObjectType(String type) {
+    if (type.equals(Utils.FORUM)) {
+      setSearchOptions(1);
+    } else if (type.equals(Utils.TOPIC)) {
+      setSearchOptions(2);
+    } else if (type.equals(Utils.POST)) {
+      setSearchOptions(3);
+    } else {
+      setSearchOptions(0);
+    }
   }
 
   public void setUserProfile(UserProfile userProfile) {
@@ -281,7 +273,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
 
   public void setSelectType(String type){
-    this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
     if (type.equals(Utils.FORUM)) {
       this.isSearchForum = true;
       this.isSearchTopic = false;
@@ -290,13 +281,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       this.isSearchCate = false;
       this.isSearchForum = false;
       this.isSearchTopic = true;
-      this.setTopicType();
-      List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-      list.add(new SelectItemOption<String>(this.getLabel("All"), "all"));
-      for (TopicType topicType : this.listTT) {
-        list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-      }
-      this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
     } else if (type.equals(Utils.CATEGORY)) {
       this.isSearchCate = true;
       this.isSearchForum = false;
@@ -306,7 +290,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       this.isSearchForum = false;
       this.isSearchTopic = false;
     }
-    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
+    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
   }
 
   public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
@@ -362,7 +346,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue();
       keyValue = CommonUtils.encodeSpecialCharInSearchTerm(keyValue);
       String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue();
-      String topicType = uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
 
       String valueIn = uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).getValue();
       if (valueIn == null || valueIn.length() == 0)
@@ -418,7 +401,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       eventQuery.setType(type);
       eventQuery.setKeyValue(keyValue);
       eventQuery.setValueIn(valueIn);
-      eventQuery.setTopicType(topicType);
       eventQuery.setPath(uiForm.path);
       eventQuery.setByUser(CommonUtils.encodeSpecialCharInSearchTerm(byUser));
       eventQuery.setIsLock(isLock);
@@ -478,7 +460,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     public void execute(Event<UISearchForm> event) throws Exception {
       UISearchForm uiForm = event.getSource();
       uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
-      uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue("all");
       uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue(ForumEventQuery.VALUE_IN_ENTIRE);
       uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);

@@ -8,12 +8,12 @@
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
 						<div class="control-group">
-							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :</label>
-							<div class="controls"><%=uicomponent.render(uicomponent.questionContent)%></div>
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%>:</label>
+							<div class="controls"><strong><%=uicomponent.render(uicomponent.questionContent)%></strong></div>
 						</div>
 						
 						<div class="control-group">
-							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :</label>
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionContent")%>:</label>
 							<div class="controls"><%=uicomponent.render(uicomponent.questionDetail)%></div>
 						</div>
 					<% 
@@ -23,7 +23,7 @@
 						<div class="control-group">
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+								<label class="control-label" for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %>:</label>
 							
 								<div class="controls">
 									<%if(field.getName().equals("QuestionRelation")){ 
@@ -55,10 +55,12 @@
 					if(uicomponent.isModerator) {
 					%>
 						<div class="control-group">
-							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.Relation")%>  :&nbsp;</label>
+							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.Relation")%>:</label>
 							<div class="controls">
-								<div class="ItemIcon AddIcon" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>"><span></span></div><br/>
-								<div style="width:100%; margin-top:10px;">
+								<a href="javascript:void(0)" onclick="<%=uicomponent.event("AddRelation")%>"  rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>">
+									<i class="uiIconLightGray uiIconPlus"></i>
+								</a>
+								<ul class="listRelated" >
 									<%
 									int i = 0 ;
 									String viewString = "" ;
@@ -69,12 +71,14 @@
 						          viewString = FAQUtils.getSubString(viewString, 85) ;
 						        }
 									%>
-										<div style="margin:0px 0px 3px 2px;">
-											<div class="ItemIcon DustBinIcon" onclick="$action" style="margin-left:5px; float:left; cursor:pointer;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.label.Remove")%>"><span></span></div>
-											&nbsp;$viewString  &nbsp;&nbsp;&nbsp;&nbsp;
-										</div>
+										<li class="listItem">
+											- $viewString
+											<a href="javascript:void(0)" onclick="$action" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.label.Remove")%>">
+												<i class="uiIconLightGray uiIconTrash"></i>
+											</a>											
+										</li>
 								<%}%>
-								</div>
+								</ul>
 							</div>
 						</div>
 					<%} %>

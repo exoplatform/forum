@@ -754,7 +754,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 520);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);
         postForm.setMod(topicDetail.isMod);
@@ -943,7 +943,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
       Post post = topicDetail.getPost(postId);
       if (post != null) {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 545);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 850, 545);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, false, false, post);
       } else {
@@ -968,7 +968,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
       Post post = topicDetail.getPost(postId);
       if (post != null) {
-        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 520);
+        UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, true, false, post);
         postForm.setMod(topicDetail.isMod);
@@ -1002,6 +1002,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum);
         topicForm.setUpdateTopic(topicDetail.getTopic(), true);
         topicForm.setMod(topicDetail.isMod);
+        topicForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
         topicForm.setIsDetail(true);
         topicDetail.isEditTopic = true;
       } catch (Exception e) {
@@ -1639,6 +1640,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(topicDetail.topic.getPath());
       searchForm.setSelectType(Utils.POST);
+      searchForm.setSearchOptionsObjectType(Utils.POST);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -1674,7 +1676,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.getTopic();
         StringBuffer buffer = new StringBuffer();
-        buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topic.getId());
+        buffer.append("uiIconForumTopic//").append(topic.getTopicName()).append("//").append(topic.getId());
         String userName = topicDetail.userProfile.getUserId();
         topicDetail.getForumService().saveUserBookmark(userName, buffer.toString(), true);
       } catch (Exception e) {

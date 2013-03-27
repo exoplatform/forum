@@ -27,6 +27,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.image.ResizeImageService;
 import org.exoplatform.forum.service.BufferAttachment;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -57,13 +58,15 @@ import org.exoplatform.webui.form.input.UIUploadInput;
 )
 public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 
-  final static public String FIELD_UPLOAD    = "upload";
+  final static public String FIELD_UPLOAD       = "upload";
 
-  final private static int   fixWidthImage   = 200;
+  final private static int   fixWidthImage      = 200;
 
-  private boolean            isTopicForm     = true;
+  private boolean            isTopicForm        = true;
 
-  private boolean            isChangeAvatar_ = false;
+  private boolean            isChangeAvatar_    = false;
+
+  private String             changeAvatarOfUser  = null;
 
   public UIAttachFileForm() throws Exception {
     setMultiPart(true);
@@ -87,6 +90,14 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
   }
 
   public void deActivate() {
+  }
+
+  public String getChangeAvatarOfUser() {
+    return changeAvatarOfUser;
+  }
+
+  public void setChangeAvatarOfUser(String changeAvatarOfUser) {
+    this.changeAvatarOfUser = changeAvatarOfUser;
   }
 
   static public class SaveActionListener extends EventListener<UIAttachFileForm> {
@@ -150,9 +161,11 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
       }
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       if (uiForm.isChangeAvatar_) {
-        uiForm.getForumService().saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
-        UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);
-        event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+        String changeAvatarOfUser = Utils.isEmpty(uiForm.changeAvatarOfUser) ? UserHelper.getCurrentUser() : uiForm.changeAvatarOfUser;
+        uiForm.getForumService().saveUserAvatar(changeAvatarOfUser, files.get(0));
+        uiForm.changeAvatarOfUser = null;
+        UIAvatarContainer avatarContainer = forumPortlet.findFirstComponentOfType(UIAvatarContainer.class);
+        event.getRequestContext().addUIComponentToUpdateByAjax(avatarContainer);
       } else if (uiForm.isTopicForm) {
         UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
         topicForm.addUploadFileList(files);
