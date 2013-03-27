@@ -87,7 +87,7 @@
 		</ul>
 
 	</div>
-
+	<!--answerToolbar-->
 	<div class="answersContainer viewQuestionContent uiContentBox">
 
 			<div class="FAQContent uiFAQContent">
@@ -279,7 +279,7 @@
 												<div class="pull-right uiDropdownWithIcon dropdown">
 
 													<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon	dropdown-toggle">
-														<i class="uiIconSettings uiIconLightGray"></i>More Actions&nbsp; <!--hardcode-->
+														<i class="uiIconSettings uiIconLightGray"></i>&nbsp;More Actions&nbsp; <!--hardcode-->
 														<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 													<!--	Begin popup menu	-->
@@ -402,148 +402,148 @@
 												<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h6>
 
-										</div>
-									</div>
+										</div><!-- end actionBar -->
 
-									<!-- questionContent -->
-									<div class="questionContent">
-										 <div class="pull-right">
-										<%
-											if(uicomponent.faqSetting_.isEnanbleVotesAndComments()) {
-										%>
-												<!--	Vote result	-->
-												<div class="voteResult clearfix">
+										<!-- questionContent -->
+										<div class="questionContent">
+											 <div class="pull-right">
 											<%
-												int markVote =(Integer) question.getMarkVote();
-												double sodu = question.getMarkVote() - markVote;
+												if(uicomponent.faqSetting_.isEnanbleVotesAndComments()) {
 											%>
-													<div class="ratingInfoContainer uiVote pull-left">
-
-											<%
-												if(uicomponent.currentUser_ == null ||
-													(uicomponent.currentUser_ != null && !uicomponent.canVote(question))) {
-													onclick = "javaScrip:void(0);";
-													titleMark = "";
-													if(uicomponent.currentUser_ != null && question.isApproved() || uicomponent.canEditQuestion) {
-														onclick = uicomponent.event("UnVoteQuestion",question.getPath());
-														titleMark = _ctx.appRes("UIQuestions.action.UnVoteQuestion");
-													}
+													<!--	Vote result	-->
+													<div class="voteResult clearfix">
+												<%
+													int markVote =(Integer) question.getMarkVote();
+													double sodu = question.getMarkVote() - markVote;
 												%>
-														<div class="avgRatingImages clearfix" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$titleMark">
-														<%
-														for(int mark = 0; mark < 5; mark ++){
-															if(mark < markVote){%>
-															<i class="voted"></i>
-														<%} else if (mark > markVote){%>
-															<i class="unvoted"></i>
-														<%} else{
-															if(sodu < 0.3){%>
-															<i class="unvoted"></i>
-															<%} else if (sodu > 0.7){%>
-															<i class="voted"></i>
-															<%} else {%>
-															<i class="votedHaft"></i>
-															<%}
-															}
-														}%>
-														</div>
+														<div class="ratingInfoContainer uiVote pull-left">
 
-											<%} else {
-													requireJS.addScripts("eXo.answer.UIAnswersPortlet.initVoteQuestion('faqVoteSpace') ;")
-											%>
-														<div id="faqVoteSpace" class="faqVoteSpace uiVote">
-															<div class="avgRatingImages clearfix inforVoted" style="display:block;">
-
-															<%String classNameForStar = "";
-																for(int mark = 0; mark < 5; mark ++){
-																if(mark < markVote){
-																	classNameForStar = "voted";
-
-																} else if (mark > markVote){
-																	classNameForStar = "unvoted";
-																} else{
-																	if(sodu < 0.3){
-																	classNameForStar = "unvoted";
-																	} else if (sodu > 0.7){
-																	classNameForStar = "voted";
-																	} else {
-																	classNameForStar = "HalfVoted";
-																	}
-																}%>
-																<i class="$classNameForStar"></i>
-															<%}%>
-															</div><!-- end avgRatingImages -->
-
+												<%
+													if(uicomponent.currentUser_ == null ||
+														(uicomponent.currentUser_ != null && !uicomponent.canVote(question))) {
+														onclick = "javaScrip:void(0);";
+														titleMark = "";
+														if(uicomponent.currentUser_ != null && question.isApproved() || uicomponent.canEditQuestion) {
+															onclick = uicomponent.event("UnVoteQuestion",question.getPath());
+															titleMark = _ctx.appRes("UIQuestions.action.UnVoteQuestion");
+														}
+													%>
+															<div class="avgRatingImages clearfix" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$titleMark">
 															<%
-																if (question.isApproved() || uicomponent.canEditQuestion) {
-															%>
-															<div class="avgRatingImages clearfix voting" style="display:none;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-															<%
-															for(int i = 0; i < 5; i ++) {
-																number = String.valueOf(i+1);
-																onclick = uicomponent.event("VoteQuestion", number);
-															%>
-																<i data-index="<%=(i+1)%>" class="unvoted" onclick="$onclick"></i>
-															<%}%>
+															for(int mark = 0; mark < 5; mark ++){
+																if(mark < markVote){%>
+																<i class="voted"></i>
+															<%} else if (mark > markVote){%>
+																<i class="unvoted"></i>
+															<%} else{
+																if(sodu < 0.3){%>
+																<i class="unvoted"></i>
+																<%} else if (sodu > 0.7){%>
+																<i class="voted"></i>
+																<%} else {%>
+																<i class="votedHaft"></i>
+																<%}
+																}
+															}%>
 															</div>
-															<%} %>
+
+												<%} else {
+														requireJS.addScripts("eXo.answer.UIAnswersPortlet.initVoteQuestion('faqVoteSpace') ;")
+												%>
+															<div id="faqVoteSpace" class="faqVoteSpace uiVote">
+																<div class="avgRatingImages clearfix inforVoted" style="display:block;">
+
+																<%String classNameForStar = "";
+																	for(int mark = 0; mark < 5; mark ++){
+																	if(mark < markVote){
+																		classNameForStar = "voted";
+
+																	} else if (mark > markVote){
+																		classNameForStar = "unvoted";
+																	} else{
+																		if(sodu < 0.3){
+																		classNameForStar = "unvoted";
+																		} else if (sodu > 0.7){
+																		classNameForStar = "voted";
+																		} else {
+																		classNameForStar = "HalfVoted";
+																		}
+																	}%>
+																	<i class="$classNameForStar"></i>
+																<%}%>
+																</div><!-- end avgRatingImages -->
+
+																<%
+																	if (question.isApproved() || uicomponent.canEditQuestion) {
+																%>
+																<div class="avgRatingImages clearfix voting" style="display:none;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																<%
+																for(int i = 0; i < 5; i ++) {
+																	number = String.valueOf(i+1);
+																	onclick = uicomponent.event("VoteQuestion", number);
+																%>
+																	<i data-index="<%=(i+1)%>" class="unvoted" onclick="$onclick"></i>
+																<%}%>
+																</div>
+																<%} %>
+															</div>
+
+												<%} %><!-- end else -->
+
 														</div>
 
-											<%} %><!-- end else -->
+													<%
+													String markView = question.getMarkVote() + "";
+													if(markView.length() <= 4){
+													%>
+														<div class="result pull-left">$markView</div>
+													<%
+													} else {
+													%>
+														<div class="result pull-left"><%=markView.substring(0, 4)%></div>
+													<%}%>
 
+													</div><!-- end voteResult -->
+											<%}	%> <!--end vote-->
+
+
+											<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
+												<!-- action Sort answer by vote -->
+												<p class="sortAnswer">
+													<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+														Sort by Rate	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+													</a>
+												</p>
+											<%}%>
+
+											</div>
+
+											<div class="leftQuestionContainer disableContextMenu">
+												<!--	view Detail	-->
+													<%
+														String questionDetail = uicomponent.render(uicomponent.getQuestionDetail());
+													%>
+												<div class="theContent">$questionDetail</div>
+												<p class="date"><%=FAQUtils.getLongDateFormat(question.getCreatedDate())%></p>
+												<!--	view bottom	-->
+												<% if(uicomponent.currentUser_ != null) { %>
+													<div class="questionAction">
+													<% if(question.isApproved() || uicomponent.canEditQuestion){ %>
+														<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+													<% }
+														 if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())) {
+													%>
+														<a href="javasript:void(0);"> | </a><a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" ><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
+													<% } %>
 													</div>
-
-												<%
-												String markView = question.getMarkVote() + "";
-												if(markView.length() <= 4){
-												%>
-													<div class="result pull-left">$markView</div>
-												<%
-												} else {
-												%>
-													<div class="result pull-left"><%=markView.substring(0, 4)%></div>
-												<%}%>
-
-												</div><!-- end voteResult -->
-										<%}	%> <!--end vote-->
-
-
-										<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
-											<!-- action Sort answer by vote -->
-											<p class="sortAnswer">
-												<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
-													Sort by Rate	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
-												</a>
-											</p>
-										<%}%>
-
-										</div>
-
-										<div class="leftQuestionContainer disableContextMenu">
-											<!--	view Detail	-->
-												<%
-													String questionDetail = uicomponent.render(uicomponent.getQuestionDetail());
-												%>
-											<div class="theContent">$questionDetail</div>
-											<p class="date"><%=FAQUtils.getLongDateFormat(question.getCreatedDate())%></p>
-											<!--	view bottom	-->
-											<% if(uicomponent.currentUser_ != null) { %>
-												<div class="questionAction">
-												<% if(question.isApproved() || uicomponent.canEditQuestion){ %>
-													<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
-												<% }
-													 if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())) {
-												%>
-													<a href="javasript:void(0);"> | </a><a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" ><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
 												<% } %>
-												</div>
-											<% } %>
-										</div><!-- end leftQuestionContainer -->
-									</div><!-- end questionContent -->
-								</div><!-- end itemContainerFirst -->
-							</div> <!-- end responseItemContainer -->
-						</div><!-- end questionSelect -->
+											</div><!-- end leftQuestionContainer -->
+										</div><!-- end questionContent -->
 
+									</div>
+									
+								</div><!-- end itemContainerFirst -->
+							</div> <!-- end questionContainer -->
 						<!--	View response content	-->
 						<%
 						Answer[] answers = uicomponent.getPageListAnswer(question.getPath());
@@ -767,9 +767,7 @@
 								<% } %><!-- end for answers -->
 
 								<% if(uicomponent.getChildById(uicomponent.ANSWER_ITER + question.getId())!= null) { %>
-									<div style="overflow:auto" class="clearfix">
 											<% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
-									</div>
 								<% } %>
 
 							<!-- end if length of answers[] > 0	-->
@@ -877,15 +875,14 @@
 								<%} %> <!-- end for comments -->
 
 								<%if(uicomponent.getChildById(uicomponent.COMMENT_ITER + question.getId())!= null) { %>
-								<div class="ClearFix">
 									<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
-								</div>
 								<%} %>
 
 						<% } %>
 
 							</div><!-- end responseContainer -->
 						</div><!-- end responseContent -->
+					</div><!-- end questionSelect -->
 
 				<% } %> <!-- end else question-->
 

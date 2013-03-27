@@ -11,7 +11,7 @@
 	<% uiform.begin() 
 	Map<String, String> mapPath = new HashMap<String, String>();
 	%>
-  <div class="uiFormTabPane uiTabNormal">
+  <div class="uiFormTabPane uiTabNormal uiTabPane">
 
 	          <ul class="nav nav-tabs">
 	          	<%int i = 0 ; 
@@ -31,7 +31,7 @@
 	                            	 <%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionManagement")%> 
 	                       </a>   
 	                 </li>
-									 <li class="$classCssNY" onclick="<%=uicomponent.event("ChangeTab", "1")%>">
+									 <li class="last $classCssNY" onclick="<%=uicomponent.event("ChangeTab", "1")%>">
 	                      <a data-toggle="tab" data-target="#QuestionNotAnswered-tab"> 
 	                        		<%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionNotYetAnswered")%>
 	                      </a>   
@@ -129,7 +129,7 @@
 											<%}
 											} else {%>
 												<tr class="info">
-													<td colspan="5" class="empty ">
+													<td colspan="5" class="empty center">
 														<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 													</td>
 												</tr>
