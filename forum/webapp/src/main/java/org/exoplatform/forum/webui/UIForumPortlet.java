@@ -586,7 +586,8 @@ public class UIForumPortlet extends UIPortletApplication {
         }
       } else return false;
     } catch (Exception e) {
-      throw e;
+      log.debug("Failed to check: " + e.getMessage(), e);
+      return false;
     }
     return true;
   }
@@ -617,7 +618,8 @@ public class UIForumPortlet extends UIPortletApplication {
         }
       } else return false;
     } catch (Exception e) {
-      throw e;
+      log.debug("Failed to check: " + e.getMessage(), e);
+      return false;
     }
     return true;
   }

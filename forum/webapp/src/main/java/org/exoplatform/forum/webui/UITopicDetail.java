@@ -605,7 +605,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         this.pageSelect = maxPage;
       }
     } catch (Exception e) {
-      log.warn("Failed to init topic page: " + e.getMessage(), e);
+      log.debug("Failed to init topic page: " + e.getMessage(), e);
     }
   }
 
