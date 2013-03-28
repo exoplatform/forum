@@ -125,18 +125,6 @@
 			<div style="display:none;">
 			
 			<div class="control-group">
-				<label class="control-label">Slide</label>
-				<div class="controls">
-					<div class="slideSearch">
-						<div class="slide slideContainer">
-							<div class="slideRange sllideHeader" style="width: 25%;"></div>
-							<a href="javascript:void(0);" class="circleDefault" style="left: 20%;"></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="control-group">
 				<label class="control-label">Calendar</label>
 				<div class="controls">
 					

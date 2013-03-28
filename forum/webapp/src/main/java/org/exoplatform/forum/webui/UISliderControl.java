@@ -29,39 +29,41 @@ import org.exoplatform.webui.form.UIFormInputBase;
  * Dec 17, 2008  
  */
 public class UISliderControl extends UIFormInputBase<String> {
+  
+  
+  int maxValue = 100;
 
   public UISliderControl(String name, String bindingExpression, String value) {
+     this(name, bindingExpression, value, 100);
+  }
+
+  public UISliderControl(String name, String bindingExpression, String value, int maxValue) {
     super(name, bindingExpression, String.class);
     this.value_ = value;
+    this.maxValue = maxValue;
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    context.getJavascriptManager().require("SHARED/UISliderControl", "sliderControl");
-
     Writer w = context.getWriter();
-    w.write("<div class=\"UISliderControl\">");
-    w.write("<div class=\"SliderContainer\" onmousedown=\"eXo.webui.UISliderControl.start(this,event);\" onkeydown=\"eXo.webui.UISliderControl.start(this,event);\" unselectable=\"on\">");
-    w.write("    <div class=\"LeftSide\">");
-    w.write("          <div class=\"RightSide\">");
-    w.write("              <div class=\"CenterSide\">");
-    w.write("                <div class=\"SliderPointer\" unselectable=\"on\"><span></span></div>");
-    w.write("              </div>");
-    w.write("          </div>");
-    w.write("      </div>");
-    w.write("  </div>");
-    w.write("  <div class=\"BoxNumber\">");
-    w.write("    <div class=\"BoxNumberInput\">");
-    w.write(new StringBuilder("      <label for=\"").append(getId()).append("\">").append(value_).append("</label>").toString());
+    w.write("<div class=\"uiFormSliderInput clearfix\" id=\"uiSliderContainer" + getName() + "\" >");
+    w.write("  <div class=\"slideSearch pull-left\">");
+    w.write("    <div class=\"slide slideContainer\">");
+    w.write("      <div class=\"slideRange sllideHeader\" style=\"width: 0%;\"></div>");
+    w.write("      <a href=\"javascript:void(0);\" class=\"circleDefault\" style=\"left: 0%;\"></a>");
     w.write("    </div>");
-    w.write(new StringBuilder("    <input class=\"UISliderInput\" type=\"hidden\" name=\"").append(getName()).append("\" id=\"").append(getId()).append("\" value=\"").append(value_).append("\"/>").toString());
+    w.write("  </div>");
+    w.write("  <div class=\"boxNumber pull-left\">");
+    w.write(new StringBuilder("    <input class=\"uiSliderInput\" type=\"text\" name=\"").append(getName()).append("\" id=\"").append(getName()).append("\" value=\"").append(value_).append("\"/>").toString());
     w.write("  </div>");
     w.write("</div>");
+
+    ForumUtils.addScripts("UISliderControl", "forumSliderControl", "forumSliderControl.init('uiSliderContainer" + getId() + "', " + maxValue + ");");
   }
 
   public void decode(Object input, WebuiRequestContext context) {
     String val = (String) input;
     if (ForumUtils.isEmpty(val) || (val.equals("null"))){
-      value_ = "0".intern();
+      value_ = "0";
     } else {
       value_ = val;
     }

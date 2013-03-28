@@ -156,9 +156,9 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false);
     UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false);
 
-    UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0");// Sliders
-    UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0");
-    UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0");
+    UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0", 300);// Sliders
+    UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0", 500);
+    UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0", 500);
 
     UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null);
 
