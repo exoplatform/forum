@@ -57,12 +57,10 @@
 							<div class="controls">
 								<div class="clearfix areaCheckbox">
 									<div  class="pull-left" >
-										<label for="<%=uicomponent.IS_APPROVED%>"><%uiform.renderChild(uicomponent.IS_APPROVED);%>
-										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
+										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
 									</div>
-									<div class="pull-left" >
-										<label for="<%=uicomponent.IS_ACTIVATED%>"><%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
-										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
+									<div class="pull-left" style="margin-left: 15px;">
+										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
 									</div>
 								</div>
 							</div>

@@ -52,6 +52,8 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.user.CommonContact;
+import org.exoplatform.forum.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -486,7 +488,25 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("Failed to get user avatar of user: " + userName, e);
     }
-    return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+    if (url == null || url.trim().length() < 1) {
+      CommonContact contact = getPersonalContact(userName);
+      if (!isFieldEmpty(contact.getAvatarUrl())) {
+        url = contact.getAvatarUrl();
+      }
+      url = (url == null || url.trim().length() < 1) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+    }
+    return url;
+  }
+  
+  public static CommonContact getPersonalContact(String userId) {
+    try {
+      if (userId.indexOf(Utils.DELETED) > 0)
+        return new CommonContact();
+      ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
+      return provider.getCommonContact(userId);
+    } catch (Exception e) {
+      return new CommonContact();
+    }
   }
 
   public static String getFileSource(FileAttachment attachment) throws Exception {

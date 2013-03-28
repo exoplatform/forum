@@ -79,7 +79,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private static final String SHOW_ANSWER       = "QuestionShowAnswer";
 
-  private static final String IS_APPROVED       = "IsApproved";
+  private static final String IS_APPROVED       = "QuestionApproved";
 
   private Question            question_         = null;
 
