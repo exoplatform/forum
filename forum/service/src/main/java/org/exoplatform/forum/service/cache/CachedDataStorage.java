@@ -394,6 +394,10 @@ public class CachedDataStorage implements DataStorage, Startable {
   public boolean isAdminRole(String userName) throws Exception {
     return storage.isAdminRole(userName);
   }
+  
+  public boolean isAdminRoleConfig(String userName) throws Exception {
+    return storage.isAdminRoleConfig(userName);
+  }
 
   public void setDefaultAvatar(String userName) {
     storage.setDefaultAvatar(userName);

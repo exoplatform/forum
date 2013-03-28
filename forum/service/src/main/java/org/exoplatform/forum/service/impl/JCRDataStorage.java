@@ -379,22 +379,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (Utils.isEmpty(userName)){
       return false;
     }
-    try {
-      for (int i = 0; i < rulesPlugins.size(); ++i) {
-        List<String> list = new ArrayList<String>();
-        list.addAll(rulesPlugins.get(i).getRules(Utils.ADMIN_ROLE));
-        if (list.contains(userName))
-          return true;
-        String[] adminrules = Utils.getStringsInList(list);
-        if (ForumServiceUtils.hasPermission(adminrules, userName))
-          return true;
-      }
+    if (isAdminRoleConfig(userName)) {
+      return true;
+    } else {
       Node userHome = getUserProfileHome(CommonUtils.createSystemProvider());
       if (userHome.hasNode(userName)) {
         return (new PropertyReader(userHome.getNode(userName)).l(EXO_USER_ROLE, 2) == UserProfile.ADMIN);
       }
-    } catch (Exception e) {
+    }
+    return false;
+  }
+  
+  public boolean isAdminRoleConfig(String userName) throws Exception {
+    if (Utils.isEmpty(userName)){
       return false;
+    }
+    for (int i = 0; i < rulesPlugins.size(); ++i) {
+      List<String> list = new ArrayList<String>();
+      list.addAll(rulesPlugins.get(i).getRules(Utils.ADMIN_ROLE));
+      if (list.contains(userName))
+        return true;
+      String[] adminrules = Utils.getStringsInList(list);
+      if (ForumServiceUtils.hasPermission(adminrules, userName))
+        return true;
     }
     return false;
   }

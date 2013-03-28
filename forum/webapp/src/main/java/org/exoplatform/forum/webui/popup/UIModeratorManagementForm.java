@@ -189,7 +189,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   private boolean isAdmin(String userId) throws Exception {
-    return getForumService().isAdminRole(userId);
+    return getForumService().isAdminRoleConfig(userId);
   }
 
   protected boolean getIsBanned(UserProfile userProfile) throws Exception {

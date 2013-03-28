@@ -1299,6 +1299,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   public boolean isAdminRole(String userName) throws Exception {
     return storage.isAdminRole(userName);
   }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isAdminRoleConfig(String userName) throws Exception {
+    return storage.isAdminRoleConfig(userName);
+  }
 
   /**
    * {@inheritDoc}

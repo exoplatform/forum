@@ -983,6 +983,15 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   boolean isAdminRole(String userName) throws Exception;
+  
+  /**
+   * Check admin role by checking xml config
+   * 
+   * @param userName username of an user
+   * @return is admin or not
+   * @throws Exception the exception
+   */
+  boolean isAdminRoleConfig(String userName) throws Exception;
 
   /**
    * Gets recent public posts limited by number post.
