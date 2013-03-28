@@ -26,7 +26,9 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.web.application.RequireJS;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 
 /**
@@ -70,6 +72,37 @@ public class WebUIUtils {
     } catch (MissingResourceException e) {
       return label;
     }
+  }
+  
+  static public RequireJS addScripts(String module, String alias, String... scripts) {
+    PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    RequireJS requireJS;
+    if (!isEmpty(module)) {
+      if (!isEmpty(alias)) {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
+      } else {
+        requireJS = pContext.getJavascriptManager().require("SHARED/" + module);
+      }
+    } else {
+      requireJS = pContext.getJavascriptManager().getRequireJS();
+    }
+    if(scripts != null) {
+      String script;
+      for (int i = 0; i < scripts.length; i++) {
+        script = scripts[i];
+        if (!isEmpty(script)) {
+          requireJS.addScripts(script + ";");
+        }
+      }
+    }
+    return requireJS;
+  }
+  
+  public static boolean isEmpty(String str) {
+    if (str == null || str.trim().length() == 0)
+      return true;
+    else
+      return false;
   }
   
 }
