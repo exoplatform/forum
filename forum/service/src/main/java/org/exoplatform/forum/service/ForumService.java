@@ -29,45 +29,61 @@ import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
 
 /**
+ * ForumService provides methods for working with Forum.
+ * 
+ * @LevelAPI Platform
  * Created by The eXo Platform SARL.
+ * 
  */
 public interface ForumService extends ForumServiceLegacy {
 
   /**
-   * Adds the plugin.
+   * Adds component plug-in what keeps email configuration for Forum. 
    * 
-   * @param plugin the plugin
+   * @param plugin the provided email configuration plug-in
+   * 
    * @throws Exception the exception
+   * @since 1.0.x
    */
   void addPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds the plugin.
+   * Adds the role plug-in what define role rule in forum.
    * 
-   * @param plugin the plugin
+   * @param plugin the provided role rules plug-in
    * @throws Exception the exception
+   * @since 1.0.x
    */
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds the plugin.
-   * 
-   * @param plugin the plugin
+   * Adds the initialization data when runs forum first time.
+   *  
+   * @param plugin the provided initialization data plug-in
    * @throws Exception the exception
+   * @since 1.0.x
    */
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
 
+  /**
+   * Adds the initialization default data when runs forum first time.
+   * 
+   * @param plugin
+   * @throws Exception
+   */
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Gets the categories.
+   * Returns {@link Category} list contained in forum.
    * 
    * @return the list category
    */
   List<Category> getCategories();
 
   /**
-   * Gets the category.
+   * 
+   * Returns the {@link Category} to which the specified key is stored, 
+   * or null if forum does not contain any {@link Category} for the key.
    * 
    * @param categoryId is the id of category.
    * @return the category
@@ -76,7 +92,7 @@ public interface ForumService extends ForumServiceLegacy {
   Category getCategory(String categoryId);
 
   /**
-   * Get category included spaces
+   * Returns the {@link Category} to which keeps {@link Forum} under Space context. 
    * 
    * @return the category
    * @throws Exception
@@ -84,53 +100,59 @@ public interface ForumService extends ForumServiceLegacy {
   Category getCategoryIncludedSpace();
 
   /**
-   * Get user and group have edit permission in a category
+   * Get user and group have edit permission in the {@link Category}
    * 
    * @param categoryId id of category
    * @param type type of category
    * @throws Exception the exception
+   * @since 1.2.x
    */
   String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception;
 
   /**
-   * Save category. Check exists category, if not to create new else update
-   * exists category
+   * Save {@link Category}, also checks exists category or not.
+   * If not to create new else update exists category
    * 
    * @param category is the category
-   * @param isNew is the true when add new category or false when update
-   *          category.
+   * @param isNew optional add new or not.
    * @throws Exception the exception
+   * @since 1.0.x
    */
   void saveCategory(Category category, boolean isNew) throws Exception;
 
   /**
-   * Save moderator information for category
+   * Calculates moderator information for category
    * 
    * @param categoryPath path of category
    * @param isNew is calculate new or not
    * @throws Exception the exception
+   * @since 1.2.x
    */
   void calculateModerator(String categoryPath, boolean isNew) throws Exception;
 
   /**
-   * Adds the plugin.
-   * 
-   * @param plugin the plugin
+   * Saves moderator to the {@link Category} list for specified userId
+   *
+   * @moderatorCate the category list
+   * @userId the userId
+   * @isAdd optional value add new or not
    * @throws Exception the exception
+   * @since 1.2.x
    */
   void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd);
 
   /**
-   * Removes the category. Check exists of category and remove it
+   * Removes the {@link Category} the specified key from the forum if present.
    * 
-   * @param categoryId is the id of category removed
-   * @return the category
+   * @param the removed categoryId.
+   * @return the category removed
    * @throws Exception the exception
    */
   Category removeCategory(String categoryId) throws Exception;
 
   /**
-   * Gets the forums in the category identify.
+   * Return the {@link Forum} list which contains 
+   * the specified {@link Category}'s Id and match query condition.
    * 
    * @param categoryId is the id of category have list forum
    * @return the list forum
@@ -139,18 +161,20 @@ public interface ForumService extends ForumServiceLegacy {
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   /**
-   *  filter forums by key via user.
+   * Return the {@link CategoryFilter} list which match forumName and userName specification.
    * 
-   * @param filterKey - the key to search forum.
+   * @param forumName - the key to search forum.
    * @param userName - the identify of user.
-   * @param maxSize TODO
-   * @return - list of categoryFilter.
+   * @param limit - limit of forum result
+   * @return - list of {@link CategoryFilter}.
    * @throws Exception
    */
   List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
+  //List<ForumResult> findForumByFilter(String forumName, String userName, int limit) throws Exception;
 
   /**
-   * Gets the forum in the category identify.
+   * Return the {@link Forum} which contains 
+   * the specified {@link Category}'s Id and {@link Forum}'s Id.
    * 
    * @param categoryId is the id of category identify.
    * @param forumId is the id of forum identify.
@@ -159,7 +183,16 @@ public interface ForumService extends ForumServiceLegacy {
   Forum getForum(String categoryId, String forumId);
 
   /**
-   * Modify this forum identify.
+   * Modify the existing {@link Forum} base on Type of updating.
+   * <ul>
+   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   * </ul>
    * 
    * @param forum is the object forum that should be modified
    * @param type is choose when modify this forum.
@@ -168,21 +201,21 @@ public interface ForumService extends ForumServiceLegacy {
   void modifyForum(Forum forum, int type) throws Exception;
 
   /**
-   * Save forum.Check exists forum, if not to create new else update exists
+   * Create new or update Forum.
    * forum
    * 
    * @param categoryId is the id of category identify.
-   * @param forum is the object forum need save.
-   * @param isNew is the new
+   * @param forum the forum.
+   * @param isNew true is new forum, else update forum
    * @throws Exception the exception
    */
   void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception;
 
   /**
-   * Save user is moderator of list forum
+   * Save or remove user is moderator of list forum
    * 
-   * @param forumPaths is the list path of forums, one forum have only path.
-   * @param userName is the userId of Account login of portal system.
+   * @param forumPaths {@link Forum} path list will be updated moderator.
+   * @param userName the userName
    * @param isDelete is false when you want to add userId into list moderator of
    *          forums isDelete is true when you want to remove userId from list
    *          moderator of forums.
@@ -191,7 +224,7 @@ public interface ForumService extends ForumServiceLegacy {
   void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception;
 
   /**
-   * Remove the forum in category identify.
+   * Remove the forum base on {@link Category}'s Id and {@link Forum}'s Id.
    * 
    * @param categoryId is the id of category.
    * @param forumId is the id of forum need remove.
@@ -201,119 +234,109 @@ public interface ForumService extends ForumServiceLegacy {
   Forum removeForum(String categoryId, String forumId) throws Exception;
 
   /**
-   * Move forum. Move list forum to category by path of category
+   * Moves {@link Forum} list to destination {@link Category}
    * 
-   * @param forums is the list object forum
-   * @param destCategoryPath is the destination path of category
+   * @param forums the forum list
+   * @param destCategoryPath the target {@link Category}
    * @throws Exception the exception
    */
   void moveForum(List<Forum> forums, String destCategoryPath) throws Exception;
 
   /**
-   * Gets the page topic in forum identify.
+   * Gets the topic list specified {@link Forum}
    * 
-   * @param categoryId is the id of category
-   * @param forumId is the id of forum
-   * @param isApproved is a string that presents status isApproved of object
-   *          Topic. if it equal "true" then this function return page topic
-   *          have isApproved equal true if it equal "false" then this function
-   *          return page topic have isApproved equal false if it is empty then
-   *          this function return page topic, not check isApproved.
-   * @param isWaiting is a string that presents status isWaiting of object
-   *          Topic. if it equal "true" then this function return page topic
-   *          have isWaiting equal true if it equal "false" then this function
-   *          return page topic have isWaiting equal false if it is empty then
-   *          this function return page topic, not check isWaiting.
-   * @param strQuery is a string. It's content have command Query. This function
-   *          will return page topic suitable to content of that strQuery
-   * @return the page topic
+   * @param categoryId the Category's Id
+   * @param forumId the Forum's Id
+   * @param strQuery: the query statement
+   * @return the topic list keeps in {@link JCRPageList}
    * @throws Exception the exception
    */
   JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 
   /**
-   * Gets the page topic by user.
+   * Gets the {@link Topic} list which match userName
    * 
-   * @param userName the user name
+   * @param userName the owner {@link Topic}
    * @param strOrderBy is a string. It's content have command to set 'order by' of Query. This function will return page topic has 'order by'
    *        by strOrderby. 
-   * @return the page topic by user
+   * @isMod the viewer is moderator or not       
+   * @return the topic list keeps in {@link JCRPageList}
    * @throws Exception the exception
    */
   JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
 
   /**
-   * Gets the page topic old.
+   * Gets the {@link Topic} list which match created date.
    * 
-   * @param date the date
-   * @param forumPatch the path of forum
-   * @return the page topic old
+   * @param date the created date
+   * @param forumPatch the {@link Forum} path
+   * @return the {@link Topic} list keeps in {@link JCRPageList}
    * @throws Exception the exception
    */
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
 
   /**
-   * Gets the list topic old.
+   * Gets the {@link Topic} list which match created date.
    * 
    * @param date the date
    * @param forumPatch path of forum
-   * @return list of topics
+   * @return the {@link Topic} list
    * @throws Exception the exception
    */
   List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception;
 
   /**
-   * Gets number of the topics old.
+   * Count number for these topic which match created date.
    * 
-   * @param date the date
-   * @param forumPatch path of forum
-   * @return number of topics old
+   * @param date the created date
+   * @param forumPatch the {@link Forum} path
+   * @return the count number
    * @throws Exception the exception
    */
   long getTotalTopicOld(long date, String forumPatch);
 
   /**
-   * Gets the topics.
+   * Gets the topic list specified {@link Forum}
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @return the topics
+   * @param categoryId the Category's Id
+   * @param forumId the Forum's Id
+   * @return the {@link Topic} list
    * @throws Exception the exception
    */
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
   /**
-   * Gets the topic.
+   * Gets the {@link Post} specified {@link Topic}
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
+   * @param categoryId the Category's Id
+   * @param forumId the Forum's Id
    * @param topicId the topic id
-   * @param userRead the user read
-   * @return the topic
+   * @param userRead the viewer
+   * @return the {@link Post}
    * @throws Exception the exception
    */
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
 
   /**
-   * Update number of topic viewers 
+   * Updates topic viewers 
    * 
    * @param path path of topic
-   * @param userRead the user read
+   * @param userRead the viewer
    */
   void setViewCountTopic(String path, String userRead);
 
   /**
-   * Gets the topic by path.
+   * Gets newest {@link Topic}
    * 
    * @param topicPath the topic path
    * @param isLastPost is the last post
-   * @return the topic by path
+   * @return the topic
    * @throws Exception the exception
    */
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
   /**
-   * Gets the topic is last post of forum.
+   * Gets newest {@link Post}
    * 
    * @param lastTopicPath
    * @return the topic contain last post of forum.
@@ -322,34 +345,52 @@ public interface ForumService extends ForumServiceLegacy {
   Topic getLastPostOfForum(String lastTopicPath) throws Exception;
   
   /**
-   * Get main informations of topic
+   * Returns Topic's summary information
    * 
    * @param topicPath the topic path
-   * @return the topic by path
+   * @return the {@link Topic}
    * @throws Exception the exception
    */
   Topic getTopicSummary(String topicPath) throws Exception;
 
   /**
-   * Gets the updated topic
+   * Gets more information for specified {@link Topic}
    * 
-   * @param topic input topic
-   * @param isSummary get main informations or not
-   * @return the updated topic
+   * @param topic the topic object
+   * @param isSummary included summary information or not.
+   * @return the topic
    * @throws Exception the exception
    */
   Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
 
   /**
-   * Modify topic.
+   * Modify the existing {@link Topic} list base on updating type.
+   * <ul>
+   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   * </ul>
    * 
-   * @param topics the topics
-   * @param type the type
+   * @param topics the topic list will be updated
+   * @param type specified action type
    */
   void modifyTopic(List<Topic> topics, int type);
   
   /**
-   * Modify merged new topic.
+   * Modify the merged {@link Topic} list base on updating type.
+   * <ul>
+   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   * </ul>
    * 
    * @param topics the topics
    * @param type the type
@@ -357,7 +398,7 @@ public interface ForumService extends ForumServiceLegacy {
   void modifyMergedTopic(List<Topic> topics, int type);
 
   /**
-   * Save topic.
+   * Save or update {@link Topic}.
    * 
    * @param categoryId the category id
    * @param forumId the forum id
@@ -380,7 +421,7 @@ public interface ForumService extends ForumServiceLegacy {
   Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
   /**
-   * Move topic.
+   * Move topic list to target {@link Forum}
    * 
    * @param topics the topics
    * @param destForumPath the target of forum path
@@ -391,7 +432,7 @@ public interface ForumService extends ForumServiceLegacy {
   void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 
   /**
-   * Move topic.
+   * Merge two topics to be new one.
    * 
    * @param srcTopicPath path of moved topic
    * @param destTopicPath the target of topic
@@ -403,20 +444,21 @@ public interface ForumService extends ForumServiceLegacy {
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception;
 
   /**
-   * Split topic.
+   * Split specified {@link Topic} to two one.
    * 
    * @param newTopic - the new topic create when split topic.
-   * @param fistPost - the fist post of new topic.
+   * @param fisrtPost - the fist post of new topic.
    * @param postPathMove - the list path's posts move to new topic
    * @param mailContent - the mail content to send notification
    * @param link to topic
    * @throws Exception
    * @since 4.0
    */
-  void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception;
+  void splitTopic(Topic newTopic, Post firstPost, List<String> postPathMove, String mailContent, String link) throws Exception;
 
   /**
-   * Gets the posts.
+   * Gets the post list in specified {@link Forum} 
+   * which match conditions such as isApproved, isHidden and query statement.
    * 
    * @param categoryId the category id
    * @param forumId the forum id
@@ -425,22 +467,22 @@ public interface ForumService extends ForumServiceLegacy {
    * @param isHidden is the hidden
    * @param strQuery the str query
    * @param userLogin the user login
-   * @return the posts
+   * @return the {@link Post} list
    * @throws Exception the exception
    */
   JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 
   /**
-   * Gets posts of topic.
+   * Gets the post list in specified {@link Topic} 
    * 
    * @param topicPath path of topic
-   * @return the posts
+   * @return the {@link Post} list
    * @throws Exception the exception
    */
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
 
   /**
-   * Gets number of the posts.
+   * Count number of {@link Post} which match conditions such as isApproved, isHidden and query statement.
    * 
    * @param categoryId the category id
    * @param forumId the forum id
@@ -448,13 +490,13 @@ public interface ForumService extends ForumServiceLegacy {
    * @param isApproved is the approved
    * @param isHidden is the hidden
    * @param userLogin the user login
-   * @return number of the posts
+   * @return the count number
    * @throws Exception the exception
    */
   long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
-   * Gets index of last read post.
+   * Gets specified {@link Post} position number in the {@link Topic}.
    * 
    * @param path path of post
    * @param isApproved is the approved
@@ -466,21 +508,20 @@ public interface ForumService extends ForumServiceLegacy {
   long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
-   * Gets the page post by user.
+   * Gets the {@link Post} list by poster.
    * 
    * @param userName the user name
    * @param userId the poster
    * @param isMod the role of poster
    * @param strQuery is a string. It's content have command Query. This function
    *        will return page post suitable to content of that strQuery
-   * @return the page post by user
+   * @return the {@link Post} list
    * @throws Exception the exception
    */
   JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
   /**
-   * This method should: 1. Check the user permission 2. Load the Page Post data
-   * from the database
+   * Return {@link Post} base on {@link Category}'s Id, {@link Forum}'s Id, {@link Topic}'s Id and {@link Post}'s Id
    * 
    * @param postId the post id
    * @param categoryId the category id
@@ -492,9 +533,7 @@ public interface ForumService extends ForumServiceLegacy {
   Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception;
 
   /**
-   * This method should: 1. Check the user permission 2. Check the madatory
-   * field of the post 3. Save the post data into the database 4. Invalidate the
-   * TopicView data cache
+   * Saves or updates {@link Post} base on provided isNew. 
    * 
    * @param topicId the topic id
    * @param post the post
@@ -506,7 +545,16 @@ public interface ForumService extends ForumServiceLegacy {
   void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception;
 
   /**
-   * Modify posts.
+   * Modify the {@link Post} base on updating type.
+   * <ul>
+   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   * </ul>
    * 
    * @param posts the posts
    * @param type type of post
@@ -514,7 +562,7 @@ public interface ForumService extends ForumServiceLegacy {
   void modifyPost(List<Post> posts, int type);
 
   /**
-   * Removes the post.
+   * Removes the {@link Post}.
    * 
    * @param categoryId the category id
    * @param forumId the forum id
@@ -525,7 +573,7 @@ public interface ForumService extends ForumServiceLegacy {
   Post removePost(String categoryId, String forumId, String topicId, String postId);
 
   /**
-   * Move post.
+   * Move post to the the target {@link Topic} 
    * 
    * @param posts the posts
    * @param destTopicPath the dest topic path
@@ -572,7 +620,7 @@ public interface ForumService extends ForumServiceLegacy {
   String getForumHomePath() throws Exception;
 
   /**
-   * Adds the topic in tag.
+   * Puts the tags into specified {@link Topic}
    * 
    * @param tags the list tag is add
    * @param topicPath the topic path
@@ -581,7 +629,7 @@ public interface ForumService extends ForumServiceLegacy {
   void addTag(List<Tag> tags, String userName, String topicPath) throws Exception;
 
   /**
-   * UnTag the topic in tag.
+   * Removes the Tag out the {@link Topic}}
    * 
    * @param tagId the tag id
    * @param userName the user id
@@ -590,7 +638,7 @@ public interface ForumService extends ForumServiceLegacy {
   void unTag(String tagId, String userName, String topicPath);
 
   /**
-   * Gets the tag.
+   * Gets the {@link Tag} base on {@link Tag}'s Id
    * 
    * @param tagId the tag id
    * @return the tag
@@ -599,7 +647,7 @@ public interface ForumService extends ForumServiceLegacy {
   Tag getTag(String tagId) throws Exception;
 
   /**
-   * Gets all the tag names.
+   * Gets all the {@link Tag} list.
    * 
    * @param strQuery query to get tags
    * @param userAndTopicId input id
@@ -611,14 +659,14 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets all the tag name in topic.
    * 
-   * @param userAndTopicId input id
+   * @param userAndTopicId 'userId,topicId' pattern
    * @return the list names of tags
    * @throws Exception the exception
    */
   List<String> getTagNameInTopic(String userAndTopicId) throws Exception;
 
   /**
-   * Gets the tags.
+   * Gets all the {@link Tag} list.
    * 
    * @return the tags
    * @throws Exception the exception
@@ -645,7 +693,7 @@ public interface ForumService extends ForumServiceLegacy {
   JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception;
 
   /**
-   * Save tag.
+   * Creates new {@link Tag}
    * 
    * @param newTag the new tag
    * @throws Exception the exception
@@ -673,9 +721,9 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save user moderator.
    * 
-   * @param userName username of a user
-   * @param ids ids of categories or forums
-   * @param isModeCate save for category or not
+   * @param userName the username of a user
+   * @param ids optional categoryId list or forumId list
+   * @param isModeCate true: update Category otherwise update Forum 
    * @throws Exception the exception
    */
   void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
@@ -729,7 +777,7 @@ public interface ForumService extends ForumServiceLegacy {
   void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception;
 
   /**
-   * Save user collapCategories.
+   * Save user collap Categories.
    * 
    * @param userName the user name
    * @param categoryId the book mark
