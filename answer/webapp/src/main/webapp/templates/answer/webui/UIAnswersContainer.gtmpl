@@ -4,7 +4,6 @@
   def rcontext = _ctx.getRequestContext();
   def requireJS = rcontext.getJavascriptManager().getRequireJS();
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.resizeLineBar('"+uicomponent.id+"');");
-  requireJS.addScripts("setTimeout( function() {eXo.answer.UIAnswersPortlet.processHeightLine();}, 300);");
  %>
 
   <% if(uicomponent.isRenderChild) { %>

@@ -14,7 +14,9 @@
 	requireJS.addScripts("eXo.answer.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + hileLeftPanels + "', '" + showLeftPanels + "');")
 					 .addScripts("eXo.answer.UIAnswersPortlet.loadActionScroll();")
 					 .addScripts("eXo.answer.UIAnswersPortlet.rightClickQuestionMenu();")
-					 .addScripts("setTimeout(function() { eXo.answer.UIAnswersPortlet.rightClickQuestionMenu();}, 200);");
+					 .addScripts("eXo.answer.UIAnswersPortlet.initTooltip('" + compId + "');")
+					 .addScripts("setTimeout( function() { eXo.answer.UIAnswersPortlet.processHeightLine(); }, 200);")
+					 .addScripts("setTimeout(function() { eXo.answer.UIAnswersPortlet.rightClickQuestionMenu(); }, 200);");
 	String cateId = uicomponent.getCategoryId();
 	uicomponent.setIsModerators(); //reset permission
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();

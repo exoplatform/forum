@@ -15,7 +15,17 @@
     UIAnswersPortlet.controlWorkSpace();
     UIAnswersPortlet.disableContextMenu(UIAnswersPortlet.portletId);
     utils.onResize(UIAnswersPortlet.resizeCallback);
+    UIAnswersPortlet.initTooltip();
   };
+  
+  UIAnswersPortlet.initTooltip = function(id) {
+    var jportlet = findId(UIAnswersPortlet.portletId);
+    if(id != null) {
+      jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
+    } else {
+      jportlet.find('[rel=tooltip]').tooltip();
+    }
+  },
 
   UIAnswersPortlet.resizeCallback = function() {
     utils.setMaskLayer(UIAnswersPortlet.portletId);
@@ -108,13 +118,12 @@
               portlet.css('padding-left', '0px');
               portlet.find('.line:first').hide();
               var iconArrow = portlet.find('a.iconControll:first').find('i:first');
-			  console.log(iconArrow.length + '  ' + portlet.find('a.iconControll:first').length);
               iconArrow.attr('class', 'uiIconMiniArrowRight pull-left');
-			  portlet.find('#resizeLineBar').addClass('resizeLt');
+              portlet.find('#resizeLineBar').addClass('resizeLt');
             } else {
               leftColumn.css('width', width + 'px').show();
               rightColumn.css('margin-left', magrinL + 'px');
-			  portlet.find('#resizeLineBar').removeClass('resizeLt');
+              portlet.find('#resizeLineBar').removeClass('resizeLt');
             }
           }
         }
