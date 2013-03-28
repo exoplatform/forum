@@ -176,7 +176,7 @@
 									 String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
 							%>
 									<li class="$lockFunction">
-										<a href="$linkView"><i class="$iconView uiIconLightGray"></i> $itemLabelView</a>
+										<a href="$linkView"><i class="$iconView uiIconLightGray"></i>$itemLabelView</a>
 									</li>
 							<% } %>
 
@@ -187,7 +187,7 @@
 										String linkView = uicomponent.event("EditQuestion", questionPath);
 							%>
 							 		<li>
-										<a href="$linkView"><i class="uiIconEdit uiIconLightGray"></i> $itemLabelView</a>
+										<a href="$linkView"><i class="uiIconEdit uiIconLightGray"></i>$itemLabelView</a>
 									</li>
 
 							<%	}
@@ -197,7 +197,7 @@
 										if(pathDiscuss == null || pathDiscuss.length() <= 0) {
 							 %>
 									<li rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
-										<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><i class="uiIconAnsDiscuss uiIconLightGray"></i> <%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+										<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><i class="uiIconAnsDiscuss uiIconLightGray"></i><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 									</li>
 							 <%
 										 }
@@ -215,7 +215,7 @@
 										 }
 							 %>
 									<li>
-										<a onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" style="display:block"><i class="uiIconAnsDiscuss uiIconLightGray"></i> <%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+										<a onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" style="display:block"><i class="uiIconAnsDiscuss uiIconLightGray"></i><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 									</li>
 							 <%	 }
 								 }
@@ -288,7 +288,7 @@
 													<ul class="dropdown-menu">
 													 <!-- action print question -->
 														<li>
-															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
+															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
 														</li>
 
 													<%
