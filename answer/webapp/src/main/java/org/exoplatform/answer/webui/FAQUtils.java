@@ -587,7 +587,8 @@ public class FAQUtils {
         builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+      String home = uiForm.i18n("UICategoryTree.label.home");
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
     }
     builder.append("</a>");
 

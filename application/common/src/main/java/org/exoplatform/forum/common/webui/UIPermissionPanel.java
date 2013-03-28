@@ -67,9 +67,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 })
 public class UIPermissionPanel extends UIContainer implements UISelector {
 
-  private static final String PERMISSION_INPUT = "PermissionInput";
+  private static final String PERMISSION_INPUT = "UIPermissionInput";
 
-  private static final String PERMISSION_GRID  = "PermissionGrid";
+  private static final String PERMISSION_GRID  = "UIPermissionGrid";
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
   

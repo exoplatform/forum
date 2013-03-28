@@ -11,8 +11,8 @@
 
 <div id="$uicomponent.id">
   <%
-    uicomponent.renderChild("PermissionGrid");
-    uicomponent.renderChild("PermissionInput");
+    uicomponent.renderChild("UIPermissionGrid");
+    uicomponent.renderChild("UIPermissionInput");
   %>
 	<span style="vertical-align: top">
 		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>">
@@ -24,6 +24,6 @@
 		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
 			<i class="uiIconGroup uiIconLightGray"></i>
 		</a>
-		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button">Add</button>
+		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add");%></button>
 	</span>
 </div>

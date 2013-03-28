@@ -10,11 +10,11 @@
 	<table class="uiGrid table table-hover table-striped">
 		<thead>
 			<tr>
-				<th style="width:150px;">Owner</th>
+				<th class="center"><%=_ctx.appRes("UIPermissionGrid.label.owner");%></th>
 				<% for(String permission : uicomponent.getPermissions()) { %>
-				<th class="center" style="width:10px">$permission</th>
+				<th class="center">$permission</th>
 				<% } %>
-				<th style="width:10px">Action</th>
+				<th class="center"><%=_ctx.appRes("UIPermissionGrid.label.action");%></th>
 			</tr>
 		</thead>
 		<tbody>

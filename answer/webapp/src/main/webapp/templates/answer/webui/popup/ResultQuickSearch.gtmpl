@@ -22,7 +22,7 @@
  											<tr>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
- 												<th class="center">answer</th>
+ 												<th class="center"><%= _ctx.appRes("ResultQuickSearch.title.answer"); %></th>
  											</tr>
  										</thead>
  										<tbody>
