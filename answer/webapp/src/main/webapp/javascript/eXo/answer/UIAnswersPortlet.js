@@ -359,9 +359,10 @@
   };
   
   UIAnswersPortlet.printAll = function (obj) {
-    var container = $('<div></div>').addClass('UIAnswersPortlet');
+    var container = $('<div></div>').addClass('PrintAllAnswersPortlet');
     if (typeof (obj) == 'string') obj = findId(obj);
     $('#UIWorkingWorkspace').hide();
+    obj.parents('#UIAnswersPopupWindow').hide();
     container.append(obj.clone());
     $('body').append(container);
   };
@@ -392,11 +393,8 @@
   // Remove UIAnswersPortlet.findDescendantsByAttribute function.
   
   UIAnswersPortlet.closePrint = function () {
-    $('#UIPortalApplication').css('display', 'block');
-    var children = $('body').children();
-    for (var i = 0; i < children.length; i++) {
-      if (children.eq(i).hasClass('UIAnswersPortlet')) children.eq(i).remove();
-    }
+    $('#UIWorkingWorkspace').show();
+    $(document.body).find('div.PrintAllAnswersPortlet').remove();
     $(window).scrollTop(0).scrollLeft(0);
     UIAnswersPortlet.viewImage = true;
   };
