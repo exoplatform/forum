@@ -19,21 +19,21 @@
   };
   
   UIAnswersPortlet.initTooltip = function(id) {
-    var jportlet = findId(UIAnswersPortlet.portletId);
+    var jportlet = $.fn.findId(UIAnswersPortlet.portletId);
     if(id != null) {
       jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
     } else {
       jportlet.find('[rel=tooltip]').tooltip();
     }
-  },
+  };
 
   UIAnswersPortlet.resizeCallback = function() {
     utils.setMaskLayer(UIAnswersPortlet.portletId);
   };
   
   UIAnswersPortlet.updateContainersHeight = function () {
-    var viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.CategoriesContainer');
-    if(!viewQuestionContentEl.exists()) viewQuestionContentEl = findId(UIAnswersPortlet.portletId).find('div.ViewQuestionContent');
+    var viewQuestionContentEl = $.fn.findId(UIAnswersPortlet.portletId).find('div.CategoriesContainer');
+    if(!viewQuestionContentEl.exists()) viewQuestionContentEl = $.fn.findId(UIAnswersPortlet.portletId).find('div.ViewQuestionContent');
   };
   
   UIAnswersPortlet.controlWorkSpace = function () {
@@ -58,14 +58,14 @@
   };
 
   UIAnswersPortlet.disableContextMenu = function (id) {
-    var oncontextmenus = findId(id).find('.disableContextMenu');
+    var oncontextmenus = $.fn.findId(id).find('.disableContextMenu');
     oncontextmenus.on('contextmenu', function() {
       return false;
     });
   };
 
   UIAnswersPortlet.processHeightLine = function() {
-    var portlet = findId(UIAnswersPortlet.portletId);
+    var portlet = $.fn.findId(UIAnswersPortlet.portletId);
     var pageBody = $('#UIPageBody');
     var trContainer = pageBody.parents('tr.TRContainer');
     var leftTDContainer = trContainer.find('td.LeftNavigationTDContainer');
@@ -81,10 +81,7 @@
     line.css('height', (height) + 'px');
   };
   
- 
-
   UIAnswersPortlet.resizeLineBar = function(idPr) {
-
     UIAnswersPortlet.currentPosW = 0;
     UIAnswersPortlet.currentW = 0;
     UIAnswersPortlet.isDownLine = false;
@@ -94,7 +91,7 @@
     var line = parent.find('div.line');
     line.on('mousedown', function(e) {
       UIAnswersPortlet.currentPosW = e.clientX;
-      var portlet = findId(UIAnswersPortlet.portletId);
+      var portlet = $.fn.findId(UIAnswersPortlet.portletId);
       var leftColumn = portlet.find('.leftColumn:first');
       var rightColumn = portlet.find('.rightColumn:first');
       UIAnswersPortlet.currentW = leftColumn.width();
@@ -106,7 +103,7 @@
           var next = e.clientX;
           var deltaMove = next - UIAnswersPortlet.currentPosW;
           if (deltaMove != 0) {
-            var portlet = findId(UIAnswersPortlet.portletId);
+            var portlet = $.fn.findId(UIAnswersPortlet.portletId);
             var leftColumn = portlet.find('.leftColumn:first');
             var rightColumn = portlet.find('.rightColumn:first');
 
@@ -117,9 +114,13 @@
               rightColumn.css('margin-left', '31px');
               portlet.css('padding-left', '0px');
               portlet.find('.line:first').hide();
+
               var iconArrow = portlet.find('a.iconControll:first').find('i:first');
               iconArrow.attr('class', 'uiIconMiniArrowRight pull-left');
+              iconArrow.attr('data-original-title', iconArrow.data('tooltipInfo').show).tooltip();
+
               portlet.find('#resizeLineBar').addClass('resizeLt');
+              UIAnswersPortlet.setCookie("FAQCustomView", 'none', 1);
             } else {
               leftColumn.css('width', width + 'px').show();
               rightColumn.css('margin-left', magrinL + 'px');
@@ -132,12 +133,14 @@
       UIAnswersPortlet.isDownLine = false;
     });
 
-    var iconArrow = answerContainer.find('.iconControll:first');
-    iconArrow.on('click', function() {
+    var aIconArrow = answerContainer.find('.iconControll:first');
+    aIconArrow.on('click', function() {
       var thiz = $(this);
-      var portlet = findId(UIAnswersPortlet.portletId);
+      var portlet = $.fn.findId(UIAnswersPortlet.portletId);
       var leftColumn = portlet.find('.leftColumn:first');
       var rightColumn = portlet.find('.rightColumn:first');
+      var iconArrow = thiz.find('i:first');
+
       if (leftColumn.css('display') === 'block') {
         leftColumn.css({'overflow' : 'hidden'}).animate({
           'width' : '10px',
@@ -148,11 +151,16 @@
           thiz.parent().find('.line').hide();
         });
         rightColumn.animate({'margin-left': '31px'}, 300, function(){});
-        iconArrow.find('i:first').attr('class', 'uiIconMiniArrowRight pull-left');
+
+        iconArrow.attr('class', 'uiIconMiniArrowRight pull-left');
+        iconArrow.attr('data-original-title', iconArrow.data('tooltipInfo').show).tooltip();
+
         portlet.find('#resizeLineBar').addClass('resizeLt');
+        UIAnswersPortlet.setCookie("FAQCustomView", 'none', 1);
       } else {
         portlet.css('padding-left', '20px');
         thiz.parent().find('.line').show();
+
         leftColumn.css({'visibility': 'hidden', 'height' : 'auto'}).show();
         var h = leftColumn.height();
         leftColumn.css('visibility', 'visible').animate({
@@ -160,41 +168,45 @@
           'height' : (h+'px')
         }, 300, function() { $(this).css({'overflow' : 'visible', 'height' : 'auto'});});
         rightColumn.animate({'margin-left': '255px'}, 300, function(){});
-        iconArrow.find('i:first').attr('class', 'uiIconMiniArrowLeft pull-left');
+
+        iconArrow.attr('class', 'uiIconMiniArrowLeft pull-left');
+        iconArrow.attr('data-original-title', iconArrow.data('tooltipInfo').hide).tooltip();
+
         portlet.find('#resizeLineBar').removeClass('resizeLt');
+        UIAnswersPortlet.setCookie("FAQCustomView", 'block', 1);
       }
     })
   };
   
   
   UIAnswersPortlet.initVoteQuestion = function(id) {
-  var parent = findId(id);
-  var voted = parent.find('div.inforVoted:first');
-  var voting = parent.find('div.voting:first');
-  voted.on('mouseover', function() {
-    var thiz = $(this);
-    thiz.hide();
-    thiz.parent().find('div.voting:first').show();
-  });
-  voting.on('mouseout', function() {
-    var thiz = $(this);
-    thiz.hide();
-    thiz.parent().find('div.inforVoted:first').show();
-  });
+    var parent = $.fn.findId(id);
+    var voted = parent.find('div.inforVoted:first');
+    var voting = parent.find('div.voting:first');
+    voted.on('mouseover', function() {
+      var thiz = $(this);
+      thiz.hide();
+      thiz.parent().find('div.voting:first').show();
+    });
+    voting.on('mouseout', function() {
+      var thiz = $(this);
+      thiz.hide();
+      thiz.parent().find('div.inforVoted:first').show();
+    });
   
-  var stars = voting.find('> i');
-  stars.on('mouseover', function(e) {
-    var thiz = $(this);
-    var index = thiz.attr('data-index');
-    var stars = thiz.parent().find(' > i');
-    stars.attr('class', 'unvoted');
-    for(var i = 0; i < index; ++i) {
-      stars.eq(i).attr('class', 'voted');
-    }   
-  } )
-  .on('mouseout', function() {
-    $(this).parent().find(' > i').attr('class', 'unvoted');
-  });
+    var stars = voting.find('> i');
+    stars.on('mouseover', function(e) {
+      var thiz = $(this);
+      var index = thiz.attr('data-index');
+      var stars = thiz.parent().find(' > i');
+      stars.attr('class', 'unvoted');
+      for(var i = 0; i < index; ++i) {
+        stars.eq(i).attr('class', 'voted');
+      }   
+    })
+    .on('mouseout', function() {
+      $(this).parent().find(' > i').attr('class', 'unvoted');
+    });
   };
   
   UIAnswersPortlet.selectCateInfor = function (number) {
@@ -211,12 +223,12 @@
   };
   
   UIAnswersPortlet.viewTitle = function (id) {
-    findId(id).css('display', 'block');
+    $.fn.findId(id).css('display', 'block');
     UIAnswersPortlet.hiddentMenu = false;
   };
   
   UIAnswersPortlet.hiddenTitle = function (id) {
-    findId(id).css('display', 'none');
+    $.fn.findId(id).css('display', 'none');
   };
   
   UIAnswersPortlet.hiddenMenu = function () {
@@ -233,24 +245,46 @@
     }
   };
   
+  UIAnswersPortlet.setCookie = function(name, value, expiredays) {
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + 10);
+      expiredays = ';expires=' + exdate.toGMTString();
+      var path = ';path=/portal';
+      document.cookie = name + "=" + escape(value) + expiredays + path;
+  };
+    
   UIAnswersPortlet.checkCustomView = function (isNotSpace, hideTitle, showTitle) {
     var cookie = eXo.core.Browser.getCookie('FAQCustomView');
-    cookie = (cookie == 'none' || cookie == '' && isNotSpace == 'false') ? 'none' : '';
-    $('#FAQViewCategoriesColumn').css('display', cookie);
+    cookie = (cookie == 'none' || cookie == '' && isNotSpace === 'false') ? 'none' : '';
 
-    var title = $('#FAQTitlePanels');
-    var portlet = findId(UIAnswersPortlet.portletId);
+    var portlet = $.fn.findId(UIAnswersPortlet.portletId);
+    var leftColumn = portlet.find('.leftColumn:first');
     var rightColumn = portlet.find('.rightColumn:first');
+    var iconArrow = portlet.find('a.iconControll:first').find('i:first');
+    var line = portlet.find('.line:first');
+    var resizeLineBar = portlet.find('#resizeLineBar');
+
+    iconArrow.data('tooltipInfo', {hide : hideTitle, show : showTitle});
+    
     if (cookie == 'none') {
+      line.hide();
+      portlet.css('padding-left', '0px');
+      leftColumn.hide();
       rightColumn.css('margin-left', '31px');
-      $('#FAQCustomView').addClass('FAQCustomViewRight');
-      title.attr('title', showTitle);
+      resizeLineBar.addClass('resizeLt');
+      iconArrow.attr('class', 'uiIconMiniArrowRight pull-left');
+      iconArrow.attr('title', showTitle).tooltip();
     } else {
+      line.show();
+      portlet.css('padding-left', '20px');
+      leftColumn.show();
       rightColumn.css('margin-left', '255px');
-      title.attr('title', hideTitle);
+      resizeLineBar.removeClass('resizeLt');
+      iconArrow.find('i:first').attr('class', 'uiIconMiniArrowLeft pull-left');
+      iconArrow.attr('data-original-title', hideTitle).tooltip();
       cookie = 'block';
     }
-    eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+    UIAnswersPortlet.setCookie("FAQCustomView", cookie, 1);
   };
   
   UIAnswersPortlet.changeCustomView = function (change, hideTitle, showTitle) {
@@ -271,25 +305,25 @@
       cookie = 'block';
     }
     
-    eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+    UIAnswersPortlet.setCookie("FAQCustomView", cookie, 1);
     if ($.isFunction(UIAnswersPortlet.initActionScroll)) UIAnswersPortlet.initActionScroll();
     if ($.isFunction(UIAnswersPortlet.initBreadCumbScroll)) UIAnswersPortlet.initBreadCumbScroll();
   };
   
   UIAnswersPortlet.changeStarForVoteQuestion = function (i, id) {
-    findId(id + i).attr('class', 'OverVote');
+    $.fn.findId(id + i).attr('class', 'OverVote');
     
     for (var j = 0; j <= i; j++) {
-      findId(id + j).attr('class', 'OverVote');
+      $.fn.findId(id + j).attr('class', 'OverVote');
     }
     
     for (var j = i + 1; j < 5; j++) {
-      obj = findId(id + j).attr('class', 'RatedVote');
+      obj = $.fn.findId(id + j).attr('class', 'RatedVote');
     }
   };
   
   UIAnswersPortlet.jumToQuestion = function (id) {
-    var viewContent = findId(id.substring(id.lastIndexOf('/') + 1)).parents('.ViewQuestionContent');
+    var viewContent = $.fn.findId(id.substring(id.lastIndexOf('/') + 1)).parents('.ViewQuestionContent');
     if (viewContent.exists()) {
       viewContent.scrollTop(viewContent.position().top);
     }
@@ -298,12 +332,12 @@
   // Remove UIAnswersPortlet.OverButton function.
   
   UIAnswersPortlet.viewDivById = function (id) {
-    var obj = findId(id);
+    var obj = $.fn.findId(id);
     if (obj.css('display') === 'none') {
       obj.css('display', 'block');
     } else {
       obj.css('display', 'none');
-      findId(id.replace('div', '')).val('');
+      $.fn.findId(id.replace('div', '')).val('');
     }
   };
   
@@ -360,7 +394,7 @@
   
   UIAnswersPortlet.printAll = function (obj) {
     var container = $('<div></div>').addClass('PrintAllAnswersPortlet');
-    if (typeof (obj) == 'string') obj = findId(obj);
+    if (typeof (obj) == 'string') obj = $.fn.findId(obj);
     $('#UIWorkingWorkspace').hide();
     obj.parents('#UIAnswersPopupWindow').hide();
     container.append(obj.clone());
@@ -516,7 +550,7 @@
   };
   
   UIAnswersPortlet.initContextMenu = function (id) {
-    var cont = findId(id);
+    var cont = $.fn.findId(id);
     if (cont.exists()) {
       UIAnswersPortlet.disableContextMenu(id);
       var uiContextMenu = contextMenu;
@@ -533,7 +567,7 @@
   
   UIAnswersPortlet.setSelectboxOnchange = function (id) {
     if (!$.browser.mozilla) return;
-    var select = findId(id).find('select.selectbox:first');
+    var select = $.fn.findId(id).find('select.selectbox:first');
     if (select.exists()) {
       select.attr('onchange', 
           select.attr('onchange')
@@ -546,7 +580,7 @@
   };
   
   UIAnswersPortlet.voteAnswerUpDown = function (imageId, isVote) {
-    var obj = findId(imageId);
+    var obj = $.fn.findId(imageId);
     if (isVote) obj.css({'filter':' alpha(opacity: 100)', 'MozOpacity':1});
     else obj.css({'filter':' alpha(opacity: 70)', 'MozOpacity':0.7});
   };
@@ -565,7 +599,7 @@
   
   // Remove UIAnswersPortlet.createLink function.
   UIAnswersPortlet.initTreeNode = function(componentId) {
-    var container = findId(componentId);
+    var container = $.fn.findId(componentId);
     var treeContainer = container.find('div.treeContainer:first');
     treeContainer.find('.nodeGroup').hide();
     treeContainer.find('.nodeGroup:first').show();
@@ -598,7 +632,7 @@
   
   
   UIAnswersPortlet.submitSearch = function (id) {
-    findId(id).on('keydown', UIAnswersPortlet.submitOnKey);
+    $.fn.findId(id).on('keydown', UIAnswersPortlet.submitOnKey);
   };
   
   UIAnswersPortlet.submitOnKey = function (event) {
