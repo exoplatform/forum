@@ -34,6 +34,8 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
@@ -265,13 +267,34 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   public void deActivate() {
   }
 
-  private String stringProcess(List<String> values) {
+  private String stringForumProcess(List<String> values) {
     StringBuilder outPut = new StringBuilder();
     if (!values.isEmpty()) {
       for (String value : values) {
         if (!ForumUtils.isEmpty(value)) {
           if (value.indexOf('(') > 0) {
-            outPut.append(value.substring(0, value.lastIndexOf('(')) + "\n");
+            String forumSubPath = value.substring(value.lastIndexOf('(')).replace("(", "");
+            String categoryId = forumSubPath.split("/")[0];
+            String forumId = forumSubPath.split("/")[1];
+            Forum forum = getForumService().getForum(categoryId, forumId);
+            outPut.append(forum.getForumName() + "\n");
+          }
+        }
+      }
+    }
+    return outPut.toString();
+  }
+  
+  private String stringCategoryProcess(List<String> values) {
+    StringBuilder outPut = new StringBuilder();
+    if (!values.isEmpty()) {
+      for (String value : values) {
+        if (!ForumUtils.isEmpty(value)) {
+          if (value.indexOf('(') > 0) {
+            String forumSubPath = value.substring(value.lastIndexOf('(')).replace("(", "");
+            String categoryId = forumSubPath.split("/")[0];
+            Category category = getForumService().getCategory(categoryId);
+            outPut.append(category.getCategoryName() + "\n");
           }
         }
       }
@@ -325,14 +348,14 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   public void setModForunValues(List<String> values) {
     this.listModerate = values;
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM);
-    String value = stringProcess(values);
+    String value = stringForumProcess(values);
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value);
   }
 
   public void setModCateValues(List<String> values) {
     this.listModCate = values;
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM);
-    String value = stringProcess(values);
+    String value = stringCategoryProcess(values);
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE).setValue(value);
   }
 
@@ -371,13 +394,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
     List<String> values = Arrays.asList(userProfile.getModerateForums());
     this.listModerate = values;
-    moderateForums.setValue(stringProcess(values));
+    moderateForums.setValue(stringForumProcess(values));
     moderateForums.setReadOnly(true);
 
     UIFormTextAreaInput moderateCategorys = new UIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE, null);
     List<String> valuesCate = Arrays.asList(userProfile.getModerateCategory());
     this.listModCate = valuesCate;
-    moderateCategorys.setValue(stringProcess(valuesCate));
+    moderateCategorys.setValue(stringCategoryProcess(valuesCate));
     moderateCategorys.setReadOnly(true);
 
     UIAvatarContainer avatarContainer = createUIComponent(UIAvatarContainer.class, null, "Avatar");

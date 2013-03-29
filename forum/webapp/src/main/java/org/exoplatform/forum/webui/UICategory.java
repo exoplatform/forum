@@ -290,11 +290,11 @@ public class UICategory extends BaseForumForm {
   static public class EditCategoryActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
+      uiCategory.isEditCategory = true;
       if(uiCategory.getCategory() != null) {
         UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 665, 380);
         categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
         categoryForm.setCategoryValue(uiCategory.getCategory(), true);
-        uiCategory.isEditCategory = true;
       } else {
         forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
