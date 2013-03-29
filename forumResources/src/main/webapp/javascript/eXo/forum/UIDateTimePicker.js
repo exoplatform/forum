@@ -1,10 +1,9 @@
 (function(utils, $, document, window) {
   var UIDateTimePicker = {
     calendarId : "UICalendarControl",
-    dateField : "",
+    container : null,
+    input : null,
     currentDate : null, // Datetime value base of selectedDate for
-    // displaying calendar below
-    // if selectedDate is invalid, currentDate deals with system time;
     selectedDate : null, // Datetime value of input date&time field
     months : [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
     weekdays : [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ],
@@ -12,17 +11,15 @@
     pathResource : "/forumResources/javascript/eXo/forum/lang/",
     lang : "",
     fistWeekDay : 0, // sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6
-    setUp : function(calendarId) {
-      UIDateTimePicker.calendarId = calendarId;
-    },
   
     getLang : function() {
       try {
-        var day = UIDateTimePicker.dateField.getAttribute('fistweekday');
-        if (day)
-          UIDateTimePicker.fistWeekDay = day * 1 - 1; // attribute 'fistweekday' includes:
-        // sunday: 1, monday: 2,..., saturday: 7
-        var lang = UIDateTimePicker.dateField.getAttribute('lang');
+        var day = UIDateTimePicker.dataInfo.attr('data-fistweekday');
+        if (day) {
+          UIDateTimePicker.fistWeekDay = day * 1 - 1;
+        }
+
+        var lang = UIDateTimePicker.dataInfo.attr('data-lang');
         if (UIDateTimePicker.lang == lang)
           return;
         UIDateTimePicker.lang = lang;
@@ -36,41 +33,32 @@
       }
     },
   
-    init : function(field, isDisplayTime, evt) {
-      var event = evt || window.event;
-      UIDateTimePicker.isDisplayTime = isDisplayTime;
-      if (UIDateTimePicker.dateField) {
-        UIDateTimePicker.dateField.parentNode.style.position = '';
-      }
-      UIDateTimePicker.dateField = field;
+    init : function(fieldId) {
+      var container = $('#'+fieldId);
+      UIDateTimePicker.container = container;
+      UIDateTimePicker.input = container.find('input.dateTimeInput');
+      UIDateTimePicker.dataInfo = container.find('div.dataInfo');
       UIDateTimePicker.getLang();
-      if (!document.getElementById(UIDateTimePicker.calendarId)) {
-        UIDateTimePicker.create();
-      }
-      // field.parentNode.style.position = 'relative' ;
-      field.parentNode.insertBefore(document.getElementById(UIDateTimePicker.calendarId), field);
-      UIDateTimePicker.show(event);
+      
+      UIDateTimePicker.input.on('click', function(evt) {
+        UIDateTimePicker.input = $(this);
+        UIDateTimePicker.container = $('#DateTime'+ UIDateTimePicker.input.attr('id'));
+        var popup = UIDateTimePicker.container.find('div.uiCalendarComponent:first');
+        if (popup.length <= 0) {
+          UIDateTimePicker.container.append($('<div class="uiCalendarComponent uiBox"></div>'));
+          popup = UIDateTimePicker.container.find('div.uiCalendarComponent:first');
+          popup.css('position', 'absolute');
+        }
+        UIDateTimePicker.show(popup, evt);
+      });
     },
   
-    create : function() {
-      var clndr = document.createElement("div");
-      clndr.id = UIDateTimePicker.calendarId;
-      clndr.style.position = "absolute";
-      if (document.all) {
-        clndr.innerHTML = "<div class='UICalendarComponent'><iframe id='" + UIDateTimePicker.calendarId
-            + "IFrame' frameBorder='0' scrolling='no'></iframe><div style='position: absolute'></div></div>";
-      } else {
-        clndr.innerHTML = "<div class='UICalendarComponent'><div style='position: absolute; width: 100%;'></div></div>";
-      }
-      document.body.appendChild(clndr);
-    },
-  
-    show : function(event) {
+    show : function(popup, event) {
       utils.hideElements();
       var re = /^(\d{1,2}\/\d{1,2}\/\d{1,4})\s*(\s+\d{1,2}:\d{1,2}:\d{1,2})?$/i;
       UIDateTimePicker.selectedDate = new Date();
-      if (re.test(UIDateTimePicker.dateField.value)) {
-        var dateParts = UIDateTimePicker.dateField.value.split(" ");
+      if (re.test(UIDateTimePicker.input.val()) === true) {
+        var dateParts = UIDateTimePicker.input.val().split(" ");
         var arr = dateParts[0].split("/");
         UIDateTimePicker.selectedDate.setMonth(parseInt(arr[0], 10) - 1);
         UIDateTimePicker.selectedDate.setDate(parseInt(arr[1], 10));
@@ -82,53 +70,21 @@
           UIDateTimePicker.selectedDate.setSeconds(arr[2], 10);
         }
       }
-      var fieldDateTime = $(UIDateTimePicker.dateField.parentNode).find('input.DateTimeInput:first')[0];
       UIDateTimePicker.currentDate = new Date(UIDateTimePicker.selectedDate.valueOf());
-      var clndr = document.getElementById(UIDateTimePicker.calendarId);
-      clndr.firstChild.lastChild.innerHTML = UIDateTimePicker.renderCalendar();
-      var x = 0;
-      // var y = this.dateField.offsetHeight ;
-      var y = fieldDateTime.offsetHeight;
-      var Browser = eXo.core.Browser;
-      if (Browser.isIE()) {
-        x = -(Browser.findPosX(UIDateTimePicker.dateField) - Browser.findPosX(fieldDateTime) + UIDateTimePicker.dateField.offsetWidth);
-      }
-      
-      var ct = $(clndr.firstChild).show().css('left', x + 'px').css('top', y + 2 + 'px');
-     // alert($(clndr.firstChild).css('display'));  
-
-      var jdrag = $('#BlockCaledar');
-      var jcomponent = jdrag.parents('.UICalendarComponent');
-      var jcalendar = jdrag.find('div.UICalendar:first');
-      jdrag.on('mousedown', function(evt) {
-        var event = evt || window.event;
-        event.cancelBubble = true;
-        jdrag.css('position', 'absolute');
-        if (Browser.isIE7()) {
-          jdrag.css('height', jcalendar.outerHeight(true) + 'px');
-        }
-        eXo.core.DragDrop.init(null, jdrag[0], component[0], event);
-      });
-      if (Browser.isIE6()) {
-        $(clndr).find('iframe:first').css(height, jdrag.parent().outerHeight(true) + 'px');
-      }
-      $(clndr).find('.UICalendar:first').on('mousedown', function(evt) {
-        var event = evt || window.event;
-        utils.cancelEvent(event)
-      });
-      utils.addhideElement(clndr.firstChild);
+      popup.html(UIDateTimePicker.renderCalendar());
+      popup.show();
+      utils.addhideElement(popup[0]);
       utils.cancelEvent(event);
     },
   
     hide : function() {
-      if (UIDateTimePicker.dateField) {
-        $(document.getElementById(UIDateTimePicker.calendarId).firstChild).hide();
-        UIDateTimePicker.dateField = null;
+      var popup = UIDateTimePicker.container.find('div.uiCalendarComponent');
+      if (popup.length > 0) {
+        popup.hide();
       }
       utils.hideElements();
     },
-  
-    /* TODO: Move HTML code to a javascript template file (.jstmpl) */
+
     renderCalendar : function() {
       var dayOfMonth = 1;
       var validDay = 0;
@@ -136,35 +92,43 @@
       var daysInMonth = UIDateTimePicker.getDaysInMonth(UIDateTimePicker.currentDate.getFullYear(), UIDateTimePicker.currentDate.getMonth());
       var clazz = null;
       var dayIdx = UIDateTimePicker.fistWeekDay;
-      var table = '<div id="BlockCaledar" class="BlockCalendar">';
-      table += '<div class="UICalendar">';
-      table += '  <table class="MonthYearBox">';
-      table += '    <tr>';
-      table += '      <td class="MonthButton"><a class="PreviousMonth" title="' + UIDateTimePicker.tooltip[1] + '" href="javaScript: void(0);" onclick="eXo.forum.UIDateTimePicker.changeMonth(-1, event);"></a></td>';
-      table += '      <td class="YearButton"><a class="PreviousYear" title="' + UIDateTimePicker.tooltip[0] + '" href="javascript: void(0);" onclick="eXo.forum.UIDateTimePicker.changeYear(-1, event);"></a></td>';
-      table += '      <td><font color="#f89302">' + UIDateTimePicker.months[UIDateTimePicker.currentDate.getMonth()] + '</font> - ' + UIDateTimePicker.currentDate.getFullYear() + '</td>';
-      table += '      <td class="YearButton"><a class="NextYear" title="' + UIDateTimePicker.tooltip[3] + '" href="javascript: void(0);" onclick="eXo.forum.UIDateTimePicker.changeYear(1, event);"></a></td>';
-      table += '      <td class="MonthButton"><a class="NextMonth" title="' + UIDateTimePicker.tooltip[2] + '" href="javascript: void(0);" onclick="eXo.forum.UIDateTimePicker.changeMonth(1, event);"></a></td>';
-      table += '    </tr>';
-      table += '  </table>';
-      table += '  <div style="margin-top: 6px;padding: 0px 5px;">';
-      table += '    <table>';
-      table += '      <tr>';
+      var table = '';
+      table += '<div class="uiCalendar" id="BlockCaledar" onmousedown="event.cancelBubble = true">';
+      table += '  <h5 class="title clearfix">';
+      table += '    <a data-placement="right" rel="tooltip" onclick="eXo.forum.UIDateTimePicker.changeMonth(-1, event);" class="actionIcon pull-left" data-original-title="'+ UIDateTimePicker.tooltip[1]+ '"><i class="uiIconMiniArrowLeft uiIconLightGray"></i></a>';
+      table += '    <span>'+ UIDateTimePicker.months[UIDateTimePicker.currentDate.getMonth()] +', '+ UIDateTimePicker.currentDate.getFullYear() + '</span>';
+      table += '    <a data-placement="right" rel="tooltip" onclick="eXo.forum.UIDateTimePicker.changeMonth(1, event);" class="actionIcon pull-right" data-original-title="'+ UIDateTimePicker.tooltip[2]+ '"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>';
+      table += '  </h5>';
+      
+      table += '  <table class="weekList">';
+      table += '    <tr>';  
       for ( var i = 0; i < 7; i++) {
         if (dayIdx == 0) {
-          table += '       <td><font color="red">' + UIDateTimePicker.weekdays[dayIdx] + '</font></td>';
+          table += '     <td><font color="red">' + UIDateTimePicker.weekdays[dayIdx] + '</font></td>';
         } else {
-          table += '       <td><font>' + UIDateTimePicker.weekdays[dayIdx] + '</font></td>';
+          table += '     <td>' + UIDateTimePicker.weekdays[dayIdx] + '</td>';
         }
         dayIdx = ++dayIdx % 7;
       }
-      table += '      </tr>';
-      table += '    </table>';
-      table += '  </div>';
-      table += '  <div class="CalendarGrid">';
-      table += '  <table>';
+      table += '    </tr>';
+      table += '  </table>';
+      table += '  <hr/>';
+
+      var _pyear, _pmonth, _pday, _nyear, _nmonth, _nday, _weekend;
+      var _today = new Date();
+      var tableRow='';
+      if(startDayOfWeek==0) startDayOfWeek = 7;
+      _pyear = (UIDateTimePicker.currentDate.getMonth() == 0) ? UIDateTimePicker.currentDate.getFullYear() - 1 : UIDateTimePicker.currentDate.getFullYear();
+      _pmonth = (UIDateTimePicker.currentDate.getMonth() == 0) ? 11 : UIDateTimePicker.currentDate.getMonth() - 1;
+      _pday = UIDateTimePicker.getDaysInMonth(_pyear, _pmonth) - (startDayOfWeek % 7) + 1;
+      
+      _nmonth = (UIDateTimePicker.currentDate.getMonth() == 11) ? 0 : UIDateTimePicker.currentDate.getMonth() + 1;
+      _nyear = (UIDateTimePicker.currentDate.getMonth() == 11) ? UIDateTimePicker.currentDate.getFullYear() + 1 : UIDateTimePicker.currentDate.getFullYear();
+      _nday = 1;
+    
+      table += '  <table class="weekDays">';
       for ( var week = 0; week < 6; week++) {
-        table += "<tr>";
+        table += "    <tr classCurrentWeek" + week + ">";
         for ( var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
           var currentWeekDay = (dayOfWeek + UIDateTimePicker.fistWeekDay) % 7;
           if (week == 0 && startDayOfWeek == currentWeekDay) {
@@ -173,40 +137,41 @@
             validDay = 0;
           }
           if (validDay) {
-            if (dayOfMonth == UIDateTimePicker.selectedDate.getDate() && UIDateTimePicker.currentDate.getFullYear() == UIDateTimePicker.selectedDate.getFullYear()
-                && UIDateTimePicker.currentDate.getMonth() == UIDateTimePicker.selectedDate.getMonth()) {
-              clazz = 'Current';
+            if (dayOfMonth == UIDateTimePicker.selectedDate.getDate() && 
+                UIDateTimePicker.currentDate.getFullYear() == UIDateTimePicker.selectedDate.getFullYear() &&
+                UIDateTimePicker.currentDate.getMonth() == UIDateTimePicker.selectedDate.getMonth()) {
+              clazz = 'highLight today';
+              table = table.replace("classCurrentWeek" + week, 'class="currentWeek"');
             } else if (dayOfWeek == 0 || dayOfWeek == 6) {
               clazz = 'Weekend';
             } else {
               clazz = 'Weekday';
             }
   
-            table = table + "<td><a class='" + clazz + "' href=\"javascript:eXo.forum.UIDateTimePicker.setDate(" + UIDateTimePicker.currentDate.getFullYear() + "," + (UIDateTimePicker.currentDate.getMonth() + 1)
-                + "," + dayOfMonth + ")\">" + dayOfMonth + "</a></td>";
+            table += '    <td><a href="#SelectDate" class="' + clazz + '" onclick="eXo.forum.UIDateTimePicker.setDate(' + UIDateTimePicker.currentDate.getFullYear() + ',' + (UIDateTimePicker.currentDate.getMonth() + 1)
+                + ',' + dayOfMonth + ')">' + dayOfMonth + '</a></td>';
             dayOfMonth++;
-          } else {
-            table = table + "<td class='empty'><div>&nbsp;</div></td>";
+            _weekend = week;
+          } else if(validDay == 0 && week == 0) {
+            
+            table += '      <td><a href="#SelectDate" class="otherMonth" onclick="eXo.forum.UIDateTimePicker.setDate('
+                      + _pyear + ','
+                      + (_pmonth + 1) + ',' + _pday + ')">'
+                      + _pday + '</a></td>';
+            _pday++;
+          } else if(validDay == 0 && week != 0 && _weekend == week ){
+            table += '      <td><a href="#SelectDate" class="otherMonth" onclick="eXo.forum.UIDateTimePicker.setDate('
+                    + _nyear + ','
+                    + (_nmonth + 1) + ',' + _nday + ')">'
+                    + _nday + '</a></td>';
+            _nday++;
           }
         }
-        table += "</tr>";
+        table = table.replace('classCurrentWeek' + week, '') + '    </tr>';
       }
-      table += '    </table>';
-      table += '  </div>';
-      if (UIDateTimePicker.isDisplayTime) {
-        table += '  <div class="CalendarTimeBox">';
-        table += '    <div class="CalendarTimeBoxR">';
-        table += '      <div class="CalendarTimeBoxM"><span><input class="InputTime" size="2" maxlength="2" value="'
-            + ((UIDateTimePicker.currentDate.getHours()) > 9 ? UIDateTimePicker.currentDate.getHours() : "0" + UIDateTimePicker.currentDate.getHours())
-            + '" onkeyup="eXo.forum.UIDateTimePicker.setHour(UIDateTimePicker)" >:<input size="2" class="InputTime" maxlength="2" value="'
-            + ((UIDateTimePicker.currentDate.getMinutes()) > 9 ? UIDateTimePicker.currentDate.getMinutes() : "0" + UIDateTimePicker.currentDate.getMinutes())
-            + '" onkeyup = "eXo.forum.UIDateTimePicker.setMinus(UIDateTimePicker)">:<input size="2" class="InputTime" maxlength="2" value="'
-            + ((UIDateTimePicker.currentDate.getSeconds()) > 9 ? UIDateTimePicker.currentDate.getSeconds() : "0" + UIDateTimePicker.currentDate.getSeconds())
-            + '" onkeyup = "eXo.forum.UIDateTimePicker.setSeconds(this)"></span></div>';
-        table += '    </div>';
-        table += '  </div>';
-      }
-      table += '</div>';
+      table += '  </table>';
+      
+      
       table += '</div>';
       return table;
     },
@@ -214,8 +179,8 @@
     changeMonth : function(change, evt) {
       UIDateTimePicker.currentDate.setDate(1);
       UIDateTimePicker.currentDate.setMonth(UIDateTimePicker.currentDate.getMonth() + change);
-      var clndr = document.getElementById(UIDateTimePicker.calendarId);
-      clndr.firstChild.lastChild.innerHTML = UIDateTimePicker.renderCalendar();
+      var popup = UIDateTimePicker.container.find('div.uiCalendarComponent');
+      popup.html(UIDateTimePicker.renderCalendar())
       var event = evt || window.event;
       utils.cancelEvent(event);
     },
@@ -223,14 +188,14 @@
     changeYear : function(change, evt) {
       UIDateTimePicker.currentDate.setFullYear(UIDateTimePicker.currentDate.getFullYear() + change);
       UIDateTimePicker.currentDay = 0;
-      var clndr = document.getElementById(UIDateTimePicker.calendarId);
-      clndr.firstChild.lastChild.innerHTML = UIDateTimePicker.renderCalendar();
+      var popup = UIDateTimePicker.container.find('div.uiCalendarComponent');
+      popup.html(UIDateTimePicker.renderCalendar())
       var event = evt || window.event;
       utils.cancelEvent(event);
     },
   
     setDate : function(year, month, day) {
-      if (UIDateTimePicker.dateField) {
+      if (UIDateTimePicker.input.length > 0) {
         if (month < 10)
           month = "0" + month;
         if (day < 10)
@@ -244,15 +209,15 @@
           UIDateTimePicker.currentSeconds = new Date().getSeconds();
         if (UIDateTimePicker.isDisplayTime)
           dateString += " " + UIDateTimePicker.currentHours + ":" + UIDateTimePicker.currentMinutes + ":" + UIDateTimePicker.currentSeconds;
-        var objRoot = UIDateTimePicker.dateField.parentNode;
-        $(objRoot).find('input.DateTimeInput:first').val(dateString);
+        
+        UIDateTimePicker.input.val(dateString);
         UIDateTimePicker.hide();
       }
       return;
     },
   
     setSeconds : function(object) {
-      if (UIDateTimePicker.dateField) {
+      if (UIDateTimePicker.input.length > 0) {
         var seconds = object.value;
         if (seconds >= 60) {
           object.value = seconds.substring(0, 1);
@@ -270,13 +235,14 @@
           UIDateTimePicker.currentYear = UIDateTimePicker.currentDate.getFullYear();
         if (UIDateTimePicker.isDisplayTime)
           timeString = UIDateTimePicker.currentDay + "/" + UIDateTimePicker.currentMonth + "/" + UIDateTimePicker.currentYear + " " + timeString;
-        UIDateTimePicker.dateField.value = timeString;
+        
+        UIDateTimePicker.input.val(timeString);
       }
       return;
     },
   
     setMinus : function(object) {
-      if (UIDateTimePicker.dateField) {
+      if (UIDateTimePicker.input.length > 0) {
         var minus = object.value;
         if (minus >= 60) {
           object.value = minus.substring(0, 1);
@@ -294,13 +260,14 @@
           UIDateTimePicker.currentYear = UIDateTimePicker.currentDate.getFullYear();
         if (UIDateTimePicker.isDisplayTime)
           timeString = UIDateTimePicker.currentDay + "/" + UIDateTimePicker.currentMonth + "/" + UIDateTimePicker.currentYear + " " + timeString;
-        UIDateTimePicker.dateField.value = timeString;
+        
+        UIDateTimePicker.input.val(timeString);
       }
       return;
     },
   
     setHour : function(object) {
-      if (UIDateTimePicker.dateField) {
+      if (UIDateTimePicker.input.length > 0) {
         var hour = object.value;
         if (hour >= 24) {
           object.value = hour.substring(0, 1);
@@ -318,13 +285,14 @@
           UIDateTimePicker.currentYear = UIDateTimePicker.currentDate.getFullYear();
         if (UIDateTimePicker.isDisplayTime)
           timeString = UIDateTimePicker.currentDay + "/" + UIDateTimePicker.currentMonth + "/" + UIDateTimePicker.currentYear + " " + timeString;
-        UIDateTimePicker.dateField.value = timeString;
+        
+        UIDateTimePicker.input.val(timeString);
       }
       return;
     },
   
     clearDate : function() {
-      UIDateTimePicker.dateField.value = '';
+      UIDateTimePicker.input.val('');
       UIDateTimePicker.hide();
     },
   
