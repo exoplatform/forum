@@ -372,7 +372,7 @@
       var vote = findId(voteId);
       rate = parseInt(rate);
       var optsContainer = vote.find('div.optionsContainer:first');
-	  optsContainer.attr('data-rate', rate);
+    optsContainer.attr('data-rate', rate);
       var options = optsContainer.children('i');
       options.on('mouseover', UIForumPortlet.overVote);
       options.on('blur', UIForumPortlet.overVote);
@@ -404,7 +404,7 @@
           break;
         opts.eq(i).attr('class', 'uiIconNormalVote');
       }
-	  optsCon.attr('data-rate', (i+1));
+    optsCon.attr('data-rate', (i+1));
       if (opts.eq(i).attr('class') == "uiIconOverVote")
         return;
       for (; i >= 0; i--) {
@@ -755,113 +755,109 @@
       uiNav.scrollMgr.checkAvailableSpace();
       uiNav.scrollMgr.renderElements();
     },
-
-    loadTagScroll : function() {
-      var uiNav = eXo.forum.UIForumPortlet;
-      var container = $("#TagContainer");
-      if (container) {
-        uiNav.tagScrollMgr = new navigation.ScrollManager("TagContainer");
-        uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll;
-        uiNav.tagScrollMgr.mainContainer = container[0];
-        uiNav.tagScrollMgr.arrowsContainer = container.find('li.ScrollButtons')[0];
-
-        uiNav.tagScrollMgr.cleanElements();
-        uiNav.tagScrollMgr.elements.clear();
-        var items = $(uiNav.tagScrollMgr.mainContainer).find('li.' + "MenuItem");
-        for ( var i = 0; i < items.length; i++) {
-          uiNav.tagScrollMgr.elements.push(items[i]);
-        }
-
-        var button = $(uiNav.tagScrollMgr.arrowsContainer).find('div');
-        if (button.length >= 2) {
-          uiNav.tagScrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
-          uiNav.tagScrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
-        }
-
-        uiNav.scrollManagerLoaded = true;
-        uiNav.initTagScroll();
-
+/*
+ * Load more tags items.
+ * */
+    loadMoreItem : function(id, moreTagLabel) {
+      var parent = findId(id);
+      var containerMoreItem = parent.find('ul.containerMoreItem:first');
+      if(containerMoreItem.exists()) {
+        var moreItem = $('<li class="dropdown moreItem pull-right"></li>');
+        var div = $('<div data-toggle="dropdown" class="actionIcon"></div>').html(moreTagLabel);
+        div.append($('<i class="uiIconMiniArrowDown"></i>'));
+        moreItem.append(div);
+        UIForumPortlet.moreItem = moreItem;
+        containerMoreItem.append(moreItem.clone());
+        UIForumPortlet.widthMoreAction = containerMoreItem.find('li.moreItem:first').width();
+        
+        
+        var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
+        var fakeContainer = parent.find('ul.fakeContainer:first');
+        var items = fakeContainer.find('li');
+        
+        UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
+        
+        utils.onResize(UIForumPortlet.processResizeWindow);
       }
     },
-
-    initTagScroll : function() {
-      var uiNav = UIForumPortlet;
-      var elements = uiNav.tagScrollMgr.elements;
-      var jarrowsContainer = $(uiNav.tagScrollMgr.arrowsContainer);
-      var menu = jarrowsContainer.find('ul.UIRightPopupMenuContainer:first')[0];
-      var tmp = null;
-      uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
-      uiNav.tagScrollMgr.init();
-      uiNav.tagScrollMgr.checkAvailableSpace();
-
-      removeChildren(menu);
-
-      jarrowsContainer.on('mouseover', over);
-      jarrowsContainer.on('focus', over);
-      jarrowsContainer.on('mouseout', out);
-      jarrowsContainer.on('blur', out);
-      for ( var i = 0; i < elements.length; i++) {
-        if (elements[i].isVisible) {
-          $(elements[i]).show();
+    
+    processResizeWindow : function() {
+      var parent = $('#UITopicDetail');
+      if(parent.exists()) {
+        var containerMoreItem = parent.find('ul.containerMoreItem:first');
+        if(containerMoreItem.exists()) {
+          var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
+          var tmpUl = parent.find('ul.fakeContainer:first');
+          var itemsMore = null;
+          if(containerMoreItem.find('li.moreItem:first').exists()) {
+              itemsMore = containerMoreItem.find('ul').find('li');
+          }
+          tmpUl.append(containerMoreItem.find('li'));
+          if(itemsMore != null) {
+            tmpUl.append(itemsMore);
+            tmpUl.find('li.moreItem').remove();
+          }
+          var items = tmpUl.find('li');
+          UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
+          
+        }
+      }
+    },
+    
+    processTagRender : function(containerMoreItem, items, maxWidth) {
+      var itemDisplay = [];
+      var itemMenu = [];
+      var lengthItem = 0;
+      var minWidthMenu = 100;
+      var paddingLRMenu = 20;
+      var widthMoreAction = UIForumPortlet.widthMoreAction;
+      
+      $.each(items, function(index, elm) {
+        var it = $(elm);
+        lengthItem += (it.width() + 4);
+        if((lengthItem + widthMoreAction) < maxWidth) {
+          itemDisplay.push(it);
         } else {
-          tmp = $(elements[i].cloneNode(true));
-          tmp.removeClass('FloatLeft').addClass('TagItem').show();
-          $(menu).append(tmp);
-          $(elements[i]).hide();
-          jarrowsContainer.show();
+          if(itemMenu.length === 0) {
+            var moreItem = UIForumPortlet.moreItem.clone();
+            itemDisplay.push(moreItem);
+          }
+          itemMenu.push(it);
+          if((it.width() + paddingLRMenu) > minWidthMenu) {
+            minWidthMenu = it.width() + paddingLRMenu;
+          }
         }
+      });
+      
+      containerMoreItem.empty();
+      for(var i = 0; i < itemDisplay.length; ++i) {
+        containerMoreItem.append(itemDisplay[i]);
       }
-
-      setPosition(menu);
-      function removeChildren(cont) {
-        $(cont).find('div.MenuTagContainer:first').remove();
+      
+      var moreItem = containerMoreItem.find('li.moreItem:first');
+      if(moreItem.exists()) {
+        var ulMore = $('<ul class="dropdown-menu menuMore"></ul>');
+        ulMore.css('min-width', minWidthMenu + 'px');
+        for(var i = 0; i < itemMenu.length; ++i) {
+          ulMore.append(itemMenu[i]);
+        }
+        moreItem.append(ulMore);
       }
-
-      function setPosition(menu) {
-        var uiPopupCategory = $(menu).parents('.UIPopupCategory');
-        uiPopupCategory.show();
-        uiPopupCategory.attr('style', 'top:24px; left:-400px;');
-        uiPopupCategory.hide();
-      }
-
-      function over() {
-        $(this).addClass('ScrollButtonsOver');
-      }
-
-      function out() {
-        $(this).removeClass('ScrollButtonsOver');
-      }
+      
     },
-
-    setTagContainerWidth : function(container) {
-      var nodes = $(container.parentNode).find('div');
-      var width = 0;
-      var i = nodes.length;
-      while (i--) {
-        if ((nodes[i].className == container.className) || !nodes[i].className)
-          continue;
-        if (nodes[i].className == "UIForumPageIterator") {
-          var right = $(nodes[i]).find('div.RightPageIteratorBlock:first')[0];
-          var left = $(nodes[i]).find('div.LeftPageIteratorBlock:first')[0];
-          width += getWidth(left, "div") + getWidth(right, "a");
-          continue;
-        }
-        width += UIForumPortlet.tagScrollMgr.getElementSpace(nodes[i]);
-      }
-      width = UIForumPortlet.tagScrollMgr.getElementSpace(container.parentNode) - width - 15;
-      container.style.width = width + "px";
-      // Private method to get real width of the element by html tag name
-      function getWidth(obj, tag) {
-        if (!obj)
-          return 0;
-        var children = $(obj).find(tag);
-        var w = 0;
-        var i = children.length;
-        while (i--) {
-          w += children[i].offsetWidth;
-        }
-        return w;
-      }
+    
+    processTagContainerWidth : function(parent) {
+      var topContainer = parent.find('.topContainer:first');
+      var actionContainer = parent.find('.actionContainer:first');
+      var pageIterContainer = parent.find('.pageIterContainer:first'); 
+      
+      var tagsContainer = parent.find('.tagsContainer:first');
+      var titleTag = tagsContainer.find('.titleTag:first');
+      var widthMoreItem = topContainer.width() - actionContainer.width() - pageIterContainer.width() - titleTag.width() - 20;
+      
+      var containerMoreItem = tagsContainer.find('ul.containerMoreItem:first');
+      //containerMoreItem.css('width', widthMoreItem + 'px');
+      return widthMoreItem;
     },
 
     executeLink : function(elm, evt) {

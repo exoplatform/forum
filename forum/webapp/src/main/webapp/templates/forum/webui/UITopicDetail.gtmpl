@@ -68,11 +68,12 @@
   }
   String idLastPost = uicomponent.getIdPostView() ;
   String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
+  String moreTagLabel = _ctx.appRes("UITopicDetail.label.MoreTag");
   if(!isNull) {
     // add JavaScript
   	String []scripts = [
   	         	"eXo.forum.UIForumPortlet.controlWorkSpace();",
-  	         	"eXo.forum.UIForumPortlet.loadTagScroll();",
+  	         	"eXo.forum.UIForumPortlet.loadMoreItem('" + uicomponent.id + "', '" + moreTagLabel + "');",
   	         	"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
   	         	"eXo.forum.UIForumPortlet.ReloadImage();",
   	         	"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
@@ -87,8 +88,8 @@
 <div class="uiTopicDetail">
 <% uiform.begin() %>
   <% if(!isNull) {%>
-	<div class="clearfix">
-		<div class="pull-left">
+	<div class="clearfix topContainer">
+		<div class="pull-left actionContainer">
 		  <% if(isCanReply) { %>
 				<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 		  <% } else if(isNotLogin) {  %>
@@ -105,28 +106,27 @@
 		  %>
 
 			<span class="titleTag"><i class="uiIconTag uiIconLightGray"></i> <%=_ctx.appRes("UITopicContainer.label.Tag");%>(s):</span>
-		  <%}%>
-			<ul class="txtTags" id="TagContainer">
-			<%
-			  for(tag in tags) {
-				String tagName = tag.getName();
-			%>
-				<li>
-					<span class="tagItem">
-						<a rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">
-							$tagName
-						</a>
-						<i rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>" class="uiIconClose uiIconLightGray"></i>
-					</span>
-				</li>
-			<%} %>
-				
+      <ul class="txtTags containerMoreItem">
+        <li></li>
 			</ul>
-		  
-		  
+      <ul class="txtTags fakeContainer" style="visibility:hidden; position:absolute;">
+        <%
+          for(tag in tags) {
+          String tagName = tag.getName();
+        %>
+          <li>
+            <span class="tagItem">
+              <a rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+              <i rel="tooltip" data-placement="bottom" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>" class="uiIconClose uiIconLightGray"></i>
+            </span>
+          </li>
+        <%} %>
+      </ul>
+      <%}%>
+      
 		</div>
 
-		<div class="pull-right">
+		<div class="pull-right pageIterContainer">
 		<% 
 		  if(uicomponent.maxPage > 1) { 
 			_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
