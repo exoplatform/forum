@@ -1,6 +1,4 @@
 <%	
-	import org.exoplatform.forum.bbcode.api.BBCode;
-	import org.exoplatform.forum.ForumUtils;
 	List bbcodes = uiform.getListBBcode();
 %>
 <div class="uiBBCodeManagerForm">
@@ -40,7 +38,7 @@
 							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="actionIcon" href="<%=uiform.event("EditBBCode", bbcodeId)%>">
 								<i  class="uiIconEdit uiIconLightGray"></i>							
 							</a>
-							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="actionIcon"  href="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
+							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="actionIcon" href="<%=uiform.event("DeleteBBCode", bbcodeId)%>;">
 								<i class="uiIconDelete uiIconLightGray"></i>							
 							</a>
 						</td>

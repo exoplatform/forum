@@ -926,48 +926,36 @@
       uiContextMenu.setup();
     },
 
-    showBBCodeHelp : function(id, isIn) {
-      var parentElm = document.getElementById(id);
-      var popupHelp = document.getElementById(id + "ID");
-      if (parentElm) {
-        if (isIn == "true") {
-          popupHelp.style.display = "block";
-          var contentHelp = $(popupHelp).find('div.ContentHelp:first')[0];
-          contentHelp.style.height = "auto";
-          var l = String(contentHelp.innerHTML).length;
-          if (l < 100) {
-            contentHelp.style.width = (l * 4) + "px";
-            contentHelp.style.height = "45px";
-          } else {
-            contentHelp.style.width = "400px";
-            if (l > 150) {
-              contentHelp.style.height = "auto";
-            } else {
-              contentHelp.style.height = "45px";
-            }
-          }
-          var parPopup = document.getElementById("UIForumPopupWindow");
-          var parPopup2 = document.getElementById("UIForumChildPopupWindow");
-          var left = 0;
-          var worksPace = document.getElementById('UIWorkingWorkspace');
-          var worksPaceW = 1 * 1;
-          if (worksPace) {
-            worksPaceW = (worksPace.offsetWidth) * 1;
-          } else {
-            worksPaceW = (document.getElementById('UIPortalApplication').offsetWidth) * 1;
-          }
-          left = (parPopup.offsetLeft) * 1 + (parPopup2.offsetLeft) * 1 + parentElm.offsetLeft + parentElm.parentNode.offsetLeft;
-          if (left + popupHelp.offsetWidth > worksPaceW) {
-            popupHelp.style.left = "-" + (contentHelp.offsetWidth + 18) + "px";
-            popupHelp.className = "RightBBCodeHelpPopup";
-          } else {
-            popupHelp.className = "LeftBBCodeHelpPopup";
-            popupHelp.style.left = "-2px";
-          }
-        } else {
-          popupHelp.style.display = "none";
-        }
+    initShowBBcodeHelp : function(id) {
+      var parent = $.fn.findId(id);
+      if (parent.exists()) {
+        var popups = parent.find('.parentPosition');
+        popups.on('click', UIForumPortlet.showBBCodeHelp);
+        parent.parents('.UIPopupWindow:first').css('z-index', 1000);
       }
+    },
+
+    showBBCodeHelp : function(evt) {
+      utils.hideElements();
+      var thiz = $(this);
+
+      var popupContent = thiz.find('.bbcodePopupContent:first');
+      var length = $.trim(popupContent.text()).length;
+      var widthCt = (length / 0.8);
+      if (widthCt < 230) {
+        widthCt = 230;
+      } else if (widthCt > 480) {
+        widthCt = 480;
+      }
+
+      popupContent.css({ width : widthCt + 'px' });
+      popupContent.find('.arrow:first').css({ top : '30%' });
+
+      var top = -((popupContent.height() * 30 / 100) + 16);
+      popupContent.css({ 'top' : top + 'px', 'left' : '10px' }).show();
+
+      utils.addhideElement(popupContent);
+      utils.cancelEvent(evt);
     },
 
     submitOnKey : function(id) {
