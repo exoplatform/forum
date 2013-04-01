@@ -104,12 +104,12 @@ public class JCRSessionManager implements SessionManager {
       session = createSession();
       currentSession.set(session);
     } else {
-      throw new IllegalStateException("A session is already opened.");
+      //throw new IllegalStateException("A session is already opened.");
     }
     return session;
   }
 
-  private Session openOrReuseSession() {
+  public Session openOrReuseSession() {
     Session session = currentSession.get();
     if (session == null) {
       session = createSession();

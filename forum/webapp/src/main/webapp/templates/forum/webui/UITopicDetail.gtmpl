@@ -170,26 +170,27 @@
 						<a id="ButtonSearch" href="javaScript:void(0)"><i class="uiIconTag uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
 					</div>
 				  <% /*Begin Popup Menu*/ %>
-					  
-					<ul class="dropdown-menu" id="AddTagId">
+					<ul class="dropdown-menu">
 					  <li>
-						<div class="searchAdvance">
-							<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-							<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("AddTagTopic")%>">
-								<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
-							</a>
-							
-							<div style="border:solid 1px red" class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
-								<div class="TagNameItem Selected"></div>
+							<div class="searchAdvance addTagContainer">
+								<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
+								<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("AddTagTopic")%>">
+									<%=_ctx.appRes("UITopicDetail.label.AddTag");%>
+								</a>
+								<%
+									String attributes = "data-restpath=\"" + uicomponent.getRestPath() + "\" ";
+									attributes += "data-linksubmit=\"" + uicomponent.event("AddTagTopic") + "\" ";
+									attributes += "data-inputid=\"" + uicomponent.FIELD_ADD_TAG + "\" ";
+									attributes += "data-userandtopicid=\"" + userLogin + "," + topic.getId() + "\"";
+								%>
+								<div class="searchTagName" <%=attributes%>>
+									<div class="dropdown open">
+										<ul class="dropdown-menu">
+											<li></li>
+										</ul>
+									</div>
+								</div>
 							</div>
-							
-							<div class="dropdown">
-								<ul class="dropdown-menu">
-									<li><a href="#">abc</a></li>
-								</ul>
-							</div>
-							
-						</div>
 					  </li>
 					</ul>
 				  <% /*End Popup Menu*/ %>
