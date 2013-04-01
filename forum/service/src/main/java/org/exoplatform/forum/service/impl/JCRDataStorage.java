@@ -1137,16 +1137,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           }
           catNode.save();
           if (moderateList.isEmpty() || (moderateList.size() == 1 && Utils.isEmpty(moderateList.get(0)))) {
-            if (userProfileNode.hasProperty(EXO_USER_ROLE)) {
-              long role = userProfileNode.getProperty(EXO_USER_ROLE).getLong();
-              if (role == 1) {
-                userProfileNode.setProperty(EXO_USER_ROLE, 2);
+            //hasRole == fasle or hasRole =true && is Moderator = true;
+            if (userProfileNode.hasProperty(EXO_USER_ROLE) == false
+                || userProfileNode.hasProperty(EXO_USER_ROLE)
+                && userProfileNode.getProperty(EXO_USER_ROLE).getLong() == UserProfile.MODERATOR) {
+                userProfileNode.setProperty(EXO_USER_ROLE, UserProfile.USER);
                 userProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-              }
-            } else {
-              userProfileNode.setProperty(EXO_USER_ROLE, 2);
-              userProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
             }
+          } else {
+            //moderator > 0
+            userProfileNode.setProperty(EXO_USER_ROLE, UserProfile.MODERATOR);
+            userProfileNode.setProperty(EXO_USER_TITLE, Utils.MODERATOR);
           }
           userProfileNode.setProperty(EXO_MODERATE_FORUMS, Utils.getStringsInList(moderateList));
         }
@@ -1644,7 +1645,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         List<String> list = new ArrayList<String>();
         try {
           userProfileNode = userProfileHomeNode.getNode(string);
-          List<String> moderatorForums = PropertyReader.valuesToList(userProfileNode.getProperty(EXO_MODERATE_FORUMS).getValues());
+          
+          List<String> moderatorForums = new ArrayList<String>();
+          
+          if (userProfileNode.hasProperty(EXO_MODERATE_FORUMS)) {
+            moderatorForums = PropertyReader.valuesToList(userProfileNode.getProperty(EXO_MODERATE_FORUMS).getValues());
+          }
+          
           boolean hasMod = false;
           for (String string2 : moderatorForums) {
             if (string2.indexOf(forum.getId()) > 0) {
@@ -1697,17 +1704,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               }
             }
             userProfileNode.setProperty(EXO_MODERATE_FORUMS, Utils.getStringsInList(list));
-            if (list.size() <= 0) {
-              if (userProfileNode.hasProperty(EXO_USER_ROLE)) {
-                long role = userProfileNode.getProperty(EXO_USER_ROLE).getLong();
-                if (role == 1) {
-                  userProfileNode.setProperty(EXO_USER_ROLE, 2);
+            
+            if (list.isEmpty()) {
+              //hasRole == fasle or hasRole =true && is Moderator = true;
+              if (userProfileNode.hasProperty(EXO_USER_ROLE) == false
+                  || userProfileNode.hasProperty(EXO_USER_ROLE)
+                  && userProfileNode.getProperty(EXO_USER_ROLE).getLong() == UserProfile.MODERATOR) {
+                  userProfileNode.setProperty(EXO_USER_ROLE, UserProfile.USER);
                   userProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-                }
-              } else {
-                userProfileNode.setProperty(EXO_USER_ROLE, 2);
-                userProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
               }
+            } else {
+              
+              //moderator > 0
+              userProfileNode.setProperty(EXO_USER_ROLE, UserProfile.MODERATOR);
+              userProfileNode.setProperty(EXO_USER_TITLE, Utils.MODERATOR);
             }
           } catch (Exception e) {
             logDebug("Failed to removing forumId storage in property moderator of user: " + string);
