@@ -42,6 +42,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
@@ -629,42 +630,45 @@ public class FAQUtils {
     return builder.toString();
   }
   
-  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String questionId, FAQSetting faqSetting) throws Exception {
+  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String questionId, FAQSetting faqSetting, Map<String, List<Question>> mapQuestion) throws Exception {
     StringBuilder builder = new StringBuilder();
     Category category = categoryTree.getCategory();
     String categoryId = category.getId();
-    builder.append("<a href=\"javascript:void(0);\"");
-    if(categoryId.equals(Utils.CATEGORY_HOME) == false) {
-      builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
-             .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+    if (! isAllowedCategory(categoryId, mapQuestion)) {
+      return "";
     } else {
-      String home = uiForm.i18n("UICategoryTree.label.home");
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
-    }
-    builder.append("</a>");
-    
-    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
-    List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting);
-    if (categoryTrees.size() > 0 || questions.size() > 0) {
-      builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
-      for (Question question : questions) {
-        if (!questionId.equals(question.getPath())) {
-          builder.append("<li class=\"node\">")
-                 .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
-                 .append(question.getId())
-                 .append("\" type=\"checkbox\"><span></span></span>")
-                 .append(question.getQuestion());
+      builder.append("<a href=\"javascript:void(0);\"");
+      if(categoryId.equals(Utils.CATEGORY_HOME) == false) {
+        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+      } else {
+        String home = uiForm.i18n("UICategoryTree.label.home");
+        builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
+      }
+      builder.append("</a>");
+      
+      List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+      List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting);
+      if (categoryTrees.size() > 0 || questions.size() > 0) {
+        builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
+        for (Question question : questions) {
+          if (!questionId.equals(question.getPath())) {
+            builder.append("<li class=\"node\">")
+                   .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
+                   .append(question.getId())
+                   .append("\" type=\"checkbox\"><span></span></span>")
+                   .append(question.getQuestion());
+            builder.append("</li>");
+          }
+        }
+        for (CategoryTree subTree : categoryTrees) {
+          builder.append("<li class=\"node\">");
+          builder.append(renderQuestionsCategoryTree(subTree, uiForm, questionId, faqSetting, mapQuestion));
           builder.append("</li>");
         }
+        builder.append("</ul>");
       }
-      for (CategoryTree subTree : categoryTrees) {
-        builder.append("<li class=\"node\">");
-        builder.append(renderQuestionsCategoryTree(subTree, uiForm, questionId, faqSetting));
-        builder.append("</li>");
-      }
-      builder.append("</ul>");
     }
-    
     return builder.toString();
   }
   
@@ -672,6 +676,12 @@ public class FAQUtils {
     List<Question> listQuestions = new ArrayList<Question>();
     listQuestions = getFAQService().getAllQuestionsByCatetory(categoryId, faqSetting).getAll();
     return listQuestions;
+  }
+  
+  public static boolean isAllowedCategory(String categoryId, Map<String, List<Question>> mapQuestion) {
+    if (mapQuestion.containsKey(categoryId))
+      return true;
+    return false;
   }
 
 }

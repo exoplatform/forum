@@ -97,7 +97,6 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
     try {
       homeCategoryName = getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME);
       setListCate(Utils.CATEGORY_HOME);
-      initPage();
     } catch (Exception e) {
       log.error("Set Relationed is fall, exception: ", e);
     }
@@ -105,29 +104,6 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
 
   public void setQuestionId(String questionId) {
     this.questionId_ = questionId;
-  }
-
-  private void initPage() throws Exception {
-    List<String> listIds = new ArrayList<String>();
-    listIds.add(Utils.CATEGORY_HOME);
-    for (Cate cate : listCategory_) {
-      listIds.add(cate.getCategory().getId());
-    }
-    listQuestion.addAll(getFAQService().getQuickQuestionsByListCatetory(listIds, false));
-    UICheckBoxInput checkQuestion;
-    for (Question question : listQuestion) {
-      if (!question.isApproved() || !question.isActivated()) { continue ; }
-      mapQuestion_.get(question.getCategoryId()).add(question);
-      if (quesIdsSelect.contains(question.getId())) {
-        checkQuestion = new UICheckBoxInput(question.getId(), question.getId(), true).setChecked(true);
-      } else {
-        checkQuestion = new UICheckBoxInput(question.getId(), question.getId(), false);
-      }
-      if (question.getPath().equals(questionId_)){
-        checkQuestion.setDisabled(true);
-      }
-      addChild(checkQuestion);
-    }
   }
 
   private void setListCate(String path) throws Exception {
@@ -166,7 +142,7 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
   }
 
   protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
-    return FAQUtils.renderQuestionsCategoryTree(categoryTree, this, questionId_, faqSetting_);
+    return FAQUtils.renderQuestionsCategoryTree(categoryTree, this, questionId_, faqSetting_, mapQuestion_);
   }
 
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
