@@ -280,10 +280,11 @@
 											<div class="moreAction pull-right">
 												<div class="pull-right uiDropdownWithIcon dropdown">
 
-													<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon	dropdown-toggle">
-														<i class="uiIconSettings uiIconLightGray"></i>&nbsp;More Actions&nbsp; <!--hardcode-->
-														<i class="uiIconMiniArrowDown uiIconLightGray"></i>
-													</a>
+													<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+	                          <i class="uiIconSettings uiIconLightGray"></i>
+	                            <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
+	                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
+	                        </button>
 													<!--	Begin popup menu	-->
 													<ul class="dropdown-menu">
 													 <!-- action print question -->
@@ -513,7 +514,7 @@
 												<!-- action Sort answer by vote -->
 												<p class="sortAnswer">
 													<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
-														Sort by Rate	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+														<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote");%>	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 												</p>
 											<%}%>
@@ -671,11 +672,11 @@
 									<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
 										<div class="moreAction">
 											<div class="pull-right uiDropdownWithIcon dropdown">
-												<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon	dropdown-toggle">
+												<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
 													<i class="uiIconSettings uiIconLightGray"></i>
-														<span>More Actions&nbsp;</span><!--hardcode-->
+														<span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
-												</a>
+												</button>
 												<!--	Begin answers popup menu	-->
 												<ul class="dropdown-menu">
 												<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
@@ -736,7 +737,11 @@
 												</div>
 										<% } else { %>
 												<div class="answerContent">
-													<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" ><span class="userName">$responseBy</span></a>
+													 <a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
+													   <span class="userName">
+													     <%= FAQUtils.getFullName(owner);%>
+													   </span>
+													 </a>
 													 <div class="theContent">$res</div>
 												</div>
 										<% } %>
@@ -818,11 +823,11 @@
 								<div class="responseItemContainer	<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
 									<div class="moreAction ">
 										<div class="pull-right uiDropdownWithIcon dropdown">
-											<a href="javascript:void(0);" data-toggle="dropdown" class="actionIcon dropdown-toggle">
-												<i class="uiIconSettings uiIconLightGray"></i>
-												<span>More Actions&nbsp;</span><!--hardcode-->
-												<i class="uiIconMiniArrowDown uiIconLightGray"></i>
-											</a>
+											<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+                         <i class="uiIconSettings uiIconLightGray"></i>
+                           <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
+                         <i class="uiIconMiniArrowDown uiIconLightGray"></i>
+                       </button>
 											<!--	Begin popup menu	-->
 											<ul class="dropdown-menu">
 												<li>

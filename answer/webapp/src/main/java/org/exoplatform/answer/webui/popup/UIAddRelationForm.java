@@ -22,18 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryTree;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -56,7 +54,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
         @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class) 
     }
 )
-public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
+public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String            homeCategoryName = "";
 
   private List<Question>      listQuestion     = new ArrayList<Question>();
@@ -78,11 +76,6 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   protected List<String> listCateSelected = new ArrayList<String>();
 
   private List<Cate>   listCategory_    = new ArrayList<Cate>();
-
-  private static FAQService getFAQService() {
-    return (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-
-  }
 
   protected List<Cate> getListCate() {
     return this.listCategory_;
@@ -173,7 +166,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   }
 
   protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
-    return FAQUtils.renderQuestionsCategoryTree(categoryTree, questionId_, faqSetting_);
+    return FAQUtils.renderQuestionsCategoryTree(categoryTree, this, questionId_, faqSetting_);
   }
 
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
@@ -190,7 +183,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
         }
       }
       responseForm.setListIdQuesRela(listQuestionId);
-      List<String> contents = getFAQService().getQuestionContents(listQuestionPath);
+      List<String> contents = addRelationForm.getFAQService().getQuestionContents(listQuestionPath);
       responseForm.setListRelationQuestion(contents);
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
       addRelationForm.cancelChildPopupAction();

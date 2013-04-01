@@ -629,7 +629,7 @@ public class FAQUtils {
     return builder.toString();
   }
   
-  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, String questionId, FAQSetting faqSetting) throws Exception {
+  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String questionId, FAQSetting faqSetting) throws Exception {
     StringBuilder builder = new StringBuilder();
     Category category = categoryTree.getCategory();
     String categoryId = category.getId();
@@ -638,7 +638,8 @@ public class FAQUtils {
       builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
              .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+      String home = uiForm.i18n("UICategoryTree.label.home");
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
     }
     builder.append("</a>");
     
@@ -658,7 +659,7 @@ public class FAQUtils {
       }
       for (CategoryTree subTree : categoryTrees) {
         builder.append("<li class=\"node\">");
-        builder.append(renderQuestionsCategoryTree(subTree, questionId, faqSetting));
+        builder.append(renderQuestionsCategoryTree(subTree, uiForm, questionId, faqSetting));
         builder.append("</li>");
       }
       builder.append("</ul>");
