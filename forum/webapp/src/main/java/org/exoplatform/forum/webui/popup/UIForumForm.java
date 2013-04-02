@@ -40,6 +40,7 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -201,6 +202,9 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     newForum.addUIFormInput(forumStatus);
     newForum.addUIFormInput(description);
 
+    notifyWhenAddPost.setReadOnly(autoAddEmailNotify.getValue());
+    notifyWhenAddTopic.setReadOnly(autoAddEmailNotify.getValue());
+    
     UIFormInputWithActions moderationOptions = new UIFormInputWithActions(FIELD_MODERATOROPTION_FORM);
     moderationOptions.addUIFormInput(autoAddEmailNotify);
     moderationOptions.addUIFormInput(notifyWhenAddPost);
@@ -260,6 +264,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       UIFormTextAreaInput notifyWhenAddTopic = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
       notifyWhenAddPost.setValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddPost()));
       notifyWhenAddTopic.setValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddTopic()));
+      notifyWhenAddPost.setReadOnly(isAutoAddEmail);
+      notifyWhenAddTopic.setReadOnly(isAutoAddEmail);
       getUICheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
 
       UIPermissionPanel permisisonTab = this.getChildById(PERMISSION_TAB);
@@ -469,32 +475,29 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIForumForm> event) throws Exception {
       UIForumForm forumForm = event.getSource();
       UIFormInputWithActions moderationOptions = forumForm.getChildById(FIELD_MODERATOROPTION_FORM);
+      UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
+      UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
       boolean isCheck = forumForm.getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       if (isCheck) {
         UIPermissionPanel permissionTab = forumForm.getChildById(PERMISSION_TAB);
         String moderators = permissionTab.getOwnersByPermission(MODERATOR);
         forumForm.setDefaultEmail(moderationOptions, moderators);
-      } else
-        event.getRequestContext().addUIComponentToUpdateByAjax(moderationOptions);
+        notifyWhenAddTopics.setReadOnly(true);
+        notifyWhenAddPosts.setReadOnly(true);
+      } else {
+        notifyWhenAddTopics.setReadOnly(false);
+        notifyWhenAddPosts.setReadOnly(false);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(moderationOptions);
     }
-  }
-
-  private String listEmailForSendNotify(Set<String> listModerator, String inputValue) throws Exception {
-    Set<String> newset = new HashSet<String>(listModerator);
-    if (!ForumUtils.isEmpty(inputValue)) {
-      newset.addAll(Arrays.asList(ForumUtils.splitForForum(inputValue)));
-    }
-    return listToString(newset);
   }
 
   private void setDefaultEmail(UIFormInputWithActions moderationOptions, String moderators) throws Exception {
+    UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
+    UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
+    Set<String> listModerator = new HashSet<String>();
     if (!ForumUtils.isEmpty(moderators)) {
-      UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
-      UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
-      String emailTopic = notifyWhenAddTopics.getValue();
-      String emailPost = notifyWhenAddPosts.getValue();
       String[] moderators_ = ForumUtils.splitForForum(moderators);
-      Set<String> listModerator = new HashSet<String>();
       String email;
       User user = null;
       List<String> list = ForumServiceUtils.getUserPermission(moderators_);
@@ -505,11 +508,9 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
           listModerator.add(email);
         }
       }
-      notifyWhenAddTopics.setValue(listEmailForSendNotify(listModerator, emailTopic));
-      notifyWhenAddPosts.setValue(listEmailForSendNotify(listModerator, emailPost));
-      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-      context.addUIComponentToUpdateByAjax(moderationOptions);
     }
+    notifyWhenAddTopics.setValue(listToString(listModerator));
+    notifyWhenAddPosts.setValue(listToString(listModerator));
   }
 
   static public class SelectTabActionListener extends EventListener<UIForumForm> {
@@ -517,13 +518,13 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumForm forumForm = event.getSource();
       forumForm.id = Integer.parseInt(id);
-      if (forumForm.id == 2) {
+      if (forumForm.id == 1) {
         UIFormInputWithActions moderationOptions = forumForm.getChildById(FIELD_MODERATOROPTION_FORM);
         UIPermissionPanel permissionTab = forumForm.getChildById(PERMISSION_TAB);
         String moderators = permissionTab.getOwnersByPermission(MODERATOR);
         forumForm.setDefaultEmail(moderationOptions, moderators);
       }
-      Util.getPortalRequestContext().setResponseComplete(true);
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumForm);
     }
   }
 }
