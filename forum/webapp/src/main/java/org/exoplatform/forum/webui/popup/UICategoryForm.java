@@ -156,7 +156,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     addUIFormInput(detailTab);
     
     UIPermissionPanel permissionPanel = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionPanel.setPermission(null, new String[] { MODERAROR, TOPICABLE, POSTABLE, VIEWER });
+    permissionPanel.setPermission(null, new String[] { getLabel(MODERAROR), getLabel(TOPICABLE), getLabel(POSTABLE), getLabel(VIEWER) });
     addChild(permissionPanel);
     
     setActions(new String[] { "Save", "Cancel" });

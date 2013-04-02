@@ -73,6 +73,10 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
   
+  final private static String FIELD_USERPRIVATE_INPUT          = "userPrivate";
+
+  final private static String FIELD_MODERATOR_INPUT            = "moderator";
+  
   private String              spaceGroupId     = null;
 
   public UIPermissionPanel() throws Exception {
@@ -154,11 +158,13 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       String errorUser = UserHelper.checkValueUser(value);
       if (CommonUtils.isEmpty(errorUser) == false) {
         WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-        context.getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.error-input", new String[] { errorUser }, ApplicationMessage.WARNING));
+        context.getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.error-input", new String[] {}, ApplicationMessage.WARNING));
         ((PortalRequestContext) context.getParentAppRequestContext()).ignoreAJAXUpdateOnPortlets(true);
         return;
       }
       grid.setOwners(splitValues(value));
+      panel.addPermissionForOwners(FIELD_MODERATOR_INPUT, splitValues(value));
+      panel.addPermissionForOwners(FIELD_USERPRIVATE_INPUT, splitValues(value));
       input.setValue(null);
       event.getRequestContext().addUIComponentToUpdateByAjax(panel);
     }

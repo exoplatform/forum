@@ -6,7 +6,7 @@
   eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
   
   rcontext.getJavascriptManager().require("SHARED/jquery")
-					.addScripts("\$(\"#$uicomponent.id #PermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + \$(this).val(); javascript:ajaxGet(eventURL); });");
+					.addScripts("\$(\"#$uicomponent.id #UIPermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + \$(this).val(); javascript:ajaxGet(eventURL); });");
 %>
 
 <div id="$uicomponent.id">
