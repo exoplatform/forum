@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -40,11 +39,7 @@ public class UIForumDescription extends UIContainer {
 
   private String  categoryId;
 
-  private Category   category   = null;
-
   private Forum   forum   = null;
-
-  private boolean isForum = false;
 
   private boolean hasUpdate = false;
 
@@ -52,46 +47,23 @@ public class UIForumDescription extends UIContainer {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
-  public void setCategory(Category category) {
-    this.isForum = false;
-    this.category = category;
-    this.hasUpdate = false;
-  }
-
   public void setForum(Forum forum) {
-    this.isForum = true;
     this.forum = forum;
     this.hasUpdate = false;
-  }
-
-  public void setCategoryId(String categoryId) {
-    this.categoryId = categoryId;
-    this.isForum = false;
-    this.hasUpdate = true;
   }
 
   public void setForumId(String categoryId, String forumId) {
     this.forumId = forumId;
     this.categoryId = categoryId;
-    this.isForum = true;
     this.hasUpdate = true;
   }
 
   public String getName() {
-    return (isForum && getForum() != null) ? forum.getForumName() :
-              ((!isForum && getCategory() != null) ? category.getCategoryName() : null);
+    return (getForum() != null) ? forum.getForumName() : null;
   }
 
   public String getDescription() {
-    return (isForum && getForum() != null) ? forum.getDescription() :
-      ((!isForum && getCategory() != null) ? category.getDescription() : null);
-  }
-
-  private Category getCategory() {
-    if (this.category == null || hasUpdate) {
-      this.category = forumService.getCategory(categoryId);
-    }
-    return this.category;
+    return (getForum() != null) ? forum.getDescription() : null;
   }
 
   private Forum getForum() {

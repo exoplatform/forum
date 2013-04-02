@@ -12,7 +12,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 
 	import org.exoplatform.forum.TimeConvertUtils;
-	import org.exoplatform.forum.webui.UIForumDescription;
+	import org.exoplatform.forum.webui.UICategoryDescription;
 
 	Category category = uicomponent.getCategory();
 	if(category == null) {
@@ -47,7 +47,7 @@
 %>
 
 <div class="uiCategory">
-<% uicomponent.renderChild(UIForumDescription.class) %>
+<% uicomponent.renderChild(UICategoryDescription.class) %>
 <%uiform.begin()%>
 	<div style="display:none;" id="divChecked" data-checked="0"><span></span></div>
 	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped uiCollapExpand">

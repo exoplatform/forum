@@ -447,14 +447,14 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
         }
       } else {
         UITopicContainer uiTopicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+        UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
         if (!uiForm.isForumUpdate) {
           forumPortlet.updateIsRendered(ForumUtils.FORUM);
-          UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
           uiForumContainer.setIsRenderChild(true);
           uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), true, 1);
           forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + ForumUtils.SLASH + newForum.getId());
         }
-        UIForumDescription forumDescription = forumPortlet.findFirstComponentOfType(UIForumDescription.class);
+        UIForumDescription forumDescription = uiForumContainer.getChild(UIForumDescription.class);
         forumDescription.setForum(newForum);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
         breadcumbs.setUpdataPath(categoryId + ForumUtils.SLASH + newForum.getId());

@@ -99,7 +99,7 @@ public class UICategory extends BaseForumForm {
   static public boolean     isUnWatch       = false;
   
   public UICategory() throws Exception {
-    addChild(UIForumDescription.class, null, null);
+    addChild(UICategoryDescription.class, null, null);
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
     setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
   }
@@ -151,7 +151,7 @@ public class UICategory extends BaseForumForm {
     this.categoryId = category.getId();
     this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
     this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId));
-    getChild(UIForumDescription.class).setCategory(category);
+    getChild(UICategoryDescription.class).setCategory(category);
   }
 
   public void updateByBreadcumbs(String categoryId) {
@@ -159,7 +159,7 @@ public class UICategory extends BaseForumForm {
     this.isEditCategory = true;
     this.isEditForum = true;
     this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
-    getChild(UIForumDescription.class).setCategoryId(categoryId);
+    getChild(UICategoryDescription.class).setCategoryId(categoryId);
   }
   
   public void updateByLink(Category category) {
@@ -168,7 +168,7 @@ public class UICategory extends BaseForumForm {
     this.isEditForum = true;
     this.category = category;
     this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
-    getChild(UIForumDescription.class).setCategory(category);
+    getChild(UICategoryDescription.class).setCategory(category);
   }
 
   public String getCategoryId() {
