@@ -1,10 +1,10 @@
-<%
-  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
-  requireJS.addScripts("eXo.answer.UIAnswersPortlet.FAQChangeHeightToAuto();");
-%>
-
-<div class="questionManagerForm uiQuestionManagerForm" id="Parent$uicomponent.id">
-		<div class="resizable questionManagerContainer">
+<div class="questionManagerForm uiQuestionManagerForm" >
+	<div class="resizable">
+		<div class="questionManagerContainer" id="$uicomponent.id" >
+			<%
+				def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+				requireJS.addScripts("setTimeout(function() { eXo.answer.UIAnswersPortlet.FAQChangeHeightToAuto('" + uicomponent.id + "');}, 100);");
+			%>
 			<div id="faqViewTabContent" class="faqViewTabContent">
 				<% uicomponent.renderChild("QuestionInfo") ; %>
 			</div>
@@ -12,21 +12,14 @@
 				<%
 				if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
 					 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
-				}
-				if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
+				} else if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
 					 uicomponent.renderChild(uicomponent.UI_RESPONSE_FORM) ;
 				}
 				%>
 			</div>
 		</div>
-	<% uiform.begin() %>
-	 <div class="uiAction uiActionBorder">
-  <% for(action in uicomponent.getActions()) { 
-        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-           String QMLink = uicomponent.event(action) ;
-        %>
-      <button type="button" onclick="$QMLink" class="btn">$actionLabel</button>
-      <%}%>
-    </div>
-	<%uiform.end()%>
+	</div>
+	<div class="uiAction uiActionBorder">
+		<button type="button" onclick="<%=uicomponent.event("Cancel")%>" class="btn"><%=_ctx.appRes("UIQuestionManagerForm.action.Cancel");%></button>
+	</div>
 </div>

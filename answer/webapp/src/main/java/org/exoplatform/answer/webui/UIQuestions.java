@@ -667,7 +667,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null);
       popupContainer.setId("FAQQuestionManagerment");
-      popupAction.activate(popupContainer, 900, 850);
+      popupAction.activate(popupContainer, 900, 580);
       questionManagerForm.setFAQSetting(questions.faqSetting_);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

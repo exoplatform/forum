@@ -544,9 +544,37 @@
   UIAnswersPortlet.showImage = function () {
     UIAnswersPortlet.showPicture(this);
   };
-  
-  UIAnswersPortlet.FAQChangeHeightToAuto = function () {
-    $('#UIFAQPopupWindow').find('div.PopupContent:first').css({'height':'auto', 'maxHeight':'500px'});
+
+  UIAnswersPortlet.FAQChangeHeightToAuto = function(id) {
+    var parent = $.fn.findId(id);
+    var uiWindow = parent.parents('.UIPopupWindow:first');
+    var winH = $(window).height();
+    var scrollTop = $(window).scrollTop();
+    if (parent.find('.uiResponseForm').exists() || parent.find('.uiQuestionForm').exists()) {
+      uiWindow.animate({
+        top : scrollTop + 'px'
+      }, 200, function() {
+        var resizeAble = parent.parents('.resizable:first');
+        if (resizeAble.height() < winH) {
+          var mH = (winH - 150);
+          resizeAble.css({
+            height : mH + 'px',
+            maxHeight : mH + 'px'
+          });
+        }
+      });
+    } else {
+      var mH = (winH - 160);
+      var resizeAble = parent.parents('.resizable:first');
+      resizeAble.css({
+        height : 'auto',
+        maxHeight : mH + 'px'
+      });
+      var top = (winH - uiWindow.height()) / 2;
+      uiWindow.animate({
+        top : (scrollTop + top) + 'px'
+      }, 200, function() { });
+    }
   };
   
   UIAnswersPortlet.initContextMenu = function (id) {

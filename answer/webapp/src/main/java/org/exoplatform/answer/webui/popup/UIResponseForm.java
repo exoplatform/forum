@@ -455,7 +455,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
         if (popupAction != null) {
           popupAction.deActivate();
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
       }
     }
   }
