@@ -656,8 +656,7 @@ public class FAQUtils {
             builder.append("<li class=\"node\">")
                    .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
                    .append(question.getId())
-                   .append("\" type=\"checkbox\"><span></span></span>")
-                   .append(question.getQuestion());
+                   .append("\" type=\"checkbox\"><span>").append(question.getQuestion()).append("</span></span>");
             builder.append("</li>");
           }
         }
