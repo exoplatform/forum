@@ -32,6 +32,14 @@ public class FAQWebservice implements ResourceContainer {
   public FAQWebservice() {
   }
 
+  /**
+   * Views rss by provided source.
+   * 
+   * @param resourceid the source of rss to view.
+   * @return the response is xml-data contain returned rss.
+   * @throws Exception
+   * @LevelAPI Platform
+   */
   @GET
   @Path("rss/{resourceid}")
   @Produces(MediaType.APPLICATION_XML)
