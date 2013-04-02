@@ -71,7 +71,7 @@
 
 .ParentMaskLayer {
     position: relative;
-    z-index: 105;
+    z-index: 3;
 }
 
 .ParentMaskLayer .KSMaskLayer {
