@@ -101,8 +101,12 @@ public class UICategories extends UIContainer {
     this.isRenderChild = isRenderChild;
   }
   
-  public UserProfile getQuickProfile(String userName) throws Exception {
-    return forumService.getQuickProfile(userName);
+  public boolean getIsDisplayAvatar(String userName) {
+    try {
+      return forumService.getQuickProfile(userName).getIsDisplayAvatar();
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   public boolean getIsRendered() throws Exception {

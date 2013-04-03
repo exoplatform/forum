@@ -111,10 +111,6 @@ public class UICategory extends BaseForumForm {
     setListWatches();
   }
   
-  public UserProfile getQuickProfile(String userName) throws Exception {
-    return getForumService().getQuickProfile(userName);
-  }
-
   protected boolean useAjax() {
     return useAjax;
   }

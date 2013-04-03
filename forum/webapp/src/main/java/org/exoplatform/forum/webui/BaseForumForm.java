@@ -145,6 +145,14 @@ public class BaseForumForm extends BaseUIForm {
   protected String getScreenName(String userName) throws Exception {
     return getForumService().getScreenName(userName);
   }
+  
+  protected boolean getIsDisplayAvatar(String userName) {
+    try {
+      return getForumService().getQuickProfile(userName).getIsDisplayAvatar();
+    } catch (Exception e) {
+      return false;
+    }
+  }
 
   protected String getShortScreenName(String screenName) throws Exception {
     if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {

@@ -43,7 +43,6 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 
   public int                         maxPage         = 1;
 
-  @SuppressWarnings("unchecked")
   public JCRPageList                 pageList;
 
   public int                         totalCheked     = 0;

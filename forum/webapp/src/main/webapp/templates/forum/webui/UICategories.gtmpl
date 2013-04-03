@@ -269,9 +269,7 @@
 					</td>
 					<td>
 						<% String screemNamePost =	uicomponent.getScreenName(lastPostBy);
-					     String userId = userProfile.getUserId();
-               UserProfile userInfo = uicomponent.getQuickProfile(userId);
-               boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
+               boolean isDisplayAvatar = uicomponent.getIsDisplayAvatar(lastPostBy);
 						%>
 						<div class="dropdown uiUserInfo">
 						  <% if (isDisplayAvatar) { %>
