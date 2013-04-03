@@ -162,10 +162,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     setSubmitAction("return false;");
   }
   
-  public UserProfile getQuickProfile(String userName) throws Exception {
-    return getForumService().getQuickProfile(userName);
-  }
-
   public boolean isNull() {
     return isNull;
   }

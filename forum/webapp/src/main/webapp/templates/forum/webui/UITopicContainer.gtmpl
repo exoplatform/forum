@@ -233,26 +233,32 @@
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:40%;">
-						<%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
+						<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 					</th>
 					<th style="width:18%;">
 						<%=_ctx.appRes("UITopicContainer.label.authorPost");%>
 					</th>
 					<th style="width:145px;">
-						<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
+						<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 					</th>
 					 
 					<th style="width:120px;">
-						<%=_ctx.appRes("UITopicContainer.label.Rating");%>
-					</th>
-					
-					<th style="width:15px;" class="center"><i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i></th>
-					<th style="width:15px;" class="center">
-						 <i class="uiIconUIForms uiIconLightGray"></i>
+						<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 					</th>
 					
 					<th style="width:15px;" class="center">
-						<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
+						<i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i>
+					</th>
+					<th style="width:15px;" class="center">
+						<a href="<%=uicomponent.event("SetOrderBy","postCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Replies");%>">
+							 <i class="uiIconUIForms uiIconLightGray"></i>
+						</a>
+					</th>
+					
+					<th style="width:15px;" class="center">
+						<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Views");%>">
+							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
+						</a>
 					</th>
 					<% if(canEdit) { %>
 					<th style="width:15px;" class="center">
@@ -401,9 +407,7 @@
 						
 						<% 
 							 String viewTopicBy = uicomponent.getScreenName(topicBy); 
-							 String userId = userProfile.getUserId();
-							 UserProfile userInfo = uicomponent.getQuickProfile(userId);
-							 boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
+							 boolean isDisplayAvatar = uicomponent.getIsDisplayAvatar(topicBy);
 						%>
 						<div class="dropdown uiUserInfo">
 							<% if (isDisplayAvatar) { %>
@@ -473,6 +477,8 @@
 							String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
 						%>
 						<a class="actionIconSmall" href="$lastPostLink" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
+					<% } else {%>
+						<a class="actionIconSmall" href="<%=uicomponent.event("OpenTopic", (topicId+"," + max_page + ",true"))%>" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GotoLastPost");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
 					<% } %>
 					
 					</td>
