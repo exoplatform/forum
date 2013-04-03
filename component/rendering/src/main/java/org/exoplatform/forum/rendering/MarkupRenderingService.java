@@ -40,10 +40,23 @@ public class MarkupRenderingService {
     registerRenderer(plugin.getRenderer());
   }
 
+  /**
+   * Registers a render.
+   * 
+   * @param renderer
+   * @LevelAPI Platform
+   */
   public void registerRenderer(Renderer renderer) {
     rendererRegistry.put(renderer.getSyntax(), renderer);
   }
 
+  /**
+   * Gets Render by provided syntax.
+   * 
+   * @param syntax The syntax to register.
+   * @return
+   * @LevelAPI Platform
+   */
   public Renderer getRenderer(String syntax) {
     Renderer r = rendererRegistry.get(syntax);
     if (r == null) {
@@ -54,10 +67,11 @@ public class MarkupRenderingService {
 
   /**
    * Convenience method to delegate markup of an object.
-   * @param <T>
+   * 
    * @param delegate
    * @param target
    * @return
+   * @LevelAPI Platform
    */
   public <T> String delegateRendering(MarkupRenderDelegate<T> delegate, T target) {
     String message = delegate.getMarkup(target);

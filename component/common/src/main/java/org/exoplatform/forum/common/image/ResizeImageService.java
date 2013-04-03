@@ -27,7 +27,7 @@ import java.io.InputStream;
 public interface ResizeImageService {
 
   /**
-   * Resize the given image input stream to the specified dimensions.
+   * Resizes the given image input stream to the specified dimensions.
    * 
    * @param imageName is the name of image to be resized
    * @param is is the input stream of image
@@ -35,6 +35,7 @@ public interface ResizeImageService {
    * @param requestHeight the new image height
    * @param keepAspectRatio keep the aspect ratio or not
    * @return the resized input stream
+   * @LevelAPI Platform
    */
   public InputStream resizeImage(String imageName,
                                  InputStream is,
@@ -43,23 +44,25 @@ public interface ResizeImageService {
                                  boolean keepAspectRatio);
 
   /**
-   * Resize the given image input stream to the adapt requested width and keep
+   * Resizes the given image input stream to the adapt requested width and keep
    * the aspect ratio.
    * 
    * @param imageName is the name of image to be resized
    * @param is is the input stream of image
    * @param requestWidth the new image width
+   * @LevelAPI Platform
    */
   public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth);
 
   /**
-   * Resize the given image input stream to the adapt requested height and keep
+   * Resizes the given image input stream to the adapt requested height and keep
    * the aspect ratio.
    * 
    * @param imageName is the name of image to be resized
    * @param is is the input stream of image
    * @param requestHeight the new image height
    * @return the resized input stream
+   * @LevelAPI Platform
    */
   public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight);
 }
