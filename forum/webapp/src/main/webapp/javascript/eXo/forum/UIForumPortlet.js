@@ -961,7 +961,7 @@
     submitOnKey : function(id) {
       var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
       if (parentElm.exists()) {
-        parentElm.on('keydown', function(evt) {
+        parentElm.off('keydown').on('keydown', function(evt) {
           var key = utils.getKeynum(evt);
           if (key == 13) {
             var searchLinkElm = $(this).find('.actionSubmitLink');
@@ -976,7 +976,6 @@
               utils.cancelEvent(evt);
               evt.preventDefault();
             }
-            return false;
           }
         });
       }

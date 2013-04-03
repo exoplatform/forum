@@ -139,7 +139,20 @@ public class TestCommonUtils extends TestCase {
     assertEquals("Text ...&gt;div class=\"&XZY\"&lt;Test&gt;/div&lt;()\"/-=~`'&#46;,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
   }
   
-  
+  public void testIsContainSpecialCharacter() {
+    String input = null;
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "";
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "abcgde";
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "abcg#$de";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+    input = "!@#abcgde";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+    input = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+  }
   
   
   

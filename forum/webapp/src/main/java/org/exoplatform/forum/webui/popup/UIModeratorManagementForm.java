@@ -207,12 +207,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   @SuppressWarnings("unchecked")
   private void setListUserProfile() throws Exception {
+    this.userProfiles =  new CopyOnWriteArrayList<UserProfile>();
     if (valueSearch == null || valueSearch.trim().length() < 1) {
       int page = pageIterator.getPageSelected();
-      this.userProfiles = this.userPageList.getPage(page);
+      this.userProfiles.addAll(this.userPageList.getPage(page));
       pageIterator.setSelectPage(userPageList.getCurrentPage());
     } else {
-      this.userProfiles = this.userPageList.getpage(this.valueSearch);
+      this.userProfiles.addAll(this.userPageList.getpage(this.valueSearch));
       pageIterator.setSelectPage(this.userPageList.getCurrentPage());
       valueSearch = null;
     }
@@ -237,9 +238,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         this.setListUserProfile();
       }
     }
-    if (userProfiles == null)
-      userProfiles = new ArrayList<UserProfile>();
-    return this.userProfiles;
+    if (userProfiles == null){
+      return new ArrayList<UserProfile>();
+    }
+    return userProfiles;
   }
 
   private UserProfile getUserProfile(String userId) throws Exception {
@@ -955,6 +957,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIModeratorManagementForm uiForm = event.getSource();
       String keyword = ((UIFormStringInput) uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
       if (keyword != null && keyword.trim().length() > 0) {
+        if (CommonUtils.isContainSpecialCharacter(keyword)) {
+          uiForm.warning("UIQuickSearchForm.msg.failure");
+          return;
+        }
         uiForm.searchUserProfileByKey(keyword);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
       } else {
