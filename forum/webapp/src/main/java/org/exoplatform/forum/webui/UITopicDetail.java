@@ -770,13 +770,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         String userName = topicDetail.getUserProfile().getUserId();
         String[] userVoteRating = topicDetail.topic.getUserVoteRating();
-        boolean erro = false;
+        boolean error = false;
         for (String string : userVoteRating) {
           if (string.equalsIgnoreCase(userName))
-            erro = true;
+            error = true;
         }
-        if (!erro) {
-          UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 300, 145);
+        if (!error) {
+          UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 320, 0);
           ratingForm.updateRating(topicDetail.topic);
           topicDetail.isEditTopic = true;
         } else {

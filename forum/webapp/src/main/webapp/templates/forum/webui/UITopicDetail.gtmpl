@@ -81,7 +81,7 @@
               "eXo.forum.UIForumPortlet.disableOnClickMenu('AddTag');"
   	         	];
   	ForumUtils.addScripts(null, null, scripts);
-  	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init();");
+  	ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init('" + uicomponent.id + "');");
   	ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
   }
 %>

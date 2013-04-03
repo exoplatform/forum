@@ -22,10 +22,10 @@ import java.util.List;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -46,10 +46,10 @@ import org.exoplatform.webui.event.EventListener;
     template = "app:/templates/forum/webui/popup/UIRatingForm.gtmpl",
     events = {
       @EventConfig(listeners = UIRatingForm.VoteTopicActionListener.class), 
-      @EventConfig(listeners = UIRatingForm.CancelActionListener.class,phase = Phase.DECODE)
+      @EventConfig(listeners = UIRatingForm.CloseActionListener.class, phase = Phase.DECODE)
     }
 )
-public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
+public class UIRatingForm extends BaseForumForm implements UIPopupComponent {
   private Topic  topic;
 
   public UIRatingForm() throws Exception {
@@ -87,7 +87,7 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
     }
   }
 
-  static public class CancelActionListener extends EventListener<UIRatingForm> {
+  static public class CloseActionListener extends EventListener<UIRatingForm> {
     public void execute(Event<UIRatingForm> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
       forumPortlet.cancelAction();

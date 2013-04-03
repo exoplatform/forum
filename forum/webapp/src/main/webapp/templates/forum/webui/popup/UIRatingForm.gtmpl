@@ -4,6 +4,7 @@
 	<% uiform.begin() %>
 <div class="uiVoteForm">
 	<div class="voteFormContainer">
+		<p style="margin-left:10px"><%=_ctx.appRes("UIRatingForm.title.MyRate");%></p>
 		<div class="uiRatingInfoContainer optionsContainer">
 				<%	
 				int i = 0; 
@@ -19,7 +20,7 @@
 		</div>
 			
 		<div class="uiAction uiActionBorder">
-			<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIRatingForm.action.Cancel"); %></button>
+			<button onclick="<%=uicomponent.event("Close")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></button>
 	    </div>	
 	</div>
 </div>
