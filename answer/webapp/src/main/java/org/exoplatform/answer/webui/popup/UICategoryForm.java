@@ -123,7 +123,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
     addUIFormInput(inputset);
     
     UIPermissionPanel permissionPanel = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionPanel.setPermission(spaceGroupId, new String[] { getLabel(FIELD_USERPRIVATE_INPUT), getLabel(FIELD_MODERATOR_INPUT) });
+    permissionPanel.setPermission(spaceGroupId, new String[] { FIELD_USERPRIVATE_INPUT, FIELD_MODERATOR_INPUT });
     addChild(permissionPanel);
     
   }

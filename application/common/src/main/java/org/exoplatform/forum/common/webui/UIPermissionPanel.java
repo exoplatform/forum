@@ -73,10 +73,6 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
   
-  final private static String FIELD_USERPRIVATE_INPUT          = "userPrivate";
-
-  final private static String FIELD_MODERATOR_INPUT            = "moderator";
-  
   private String              spaceGroupId     = null;
 
   public UIPermissionPanel() throws Exception {
@@ -163,8 +159,6 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
         return;
       }
       grid.setOwners(splitValues(value));
-      panel.addPermissionForOwners(FIELD_MODERATOR_INPUT, splitValues(value));
-      panel.addPermissionForOwners(FIELD_USERPRIVATE_INPUT, splitValues(value));
       input.setValue(null);
       event.getRequestContext().addUIComponentToUpdateByAjax(panel);
     }

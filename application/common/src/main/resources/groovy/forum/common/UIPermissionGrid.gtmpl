@@ -11,8 +11,10 @@
 		<thead>
 			<tr>
 				<th class="center"><%=_ctx.appRes("UIPermissionGrid.label.owner");%></th>
-				<% for(String permission : uicomponent.getPermissions()) { %>
-				<th class="center">$permission</th>
+				<% for(String permission : uicomponent.getPermissions()) { 
+				     String label = uicomponent.getLabelPermission(permission);
+				%>
+				<th class="center">$label</th>
 				<% } %>
 				<th class="center"><%=_ctx.appRes("UIPermissionGrid.label.action");%></th>
 			</tr>
