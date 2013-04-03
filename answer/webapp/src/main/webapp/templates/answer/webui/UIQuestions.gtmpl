@@ -687,21 +687,37 @@
 													</li>
 													<%
 															if(uicomponent.canEditQuestion) {
-																actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
+																actionApprove = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
+																actionActivate = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Activate");
 																if(answer.getApprovedAnswers()) {
 													%>
 													<li>
-														<a	href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
+														<a	href="$actionApprove" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
 															<i class="uiIconAnsLightGray uiIconAnsDisapprove" ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>
 														</a>
 													</li>
 															<%} else { %>
 													<li>
-														<a	href="$actionAnswer" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
-															<i class="uiIconAnsLightGray uiIconAnsEnable"	></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>
+														<a	href="$actionApprove" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
+															<i class="uiIconAnsLightGray uiIconAnsApprove"	></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>
 														</a>
 													</li>
 														<%	} %>
+														
+														<% if(answer.getActivateAnswers()) { %>
+                          <li>
+                            <a  href="$actionActivate" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
+                              <i class="uiIconAnsLightGray uiIconAnsEnable" ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>
+                            </a>
+                          </li>
+                              <%} else { %>
+                          <li>
+                            <a  href="$actionActivate" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
+                              <i class="uiIconAnsLightGray uiIconAnsEnable" ></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>
+                            </a>
+                          </li>
+                            <%  } %>
+														
 													<%	} %><!-- end canEditQuestion -->
 													<li>
 														<a	href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
