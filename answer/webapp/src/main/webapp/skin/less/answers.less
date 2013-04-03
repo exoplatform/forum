@@ -215,7 +215,10 @@
 					color: @textColor;
 				}
 			.avatarLarge  {
-				.square(70px);
+				.size(auto,70px);
+				.authorName,.authorEmail {
+				  .text-overflow;
+				}
 				img {
 					.square(70px);
 					 border: 1px solid @white;

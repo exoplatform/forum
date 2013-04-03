@@ -264,13 +264,17 @@
 
 								<div class="itemContainerFirst">
 								<%
-									if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){
+									if(uicomponent.faqSetting_.isEnableViewAvatar()){
 										String author = question.getAuthor();
 								%>
 									<div class="avatarLarge pull-left ">
 										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", author)%>" >
 											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 										</a>
+								<% if (uicomponent.viewAuthorInfor) {%>
+								    <div class="authorName" rel="tooltip" data-placement="bottom" title="<%= FAQUtils.getFullName(question.getAuthor());%>"><%= FAQUtils.getFullName(question.getAuthor());%></div>
+								    <div class="authorEmail" rel="tooltip" data-placement="bottom" title="<%= question.getEmail();%>"><%= question.getEmail();%></div>
+								<% } %>
 									</div>
 							<% } %>
 
