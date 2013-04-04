@@ -111,7 +111,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String getQuestionDetail() {
     Question question = new Question();
     question.setDetail(questionDetail);
-    return renderHelper.renderQuestion(question);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(renderHelper.renderQuestion(question));
   }
 
   public void activate() {
@@ -168,7 +168,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
       UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
       UIAnswersContainer answersContainer = portlet.getChild(UIAnswersContainer.class);
       UIQuestions questions = answersContainer.getChild(UIQuestions.class);
-      comment = CommonUtils.encodeSpecialCharInContent(comment);
+      comment = CommonUtils.encodeSpecialCharInSearchTerm(comment);
       try {
         // Create link by Vu Duy Tu.
         if(FAQUtils.isFieldEmpty(commentForm.question_.getLink())) {

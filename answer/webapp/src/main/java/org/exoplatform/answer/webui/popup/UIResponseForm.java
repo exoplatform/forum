@@ -225,7 +225,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
-    return renderHelper.renderQuestion(question);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(renderHelper.renderQuestion(question));
   }
 
   protected String getValue(String id) {
@@ -343,7 +343,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIResponseForm responseForm = event.getSource();
       String language = responseForm.questionLanguages_.getValue();
       String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
-      responseQuestionContent = CommonUtils.encodeSpecialCharInContent(responseQuestionContent);
+      responseQuestionContent = CommonUtils.encodeSpecialCharInSearchTerm(responseQuestionContent);
       Answer answer;
       if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if (responseForm.mapAnswers.containsKey(language)) {

@@ -525,13 +525,14 @@ public class UIQuestions extends UIContainer {
   }
 
   public String render(Object obj) throws RenderingException {
+    String result = "";
     if (obj instanceof Question)
-      return renderHelper.renderQuestion((Question) obj);
+      result = renderHelper.renderQuestion((Question) obj);
     else if (obj instanceof Answer)
-      return renderHelper.renderAnswer((Answer) obj);
+      result=  renderHelper.renderAnswer((Answer) obj);
     else if (obj instanceof Comment)
-      return renderHelper.renderComment((Comment) obj);
-    return "";
+      result = renderHelper.renderComment((Comment) obj);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(result);
   }
 
   protected String calculateTimeMessageOfLastActivity(long time) {

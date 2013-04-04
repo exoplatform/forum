@@ -548,8 +548,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
             questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE);
           }
         }
-        questionDetail = CommonUtils.encodeSpecialCharInContent(questionDetail);
-        questionContent = CommonUtils.encodeSpecialCharInTitle(questionContent);
+        questionDetail = CommonUtils.encodeSpecialCharInSearchTerm(questionDetail);
+        questionContent = CommonUtils.encodeSpecialCharInSearchTerm(questionContent);
 
         Question question = questionForm.getQuestion();
         if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question
