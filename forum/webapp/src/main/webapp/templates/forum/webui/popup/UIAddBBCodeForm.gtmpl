@@ -12,7 +12,7 @@ import org.exoplatform.forum.ForumUtils;
 			String id = "";
 		%>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_TAGNAME_INPUT%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_TAGNAME_INPUT%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 					<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
@@ -29,7 +29,7 @@ import org.exoplatform.forum.ForumUtils;
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 					<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
@@ -45,7 +45,7 @@ import org.exoplatform.forum.ForumUtils;
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
@@ -61,7 +61,7 @@ import org.exoplatform.forum.ForumUtils;
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_EXAMPLE_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_EXAMPLE_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 					<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
@@ -78,7 +78,7 @@ import org.exoplatform.forum.ForumUtils;
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%>:</label>
 				<div class="controls">
 					<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 					<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
