@@ -7,25 +7,25 @@
 		<h5 class="title titleAdvancedForm"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></h5>
 		<div class="form-horizontal">				
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHVALUE_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %> :</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHVALUE_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %> :</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_SEARCHTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>"><%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %> :</label>
+				<label class="control-label" for="<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>"><%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_SCOPE_RADIOBOX); %>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label"	for="<%=uicomponent.FIELD_SEARCHUSER_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %> :</label>
+				<label class="control-label"	for="<%=uicomponent.FIELD_SEARCHUSER_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 					<a class="actionIcon" href="<%=uicomponent.event("AddValuesUser", uiform.FIELD_SEARCHUSER_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
@@ -37,7 +37,7 @@
 			if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Status");%>"><%=_ctx.appRes("UISearchForm.label.Status");%> :</label>
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Status");%>"><%=_ctx.appRes("UISearchForm.label.Status");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%>
 					<%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%>
@@ -47,7 +47,7 @@
 				if(uiform.getIsMod()){
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.State");%>"><%=_ctx.appRes("UISearchForm.label.State");%> :</label>
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.State");%>"><%=_ctx.appRes("UISearchForm.label.State");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%>
 					<%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%>
@@ -57,7 +57,7 @@
 			}
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%> :</label>
+				<label class="control-label" for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FROMDATECREATED); %>
 					<div class="pull-left dateTimeAnd"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
@@ -66,7 +66,7 @@
 			</div>
 			<% if(uiform.getIsSearchTopic()){ %>
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%> :</label>
+				<label class="control-label" for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>:</label>
 				<div class="controls clearfix">
 					<%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %>
 					<div class="pull-left dateTimeAnd"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
@@ -77,7 +77,7 @@
 				if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Posts");%>"><%=_ctx.appRes("UISearchForm.label.Posts");%> :</label>
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Posts");%>"><%=_ctx.appRes("UISearchForm.label.Posts");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_SLIDER); %>
 				</div>
@@ -86,7 +86,7 @@
 			if(uiform.getIsSearchForum()){
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Topics");%>"><%=_ctx.appRes("UISearchForm.label.Topics");%> :</label>
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Topics");%>"><%=_ctx.appRes("UISearchForm.label.Topics");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_SLIDER); %>
 				</div>
@@ -95,7 +95,7 @@
 			if(uiform.getIsSearchTopic()) {
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Views");%>"><%=_ctx.appRes("UISearchForm.label.Views");%> :</label>
+				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Views");%>"><%=_ctx.appRes("UISearchForm.label.Views");%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_SLIDER); %>
 				</div>
@@ -104,7 +104,7 @@
 				if(uiform.getIsSearchForum() || uiform.isSearchCate){
 			%>
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_MODERATOR_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %> :</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_MODERATOR_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
 					<a class="actionIcon" href="<%=uicomponent.event("AddValuesUser", uiform.FIELD_MODERATOR_INPUT);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">

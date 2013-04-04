@@ -37,6 +37,7 @@
       var container = $('#'+fieldId);
       UIDateTimePicker.container = container;
       UIDateTimePicker.input = container.find('input.dateTimeInput');
+      UIDateTimePicker.input.attr('placeholder', 'mm/dd/yyyy');
       UIDateTimePicker.dataInfo = container.find('div.dataInfo');
       UIDateTimePicker.getLang();
       
@@ -47,7 +48,7 @@
         if (popup.length <= 0) {
           UIDateTimePicker.container.append($('<div class="uiCalendarComponent uiBox"></div>'));
           popup = UIDateTimePicker.container.find('div.uiCalendarComponent:first');
-          popup.css('position', 'absolute');
+          popup.css({'position': 'absolute', 'z-index' : 10});
         }
         UIDateTimePicker.show(popup, evt);
       });
