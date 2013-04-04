@@ -104,8 +104,12 @@ public class BBCodeRenderer implements Renderer {
           String sourceSyntax = Syntax.CONFLUENCE_1_0.toIdString();
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(str);
-          param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
+          try {
+            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
+            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
+          } catch (Exception e) {
+            continue;
+          }
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
         }
@@ -165,8 +169,12 @@ public class BBCodeRenderer implements Renderer {
           }
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(param);
-          param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
+          try {
+            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
+            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
+          } catch (Exception e) {
+            continue;
+          }
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
           param = StringUtils.replace(param, "{option}", option);
