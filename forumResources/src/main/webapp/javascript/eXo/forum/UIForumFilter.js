@@ -18,7 +18,7 @@
         
         this.menu = this.parent.find('.filterMenu:first');
 		
-		this.dropdownMenu = this.menu.find('ul.dropdown-menu:first');
+        this.dropdownMenu = this.menu.find('ul.dropdown-menu:first');
         
         var jOnchange = this.parent.find('div.forumFilterData');
         this.onChange = jOnchange.attr('data-onchange');
@@ -34,7 +34,7 @@
           //
           UIForumFilter.dropdownMenu.css('height', 'auto');
           var h = UIForumFilter.dropdownMenu.height();
-		  UIForumFilter.dropdownMenu.css('height', '0px');
+          UIForumFilter.dropdownMenu.css('height', '0px');
           UIForumFilter.menu.css({'visibility' :'visible'});
           UIForumFilter.dropdownMenu.animate({height: h + 'px'}, 300, function() {
               gj(this).css('height', 'auto');

@@ -71,6 +71,7 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
         @EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ReloadActionListener.class),
         @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
     }
 )
