@@ -34,9 +34,9 @@
 		<tbody class="uiExpandContainer">
 			<tr>
 				<td>
-					<div class="textInfo"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
+					<div class="textInfo"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> $mostUserOnline</div>
 					<div class="textInfo clearfix" >
-						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
+						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%>:</div> 
 					<% int t = 0 ;
 						for(user in userOnlines) {
 							userView = uicomponent.getScreenName(user);

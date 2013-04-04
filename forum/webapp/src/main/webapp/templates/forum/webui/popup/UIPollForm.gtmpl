@@ -32,7 +32,7 @@
 			</div>
 			
 			<div class="control-group">
-				<label class="control-label" for="<%=uicomponent.FIELD_MULTIVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%> :</label>
+				<label class="control-label" for="<%=uicomponent.FIELD_MULTIVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</label>
 				<div class="controls">
 					<% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
 				</div>

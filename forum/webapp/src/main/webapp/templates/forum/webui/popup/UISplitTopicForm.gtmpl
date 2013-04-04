@@ -14,7 +14,7 @@
 <div class="uiSplitTopicForm resizable">
 	<div class="form-horizontal">
 		<div class="control-group">
-			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%>"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</label>
+			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%>"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%>:</label>
 			<div class="controls">
 				<strong><%=topic.getTopicName();%></strong>
 			</div>
@@ -22,7 +22,7 @@
 		
 		<div class="control-group">
 			<label class="control-label" for="<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>">
-				<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%> :
+				<%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:
 			</label>
 			<div class="controls">
 				<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>

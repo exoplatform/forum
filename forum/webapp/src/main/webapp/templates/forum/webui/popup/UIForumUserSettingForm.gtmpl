@@ -95,13 +95,13 @@
 				
 									<div class="form-horizontal mySubscriptions">
 										<div class="control-group">
-											<label class="control-label" for="<%=uicomponent.RSS_LINK%>"><i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
+											<label class="control-label" for="<%=uicomponent.RSS_LINK%>"><i class="uiIconRss uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%>:</label>
 											<div class="controls">
 												<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.RSS_LINK))%>
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconMail uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
+											<label class="control-label" for="<%=uicomponent.EMAIL_ADD%>"><i class="uiIconMail uiIconLightGray"></i> <%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%>:</label>
 											<div class="controls">
 												<%uicomponent.renderUIComponent(tabcontent.getChildById(uicomponent.EMAIL_ADD))%>
 												<button onclick="<%=uiform.event("UpdateEmail")%>" class="btn" type="button"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></button>
