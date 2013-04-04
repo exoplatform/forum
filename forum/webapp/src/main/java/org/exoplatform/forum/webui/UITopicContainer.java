@@ -448,7 +448,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private Topic getTopic(String topicId) throws Exception {
     for (Topic topic : topicList) {
       if (topic.getId().equals(topicId))
-        return topic;
+        return getForumService().getTopicUpdate(topic, false);
     }
     return getForumService().getTopic(categoryId, forumId, topicId, userProfile.getUserId());
   }
