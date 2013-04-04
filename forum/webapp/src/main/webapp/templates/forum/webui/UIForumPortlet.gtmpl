@@ -24,5 +24,16 @@
 	
   uicomponent.initSendNotification() ;
 	%>
+	<div class="uiNotification" style="display:none; position:absolute; right: 50px; padding:10px; background: rgb(238, 221, 205)">
+		<div class="popupTitle clearfix">
+			<span class="name full-left"><i class="uiIcon"></i>Message</span>
+			<a class="closePopup full-right"><i class="uiIconClose"></i></a>
+		</div>
+		<div class="nameMessage"></div>
+		<div class="title"></div>
+		<div class="from"></div>
+		<div class="content"></div>
+		<div class="link"></div>
+	</div>
 	<div><span></span></div>
 </div>

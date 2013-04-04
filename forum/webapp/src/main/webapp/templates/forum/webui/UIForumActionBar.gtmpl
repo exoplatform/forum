@@ -107,4 +107,5 @@
   org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.calculateWidthOfActionBar('uiRightActionBar');");
   } %>
 	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
+	<a id="Reload" href="<%=uicomponent.event("Reload");%>" style="display:none">a</a>
 </div>

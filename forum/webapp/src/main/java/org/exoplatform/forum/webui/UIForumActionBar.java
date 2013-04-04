@@ -159,6 +159,16 @@ public class UIForumActionBar extends UIContainer {
     }
   }
 
+  static public class ReloadActionListener extends EventListener<UIForumActionBar> {
+    public void execute(Event<UIForumActionBar> event) throws Exception {
+      UIForumActionBar uiActionBar = event.getSource();
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      forumPortlet.removeCacheUserProfile();
+      uiActionBar.getUserProfile();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiActionBar);
+    }
+  }
+
   static public class ModerationActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();

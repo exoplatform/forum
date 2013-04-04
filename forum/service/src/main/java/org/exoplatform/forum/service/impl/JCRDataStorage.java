@@ -6606,8 +6606,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
         ContinuationService continuation = getContinuationService();
         JsonValue json = generatorImpl.createJsonObject(message);
+        String from = message.getFrom();
+        message.setFrom(getScreenName(from));
         for (int i = 0; i < sendTo.length; i++) {
-          if (sendTo[i].equals(message.getFrom()))
+          if (sendTo[i].equals(from))
             continue;
           continuation.sendMessage(sendTo[i], "/eXo/Application/Forum/NotificationMessage", json, message.toString());
         }

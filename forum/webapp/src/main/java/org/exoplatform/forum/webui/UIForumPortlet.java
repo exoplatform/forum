@@ -540,7 +540,8 @@ public class UIForumPortlet extends UIPortletApplication {
   protected void initSendNotification() {
     if(getUserProfile().getUserRole() <=2 ) {
       StringBuilder init = new StringBuilder("forumNotify.init('");
-      init.append(userProfile.getUserId()).append("', '")
+      init.append(getId()).append("', '")
+          .append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("');");
       StringBuilder initParam = new StringBuilder("forumNotify.initParam('");
