@@ -57,6 +57,7 @@
     <org.exoplatform.social.version>4.0.0-relooking-SNAPSHOT</org.exoplatform.social.version>
     <org.exoplatform.wiki.version>4.0.0-relooking-SNAPSHOT</org.exoplatform.wiki.version>
     <!-- Platform Project 3rd party Dependencies -->
+    <org.exoplatform.doc.doc-style.version>4.0.0-SNAPSHOT</org.exoplatform.doc.doc-style.version>
   </properties>
   <dependencyManagement>
     <!-- ### NEVER CHANGE THIS ORDER OF DEPMGT ### -->
@@ -348,6 +349,12 @@
         <version>${org.exoplatform.kernel.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <!-- Use to generate some documentation -->
+      <dependency>
+        <groupId>org.exoplatform.doc</groupId>
+        <artifactId>doc-style</artifactId>
+        <version>${org.exoplatform.doc.doc-style.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
