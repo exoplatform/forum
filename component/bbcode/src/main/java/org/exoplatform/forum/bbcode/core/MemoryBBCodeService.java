@@ -28,7 +28,7 @@ import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
  * Implementation of BBCodeService that manages BBCodes in memory
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+
  * @version $Revision$
  */
 public class MemoryBBCodeService implements BBCodeService {

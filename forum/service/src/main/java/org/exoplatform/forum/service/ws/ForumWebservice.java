@@ -35,6 +35,14 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
+/**
+ * Url template: <tt>{rest_context_name}/ks/forum</tt>
+ * <br />
+ * GET: /{rest_context_name}/ks/forum/getmessage/{maxcount}
+ * 
+ * @anchor ForumWebservice
+ * 
+ */
 @Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
 
@@ -65,8 +73,13 @@ public class ForumWebservice implements ResourceContainer {
    * @param maxcount is max number post for render in gadget
    * @param sc is SecurityContext for get userId login when we use rest link to render gadget.
    * @param uriInfo is UriInfo for get userId login when we render gadget via gadgets service
+   * 
+   * @anchor ForumWebservice.getMessage
+   * 
    * @return the response is json-data content list recent post for user.
+   * 
    * @throws Exception the exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -88,8 +101,13 @@ public class ForumWebservice implements ResourceContainer {
    * Gets recent public post limited by number post.
    * 
    * @param maxcount is max number post for render in gadget
+   * 
+   * @anchor ForumWebservice.getPulicMessage
+   * 
    * @return the response is json-data content list recent public post.
+   * 
    * @throws Exception the exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -104,8 +122,13 @@ public class ForumWebservice implements ResourceContainer {
    * Filters ips.
    * 
    * @param str ip to filter.
+   * 
+   * @anchor ForumWebservice.filterIps
+   * 
    * @return the response is json-data
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -136,8 +159,13 @@ public class ForumWebservice implements ResourceContainer {
    * 
    * @param forumId id of forum
    * @param str banned ip to filter
+   * 
+   * @anchor ForumWebservice.filterIpBanForum
+   * 
    * @return the response is json-data
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -168,8 +196,13 @@ public class ForumWebservice implements ResourceContainer {
    * 
    * @param str tag name to filter
    * @param userAndTopicId id of user and topic
+   * 
+   * @anchor ForumWebservice.filterTagNameForum
+   * 
    * @return the response is json-data
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -200,8 +233,13 @@ public class ForumWebservice implements ResourceContainer {
    * Gets forum rss information.
    * 
    * @param resourceid source to get rss.
+   * 
+   * @anchor ForumWebservice.viewrss
+   * 
    * @return the response is xml-data contain returned rss.
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -222,8 +260,13 @@ public class ForumWebservice implements ResourceContainer {
    * Gets user rss information.
    * 
    * @param resourceid source to get rss
+   * 
+   * @anchor ForumWebservice.userrss
+   * 
    * @return the response is xml-data contains returned rss
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -241,13 +284,19 @@ public class ForumWebservice implements ResourceContainer {
   }
   
   /**
+   * Filters forum by name and returned result by provided size.
    * 
    * @param forumName the name to be filtered
    * @param maxSize limit of returned result.
    * @param sc security context to get request information
    * @param uriInfo The resquest information
+   * 
+   * @anchor ForumWebservice.filterForum
+   * 
    * @return the response is json-data contain forum filtered by name.
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET

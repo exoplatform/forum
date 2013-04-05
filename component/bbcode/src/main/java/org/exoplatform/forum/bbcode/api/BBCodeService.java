@@ -22,7 +22,6 @@ import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
  * Main Facade for all BBCode related operations
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public interface BBCodeService {

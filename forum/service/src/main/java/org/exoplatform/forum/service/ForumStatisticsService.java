@@ -17,7 +17,6 @@
 package org.exoplatform.forum.service;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public interface ForumStatisticsService {

@@ -19,8 +19,11 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
- * @author Uoc Nguyen
+ * Url template: <tt>{rest_context_name}/ks/faq</tt>
+ * <br />
+ * GET: /{rest_context_name}/ks/faq/rss/{resourceid}
  * 
+ * @anchor FAQWebservice
  */
 @Path("ks/faq")
 public class FAQWebservice implements ResourceContainer {
@@ -36,8 +39,13 @@ public class FAQWebservice implements ResourceContainer {
    * Views rss by provided source.
    * 
    * @param resourceid the source of rss to view.
+   * 
+   * @anchor FAQWebservice.viewrss
+   * 
    * @return the response is xml-data contain returned rss.
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET

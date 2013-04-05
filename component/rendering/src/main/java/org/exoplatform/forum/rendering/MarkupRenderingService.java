@@ -25,7 +25,6 @@ import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.rendering.spi.RendererPlugin;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class MarkupRenderingService {

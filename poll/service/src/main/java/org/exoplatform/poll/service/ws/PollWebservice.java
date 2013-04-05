@@ -43,7 +43,11 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 
 /**
- * @author Vu Duy Tu
+ * Url template: <tt>{rest_context_name}/ks/poll</tt>
+ * <br />
+ * GET: /{rest_context_name}/ks/poll/viewpoll/{resourceid}
+ * 
+ * @anchor PollWebservice
  * 
  */
 @Path("ks/poll")
@@ -71,8 +75,13 @@ public class PollWebservice implements ResourceContainer {
    * @param pollId id of poll to view.
    * @param sc security context.
    * @param uriInfo The request information
+   * 
+   * @anchor PollWebservice.viewPoll
+   * 
    * @return the response is json-data
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET
@@ -131,8 +140,13 @@ public class PollWebservice implements ResourceContainer {
    * @param indexVote
    * @param sc security context.
    * @param uriInfo The request information
+   * 
+   * @anchor PollWebservice.votePoll
+   * 
    * @return the response is json-data
+   * 
    * @throws Exception
+   * 
    * @LevelAPI Platform
    */
   @GET

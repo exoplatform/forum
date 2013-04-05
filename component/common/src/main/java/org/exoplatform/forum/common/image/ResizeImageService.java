@@ -18,12 +18,6 @@ package org.exoplatform.forum.common.image;
 
 import java.io.InputStream;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * 2 Jun 2011  
- */
 public interface ResizeImageService {
 
   /**

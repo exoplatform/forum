@@ -22,7 +22,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 
 /**
  * Main Facade for all BBCode related operations
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+ * 
  * @version $Revision$
  */
 public interface PollService {
