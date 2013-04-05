@@ -136,7 +136,6 @@
       if (divChecked.exists()) {
         var check = 0;
         check = divChecked.attr("data-checked") * 1;
-        window.console.log(check + ' ' + isChecked);
         if (isChecked)
           divChecked.attr("data-checked", (check + 1));
         else
@@ -930,7 +929,8 @@
       var parent = $.fn.findId(id);
       if (parent.exists()) {
         var popups = parent.find('.parentPosition');
-        popups.on('click', UIForumPortlet.showBBCodeHelp);
+        popups.on('mouseover', UIForumPortlet.showBBCodeHelp);
+        popups.on('mouseout', utils.hideElements);
         parent.parents('.UIPopupWindow:first').css('z-index', 1000);
       }
     },
@@ -953,6 +953,7 @@
 
       var top = -((popupContent.height() * 30 / 100) + 16);
       popupContent.css({ 'top' : top + 'px', 'left' : '10px' }).show();
+      popupContent.on('click mousedown mouseup', utils.cancelEvent);
 
       utils.addhideElement(popupContent);
       utils.cancelEvent(evt);

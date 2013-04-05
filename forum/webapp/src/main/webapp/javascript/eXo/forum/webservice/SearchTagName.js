@@ -123,7 +123,6 @@
         var restPath = SearchTagName.jcontainer.attr("data-restpath");
         if (userAndTopicId) {
           var restUrl = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword ;
-          console.log(restUrl);
           $.ajax({
             type: "GET",
             url: restUrl
