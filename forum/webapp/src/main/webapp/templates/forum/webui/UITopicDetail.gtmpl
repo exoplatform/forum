@@ -848,7 +848,6 @@
     </h5>
     <div class="uiContentBox textQuickReply uiExpandContainer">
      
-        <label for="<%=uicomponent.FIELD_MESSAGE_TEXTAREA%>"><%=_ctx.appRes("UITopicDetail.label.Message");%>:</label>
         <%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
      
 		<div class="uiAction">

@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,8 +39,6 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -194,9 +191,10 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     UICheckBoxInput autoAddEmailNotify = new UICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, true);
     autoAddEmailNotify.setValue(true);
     autoAddEmailNotify.setOnChange("OnChangeAutoEmail");
-    addUIFormInput(selictCategoryId);
+    //addUIFormInput(selictCategoryId);
     UIFormInputWithActions newForum = new UIFormInputWithActions(FIELD_NEWFORUM_FORM);
     newForum.addUIFormInput(forumTitle);
+    newForum.addUIFormInput(selictCategoryId);
     newForum.addUIFormInput(forumOrder);
     newForum.addUIFormInput(forumState);
     newForum.addUIFormInput(forumStatus);
@@ -279,9 +277,11 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
   }
 
   public void setCategoryValue(String categoryId, boolean isEditable) throws Exception {
-    if (!ForumUtils.isEmpty(categoryId))
-      getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId);
-    getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setDisabled(!isEditable);
+    UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
+    if (!ForumUtils.isEmpty(categoryId)) {
+      newForum.getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId);
+    }
+    newForum.getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setDisabled(!isEditable);
     isCategoriesUpdate = isEditable;
     this.categoryId = categoryId;
     isUpdate = false;
@@ -311,10 +311,10 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       uiForm.isDoubleClickSubmit = true;
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
 
-      UIFormSelectBox categorySelectBox = uiForm.getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX);
-      String categoryId = categorySelectBox.getValue();
-
       UIFormInputWithActions newForumForm = uiForm.getChildById(FIELD_NEWFORUM_FORM);
+      
+      UIFormSelectBox categorySelectBox = newForumForm.getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX);
+      String categoryId = categorySelectBox.getValue();
       String forumTitle = newForumForm.getUIStringInput(FIELD_FORUMTITLE_INPUT).getValue();
       forumTitle = forumTitle.trim();
       int maxText = 50;// ForumUtils.MAXTITLE ;

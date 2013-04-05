@@ -48,9 +48,15 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 public class UIQuickSearchForm extends BaseUIForm {
   final static private String FIELD_SEARCHVALUE = "inputValue";
+  
+  private static final String SearchDefaultValue       = "Search";
 
   public UIQuickSearchForm() throws Exception {
-    addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null));
+    if (getId() == null)
+      setId("UIQuickSearchForm");
+    UIFormStringInput form = new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null);
+    form.setHTMLAttribute("placeholder", getLabel(SearchDefaultValue));
+    addChild(form);
   }
 
   static public class SearchActionListener extends EventListener<UIQuickSearchForm> {

@@ -73,6 +73,8 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
   
+  private static final String selectOwner      = "SelectOwner";
+  
   private String              spaceGroupId     = null;
 
   public UIPermissionPanel() throws Exception {
@@ -81,6 +83,11 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
     UIPermissionGrid grid = createUIComponent(UIPermissionGrid.class, null, PERMISSION_GRID);
     addChild(input);
     addChild(grid);
+  }
+  
+  protected void initPlaceholder() throws Exception {
+    BaseUIForm uiForm = getAncestorOfType(BaseUIForm.class);
+    ((UIFormStringInput)getChildById(PERMISSION_INPUT)).setHTMLAttribute("placeholder",  uiForm.getLabel(selectOwner));
   }
 
   public String getSpaceGroupId() {

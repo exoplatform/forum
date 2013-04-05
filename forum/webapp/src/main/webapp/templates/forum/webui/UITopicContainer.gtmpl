@@ -230,7 +230,7 @@
 				<tr>
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:15px;">&nbsp;</th>
-					<th style="width:40%;">
+					<th style="width:35%;">
 						<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 					</th>
 					<th style="width:18%;">
@@ -240,7 +240,7 @@
 						<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 					</th>
 					 
-					<th style="width:200px;">
+					<th style="width:140px;" class="center">
 						<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 					</th>
 					

@@ -210,12 +210,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   public UITopicDetail() throws Exception {
     isDoubleClickQuickReply = false;
-
+    if (getId() == null)
+      setId("UITopicDetail");
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
     addUIFormInput(new UIFormStringInput(FIELD_ADD_TAG, null));
-    addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
+    UIFormTextAreaInput textArea = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
+    textArea.setHTMLAttribute("placeholder", getLabel(FIELD_MESSAGE_TEXTAREA));
+    addUIFormInput(textArea);
     addChild(UIPostRules.class, null, null);
     this.setActions(new String[] { "QuickReply", "PreviewReply" });
     this.isLink = true;
