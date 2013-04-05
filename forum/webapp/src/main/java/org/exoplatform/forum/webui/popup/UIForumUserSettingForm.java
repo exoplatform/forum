@@ -226,7 +226,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     String screenN = userProfileSetting.getScreenName();
     if (ForumUtils.isEmpty(screenN))
       screenN = userProfileSetting.getUserId();
-    screenName.setValue(screenN);
+    screenName.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(screenN));
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
     userTitle.setValue(this.userProfileSetting.getUserTitle());
     if (this.userProfileSetting.getUserRole() > 0) {
@@ -411,6 +411,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
+      screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       UserProfile userProfileSetting = uiForm.userProfileSetting;
       if (userTitle == null || userTitle.trim().length() < 1) {
         userTitle = userProfileSetting.getUserTitle();
