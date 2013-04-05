@@ -1,12 +1,9 @@
 <% 
-	import org.exoplatform.forum.service.Forum; 
-	import org.exoplatform.forum.service.Topic; 
-	import org.exoplatform.forum.service.Post;
+	import org.exoplatform.forum.service.Topic;
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.TimeConvertUtils ;
-	import org.exoplatform.forum.ForumSessionUtils;
 	
 	ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;");
 	
@@ -49,7 +46,6 @@
 					<% 
 					if(!topics.isEmpty()) {
 						String classRow = "whileRow";
-						int i = 0;
 						String linkOpen = "";
 						Date postDate = new Date();
 						for(topic in topics){
@@ -107,8 +103,8 @@
 							<td>
 								<div class="uiVote">
 								  <%
-	                  String[] classNames = uicomponent.getStarNumber(topic) ; 
-	                  String SumVote = classNames[5] ;
+									  String[] classNames = uicomponent.getStarNumber(topic) ; 
+									  String SumVote = classNames[5] ;
 								  %>
 									<div class="avgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 									<% 
@@ -124,7 +120,7 @@
 								</div>
 							</td>
 							<td>$lastPostDate</td>
-							<td class="center"><div>$postCount</div></td>
+							<td class="center">$postCount</td>
 							<td class="center">$postView</td>
 							<%if(isAdmin){ %>
 							<td class="center">
@@ -134,7 +130,7 @@
 							</td>
 							<%}%>
 						</tr>
-					<% i = i + 1;}
+					<%}
 					} else {
 						%>
 						<tr>

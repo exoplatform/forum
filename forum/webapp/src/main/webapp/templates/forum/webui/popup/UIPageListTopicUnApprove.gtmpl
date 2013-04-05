@@ -1,105 +1,156 @@
 <% 
-	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.TimeConvertUtils ;
+
 	UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 	List topics = uicomponent.getTopicsUnApprove() ;
 %>
 <div class="<%=uicomponent.getName();%>">
 	<% uiform.begin() %>
-	<div class="UITopicContainer resizable">
-	 	<div class="UIForumContainer">
-			<div class="ContentContainer">
-				<div class="UITopicList">
-					<div style="overflow:auto; margin:2px 0px;" class="ClearFix">
-						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-					</div>
-					<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
-						<thead>
-							<tr>
-								<th style="width:40px;"></th>
-								<th style="width:40px;"></th>
-								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-								<th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
-								<th style="width:50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
-							</tr>
-						</thead>
-						<tbody>
-							<% 
-								String classRow = "whileRow";
-								if(topics != null && topics.size() > 0) {
-								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
-							  if(checkeds == null) checkeds = new ArrayList<String>();
-								int i = 0;
-								 for(topic in topics){
-									if(i%2 == 0) classRow = "whileRow";
-									else classRow = "OddRow";
-									String topicId = topic.getId();
-									String iconClassTopic = topic.getIcon();
-									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
-									String topicTitle = topic.getTopicName();
-									String topicBy = topic.getOwner();
-									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
-									titlePost = ForumUtils.getSubString(titlePost, 100);
-									String postView = String.valueOf(topic.getViewCount());
-									String titleTopicStatus = "Hot thread with new post" ;
-									String iconTopicStatus = "HotThreadNewPost" ;
-									if(topic.getIsLock()) {
-										iconTopicStatus = "HotThreadNewLockPost" ;
-										titleTopicStatus = "Hot thread with new post lock" ;
-									}
-									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-									String title = "";
-									if(isReadTopic) {
-										title = "TitleNorman";
-									} else {
-										title = "TitleBold";
-									}
-							%>
-								<tr class="$classRow">
-									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
-									<td >
-										<div >
-										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
-										<% } %>
-											<label for="$topicId"><a href="<%=uicomponent.event("OpenTopic", topicId)%>" rel="tooltip" data-placement="bottom" title="$titlePost" class="$title">$topicTitle</a></label>
-										</div>
-									</td>
-								 	<td class="Tdbox" align="center"><div>$postView</div></td>
-									<%
-									  String checked = "";
-									  if(checkeds.contains(topicId)){
-									    checked = "checked=\"checked\"";
-									  }
+	<div class="resizable">
+		<div class="horizontalLayout forumContainer">
+			
+				<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+				
+			<table class="uiGrid table table-hover table-striped">
+				<thead>
+					<tr>
+						<th style="width:15px;"></th>
+						<th style="width:15px;"></th>
+						<th style="width:40%;">
+							<%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
+						</th>
+						<th style="width:80px;">
+							<%=_ctx.appRes("UITopicContainer.label.Rating");%>
+						</th>
+						<th style="width:110px;">
+							<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
+						</th>
+						<th style="width:20px;" class="center">
+							<i class="uiIconUIForms uiIconLightGray"></i>
+						</th>
+						<th style="width:20px;" class="center">
+							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
+						</th>
+						<th style="width:20px;" class="center"><%=_ctx.appRes("UIPageListTopicByUser.label.Action");%></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% 
+					if(topics != null && topics.size() > 0) {
+						List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+						if(checkeds == null) checkeds = new ArrayList<String>();
+						String classRow = "whileRow";
+						String linkOpen = "";
+						Date postDate = new Date();
+						for(topic in topics){
+							postDate = topic.getLastPostDate();
+							String topicId = topic.getId();
+							String topicPath = topic.getPath() ;
+							String topicTitle = topic.getTopicName();
+							String topicBy = topic.getOwner();
+							String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
+							titlePost = ForumUtils.getSubString(titlePost, 100);
+							String postCount = String.valueOf(topic.getPostCount());
+							String postView = String.valueOf(topic.getViewCount());
+
+							long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
+							String title = "";
+							String iconTopicStatus = ""; 
+							String titleTopicStatus = "";
+							if(lastAccess < postDate.getTime()) {
+								title = "titleBold";
+								iconTopicStatus = "uiIconForumColorUnread";		
+								titleTopicStatus = _ctx.appRes("UIForumIconState.label.ForumNewPost");
+							}
+							String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
+							String textHotTopic = " ";
+							if(topic.getPostCount() > 30) {
+								textHotTopic = "textHotTopic";
+							}
+
+							String iconStatusTopic = "";
+							if(topic.getIsLock()) {
+								iconStatusTopic = "uiIconForumColorLockTiny";
+							}
+							if(topic.getIsClosed()) {
+								iconStatusTopic = "uiIconForumColorCloseTiny";
+							}
+							linkOpen = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
+					%>
+						<tr>
+							<td class="center">
+								<i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i>
+							</td>
+							<td class="center">
+								<%if(topic.getIsPoll()){%>
+									<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+								<%} else {%>
+									<i class="uiIconForumTopic uiIconForumLightGray"></i>
+								<%}%>
+							</td>
+							<td >
+								<% if(topic.getIsSticky()) {%>
+									<i class="uiIconForumStick"></i>
+								<% } %>
+									<a class="ActionLink $title $textHotTopic" rel="tooltip" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							</td>
+							<td>
+								<div class="uiVote">
+								  <%
+								  String[] classNames = ForumUtils.getStarNumber(topic.getVoteRating()) ; 
+								  String SumVote = classNames[5] ;
+								  %>
+									<div class="avgRatingImages clearfix" rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
+									<% 
+										for(className in classNames) {
+											if(className.equals("star")) className = "voted" ;
+											if(className.equals("notStar")) className = "unvoted" ;
+											if(className.equals("halfStar")) className = "votedHaft" ;
+											if(className.equals(classNames[5])) break ;
 									%>
-									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" id="$topicId" name="$topicId" $checked/></td>
-					 			</tr>
-						 	<% i = i + 1;} 
-						 	} else {
-					 		%>
-					 			<tr>
-					 				<td colspan="5" align="center">
-					 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
-					 				</td>
-					 			</tr>
-					 		<%}%>
-						</tbody>
-					</table>
-					<div style="overflow:auto;" class="ClearFix">
-						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-					</div>						
-				</div>
-			</div>
+										<i class="$className"></i>
+									 <% } %>
+									</div>
+								</div>
+							</td>
+							<td>$lastPostDate</td>
+							<td class="center">$postCount</td>
+							<td class="center">$postView</td>
+							<%
+							  String checked = "";
+							  if(checkeds.contains(topicId)){
+								checked = "checked=\"checked\"";
+							  }
+							%>
+							<td class="center"><span class="uiCheckbox"><input type="checkbox" class="checkbox" id="$topicId" name="$topicId" $checked/><span></span></span></td>
+
+						</tr>
+					<%} 
+					} else {
+					%>
+						<tr>
+							<td colspan="8" class="empty center">
+								<%=_ctx.appRes("UIForumPortlet.label.NoThread");%>
+							</td>
+						</tr>
+					<%}%>
+				</tbody>
+			</table>
+			
+			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>				
+			
 		</div>
 	</div>
-	 <div class="uiAction">
+	 <div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
+		String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		String link = uicomponent.event(action) ;
+	%>
       <button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>

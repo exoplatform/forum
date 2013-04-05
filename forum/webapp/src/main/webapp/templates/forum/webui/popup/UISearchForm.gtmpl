@@ -38,7 +38,7 @@
 			%>
 			<div class="control-group">
 				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.Status");%>"><%=_ctx.appRes("UISearchForm.label.Status");%>:</label>
-				<div class="controls">
+				<div class="controls status">
 					<%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%>
 					<%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%>
 				</div>
@@ -48,7 +48,7 @@
 			%>
 			<div class="control-group">
 				<label class="control-label" for="<%=_ctx.appRes("UISearchForm.label.State");%>"><%=_ctx.appRes("UISearchForm.label.State");%>:</label>
-				<div class="controls">
+				<div class="controls state">
 					<%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%>
 					<%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%>
 				</div>

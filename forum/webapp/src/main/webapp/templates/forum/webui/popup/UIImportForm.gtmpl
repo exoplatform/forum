@@ -1,4 +1,4 @@
-<div class="uiFormForum $uicomponent.id" style="padding:10px;">
+<div class="uiFormForum uiImportForm">
 	<% uiform.begin() %>
   <div class="resizable">
 		<div class="form-horizontal">

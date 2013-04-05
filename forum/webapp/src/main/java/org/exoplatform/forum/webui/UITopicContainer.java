@@ -832,7 +832,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.getForumService().modifyTopic(topics, Utils.APPROVE);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
       } else {
-        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicUnApprove", 500, 365);
+        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicUnApprove", 760, 450);
         pageListTopicUnApprove.setTypeApprove(Utils.APPROVE);
         pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId);
       }
@@ -858,7 +858,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.getForumService().modifyTopic(topics, Utils.ACTIVE);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
-        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicInActive", 500, 365);
+        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicInActive", 760, 450);
         pageListTopicUnApprove.setId("UIPageListTopicInActive");
         pageListTopicUnApprove.setTypeApprove(Utils.ACTIVE);
         pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId);
@@ -1174,7 +1174,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
           event.getSource().log.warn("Failed to set unwaiting topics", e);
         }
       } else {
-        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicWaiting", 500, 365);
+        UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicWaiting", 760, 450);
         pageListTopicUnApprove.setId("UIPageListTopicWaiting");
         pageListTopicUnApprove.setTypeApprove(Utils.WAITING);
         pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId);
