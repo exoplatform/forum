@@ -92,7 +92,7 @@ public class UIQuickSearchForm extends BaseUIForm {
         categories.setIsRenderChild(true);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
-        listSearchEvent.setListSearchEvent(list, breadcumbs.getLastPath());
+        listSearchEvent.setListSearchEvent(text, list, breadcumbs.getLastPath());
         breadcumbs.setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {

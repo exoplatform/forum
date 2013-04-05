@@ -215,8 +215,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     addUIFormInput(moderationOptions);
 
     UIPermissionPanel permissionTab = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    String []permssion = (isMode == true) ? new String[] { TOPICABLE, POSTABLE, VIEWER } : 
-                                            new String[] { MODERATOR, TOPICABLE, POSTABLE, VIEWER }; 
+    String []permssion = (isMode == true) ? new String[] { VIEWER, TOPICABLE, POSTABLE } : 
+                                            new String[] { MODERATOR, VIEWER, TOPICABLE, POSTABLE }; 
     permissionTab.setPermission(spaceGroupId, permssion);
     addChild(permissionTab);
 

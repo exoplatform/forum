@@ -33,7 +33,9 @@
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
 			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
 				<i class="$icon"></i>
+				<% if (! action.equals("EditProfile")) { %>
 				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+				<% } %>
 			</a>
 		  </li>
 		  <%} else {%>

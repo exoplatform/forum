@@ -142,18 +142,16 @@
 										isView = true ;
 									}
 									classDisable = "" ;
-									if(!isView){
-										link = "javaScript: void(0);" ;
-										classDisable = "disabled" ;
-									}
 									if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
 										link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
 									}
+									if(isView){
 							 %>
 								<li class="$classDisable">
 									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
 								</li>
-						 <% } %>
+						    <% }
+							} %>
 							</ul>
 						</div>
 						</li>
@@ -242,20 +240,20 @@
 						<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 					</th>
 					 
-					<th style="width:120px;">
+					<th style="width:200px;">
 						<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 					</th>
 					
-					<th style="width:15px;" class="center">
+					<th style="width:50px;" class="center">
 						<i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i>
 					</th>
-					<th style="width:15px;" class="center">
+					<th style="width:50px;" class="center">
 						<a href="<%=uicomponent.event("SetOrderBy","postCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Replies");%>">
 							 <i class="uiIconUIForms uiIconLightGray"></i>
 						</a>
 					</th>
 					
-					<th style="width:15px;" class="center">
+					<th style="width:50px;" class="center">
 						<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Views");%>">
 							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
 						</a>

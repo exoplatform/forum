@@ -217,7 +217,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     addUIFormInput(new UIFormStringInput(FIELD_ADD_TAG, null));
     addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
     addChild(UIPostRules.class, null, null);
-    this.setActions(new String[] { "PreviewReply", "QuickReply" });
+    this.setActions(new String[] { "QuickReply", "PreviewReply" });
     this.isLink = true;
   }
 
@@ -888,7 +888,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         List<ForumSearch> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
+        listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         topicDetail.refreshPortlet();

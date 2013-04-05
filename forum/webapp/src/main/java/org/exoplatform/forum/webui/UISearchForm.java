@@ -440,7 +440,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       UICategories categories = categoryContainer.getChild(UICategories.class);
       categories.setIsRenderChild(true);
       UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-      listSearchEvent.setListSearchEvent(list, ForumUtils.FIELD_SEARCHFORUM_LABEL+type);
+      listSearchEvent.setListSearchEvent(keyValue, list, ForumUtils.FIELD_SEARCHFORUM_LABEL+type);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }

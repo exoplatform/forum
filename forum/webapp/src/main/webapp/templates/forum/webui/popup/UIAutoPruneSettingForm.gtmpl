@@ -8,14 +8,14 @@
 			<p><%=_ctx.appRes("UIAutoPruneSettingForm.label.Note");%></p>
 			<div class="form-horizontal">
 				<div class="control-group">
-					<label class="control-label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></label>
+					<label class="control-label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %>:</label>
 					<div class="controls inputMini selectboxMini">
 						<%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %>
 						<%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></label>
+					<label class="control-label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %>:</label>
 					<div class="controls inputMini selectboxMini">
 						<%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %>
 						<%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %>

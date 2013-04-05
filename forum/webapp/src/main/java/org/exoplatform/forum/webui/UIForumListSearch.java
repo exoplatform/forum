@@ -70,6 +70,8 @@ public class UIForumListSearch extends BaseForumForm {
   private String              pathLastVisit                = GO_BACK + Utils.FORUM_SERVICE;
 
   private JCRPageList         pageList;
+  
+  private String              searchTerm                   = "";
 
   private int                 pageSize                     = 10;
 
@@ -97,8 +99,9 @@ public class UIForumListSearch extends BaseForumForm {
     return pathLastVisit;
   }
 
-  public void setListSearchEvent(List<ForumSearch> listEvent, String pathLastVisit) throws Exception {
+  public void setListSearchEvent(String text, List<ForumSearch> listEvent, String pathLastVisit) throws Exception {
     this.listEvent = listEvent;
+    searchTerm = text;
     this.setPathLastVisit(GO_BACK + pathLastVisit);
     pageIterator.setSelectPage(1);
     String userId = getUserProfile().getUserId();

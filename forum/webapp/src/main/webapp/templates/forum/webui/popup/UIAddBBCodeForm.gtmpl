@@ -18,7 +18,7 @@ import org.exoplatform.forum.ForumUtils;
 					<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
 					
 					<div style="display:inline-block;" class="parentPosition">
-						<i class="uiIconQuestion uiIconLightGray"></i>
+						<i class="uiIconQuestion uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
 								<span class="arrow"></span>
@@ -34,7 +34,7 @@ import org.exoplatform.forum.ForumUtils;
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 					<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
 					<div style="display:inline-block;" class="parentPosition">
-						<i class="uiIconQuestion uiIconLightGray"></i>
+						<i class="uiIconQuestion uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
 								<span class="arrow"></span>
@@ -50,7 +50,7 @@ import org.exoplatform.forum.ForumUtils;
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
 					<div style="display:inline-block;" class="parentPosition">
-						<i class="uiIconQuestion uiIconLightGray"></i>
+						<i class="uiIconQuestion uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
 								<span class="arrow"></span>
@@ -65,9 +65,9 @@ import org.exoplatform.forum.ForumUtils;
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 					<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray"></i></a>
+					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i></a>
 					<div style="display:inline-block;" class="parentPosition">
-						<i class="uiIconQuestion uiIconLightGray"></i>
+						<i class="uiIconQuestion uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
 								<span class="arrow"></span>
@@ -83,7 +83,7 @@ import org.exoplatform.forum.ForumUtils;
 					<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 					<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
 					<div style="display:inline-block;margin-left:20px;" class="parentPosition">
-						<i class="uiIconQuestion uiIconLightGray"></i>
+						<i class="uiIconQuestion uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
 								<span class="arrow"></span>

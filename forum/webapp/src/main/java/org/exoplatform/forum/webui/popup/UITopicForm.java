@@ -185,10 +185,10 @@ public class UITopicForm extends BaseForumForm {
     addUIFormInput(threadOption);
     
     UIPermissionPanel permissionTab = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionTab.setPermission(null, new String[] { CANPOST, CANVIEW });
+    permissionTab.setPermission(null, new String[] { CANVIEW, CANPOST });
     addChild(permissionTab);
     
-    this.setActions(new String[] { "PreviewThread", "SubmitThread", "Cancel" });
+    this.setActions(new String[] { "SubmitThread", "PreviewThread", "Cancel" });
     setAddColonInLabel(true);
   }
 

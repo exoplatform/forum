@@ -9,11 +9,11 @@
 				<table class="uiGrid table table-hover table-striped" id="UIGrid">
 					<thead>
 						<tr>
-							<th style="width:21%;"><%=_ctx.appRes("UIForumPortlet.label.category"); %></th>
+							<th style="width:21%;"><%=_ctx.appRes("UIForumPortlet.label.categories"); %></th>
 							<th style="width:28%;"><%=_ctx.appRes("UIForumPortlet.label.forum"); %></th>
 							<th style="width:15px;" class="center"><%=_ctx.appRes("UIAutoPruneForm.label.Active"); %></th>
 							<th style="width:170px;"><%=_ctx.appRes("UIAutoPruneForm.label.LastRun"); %></th>
-							<th style="width:60px;" class="center"><%=_ctx.appRes("UIForumPortlet.label.Action"); %></th>
+							<th style="width:60px;" class="center"><%=_ctx.appRes("UIForumPortlet.label.Actions"); %></th>
 						</tr>
 					</thead>
 					

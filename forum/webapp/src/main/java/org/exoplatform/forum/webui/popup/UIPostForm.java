@@ -141,7 +141,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     threadContent.setLabelActionAddItem(getLabel("Attachment"));
 
     addUIFormInput(threadContent);
-    this.setActions(new String[] { "PreviewPost", "SubmitPost", "Cancel" });
+    this.setActions(new String[] { "SubmitPost", "PreviewPost", "Cancel" });
     setAddColonInLabel(true);
   }
 

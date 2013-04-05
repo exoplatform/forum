@@ -62,7 +62,7 @@
 		</div>
 	</div>
 <div class="uiAction uiActionBorder">
-	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
+	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Cancel");%></button>
 </div>
 	<% uiform.end() %>	
 </div>
