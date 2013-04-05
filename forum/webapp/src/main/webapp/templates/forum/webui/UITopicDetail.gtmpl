@@ -10,6 +10,7 @@
   import org.exoplatform.forum.TimeConvertUtils;
   import org.exoplatform.forum.webui.UIPostRules ;
   
+  uicomponent.initPlaceholder();
   long setTime = 0;
   String uiformId = uicomponent.getName() ;
   String userLogin = "" ;

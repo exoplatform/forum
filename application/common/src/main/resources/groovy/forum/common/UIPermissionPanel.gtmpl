@@ -11,9 +11,9 @@
 
 <div id="$uicomponent.id">
   <%
+    uicomponent.initPlaceholder();
     uicomponent.renderChild("UIPermissionGrid");
     uicomponent.renderChild("UIPermissionInput");
-    uicomponent.initPlaceholder();
   %>
 	<span style="vertical-align: top">
 		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>">

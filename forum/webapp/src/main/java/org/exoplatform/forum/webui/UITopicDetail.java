@@ -200,7 +200,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private Map<String, CommonContact> mapContact              = new HashMap<String, CommonContact>();
 
-  public static final String         FIELD_MESSAGE_TEXTAREA  = "Message";
+  public static final String         FIELD_MESSAGE_TEXTAREA  = "UITopicDetail.label.Message";
 
   public static final String         FIELD_ADD_TAG           = "AddTag";
 
@@ -217,11 +217,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
     addUIFormInput(new UIFormStringInput(FIELD_ADD_TAG, null));
     UIFormTextAreaInput textArea = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
-    textArea.setHTMLAttribute("placeholder", getLabel(FIELD_MESSAGE_TEXTAREA));
     addUIFormInput(textArea);
     addChild(UIPostRules.class, null, null);
     this.setActions(new String[] { "QuickReply", "PreviewReply" });
     this.isLink = true;
+  }
+  
+  protected void initPlaceholder() throws Exception {
+    ((UIFormTextAreaInput)getChildById(FIELD_MESSAGE_TEXTAREA)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, FIELD_MESSAGE_TEXTAREA));
   }
 
   public boolean isShowQuickReply() {

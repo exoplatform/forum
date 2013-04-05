@@ -73,7 +73,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   private static final String POPUP_WINDOW_ID  = "UIPermissionPopupWindow";
   
-  private static final String selectOwner      = "SelectOwner";
+  private static final String selectOwner      = "UIPermissionPanel.label.SelectOwner";
   
   private String              spaceGroupId     = null;
 
@@ -86,8 +86,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
   }
   
   protected void initPlaceholder() throws Exception {
-    BaseUIForm uiForm = getAncestorOfType(BaseUIForm.class);
-    ((UIFormStringInput)getChildById(PERMISSION_INPUT)).setHTMLAttribute("placeholder",  uiForm.getLabel(selectOwner));
+    ((UIFormStringInput)getChildById(PERMISSION_INPUT)).setHTMLAttribute("placeholder",  WebUIUtils.getLabel(null, selectOwner));
   }
 
   public String getSpaceGroupId() {
