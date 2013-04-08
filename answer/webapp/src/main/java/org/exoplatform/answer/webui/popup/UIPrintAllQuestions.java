@@ -139,13 +139,14 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   }
 
   public String render(Object obj) throws RenderingException {
+    String content = "";
     if (obj instanceof Question)
-      return renderHelper.renderQuestion((Question) obj);
+      content = renderHelper.renderQuestion((Question) obj);
     else if (obj instanceof Answer)
-      return renderHelper.renderAnswer((Answer) obj);
+      content = renderHelper.renderAnswer((Answer) obj);
     else if (obj instanceof Comment)
-      return renderHelper.renderComment((Comment) obj);
-    return "";
+      content = renderHelper.renderComment((Comment) obj);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(content);
   }
 
   public List<Question> getListQuestion() {

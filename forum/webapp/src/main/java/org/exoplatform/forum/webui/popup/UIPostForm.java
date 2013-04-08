@@ -221,7 +221,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
     editReason.setRendered(false);
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
-      String message = post.getMessage();
+      String message = CommonUtils.decodeSpecialCharToHTMLnumber(post.getMessage());
       if (isQuote) {// quote
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
         String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
@@ -350,7 +350,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             String userName = userProfile.getUserId();
             editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
             message = TransformHTML.fixAddBBcodeAction(message);
-            message = CommonUtils.encodeSpecialCharInContent(message);
+            message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
             Post post = uiForm.post_;
             boolean isPP = false;

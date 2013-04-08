@@ -10,32 +10,29 @@
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.printAll('"+uicomponent.id+"');");
 %>
 
-<div class="uiPrintAllQuestions $uicomponent.id">
+<div class="uiPrintAllQuestions">
 	<% uiform.begin() %>
 	<div class="uiAnswersPortlet">
-		<div class="uiBox ">		
+		<div class="uiBox">		
 			<div class="uiContentBox">
-			<%
+		<%
 			for(Question question : uicomponent.getListQuestion()){
 				questionContent = question.getQuestion();
 				String responseBy = "..." ;
 				String date = "..." ;
-			%>
+		%>
 				<div class="questionSelect printBox" >
-					<div class="questionContainer responseItemContainer" id="<%=question.getId()%>">
+					<div class="questionContainer responseItemContainer">
 						<div class="itemContainerFirst">
-							<% if(uicomponent.faqSetting_.isEnableViewAvatar()){ %>
+							<% if(uicomponent.faqSetting_.isEnableViewAvatar()) { %>
 								<div class="avatarLarge pull-left ">
-								<%
-									if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-								%>				
 									<div class="avatarContainer">
 										<img  src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 									</div>
-								<%}%>
+							<% } %>
 								<!-- ========================================= view author's infor ================================ -->
 								<%
-									if(uicomponent.viewAuthorInfor){
+									if(uicomponent.viewAuthorInfor) {
 								%>
 									<p>
 										<a class="authorInfor" href="javascript:void(0)" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>">
@@ -49,12 +46,12 @@
 							
 							
 							<div class="questionRight">
-								<div class="questionContent" >
+								<div class="questionContent">
 									<%
 									if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 									%>
 										<!-- =========================== Vote result ========================== -->
-									 <div class="voteResult pull-right">
+									<div class="voteResult pull-right">
 										<div class="ratingInfoContainer uiVote  pull-left">
 											<% 
 											int rateInt =(Integer) question.getMarkVote();
@@ -117,7 +114,7 @@
 						</div><!--itemContainerFirst-->
 					</div><!--end questionContainer responseItemContainer-->
 					<!--=========================end first block intro========================================-->
-										<!-- ===================================== View response content ==================================================== -->
+					<!-- ===================================== View response content ==================================================== -->
 					<% 
 					List answers = uicomponent.getListAnswers(question.getPath());
 					String classResponsse = "";
@@ -138,7 +135,6 @@
 													String fileName = fileAttachment.getName();
 													if(fileType.indexOf("image") >= 0 && fileName.indexOf(".psd") < 0) {
 														long fileSize = fileAttachment.getSize();
-														String linkImage = FAQUtils.getFileSource(fileAttachment);
 														String attLink = uicomponent.getImageUrl(fileAttachment.getPath());
 												%>																																	
 													<div class="imageAttachmentBox" id="divId${fileAttachment.getId()}">
@@ -156,7 +152,6 @@
 														long fileSize = fileAttachment.getSize();
 														String size = uicomponent.convertSize(fileSize);
 														String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(fileType.substring((fileType.indexOf("/")+1)));
-														String linkImage = FAQUtils.getFileSource(fileAttachment);
 												%>
 												<div class="otherAttachmentBox">
 													<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i>&nbsp;$fileName															
@@ -300,12 +295,8 @@
 											</div>
 											<div class="responseItemContainerRight">
 												<div class="commentContent">
-													<a href="javascript:void(0)" class="userName">
-														<%=FAQUtils.getFullName(comment.getCommentBy())%>
-													</a>
-													<%
-														String commentDetail = uicomponent.answer(comment);
-													%>
+													<a href="javascript:void(0)" class="userName"><%=FAQUtils.getFullName(comment.getCommentBy())%></a>
+											<% String commentDetail = uicomponent.answer(comment); %>
 													<div class="theContent">$commentDetail</div>
 													<div class="date"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
 												</div>
@@ -316,32 +307,19 @@
 								</div><!-- response responseComment -->								
 							<%}%>		
 							<!-- ==============================end View question's commnets ============================================== -->
-					
-						
 						
 					</div><!--ENDresponseContent-->
-					<!--=========================end second block intro========================================-->
-					
-					
-					
-					
+					<!--=========================end second block intro========================================-->					
 				</div><!-- questionSelect -->		
-			<%
-			}
-			%>					
-			
+			<% } %>					
+
 				<!--BEGIN uiAction-->
 				<div class="uiAction">
-			   <% for(action in uicomponent.getActions()) { 
-						 String actionLabel = _ctx.appRes("UIAnswersPortlet.action." + action); 
-					   String link = uicomponent.event(action) ;
-					%>
 					<button type="button" onclick="window.print();" class="btn"><%=_ctx.appRes("UIQuestions.action.Print")%></button>
-					<button type="button" onclick="eXo.answer.UIAnswersPortlet.closePrint(); $link;" class="btn">$actionLabel</button>
-			  <%}%>
-			   </div><!--END uiAction-->		   
-	         </div><!--uiContentBox -->
-    	</div><!--uiBox -->
-    </div><!--uiAnswersPortlet-->
+					<button type="button" onclick="eXo.answer.UIAnswersPortlet.closePrint(); <%=uicomponent.event("Close")%>;" class="btn"><%=_ctx.appRes("UIAnswersPortlet.action.Close")%></button>
+			  </div><!--END uiAction-->		   
+			 </div><!--uiContentBox -->
+		</div><!--uiBox -->
+	</div><!--uiAnswersPortlet-->
 	<%uiform.end()%>
 </div>

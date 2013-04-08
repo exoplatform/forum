@@ -19,6 +19,7 @@ package org.exoplatform.forum.common.webui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -39,7 +40,7 @@ public class BaseUIForm extends UIForm {
 
   
   protected Log log = ExoLogger.getLogger(this.getClass());
-  
+  protected boolean isAddColonInLabel = false;
 
   /**
    * Get a value from the app resource bundle.
@@ -77,6 +78,22 @@ public class BaseUIForm extends UIForm {
     return labelID;
   }
   
+  @Override
+  public String getLabel(ResourceBundle res, String id) {
+    String label = super.getLabel(res, id);
+    if(isAddColonInLabel && id.indexOf("action.") < 0) {
+      return String.format("%s%s", label, CommonUtils.COLON);
+    }
+    return label;
+  }
+
+  public boolean isAddColonInLabel() {
+    return isAddColonInLabel;
+  }
+
+  public void setAddColonInLabel(boolean isAddColonInLabel) {
+    this.isAddColonInLabel = isAddColonInLabel;
+  }
   public UIFormScrollSelectBox getUIFormScrollSelectBox(String name) {
     return (UIFormScrollSelectBox) getUIInput(name);
   }

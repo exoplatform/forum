@@ -155,7 +155,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     setQuestionId(question, language, answer.getApprovedAnswers());
     mapAnswers.clear();
     mapAnswers.put(answer.getLanguage(), answer);
-    inputResponseQuestion_.setValue(answer.getResponses());
+    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(answer.getResponses()));
     listLanguageToReponse.clear();
     listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
@@ -495,7 +495,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       if (ValidatorDataInput.fckContentIsNotEmpty(responseContent)) {
         if (responseForm.mapAnswers.containsKey(responseForm.currentLanguage)) {
           answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
-          answer.setResponses(responseContent);
+          answer.setResponses(CommonUtils.encodeSpecialCharInSearchTerm(responseContent));
         } else {
           answer = new Answer();
           answer.setNew(true);

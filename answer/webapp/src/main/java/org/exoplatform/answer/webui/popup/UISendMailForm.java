@@ -47,6 +47,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
@@ -64,9 +65,9 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     template = "app:/templates/answer/webui/popup/UISendMailForm.gtmpl", 
     events = {
         @EventConfig(listeners = UISendMailForm.SendActionListener.class), 
-        @EventConfig(listeners = UISendMailForm.ToActionListener.class), 
-        @EventConfig(listeners = UISendMailForm.CancelActionListener.class), 
-        @EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class) 
+        @EventConfig(listeners = UISendMailForm.ToActionListener.class, phase=Phase.DECODE), 
+        @EventConfig(listeners = UISendMailForm.CancelActionListener.class, phase=Phase.DECODE), 
+        @EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class, phase=Phase.DECODE) 
     }
 )
 public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {

@@ -101,6 +101,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UICategoryForm() throws Exception {
     setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   public void updateAddNew(boolean isAddNew, String spaceGroupId) throws Exception {

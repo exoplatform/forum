@@ -1,5 +1,4 @@
 <%  
-  import org.exoplatform.faq.service.CategoryTree;
   def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.id + "');");  
 %>
@@ -7,14 +6,13 @@
 <div class="uiAddRelationForm $uicomponent.id">
   <% uiform.begin() %>
   <div class="form-horizontal resizable">
-      <div class="uiTrees scrollArea" style="background: #fff; padding: 15px;">
-        <div class="treeContainer jsContainer">
-        <%
-        print(uicomponent.renderCategoryTree(uicomponent.getCategoryTree()));
-        %>
-        </div>
-      </div>
-
+     <div class="uiTrees scrollArea" style="background: #fff; padding: 15px;">
+       <div class="treeContainer jsContainer">
+       <%
+       print(uicomponent.renderCategoryTree());
+       %>
+       </div>
+     </div>
   </div>
   <div class="uiAction">
 	  <%for(action in uicomponent.getActions()) {

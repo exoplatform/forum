@@ -69,13 +69,16 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
  * Aus 01, 2007 2:48:18 PM
  */
 
-@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/answer/webui/popup/UIQuestionForm.gtmpl", events = {
-    @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class),
-    @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"),
-    @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
-    @EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
-    @EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
-    @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) })
+@ComponentConfig(lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/answer/webui/popup/UIQuestionForm.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class),
+        @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"),
+        @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
+        @EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
+        @EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
+        @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) 
+})
 public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   public static final String             AUTHOR                 = "Author";
 
@@ -188,7 +191,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     questionId_ = "";
     question_ = null;
 
-    this.setActions(new String[] { "Save", "Cancel" });
+    setActions(new String[] { "Save", "Cancel" });
   }
 
   public void refresh() throws Exception {
@@ -349,11 +352,11 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       emailQ.setValue(question_.getEmail());
       
       if(mapLanguage.containsKey(this.editLanguage)){
-        inputQuestionDetail.setValue(mapLanguage.get(this.editLanguage).getDetail());
+        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(this.editLanguage).getDetail()));
         inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(this.editLanguage).getQuestion()));        
       }else{
         inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getQuestion()));
-        inputQuestionDetail.setValue(question_.getDetail());
+        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getDetail()));
       }
     } catch (Exception e) {
       log.error("Set question is fall, exception: " + e.getMessage());

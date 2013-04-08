@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.answer.webui;
 
-import java.io.Writer;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.forum.common.webui.BaseUIForm;
@@ -60,7 +58,7 @@ public class BaseUIFAQForm extends BaseUIForm {
     WebUIUtils.addScripts("bts_tooltip", null, "setTimeout(function(){eXo.answer.UIAnswersPortlet.initTooltip('" + getId() + "');}, 200);");
     super.processRender(context);
   }
-
+  
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
     UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
     return openPopup(uiPortlet, componentType, popupId, width, height);

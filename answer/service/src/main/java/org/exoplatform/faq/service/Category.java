@@ -36,11 +36,15 @@ public class Category {
   
   private String   id;
 
+  private String   path;
+
   private long     index;
 
   private String   name;
 
-  private String[] userPrivate         = null;
+  private String[] userPrivate;
+
+  private String[] moderators;
 
   private String   description;
 
@@ -52,18 +56,15 @@ public class Category {
 
   private boolean  isView              = true;
 
-  private String[] moderators;
-
   private Date     createdDate;
-
-  private String   path;
 
   /**
    * Class constructor specifying id of object is created
    */
   public Category() {
     id =  CATEGORY_ID + IdGenerator.generate();
-    // userPrivate = new String[] {" "};
+    userPrivate = new String[] {};
+    moderators = new String[] {};
   }
 
   public boolean isView() {

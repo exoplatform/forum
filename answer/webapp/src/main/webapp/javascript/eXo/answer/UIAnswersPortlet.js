@@ -329,8 +329,6 @@
     }
   };
   
-  // Remove UIAnswersPortlet.OverButton function.
-  
   UIAnswersPortlet.viewDivById = function (id) {
     var obj = $.fn.findId(id);
     if (obj.css('display') === 'none') {
@@ -401,8 +399,6 @@
     $('body').append(container);
   };
   
-  // Remove UIAnswersPortlet.closePrintAll function.
-  
   UIAnswersPortlet.removeLink = function (rootNode) {
     rootNode.find('a').attr('href', 'javascript:void(0);');
     rootNode.find('a[onclick]').removeAttr('onclick');
@@ -423,8 +419,6 @@
     }
     return rootNode;
   };
-  
-  // Remove UIAnswersPortlet.findDescendantsByAttribute function.
   
   UIAnswersPortlet.closePrint = function () {
     $('#UIWorkingWorkspace').show();

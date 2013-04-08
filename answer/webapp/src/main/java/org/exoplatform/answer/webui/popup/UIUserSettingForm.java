@@ -87,6 +87,7 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
   public UIUserSettingForm() throws Exception {
     faqService_ = FAQUtils.getFAQService();
     setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
   
   public void init() throws Exception {
@@ -106,7 +107,6 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
     
     addChild(displayTab);
     
-    //UIUserWatchManager watchForm = new UIUserWatchManager();
     UIUserWatchManager watchForm = createUIComponent(UIUserWatchManager.class, null, WATCHES_TAB);
     watchForm.setFAQSetting(faqSetting_);
     addChild(watchForm);
