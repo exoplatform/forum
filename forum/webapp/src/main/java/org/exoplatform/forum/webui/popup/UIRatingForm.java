@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.ForumService;
@@ -51,12 +52,30 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIRatingForm extends BaseForumForm implements UIPopupComponent {
   private Topic  topic;
+  
+  private boolean isAlreadyVoted = false;
+  
+  private double userRateValue = 0.0;
 
   public UIRatingForm() throws Exception {
   }
 
-  public void updateRating(Topic topic) {
+  public void updateRating(Topic topic, boolean isAlreadyVoted, double userRateValue) {
     this.topic = topic;
+    this.isAlreadyVoted = isAlreadyVoted;
+    this.userRateValue = userRateValue;
+  }
+  
+  public boolean isAlreadyVoted() {
+    return isAlreadyVoted;
+  }
+  
+  public double getUserRateValue() {
+    return userRateValue;
+  }
+  
+  public String[] getStarNumber() throws Exception {
+    return ForumUtils.getStarNumber(userRateValue);
   }
 
   public void activate() {
@@ -75,7 +94,7 @@ public class UIRatingForm extends BaseForumForm implements UIPopupComponent {
       voteRating = (voteRating * k + Integer.parseInt(vote)) / (k + 1);
       String[] temp = new String[k + 1];
       System.arraycopy(Vote, 0, temp, 0, k);
-      temp[k] = userName;
+      temp[k] = userName+":"+vote;
       topic.setVoteRating(voteRating);
       topic.setUserVoteRating(temp);
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);

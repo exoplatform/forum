@@ -1,24 +1,52 @@
 <%
+  import org.exoplatform.forum.ForumUtils ;
   org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initVote('$uicomponent.id', 5) ;");
 %>
-	<% uiform.begin() %>
+	<% uiform.begin(); 
+     boolean isVoted = uicomponent.isAlreadyVoted();
+	%>
 <div class="uiVoteForm">
 	<div class="voteFormContainer">
-		<p style="margin-left:10px"><%=_ctx.appRes("UIRatingForm.title.MyRate");%></p>
-		<div class="uiRatingInfoContainer optionsContainer">
-				<%	
-				int i = 0; 
-				while(i < 5) {
-					String number = String.valueOf(i+1) ;
-					String onclick = uicomponent.event("VoteTopic", number);
-					String title = _ctx.appRes("UIRatingForm.title.rank" + number); 
-				%>
-				<i class="uiIconNormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"></i>
-			 <% i = i + 1;
-				 } %>
-				
-		</div>
-			
+		<p style="margin-left:10px">
+		<% if (isVoted) {
+		  String value = "" + uicomponent.getUserRateValue().intValue();
+		%>
+		  <%=_ctx.appRes("UIRatingForm.title.MyRate");%>&nbsp;<%=_ctx.appRes("UIRatingForm.title.rank" + value); %>
+		<% } else {%>
+		  <%=_ctx.appRes("UIRatingForm.title.MyRate");%>&nbsp;<%=_ctx.appRes("UIRatingForm.title.NotRateYet"); %>
+		<% } %>
+		</p>
+		<% if (! isVoted) { %>
+			<div class="uiRatingInfoContainer optionsContainer">
+					<%	
+					int i = 0; 
+					while(i < 5) {
+						String number = String.valueOf(i+1) ;
+						String onclick = uicomponent.event("VoteTopic", number);
+						String title = _ctx.appRes("UIRatingForm.title.rank" + number); 
+					%>
+					<i class="uiIconNormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"></i>
+				 <% i = i + 1;
+					 } %>
+					
+			</div>
+			<% } else {
+			    String[] classNames = uicomponent.getStarNumber() ; 
+      %>
+        <div class="uiRatingInfoContainer optionsContainer uiVote clearfix">
+	        <div class="avgRatingImages">
+	         <%  
+	           for(className in classNames) {
+	             if(className.equals("star")) className = "voted" ;
+	             if(className.equals("notStar")) className = "unvoted" ;
+	             if(className.equals("halfStar")) className = "votedHaft" ;
+	             if(className.equals(classNames[5])) break ;
+	         %>
+	           <i class="$className"></i>
+	         <% } %>
+	         </div>
+         </div>
+			<% } %>
 		<div class="uiAction uiActionBorder">
 			<button onclick="<%=uicomponent.event("Close")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></button>
 	    </div>	

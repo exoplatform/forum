@@ -777,17 +777,26 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         String userName = topicDetail.getUserProfile().getUserId();
         String[] userVoteRating = topicDetail.topic.getUserVoteRating();
         boolean error = false;
+        double userRateValue = 0.0;
+        String user = "";
         for (String string : userVoteRating) {
-          if (string.equalsIgnoreCase(userName))
+          double tmp = 0.0;
+          if (string.indexOf(":") > 0) {
+            String[] votes = string.split(":");
+            user = votes[0];
+            tmp = Double.parseDouble(votes[1]);
+          } else {
+            user = string;
+            tmp = topicDetail.topic.getVoteRating();
+          }
+          if (user.equalsIgnoreCase(userName)) {
             error = true;
+            userRateValue = tmp;
+          }
         }
-        if (!error) {
-          UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 320, 0);
-          ratingForm.updateRating(topicDetail.topic);
-          topicDetail.isEditTopic = true;
-        } else {
-          warning("UITopicDetail.sms.VotedRating", topicDetail.getUserProfile().getScreenName(), false);
-        }
+        UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 320, 0);
+        ratingForm.updateRating(topicDetail.topic, error, userRateValue);
+        topicDetail.isEditTopic = true;
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
