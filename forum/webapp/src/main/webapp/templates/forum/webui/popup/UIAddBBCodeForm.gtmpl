@@ -65,7 +65,7 @@ import org.exoplatform.forum.ForumUtils;
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 					<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.text.tooltip");%>"></i></a>
+					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%>"></i></a>
 					<div style="display:inline-block;" class="parentPosition">
 						<i class="uiIconQuestion uiIconLightGray"></i>
 						<div class="gotPosition" style="position: absolute;">

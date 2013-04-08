@@ -34,6 +34,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
@@ -166,6 +167,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   private boolean             isViewSearchUser                   = false;
 
   private UIForumPageIterator pageIterator                       = null;
+  
+  private static final String SearchDefaultValue                 = "UIModeratorManagementForm.label.Search";
 
   public UIModeratorManagementForm() throws Exception {
     pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator");
@@ -180,6 +183,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     setAddColonInLabel(true);
   }
 
+  protected void initPlaceholder() throws Exception {
+    ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+  }
+  
   public void setValueSearch(String value) {
     this.valueSearch = value;
   }
