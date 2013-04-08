@@ -384,9 +384,13 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       newForum.setIsModerateTopic(ModerateTopic);
       if (forumState.equals("closed")) {
         newForum.setIsClosed(true);
+      } else {
+        newForum.setIsClosed(false);
       }
       if (forumStatus.equals("locked")) {
         newForum.setIsLock(true);
+      } else {
+        newForum.setIsLock(false);
       }
       
       String[] setTopicable = ForumUtils.splitForForum(topicable);
