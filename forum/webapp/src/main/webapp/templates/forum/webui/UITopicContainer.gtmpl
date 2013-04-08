@@ -240,20 +240,20 @@
 						<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 					</th>
 					 
-					<th style="width:140px;" class="center">
+					<th style="width:140px;">
 						<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 					</th>
 					
-					<th style="width:50px;" class="center">
+					<th style="width:25px;" class="center">
 						<i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i>
 					</th>
-					<th style="width:50px;" class="center">
+					<th style="width:25px;" class="center">
 						<a href="<%=uicomponent.event("SetOrderBy","postCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Replies");%>">
 							 <i class="uiIconUIForms uiIconLightGray"></i>
 						</a>
 					</th>
 					
-					<th style="width:50px;" class="center">
+					<th style="width:25px;" class="center">
 						<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Views");%>">
 							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
 						</a>
@@ -357,7 +357,7 @@
 					<td class="center"><i class="$iconTopicStatus" rel="tooltip" data-placement="bottom" title="$titleTopicStatus"></i></td>
 					<td>
 						<%if(topic.getIsPoll()){%>
-								<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
+							<i class="uiIconPoll uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"></i>
 						<%} else {%>
 							<i class="uiIconForumTopic uiIconForumLightGray"></i>
 						<%}%>

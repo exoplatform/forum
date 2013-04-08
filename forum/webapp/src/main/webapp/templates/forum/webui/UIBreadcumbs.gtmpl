@@ -31,12 +31,12 @@
 				%>
 					<%if(uicomponent.useAjax){%>
 			  <li>
-							<a href="$link" onclick="$event; return false;" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
+				<a href="$link" onclick="$event; return false;" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%} else {%>
 			  <li>
-							<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
+					<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%} %>
@@ -51,7 +51,7 @@
 			  </li>
 					<%} else {%>
 			  <li>
-							<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
+					<a href="$link" rel="tooltip" data-placement="bottom" title="$namePath" class="Selected">$name</a>
 			  <span class="uiIconMiniArrowRight"></span>
 			  </li>
 					<%}%>
@@ -71,7 +71,7 @@
 			toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 	  %>
 		<div class="pull-right permaLink">
-			<a onclick="window.open('$link'); return false;" href="$link" data-placement="bottom" rel="tooltip" title="$toolTip"><i class="uiIconPermalink"></i></a>
+			<a onclick="window.open('$link'); return false;" href="$link" ><i class="uiIconPermalink uiIconLightGray" data-placement="bottom" rel="tooltip" title="$toolTip"></i></a>
 		</div>
 		<%}%>
 

@@ -80,9 +80,9 @@ import org.exoplatform.forum.ForumUtils;
 			<div class="control-group">
 				<label class="control-label" for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%>:</label>
 				<div class="controls">
-					<div class="pull-left"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
+					<%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%>
 					<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
-					<div class="parentPosition pull-left">
+					<div class="parentPosition" style="display: inline-block;">
 						<i class="uiIconQuestion uiIconLightGray"></i>
 						<div class="gotPosition" style="position: absolute;">
 							<div class="popover right bbcodePopupContent" style="display: none;">
