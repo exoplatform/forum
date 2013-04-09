@@ -17,8 +17,8 @@
 			<table class="uiGrid table  table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="center">Banned IP</th>
-						<th class="center">Action</th>
+						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.BannedIP");%></th>
+						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Action");%></th>
 					</tr>
 				</thead>
 				<tbody>

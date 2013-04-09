@@ -29,7 +29,7 @@
 							<th style="width:125px">
 								<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
 							</th>
-							<th style="width:85px" class="center"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+							<th style="width:85px" class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Action");%></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -74,7 +74,7 @@
 								}
 								%>
 								<td class="center">
-									<a href="javascript:void(0)" onclick="$link_"><i class="uiIconDelete uiIconLightGray"></i></a>
+									<a href="javascript:void(0)" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPageListPostByUser.label.Delete");%>" onclick="$link_"><i class="uiIconDelete uiIconLightGray"></i></a>
 								</td>
 							</tr>
 						<% i = i + 1;}
