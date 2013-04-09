@@ -113,7 +113,7 @@ import org.exoplatform.forum.ForumUtils;
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<button type="button" onclick="$actionPriview" class="btn btn-primary"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
+					<button type="button" onclick="$actionPriview" class="btn"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
 				</div>
 			</div>
 			<% } %>
