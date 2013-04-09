@@ -17,6 +17,7 @@
 package org.exoplatform.forum.rendering;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.service.Post;
@@ -49,7 +50,7 @@ public class RenderHelper {
   static class PostDelegate implements MarkupRenderDelegate<Post> {
 
     public String getMarkup(Post post) {
-      return post.getMessage();
+      return CommonUtils.decodeSpecialCharToHTMLnumber(post.getMessage());
     }
 
     /**

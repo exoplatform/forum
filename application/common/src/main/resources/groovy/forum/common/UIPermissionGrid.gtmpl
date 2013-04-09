@@ -1,6 +1,7 @@
 <div id="$uicomponent.id">
 <%
-  for(String permission : uicomponent.getPermissions())
+  String[] permissions = uicomponent.getPermissions();
+  for(String permission : permissions)
   {
 %>
   <input type="hidden" name="$permission" value="<%=uicomponent.getOwnersByPermission()%>" />
@@ -11,7 +12,7 @@
 		<thead>
 			<tr>
 				<th class="center"><%=_ctx.appRes("UIPermissionGrid.label.owner");%></th>
-				<% for(String permission : uicomponent.getPermissions()) { 
+				<% for(String permission : permissions) { 
 				     String label = uicomponent.getLabelPermission(permission);
 				%>
 				<th class="center">$label</th>
@@ -20,33 +21,45 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% for(String owner : uicomponent.getOwners()) { %>
+		<%
+      String[] owners = uicomponent.getOwners();
+      if (owners.length == 0) { 
+      int length = permissions.length + 2;
+    %>
+      <tr>
+         <td class="empty center" colspan="<%= length %>">
+           <%=_ctx.appRes("UIPermissionGrid.label.Empty");%>
+         </td>
+      </tr>  
+    <%  } else {
+      for(String owner : owners) { %>
 		  <tr>
-			<td>
-			  <div class="txtPermissionGrid" rel="tooltip" data-placement="bottom" title="<%=uicomponent.getDisplayNameOfOwner(owner)%>"><%=uicomponent.getDisplayNameOfOwner(owner)%></div>
-			  <div class="txtPermissionGrid" rel="tooltip" data-placement="bottom" title="$owner">($owner)</div>
-			</td>
-			<% for(String permission : uicomponent.getPermissions()) {
-				String checked = "";
-				boolean hasPermission = uicomponent.hasPermission(owner, permission);
-				if(hasPermission)
-				{
-				   checked = "checked=\"checked\"";
-				}
-			%>
+				<td>
+				  <div class="txtPermissionGrid" rel="tooltip" data-placement="bottom" title="<%=uicomponent.getDisplayNameOfOwner(owner)%>"><%=uicomponent.getDisplayNameOfOwner(owner)%></div>
+				  <div class="txtPermissionGrid" rel="tooltip" data-placement="bottom" title="$owner">($owner)</div>
+				</td>
+				<% for(String permission : permissions) {
+					String checked = "";
+					boolean hasPermission = uicomponent.hasPermission(owner, permission);
+					if(hasPermission)
+					{
+					   checked = "checked=\"checked\"";
+					}
+				%>
 			 
-			<td class="center">
-				<span class="uiCheckbox">
-					<input type="checkbox" rel="tooltip" data-placement="bottom" title="View Pages" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
-					<span></span>
-				</span>
-			</td>
-			<% } %>
-			<td class="center">
-				<a href="<%=uicomponent.event("RemoveOwner", owner)%>" rel="tooltip" data-placement="bottom" title="Remove" class="actionIcon"><i class="uiIconDelete uiIconLightGray"></i></a>
-			</td>
+				<td class="center">
+					<span class="uiCheckbox">
+						<input type="checkbox" rel="tooltip" data-placement="bottom" title="View Pages" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
+						<span></span>
+					</span>
+				</td>
+			 <% } %>
+				<td class="center">
+					<a href="<%=uicomponent.event("RemoveOwner", owner)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionGrid.label.Remove");%>" class="actionIcon"><i class="uiIconDelete uiIconLightGray"></i></a>
+				</td>
 		  </tr>
-		  <% } %>
+		  <% } 
+        } %>
 		</tbody>
 	</table>
 </div>
