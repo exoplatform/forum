@@ -39,10 +39,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
+import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
@@ -189,6 +192,18 @@ public class ForumUtils {
       sizeStr = df.format(convertedSize);
     }
     return (sizeStr + unit);
+  }
+  
+  public static String getFileSource(ForumAttachment attachment) {
+    try {
+      ForumDownloadResouce downloadResouce = new ForumDownloadResouce(attachment.getMimeType(), attachment.getMimeType());
+      downloadResouce.setDownloadName(attachment.getName());
+      downloadResouce.setAttachment((BufferAttachment) attachment);
+      DownloadService downloadService = (DownloadService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(DownloadService.class);
+      return downloadService.getDownloadLink(downloadService.addDownloadResource(downloadResouce));
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   public static String getTimeZoneNumberInString(String string) {

@@ -446,6 +446,7 @@ public class FAQUtils {
     DownloadService dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class);
     try {
         FAQDownloadResouce dresource = new FAQDownloadResouce(attachment.getMimeType(), "image");
+        dresource.setFileAttachment(attachment);
         dresource.setDownloadName(attachment.getName());
         return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
     } catch (Exception e) {

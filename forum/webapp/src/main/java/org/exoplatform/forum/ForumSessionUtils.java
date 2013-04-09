@@ -16,13 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.user.ContactProvider;
@@ -75,19 +70,6 @@ public class ForumSessionUtils {
       url = (url == null || url.trim().length() < 1) ? DEFAULT_AVATAR : url;
     }
     return url;
-  }
-
-  public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-    byte[] imageBytes = null;
-    if (input != null) {
-      imageBytes = new byte[input.available()];
-      input.read(imageBytes);
-      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-      InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-      dresource.setDownloadName(fileName);
-      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-    }
-    return null;
   }
 
   public static CommonContact getPersonalContact(String userId) {
