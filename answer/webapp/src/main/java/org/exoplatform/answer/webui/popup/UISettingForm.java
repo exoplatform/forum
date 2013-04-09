@@ -247,7 +247,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       ad.setActionListener("SelectCategoryForum");
       ad.setActionName("SelectCategoryForum");
       ad.setActionType(ActionData.TYPE_ICON);
-      ad.setCssIconClass("AddIcon16x16");
+      ad.setCssIconClass("uiIconPlus uiIconLightGray");
       actionData.add(ad);
       Discussion.setActionField(FIELD_CATEGORY_PATH_INPUT, actionData);
 
