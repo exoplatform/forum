@@ -39,6 +39,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -453,6 +456,11 @@ public class ForumUtils {
       }
     }
     return str;
+  }
+
+  public static String getTitleInHTMLCode(String s) {
+    List<String> supportedBBCodes = new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes());
+    return TransformHTML.getTitleInHTMLCode(CommonUtils.decodeSpecialCharToHTMLnumber(s), supportedBBCodes);
   }
 
   public static List<String> addArrayToList(List<String> list, String[] array) {

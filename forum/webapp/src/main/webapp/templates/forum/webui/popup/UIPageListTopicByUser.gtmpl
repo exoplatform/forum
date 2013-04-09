@@ -54,7 +54,7 @@
 							String topicPath = topic.getPath() ;
 							String topicTitle = topic.getTopicName();
 							String topicBy = topic.getOwner();
-							String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
+							String titlePost = ForumUtils.getTitleInHTMLCode(topic.getDescription());
 							titlePost = ForumUtils.getSubString(titlePost, 100);
 							String postCount = String.valueOf(topic.getPostCount());
 							String postView = String.valueOf(topic.getViewCount());

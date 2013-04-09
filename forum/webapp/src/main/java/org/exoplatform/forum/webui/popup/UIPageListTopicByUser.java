@@ -101,10 +101,6 @@ public class UIPageListTopicByUser extends UIContainer {
     this.userName = userName;
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   @SuppressWarnings("unchecked")
   protected List<Topic> getTopicsByUser() throws Exception {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);

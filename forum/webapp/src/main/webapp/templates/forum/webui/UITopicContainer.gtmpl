@@ -306,7 +306,7 @@
 						}
 						
 						String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);					
-						String titlePost = ForumUtils.getSubString(uicomponent.getTitleInHTMLCode(topic.getDescription()), 101);
+						String titlePost = ForumUtils.getSubString(ForumUtils.getTitleInHTMLCode(topic.getDescription()), 101);
 	
 						int att = topic.getNumberAttachment() ;
 						if(att < 0) att = 0;

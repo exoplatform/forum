@@ -67,7 +67,7 @@
 									classForumIcon = "PostsIcon";
 									if(topic.getIsLock()) classForumIcon = "LockPostsIcon";
 									if(topic.getIsClosed())classForumIcon = "ClosePostsIcon";
-									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription()); 
+									String titlePost = ForumUtils.getTitleInHTMLCode(topic.getDescription()); 
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 								%>
 								<li class="node">

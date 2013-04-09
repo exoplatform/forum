@@ -95,10 +95,6 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
     this.userName = userId;
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void setIp(String ip) {
     this.ip_ = ip;
     strOrderBy = "createdDate descending";

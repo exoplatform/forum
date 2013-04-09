@@ -76,10 +76,6 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
   public void deActivate() {
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void setUpdateContainer(String categoryId, String forumId, String topicId, boolean isApprove) {
     this.categoryId = categoryId;
     this.forumId = forumId;

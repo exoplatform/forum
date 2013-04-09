@@ -74,10 +74,6 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
   public void deActivate() {
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void setUpdateContainer(String categoryId, String forumId, String topicId) {
     this.categoryId = categoryId;
     this.forumId = forumId;

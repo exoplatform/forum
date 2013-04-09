@@ -215,10 +215,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return isShowActive;
   }
 
-  public String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void setIdUpdate(boolean isUpdate) {
     this.isUpdate = isUpdate;
   }

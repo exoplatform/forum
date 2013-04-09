@@ -80,10 +80,6 @@ public class UIListTopicOld extends UIContainer {
     this.date = date;
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   protected UserProfile getUserProfile() throws Exception {
     if (userProfile == null) {
       this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();

@@ -104,10 +104,6 @@ public class UIPageListPostByUser extends UIContainer {
     strOrderBy = Utils.EXO_CREATED_DATE.concat(Utils.DESCENDING);
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   @SuppressWarnings("unchecked")
   protected List<Post> getPostsByUser() throws Exception {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);

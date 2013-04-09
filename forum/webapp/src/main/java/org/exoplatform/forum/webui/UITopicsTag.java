@@ -114,10 +114,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     return CommonUtils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   protected long getSizePost(String Id) throws Exception {
     if (mapNumberPagePost.containsKey(Id))
       return mapNumberPagePost.get(Id);

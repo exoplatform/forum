@@ -41,7 +41,7 @@
 								if(i%2 == 0) classRow = "whileRow";
 								else classRow = "OddRow";
 								String postTitle = post.getName() ;
-								String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
+								String message = ForumUtils.getTitleInHTMLCode(post.getMessage()) ;
 								String titlePost = ForumUtils.getSubString(message, 100);
 								String iconPost = post.getIcon() ;
 								String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), formatDate, setTime) ;

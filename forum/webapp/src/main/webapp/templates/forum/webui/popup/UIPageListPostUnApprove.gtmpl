@@ -3,6 +3,7 @@
 	import org.exoplatform.forum.service.Post; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.TimeConvertUtils ;
+	import org.exoplatform.forum.ForumUtils;
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List posts = uicomponent.getPosts() ;
@@ -39,7 +40,7 @@
 									else classRow = "OddRow";
 									String postId = post.getId();
 									String postTitle = post.getName() ;
-									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
+									String message = ForumUtils.getTitleInHTMLCode(post.getMessage()) ;
 									String iconPost = post.getIcon() ;
 									String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), formatDate, setTime) ;
 							%>

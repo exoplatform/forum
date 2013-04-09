@@ -87,10 +87,6 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
     this.forumId = forumId;
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   @SuppressWarnings("unchecked")
   protected List<Topic> getTopicsUnApprove() throws Exception {
     String type = (typeApprove == Utils.WAITING) ? ForumNodeTypes.EXO_IS_WAITING : (typeApprove == Utils.APPROVE) ? ForumNodeTypes.EXO_IS_APPROVED : ForumNodeTypes.EXO_IS_ACTIVE;
