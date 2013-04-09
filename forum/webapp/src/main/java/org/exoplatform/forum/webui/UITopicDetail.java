@@ -961,6 +961,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 850, 545);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, false, false, post);
+        postForm.setMod(topicDetail.isMod);
       } else {
         throwWarning("UIPostForm.msg.canNotEdit");
       }
