@@ -118,6 +118,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -5611,7 +5612,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public List<ForumSearch> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception {
-    List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
+    List<ForumSearch> listSearchResult = new ArrayList<ForumSearch>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -5710,40 +5711,36 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
         if ("DESC".equalsIgnoreCase(order)) {
           queryString.append(DESCENDING);
-        } else if ("ASC".equalsIgnoreCase(order)) {
-          queryString.append(ASCENDING);
-        } else if (Utils.isEmpty(order)) {
-          queryString.append(ASCENDING); // If no ascending but sort value : apply ascending as default value
         }
 
         QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.XPATH);
-        query.setCaseInsensitiveOrder(true);
+        //query.setCaseInsensitiveOrder(true);
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
         RowIterator rowIterator = result.getRows();
         while (iter.hasNext()) {
           Node nodeObj = iter.nextNode();
           Row row = rowIterator.nextRow();
-          listSearchEvent.add(setPropertyUnifiedSearch(row, nodeObj, type));
+          listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type));
         }
       }
 
       if(limit > 0) {
-        int size = listSearchEvent.size();
+        int size = listSearchResult.size();
         if(size > offset) {
           if(limit > size) {
             limit = size;
           }
-          listSearchEvent = listSearchEvent.subList(offset, limit);
+          listSearchResult = listSearchResult.subList(offset, limit);
         } else {
-          listSearchEvent.clear();
+          listSearchResult.clear();
         }
       }
 
     } catch (Exception e) {
       throw e;
     }
-    return listSearchEvent;
+    return UnifiedSearchOrder.processOrder(listSearchResult, sort, order);
   }
 
   private ForumSearch setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {

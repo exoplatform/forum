@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.utils;
 
+import org.exoplatform.forum.search.UnifiedSearchOrderTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
   UserProfileUtilsTestCase.class,
   UtilsTestCase.class,
+  UnifiedSearchOrderTest.class,
   ForumEventQueryTestCase.class
 })
 public class NoContainerTestSuite {
