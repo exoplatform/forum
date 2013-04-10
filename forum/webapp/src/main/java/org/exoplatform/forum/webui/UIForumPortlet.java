@@ -279,9 +279,6 @@ public class UIForumPortlet extends UIPortletApplication {
         String parentGrId = service.getGroupHandler().findGroupById(spaceGroupId).getParentId();
         categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
       } catch (Exception e) {
-        if (log.isDebugEnabled()) {
-          log.debug("Failed to set category id of space " + space.getPrettyName(), e);
-        }
         return null;
       }
     }
