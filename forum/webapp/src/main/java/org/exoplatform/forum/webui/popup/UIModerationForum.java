@@ -87,10 +87,6 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     this.isReloadPortlet = isReloadPortlet;
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void setUserProfile(UserProfile userProfile) throws Exception {
     this.userProfile = userProfile;
     if (this.userProfile == null) {

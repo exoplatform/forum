@@ -72,6 +72,8 @@ public interface DataStorage {
   void initCategoryListener();
 
   boolean isAdminRole(String userName) throws Exception;
+  
+  boolean isAdminRoleConfig(String userName) throws Exception;
 
   void setDefaultAvatar(String userName);
 

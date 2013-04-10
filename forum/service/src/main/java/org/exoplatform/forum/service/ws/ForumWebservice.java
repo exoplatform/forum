@@ -35,6 +35,14 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
+/**
+ * Url template: <tt>{rest_context_name}/ks/forum</tt>
+ * <br />
+ * GET: /{rest_context_name}/ks/forum/getmessage/{maxcount}
+ * 
+ * @anchor ForumWebservice
+ * 
+ */
 @Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
 
@@ -57,6 +65,267 @@ public class ForumWebservice implements ResourceContainer {
   }
   
   public ForumWebservice() {
+  }
+
+  /**
+   * Gets recent posts for user and limited by number post.
+   * 
+   * @param maxcount is max number post for render in gadget
+   * @param sc is SecurityContext for get userId login when we use rest link to render gadget.
+   * @param uriInfo is UriInfo for get userId login when we render gadget via gadgets service
+   * 
+   * @anchor ForumWebservice.getMessage
+   * 
+   * @return the response is json-data content list recent post for user.
+   * 
+   * @throws Exception the exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("getmessage/{maxcount}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getMessage(@PathParam("maxcount") int maxcount, @Context SecurityContext sc,
+                                                                  @Context UriInfo uriInfo) throws Exception {
+    try {
+      String userName = getUserId(sc, uriInfo);
+      MessageBean data = getNewPosts(userName, maxcount);
+      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+    } catch (Exception e) {
+      log.debug("Failed to get new post by user.");
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
+    }
+  }
+
+  /**
+   * Gets recent public post limited by number post.
+   * 
+   * @param maxcount is max number post for render in gadget
+   * 
+   * @anchor ForumWebservice.getPulicMessage
+   * 
+   * @return the response is json-data content list recent public post.
+   * 
+   * @throws Exception the exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("getpublicmessage/{maxcount}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getPulicMessage(@PathParam("maxcount") int maxcount) throws Exception {
+    MessageBean data = getNewPosts(null, maxcount);
+    return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+  }
+  
+  /**
+   * Filters ips.
+   * 
+   * @param str ip to filter.
+   * 
+   * @anchor ForumWebservice.filterIps
+   * 
+   * @return the response is json-data
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("filter/{strIP}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterIps(@PathParam("strIP") String str) throws Exception {
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    if (str.equals("all")) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getBanList();
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
+      }
+    } else if (!str.equals(strQuery)) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getBanList();
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
+      }
+      strQuery = str;
+    }
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
+  }
+
+  /**
+   * Filters banned IP.
+   * 
+   * @param forumId id of forum
+   * @param str banned ip to filter
+   * 
+   * @anchor ForumWebservice.filterIpBanForum
+   * 
+   * @return the response is json-data
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("filterIpBanforum/{strForumId}/{strIP}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterIpBanForum(@PathParam("strForumId") String forumId, @PathParam("strIP") String str) throws Exception {
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    if (str.equals("all")) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getForumBanList(forumId);
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
+      }
+    } else if (!str.equals(strQuery)) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getForumBanList(forumId);
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
+      }
+      strQuery = str;
+    }
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
+  }
+
+  /**
+   * Filters tag of forum by name.
+   * 
+   * @param str tag name to filter
+   * @param userAndTopicId id of user and topic
+   * 
+   * @anchor ForumWebservice.filterTagNameForum
+   * 
+   * @return the response is json-data
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("filterTagNameForum/{userAndTopicId}/{strTagName}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterTagNameForum(@PathParam("strTagName") String str, @PathParam("userAndTopicId") String userAndTopicId) throws Exception {
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    if (str.equals(" ")) {
+      ipsToJson.clear();
+    } else if (str.equals("onclickForm")) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getTagNameInTopic(userAndTopicId);
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
+      }
+    } else {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getAllTagName(str, userAndTopicId);
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
+      }
+    }
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
+  }
+
+  /**
+   * Gets forum rss information.
+   * 
+   * @param resourceid source to get rss.
+   * 
+   * @anchor ForumWebservice.viewrss
+   * 
+   * @return the response is xml-data contain returned rss.
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("rss/{resourceid}")
+  @Produces(MediaType.APPLICATION_XML)
+  public Response viewrss(@PathParam("resourceid") String resourceid) throws Exception {
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      InputStream is = forumService.createForumRss(resourceid, "http://www.exoplatform.com");
+      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
+    } catch (Exception e) {
+      log.trace("\nView RSS fail: " + e.getMessage() + "\n" + e.getCause());
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Gets user rss information.
+   * 
+   * @param resourceid source to get rss
+   * 
+   * @anchor ForumWebservice.userrss
+   * 
+   * @return the response is xml-data contains returned rss
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("rss/user/{resourceid}")
+  @Produces(MediaType.TEXT_XML)
+  public Response userrss(@PathParam("resourceid") String resourceid) throws Exception {
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      InputStream is = forumService.createUserRss(resourceid, "http://www.exoplatform.com");
+      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
+    } catch (Exception e) {
+      log.trace("\nGet UserRSS fail: ", e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+  
+  /**
+   * Filters forum by name and returned result by provided size.
+   * 
+   * @param forumName the name to be filtered
+   * @param maxSize limit of returned result.
+   * @param sc security context to get request information
+   * @param uriInfo The resquest information
+   * 
+   * @anchor ForumWebservice.filterForum
+   * 
+   * @return the response is json-data contain forum filtered by name.
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
+  @GET
+  @Path("filterforum/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterForum(@QueryParam("name") String forumName, 
+                               @QueryParam("maxSize") String maxSize,
+                               @Context SecurityContext sc,
+                               @Context UriInfo uriInfo) throws Exception {
+    try {
+      List<CategoryFilter> categoryFilters = new ArrayList<CategoryFilter>();
+      if(!Utils.isEmpty(forumName)) {
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        String userName = getUserId(sc, uriInfo);
+        int maxSize_ = 0;
+        if(!Utils.isEmpty(maxSize)) {
+          try {
+            maxSize_ = Integer.parseInt(maxSize.trim());
+          } catch (NumberFormatException e) {
+            maxSize_ = 0;
+          }
+        }
+        categoryFilters = forumService.filterForumByName(forumName, userName, maxSize_);
+        Collections.sort(categoryFilters, new Utils.CategoryNameComparator());
+      }
+      return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
+    } catch (Exception e) {
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+    }
   }
 
   private MessageBean getNewPosts(String userName, int maxcount) throws Exception {
@@ -95,171 +364,4 @@ public class ForumWebservice implements ResourceContainer {
     }
     return null;
   }
-
-  /**
-   * The rest can gets response is recent posts for user and limited by number post.
-   * 
-   * @param maxcount is max number post for render in gadget
-   * @param sc is SecurityContext for get userId login when we use rest link to render gadget.
-   * @param uriInfo is UriInfo for get userId login when we render gadget via gadgets service
-   * @return the response is json-data content list recent post for user.
-   * @throws Exception the exception
-   */
-  @GET
-  @Path("getmessage/{maxcount}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getMessage(@PathParam("maxcount") int maxcount, @Context SecurityContext sc,
-                                                                  @Context UriInfo uriInfo) throws Exception {
-    try {
-      String userName = getUserId(sc, uriInfo);
-      MessageBean data = getNewPosts(userName, maxcount);
-      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
-    } catch (Exception e) {
-      log.debug("Failed to get new post by user.");
-      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
-    }
-  }
-
-  /**
-   * The rest can gets response is recent public post limited by number post.
-   * 
-   * @param maxcount is max number post for render in gadget
-   * @return the response is json-data content list recent public post.
-   * @throws Exception the exception
-   */
-  @GET
-  @Path("getpublicmessage/{maxcount}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getPulicMessage(@PathParam("maxcount") int maxcount) throws Exception {
-    MessageBean data = getNewPosts(null, maxcount);
-    return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
-  }
-
-  @GET
-  @Path("filter/{strIP}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response filterIps(@PathParam("strIP") String str) throws Exception {
-    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if (str.equals("all")) {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getBanList();
-      for (String ip : banIps) {
-        ipsToJson.add(new BanIP(ip));
-      }
-    } else if (!str.equals(strQuery)) {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getBanList();
-      for (String ip : banIps) {
-        if (ip.startsWith(str))
-          ipsToJson.add(new BanIP(ip));
-      }
-      strQuery = str;
-    }
-    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
-  }
-
-  @GET
-  @Path("filterIpBanforum/{strForumId}/{strIP}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response filterIpBanForum(@PathParam("strForumId") String forumId, @PathParam("strIP") String str) throws Exception {
-    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if (str.equals("all")) {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getForumBanList(forumId);
-      for (String ip : banIps) {
-        ipsToJson.add(new BanIP(ip));
-      }
-    } else if (!str.equals(strQuery)) {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getForumBanList(forumId);
-      for (String ip : banIps) {
-        if (ip.startsWith(str))
-          ipsToJson.add(new BanIP(ip));
-      }
-      strQuery = str;
-    }
-    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
-  }
-
-  @GET
-  @Path("filterTagNameForum/{userAndTopicId}/{strTagName}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response filterTagNameForum(@PathParam("strTagName") String str, @PathParam("userAndTopicId") String userAndTopicId) throws Exception {
-    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if (str.equals(" ")) {
-      ipsToJson.clear();
-    } else if (str.equals("onclickForm")) {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getTagNameInTopic(userAndTopicId);
-      for (String ip : banIps) {
-        ipsToJson.add(new BanIP(ip));
-      }
-    } else {
-      ipsToJson.clear();
-      List<String> banIps = forumService.getAllTagName(str, userAndTopicId);
-      for (String ip : banIps) {
-        if (ip.startsWith(str))
-          ipsToJson.add(new BanIP(ip));
-      }
-    }
-    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
-  }
-
-  @GET
-  @Path("rss/{resourceid}")
-  @Produces(MediaType.APPLICATION_XML)
-  public Response viewrss(@PathParam("resourceid") String resourceid) throws Exception {
-    try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      InputStream is = forumService.createForumRss(resourceid, "http://www.exoplatform.com");
-      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
-    } catch (Exception e) {
-      log.trace("\nView RSS fail: " + e.getMessage() + "\n" + e.getCause());
-      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-    }
-  }
-
-  @GET
-  @Path("rss/user/{resourceid}")
-  @Produces(MediaType.TEXT_XML)
-  public Response userrss(@PathParam("resourceid") String resourceid) throws Exception {
-    try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      InputStream is = forumService.createUserRss(resourceid, "http://www.exoplatform.com");
-      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
-    } catch (Exception e) {
-      log.trace("\nGet UserRSS fail: ", e);
-      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-    }
-  }
-  
-  @GET
-  @Path("filterforum/")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response filterForum(@QueryParam("name") String forumName, 
-                               @QueryParam("maxSize") String maxSize,
-                               @Context SecurityContext sc,
-                               @Context UriInfo uriInfo) throws Exception {
-    try {
-      List<CategoryFilter> categoryFilters = new ArrayList<CategoryFilter>();
-      if(!Utils.isEmpty(forumName)) {
-        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-        String userName = getUserId(sc, uriInfo);
-        int maxSize_ = 0;
-        if(!Utils.isEmpty(maxSize)) {
-          try {
-            maxSize_ = Integer.parseInt(maxSize.trim());
-          } catch (NumberFormatException e) {
-            maxSize_ = 0;
-          }
-        }
-        categoryFilters = forumService.filterForumByName(forumName, userName, maxSize_);
-        Collections.sort(categoryFilters, new Utils.CategoryNameComparator());
-      }
-      return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();
-    } catch (Exception e) {
-      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-    }
-  }
-
 }

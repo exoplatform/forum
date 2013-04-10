@@ -16,16 +16,13 @@
  */
 package org.exoplatform.answer.webui.popup;
 
-import org.exoplatform.answer.webui.UIAnswersContainer;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIPopupComponent;
-import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -35,13 +32,12 @@ import org.exoplatform.webui.form.UIForm;
  */
 
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UIQuestionManagerForm.gtmpl", 
     events = {
         @EventConfig(listeners = UIQuestionManagerForm.CancelActionListener.class) 
     }
 )
-public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
+public class UIQuestionManagerForm extends UIContainer {
   public static final String UI_QUESTION_INFO       = "QuestionInfo";
 
   public static final String UI_QUESTION_FORM       = "UIQuestionForm";
@@ -55,12 +51,6 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   public boolean             isViewEditQuestion     = true;
 
   public boolean             isViewResponseQuestion = false;
-
-  public void activate() {
-  }
-
-  public void deActivate() {
-  }
 
   public UIQuestionManagerForm() throws Exception {
     isEditQuestion = false;
@@ -95,11 +85,8 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
 
   static public class CancelActionListener extends EventListener<UIQuestionManagerForm> {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
-      UIQuestionManagerForm questionManagerForm = event.getSource();
-      UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIAnswersContainer container = portlet.findFirstComponentOfType(UIAnswersContainer.class);
+      UIAnswersPortlet portlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class);
       portlet.cancelAction();
-      event.getRequestContext().addUIComponentToUpdateByAjax(container);
     }
   }
 }

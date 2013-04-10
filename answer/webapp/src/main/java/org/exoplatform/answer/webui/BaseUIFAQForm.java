@@ -19,6 +19,8 @@ package org.exoplatform.answer.webui;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 
 /**
@@ -50,7 +52,13 @@ public class BaseUIFAQForm extends BaseUIForm {
   protected void setFAQService(FAQService faqService) {
     this.faqService = faqService;
   }
-
+  
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    WebUIUtils.addScripts("bts_tooltip", null, "setTimeout(function(){eXo.answer.UIAnswersPortlet.initTooltip('" + getId() + "');}, 200);");
+    super.processRender(context);
+  }
+  
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
     UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
     return openPopup(uiPortlet, componentType, popupId, width, height);

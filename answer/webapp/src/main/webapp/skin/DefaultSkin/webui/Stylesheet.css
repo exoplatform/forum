@@ -2118,11 +2118,6 @@
 	cursor: pointer;
 }
 
-.UIAnswersPortlet .Discussion #CategoryPath {
-	font-size:11px;
-	width:215px;
-	float:left;
-}
 
 .UIAnswersPortlet .Discussion #ForumId {
 	font-size:11px;

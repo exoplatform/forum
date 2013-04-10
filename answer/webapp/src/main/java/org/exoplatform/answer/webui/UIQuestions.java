@@ -525,19 +525,20 @@ public class UIQuestions extends UIContainer {
   }
 
   public String render(Object obj) throws RenderingException {
+    String result = "";
     if (obj instanceof Question)
-      return renderHelper.renderQuestion((Question) obj);
+      result = renderHelper.renderQuestion((Question) obj);
     else if (obj instanceof Answer)
-      return renderHelper.renderAnswer((Answer) obj);
+      result=  renderHelper.renderAnswer((Answer) obj);
     else if (obj instanceof Comment)
-      return renderHelper.renderComment((Comment) obj);
-    return "";
+      result = renderHelper.renderComment((Comment) obj);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(result);
   }
 
   protected String calculateTimeMessageOfLastActivity(long time) {
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
     calendar.setTimeInMillis(time);
-    return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE,MMM dd,yyyy", TimeConvertUtils.MONTH);
+    return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE, MMM dd, yyyy", TimeConvertUtils.MONTH);
   }
 
   public boolean checkQuestionToView(Question question, WebuiRequestContext context) throws Exception {
@@ -667,7 +668,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null);
       popupContainer.setId("FAQQuestionManagerment");
-      popupAction.activate(popupContainer, 900, 850);
+      popupAction.activate(popupContainer, 900, 580);
       questionManagerForm.setFAQSetting(questions.faqSetting_);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

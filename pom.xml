@@ -42,12 +42,12 @@
     <!-- **************************************** -->
     <!-- Dependencies versions -->
     <!-- **************************************** -->
-    <org.exoplatform.depmgt.version>4</org.exoplatform.depmgt.version>
+    <org.exoplatform.depmgt.version>5-SNAPSHOT</org.exoplatform.depmgt.version>
     <!-- JCR Project Dependencies -->
-    <org.exoplatform.kernel.version>2.4.2-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.5.2-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.3.2-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.15.2-GA</org.exoplatform.jcr.version>
+    <org.exoplatform.kernel.version>2.4.3-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.5.3-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.3.3-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.15.3-GA</org.exoplatform.jcr.version>
     <!-- GateIn Project Dependencies -->
     <org.gatein.common.version>2.1.0.Final</org.gatein.common.version>
     <org.gatein.wci.version>2.3.0.Final</org.gatein.wci.version>
@@ -57,6 +57,7 @@
     <org.exoplatform.social.version>4.0.0-SNAPSHOT</org.exoplatform.social.version>
     <org.exoplatform.wiki.version>4.0.0-SNAPSHOT</org.exoplatform.wiki.version>
     <!-- Platform Project 3rd party Dependencies -->
+    <org.exoplatform.doc.doc-style.version>4.0.0-SNAPSHOT</org.exoplatform.doc.doc-style.version>
   </properties>
   <dependencyManagement>
     <!-- ### NEVER CHANGE THIS ORDER OF DEPMGT ### -->
@@ -348,6 +349,12 @@
         <version>${org.exoplatform.kernel.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <!-- Use to generate some documentation -->
+      <dependency>
+        <groupId>org.exoplatform.doc</groupId>
+        <artifactId>doc-style</artifactId>
+        <version>${org.exoplatform.doc.doc-style.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

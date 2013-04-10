@@ -84,11 +84,10 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
   
   protected String           tabId            = "DisplayTab";
   
-  public static final String FIELD_IS_DELETE_AVATAR_CHECKBOX     = "IsDeleteAvatar";
-
   public UIUserSettingForm() throws Exception {
     faqService_ = FAQUtils.getFAQService();
     setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
   
   public void init() throws Exception {
@@ -108,7 +107,6 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
     
     addChild(displayTab);
     
-    //UIUserWatchManager watchForm = new UIUserWatchManager();
     UIUserWatchManager watchForm = createUIComponent(UIUserWatchManager.class, null, WATCHES_TAB);
     watchForm.setFAQSetting(faqSetting_);
     addChild(watchForm);
@@ -124,10 +122,6 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       faqSetting.setSortQuestionByVote(settingForm.getUICheckBoxInput(settingForm.ITEM_VOTE)
                                                   .isChecked());
       
-      if (settingForm.getUICheckBoxInput(FIELD_IS_DELETE_AVATAR_CHECKBOX).isChecked()) {
-        settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
-        settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
-      }
       settingForm.faqService_.saveFAQSetting(faqSetting, FAQUtils.getCurrentUser());
       UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class);
       uiPopupAction.deActivate();

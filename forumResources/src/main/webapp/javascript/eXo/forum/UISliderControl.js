@@ -1,72 +1,107 @@
-(function(utils, gj) {
+(function(utils, $) {
   var UISliderControl = {
-    container : null,
-    object : null,
-    parent : null,
-    inputField : null,
+    init : function(contId, mValue) {
+      var container = $('#' + contId);
+      var slideContainer = container.find('.slideContainer:first');
+      var datas = {
+        containerId : contId,
+        widthValue : parseInt(slideContainer.width()),
+        percent : 0,
+        maxValue : mValue,
+        currentMouse : 0,
+        isDown : false
+      };
 
-    start : function(obj, evt) {
-      this.container = obj;
-      this.object = gj(obj).find('div.SliderPointer').eq(0)[0];
-      this.parent = gj(obj).parent();
-      this.inputField = this.parent.find('input').eq(0)[0];
-      var mouseX = eXo.core.Browser.findMouseRelativeX(obj, gj.event.fix(evt));
-      var props = UISliderControl.getValue(mouseX);
-      gj(this.object).css('width', props[0] + 'px');
-      gj(this.inputField).val(props[1] * 5);
-      this.parent.find('label[for=' + this.inputField.id + ']').html(
-          props[1] * 5);
-      this.parent.on('mousemove', this.execute);
-      this.parent.on('mouseup', this.end);
+      var circleDefault = container.find('.circleDefault:first');
+      circleDefault.data('infoSlider', datas);
+
+      circleDefault.on('mousedown', UISliderControl.start);
+      container.on('mouseover', UISliderControl.execute);
+
+      slideContainer.on('click', function(evt) {
+        var slideContainer = $(this);
+        var circleDefault = slideContainer.find('.circleDefault:first');
+
+        if (circleDefault.data('infoSlider').currentMouse === 0) {
+          var Browser = eXo.core.Browser;
+          var X = Browser.findMouseRelativeX(slideContainer, evt, false);
+          X = evt.clientX - X + 5;
+          UISliderControl.saveInfoStart(circleDefault, X);
+        } else {
+          UISliderControl.saveInfoStart(circleDefault, 0);
+        }
+
+        var container = slideContainer.parents('.uiFormSliderInput:first');
+        UISliderControl.runExecute(container, evt);
+        UISliderControl.end(evt);
+      });
+    },
+
+    start : function(evt) {
+      var circleDefault = $(this);
+      UISliderControl.saveInfoStart(circleDefault, 0, evt);
     },
 
     execute : function(evt) {
-      var cont = UISliderControl.container;
-      var mouseX = eXo.core.Browser.findMouseRelativeX(cont, gj.event.fix(evt));
-      var props = UISliderControl.getValue(mouseX);
-      gj(UISliderControl.object).css('width', props[0] + 'px');
-      gj(UISliderControl.inputField).val(String(props[1] * 5));
-      UISliderControl.parent.find(
-          'label[for=' + UISliderControl.inputField.id + ']')
-          .html(props[1] * 5);
+      var container = $(this);
+      UISliderControl.runExecute(container, evt);
     },
 
-    getValue : function(mouseX) {
-      var width = 0;
-      var value = 0;
-      mouseX = parseInt(mouseX);
-      if (mouseX <= 7) {
-        width = 14;
-        value = 0;
-      } else if ((mouseX > 7) && (mouseX <= 200)) {
-        width = mouseX + 7;
-        value = width - 14;
-      } else if ((mouseX > 200) && (mouseX < 221)) {
-        width = mouseX + 7;
-        value = width - 28;
-      } else {
-        width = 228;
-        value = 200;
+    saveInfoStart : function(circleDefault, currentMouse, evt) {
+      var datas = circleDefault.data('infoSlider');
+      if (typeof evt !== 'undefined') {
+        datas.currentMouse = evt.clientX;
+      } else if (currentMouse > 0) {
+        datas.currentMouse = currentMouse;
       }
-      return [ width, value ];
+      datas.isDown = true;
+      circleDefault.data('infoSlider', datas);
     },
 
-    end : function() {
-      UISliderControl.parent.off('mousemove', UISliderControl.execute);
-      UISliderControl.parent.off('mouseup', UISliderControl.end);
-      UISliderControl.object = null;
-      UISliderControl.container = null;
+    end : function(evt) {
+      var id = $(document.body).attr('data-currentslider');
+      if (id != null) {
+        var container = $('#' + id);
+        var circleDefault = container.find('.circleDefault:first');
+        var datas = circleDefault.data('infoSlider');
+        datas.isDown = false;
+        circleDefault.data('infoSlider', datas);
+        $(document.body).removeAttr('data-currentslider');
+      }
     },
 
-    reset : function(input) {
-      gj(input).val('0');
-      var parent = gj(input).parents('.UISliderControl');
-      parent.find('label[for=' + gj(input).attr('id') + ']').html('0');
-      parent.find('div.SliderPointer').css('width', '14px');
+    runExecute : function(container, evt) {
+      var circleDefault = container.find('.circleDefault:first');
+      var datas = circleDefault.data('infoSlider');
+      if (datas.isDown === true) {
+        var next = evt.clientX;
+        var deltaMove = next - datas.currentMouse;
+        if (deltaMove !== 0) {
+          var widthValue = datas.widthValue;
+          var deltaPercent = (deltaMove / widthValue) * 100;
+          var newPercent = datas.percent + deltaPercent;
+          if (newPercent < 0) {
+            newPercent = 0;
+          } else if (newPercent > 100) {
+            newPercent = 100;
+          }
+          datas.percent = newPercent;
+          datas.currentMouse = next;
+          circleDefault.data('infoSlider', datas);
+          circleDefault.css('left', newPercent + '%');
+          container.find('.slideRange:first').css('width', newPercent + '%');
+          //
+          var point = (datas.maxValue * newPercent) / 100;
+          container.find('input.uiSliderInput:first').val(parseInt(point));
+        }
+        $(document.body).attr('data-currentslider', container.attr('id'))
+      }
+    },
+
+    reset : function() {
+
     }
   };
-  window.eXo = window.eXo || {};
-  window.eXo.webui = window.eXo.webui || {};
-  window.eXo.webui.UISliderControl = UISliderControl;
-  return window.eXo.webui.UISliderControl;
+  $(document.body).on('mouseup', UISliderControl.end);
+  return UISliderControl;
 })(utils, gj);

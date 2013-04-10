@@ -1,3 +1,8 @@
+<%
+import org.exoplatform.forum.ForumUtils;
+	ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initShowBBcodeHelp('"+uiform.id+"') ;");
+%>
+
 <div class="uiAddBBCodeForm">
 	<% uiform.begin() %>
     <div class="resizable">
@@ -7,88 +12,82 @@
 			String id = "";
 		%>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_TAGNAME_INPUT%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_TAGNAME_INPUT%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 					<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
 					
-					<div style="display:inline-block;">
+					<div style="display:inline-block;" class="parentPosition">
 						<i class="uiIconQuestion uiIconLightGray"></i>
-						<div class="popover right" id="$id" style="display: block;left: 495px;top: 55px;">
-							<span class="arrow">
-							</span>
-							<div class="popover-content" id="${id}ID">
-								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+						<div class="gotPosition" style="position: absolute;">
+							<div class="popover right bbcodePopupContent" style="display: none;">
+								<span class="arrow"></span>
+								<div class="popover-content"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 					<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
-					<div style="display:inline-block;">
+					<div style="display:inline-block;" class="parentPosition">
 						<i class="uiIconQuestion uiIconLightGray"></i>
-						<div class="popover right" id="$id" style="display: block;left: 495px;top: 115px;">
-							<span class="arrow">
-							</span>
-							<div class="popover-content" id="${id}ID">
-								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+						<div class="gotPosition" style="position: absolute;">
+							<div class="popover right bbcodePopupContent" style="display: none;">
+								<span class="arrow"></span>
+								<div class="popover-content"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
-					<div style="display:inline-block;">
+					<div style="display:inline-block;" class="parentPosition">
 						<i class="uiIconQuestion uiIconLightGray"></i>
-						<div class="popover right" id="$id"  style="display: block;left: 485px;top: 205px;">
-							<span class="arrow">
-							</span>
-							<div class="popover-content" id="${id}ID">
-								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+						<div class="gotPosition" style="position: absolute;">
+							<div class="popover right bbcodePopupContent" style="display: none;">
+								<span class="arrow"></span>
+								<div class="popover-content"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_EXAMPLE_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_EXAMPLE_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%>:</label>
 				<div class="controls">
 					<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 					<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray"></i></a>
-					<div style="display:inline-block;">
+					<a class="actionIcon" href="$actionPriview"><i class="uiIconPreview uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%>"></i></a>
+					<div style="display:inline-block;" class="parentPosition">
 						<i class="uiIconQuestion uiIconLightGray"></i>
-						<div class="popover right" id="$id" style="display: block;left: 525px;top: 293px;">
-							<span class="arrow">
-							</span>
-							<div class="popover-content" id="${id}ID">
-								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+						<div class="gotPosition" style="position: absolute;">
+							<div class="popover right bbcodePopupContent" style="display: none;">
+								<span class="arrow"></span>
+								<div class="popover-content"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%></label>
+				<label class="control-label" for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%>:</label>
 				<div class="controls">
-					<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
+					<%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%>
 					<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
-					<div style="display:inline-block;">
+					<div class="parentPosition" style="display: inline-block;">
 						<i class="uiIconQuestion uiIconLightGray"></i>
-						<div class="popover right" id="$id"  style="display: block;left: 229px;top: 356px;">
-							<span class="arrow">
-							</span>
-							<div class="popover-content" id="${id}ID">
-								<%=_ctx.appRes("UIAddBBCodeForm.text." + id);%>
+						<div class="gotPosition" style="position: absolute;">
+							<div class="popover right bbcodePopupContent" style="display: none;">
+								<span class="arrow"></span>
+								<div class="popover-content"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 							</div>
 						</div>
 					</div>
@@ -114,7 +113,7 @@
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<button type="button" onclick="$actionPriview" class="btn btn-primary"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
+					<button type="button" onclick="$actionPriview" class="btn"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
 				</div>
 			</div>
 			<% } %>

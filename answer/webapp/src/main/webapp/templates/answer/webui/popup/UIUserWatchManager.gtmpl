@@ -5,62 +5,60 @@
   def rcontext = _ctx.getRequestContext() ;	
  %>
 <div class="uiUserWatchManager" id="$uicomponent.id">
-		
-		
-          <table class="uiGrid table table-hover table-striped">
-            <thead>
-              <tr>
-                <th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-                <th class="center"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
-              </tr>
-            </thead>
-            <tbody>
-            <% 
-            List<Category> listCate = uicomponent.getListCategory() ;
-            if(listCate.size() > 0){
-              for(String cate : listCate ) {
-                categoryId = cate.getPath() ;
-                path = uicomponent.getCategoriesName(categoryId);
-                categoryPathName = path.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
-				String unWatch = uicomponent.event("UnWatch", uicomponent.id);
-                String link = uicomponent.event("Link",categoryId);
-             %>
-              <tr>
-                <% if(path.length() > 120) {
-                    String title = path ;
-                    path = uicomponent.getSubString(path,120);
-                 %>
-                  <td><a rel="tooltip" data-placement="bottom" title="$title" href="$link">$categoryPathName</a></td>
-                <% } else { %>
-                  <td><a href="$link">$categoryPathName</a></td>
-                <% } %>
-                <td class="center">
-                    <a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="actionIcon" >
-                    	<i class="uiIconTrash uiIconLightGray"></i>
-                    </a>
-                </td>
-              </tr>
-              <% 
-                }
-              } else {
-              %>
-                <tr>
-                   <td class="empty center" colspan="2"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
-               </tr>
-              <% } %>
-            </tbody>
-          </table>
-		
-          <%
-            int totalPages = uicomponent.getTotalpages(uicomponent.LIST_CATES_WATCHED) ;
-            if(totalPages > 1) {
-            %>
-             <% uicomponent.renderChild(uicomponent.LIST_CATES_WATCHED) ; %>
-          <%}%>
-		  <div class="emailAddress">
-	         <strong><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</strong> 
-	         <a href="mailto:$uicomponent.emailAddress">$uicomponent.emailAddress</a>
-      	</div>
+   <table class="uiGrid table table-hover table-striped">
+     <thead>
+       <tr>
+         <th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
+         <th class="center"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+       </tr>
+     </thead>
+     <tbody>
+     <% 
+     List<Category> listCate = uicomponent.getListCategory() ;
+     if(listCate.size() > 0){
+       for(String cate : listCate ) {
+         categoryId = cate.getPath() ;
+         path = uicomponent.getCategoriesName(categoryId);
+         categoryPathName = path.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
+				 String unWatch = uicomponent.event("UnWatch", uicomponent.id);
+         String link = uicomponent.event("Link",categoryId);
+      %>
+       <tr>
+         <% if(path.length() > 120) {
+             String title = path ;
+             path = uicomponent.getSubString(path,120);
+          %>
+           <td><a rel="tooltip" data-placement="bottom" title="$title" href="$link">$categoryPathName</a></td>
+         <% } else { %>
+           <td><a href="$link">$categoryPathName</a></td>
+         <% } %>
+         <td class="center">
+             <a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="actionIcon" >
+             	<i class="uiIconTrash uiIconLightGray"></i>
+             </a>
+         </td>
+       </tr>
+       <% 
+         }
+       } else {
+       %>
+         <tr>
+            <td class="empty center" colspan="2"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
+        </tr>
+       <% } %>
+     </tbody>
+   </table>
+
+   <%
+     int totalPages = uicomponent.getTotalpages(uicomponent.LIST_CATES_WATCHED) ;
+     if(totalPages > 1) {
+     %>
+      <% uicomponent.renderChild(uicomponent.LIST_CATES_WATCHED) ; %>
+   <%}%>
+  <div class="emailAddress">
+    <strong><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</strong> 
+    <a href="mailto:$uicomponent.emailAddress">$uicomponent.emailAddress</a>
+ 	</div>
 		
 		
 </div>

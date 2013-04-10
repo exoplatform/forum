@@ -215,7 +215,10 @@
 					color: @textColor;
 				}
 			.avatarLarge  {
-				.square(70px);
+				.size(auto,70px);
+				.authorName,.authorEmail {
+				  .text-overflow;
+				}
 				img {
 					.square(70px);
 					 border: 1px solid @white;
@@ -243,7 +246,11 @@
 				margin-right: 120px;
 			}
 		}
-		
+		.theContent {
+			ul, ol {
+				margin: 0px 0px 10px 25px;
+			}
+		}	
 }
 
 .boxNum {

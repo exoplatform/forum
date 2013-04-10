@@ -50,7 +50,6 @@ public class BaseForumForm extends BaseUIForm {
 
   public List<Watch>   listWatches = new ArrayList<Watch>();
 
-  private boolean isAddColonInLabel = false;
   /**
    * Get a reference to the forum service
    * @return
@@ -90,23 +89,6 @@ public class BaseForumForm extends BaseUIForm {
      return findComponentById(name);
   }
   
-  @Override
-  public String getLabel(ResourceBundle res, String id) {
-    String label = super.getLabel(res, id);
-    if(isAddColonInLabel && id.indexOf("action.") < 0) {
-      return String.format("%s&nbsp;%s", label, CommonUtils.COLON);
-    }
-    return label;
-  }
-
-  public boolean isAddColonInLabel() {
-    return isAddColonInLabel;
-  }
-
-  public void setAddColonInLabel(boolean isAddColonInLabel) {
-    this.isAddColonInLabel = isAddColonInLabel;
-  }
-
   public UserProfile getUserProfile() {
     if (userProfile == null) {
       try {
@@ -144,6 +126,14 @@ public class BaseForumForm extends BaseUIForm {
 
   protected String getScreenName(String userName) throws Exception {
     return getForumService().getScreenName(userName);
+  }
+  
+  protected boolean getIsDisplayAvatar(String userName) {
+    try {
+      return getForumService().getQuickProfile(userName).getIsDisplayAvatar();
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   protected String getShortScreenName(String screenName) throws Exception {

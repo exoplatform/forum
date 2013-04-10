@@ -1,6 +1,7 @@
 <% 
   def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.submitSearch('uiAnswersSearchBox');");
+  uicomponent.initPlaceholder();
 %>
 
 <div class="uiAnswersSearchBox uiSearchInput pull-right" id="uiAnswersSearchBox">

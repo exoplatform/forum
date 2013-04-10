@@ -17,22 +17,25 @@
 package org.exoplatform.forum.service;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public interface ForumStatisticsService {
 
   /**
-   * increase user count and last member
+   * Increases user count and last member.
+   * 
    * @param userName
    * @throws Exception 
+   * @LevelAPI Platform
    */
   void addMember(String userName) throws Exception;
 
   /**
-   * decrease user count
+   * Decreases user count.
+   * 
    * @param userName
    * @throws Exception
+   * @LevelAPI Platform
    */
   void removeMember(String userName) throws Exception;
 

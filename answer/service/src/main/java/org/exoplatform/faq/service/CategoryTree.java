@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,11 @@ public class CategoryTree {
   private Category category;
 
   private List<CategoryTree> subCategory;
-
+  
+  public CategoryTree() {
+    category = new Category();
+    subCategory = new ArrayList<CategoryTree>();
+  }
 
   public Category getCategory() {
     return category;

@@ -18,22 +18,18 @@ package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryTree;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -43,31 +39,29 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
+ * Created by The eXo Platform SARL 
+ * Author : Ha Mai 
  *          ha.mai@exoplatform.com 
  * Apr 18, 2008 ,1:32:01 PM
  */
+
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/answer/webui/popup/UIAddRelationForm.gtmpl", 
-    events = {
-        @EventConfig(listeners = UIAddRelationForm.SaveActionListener.class), 
-        @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class) 
-    }
-)
-public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
-  protected String            homeCategoryName = "";
+     lifecycle = UIFormLifecycle.class, 
+     template = "app:/templates/answer/webui/popup/UIAddRelationForm.gtmpl", 
+     events = {
+          @EventConfig(listeners = UIAddRelationForm.SaveActionListener.class),
+          @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class) 
+})
+public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent {
+  private List<Question> listQuestion  = new ArrayList<Question>();
 
-  private List<Question>      listQuestion     = new ArrayList<Question>();
+  private List<String>   quesIdsSelect = new ArrayList<String>();
 
-  private List<String>        quesIdsSelect    = new ArrayList<String>();
+  private String         questionId_;
 
-  Map<String, List<Question>> mapQuestion_     = new HashMap<String, List<Question>>();
+  private FAQSetting     faqSetting_   = new FAQSetting();
 
-  private String              questionId_;
-
-  private FAQSetting          faqSetting_      = new FAQSetting();
+  private CategoryTree   categoryTree  = null;
 
   public void activate() {
   }
@@ -75,24 +69,10 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() {
   }
 
-  protected List<String> listCateSelected = new ArrayList<String>();
-
-  private List<Cate>   listCategory_    = new ArrayList<Cate>();
-
-  private static FAQService getFAQService() {
-    return (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-
-  }
-
-  protected List<Cate> getListCate() {
-    return this.listCategory_;
-  }
-
   public UIAddRelationForm() throws Exception {
-    setActions(new String[] { "Save", "Cancel" });
     FAQUtils.getPorletPreference(faqSetting_);
     getFAQService().getUserSetting(FAQUtils.getCurrentUser(), faqSetting_);
-
+    setActions(new String[] { "Save", "Cancel" });
   }
 
   public void setFAQSetting(FAQSetting faqSetting) {
@@ -101,79 +81,89 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 
   public void setRelationed(List<String> listRelation) {
     quesIdsSelect = listRelation;
-    try {
-      homeCategoryName = getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME);
-      setListCate(Utils.CATEGORY_HOME);
-      initPage();
-    } catch (Exception e) {
-      log.error("Set Relationed is fall, exception: ", e);
-    }
   }
 
   public void setQuestionId(String questionId) {
     this.questionId_ = questionId;
-  }
-
-  private void initPage() throws Exception {
-    List<String> listIds = new ArrayList<String>();
-    listIds.add(Utils.CATEGORY_HOME);
-    for (Cate cate : listCategory_) {
-      listIds.add(cate.getCategory().getId());
-    }
-    listQuestion.addAll(getFAQService().getQuickQuestionsByListCatetory(listIds, false));
-    UICheckBoxInput checkQuestion;
-    for (Question question : listQuestion) {
-      if (!question.isApproved() || !question.isActivated()) { continue ; }
-      mapQuestion_.get(question.getCategoryId()).add(question);
-      if (quesIdsSelect.contains(question.getId())) {
-        checkQuestion = new UICheckBoxInput(question.getId(), question.getId(), true).setChecked(true);
-      } else {
-        checkQuestion = new UICheckBoxInput(question.getId(), question.getId(), false);
-      }
-      if (question.getPath().equals(questionId_)){
-        checkQuestion.setDisabled(true);
-      }
-      addChild(checkQuestion);
+    try {
+      this.categoryTree = getFAQService().buildCategoryTree(null);
+    } catch (Exception e) {
+      this.categoryTree = new CategoryTree();
     }
   }
 
-  private void setListCate(String path) throws Exception {
-    this.listCategory_.clear();
-    List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
-    for (Cate cat : getFAQService().listingCategoryTree()) {
-      if (hasPermission(cat, listOfUser)) {
-        listCategory_.add(cat);
-      }
-    }
-    mapQuestion_.put(Utils.CATEGORY_HOME, new ArrayList<Question>());
-    for (Cate cat : listCategory_) {
-      mapQuestion_.put(cat.getCategory().getId(), new ArrayList<Question>());
-    }
-  }
-
-  private boolean hasPermission(Cate cat, List<String> listOfUser) {
-    Category category = cat.getCategory();
-    List<String> moderators = Arrays.asList(category.getModerators());
-    if (Utils.hasPermission(moderators, listOfUser)) {
+  private boolean hasPermission(Category category, List<String> listOfUser) {
+    if(CommonUtils.isEmpty(category.getModerators()) == false && 
+        Utils.hasPermission(Arrays.asList(category.getModerators()), listOfUser)) {
       return true;
     }
-    List<String> userPrivates = Arrays.asList(category.getUserPrivate());
-    if (userPrivates.size() > 0) {
-      return Utils.hasPermission(moderators, listOfUser);
+    if (CommonUtils.isEmpty(category.getUserPrivate()) == false) {
+      return Utils.hasPermission(Arrays.asList(category.getUserPrivate()), listOfUser);
     }
     return true;
   }
-  
-  protected List<Question> getQuestions(String cateId) {
-    return mapQuestion_.get(cateId);
-  }
-  
-  protected CategoryTree getCategoryTree() throws Exception {
-    return getFAQService().buildCategoryTree(null);
+
+  protected String renderCategoryTree() throws Exception {
+    listQuestion.clear();
+    return renderCategoryTree(categoryTree, UserHelper.getAllGroupAndMembershipOfUser(null));
   }
 
-  protected String renderCategoryTree(CategoryTree categoryTree) throws Exception {
-    return FAQUtils.renderQuestionsCategoryTree(categoryTree, questionId_, faqSetting_);
+  private String renderCategoryTree(CategoryTree categoryTree, List<String> listOfUser) throws Exception {
+    StringBuilder builder = new StringBuilder();
+    Category category = categoryTree.getCategory();
+    String categoryId = category.getId();
+    if (hasPermission(category, listOfUser)) {
+      builder.append("<a href=\"javascript:void(0);\"");
+      if (categoryId.equals(Utils.CATEGORY_HOME) == false) {
+        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>")
+               .append(category.getName());
+      } else {
+        String home = this.i18n("UICategoryTree.label.home");
+        builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
+      }
+      builder.append("</a>");
+
+      List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+      List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting_);
+
+      listQuestion.addAll(questions);
+
+      if (categoryTrees.size() > 0 || questions.size() > 0) {
+        builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
+        for (Question question : questions) {
+          if (!questionId_.equals(question.getPath())) {
+            boolean isChecked = false;
+            if (quesIdsSelect.contains(question.getId())) {
+              isChecked = true;
+            }
+            addUIFormInput(new UICheckBoxInput(question.getId(), question.getId(), isChecked));
+            builder.append("<li class=\"node\">")
+                   .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
+                   .append(question.getId())
+                   .append("\" type=\"checkbox\"")
+                   .append((isChecked == true) ? " checked" : "")
+                   .append("/><span>")
+                   .append(question.getQuestion())
+                   .append("</span></span>");
+            builder.append("</li>");
+          }
+        }
+        for (CategoryTree subTree : categoryTrees) {
+          builder.append("<li class=\"node\">");
+          builder.append(renderCategoryTree(subTree, listOfUser));
+          builder.append("</li>");
+        }
+        builder.append("</ul>");
+      }
+    }
+    return builder.toString();
+  }
+
+  private List<Question> getQuestionsByCategoryId(String categoryId, FAQSetting faqSetting) throws Exception {
+    List<Question> listQuestions = new ArrayList<Question>();
+    listQuestions = getFAQService().getAllQuestionsByCatetory(categoryId, faqSetting).getAll();
+    return listQuestions;
   }
 
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
@@ -184,22 +174,25 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
       List<String> listQuestionId = new ArrayList<String>();
       for (Question question : addRelationForm.listQuestion) {
         UICheckBoxInput chkRelated = addRelationForm.getUICheckBoxInput(question.getId());
-        if (chkRelated != null &&  chkRelated.isChecked()) {
+        if (chkRelated != null && chkRelated.isChecked()) {
           listQuestionPath.add(question.getPath());
           listQuestionId.add(question.getId());
         }
       }
       responseForm.setListIdQuesRela(listQuestionId);
-      List<String> contents = getFAQService().getQuestionContents(listQuestionPath);
+      List<String> contents = addRelationForm.getFAQService().getQuestionContents(listQuestionPath);
       responseForm.setListRelationQuestion(contents);
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
+      addRelationForm.listQuestion.clear();
       addRelationForm.cancelChildPopupAction();
     }
   }
 
   static public class CancelActionListener extends EventListener<UIAddRelationForm> {
     public void execute(Event<UIAddRelationForm> event) throws Exception {
-      event.getSource().cancelChildPopupAction();
+      UIAddRelationForm addRelationForm = event.getSource();
+      addRelationForm.listQuestion.clear();
+      addRelationForm.cancelChildPopupAction();
     }
   }
 }

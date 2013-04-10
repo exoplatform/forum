@@ -16,20 +16,12 @@
  */
 package org.exoplatform.answer.webui;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
@@ -40,18 +32,17 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.faq.service.JcrInputProperty;
-import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.user.CommonContact;
+import org.exoplatform.forum.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -65,10 +56,6 @@ import org.exoplatform.web.CacheUserProfileFilter;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.form.UIFormDateTimeInput;
-import org.exoplatform.webui.form.UIFormInputBase;
-import org.exoplatform.webui.form.UIFormMultiValueInputSet;
-import org.exoplatform.webui.form.UIFormUploadInput;
 import org.exoplatform.webui.utils.TimeConvertUtils;
 
 /**
@@ -193,7 +180,7 @@ public class FAQUtils {
       ConversationState state = ConversationState.getCurrent();
       User user = (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
       if (user == null) {
-        user = UserHelper.getOrganizationService().getUserHandler().findUserByName(getCurrentUser());
+        user = UserHelper.getOrganizationService().getUserHandler().findUserByName(UserHelper.getCurrentUser());
       }
       return user;
     } catch (Exception e) {
@@ -224,24 +211,30 @@ public class FAQUtils {
    */
   static public String getFullName(String userName) throws Exception {
     if (userName == null) {
-      return getCurrentUserObject().getFullName();
+      return getUserFullName(getCurrentUserObject());
     }
     try {
       OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
       User user = organizationService.getUserHandler().findUserByName(userName);
-      String fullName = user.getFullName();
-      if (isFieldEmpty(fullName))
-        fullName = userName;
-      return fullName;
+      return getUserFullName(user);
     } catch (Exception e) {
       return getScreenName(userName, "");
     }
   }
 
-  public static String getScreenName(String userName, String fullName) {
-    return (userName.contains(org.exoplatform.faq.service.Utils.DELETED)) ? ("<s>" + ((isFieldEmpty(fullName)) ? (userName.substring(0, userName.indexOf(org.exoplatform.faq.service.Utils.DELETED))) : fullName) + "</s>") : userName;
+  private static String getUserFullName(User user) {
+    String displayName = user.getDisplayName();
+    if (isFieldEmpty(displayName)) {
+      displayName = new StringBuffer(user.getFirstName()).append(" ").append(user.getLastName()).toString();
+    }
+    return displayName;
   }
 
+  public static String getScreenName(String userName, String fullName) {
+    return (userName.contains(Utils.DELETED)) ? ("<s>" + ((isFieldEmpty(fullName)) ? 
+                (userName.substring(0, userName.indexOf(Utils.DELETED))) : fullName) + "</s>") : userName;
+  }
+  
   public static boolean isFieldEmpty(String s) {
     return (s == null || s.trim().length() <= 0) ? true : false;
   }
@@ -261,64 +254,6 @@ public class FAQUtils {
       return false;
     }
     return isInvalid;
-  }
-
-  public static String getResourceBundle(String resourceBundl) {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
-    return res.getString(resourceBundl);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static Map prepareMap(List inputs, Map properties) throws Exception {
-    Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
-    HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>();
-    for (int i = 0; i < inputs.size(); i++) {
-      JcrInputProperty property = null;
-      if (inputs.get(i) instanceof UIFormMultiValueInputSet) {
-        String inputName = ((UIFormMultiValueInputSet) inputs.get(i)).getName();
-        if (!hasMap.containsKey(inputName)) {
-          List<String> values = (List<String>) ((UIFormMultiValueInputSet) inputs.get(i)).getValue();
-          property = (JcrInputProperty) properties.get(inputName);
-          if (property != null) {
-            property.setValue(values.toArray(new String[values.size()]));
-          }
-        }
-        hasMap.put(inputName, property);
-      } else {
-        UIFormInputBase input = (UIFormInputBase) inputs.get(i);
-        property = (JcrInputProperty) properties.get(input.getName());
-        if (property != null) {
-          if (input instanceof UIFormUploadInput) {
-            FileInputStream stream = (FileInputStream) ((UIFormUploadInput) input).getUploadDataAsStream();
-            try {
-              FileChannel fchan = stream.getChannel();
-              long fsize = fchan.size();
-              ByteBuffer buff = ByteBuffer.allocate((int) fsize);
-              fchan.read(buff);
-              buff.rewind();
-              property.setValue(buff.array());
-              buff.clear();
-              fchan.close();
-              stream.close();
-            } catch (Exception e) {
-              log.error("Can not read file because " + e.getCause());
-            }
-          } else if (input instanceof UIFormDateTimeInput) {
-            property.setValue(((UIFormDateTimeInput) input).getCalendar());
-          } else {
-            property.setValue(input.getValue());
-          }
-        }
-      }
-    }
-    Iterator iter = properties.values().iterator();
-    JcrInputProperty property;
-    while (iter.hasNext()) {
-      property = (JcrInputProperty) iter.next();
-      rawinputs.put(property.getJcrPath(), property);
-    }
-    return rawinputs;
   }
 
   public static String getSubString(String str, int max) {
@@ -451,9 +386,9 @@ public class FAQUtils {
   private static String getFormatDate(int dateFormat, Date myDate) {
     if (myDate == null)
       return "";
-    String format = (dateFormat == DateFormat.LONG) ? "EEE,MMM dd,yyyy" : "MM/dd/yyyy";
+    String format = (dateFormat == DateFormat.LONG) ? "EEE, MMM dd, yyyy" : "MM/dd/yyyy";
     try {
-      String userName = getCurrentUser();
+      String userName = UserHelper.getCurrentUser();
       if (!isFieldEmpty(userName)) {
         org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService)
         ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
@@ -463,7 +398,7 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("No forum settings found for date format. Will use format " + format);
     }
-    format = format.replaceAll("D", "E");
+    format = format.replace("EEE,MMM", "EEE, MMM").replaceAll("D", "E");
     return TimeConvertUtils.getFormatDate(myDate, format);
   }
 
@@ -486,23 +421,34 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("Failed to get user avatar of user: " + userName, e);
     }
-    return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+    if (url == null || url.trim().length() < 1) {
+      CommonContact contact = getPersonalContact(userName);
+      if (!isFieldEmpty(contact.getAvatarUrl())) {
+        url = contact.getAvatarUrl();
+      }
+      url = (url == null || url.trim().length() < 1) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+    }
+    return url;
+  }
+  
+  public static CommonContact getPersonalContact(String userId) {
+    try {
+      if (userId.indexOf(Utils.DELETED) > 0)
+        return new CommonContact();
+      ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
+      return provider.getCommonContact(userId);
+    } catch (Exception e) {
+      return new CommonContact();
+    }
   }
 
   public static String getFileSource(FileAttachment attachment) throws Exception {
     DownloadService dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class);
     try {
-      InputStream input = attachment.getInputStream();
-      String fileName = attachment.getName();
-      byte[] imageBytes = null;
-      if (input != null) {
-        imageBytes = new byte[input.available()];
-        input.read(imageBytes);
-        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-        InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-        dresource.setDownloadName(fileName);
+        FAQDownloadResource dresource = new FAQDownloadResource(attachment.getMimeType(), "image");
+        dresource.setFileAttachment(attachment);
+        dresource.setDownloadName(attachment.getName());
         return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-      }
     } catch (Exception e) {
       log.error("Can not get File Source, exception: " + e.getMessage());
     }
@@ -587,7 +533,8 @@ public class FAQUtils {
         builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
+      String home = uiForm.i18n("UICategoryTree.label.home");
+      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
     }
     builder.append("</a>");
 
@@ -608,48 +555,4 @@ public class FAQUtils {
     return builder.toString();
   }
   
-  public static String renderQuestionsCategoryTree(CategoryTree categoryTree, String questionId, FAQSetting faqSetting) throws Exception {
-    StringBuilder builder = new StringBuilder();
-    Category category = categoryTree.getCategory();
-    String categoryId = category.getId();
-    builder.append("<a href=\"javascript:void(0);\"");
-    if(categoryId.equals(Utils.CATEGORY_HOME) == false) {
-      builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
-             .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
-    } else {
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>");
-    }
-    builder.append("</a>");
-    
-    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
-    List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting);
-    if (categoryTrees.size() > 0 || questions.size() > 0) {
-      builder.append("<ul class=\"nodeGroup\" style=\"display: block; \">");
-      for (Question question : questions) {
-        if (!questionId.equals(question.getPath())) {
-          builder.append("<li class=\"node\">")
-                 .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
-                 .append(question.getId())
-                 .append("\" type=\"checkbox\"><span></span></span>")
-                 .append(question.getQuestion());
-          builder.append("</li>");
-        }
-      }
-      for (CategoryTree subTree : categoryTrees) {
-        builder.append("<li class=\"node\">");
-        builder.append(renderQuestionsCategoryTree(subTree, questionId, faqSetting));
-        builder.append("</li>");
-      }
-      builder.append("</ul>");
-    }
-    
-    return builder.toString();
-  }
-  
-  public static List<Question> getQuestionsByCategoryId(String categoryId, FAQSetting faqSetting) throws Exception {
-    List<Question> listQuestions = new ArrayList<Question>();
-    listQuestions = getFAQService().getAllQuestionsByCatetory(categoryId, faqSetting).getAll();
-    return listQuestions;
-  }
-
 }

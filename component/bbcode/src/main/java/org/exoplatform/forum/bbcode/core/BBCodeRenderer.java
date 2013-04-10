@@ -18,7 +18,9 @@ package org.exoplatform.forum.bbcode.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -47,6 +49,8 @@ public class BBCodeRenderer implements Renderer {
   protected BBCodeProvider   bbCodeProvider;
 
   private static final Log   log              = ExoLogger.getLogger(BBCodeRenderer.class);
+  
+  private static Map<String, String> dataStyleList = new HashMap<String, String>();
 
   public BBCodeRenderer() {
     bbCodeProvider = new BuiltinBBCodeProvider();
@@ -104,8 +108,12 @@ public class BBCodeRenderer implements Renderer {
           String sourceSyntax = Syntax.CONFLUENCE_1_0.toIdString();
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(str);
-          param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
+          try {
+            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
+            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
+          } catch (Exception e) {
+            continue;
+          }
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
         }
@@ -165,8 +173,12 @@ public class BBCodeRenderer implements Renderer {
           }
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(param);
-          param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
+          try {
+            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
+            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
+          } catch (Exception e) {
+            continue;
+          }
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
           param = StringUtils.replace(param, "{option}", option);
@@ -199,13 +211,10 @@ public class BBCodeRenderer implements Renderer {
         if (str_.lastIndexOf("</li><li>") > 0) {
           str_ = str_ + "</li>";
         }
-        if (str_.indexOf("<br/>") >= 0) {
-          str_ = StringUtils.replace(str_, "<br/>", "");
-        }
-        if (str_.indexOf("<p>") >= 0) {
-          str_ = StringUtils.replace(str_, "<p>", "");
-          str_ = StringUtils.replace(str_, "</p>", "");
-        }
+
+        str_ = cleanHTMLTagInTagList(str_);
+
+        str_ = StringUtils.replace(str_, "<li>", "<li " + getStyleList("o") + ">");
         s = StringUtils.replace(s, "[list]" + str + "[/list]", "<ul>" + str_ + "</ul>");
       } catch (Exception e) {
         continue;
@@ -230,17 +239,14 @@ public class BBCodeRenderer implements Renderer {
         if (str_.lastIndexOf("</li><li>") > 0) {
           str_ = str_ + "</li>";
         }
-        if (str_.indexOf("<br/>") >= 0) {
-          str_ = StringUtils.replace(str_, "<br/>", "");
-        }
-        if (str_.indexOf("<p>") >= 0) {
-          str_ = StringUtils.replace(str_, "<p>", "");
-          str_ = StringUtils.replace(str_, "</p>", "");
-        }
+
+        str_ = cleanHTMLTagInTagList(str_);
+
         if (" 1 i I a A ".indexOf(type) > 0) {
+          str_ = StringUtils.replace(str_, "<li>", "<li " + getStyleList(type) + ">");
           s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\"" + type + "\">" + str_ + "</ol>");
         } else {
-          str_ = StringUtils.replace(str_, "<li>", "<li type=\"" + type + "\">");
+          str_ = StringUtils.replace(str_, "<li>", "<li style=\"list-style-type:" + type + ";\">");
           s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ul>" + str_ + "</ul>");
         }
       } catch (Exception e) {
@@ -248,6 +254,30 @@ public class BBCodeRenderer implements Renderer {
       }
     }
     return s;
+  }
+  
+  private String getStyleList(String type) {
+    if(dataStyleList.isEmpty()) {
+      buildStyleList();
+    }
+    return dataStyleList.get(type);
+  }
+  
+  private void buildStyleList() {
+    dataStyleList.put("o", "style=\"list-style-type:disc;\"");
+    dataStyleList.put("1", "style=\"list-style-type:decimal;\"");
+    dataStyleList.put("i", "style=\"list-style-type:lower-roman;\"");
+    dataStyleList.put("I", "style=\"list-style-type:upper-roman;\"");
+    dataStyleList.put("a", "style=\"list-style-type:lower-alpha;\"");
+    dataStyleList.put("A", "style=\"list-style-type:upper-alpha;\"");
+  }
+  
+  public String cleanHTMLTagInTagList(String str) {
+    str = str.replaceAll("<br.*?>", "");
+    str = str.replaceAll("</?p>", "");
+    str = str.replaceAll("</div>", "");
+    str = str.replaceAll("<div.*?>", "");
+    return str;
   }
 
   public List<BBCode> getBbcodes() {

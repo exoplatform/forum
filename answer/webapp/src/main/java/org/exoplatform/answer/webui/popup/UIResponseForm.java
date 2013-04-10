@@ -79,7 +79,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private static final String SHOW_ANSWER       = "QuestionShowAnswer";
 
-  private static final String IS_APPROVED       = "IsApproved";
+  private static final String IS_APPROVED       = "QuestionApproved";
 
   private Question            question_         = null;
 
@@ -155,7 +155,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     setQuestionId(question, language, answer.getApprovedAnswers());
     mapAnswers.clear();
     mapAnswers.put(answer.getLanguage(), answer);
-    inputResponseQuestion_.setValue(answer.getResponses());
+    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(answer.getResponses()));
     listLanguageToReponse.clear();
     listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
@@ -225,7 +225,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
-    return renderHelper.renderQuestion(question);
+    return CommonUtils.decodeSpecialCharToHTMLnumber(renderHelper.renderQuestion(question));
   }
 
   protected String getValue(String id) {
@@ -343,7 +343,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIResponseForm responseForm = event.getSource();
       String language = responseForm.questionLanguages_.getValue();
       String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
-      responseQuestionContent = CommonUtils.encodeSpecialCharInContent(responseQuestionContent);
+      responseQuestionContent = CommonUtils.encodeSpecialCharInSearchTerm(responseQuestionContent);
       Answer answer;
       if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if (responseForm.mapAnswers.containsKey(language)) {
@@ -455,7 +455,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
         if (popupAction != null) {
           popupAction.deActivate();
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
       }
     }
   }
@@ -495,7 +495,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       if (ValidatorDataInput.fckContentIsNotEmpty(responseContent)) {
         if (responseForm.mapAnswers.containsKey(responseForm.currentLanguage)) {
           answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
-          answer.setResponses(responseContent);
+          answer.setResponses(CommonUtils.encodeSpecialCharInSearchTerm(responseContent));
         } else {
           answer = new Answer();
           answer.setNew(true);

@@ -25,6 +25,11 @@ import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.application.RequestNavigationData;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.social.common.router.ExoRouter;
+import org.exoplatform.social.common.router.ExoRouter.Route;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
@@ -54,15 +59,21 @@ public class UIFAQPortlet extends UIPortletApplication {
   }
   
   public String getDisplaySpaceName() {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences pref = pcontext.getRequest().getPreferences();
-      String url;
-      if ((url = pref.getValue(SpaceUtils.SPACE_URL, null)) != null) {
-        SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
-        Space space = sService.getSpaceByUrl(url);
-        return space.getDisplayName();
-      }
-      return CommonUtils.AMP_SPACE;
+    PortalRequestContext plcontext = Util.getPortalRequestContext();
+    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
+    Route route = ExoRouter.route(requestPath);
+    if (route == null) {
+      return null;
+    }
+    //
+    String spacePrettyName = route.localArgs.get("spacePrettyName");
+
+    if (spacePrettyName != null) {
+      SpaceService sService = getApplicationComponent(SpaceService.class);
+      Space space = sService.getSpaceByPrettyName(spacePrettyName);
+      return (space != null) ? space.getDisplayName() : CommonUtils.AMP_SPACE;
+    }
+    return CommonUtils.AMP_SPACE;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {

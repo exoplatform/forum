@@ -7,6 +7,7 @@
   String [] scripts = ["eXo.forum.UIForumPortlet.setEnableInput();", 
                        "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;"];
   ForumUtils.addScripts(null, null, scripts);
+  uicomponent.initPlaceholder();
 %>
 <div class="uiModeratorManagementForm">
   <% uiform.begin() %>

@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
 
@@ -192,10 +193,9 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    context.getJavascriptManager().require("SHARED/ForumDateTimePicker", "dateTimePicker");
-    
     Writer w = context.getWriter();
-    w.write("<input type=\"text\" class=\"DateTimeInput\" name=\"");
+    w.write("<div class=\"dateTimeInputContainer pull-left\" id=\"DateTime" + getName() + "\">");
+    w.write("<input type=\"text\" class=\"dateTimeInput\" name=\"");
     w.write(getName());
     w.write("\" id=\"");
     w.write(getId());
@@ -206,8 +206,10 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
       w.write('\'');
     }
     renderHTMLAttributes(w);
-    w.write("/>");
-    w.write("<div class='CalendarIcons' lang='" + getLang() + "' fistweekday='" + getFirstDayOfWeek() + "' format='" + getFormatStyle() + "' onclick='eXo.forum.UIDateTimePicker.init(this,");
-    w.write(String.valueOf(isDisplayTime_) + ", event);' title='" + titleShowCalendar + "'><span></span></div>");
+    w.write("title=\"" + titleShowCalendar + "\" rel=\"tooltip\" data-placement=\"bottom\"/>");
+    w.write("<div style=\"display:none\" class=\"dataInfo\" data-lang=\"" + getLang() + "\" data-fistweekday=\"" + getFirstDayOfWeek() + "\" data-format=\"" + getFormatStyle() + "\"><span></span></div>");
+    w.write("</div>");
+    
+    ForumUtils.addScripts("ForumDateTimePicker", "forumDateTimePicker", "forumDateTimePicker.init('DateTime" + getName() + "');");
   }
 }

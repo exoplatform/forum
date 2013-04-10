@@ -9,7 +9,7 @@
 												<%fieldName = uicomponent.getLabel(field.getName());%>										
 													<label class="control-label">
 														<%if(fieldName != null && fieldName.length() > 0) {%> 
-															<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %></label>
+															<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %>:</label>
 														<%}%>
 													</label>
 													<div class="controls">

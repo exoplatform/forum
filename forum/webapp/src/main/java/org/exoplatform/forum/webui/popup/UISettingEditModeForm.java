@@ -61,8 +61,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
 
   public static final String       FIELD_FORUM_PREFERENCE_TAB   = "ForumPreference";
 
-  public static final String       FIELD_ISFORUMJUMP_CHECKBOX   = "isShowForumJump";
-
   public static final String       FIELD_ISPOLL_CHECKBOX        = "IsShowPoll";
 
   public static final String       FIELD_ISMODERATOR_CHECKBOX   = "isShowModerator";
@@ -77,14 +75,16 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
 
   public static final String       FIELD_ISUSEAJAX_CHECKBOX     = "isUseAjax";
 
-  private boolean                  isSave                       = false;
-
   private int                      tabId                        = 0;
 
   private static List<String>      listCategoryinv              = new ArrayList<String>();
 
   private static List<String>      listforuminv                 = new ArrayList<String>();
 
+  private int                      allForumSize                 = 0;
+
+  private int                      allCategorySize              = 0;
+  
   private SettingPortletPreference portletPreference;
 
   public UISettingEditModeForm() {
@@ -92,7 +92,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     UIForumInputWithActions EnabledPanel = new UIForumInputWithActions(FIELD_SHOW_HIDDEN_TAB);
     UIForumInputWithActions ForumPreference = new UIForumInputWithActions(FIELD_FORUM_PREFERENCE_TAB);
 
-    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX, FIELD_ISFORUMJUMP_CHECKBOX, true);
     UICheckBoxInput IsShowPoll = new UICheckBoxInput(FIELD_ISPOLL_CHECKBOX, FIELD_ISPOLL_CHECKBOX, true);
     UICheckBoxInput isShowModerator = new UICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX, FIELD_ISMODERATOR_CHECKBOX, true);
     UICheckBoxInput isShowQuickReply = new UICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX, FIELD_ISQUICKREPLY_CHECKBOX, true);
@@ -101,7 +100,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     UICheckBoxInput isShowStatistic = new UICheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX, FIELD_ISSTATISTIC_CHECKBOX, true);
     UICheckBoxInput isUseAjax = new UICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX, FIELD_ISUSEAJAX_CHECKBOX, true);
 
-    EnabledPanel.addUIFormInput(isShowForumJump);
     EnabledPanel.addUIFormInput(IsShowPoll);
     EnabledPanel.addUIFormInput(isShowModerator);
     EnabledPanel.addUIFormInput(isShowQuickReply);
@@ -120,7 +118,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     UIForumInputWithActions EnabledPanel = getChildById(FIELD_SHOW_HIDDEN_TAB);
     UIForumInputWithActions ForumPreference = getChildById(FIELD_FORUM_PREFERENCE_TAB);
     portletPreference = ForumUtils.getPorletPreference();
-    EnabledPanel.getUICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).setChecked(portletPreference.isShowForumJump());
     EnabledPanel.getUICheckBoxInput(FIELD_ISPOLL_CHECKBOX).setChecked(portletPreference.isShowPoll());
     EnabledPanel.getUICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).setChecked(portletPreference.isShowQuickReply());
     EnabledPanel.getUICheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).setChecked(portletPreference.isShowIconsLegend());
@@ -129,7 +126,9 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     EnabledPanel.getUICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
 
     ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
-    isSave = false;
+    UIForumPortlet  forumPortlet = getParent();
+    listCategoryinv = forumPortlet.getInvisibleCategories();
+    listforuminv = forumPortlet.getInvisibleForums();
   }
 
   protected boolean tabIsSelected(int tabId) {
@@ -168,23 +167,27 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
         log.debug(String.format("Failed to check permission for user %s", userId), e);
       }
     }
-    if (!isSave) {
-      listCategoryinv = ((UIForumPortlet) this.getParent()).getInvisibleCategories();
-    }
     for (Category category : categoryList) {
       String categoryId = category.getId();
-      boolean isCheck = false;
-      if (listCategoryinv.contains(categoryId) || listCategoryinv.isEmpty())
-        isCheck = true;
+      boolean isCheck = isCategoryChecked(categoryId);
       if (getUICheckBoxInput(categoryId) != null) {
         getUICheckBoxInput(categoryId).setChecked(isCheck);
       } else {
         UICheckBoxInput boxInput = new UICheckBoxInput(categoryId, categoryId, isCheck);
         boxInput.setChecked(isCheck);
         addUIFormInput(boxInput);
+        ++allCategorySize;
       }
     }
     return categoryList;
+  }
+  
+  private boolean isCategoryChecked(String categoryId) {
+    return (listCategoryinv.contains(categoryId) == true || listCategoryinv.isEmpty());
+  }
+
+  private boolean isForumChecked(String forumId) {
+    return (listforuminv.contains(forumId) == true || listCategoryinv.isEmpty());
   }
 
   protected List<Forum> getForumList(String categoryId) throws Exception {
@@ -198,19 +201,17 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     } catch (Exception e) {
       forumList = new ArrayList<Forum>();
     }
-    if (!isSave)
-      listforuminv = ((UIForumPortlet) this.getParent()).getInvisibleForums();
+      
     for (Forum forum : forumList) {
       String forumId = forum.getId();
-      boolean isCheck = false;
-      if (listforuminv.contains(forumId) || listCategoryinv.isEmpty())
-        isCheck = true;
+      boolean isCheck = isForumChecked(forumId);
       if (getUICheckBoxInput(forumId) != null) {
         getUICheckBoxInput(forumId).setChecked(isCheck);
       } else {
         UICheckBoxInput boxInput = new UICheckBoxInput(forumId, forumId, isCheck);
         boxInput.setChecked(isCheck);
         addUIFormInput(boxInput);
+        ++allForumSize;
       }
     }
     return forumList;
@@ -231,8 +232,16 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
         }
       }
     }
-    listforuminv = new ArrayList<String>(forumIds);
-    listCategoryinv = new ArrayList<String>(categoryIds);
+    if(categoryIds.size() != allCategorySize) {
+      listCategoryinv = new ArrayList<String>(categoryIds);
+      listforuminv = new ArrayList<String>(forumIds);
+    } else {
+      listCategoryinv.isEmpty();
+      listforuminv.isEmpty();
+      if(forumIds.size() != allForumSize) {
+        listforuminv = new ArrayList<String>(forumIds);
+      }
+    }
   }
 
   static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
@@ -240,7 +249,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
       UISettingEditModeForm editModeForm = event.getSource();
       UIForumInputWithActions EnabledPanel = editModeForm.getChildById(FIELD_SHOW_HIDDEN_TAB);
 
-      editModeForm.portletPreference.setShowForumJump((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).getValue());
       editModeForm.portletPreference.setShowPoll((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISPOLL_CHECKBOX).getValue());
       editModeForm.portletPreference.setShowQuickReply((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).getValue());
       editModeForm.portletPreference.setShowIconsLegend((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).getValue());
@@ -253,7 +261,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
       editModeForm.portletPreference.setUseAjax((Boolean) ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).getValue());
 
       try {
-        editModeForm.isSave = true;
         editModeForm.setNewListActive();
         editModeForm.portletPreference.setInvisibleCategories(listCategoryinv);
         editModeForm.portletPreference.setInvisibleForums(listforuminv);
@@ -274,7 +281,6 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
       UISettingEditModeForm editModeForm = event.getSource();
       if (editModeForm.tabId == 0) {
         editModeForm.setNewListActive();
-        editModeForm.isSave = true;
       }
       editModeForm.tabId = Integer.parseInt(id);
       event.getRequestContext().addUIComponentToUpdateByAjax(editModeForm.getParent());

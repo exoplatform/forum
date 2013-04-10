@@ -39,6 +39,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -233,7 +234,7 @@ public class UICategories extends BaseUIFAQForm {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
       }
       if (currentCategoryName == null || currentCategoryName.trim().length() < 1){
-        currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
+        currentCategoryName = WebUIUtils.getLabel(null, "UIBreadcumbs.label.categories");
       }
     }
     isSwap = false;

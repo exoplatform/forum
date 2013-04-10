@@ -1,4 +1,4 @@
-(function(utils, gj) {
+(function(utils, $) {
   var SearchTagName = {
     key : {
       ENTER : 13,
@@ -14,58 +14,58 @@
     request : null,
     data : {},
     lastkey : '',
-    init : function() {
-      var jparent = gj('#AddTagId');
+    init : function(id) {
+      var component = $('#' + id);
+      var jparent = component.find('.addTagContainer');
       if (jparent.exists()) {
         SearchTagName.jparent = jparent;
-        SearchTagName.jcontainer = jparent.findId('#searchTagName');
+        SearchTagName.jcontainer = jparent.find('.searchTagName:first');
         SearchTagName.jcontainer.hide();
-        SearchTagName.jInputSearch = jparent.findId(SearchTagName.jcontainer
-            .attr('inputId'));
+        SearchTagName.jInputSearch = jparent.find('input#'+SearchTagName.jcontainer.attr('data-inputid'));
         SearchTagName.lastkey = '';
         if (SearchTagName.jInputSearch.exists()) {
           SearchTagName.jInputSearch.val('');
-          SearchTagName.jInputSearch.on('keydown',
-              SearchTagName.searchTagNameWrapper);
-          SearchTagName.jInputSearch.on('click', SearchTagName.submitInput);
-          var buttonSearch = gj('#ButtonSearch');
-          if (buttonSearch.exists()) {
-            buttonSearch.on('click', SearchTagName.submitInput);
+          SearchTagName.jInputSearch.on('keyup', SearchTagName.onKeyControl);
+          SearchTagName.jInputSearch.on('click', SearchTagName.openAddTag);
+          var tagAction = component.find('.addTagAction');
+          if (tagAction.exists()) {
+            tagAction.on('click', function(e)  {
+              SearchTagName.openAddTag(e);
+              SearchTagName.jInputSearch.focus();
+            });
           }
         }
       }
     },
-    submitInput : function(event) {
+    openAddTag : function(event) {
       var str = String(SearchTagName.jInputSearch.val());
-      if (SearchTagName.jcontainer.css('visibility') === 'hidden'
-          && str.trim().length === 0) {
+      if (SearchTagName.jcontainer.css('display') === 'none' && str.trim().length === 0) {
         SearchTagName.searchTagName('onclickForm');
       }
     },
-    searchTagNameWrapper : function(event) {
+    onKeyControl : function(event) {
       var key = utils.getKeynum(event);
       var KEY = SearchTagName.key;
       if (key == KEY.ENTER) {
         var str = String(SearchTagName.jInputSearch.val()).trim();
-        if (SearchTagName.jcontainer.css('visibility') === 'visible') {
-          SearchTagName.jInputSearch[0].focus();
+        if (SearchTagName.jcontainer.css('display') === 'none') {
           SearchTagName.jcontainer.hide();
           SearchTagName.searchTagName(' ');
         } else if (str.length > 0) {
-          eval(String(SearchTagName.jcontainer.attr('linkSubmit')).replace(
-              'javascript:', ''));
+          eval(String(SearchTagName.jcontainer.attr('data-linksubmit')).replace('javascript:', ''));
         }
         return;
       }
       if (key == KEY.UP || key == KEY.DOWN) {
-        var items = SearchTagName.jparent.find('div.TagNameItem');
+        var ul = SearchTagName.jparent.find('ul:first');
+        var items = ul.find('li');
         if (items.exists()) {
-          var itemSl = SearchTagName.jparent.find('div.Selected:first');
+          var itemSl = ul.find('li.selected:first');
           if (itemSl.exists()) {
             var t = items.length;
             for ( var i = 0; i < t; i++) {
               if (items.eq(i)[0] === itemSl[0]) {
-                itemSl.removeClass('Selected');
+                itemSl.removeClass('selected');
                 if (i == 0 && key == KEY.UP) {
                   SearchTagName.setValueInput(items.eq(t - 1));
                 } else if (i == (t - 1) && key == KEY.DOWN) {
@@ -83,19 +83,23 @@
         }
       } else if (key > KEY.DOWN || key == KEY.BACK || key == KEY.SPACE) {
         var str = String(SearchTagName.jInputSearch.val());
-        if ((key == KEY.BACK || key == KEY.SPACE)
-            && (str.trim().length == 0 || str.length == 1)) {
+        if ((key == KEY.BACK && str.trim().length == 0) || key == KEY.SPACE) {
           SearchTagName.searchTagName('onclickForm');
         } else {
-          window.setTimeout(SearchTagName.searchTagNameTimeout, 100);
+          var val = String(SearchTagName.jInputSearch.val()).trim();
+          if(val.indexOf(' ') > 0 ) {
+            val = val.substring(val.indexOf(' '));
+          }
+          SearchTagName.searchTagName(val);
         }
       }
     },
+
     setValueInput : function(elm) {
-      elm.addClass('Selected');
+      elm.addClass('selected');
       var str = String(SearchTagName.jInputSearch.val());
       str = str.substring(0, str.lastIndexOf(" "));
-      var value = String(elm.html());
+      var value = String(elm.text());
       value = value.substring(0, value.indexOf(" "));
       if (str.length == 0)
         str = value;
@@ -103,9 +107,7 @@
         str = str + " " + value;
       SearchTagName.jInputSearch.val(str);
     },
-    searchTagNameTimeout : function() {
-      SearchTagName.searchTagName(SearchTagName.jInputSearch.val());
-    },
+
     searchTagName : function(keyword) {
       // Get data from service, url: /ks/forum/filterTagNameForum/{strTagName}/
       keyword = String(keyword);
@@ -117,82 +119,56 @@
         return;
       }
       if (keyword.trim().length > 0) {
-        var userAndTopicId = SearchTagName.jcontainer.attr("userAndTopicId");
-        var restPath = SearchTagName.jcontainer.attr("restPath");
+        var userAndTopicId = SearchTagName.jcontainer.attr("data-userandtopicid");
+        var restPath = SearchTagName.jcontainer.attr("data-restpath");
         if (userAndTopicId) {
-          var url = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId
-              + '/' + keyword + '/';
-          SearchTagName.request = gj.getJSON(url);
-          setTimeout(SearchTagName.processing, 200);
-          SearchTagName.lastkey = keyword;
+          var restUrl = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword ;
+          $.ajax({
+            type: "GET",
+            url: restUrl
+          }).complete(function (jqXHR) {
+            if (jqXHR.readyState === 4) {
+              SearchTagName.data = $.parseJSON(jqXHR.responseText);
+              if (SearchTagName.data.jsonList) {
+                SearchTagName.updateTagList();
+              }
+            }
+          });
         }
       } else {
         SearchTagName.jcontainer.hide();
         SearchTagName.lastkey = '';
-        SearchTagName.jcontainer.css('visibility', 'hidden');
       }
     },
-    processing : function() {
-      var txt = String(SearchTagName.request.responseText);
-      if (txt != 'undefined' && txt.trim().length > 0) {
-        SearchTagName.data = gj.parseJSON(txt);
-        if (SearchTagName.data.jsonList) {
-          SearchTagName.updateIpBanList();
-        }
-      }
-    },
-    updateIpBanList : function() {
+
+    updateTagList : function() {
+      var ul = SearchTagName.jparent.find('ul:first');
       // Remove all old items
-      SearchTagName.jcontainer.find('.TagNameItem').remove();
+      ul.empty();
       // Fill up with new list
-      var t = 0;
-      var length_ = SearchTagName.data.jsonList.length;
-      for ( var i = 0; i < length_; i++) {
-        SearchTagName.jcontainer.append(SearchTagName
-            .buildItemNode(SearchTagName.data.jsonList[i].ip));
-        t = 1;
+      SearchTagName.jcontainer.hide();
+      var items = SearchTagName.data.jsonList;
+      for(var i = 0; i < items.length; ++i){
+        var li = $('<li></li>');
+        li.on('mousedown mouseup', utils.cancelEvent)
+        .on('mouseover', function(e) {
+          utils.cancelEvent(e);
+          var thiz = $(this);
+          thiz.parents('ul:first').find('li').removeClass('selected');
+          thiz.addClass('selected');
+        })
+        .on('click', function(e) {
+          SearchTagName.setValueInput($(this));
+          SearchTagName.jcontainer.hide();
+          utils.cancelEvent(e);
+        });
+        var a = $('<a href="javascript:void(0);"></a>')
+        a.html(items[i].ip);
+        li.append(a);
+        ul.append(li);
       }
-      if (t == 1) {
-        SearchTagName.jcontainer.css('visibility', 'visible');
-        SearchTagName.jcontainer.show(300);
-      } else {
-        SearchTagName.jcontainer.hide(300);
-        SearchTagName.jcontainer.css('visibility', 'hidden');
-      }
-    },
-    buildItemNode : function(ip) {
-      var itemNode = gj('<div></div>').addClass('TagNameItem').html(ip);
-      itemNode.on('click', function(event) {
-        var vl = ip.substring(0, ip.indexOf(' '));
-        var str = String(SearchTagName.jInputSearch.val());
-        str = str.substring(0, str.lastIndexOf(' '))
-        if (str.length == 0)
-          str = vl;
-        else
-          str += ' ' + vl;
-        SearchTagName.jInputSearch.val(str);
-        SearchTagName.jInputSearch.focus();
-        SearchTagName.jcontainer.hide();
-        SearchTagName.searchTagName(' ');
-      });
-      itemNode.on('mouseover', SearchTagName.mouseOveEvent);
-      itemNode.on('focus', SearchTagName.mouseOveEvent);
-      itemNode.on('mouseout', SearchTagName.mouseOutEvent);
-      itemNode.on('blur', SearchTagName.mouseOutEvent);
-      return itemNode;
-    },
-    mouseOveEvent : function() {
-      if (gj(this).hasClass('Selected')) {
-        gj(this).attr('class', 'TagNameItem OverItem Slect');
-      } else {
-        gj(this).attr('class', 'TagNameItem OverItem');
-      }
-    },
-    mouseOutEvent : function() {
-      if (gj(this).hasClass('Slect')) {
-        gj(this).attr('class', 'TagNameItem Selected');
-      } else {
-        gj(this).attr('class', 'TagNameItem');
+      if(items.length > 0) {
+        SearchTagName.jcontainer.show();
       }
     }
   };

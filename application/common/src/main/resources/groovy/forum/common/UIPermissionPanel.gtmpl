@@ -5,25 +5,28 @@
   String eventURL = uicomponent.event("EnterPermission");
   eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
   
-  rcontext.getJavascriptManager().require("SHARED/jquery")
-					.addScripts("\$(\"#$uicomponent.id #PermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + \$(this).val(); javascript:ajaxGet(eventURL); });");
+  def requireJS = rcontext.getJavascriptManager().require("SHARED/jquery", "gj");
+  requireJS.addScripts("gj(\"#$uicomponent.id #UIPermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + gj(this).val(); javascript:ajaxGet(eventURL); });");
+  requireJS.require("SHARED/bts_tooltip").addScripts("gj('#$uicomponent.id').find('[rel=tooltip]').tooltip();");
+
 %>
 
 <div id="$uicomponent.id">
   <%
-    uicomponent.renderChild("PermissionGrid");
-    uicomponent.renderChild("PermissionInput");
+    uicomponent.initPlaceholder();
+    uicomponent.renderChild("UIPermissionGrid");
+    uicomponent.renderChild("UIPermissionInput");
   %>
 	<span style="vertical-align: top">
-		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>">
+		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIUserSelector");%>">
 			<i class="uiIconUser uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>">
+		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIMemberShipSelector");%>">
 			<i class="uiIconMembership uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>">
+		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector");%>">
 			<i class="uiIconGroup uiIconLightGray"></i>
 		</a>
-		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button">Add</button>
+		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add");%></button>
 	</span>
 </div>

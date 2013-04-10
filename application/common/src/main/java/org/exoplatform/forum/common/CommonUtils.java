@@ -347,6 +347,22 @@ public class CommonUtils {
     String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
     return encodeSpecialCharToHTMLnumber(s, charIgnore, false);
   }
+  
+  public static boolean isContainSpecialCharacter(String s) {
+    if (isEmpty(s)) {
+      return false;
+    }
+    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    int i = 0;
+    while (i < s.length()) {
+      char c = s.charAt(i);
+      if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
+        return true;
+      }
+      i++;
+    }
+    return false;
+  }
 
   /**
    * Encode special character to html number. Ex: '/' --> &#47; 
@@ -417,9 +433,9 @@ public class CommonUtils {
       }
       // Tokens by Entity code.
       tokens.add(LESS_THAN);
-      charcodes.put(LESS_THAN, ">");
+      charcodes.put(LESS_THAN, "<");
       tokens.add(GREATER_THAN);
-      charcodes.put(GREATER_THAN, "<");
+      charcodes.put(GREATER_THAN, ">");
       tokens.add(QUOT);
       charcodes.put(QUOT, "\"");
       tokens.add(AMP_SPACE);

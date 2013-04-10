@@ -18,14 +18,18 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -47,12 +51,19 @@ import org.exoplatform.webui.form.UIFormStringInput;
     }
 )
 public class UIQuickSearchForm extends BaseUIForm {
-  final static private String FIELD_SEARCHVALUE = "inputValue";
+  final static private String FIELD_SEARCHVALUE  = "inputValue";
+
+  private static final String SearchDefaultValue = "UIQuickSearchForm.label.Search";
 
   public UIQuickSearchForm() throws Exception {
-    addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null));
+    UIFormStringInput form = new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null);
+    addChild(form);
   }
-
+  
+  protected void initPlaceholder() throws Exception {
+    ((UIFormStringInput)getChildById(FIELD_SEARCHVALUE)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+  }
+  
   static public class SearchActionListener extends EventListener<UIQuickSearchForm> {
     public void execute(Event<UIQuickSearchForm> event) throws Exception {
       UIQuickSearchForm uiForm = event.getSource();
@@ -92,7 +103,7 @@ public class UIQuickSearchForm extends BaseUIForm {
         categories.setIsRenderChild(true);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
-        listSearchEvent.setListSearchEvent(list, breadcumbs.getLastPath());
+        listSearchEvent.setListSearchEvent(text, list, breadcumbs.getLastPath());
         breadcumbs.setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {

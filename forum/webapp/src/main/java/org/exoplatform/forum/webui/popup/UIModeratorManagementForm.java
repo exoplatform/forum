@@ -34,6 +34,9 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
@@ -164,6 +167,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   private boolean             isViewSearchUser                   = false;
 
   private UIForumPageIterator pageIterator                       = null;
+  
+  private static final String SearchDefaultValue                 = "UIModeratorManagementForm.label.Search";
 
   public UIModeratorManagementForm() throws Exception {
     pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator");
@@ -178,6 +183,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     setAddColonInLabel(true);
   }
 
+  protected void initPlaceholder() throws Exception {
+    ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+  }
+  
   public void setValueSearch(String value) {
     this.valueSearch = value;
   }
@@ -189,7 +198,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   private boolean isAdmin(String userId) throws Exception {
-    return getForumService().isAdminRole(userId);
+    return getForumService().isAdminRoleConfig(userId);
   }
 
   protected boolean getIsBanned(UserProfile userProfile) throws Exception {
@@ -205,12 +214,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   @SuppressWarnings("unchecked")
   private void setListUserProfile() throws Exception {
+    this.userProfiles =  new CopyOnWriteArrayList<UserProfile>();
     if (valueSearch == null || valueSearch.trim().length() < 1) {
       int page = pageIterator.getPageSelected();
-      this.userProfiles = this.userPageList.getPage(page);
+      this.userProfiles.addAll(this.userPageList.getPage(page));
       pageIterator.setSelectPage(userPageList.getCurrentPage());
     } else {
-      this.userProfiles = this.userPageList.getpage(this.valueSearch);
+      this.userProfiles.addAll(this.userPageList.getpage(this.valueSearch));
       pageIterator.setSelectPage(this.userPageList.getCurrentPage());
       valueSearch = null;
     }
@@ -235,9 +245,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         this.setListUserProfile();
       }
     }
-    if (userProfiles == null)
-      userProfiles = new ArrayList<UserProfile>();
-    return this.userProfiles;
+    if (userProfiles == null){
+      return new ArrayList<UserProfile>();
+    }
+    return userProfiles;
   }
 
   private UserProfile getUserProfile(String userId) throws Exception {
@@ -265,13 +276,34 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   public void deActivate() {
   }
 
-  private String stringProcess(List<String> values) {
+  private String stringForumProcess(List<String> values) {
     StringBuilder outPut = new StringBuilder();
     if (!values.isEmpty()) {
       for (String value : values) {
         if (!ForumUtils.isEmpty(value)) {
           if (value.indexOf('(') > 0) {
-            outPut.append(value.substring(0, value.lastIndexOf('(')) + "\n");
+            String forumSubPath = value.substring(value.lastIndexOf('(')).replace("(", "");
+            String categoryId = forumSubPath.split("/")[0];
+            String forumId = forumSubPath.split("/")[1];
+            Forum forum = getForumService().getForum(categoryId, forumId);
+            outPut.append(forum.getForumName() + "\n");
+          }
+        }
+      }
+    }
+    return outPut.toString();
+  }
+  
+  private String stringCategoryProcess(List<String> values) {
+    StringBuilder outPut = new StringBuilder();
+    if (!values.isEmpty()) {
+      for (String value : values) {
+        if (!ForumUtils.isEmpty(value)) {
+          if (value.indexOf('(') > 0) {
+            String forumSubPath = value.substring(value.lastIndexOf('(')).replace("(", "");
+            String categoryId = forumSubPath.split("/")[0];
+            Category category = getForumService().getCategory(categoryId);
+            outPut.append(category.getCategoryName() + "\n");
           }
         }
       }
@@ -325,14 +357,14 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   public void setModForunValues(List<String> values) {
     this.listModerate = values;
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM);
-    String value = stringProcess(values);
+    String value = stringForumProcess(values);
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value);
   }
 
   public void setModCateValues(List<String> values) {
     this.listModCate = values;
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM);
-    String value = stringProcess(values);
+    String value = stringCategoryProcess(values);
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE).setValue(value);
   }
 
@@ -371,13 +403,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
     List<String> values = Arrays.asList(userProfile.getModerateForums());
     this.listModerate = values;
-    moderateForums.setValue(stringProcess(values));
+    moderateForums.setValue(stringForumProcess(values));
     moderateForums.setReadOnly(true);
 
     UIFormTextAreaInput moderateCategorys = new UIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE, null);
     List<String> valuesCate = Arrays.asList(userProfile.getModerateCategory());
     this.listModCate = valuesCate;
-    moderateCategorys.setValue(stringProcess(valuesCate));
+    moderateCategorys.setValue(stringCategoryProcess(valuesCate));
     moderateCategorys.setReadOnly(true);
 
     UIAvatarContainer avatarContainer = createUIComponent(UIAvatarContainer.class, null, "Avatar");
@@ -932,6 +964,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIModeratorManagementForm uiForm = event.getSource();
       String keyword = ((UIFormStringInput) uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
       if (keyword != null && keyword.trim().length() > 0) {
+        if (CommonUtils.isContainSpecialCharacter(keyword)) {
+          uiForm.warning("UIQuickSearchForm.msg.failure");
+          return;
+        }
         uiForm.searchUserProfileByKey(keyword);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
       } else {

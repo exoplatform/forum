@@ -22,51 +22,62 @@ import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
  * Main Facade for all BBCode related operations
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public interface BBCodeService {
 
   /**
-   * Register a new BBCode plugin
+   * Registers a new BBCode plugin.
+   * 
    * @param plugin
    * @throws Exception
+   * @LevelAPI Platform
    */
   void registerBBCodePlugin(BBCodePlugin plugin) throws Exception;
 
   /**
-   * Save a list of BBCodes
+   * Saves a list of BBCodes.
+   * 
    * @param bbcodes List of BBCodes to save
    * @throws Exception
+   * @LevelAPI Platform
    */
   public void save(List<BBCode> bbcodes) throws Exception;
 
   /**
-   * Retrieve all BBCodes
+   * Retrieves all BBCodes.
+   * 
    * @return List of all registered BBCodes
    * @throws Exception
+   * @LevelAPI Platform
    */
   public List<BBCode> getAll() throws Exception;
 
   /**
-   * Retrieve BBCode IDs that are active
+   * Retrieves BBCode IDs that are active.
+   * 
    * @return List of BBCOde IDs
    * @throws Exception
+   * @LevelAPI Platform
    */
   public List<String> getActive() throws Exception;
 
   /**
-   * Load a specific BBCode
+   * Loads a specific BBCode.
+   * 
    * @param bbcodeId ID of the BBCode
    * @return
    * @throws Exception
+   * @LevelAPI Platform
    */
   public BBCode findById(String bbcodeId) throws Exception;
 
   /**
-   * Delete an existing BBCode
-   * @param bbcodeId
+   * Deletes an existing BBCode.
+   * 
+   * @param bbcodeId the id of BBCode to be deleted
    * @throws Exception
+   * @LevelAPI Platform
    */
   public void delete(String bbcodeId) throws Exception;
 

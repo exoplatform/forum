@@ -17,14 +17,21 @@
 			<table class="uiGrid table  table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="center">Banned IP</th>
-						<th class="center">Action</th>
+						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.BannedIP");%></th>
+						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Action");%></th>
 					</tr>
 				</thead>
 				<tbody>
 				<%
 					String color = "#ffffff";
 					String[] ips = uicomponent.getListIpBan();
+					if (ips.length == 0) { %>
+					<tr>
+						 <td class="empty center" colspan="2">
+						   <%=_ctx.appRes("UIBanIPForumManagerForm.label.Empty");%>
+						 </td>
+					</tr>  
+				<%	} else {
 					for(int i = 0; i < ips.length; ++i){
 						if(i%2 == 0) color = "#edf3ee";
 						else color = "#ffffff";
@@ -39,6 +46,7 @@
 							</td>
 						</tr>
 				<%}%>
+				<% } %>
 				</tbody>
 			</table>
 			<table class="typeInputIp">
@@ -62,7 +70,7 @@
 		</div>
 	</div>
 <div class="uiAction uiActionBorder">
-	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
+	<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Cancel");%></button>
 </div>
 	<% uiform.end() %>	
 </div>

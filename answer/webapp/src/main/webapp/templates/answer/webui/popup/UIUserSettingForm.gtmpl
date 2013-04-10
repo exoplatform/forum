@@ -25,70 +25,49 @@
     %>
         <div id="$tabcontent.id-tab" class="tab-pane fade $active">
           <div class="resizable">
-          
-          
-           <%
-          if(tabcontent.id.equals("DisplayTab")){
+          <%
+         	 if(tabcontent.id.equals("DisplayTab")){
           %>
             <div class="form-horizontal">
-              <%
-              for(tabChildConten in tabcontent.getChildren()){
-                String label = tabChildConten.getId();
-                String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + label); %>
-                
-                <% 
-                	if(tabChildConten.id.equals(uiform.ORDER_TYPE) == false){
-                %>
-				<div class="control-group">
-                  <label class="control-label" for="<%=tabChildConten.getId()%>"><%=actionLabel %></label>
-				  <div class="controls"> 
-                    <% uiform.renderField(tabChildConten) %>
-                 
-                <%  } else {
-                		uiform.renderField(tabChildConten);
-						print(" </div> </div>");
-                	}
-					if(tabChildConten.id.equals(uiform.ORDER_TYPE) == false && tabChildConten.id.equals(uiform.ORDER_BY) == false) {
-				%>
-				 </div>
-				</div>
-				<% } %>
-				<%}%>	
-                <div class="control-group">
-                    <label class="control-label">
-                      <%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>
-                    </label>
-                    <div class="controls ">
-                       <p class="avatarLarge">
-							<img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
-						</p>
-						<div class="btn-group">
-							<a href="javaScript:void(0);" onclick="<%=uiform.event("ChangeAvatar")%>" class="btn btn-mini">
-							  <%=_ctx.appRes("UIUserSettingForm.action.ChangeAvatar")%>
-							</a>
-							<%
-							if(!uicomponent.isDefaultAvatar()){
-							%>
-							<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" class="btn btn-mini">
-								<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>
-							</a>
-							<%
-							}%>
-						</div>
-                    </div>
-                </div>
-				
-              
+            	<div class="control-group">
+                <label class="control-label" for="<%=uiform.ORDER_BY%>"><%=uiform.getLabel(uiform.ORDER_BY)%>:</label>
+				  			<div class="controls"> 
+            			<% uiform.renderField(uiform.ORDER_BY) %>
+            			<% uiform.renderField(uiform.ORDER_TYPE) %>
+            		</div>
+            	</div>
+            	<div class="control-group">
+                <label class="control-label" for="<%=uiform.ITEM_VOTE%>"><%=uiform.getLabel(uiform.ITEM_VOTE)%>:</label>
+				  			<div class="controls"> 
+            			<% uiform.renderField(uiform.ITEM_VOTE) %>
+            		</div>
+            	</div>
+            
+              <div class="control-group">
+                 <label class="control-label"><%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>:</label>
+                 <div class="controls">
+                   <p class="avatarLarge"><img src="<%=uicomponent.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/></p>
+									 <div class="btn-group">
+										<a href="javaScript:void(0);" onclick="<%=uiform.event("ChangeAvatar")%>" class="btn btn-mini">
+										  <%=_ctx.appRes("UIUserSettingForm.action.ChangeAvatar")%>
+										</a>
+									<%
+										if(!uicomponent.isDefaultAvatar()){
+									%>
+										<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" class="btn btn-mini">
+											<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>
+										</a>
+									<%}%>
+									</div>
+                 </div>
+              </div>
             </div>
           <% } else {
-            uiform.renderChild(tabcontent.id) ;
-            } %>
-          
-          
-          
+            	uiform.renderChild(tabcontent.id) ;
+             } %>
           </div>
         </div>
-        <% } %>
+      <% } %>
     </div>
     
   </div>

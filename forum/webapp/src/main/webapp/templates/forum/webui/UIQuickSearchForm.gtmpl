@@ -1,6 +1,7 @@
 <% 
 	import org.exoplatform.forum.ForumUtils;
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;");
+  uicomponent.initPlaceholder();
 %>
 <div class="uiSearchInput">
   <% uiform.begin() %>  

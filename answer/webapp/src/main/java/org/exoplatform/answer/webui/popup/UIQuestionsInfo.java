@@ -59,7 +59,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     template = "app:/templates/answer/webui/popup/UIQuestionsInfo.gtmpl", 
     events = {
         @EventConfig(listeners = UIQuestionsInfo.ChangeCategoryActionListener.class), 
-        @EventConfig(listeners = UIQuestionsInfo.CloseActionListener.class), 
         @EventConfig(listeners = UIQuestionsInfo.EditQuestionActionListener.class), 
         @EventConfig(listeners = UIQuestionsInfo.DeleteQuestionActionListener.class), 
         @EventConfig(listeners = UIQuestionsInfo.ChangeTabActionListener.class), 
@@ -322,8 +321,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
           }
         }
       }
-      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
     }
   }
 
@@ -339,9 +337,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.updateChildOfQuestionManager(true);
         responseForm.setModertator(true);
-        /*
-         * if(param.length == 1) responseForm.setQuestionId(question, null, isModerateAnswer) ; else
-         */
+
         responseForm.setQuestionId(question, language, isModerateAnswer);
         questionManagerForm.isViewEditQuestion = false;
         questionManagerForm.isViewResponseQuestion = true;
@@ -355,13 +351,13 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
           }
         }
       }
-      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
     }
   }
 
   static public class DeleteQuestionActionListener extends BaseEventListener<UIQuestionsInfo> {
     public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String questionId) throws Exception {
+      UIQuestionManagerForm questionManagerForm = questionsInfo.getParent();
       UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
       try {
@@ -370,7 +366,6 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         deleteQuestion.setQuestionId(question);
         deleteQuestion.setIsManagement(true);
         //deleteQuestion.setId("Confirm Delete");
-        UIQuestionManagerForm questionManagerForm = questionsInfo.getParent();
         if (questionManagerForm.isEditQuestion) {
           UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class);
           questionForm.setIsMode(true);
@@ -384,7 +379,6 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
             questionManagerForm.isResponseQuestion = false;
           }
         }
-        // event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
         warning("UIQuestions.msg.question-id-deleted", false);
         for (int i = 0; i < questionsInfo.listQuestion_.size(); i++) {
@@ -394,7 +388,8 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
           }
         }
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
 
@@ -407,19 +402,16 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class);
       questionManagerForm.isResponseQuestion = false;
       questionManagerForm.isEditQuestion = false;
-      UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
     }
   }
-
+/*
   static public class CloseActionListener extends EventListener<UIQuestionsInfo> {
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionManagerForm = event.getSource();
-      UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIAnswersPortlet portlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class);
+      portlet.cancelAction();
     }
-  }
+  }*/
 
   static public class ChangeTabActionListener extends BaseEventListener<UIQuestionsInfo> {
     public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String idTab) throws Exception {
@@ -438,8 +430,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         questionManagerForm.isViewResponseQuestion = true;
       }
       questionsInfo.isChangeTab_ = true;
-      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm);
     }
   }
 
@@ -468,7 +459,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         questionsInfo.log.error("Can not Change Question Status, exception: " + e.getMessage());
         warning("UIQuestions.msg.question-id-deleted", false);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getAncestorOfType(UIPopupContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getParent());
     }
   }
 }

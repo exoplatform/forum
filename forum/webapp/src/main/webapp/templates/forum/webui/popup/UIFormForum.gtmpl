@@ -1,8 +1,11 @@
-<div class="uiFormForum $uicomponent.id">
+<%
+	String id = "ui" + uicomponent.id.substring(2);
+%>
+
+<div class="uiFormForum $id">
 	<% uiform.begin() %>
   <div class="resizable">
 		<div class="form-horizontal">
-							
 			<% 
 				for(field in uiform.getChildren()) { 
 					if(field.isRendered()) {
@@ -11,10 +14,10 @@
 							<%fieldName = uicomponent.getLabel(field.getName());%>
 							<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
 								<label class="control-label">
-									<%if(field instanceof org.exoplatform.webui.form.UIFormInputIconSelector) { %>
-										<label><%=fieldName%></label>
+									<%if(field.getName().equals("censorKeyword")){ %>
+										<label for="<%=field.getId()%>"><%=fieldName%></label>
 									<%} else {%>
-									  <label for="<%=field.getId()%>"><%=fieldName%></label>
+										<label for="<%=field.getId()%>"><%=fieldName%>:</label>
 									<%} %>
 								</label>
 								<div class="controls">
@@ -29,17 +32,17 @@
 			<%
 					}
 				}
-			%>						
+			%>
 				
 		</div>
     </div>
-	<div class="uiAction">
+	<div class="uiAction uiActionBorder">
 	<% for(action in uicomponent.getActions()) { 
-				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-				 String link = uicomponent.event(action) ;
-				 String onclick = "" ;
-				 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
-			%>
+		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		 String link = uicomponent.event(action) ;
+		 String onclick = "" ;
+		 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+	%>
 		<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
     </div>

@@ -121,7 +121,17 @@ public class TestBBCodeRenderer extends TestCase {
     bbcode.setIsOption("false");
     BBCodeRenderer renderer = new BBCodeRenderer();
     String actual = renderer.processList("[list][*]list item 1[*]list item 2[/list]");
-    assertEquals("<ul><li>list item 1</li><li>list item 2</li></ul>", actual);
+    assertEquals("<ul><li style=\"list-style-type:disc;\">list item 1</li><li style=\"list-style-type:disc;\">list item 2</li></ul>", actual);
+    
+    bbcode.setIsOption("true");
+    actual = renderer.processList("[list=1][*]list item 1[*]list item 2[/list]");
+    String expected = "<ol type=\"1\"><li style=\"list-style-type:decimal;\">list item 1</li><li style=\"list-style-type:decimal;\">list item 2</li></ol>";
+    assertEquals(expected, actual);
+    
+    bbcode.setIsOption("true");
+    actual = renderer.processList("[list=a][*]list item 1[*]list item 2[/list]");
+    expected = "<ol type=\"a\"><li style=\"list-style-type:lower-alpha;\">list item 1</li><li style=\"list-style-type:lower-alpha;\">list item 2</li></ol>";
+    assertEquals(expected, actual);
   }
 
   public void testBuiltinBBCodes() {
@@ -151,4 +161,9 @@ public class TestBBCodeRenderer extends TestCase {
     assertEquals("<font size=\"-2\">param</font>", renderer.render("[SIZE=-2]param[/SIZE]"));
   }
 
+  public void testCleanHTMLTagInTagList() {
+    BBCodeRenderer renderer = new BBCodeRenderer();
+    String input = "dsad <br>fsd f <br/> sdfsjdf <br /> fsdfs f<div style=\"xxx\">fsfsdfdsf</div> fsdfsdf <p>fsdfsdf</p> fdsfsd";
+    assertEquals("dsad fsd f  sdfsjdf  fsdfs ffsfsdfdsf fsdfsdf fsdfsdf fdsfsd", renderer.cleanHTMLTagInTagList(input));
+  }
 }

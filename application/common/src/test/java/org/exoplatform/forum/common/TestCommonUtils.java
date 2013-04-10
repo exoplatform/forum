@@ -131,15 +131,28 @@ public class TestCommonUtils extends TestCase {
     input = "Text ...&#60;&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&#62; too";
     assertEquals("Text ...<@#$%^&*()\"/-=~`'.,> too", CommonUtils.decodeSpecialCharToHTMLnumber(input));
     //content extend token
-    input = "Text ...&gt;div class=&quot;&amp;XZY&quot;&lt;Test&gt;&#47;div&lt;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&#60;strong&#62;too&#60;&#47;strong&#62;";
+    input = "Text ...&lt;div class=&quot;&amp;XZY&quot;&gt;Test&lt;&#47;div&gt;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&#60;strong&#62;too&#60;&#47;strong&#62;";
     assertEquals("Text ...<div class=\"&XZY\">Test</div>()\"/-=~`'.,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input));
     
     // ignore case
     List<String> ig = Arrays.asList(new String[]{"&gt;", "&lt;", "&#46;"});
-    assertEquals("Text ...&gt;div class=\"&XZY\"&lt;Test&gt;/div&lt;()\"/-=~`'&#46;,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
+    assertEquals("Text ...&lt;div class=\"&XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'&#46;,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
   }
   
-  
+  public void testIsContainSpecialCharacter() {
+    String input = null;
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "";
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "abcgde";
+    assertEquals(false, CommonUtils.isContainSpecialCharacter(input));
+    input = "abcg#$de";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+    input = "!@#abcgde";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+    input = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
+  }
   
   
   

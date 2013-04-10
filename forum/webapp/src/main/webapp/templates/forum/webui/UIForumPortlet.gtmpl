@@ -24,5 +24,16 @@
 	
   uicomponent.initSendNotification() ;
 	%>
+	<div class="uiNotification">
+		<div class="popupTitle clearfix">
+			<span class="name pull-left"><i class="uiIconColorBell"></i> <strong>Message</strong></span>
+			<a class="closePopup pull-right"><i class="uiIconClose"></i></a>
+		</div>
+		<div class="nameMessage"></div>
+		<div class="title"></div>
+		<div class="from"></div>
+		<div class="content"></div>
+		<div class="link"></div>
+	</div>
 	<div><span></span></div>
 </div>

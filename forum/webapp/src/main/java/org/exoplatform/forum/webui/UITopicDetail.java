@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,7 +31,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
@@ -200,7 +198,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private Map<String, CommonContact> mapContact              = new HashMap<String, CommonContact>();
 
-  public static final String         FIELD_MESSAGE_TEXTAREA  = "Message";
+  public static final String         FIELD_MESSAGE_TEXTAREA  = "UITopicDetail.label.Message";
 
   public static final String         FIELD_ADD_TAG           = "AddTag";
 
@@ -210,15 +208,21 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   public UITopicDetail() throws Exception {
     isDoubleClickQuickReply = false;
-
+    if (getId() == null)
+      setId("UITopicDetail");
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
     addUIFormInput(new UIFormStringInput(FIELD_ADD_TAG, null));
-    addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
+    UIFormTextAreaInput textArea = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
+    addUIFormInput(textArea);
     addChild(UIPostRules.class, null, null);
-    this.setActions(new String[] { "PreviewReply", "QuickReply" });
+    this.setActions(new String[] { "QuickReply", "PreviewReply" });
     this.isLink = true;
+  }
+  
+  protected void initPlaceholder() throws Exception {
+    ((UIFormTextAreaInput)getChildById(FIELD_MESSAGE_TEXTAREA)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, FIELD_MESSAGE_TEXTAREA));
   }
 
   public boolean isShowQuickReply() {
@@ -549,15 +553,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   public String getFileSource(ForumAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class);
-    try {
-      InputStream input = attachment.getInputStream();
-      String fileName = attachment.getName();
-      return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (PathNotFoundException e) {
-      log.warn("Failed get file source: " + e.getMessage(), e);
-      return null;
-    }
+    return ForumUtils.getFileSource(attachment);
   }
 
   public String getAvatarUrl(String userId) throws Exception {
@@ -605,7 +601,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         this.pageSelect = maxPage;
       }
     } catch (Exception e) {
-      log.warn("Failed to init topic page: " + e.getMessage(), e);
+      log.debug("Failed to init topic page: " + e.getMessage(), e);
     }
   }
 
@@ -770,18 +766,27 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         String userName = topicDetail.getUserProfile().getUserId();
         String[] userVoteRating = topicDetail.topic.getUserVoteRating();
-        boolean erro = false;
+        boolean error = false;
+        double userRateValue = 0.0;
+        String user = "";
         for (String string : userVoteRating) {
-          if (string.equalsIgnoreCase(userName))
-            erro = true;
+          double tmp = 0.0;
+          if (string.indexOf(":") > 0) {
+            String[] votes = string.split(":");
+            user = votes[0];
+            tmp = Double.parseDouble(votes[1]);
+          } else {
+            user = string;
+            tmp = topicDetail.topic.getVoteRating();
+          }
+          if (user.equalsIgnoreCase(userName)) {
+            error = true;
+            userRateValue = tmp;
+          }
         }
-        if (!erro) {
-          UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 300, 145);
-          ratingForm.updateRating(topicDetail.topic);
-          topicDetail.isEditTopic = true;
-        } else {
-          warning("UITopicDetail.sms.VotedRating", topicDetail.getUserProfile().getScreenName(), false);
-        }
+        UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 320, 0);
+        ratingForm.updateRating(topicDetail.topic, error, userRateValue);
+        topicDetail.isEditTopic = true;
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
@@ -888,7 +893,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         List<ForumSearch> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
+        listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         topicDetail.refreshPortlet();
@@ -946,6 +951,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 850, 545);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(postId, false, false, post);
+        postForm.setMod(topicDetail.isMod);
       } else {
         throwWarning("UIPostForm.msg.canNotEdit");
       }

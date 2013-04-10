@@ -71,6 +71,7 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
         @EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
         @EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ReloadActionListener.class),
         @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
     }
 )
@@ -156,6 +157,16 @@ public class UIForumActionBar extends UIContainer {
         uiActionBar.getUserProfile();
         event.getRequestContext().addUIComponentToUpdateByAjax(uiActionBar);
       }
+    }
+  }
+
+  static public class ReloadActionListener extends EventListener<UIForumActionBar> {
+    public void execute(Event<UIForumActionBar> event) throws Exception {
+      UIForumActionBar uiActionBar = event.getSource();
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      forumPortlet.removeCacheUserProfile();
+      uiActionBar.getUserProfile();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiActionBar);
     }
   }
 

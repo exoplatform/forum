@@ -36,6 +36,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIForm;
 
 /**
  * @author <a href="mailto:haithanh0809@gmail.com">Hai Thanh Nguyen</a>
@@ -90,8 +91,13 @@ public class UIPermissionGrid extends UIContainer {
     this.permissions.addAll(Arrays.asList(permissions));
   }
 
-  Set<String> getPermissions() {
+  protected Set<String> getPermissions() {
     return permissions;
+  }
+
+  protected String getLabelPermission(String id) throws Exception {
+    BaseUIForm uiForm = getAncestorOfType(BaseUIForm.class);
+    return uiForm.getLabel(id);
   }
 
   void setOwners(String... values) {

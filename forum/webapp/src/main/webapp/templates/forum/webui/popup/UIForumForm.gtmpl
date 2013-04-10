@@ -1,14 +1,6 @@
 
 <div class="uiForumForm">	
 	<% uiform.begin() %>	
-	<div class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label" for="<%=uiform.FIELD_CATEGORY_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</label>
-			<div class="controls">
-				<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
-			</div>
-		</div>
-	</div>
   
   <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
     <ul class="nav nav-tabs">

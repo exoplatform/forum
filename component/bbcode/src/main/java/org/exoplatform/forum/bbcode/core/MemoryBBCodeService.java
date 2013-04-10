@@ -28,7 +28,7 @@ import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
  * Implementation of BBCodeService that manages BBCodes in memory
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+
  * @version $Revision$
  */
 public class MemoryBBCodeService implements BBCodeService {
@@ -39,14 +39,31 @@ public class MemoryBBCodeService implements BBCodeService {
     bbcodes = new HashMap<String, BBCode>();
   }
 
+  /**
+   * Deletes BBCode by its id.
+   * 
+   * @param bbcodeId id of target BBCode
+   * @LevelAPI Platform
+   */
   public void delete(String bbcodeId) throws Exception {
     bbcodes.remove(bbcodeId);
   }
 
+  /**
+   * Finds BBCode by its id.
+   * 
+   * @param bbcodeId id of target BBCode
+   * @LevelAPI Platform
+   */
   public BBCode findById(String bbcodeId) throws Exception {
     return bbcodes.get(bbcodeId);
   }
 
+  /**
+   * Gets active BBCode.
+   * 
+   * @LevelAPI Platform
+   */
   public List<String> getActive() throws Exception {
     List<String> result = new ArrayList<String>();
     Iterator<BBCode> it = bbcodes.values().iterator();
@@ -59,6 +76,11 @@ public class MemoryBBCodeService implements BBCodeService {
     return result;
   }
 
+  /**
+   * Gets all BBCode.
+   * 
+   * @LevelAPI Platform
+   */
   public List<BBCode> getAll() throws Exception {
     return new ArrayList<BBCode>(bbcodes.values());
   }
@@ -67,12 +89,22 @@ public class MemoryBBCodeService implements BBCodeService {
     throw new UnsupportedOperationException("registering a BBCode plugin is not supported by " + getClass());
   }
 
+  /**
+   * Saves a list of BBCodes.
+   * 
+   * @LevelAPI Platform
+   */
   public void save(List<BBCode> bbcodes) throws Exception {
     for (BBCode bbCode : bbcodes) {
       addBBCode(bbCode);
     }
   }
 
+  /**
+   * Adds BBCode.
+   * 
+   * @param code
+   */
   public void addBBCode(BBCode code) {
     code.setId(code.getTagName() + ((code.isOption()) ? "=" : ""));
     this.bbcodes.put(code.getId(), code);

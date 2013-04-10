@@ -185,10 +185,10 @@ public class UITopicForm extends BaseForumForm {
     addUIFormInput(threadOption);
     
     UIPermissionPanel permissionTab = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionTab.setPermission(null, new String[] { CANPOST, CANVIEW });
+    permissionTab.setPermission(null, new String[] { CANVIEW, CANPOST });
     addChild(permissionTab);
     
-    this.setActions(new String[] { "PreviewThread", "SubmitThread", "Cancel" });
+    this.setActions(new String[] { "SubmitThread", "PreviewThread", "Cancel" });
     setAddColonInLabel(true);
   }
 
@@ -291,7 +291,7 @@ public class UITopicForm extends BaseForumForm {
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
-      threadContent.getChild(UIFormWYSIWYGInput.class).setValue(this.topic.getDescription());
+      threadContent.getChild(UIFormWYSIWYGInput.class).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getDescription()));
 
       getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).setValue(topic.getIsClosed());
       
@@ -399,8 +399,9 @@ public class UITopicForm extends BaseForumForm {
             k = 0;
           }
           if (t > 0 && k != 0 && !checksms.equals("null")) {
+            message = CommonUtils.encodeSpecialCharInSearchTerm(message);
+            message = TransformHTML.fixAddBBcodeAction(message);
             message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-            message = StringUtils.replace(message, "'", "&#39;");
             boolean isOffend = false;
             boolean hasForumMod = false;
             if (!uiForm.isMod()) {

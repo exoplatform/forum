@@ -136,7 +136,6 @@
       if (divChecked.exists()) {
         var check = 0;
         check = divChecked.attr("data-checked") * 1;
-        window.console.log(check + ' ' + isChecked);
         if (isChecked)
           divChecked.attr("data-checked", (check + 1));
         else
@@ -316,55 +315,32 @@
       }
     },
 
-    showTreeNode : function(obj, isShow) {
-      if (isShow === "false")
-        return;
+    showTreeNode : function(obj) {
       var jobject = $(obj);
-      var parentNode = jobject.parents(".ParentNode");
-      var nodes = parentNode.find('div.Node');
-      var selectedNode = jobject.parents(".Node");
-      var nodeSize = nodes.length;
-      var childrenContainer = null;
-      for ( var i = 0; i < nodeSize; i++) {
-        var node = nodes.eq(i);
-        childrenContainer = node.find("div.ChildNodeContainer:first");
-        if (node[0] === selectedNode[0]) {
-          childrenContainer.show();
-          node.addClass("Node SmallGrayPlus").removeClass('SmallGrayMinus');
-        } else {
-          childrenContainer.hide();
-          if (node.hasClass("Node SmallGrayPlus false"))
-            continue;
-          node.addClass("Node SmallGrayMinus");
-        }
-      }
+      var parentNode = jobject.parents(".nodeGroup:first");
+
+      var nodes = parentNode.find(' > .node');
+      nodes.find('.nodeGroup:first').hide();
+      nodes.find('.uiIconNode:first').removeClass('expandIcon').addClass("collapseIcon");
+
+      var selectedNode = jobject.parents(".node:first");
+
+      selectedNode.find('.uiIconNode:first').addClass("expandIcon");
+      selectedNode.find('.nodeGroup:first').show();
     },
 
     checkedNode : function(elm) {
-      var jelm = $(elm);
-      var jinput = jelm.find('input:first');
-
-      var parentNode = jinput.parents('.Node');
-      var containerChild = parentNode.find('div.ChildNodeContainer:first');
-      if (containerChild.exists()) {
-        var checkboxes = containerChild.find('input');
-        for ( var i = 0; i < checkboxes.length; ++i) {
-          if (jinput[0].checked)
-            checkboxes[i].checked = (true);
-          else
-            checkboxes[i].checked = (false);
-        }
-      }
+      var jinput = $(elm);
+      var node = jinput.parents('.node:first');
+      var inputs = node.find('.nodeGroup:first').find('input[type=checkbox]');
+      inputs.prop("checked", elm.checked);
     },
 
     checkedChildNode : function(elm) {
-      var input = $(elm).find('input:first');
-      if (input.exists()) {
-        if (input[0].checked) {
-          var parentCheckBoxNode = elm.parent().parent().parent();
-          var parentCheckBox = parentCheckBoxNode.find('div.ParentCheckBox:first');
-          parentCheckBox.find('input:first')[0].checked = (true);
-        }
+      if (elm.checked) {
+        var parentNode = $(elm).parents('.nodeGroup:first').parents('.node:first');
+        var parentCheckBox = parentNode.find('a.uiIconNode:first').find('input:first');
+        parentCheckBox.prop("checked", elm.checked);
       }
     },
 
@@ -372,7 +348,7 @@
       var vote = findId(voteId);
       rate = parseInt(rate);
       var optsContainer = vote.find('div.optionsContainer:first');
-	  optsContainer.attr('data-rate', rate);
+    optsContainer.attr('data-rate', rate);
       var options = optsContainer.children('i');
       options.on('mouseover', UIForumPortlet.overVote);
       options.on('blur', UIForumPortlet.overVote);
@@ -404,7 +380,7 @@
           break;
         opts.eq(i).attr('class', 'uiIconNormalVote');
       }
-	  optsCon.attr('data-rate', (i+1));
+    optsCon.attr('data-rate', (i+1));
       if (opts.eq(i).attr('class') == "uiIconOverVote")
         return;
       for (; i >= 0; i--) {
@@ -755,113 +731,109 @@
       uiNav.scrollMgr.checkAvailableSpace();
       uiNav.scrollMgr.renderElements();
     },
-
-    loadTagScroll : function() {
-      var uiNav = eXo.forum.UIForumPortlet;
-      var container = $("#TagContainer");
-      if (container) {
-        uiNav.tagScrollMgr = new navigation.ScrollManager("TagContainer");
-        uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll;
-        uiNav.tagScrollMgr.mainContainer = container[0];
-        uiNav.tagScrollMgr.arrowsContainer = container.find('li.ScrollButtons')[0];
-
-        uiNav.tagScrollMgr.cleanElements();
-        uiNav.tagScrollMgr.elements.clear();
-        var items = $(uiNav.tagScrollMgr.mainContainer).find('li.' + "MenuItem");
-        for ( var i = 0; i < items.length; i++) {
-          uiNav.tagScrollMgr.elements.push(items[i]);
-        }
-
-        var button = $(uiNav.tagScrollMgr.arrowsContainer).find('div');
-        if (button.length >= 2) {
-          uiNav.tagScrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
-          uiNav.tagScrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
-        }
-
-        uiNav.scrollManagerLoaded = true;
-        uiNav.initTagScroll();
-
+/*
+ * Load more tags items.
+ * */
+    loadMoreItem : function(id, moreTagLabel) {
+      var parent = findId(id);
+      var containerMoreItem = parent.find('ul.containerMoreItem:first');
+      if(containerMoreItem.exists()) {
+        var moreItem = $('<li class="dropdown moreItem pull-right"></li>');
+        var div = $('<div data-toggle="dropdown" class="actionIcon"></div>').html(moreTagLabel);
+        div.append($('<i class="uiIconMiniArrowDown"></i>'));
+        moreItem.append(div);
+        UIForumPortlet.moreItem = moreItem;
+        containerMoreItem.append(moreItem.clone());
+        UIForumPortlet.widthMoreAction = containerMoreItem.find('li.moreItem:first').width();
+        
+        
+        var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
+        var fakeContainer = parent.find('ul.fakeContainer:first');
+        var items = fakeContainer.find('li');
+        
+        UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
+        
+        utils.onResize(UIForumPortlet.processResizeWindow);
       }
     },
-
-    initTagScroll : function() {
-      var uiNav = UIForumPortlet;
-      var elements = uiNav.tagScrollMgr.elements;
-      var jarrowsContainer = $(uiNav.tagScrollMgr.arrowsContainer);
-      var menu = jarrowsContainer.find('ul.UIRightPopupMenuContainer:first')[0];
-      var tmp = null;
-      uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
-      uiNav.tagScrollMgr.init();
-      uiNav.tagScrollMgr.checkAvailableSpace();
-
-      removeChildren(menu);
-
-      jarrowsContainer.on('mouseover', over);
-      jarrowsContainer.on('focus', over);
-      jarrowsContainer.on('mouseout', out);
-      jarrowsContainer.on('blur', out);
-      for ( var i = 0; i < elements.length; i++) {
-        if (elements[i].isVisible) {
-          $(elements[i]).show();
+    
+    processResizeWindow : function() {
+      var parent = $('#UITopicDetail');
+      if(parent.exists()) {
+        var containerMoreItem = parent.find('ul.containerMoreItem:first');
+        if(containerMoreItem.exists()) {
+          var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
+          var tmpUl = parent.find('ul.fakeContainer:first');
+          var itemsMore = null;
+          if(containerMoreItem.find('li.moreItem:first').exists()) {
+              itemsMore = containerMoreItem.find('ul').find('li');
+          }
+          tmpUl.append(containerMoreItem.find('li'));
+          if(itemsMore != null) {
+            tmpUl.append(itemsMore);
+            tmpUl.find('li.moreItem').remove();
+          }
+          var items = tmpUl.find('li');
+          UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
+          
+        }
+      }
+    },
+    
+    processTagRender : function(containerMoreItem, items, maxWidth) {
+      var itemDisplay = [];
+      var itemMenu = [];
+      var lengthItem = 0;
+      var minWidthMenu = 100;
+      var paddingLRMenu = 20;
+      var widthMoreAction = UIForumPortlet.widthMoreAction;
+      
+      $.each(items, function(index, elm) {
+        var it = $(elm);
+        lengthItem += (it.width() + 4);
+        if((lengthItem + widthMoreAction) < maxWidth) {
+          itemDisplay.push(it);
         } else {
-          tmp = $(elements[i].cloneNode(true));
-          tmp.removeClass('FloatLeft').addClass('TagItem').show();
-          $(menu).append(tmp);
-          $(elements[i]).hide();
-          jarrowsContainer.show();
+          if(itemMenu.length === 0) {
+            var moreItem = UIForumPortlet.moreItem.clone();
+            itemDisplay.push(moreItem);
+          }
+          itemMenu.push(it);
+          if((it.width() + paddingLRMenu) > minWidthMenu) {
+            minWidthMenu = it.width() + paddingLRMenu;
+          }
         }
+      });
+      
+      containerMoreItem.empty();
+      for(var i = 0; i < itemDisplay.length; ++i) {
+        containerMoreItem.append(itemDisplay[i]);
       }
-
-      setPosition(menu);
-      function removeChildren(cont) {
-        $(cont).find('div.MenuTagContainer:first').remove();
+      
+      var moreItem = containerMoreItem.find('li.moreItem:first');
+      if(moreItem.exists()) {
+        var ulMore = $('<ul class="dropdown-menu menuMore"></ul>');
+        ulMore.css('min-width', minWidthMenu + 'px');
+        for(var i = 0; i < itemMenu.length; ++i) {
+          ulMore.append(itemMenu[i]);
+        }
+        moreItem.append(ulMore);
       }
-
-      function setPosition(menu) {
-        var uiPopupCategory = $(menu).parents('.UIPopupCategory');
-        uiPopupCategory.show();
-        uiPopupCategory.attr('style', 'top:24px; left:-400px;');
-        uiPopupCategory.hide();
-      }
-
-      function over() {
-        $(this).addClass('ScrollButtonsOver');
-      }
-
-      function out() {
-        $(this).removeClass('ScrollButtonsOver');
-      }
+      
     },
-
-    setTagContainerWidth : function(container) {
-      var nodes = $(container.parentNode).find('div');
-      var width = 0;
-      var i = nodes.length;
-      while (i--) {
-        if ((nodes[i].className == container.className) || !nodes[i].className)
-          continue;
-        if (nodes[i].className == "UIForumPageIterator") {
-          var right = $(nodes[i]).find('div.RightPageIteratorBlock:first')[0];
-          var left = $(nodes[i]).find('div.LeftPageIteratorBlock:first')[0];
-          width += getWidth(left, "div") + getWidth(right, "a");
-          continue;
-        }
-        width += UIForumPortlet.tagScrollMgr.getElementSpace(nodes[i]);
-      }
-      width = UIForumPortlet.tagScrollMgr.getElementSpace(container.parentNode) - width - 15;
-      container.style.width = width + "px";
-      // Private method to get real width of the element by html tag name
-      function getWidth(obj, tag) {
-        if (!obj)
-          return 0;
-        var children = $(obj).find(tag);
-        var w = 0;
-        var i = children.length;
-        while (i--) {
-          w += children[i].offsetWidth;
-        }
-        return w;
-      }
+    
+    processTagContainerWidth : function(parent) {
+      var topContainer = parent.find('.topContainer:first');
+      var actionContainer = parent.find('.actionContainer:first');
+      var pageIterContainer = parent.find('.pageIterContainer:first'); 
+      
+      var tagsContainer = parent.find('.tagsContainer:first');
+      var titleTag = tagsContainer.find('.titleTag:first');
+      var widthMoreItem = topContainer.width() - actionContainer.width() - pageIterContainer.width() - titleTag.width() - 20;
+      
+      var containerMoreItem = tagsContainer.find('ul.containerMoreItem:first');
+      //containerMoreItem.css('width', widthMoreItem + 'px');
+      return widthMoreItem;
     },
 
     executeLink : function(elm, evt) {
@@ -930,54 +902,44 @@
       uiContextMenu.setup();
     },
 
-    showBBCodeHelp : function(id, isIn) {
-      var parentElm = document.getElementById(id);
-      var popupHelp = document.getElementById(id + "ID");
-      if (parentElm) {
-        if (isIn == "true") {
-          popupHelp.style.display = "block";
-          var contentHelp = $(popupHelp).find('div.ContentHelp:first')[0];
-          contentHelp.style.height = "auto";
-          var l = String(contentHelp.innerHTML).length;
-          if (l < 100) {
-            contentHelp.style.width = (l * 4) + "px";
-            contentHelp.style.height = "45px";
-          } else {
-            contentHelp.style.width = "400px";
-            if (l > 150) {
-              contentHelp.style.height = "auto";
-            } else {
-              contentHelp.style.height = "45px";
-            }
-          }
-          var parPopup = document.getElementById("UIForumPopupWindow");
-          var parPopup2 = document.getElementById("UIForumChildPopupWindow");
-          var left = 0;
-          var worksPace = document.getElementById('UIWorkingWorkspace');
-          var worksPaceW = 1 * 1;
-          if (worksPace) {
-            worksPaceW = (worksPace.offsetWidth) * 1;
-          } else {
-            worksPaceW = (document.getElementById('UIPortalApplication').offsetWidth) * 1;
-          }
-          left = (parPopup.offsetLeft) * 1 + (parPopup2.offsetLeft) * 1 + parentElm.offsetLeft + parentElm.parentNode.offsetLeft;
-          if (left + popupHelp.offsetWidth > worksPaceW) {
-            popupHelp.style.left = "-" + (contentHelp.offsetWidth + 18) + "px";
-            popupHelp.className = "RightBBCodeHelpPopup";
-          } else {
-            popupHelp.className = "LeftBBCodeHelpPopup";
-            popupHelp.style.left = "-2px";
-          }
-        } else {
-          popupHelp.style.display = "none";
-        }
+    initShowBBcodeHelp : function(id) {
+      var parent = $.fn.findId(id);
+      if (parent.exists()) {
+        var popups = parent.find('.parentPosition');
+        popups.on('mouseover', UIForumPortlet.showBBCodeHelp);
+        popups.on('mouseout', utils.hideElements);
+        parent.parents('.UIPopupWindow:first').css('z-index', 1000);
       }
+    },
+
+    showBBCodeHelp : function(evt) {
+      utils.hideElements();
+      var thiz = $(this);
+
+      var popupContent = thiz.find('.bbcodePopupContent:first');
+      var length = $.trim(popupContent.text()).length;
+      var widthCt = (length / 0.8);
+      if (widthCt < 230) {
+        widthCt = 230;
+      } else if (widthCt > 480) {
+        widthCt = 480;
+      }
+
+      popupContent.css({ width : widthCt + 'px' });
+      popupContent.find('.arrow:first').css({ top : '30%' });
+
+      var top = -((popupContent.height() * 30 / 100) + 16);
+      popupContent.css({ 'top' : top + 'px', 'left' : '10px' }).show();
+      popupContent.on('click mousedown mouseup', utils.cancelEvent);
+
+      utils.addhideElement(popupContent);
+      utils.cancelEvent(evt);
     },
 
     submitOnKey : function(id) {
       var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
       if (parentElm.exists()) {
-        parentElm.on('keydown', function(evt) {
+        parentElm.off('keydown').on('keydown', function(evt) {
           var key = utils.getKeynum(evt);
           if (key == 13) {
             var searchLinkElm = $(this).find('.actionSubmitLink');
@@ -992,7 +954,6 @@
               utils.cancelEvent(evt);
               evt.preventDefault();
             }
-            return false;
           }
         });
       }

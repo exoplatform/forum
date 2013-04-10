@@ -69,10 +69,6 @@ public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
   public void deActivate() {
   }
 
-  protected String getTitleInHTMLCode(String s) {
-    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-  }
-
   public void updatePost(String topicId, List<Post> posts) {
     this.topicId = topicId;
     this.posts = posts;

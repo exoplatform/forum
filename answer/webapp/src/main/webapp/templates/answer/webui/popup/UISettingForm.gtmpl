@@ -69,14 +69,14 @@ if(!uicomponent.isEditPortlet_){
 									</tbody>
 								</table>
 				 		</div>
-			 	<div class="UIAction">
+			 	<div class="uiAction ">
             <% for(action in uicomponent.getActions()) {
 						 if(action.indexOf("Values") > 0) continue ; 
 						 if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 				%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+	  <button type="button" onclick="$link" class="btn">$actionLabel</button>
       <%}%>
     </div>
 	<%uiform.end()%>
@@ -84,141 +84,102 @@ if(!uicomponent.isEditPortlet_){
 <%
 } else {
 %>
-<div class="UISettingForm $uicomponent.id">
-	<div class="UITabPane">
-		<div style="padding:2px;">
-			<div class="WorkingArea">
-			
-			 	<div class="UIHorizontalTabs">
-			 		<div class="LeftHorizontalTabs">
-			 			<div class="RightHorizontalTabs">
-			 				<div class="CenterHorizontalTabs">
-								<div class="TabsContainer">
-									<%
-										String selTabId = uicomponent.getSelectedTab() ;
-										if(uicomponent.isResetMail){
-											uicomponent.isResetMail = false;
-											selTabId = uicomponent.SET_DEFAULT_EMAIL_TAB;
-										}
-										String actionChangeTab =	"";
-										int count = 0;
-										for(inputSet in uicomponent.getChildren()) {
-											if(!inputSet.isRendered()) continue ;
-											actionChangeTab =	uicomponent.event("ChildTabChange", "parent/" + count);
-											String className="NormalTab" ;
-											if(inputSet.getId().equals(selTabId)){
-											 className="SelectedTab" ;
-											}
-											String tabNames = inputSet.getId();
-											String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet.name) ;
-											count ++;
-									%>
-											<div class="UITab NormalTabStyle">
-												<div class="$className">
-													<div class="LeftTab">
-														<div class="RightTab">
-															<div class="MiddleTab" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$tabName</div>
-														</div>
-													</div>
-												</div>
-											</div>
-									<% }%>
-								</div>
-							</div>
-						</div>
+<div class="faqPortletSetting $uicomponent.id">
+	<div class="uiTabPane">
+			<div class="workingArea">			
+			 	<div class="actionButtonGroup center">			 		
+					<div class="btn-group ">
+						<%
+							String selTabId = uicomponent.getSelectedTab() ;
+							if(uicomponent.isResetMail){
+								uicomponent.isResetMail = false;
+								selTabId = uicomponent.SET_DEFAULT_EMAIL_TAB;
+							}
+							String actionChangeTab =	"";
+							int count = 0;
+							for(inputSet in uicomponent.getChildren()) {
+								if(!inputSet.isRendered()) continue ;
+								actionChangeTab =	uicomponent.event("ChildTabChange", "parent/" + count);
+								String className="" ;
+								if(inputSet.getId().equals(selTabId)){
+								 className="active" ;
+								}
+								String tabNames = inputSet.getId();
+								String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet.name) ;
+								count ++;
+						%>
+						<button class="btn $className" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$tabName</button>
+								
+						<% }%>
 					</div>
 				</div>
-			 
-				<%uiform.begin()%>
-				<div style="background-color:#F3F3F3;">
-				
-					<div class="UITabContentContainers">
+			 <!--actionButtonGroup-->
+				<%uiform.begin()%>				
+					<div class="uiTabContentContainers">
 						<%
 							for(formInput in uicomponent.getChildren()) {
 								if(!formInput.isRendered()) continue ;
 								String display = "none" ;
 								if(formInput.getId().equals(selTabId)) display="block" ;
 						%>
-								<div class="UITabContent"	style="display:$display;">
+								<div class="uiTabContent"	style="display:$display;">
 								<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)){%>
 
-                  <!-- Child-UIHorizontalTabs -->
-											<div class="UIHorizontalTabs">
-										 		<div class="LeftHorizontalTabs">
-										 			<div class="RightHorizontalTabs">
-										 				<div class="CenterHorizontalTabs">
-															<div class="TabsContainer">
-																<%
-																	count = 0;
-																	for(childInputSet in formInput.getChildren()) {
-																		actionChangeTab =	uicomponent.event("ChildTabChange", "child/" + count);
-																		if(!childInputSet.isRendered()) continue ;
-																		String childClassName="NormalTab" ;
-																		if(count == uicomponent.indexOfTab) childClassName="SelectedTab" ;
-																		String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
-																%>
-																		<div class="UITab NormalTabStyle">
-																			<div class="$childClassName">
-																				<div class="LeftTab">
-																					<div class="RightTab">
-																						<div class="MiddleTab" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$childTabName</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																<%	count ++; 
-																}%>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
+								<!-- Child-actionButtonGroup -->
+									<div class="actionButtonGroup center">			 		
+										<div class="btn-group ">
+											<%
+												count = 0;
+												for(childInputSet in formInput.getChildren()) {
+													actionChangeTab =	uicomponent.event("ChildTabChange", "child/" + count);
+													if(!childInputSet.isRendered()) continue ;
+													String childClassName="" ;
+													if(count == uicomponent.indexOfTab) childClassName="active" ;
+													String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
+											%>
+													<button class="btn $childClassName" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$childTabName</button>
+											<%	count ++; 
+											}%>
+										</div>
+									</div>
 											
-		              <!-- /Child-UIHorizontalTabs -->
-		              <!-- Child-UITabContentContainer -->
-											<div style="background-color:#F3F3F3;">
-												<div class="UITabContentContainers">
-													<%
-														int i = 0;
-														for(uiFormInput in formInput.getChildren()) {
-															String actionReset = uicomponent.event("ResetMailContent", "" + i);
-															if(!uiFormInput.isRendered()) continue ;
-															String displayChild = "none" ;
-															if(i == uicomponent.indexOfTab) displayChild="block" ;
-															else displayChild = "none" ;
-															i ++;
-													%>
-															<div class="UITabContent"	style="display:$displayChild; padding:5px;">
-																<table class="UIFormGrid" style="width:100%;">
-																	<tbody>
-																		<%//uicomponent.renderUIComponent(uiFormInput);
-																			for(childForm in uiFormInput.getChildren()) {
-																			%>
-																				<tr>
-																					<td class="FieldLabel" style="white-space:nowrap; width:120px;">
-																						<label for="<%=childForm.getId();%>"><%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%></label>
-																					</td>
-																					<td class="FieldComponent">
-																						<div style="float:left; width:90%;">
-																							<%uicomponent.renderUIComponent(childForm);%>
-																						</div>
-																						<div onclick="$actionReset" style="cursor:pointer;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
-																							<div class="refreshMail"><span></span></div>
-																						</div>
-																					</td>
-																				</tr>
-																		<%}%>
-																	</tbody>
-																</table>
-															</div>
-													<%}%>
+									  <!-- /Child-actionButtonGroup -->
+									  <!-- Child-uiTabContentContainer -->
+									<div class="uiTabContentContainer" >
+										<%
+											int i = 0;
+											for(uiFormInput in formInput.getChildren()) {
+												String actionReset = uicomponent.event("ResetMailContent", "" + i);
+												if(!uiFormInput.isRendered()) continue ;
+												String displayChild = "none" ;
+												if(i == uicomponent.indexOfTab) displayChild="block" ;
+												else displayChild = "none" ;
+												i ++;
+										%>
+												<div class="uiTabContent"	style="display:$displayChild; ">
+													<div class="form-horizontal">
+															<%//uicomponent.renderUIComponent(uiFormInput);
+																for(childForm in uiFormInput.getChildren()) {
+																%>
+																	<div class="control-group">
+																		<label class="control-label" for="<%=childForm.getId();%>"><%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%></label>
+																		<div  class="controls">
+																			<div class="pull-left" style="width: 95%"><%uicomponent.renderUIComponent(childForm);%></div>
+																			<a  href="javascript:void(0)"  onclick="$actionReset" style="cursor:pointer;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
+																				<i class="uiIconRefresh uiIconLightGray"></i>
+																			</a>
+																		</div>
+																	</div>
+															<%}%>
+													</div>		
 												</div>
-											</div>
+										<%}%>
+									</div>
 
-							   <!-- /Child-UITabContentContainer -->
+							   <!-- /Child-uiTabContentContainer -->
 								 <%}else if(formInput.getId().equals(uicomponent.CATEGORY_SCOPING)) {%>
 								 		<!-- View interface -->
-										<div class="HorizontalLayout ViewQuestionsToSelect" style="overflow:auto;">
+										<div class="viewQuestionsToSelect" style="overflow:auto;">
 											<%
 											List listCate = uicomponent.listCate;
 											Stack<String> stackCateid = new Stack<String>() ;
@@ -305,23 +266,21 @@ if(!uicomponent.isEditPortlet_){
 									%>
 								</div>
 						<%}%>
-					</div>
-				</div>
+					</div>  <!-- /uiTabContentContainers -->
         <!-- /ContentTabs-->
         <!-- UIAction-->
-				 <div class="UIAction">
+				 <div class="uiAction">
         <%for(action in uicomponent.getActions()) { 
 									if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 									String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 									String link = uicomponent.event(action) ;
 								%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <button type="button" onclick="$link" class="btn">$actionLabel</button>
       <%}%>
     </div>
         <!-- /UIAction-->
 				<%uiform.end()%>
 			</div>
-		</div>	
 	</div>
 </div>
 <%

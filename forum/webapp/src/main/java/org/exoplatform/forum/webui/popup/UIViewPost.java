@@ -110,14 +110,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
   }
 
   protected String getFileSource(ForumAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class);
-    try {
-      InputStream input = attachment.getInputStream();
-      String fileName = attachment.getName();
-      return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (PathNotFoundException e) {
-      return null;
-    }
+    return ForumUtils.getFileSource(attachment);
   }
 
   public void setPostView(Post post) throws Exception {

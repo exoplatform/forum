@@ -43,7 +43,11 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 
 /**
- * @author Vu Duy Tu
+ * Url template: <tt>{rest_context_name}/ks/poll</tt>
+ * <br />
+ * GET: /{rest_context_name}/ks/poll/viewpoll/{resourceid}
+ * 
+ * @anchor PollWebservice
  * 
  */
 @Path("ks/poll")
@@ -65,40 +69,21 @@ public class PollWebservice implements ResourceContainer {
     cc.setNoStore(true);
   }
   
-  private OrganizationService getOrganizationService() {
-    if (organizationService == null) {
-      organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
-                                .getComponentInstance(OrganizationService.class);
-    }
-    return organizationService;
-  }
-  
-  private String getUserId(SecurityContext sc, UriInfo uriInfo) {
-    ConversationState state = ConversationState.getCurrent();
-    if(state != null) {
-      return state.getIdentity().getUserId();
-    }
-    if (sc != null && sc.getUserPrincipal() != null) {
-      return sc.getUserPrincipal().getName();
-    } else if (uriInfo != null) {
-      return getViewerId(uriInfo);
-    }
-    return StringUtils.EMPTY;
-  }
-  
-  private String getViewerId(UriInfo uriInfo) {
-    URI uri = uriInfo.getRequestUri();
-    String requestString = uri.getQuery();
-    if (requestString == null) return null;
-    String[] queryParts = requestString.split("&");
-    for (String queryPart : queryParts) {
-      if (queryPart.startsWith("opensocial_viewer_id")) {
-        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
-      }
-    }
-    return null;
-  }
-
+  /**
+   * Views poll by id.
+   * 
+   * @param pollId id of poll to view.
+   * @param sc security context.
+   * @param uriInfo The request information
+   * 
+   * @anchor PollWebservice.viewPoll
+   * 
+   * @return the response is json-data
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
   @GET
   @Path("/viewpoll/{resourceid}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -148,6 +133,22 @@ public class PollWebservice implements ResourceContainer {
     return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cc).build();
   }
 
+  /**
+   * Votes poll by id.
+   * 
+   * @param pollId id of poll to view.
+   * @param indexVote
+   * @param sc security context.
+   * @param uriInfo The request information
+   * 
+   * @anchor PollWebservice.votePoll
+   * 
+   * @return the response is json-data
+   * 
+   * @throws Exception
+   * 
+   * @LevelAPI Platform
+   */
   @GET
   @Path("/votepoll/{pollId}/{indexVote}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -178,6 +179,40 @@ public class PollWebservice implements ResourceContainer {
     return Response.status(Status.INTERNAL_SERVER_ERROR).build();
   }
 
+  private OrganizationService getOrganizationService() {
+    if (organizationService == null) {
+      organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
+                                .getComponentInstance(OrganizationService.class);
+    }
+    return organizationService;
+  }
+  
+  private String getUserId(SecurityContext sc, UriInfo uriInfo) {
+    ConversationState state = ConversationState.getCurrent();
+    if(state != null) {
+      return state.getIdentity().getUserId();
+    }
+    if (sc != null && sc.getUserPrincipal() != null) {
+      return sc.getUserPrincipal().getName();
+    } else if (uriInfo != null) {
+      return getViewerId(uriInfo);
+    }
+    return StringUtils.EMPTY;
+  }
+  
+  private String getViewerId(UriInfo uriInfo) {
+    URI uri = uriInfo.getRequestUri();
+    String requestString = uri.getQuery();
+    if (requestString == null) return null;
+    String[] queryParts = requestString.split("&");
+    for (String queryPart : queryParts) {
+      if (queryPart.startsWith("opensocial_viewer_id")) {
+        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
+      }
+    }
+    return null;
+  }
+  
   private boolean validateIndexVote(String indexVote, int max) {
     String[] ivArr = indexVote.split(Utils.COLON);
     for (int i = 1; i < ivArr.length; i++) {

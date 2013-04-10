@@ -42,6 +42,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.NotifyInfo;
 
 /**
@@ -368,6 +369,39 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     eventQuery.setAuthor("userTest");
     eventQuery.setAdmin(true);
     eventQuery.setText("");
+    listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(1, listQuickSearch.size());
+  }
+  
+  public void testSearchWithSpecialCharaters() throws Exception {
+    FAQEventQuery eventQuery = new FAQEventQuery();
+
+    eventQuery.setText("test");
+    eventQuery.setAdmin(true);
+    eventQuery.setModerator("demo");
+    eventQuery.setUserId(USER_ROOT);
+    eventQuery.setLanguage("English");
+
+    // quick search (for all questions and categories)
+    eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
+    List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(5, listQuickSearch.size());
+    
+    Question question6 = createQuestion(categoryId1);
+    question6.setQuestion(CommonUtils.encodeSpecialCharInSearchTerm("()*& test"));
+    faqService_.saveQuestion(question6, true, faqSetting_);
+    
+    String text = CommonUtils.encodeSpecialCharInSearchTerm("()*& test");
+    eventQuery.setText(text);
+    listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(1, listQuickSearch.size());
+    
+    Question question7 = createQuestion(categoryId1);
+    question7.setDetail(CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_"));
+    faqService_.saveQuestion(question7, true, faqSetting_);
+    
+    text = CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_");
+    eventQuery.setText(text);
     listQuickSearch = faqService_.getSearchResults(eventQuery);
     assertEquals(1, listQuickSearch.size());
   }

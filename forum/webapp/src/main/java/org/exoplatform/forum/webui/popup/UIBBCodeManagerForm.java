@@ -28,6 +28,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
@@ -46,7 +47,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     events = {
       @EventConfig(listeners = UIBBCodeManagerForm.AddNewBBCodeActionListener.class), 
       @EventConfig(listeners = UIBBCodeManagerForm.EditBBCodeActionListener.class), 
-      @EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class), 
+      @EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class, confirm = "UIBBCodeManagerForm.msg.confirm-delete-BBCode"), 
       @EventConfig(listeners = UIBBCodeManagerForm.SaveActionListener.class),
       @EventConfig(listeners = UIBBCodeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
     }
@@ -108,7 +109,10 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
   static public class AddNewBBCodeActionListener extends BaseEventListener<UIBBCodeManagerForm> {
     public void onEvent(Event<UIBBCodeManagerForm> event, UIBBCodeManagerForm uiForm, final String objectId) throws Exception {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      uiForm.openPopup(popupContainer, UIAddBBCodeForm.class, 670, 0);
+      uiForm.openPopup(popupContainer, UIAddBBCodeForm.class, 670, 400);
+      UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+      popupWindow.setWindowSize(650, 400);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
     }
   }
 
@@ -116,8 +120,11 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
     public void onEvent(Event<UIBBCodeManagerForm> event, UIBBCodeManagerForm uiForm, final String bbcodeId) throws Exception {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       BBCode bbCode = uiForm.getBBCode(bbcodeId);
-      UIAddBBCodeForm bbcForm = uiForm.openPopup(popupContainer, UIAddBBCodeForm.class, "EditBBCodeForm", 670, 0);
+      UIAddBBCodeForm bbcForm = uiForm.openPopup(popupContainer, UIAddBBCodeForm.class, "EditBBCodeForm", 670, 400);
       bbcForm.setEditBBcode(bbCode);
+      UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+      popupWindow.setWindowSize(650, 400);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
     }
   }
 

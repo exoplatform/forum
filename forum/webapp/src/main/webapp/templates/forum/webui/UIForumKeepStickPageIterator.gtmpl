@@ -9,11 +9,11 @@
   }catch(Exception e) {}
   
   String getHref(int i, boolean isMod) {
-	String href = uicomponent.event("GoPage", "$i");
-	if(isMod) {
-	  href = uicomponent.getURLGopage(String.valueOf(i));
-	}
-	return href;
+		String href = uicomponent.event("GoPage", "$i");
+		if(isMod == false) {
+		  href = uicomponent.getURLGopage(String.valueOf(i));
+		}
+		return href;
   }
   void render(int i, boolean isMod) {
 	  String href = getHref(i, isMod);

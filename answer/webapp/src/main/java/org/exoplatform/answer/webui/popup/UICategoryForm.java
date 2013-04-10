@@ -101,6 +101,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UICategoryForm() throws Exception {
     setActions(new String[] { "Save", "Cancel" });
+    setAddColonInLabel(true);
   }
 
   public void updateAddNew(boolean isAddNew, String spaceGroupId) throws Exception {
@@ -123,7 +124,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
     addUIFormInput(inputset);
     
     UIPermissionPanel permissionPanel = createUIComponent(UIPermissionPanel.class, null, PERMISSION_TAB);
-    permissionPanel.setPermission(spaceGroupId, new String[] { FIELD_MODERATOR_INPUT, FIELD_USERPRIVATE_INPUT });
+    permissionPanel.setPermission(spaceGroupId, new String[] { FIELD_USERPRIVATE_INPUT, FIELD_MODERATOR_INPUT });
     addChild(permissionPanel);
     
   }
@@ -164,8 +165,8 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
       String[] moderators = (CommonUtils.isEmpty(cat.getModerators())) ? new String[] { FAQUtils.getCurrentUser() } : cat.getModerators();
       
       UIPermissionPanel permissionTab = getChildById(PERMISSION_TAB);
-      permissionTab.addPermissionForOwners(FIELD_MODERATOR_INPUT, moderators);
       permissionTab.addPermissionForOwners(FIELD_USERPRIVATE_INPUT, cat.getUserPrivate());
+      permissionTab.addPermissionForOwners(FIELD_MODERATOR_INPUT, moderators);
     }
   }
 
