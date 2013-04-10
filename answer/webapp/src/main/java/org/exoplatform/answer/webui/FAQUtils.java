@@ -386,7 +386,7 @@ public class FAQUtils {
   private static String getFormatDate(int dateFormat, Date myDate) {
     if (myDate == null)
       return "";
-    String format = (dateFormat == DateFormat.LONG) ? "EEE,MMM dd,yyyy" : "MM/dd/yyyy";
+    String format = (dateFormat == DateFormat.LONG) ? "EEE, MMM dd, yyyy" : "MM/dd/yyyy";
     try {
       String userName = UserHelper.getCurrentUser();
       if (!isFieldEmpty(userName)) {
@@ -398,7 +398,7 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("No forum settings found for date format. Will use format " + format);
     }
-    format = format.replaceAll("D", "E");
+    format = format.replace("EEE,MMM", "EEE, MMM").replaceAll("D", "E");
     return TimeConvertUtils.getFormatDate(myDate, format);
   }
 

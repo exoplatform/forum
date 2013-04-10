@@ -29,6 +29,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -53,6 +54,8 @@ public class UIQuickSearch extends BaseUIFAQForm {
   final static private String FIELD_SEARCHVALUE = "inputValue";
 
   private FAQSetting          faqSetting_       = new FAQSetting();
+  
+  private static final String SearchDefaultValue = "UIQuickSeach.label.search";
 
   public UIQuickSearch() throws Exception {
     addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null));
@@ -71,6 +74,10 @@ public class UIQuickSearch extends BaseUIFAQForm {
     } else {
       faqSetting_.setIsAdmin("FALSE");
     }
+  }
+  
+  protected void initPlaceholder() throws Exception {
+    ((UIFormStringInput)getChildById(FIELD_SEARCHVALUE)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
   }
 
   static public class SearchActionListener extends BaseEventListener<UIQuickSearch> {

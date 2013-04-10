@@ -19,6 +19,7 @@ package org.exoplatform.answer.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.UIAnswersContainer;
 import org.exoplatform.answer.webui.UIAnswersPageIterator;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
@@ -30,7 +31,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.forum.common.webui.BaseEventListener;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -56,7 +56,7 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIWatchManager.CancelActionListener.class) 
     }
 )
-public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
+public class UIWatchManager extends BaseUIFAQForm implements UIPopupComponent {
   private String                categoryId_       = "";
 
   private static String         ADD               = "add";

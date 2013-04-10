@@ -538,7 +538,7 @@ public class UIQuestions extends UIContainer {
   protected String calculateTimeMessageOfLastActivity(long time) {
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
     calendar.setTimeInMillis(time);
-    return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE,MMM dd,yyyy", TimeConvertUtils.MONTH);
+    return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE, MMM dd, yyyy", TimeConvertUtils.MONTH);
   }
 
   public boolean checkQuestionToView(Question question, WebuiRequestContext context) throws Exception {

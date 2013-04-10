@@ -54,7 +54,7 @@ public class ForumUserListener extends UserEventListener {
     String shortDateFormat = props.getProperty("shortDateFormat") != null ? props.getProperty("shortDateFormat") : "MM/dd/yyyy";
     profileTemplate.setShortDateFormat(shortDateFormat);
 
-    String longDateFormat = props.getProperty("longDateFormat") != null ? props.getProperty("longDateFormat") : "DDD,MMM dd,yyyy";
+    String longDateFormat = props.getProperty("longDateFormat") != null ? props.getProperty("longDateFormat") : "DDD, MMM dd, yyyy";
 
     profileTemplate.setLongDateFormat(longDateFormat);
     String timeFormat = (props.getProperty("timeFormat") != null) ? props.getProperty("timeFormat") : "hh:mm a";
