@@ -1,59 +1,48 @@
 <% uiform.begin() %>
-<div class="UIWatchToolsForm resizable">
-	<div class="UITopicContainer">
-	 	<div class="UIForumContainer">
-			<div class="ContentContainer">
-				<div class="UITopicList">
-					<div style="overflow:auto; padding-bottom:2px;" class="ClearFix">
-					<% 
-					  uiform.renderChild(uiform.WATCHTOOLS_ITERATOR);
-					%>
+<div class="uiWatchToolsForm resizable">
+  <div class="horizontalLayout">
+          <% 
+            uiform.renderChild(uiform.WATCHTOOLS_ITERATOR);
+          %>
 
-					</div>
-					<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
-						<thead>
-							<tr>
-								<th><%=_ctx.appRes("UIWatchToolsForm.label.Emails");%></th>
-								<th style="width:120px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
-							</tr>
-						</thead>
-						<tbody>
-							<% 
-								String []emails = uicomponent.getEmails();
-								if(emails.length > 0){
-									String classRow = "whileRow";
-								  for(int i = 0; i < emails.length; ++i){
-								    String email = emails[i];
-										if(i%2 == 0) classRow = "whileRow";
-										else classRow = "OddRow";
-							%>
-								<tr class="$classRow">
-									<td >
-										<div>$email</div>
-									</td>
-									<td class="Tdbox">
-										<div onclick="<%=uicomponent.event("DeleteEmail", email);%>" style="cursor:pointer;">
-											<div class="DeleteIcon" style="width:24px; margin:auto;"><span></span></div>
-										</div>
-									</td>
-					 			</tr>
-						 	<%  }
-						 		} else { %>
-						 	<tr>
-								<td colspan="2" align="center">
-									<strong><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></strong>
-								</td>
-							</tr>
-						 <% } %>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-</div>
+          <table class="uiGrid table table-hover table-striped">
+            <thead>
+              <tr>
+                <th><%=_ctx.appRes("UIWatchToolsForm.label.Emails");%></th>
+                <th style="width:20px" class="center"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% 
+                String []emails = uicomponent.getEmails();
+                if(emails.length > 0){
+                  for(int i = 0; i < emails.length; ++i){
+                    String email = emails[i];
+              %>
+                <tr>
+                  <td >
+                    $email
+                  </td>
+                  <td class="center">
+                    <a class="actionIcon" href="<%=uicomponent.event("DeleteEmail", email);%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIWatchToolsForm.label.Delete");%>">
+                      <i class="uiIconDelete uiIconLightGray"></i>
+                    </a>
+                  </td>
+                </tr>
+              <%  }
+                } else { %>
+              <tr>
+                <td colspan="2" class="center empty">
+                  <%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%>
+                </td>
+              </tr>
+             <% } %>
+            </tbody>
+          </table>
+  </div>
 
 </div>
-    <div class="uiAction">
+    <div class="uiAction uiActionBorder">
       <button onclick="<%=uicomponent.event("Close")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
     </div>
   <%uiform.end()%>
