@@ -42,30 +42,31 @@
 				else if(j==1) height = "";
 				else height = ""; 
 		%>
-		<div style="display:$displayTab; $height" id="UITabContent">
+		<div style="display:$displayTab; $height" id="UITabContent_$j">
 			<% if(j == 0){ %>	
 			<p><%=_ctx.appRes("UISettingEditModeForm.label.ChooseCategory-Forum");%>:</p>
-			<div class="uiTrees scrollArea">
+			<div class="uiTrees scrollArea" style="height:172px; overflow:auto;">
 				<div class="treeContainer">
 					<ul class="nodeGroup">
-					<% 
+					<%
+						String checked = "";
 						for(category in categories) {
 							display = "display:block;" ;
-							iconClass = "collapseIcon" ;
-							String isShow = "true";
-							categoryName = category.getCategoryName() ;
+							iconClass = "expandIcon" ;
+							categoryName = category.getCategoryName().trim() ;
 							List forums =	uicomponent.getForumList(category.getId());
-							if(t > 0){
-							 // display = "display:none;" ;
-							  iconClass = "expandIcon" ;
+							if (t > 0) {
+							  display = "display:none;" ;
+							  iconClass = "collapseIcon" ;
 							}
 							++t;
-							if(forums.size() < 1) {iconClass = "expandIcon false"; isShow = "false";}
+							if(forums.size() < 1) {iconClass = "uiIconEmpty";}
+							checked = (uicomponent.isCategoryChecked(category.getId()) == true) ? "checked " : "";
 					%>
 						<li class="node">
-							<a href="javascript:void(0);" class="uiIconNode $iconClass">
+							<a href="javascript:void(0);" class="uiIconNode $iconClass" onclick="eXo.forum.UIForumPortlet.showTreeNode(this);">
 								<span class="uiCheckbox">
-									<input type="checkbox" name="<%=category.getId()%>" class="checkbox" id="<%=category.getId()%>">
+									<input onclick="eXo.forum.UIForumPortlet.checkedNode(this)" type="checkbox" <%=checked%>name="<%=category.getId()%>" class="checkbox" id="<%=category.getId()%>">
 									<span><i class="uiIconCategory uiIconLightGray"></i> $categoryName</span>
 								</span>								
 							</a>
@@ -73,15 +74,16 @@
 							<ul class="nodeGroup" style="$display">
 							<% 
 								for(forum in forums) {
-									forumName = forum.getForumName() ;
+									forumName = forum.getForumName().trim() ;
 									classForumIcon = "uiIconUIForms";
 									if(forum.getIsLock()) classForumIcon = "uiIconForumColorLockTiny";
 									if(forum.getIsClosed())classForumIcon = "uiIconForumColorCloseTiny"; 
+									checked = (uicomponent.isForumChecked(forum.getId()) == true) ? "checked " : "";
 							%>
 								<li class="node">
 									<i class="uiIconEmpty"></i>
 									<span class="uiCheckbox">
-										<input type="checkbox" name="<%=forum.getId()%>" class="checkbox" id="<%=forum.getId()%>">
+										<input onclick="eXo.forum.UIForumPortlet.checkedChildNode(this)" type="checkbox" name="<%=forum.getId()%>" <%=checked%>class="checkbox" id="<%=forum.getId()%>">
 										<span><i class="$classForumIcon uiIconLightGray"></i> $forumName</span>
 									</span>
 								</li>

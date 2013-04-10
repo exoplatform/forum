@@ -315,55 +315,32 @@
       }
     },
 
-    showTreeNode : function(obj, isShow) {
-      if (isShow === "false")
-        return;
+    showTreeNode : function(obj) {
       var jobject = $(obj);
-      var parentNode = jobject.parents(".nodeGroup");
-      var nodes = parentNode.find('.node');
-      var selectedNode = jobject.parents(".node");
-      var nodeSize = nodes.length;
-      var childrenContainer = null;
-      for ( var i = 0; i < nodeSize; i++) {
-        var node = nodes.eq(i);
-        childrenContainer = node.find(".nodeGroup:first");
-        if (node[0] === selectedNode[0]) {
-          childrenContainer.show();
-          node.addClass("node expandIcon").removeClass('collapseIcon');
-        } else {
-          childrenContainer.hide();
-          if (node.hasClass("node expandIcon false"))
-            continue;
-          node.addClass("node collapseIcon");
-        }
-      }
+      var parentNode = jobject.parents(".nodeGroup:first");
+
+      var nodes = parentNode.find(' > .node');
+      nodes.find('.nodeGroup:first').hide();
+      nodes.find('.uiIconNode:first').removeClass('expandIcon').addClass("collapseIcon");
+
+      var selectedNode = jobject.parents(".node:first");
+
+      selectedNode.find('.uiIconNode:first').addClass("expandIcon");
+      selectedNode.find('.nodeGroup:first').show();
     },
 
     checkedNode : function(elm) {
-      var jelm = $(elm);
-      var jinput = jelm.find('input:first');
-
-      var parentNode = jinput.parent().parents('.node');
-      var containerChild = parentNode.find('.nodeGroup');
-      if (containerChild.exists()) {
-        var checkboxes = containerChild.find('input');
-        for ( var i = 0; i < checkboxes.length; ++i) {
-          if (jinput[0].checked)
-            checkboxes[i].checked = (true);
-          else
-            checkboxes[i].checked = (false);
-        }
-      }
+      var jinput = $(elm);
+      var node = jinput.parents('.node:first');
+      var inputs = node.find('.nodeGroup:first').find('input[type=checkbox]');
+      inputs.prop("checked", elm.checked);
     },
 
     checkedChildNode : function(elm) {
-      var input = $(elm).find('input:first');
-      if (input.exists()) {
-        if (input[0].checked) {
-          var parentCheckBoxNode = elm.parent().parent().parent();
-          var parentCheckBox = parentCheckBoxNode.find('a.uiIconNode:first').find('input:first');
-          parentCheckBox.find('input:first')[0].checked = (true);
-        }
+      if (elm.checked) {
+        var parentNode = $(elm).parents('.nodeGroup:first').parents('.node:first');
+        var parentCheckBox = parentNode.find('a.uiIconNode:first').find('input:first');
+        parentCheckBox.prop("checked", elm.checked);
       }
     },
 
