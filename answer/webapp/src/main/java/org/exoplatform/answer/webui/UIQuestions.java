@@ -206,7 +206,6 @@ public class UIQuestions extends UIContainer {
     if (FAQUtils.isFieldEmpty(getId()))
       setId("UIQuestions");
 
-    //"CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"
     String[] icons = new String[]{"uiIconComment", "uiIconAnsAnswer", "uiIconEdit", "uiIconTrash", "uiIconMove", "uiIconAnsSentMail"}; 
     iconActionQuesion.clear();
     for(int i = 0; i < moderatorActionQues_.length; ++i) {
@@ -525,14 +524,13 @@ public class UIQuestions extends UIContainer {
   }
 
   public String render(Object obj) throws RenderingException {
-    String result = "";
     if (obj instanceof Question)
-      result = renderHelper.renderQuestion((Question) obj);
+      return renderHelper.renderQuestion((Question) obj);
     else if (obj instanceof Answer)
-      result=  renderHelper.renderAnswer((Answer) obj);
+      return renderHelper.renderAnswer((Answer) obj);
     else if (obj instanceof Comment)
-      result = renderHelper.renderComment((Comment) obj);
-    return CommonUtils.decodeSpecialCharToHTMLnumber(result);
+      return renderHelper.renderComment((Comment) obj);
+    return CommonUtils.EMPTY_STR;
   }
 
   protected String calculateTimeMessageOfLastActivity(long time) {
@@ -654,7 +652,7 @@ public class UIQuestions extends UIContainer {
       UIUserSettingForm uiSetting = popupContainer.addChild(UIUserSettingForm.class, null, null);
       uiSetting.setFaqSetting(question.faqSetting_);
       uiSetting.init();
-      popupContainer.setId("CategorySettingForm");
+      popupContainer.setId("UserSettingForm");
       popupAction.activate(popupContainer, 500, 0);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

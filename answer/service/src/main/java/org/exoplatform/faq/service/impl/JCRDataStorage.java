@@ -1712,6 +1712,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     cate.setPath(categoryNode.getPath());
     cate.setName(reader.string(EXO_NAME));
     cate.setIndex(reader.l(EXO_INDEX));
+    cate.setView(reader.bool(EXO_IS_VIEW));
     return cate;
   }
   

@@ -19,19 +19,12 @@
        for(String cate : listCate ) {
          categoryId = cate.getPath() ;
          path = uicomponent.getCategoriesName(categoryId);
-         categoryPathName = path.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
+         categoryPathName = uicomponent.getSubPath(path).replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
 				 String unWatch = uicomponent.event("UnWatch", uicomponent.id);
          String link = uicomponent.event("Link",categoryId);
       %>
        <tr>
-         <% if(path.length() > 120) {
-             String title = path ;
-             path = uicomponent.getSubString(path,120);
-          %>
-           <td><a rel="tooltip" data-placement="bottom" title="$title" href="$link">$categoryPathName</a></td>
-         <% } else { %>
-           <td><a href="$link">$categoryPathName</a></td>
-         <% } %>
+         <td><a rel="tooltip" data-placement="bottom" title="$path" href="$link">$categoryPathName</a></td>
          <td class="center">
              <a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="actionIcon" >
              	<i class="uiIconTrash uiIconLightGray"></i>

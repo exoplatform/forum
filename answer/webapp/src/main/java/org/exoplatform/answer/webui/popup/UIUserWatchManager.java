@@ -33,8 +33,6 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -77,8 +75,6 @@ public class UIUserWatchManager extends UIContainer {
 
   private String                emailAddress;
 
-  static private Log            LOG                    = ExoLogger.getLogger(UIWatchManager.class);
-
   private static FAQService     faqService_;
 
   public UIUserWatchManager() throws Exception {
@@ -102,19 +98,14 @@ public class UIUserWatchManager extends UIContainer {
     return faqService_.getParentCategoriesName(categoryId);
   }
 
-  public static String getSubString(String str, int max) {
-    if (!FAQUtils.isFieldEmpty(str)) {
-      int l = str.length();
-      if (l > max) {
-        str = str.substring(0, (max - 3));
-        int comma = str.lastIndexOf(",");
-        if (comma > 0)
-          str = str.substring(0, comma) + "...";
-        else
-          str = str + "...";
+  public static String getSubPath(String path) {
+    if (FAQUtils.isFieldEmpty(path) == false) {
+      String[] paths = path.split(" > ");
+      if (paths.length > 3) {
+        return paths[0] + " > ... > " + paths[paths.length - 1];
       }
     }
-    return str;
+    return null;
   }
 
   public void setFAQSetting(FAQSetting setting) {
@@ -143,7 +134,6 @@ public class UIUserWatchManager extends UIContainer {
       }
       return listCategories;
     } catch (Exception e) {
-      LOG.error("Fail to get list of category watch: ", e);
       return null;
     }
   }
@@ -171,9 +161,8 @@ public class UIUserWatchManager extends UIContainer {
       }
       return listQuestion_;
     } catch (Exception e) {
-      LOG.error("fail to get list of question watch: " + e.getMessage(), e);
+      return null;
     }
-    return null;
   }
 
   protected long getTotalpages(String pageInteratorId) {
@@ -181,7 +170,6 @@ public class UIUserWatchManager extends UIContainer {
     try {
       return pageIterator.getInfoPage().get(3);
     } catch (Exception e) {
-      LOG.debug("Getting total page fail: ", e);
       return 1;
     }
   }
@@ -193,9 +181,9 @@ public class UIUserWatchManager extends UIContainer {
       UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class);
       if (!faqService_.isExisting(categoryId)) {        
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));        
+        event.getRequestContext().getUIApplication()
+        .addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));        
+
         uiQuestions.setDefaultLanguage();
         UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
         popupAction.deActivate();
@@ -218,11 +206,9 @@ public class UIUserWatchManager extends UIContainer {
     public void execute(Event<UIUserWatchManager> event) throws Exception {
       UIUserWatchManager watchManager = event.getSource();
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-      UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
-      if (!faqService_.isExisting(categoryId)) {        
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));        
+      if (faqService_.isExisting(categoryId) == false) {
+        event.getRequestContext().getUIApplication()
+          .addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));        
         return;
       }
       faqService_.unWatchCategory(categoryId, FAQUtils.getCurrentUser());

@@ -522,6 +522,12 @@ public class FAQUtils {
   public static String renderCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String actionName,  String categoryId, boolean isAddSup) throws Exception {
     StringBuilder builder = new StringBuilder();
     Category category = categoryTree.getCategory();
+    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    String clazz = "collapseIcon";
+    if (categoryTrees.size() == 0){
+      clazz = "uiIconEmpty";
+    }
+
     builder.append("<a href=\"javascript:void(0);\"");
     if (isAddSup == false && category.getId().equals(categoryId) == true) {
       String warning = uiForm.i18n("UIMoveQuestionForm.msg.choice-orther");
@@ -530,7 +536,7 @@ public class FAQUtils {
       builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
     }
     if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
-        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
       String home = uiForm.i18n("UICategoryTree.label.home");
@@ -538,7 +544,7 @@ public class FAQUtils {
     }
     builder.append("</a>");
 
-    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+    
     if(categoryTrees.size() > 0) {
       builder.append("<ul class=\"nodeGroup\">");
       for(CategoryTree subTree : categoryTrees) {

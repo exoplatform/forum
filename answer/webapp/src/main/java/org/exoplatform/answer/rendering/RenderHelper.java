@@ -21,6 +21,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.bbcode.core.BBCodeRenderer;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.rendering.MarkupRenderingService;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 
@@ -68,7 +69,7 @@ public class RenderHelper {
   static class AnswerDelegate implements MarkupRenderDelegate<Answer> {
 
     public String getMarkup(Answer answer) {
-      return answer.getResponses();
+      return CommonUtils.decodeSpecialCharToHTMLnumber(answer.getResponses());
     }
 
     public String getSyntax(Answer target) {
@@ -80,7 +81,7 @@ public class RenderHelper {
   static class CommentDelegate implements MarkupRenderDelegate<Comment> {
 
     public String getMarkup(Comment answer) {
-      return answer.getComments();
+      return CommonUtils.decodeSpecialCharToHTMLnumber(answer.getComments());
     }
 
     public String getSyntax(Comment target) {
@@ -92,7 +93,7 @@ public class RenderHelper {
   static class QuestionDelegate implements MarkupRenderDelegate<Question> {
 
     public String getMarkup(Question question) {
-      return question.getDetail();
+      return CommonUtils.decodeSpecialCharToHTMLnumber(question.getDetail());
     }
 
     public String getSyntax(Question target) {
@@ -104,10 +105,6 @@ public class RenderHelper {
   public MarkupRenderingService getMarkupRenderingService() {
     if (this.markupRenderingService == null) {
       this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MarkupRenderingService.class);
-      /*
-       * BBCodeRenderer renderer = (BBCodeRenderer) markupRenderingService.getRenderer(BBCodeRenderer.BBCODE_SYNTAX_ID); renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
-       */
-
     }
 
     return this.markupRenderingService;
