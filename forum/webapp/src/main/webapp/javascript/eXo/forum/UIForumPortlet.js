@@ -319,22 +319,22 @@
       if (isShow === "false")
         return;
       var jobject = $(obj);
-      var parentNode = jobject.parents(".ParentNode");
-      var nodes = parentNode.find('div.Node');
-      var selectedNode = jobject.parents(".Node");
+      var parentNode = jobject.parents(".nodeGroup");
+      var nodes = parentNode.find('.node');
+      var selectedNode = jobject.parents(".node");
       var nodeSize = nodes.length;
       var childrenContainer = null;
       for ( var i = 0; i < nodeSize; i++) {
         var node = nodes.eq(i);
-        childrenContainer = node.find("div.ChildNodeContainer:first");
+        childrenContainer = node.find(".nodeGroup:first");
         if (node[0] === selectedNode[0]) {
           childrenContainer.show();
-          node.addClass("Node SmallGrayPlus").removeClass('SmallGrayMinus');
+          node.addClass("node expandIcon").removeClass('collapseIcon');
         } else {
           childrenContainer.hide();
-          if (node.hasClass("Node SmallGrayPlus false"))
+          if (node.hasClass("node expandIcon false"))
             continue;
-          node.addClass("Node SmallGrayMinus");
+          node.addClass("node collapseIcon");
         }
       }
     },
@@ -343,8 +343,8 @@
       var jelm = $(elm);
       var jinput = jelm.find('input:first');
 
-      var parentNode = jinput.parents('.Node');
-      var containerChild = parentNode.find('div.ChildNodeContainer:first');
+      var parentNode = jinput.parent().parents('.node');
+      var containerChild = parentNode.find('.nodeGroup');
       if (containerChild.exists()) {
         var checkboxes = containerChild.find('input');
         for ( var i = 0; i < checkboxes.length; ++i) {
@@ -361,7 +361,7 @@
       if (input.exists()) {
         if (input[0].checked) {
           var parentCheckBoxNode = elm.parent().parent().parent();
-          var parentCheckBox = parentCheckBoxNode.find('div.ParentCheckBox:first');
+          var parentCheckBox = parentCheckBoxNode.find('a.uiIconNode:first').find('input:first');
           parentCheckBox.find('input:first')[0].checked = (true);
         }
       }
