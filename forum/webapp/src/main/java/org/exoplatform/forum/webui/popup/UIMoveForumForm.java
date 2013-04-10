@@ -28,6 +28,7 @@ import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
@@ -81,7 +82,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     List<Category> categorys = new ArrayList<Category>();
     for (Category category : forumService.getCategories()) {
-      if (!category.getId().equals(categoryId_)) {
+      if (!category.getId().equals(categoryId_) && !category.getId().equals(Utils.CATEGORY_SPACE_ID_PREFIX)) {
         categorys.add(category);
       }
     }
