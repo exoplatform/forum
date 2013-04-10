@@ -71,7 +71,7 @@ public class UIFAQPortlet extends UIPortletApplication {
     if (spacePrettyName != null) {
       SpaceService sService = getApplicationComponent(SpaceService.class);
       Space space = sService.getSpaceByPrettyName(spacePrettyName);
-      return space.getDisplayName();
+      return (space != null) ? space.getDisplayName() : CommonUtils.AMP_SPACE;
     }
     return CommonUtils.AMP_SPACE;
   }

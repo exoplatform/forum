@@ -271,11 +271,10 @@ public class UIForumPortlet extends UIPortletApplication {
     if (spacePrettyName != null && ForumUtils.isEmpty(forumSpId)) {
       SpaceService sService = getApplicationComponent(SpaceService.class);
       Space space = sService.getSpaceByPrettyName(spacePrettyName);
-
-      spaceGroupId = space.getGroupId();
-      forumSpId = Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
-      spaceDisplayName = space.getDisplayName();
       try {
+        spaceGroupId = space.getGroupId();
+        forumSpId = Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
+        spaceDisplayName = space.getDisplayName();
         OrganizationService service = getApplicationComponent(OrganizationService.class);
         String parentGrId = service.getGroupHandler().findGroupById(spaceGroupId).getParentId();
         categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
@@ -283,6 +282,7 @@ public class UIForumPortlet extends UIPortletApplication {
         if (log.isDebugEnabled()) {
           log.debug("Failed to set category id of space " + space.getPrettyName(), e);
         }
+        return null;
       }
     }
     return forumSpId;
