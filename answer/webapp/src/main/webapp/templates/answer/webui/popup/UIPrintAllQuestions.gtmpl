@@ -29,7 +29,6 @@
 									<div class="avatarContainer">
 										<img  src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 									</div>
-							<% } %>
 								<!-- ========================================= view author's infor ================================ -->
 								<%
 									if(uicomponent.viewAuthorInfor) {
