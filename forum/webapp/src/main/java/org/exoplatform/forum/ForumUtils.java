@@ -196,7 +196,7 @@ public class ForumUtils {
   
   public static String getFileSource(ForumAttachment attachment) {
     try {
-      ForumDownloadResouce downloadResouce = new ForumDownloadResouce(attachment.getMimeType(), attachment.getMimeType());
+      ForumDownloadResource downloadResouce = new ForumDownloadResource(attachment.getMimeType(), attachment.getMimeType());
       downloadResouce.setDownloadName(attachment.getName());
       downloadResouce.setAttachment((BufferAttachment) attachment);
       DownloadService downloadService = (DownloadService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(DownloadService.class);

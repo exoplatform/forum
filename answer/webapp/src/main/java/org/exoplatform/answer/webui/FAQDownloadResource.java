@@ -28,10 +28,10 @@ import org.exoplatform.faq.service.FileAttachment;
  *          tuvd@exoplatform.com
  * Apr 8, 2013  
  */
-public class FAQDownloadResouce extends DownloadResource {
+public class FAQDownloadResource extends DownloadResource {
   private FileAttachment fileAttachment;
   
-  public FAQDownloadResouce(String downloadType, String resourceMimeType) {
+  public FAQDownloadResource(String downloadType, String resourceMimeType) {
     super(resourceMimeType);
   }
 

@@ -28,11 +28,11 @@ import org.exoplatform.forum.service.BufferAttachment;
  *          tuvd@exoplatform.com
  * Apr 9, 2013  
  */
-public class ForumDownloadResouce extends DownloadResource {
+public class ForumDownloadResource extends DownloadResource {
   
   private BufferAttachment attachment;
 
-  public ForumDownloadResouce(String downloadType, String resourceMimeType) {
+  public ForumDownloadResource(String downloadType, String resourceMimeType) {
     super(downloadType, resourceMimeType);
   }
 
