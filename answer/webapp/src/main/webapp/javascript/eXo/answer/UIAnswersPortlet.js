@@ -619,7 +619,6 @@
     return false;
   };
   
-  // Remove UIAnswersPortlet.createLink function.
   UIAnswersPortlet.initTreeNode = function(componentId) {
     var container = $.fn.findId(componentId);
     var treeContainer = container.find('div.treeContainer:first');
@@ -637,9 +636,21 @@
     var childrenNodeGroup = parentNode.find('ul.nodeGroup:first').show();
     
     var allNodes = treeContainer.find('a.uiIconNode');
-    allNodes.attr('class', 'uiIconNode collapseIcon');
+    $.each(allNodes, function(id, elm) {
+       var thizz = $(elm);
+       if(thizz.hasClass('uiIconEmpty')) {
+         thizz.removeClass('nodeSelected');
+       } else {
+         thizz.attr('class', 'uiIconNode collapseIcon');
+       }
+    });
     
-    thiz.attr('class', 'uiIconNode expandIcon nodeSelected');
+    if(thiz.hasClass('uiIconEmpty') == false) {
+      thiz.attr('class', 'uiIconNode expandIcon nodeSelected');
+    } else {
+      thiz.addClass('nodeSelected');
+    }
+    
     UIAnswersPortlet.showNode(thiz);
   };
   
@@ -647,11 +658,29 @@
     if(!obj.parents('div.treeContainer').exists()) return;
     var parentNode = obj.parents('ul.nodeGroup:first').show().parents('li.node:first');
     if(parentNode.exists()) {
-      var nThiz = parentNode.find('a.uiIconNode:first').attr('class', 'uiIconNode expandIcon');
+      var nThiz = parentNode.find('a.uiIconNode:first');
+      if(nThiz.hasClass('uiIconEmpty') == false) {
+        nThiz.attr('class', 'uiIconNode expandIcon');
+      }
       UIAnswersPortlet.showNode(nThiz);
     }
   };
-  
+
+  UIAnswersPortlet.checkedNode = function(obj, evt) {
+    var thizz = $(obj);
+    if(obj.checked === true) {
+      var nodes = thizz.parents('.nodeGroup:first').parents('.node');
+      var inputs = nodes.find('input[type=checkbox]:first');
+      inputs.prop("checked", obj.checked);
+    }
+
+    var nodeGroup = thizz.parents('.node:first').find('.nodeGroup:first');
+    if (nodeGroup.length > 0) {
+      var inputChilds = nodeGroup.find('.node').find('input[type=checkbox]:first');
+      inputChilds.prop("checked", obj.checked);
+    }
+    utils.cancelEvent(evt);
+  };
   
   UIAnswersPortlet.submitSearch = function (id) {
     $.fn.findId(id).on('keydown', UIAnswersPortlet.submitOnKey);

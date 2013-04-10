@@ -46,8 +46,6 @@ import org.exoplatform.webui.form.UIForm;
     }
 )
 public class UISelectCategoryForumForm extends UIForm implements UIPopupComponent {
-  private List<Category> listcate = new ArrayList<Category>();
-
   private ForumService   forumService;
 
   private Log            log      = ExoLogger.getLogger(UISelectCategoryForumForm.class);
@@ -56,11 +54,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
     forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
   }
 
-  public void setListCategory() throws Exception {
-    listcate = forumService.getCategories();
-  }
-
-  List<Forum> getForums(String categoryId) {
+  protected List<Forum> getForums(String categoryId) {
     List<Forum> listForum = new ArrayList<Forum>();
     if (categoryId != null && categoryId.trim().length() > 0) {
       try {
@@ -74,7 +68,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
   }
 
   protected List<Category> getCategories() throws Exception {
-    return this.listcate;
+    return forumService.getCategories();
   }
 
   public void activate() {
@@ -113,9 +107,9 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
       UISelectCategoryForumForm uiForm = event.getSource();
       String allPath = event.getRequestContext().getRequestParameter(OBJECTID);
       UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
-      UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
+      UIAnswerEditModeForm settingForm = portlet.findFirstComponentOfType(UIAnswerEditModeForm.class);
       settingForm.setPathCatygory(uiForm.getPathName(allPath));
-      event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getChildById(UIAnswerEditModeForm.DISCUSSION_TAB));
       try {
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
         UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);

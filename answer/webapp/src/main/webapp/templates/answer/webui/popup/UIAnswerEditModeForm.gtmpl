@@ -1,0 +1,129 @@
+<%
+	import org.exoplatform.faq.service.Utils;
+	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Cate;
+%>
+
+<div class="faqPortletSetting $uicomponent.id">
+	<%uiform.begin()%>
+	<div class="uiTabPane">
+		<div class="workingArea">			
+		 	<div class="actionButtonGroup center">			 		
+				<div class="btn-group ">
+			<%
+				String selTabId = uicomponent.getSelectedTab() ;
+				if(uicomponent.isResetMail){
+					uicomponent.isResetMail = false;
+					selTabId = uicomponent.SET_DEFAULT_EMAIL_TAB;
+				}
+				String actionChangeTab =	"";
+				int count = 0;
+				for(inputSet in uicomponent.getChildren()) {
+					if(!inputSet.isRendered()) continue ;
+					actionChangeTab =	uicomponent.event("ChildTabChange", "parent/" + count);
+					String className="" ;
+					if(inputSet.getId().equals(selTabId)){
+					 className="active" ;
+					}
+					String tabNames = inputSet.getId();
+					String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet.name) ;
+					count ++;
+				%>
+					<button class="btn $className" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$tabName</button>
+			<%}%>
+				</div>
+			</div>
+		 <!--actionButtonGroup-->
+			<div class="uiTabContentContainers">
+				<%
+					for(formInput in uicomponent.getChildren()) {
+						if(formInput.isRendered() == false) continue ;
+						String display = "none" ;
+						if(formInput.getId().equals(selTabId)) display="block" ;
+				%>
+						<div class="uiTabContent"	style="display:$display;">
+						<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)) {%>
+
+						<!-- Child-actionButtonGroup -->
+							<div class="actionButtonGroup center">			 		
+								<div class="btn-group ">
+							<%
+								count = 0;
+								for(childInputSet in formInput.getChildren()) {
+									if(childInputSet.isRendered() == false) continue ;
+									actionChangeTab =	uicomponent.event("ChildTabChange", "child/" + count);
+									String childClassName="" ;
+									if(count == uicomponent.indexOfTab) childClassName="active" ;
+									String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
+							%>
+									<button class="btn $childClassName" onmousedown="$actionChangeTab" onkeydown="$actionChangeTab">$childTabName</button>
+							<%	count ++; 
+								}
+							%>
+								</div>
+							</div>
+									
+								<!-- /Child-actionButtonGroup -->
+								<!-- Child-uiTabContentContainer -->
+							<div class="uiTabContentContainer" >
+							<%
+								int i = 0;
+								for(uiFormInput in formInput.getChildren()) {
+									if(uiFormInput.isRendered() == false) continue ;
+									String actionReset = uicomponent.event("ResetMailContent", "" + i);
+									String displayChild = "none" ;
+									if(i == uicomponent.indexOfTab) displayChild="block" ;
+									else displayChild = "none" ;
+									i ++;
+							%>
+									<div class="uiTabContent"	style="display:$displayChild; ">
+										<div class="form-horizontal">
+										<%
+											for(childForm in uiFormInput.getChildren()) {
+										%>
+											<div class="control-group">
+												<label class="control-label" for="<%=childForm.getId();%>"><%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%></label>
+												<div	class="controls">
+													<div class="pull-left" style="width: 95%"><%uicomponent.renderUIComponent(childForm);%></div>
+													<a	href="javascript:void(0)"	onclick="$actionReset" style="cursor:pointer;" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAnswerEditModeForm.label.resetMailContent")%>">
+														<i class="uiIconRefresh uiIconLightGray"></i>
+													</a>
+												</div>
+											</div>
+									<% }%>
+										</div>		
+									</div>
+								<%}%>
+							</div>
+
+						 <!-- /Child-uiTabContentContainer -->
+						 <%} else if(formInput.getId().equals(uicomponent.CATEGORY_SCOPING)) {
+						  	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+								requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.CATEGORY_SCOPING + "');");  
+							%>
+						 		<!-- View interface -->
+								<div class="viewQuestionsToSelect" style="overflow:auto;" id="<%=uicomponent.CATEGORY_SCOPING%>">
+									<div class="uiTrees scrollArea">
+										<div class="treeContainer">
+										<%=uicomponent.renderCategoryTree();%>
+										</div>
+									</div>
+								</div>
+								
+						 <%} else {
+								uicomponent.renderUIComponent(formInput) ;
+							}
+							%>
+						</div>
+				<%}%>
+			</div>	<!-- /uiTabContentContainers -->
+			 <!-- /ContentTabs-->
+			 <!-- UIAction-->
+			<div class="uiAction">
+			 	<button type="button" onclick="<%=uicomponent.event("Save")%>" class="btn"><%=_ctx.appRes("UIAnswerEditModeForm.action.Save")%></button>
+			</div>
+			<!-- /UIAction-->
+		</div>
+	</div>
+	<%uiform.end()%>
+</div>

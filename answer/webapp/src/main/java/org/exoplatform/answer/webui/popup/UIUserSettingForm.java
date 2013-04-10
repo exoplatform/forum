@@ -50,11 +50,10 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UIUserSettingForm.ChangeAvatarActionListener.class),
       @EventConfig(listeners = UIUserSettingForm.OpenTabActionListener.class),
       @EventConfig(listeners = UIUserSettingForm.SetDefaultAvatarActionListener.class), 
-      
       @EventConfig(listeners = UIUserSettingForm.CancelActionListener.class) 
 })
 
-public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent{
+public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public static final String ORDER_BY         = "order-by".intern();
 
@@ -71,30 +70,30 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
   private int                id               = 0;
 
   public final String        DISPLAY_TAB      = "DisplayTab";
-  
+
   public static final String WATCHES_TAB      = "WatchesTab";
 
   public static final String ITEM_CREATE_DATE = "created".intern();
 
-  public static final String ITEM_ALPHABET    = "alphabet".intern();
+  public static final String ITEM_ALPHABET    = "alphabetIndex".intern();
 
   public static final String ASC              = "asc".intern();
 
   public static final String DESC             = "desc".intern();
-  
+
   protected String           tabId            = "DisplayTab";
-  
+
   public UIUserSettingForm() throws Exception {
     faqService_ = FAQUtils.getFAQService();
     setActions(new String[] { "Save", "Cancel" });
     setAddColonInLabel(true);
   }
-  
+
   public void init() throws Exception {
     UIFormInputWithActions displayTab = new UIFormInputWithActions(DISPLAY_TAB);
     List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
     orderBy.add(new SelectItemOption<String>(getLabel(ITEM_CREATE_DATE), FAQSetting.DISPLAY_TYPE_POSTDATE));
-    orderBy.add(new SelectItemOption<String>(getLabel(ITEM_ALPHABET) + "/Index", FAQSetting.DISPLAY_TYPE_ALPHABET + "/Index"));
+    orderBy.add(new SelectItemOption<String>(getLabel(ITEM_ALPHABET), FAQSetting.DISPLAY_TYPE_ALPHABET + "/Index"));
     displayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
 
     List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
@@ -104,14 +103,46 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
 
     displayTab.addUIFormInput((new UICheckBoxInput(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
     setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
-    
+
     addChild(displayTab);
-    
+
     UIUserWatchManager watchForm = createUIComponent(UIUserWatchManager.class, null, WATCHES_TAB);
     watchForm.setFAQSetting(faqSetting_);
     addChild(watchForm);
   }
-  
+
+  protected boolean getIsSelected(int id) {
+    if (this.id == id)
+      return true;
+    return false;
+  }
+
+  public FAQSetting getFaqSetting() {
+    return faqSetting_;
+  }
+
+  public void setFaqSetting(FAQSetting faqSetting) {
+    this.faqSetting_ = faqSetting;
+  }
+
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  public void setAvatarUrl(String url) {
+    this.avatarUrl = url;
+  }
+
+  boolean isDefaultAvatar() {
+    return avatarUrl != null && avatarUrl.indexOf(Utils.DEFAULT_AVATAR_URL) >= 0;
+  }
+
+  public void activate() {
+  }
+
+  public void deActivate() {
+  }
+
   static public class SaveActionListener extends EventListener<UIUserSettingForm> {
     public void execute(Event<UIUserSettingForm> event) throws Exception {
       UIUserSettingForm settingForm = event.getSource();
@@ -119,9 +150,8 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       FAQSetting faqSetting = settingForm.faqSetting_;
       faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue()));
       faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue()));
-      faqSetting.setSortQuestionByVote(settingForm.getUICheckBoxInput(settingForm.ITEM_VOTE)
-                                                  .isChecked());
-      
+      faqSetting.setSortQuestionByVote(settingForm.getUICheckBoxInput(settingForm.ITEM_VOTE).isChecked());
+
       settingForm.faqService_.saveFAQSetting(faqSetting, FAQUtils.getCurrentUser());
       UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class);
       uiPopupAction.deActivate();
@@ -135,14 +165,14 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
     }
   }
-  
+
   static public class OpenTabActionListener extends BaseEventListener<UIUserSettingForm> {
     public void onEvent(Event<UIUserSettingForm> event, UIUserSettingForm uiForm, String objectId) throws Exception {
       uiForm.tabId = objectId;
       Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
-  
+
   static public class ChangeAvatarActionListener extends BaseEventListener<UIUserSettingForm> {
     public void onEvent(Event<UIUserSettingForm> event, UIUserSettingForm settingForm, String objectId) throws Exception {
       UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class);
@@ -151,7 +181,7 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       attachMentForm.setNumberUpload(1);
     }
   }
-  
+
   static public class CancelActionListener extends EventListener<UIUserSettingForm> {
     public void execute(Event<UIUserSettingForm> event) throws Exception {
       UIUserSettingForm settingForm = event.getSource();
@@ -160,44 +190,14 @@ public class UIUserSettingForm extends BaseUIFAQForm implements UIPopupComponent
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.getChild(UIAnswersContainer.class));
     }
   }
+
   static public class SetDefaultAvatarActionListener extends EventListener<UIUserSettingForm> {
-	    public void execute(Event<UIUserSettingForm> event) throws Exception {
-	    	UIUserSettingForm settingForm = event.getSource();
-	      settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
-	      settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
-	      event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent());
-	    }
-	  }
-  protected boolean getIsSelected(int id) {
-    if (this.id == id)
-      return true;
-    return false;
-  }
-  
-  public FAQSetting getFaqSetting() {
-    return faqSetting_;
-  }
-
-  public void setFaqSetting(FAQSetting faqSetting) {
-    this.faqSetting_ = faqSetting;
-  }
-  
-  public String getAvatarUrl() {
-    return avatarUrl;
-  }
-
-  public void setAvatarUrl(String url) {
-    this.avatarUrl = url;
-  }
-  
-  boolean isDefaultAvatar() {
-    return avatarUrl != null && avatarUrl.indexOf(Utils.DEFAULT_AVATAR_URL) >= 0;
-  }
-  
-  public void activate() {
-  }
-
-  public void deActivate() {
+    public void execute(Event<UIUserSettingForm> event) throws Exception {
+      UIUserSettingForm settingForm = event.getSource();
+      settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
+      settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
+      event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent());
+    }
   }
 
 }

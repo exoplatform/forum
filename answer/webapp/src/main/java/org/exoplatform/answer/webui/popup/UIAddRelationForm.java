@@ -106,19 +106,22 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
     Category category = categoryTree.getCategory();
     String categoryId = category.getId();
     if (hasPermission(category, listOfUser)) {
+      List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+      List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting_);
+      String clazz = "collapseIcon";
+      if (categoryTrees.size() == 0 && questions.size() == 0){
+        clazz = "uiIconEmpty";
+      }
       builder.append("<a href=\"javascript:void(0);\"");
       if (categoryId.equals(Utils.CATEGORY_HOME) == false) {
-        builder.append(" class=\"uiIconNode collapseIcon\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>")
                .append(category.getName());
       } else {
         String home = this.i18n("UICategoryTree.label.home");
-        builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
+        builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i> <span>").append(home).append("</span>");
       }
       builder.append("</a>");
-
-      List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
-      List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting_);
 
       listQuestion.addAll(questions);
 
@@ -133,6 +136,8 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
             addUIFormInput(new UICheckBoxInput(question.getId(), question.getId(), isChecked));
             builder.append("<li class=\"node\">")
                    .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
+                   .append(question.getId())
+                   .append("\" id=\"")
                    .append(question.getId())
                    .append("\" type=\"checkbox\"")
                    .append((isChecked == true) ? " checked" : "")

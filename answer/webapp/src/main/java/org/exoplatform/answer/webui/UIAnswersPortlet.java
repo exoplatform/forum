@@ -19,12 +19,12 @@ package org.exoplatform.answer.webui;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
-import org.exoplatform.answer.webui.popup.UISettingForm;
+import org.exoplatform.answer.webui.popup.UIAnswerEditModeForm;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.application.RequestNavigationData;
@@ -50,22 +50,17 @@ import org.exoplatform.webui.form.UIFormInputInfo;
     template = "app:/templates/answer/webui/UIAnswersPortlet.gtmpl"
 )
 public class UIAnswersPortlet extends UIPortletApplication {
-  private final static String SPACE_URL   = "SPACE_URL".intern();
-
   private final static String SLASH       = "/".intern();
 
   private String              spaceGroupId = null;
 
-  private boolean             isFirstTime = true;
-
   /**
    * ui component for displaying message when changing mode.
    */
-  private UIFormInputInfo changeModeMessage;
 
   private PortletMode     portletMode;
   public UIAnswersPortlet() throws Exception {
-    changeModeMessage = new UIFormInputInfo("UIMessageEditMode", "UIMessageEditMode", "");
+    UIFormInputInfo changeModeMessage = new UIFormInputInfo("UIMessageEditMode", "UIMessageEditMode", "");
     changeModeMessage.setRendered(false);
     addChild(changeModeMessage);
     addChild(UIAnswersContainer.class, null, null);
@@ -104,35 +99,30 @@ public class UIAnswersPortlet extends UIPortletApplication {
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     portletMode = portletReqContext.getApplicationMode();
+    UIFormInputInfo formInputInfo = getChild(UIFormInputInfo.class).setRendered(false);
     if (portletMode == PortletMode.VIEW) {
-      changeModeMessage.setRendered(false);
-      isFirstTime = true;
       if (getChild(UIAnswersContainer.class) == null) {
-        if (getChild(UISettingForm.class) != null) {
-          removeChild(UISettingForm.class);
+        if (getChild(UIAnswerEditModeForm.class) != null) {
+          removeChild(UIAnswerEditModeForm.class);
         }
         addChild(UIAnswersContainer.class, null, null);
       }
       renderPortletByURL();
     } else if (portletMode == PortletMode.EDIT) {
       try {
-        changeModeMessage.setValue(context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode"));
-        if (isFirstTime) {
-          isFirstTime = false;
-          UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-          FAQSetting faqSetting = questions.getFAQSetting();
-          removeChild(UIAnswersContainer.class);
-          if (getChild(UISettingForm.class) == null) {
-            if (faqSetting.isAdmin()) {
-              UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
-              settingForm.setRendered(true);
-              settingForm.setIsEditPortlet(true);
-              settingForm.init();
-            } else {
-              changeModeMessage.setRendered(true);
-            }
-
+        FAQService fService = getApplicationComponent(FAQService.class);
+        if(fService.isAdminRole(UserHelper.getCurrentUser())) {
+          UIAnswerEditModeForm settingForm = getChild(UIAnswerEditModeForm.class);
+          if (settingForm == null) {
+            settingForm = addChild(UIAnswerEditModeForm.class, null, "FAQPortletSetting");
           }
+          settingForm.initContainer().setRendered(true);
+        } else {
+          String infoMessage = context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode");
+          ((UIFormInputInfo) formInputInfo.setRendered(true)).setValue(infoMessage);
+        }
+        if (getChild(UIAnswersContainer.class) != null) {
+          removeChild(UIAnswersContainer.class);
         }
       } catch (Exception e) {
         log.error("\nFail to render a WebUIApplication\n", e);

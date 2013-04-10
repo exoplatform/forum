@@ -48,7 +48,6 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
-import org.exoplatform.forum.bbcode.core.BBCodeServiceImpl;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.NotifyInfo;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
@@ -71,10 +70,6 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   private JCRDataStorage                jcrData_;
 
-  private MultiLanguages                multiLanguages_;
-
-  private BBCodeServiceImpl             bbcodeObject_;
-
   private TemplatePlugin                template_;
 
   private ConfigurationManager          configManager_;
@@ -92,11 +87,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public FAQServiceImpl(InitParams params, KSDataLocation locator, ConfigurationManager configManager) throws Exception {
     configManager_ = configManager;
-    multiLanguages_ = new MultiLanguages();
     initDataPlugins = new ArrayList<InitialDataPlugin>();
     this.locator = locator;
     jcrData_ = new JCRDataStorage(locator);
-    bbcodeObject_ = new BBCodeServiceImpl();
   }
 
   public void addPlugin(ComponentPlugin plugin) throws Exception {
@@ -161,7 +154,6 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void stop() {
   }
 
-  @SuppressWarnings("deprecation")
   private void initViewerTemplate() throws Exception {
     if (template_ == null) {
       log.warn("No default template was configured for FAQ.");
@@ -780,7 +772,7 @@ public class FAQServiceImpl implements FAQService, Startable {
    * @throws Exception    throw an exception when save a new language node
    */
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
-    multiLanguages_.addLanguage(questionNode, language);
+    MultiLanguages.addLanguage(questionNode, language);
   }
 
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception {

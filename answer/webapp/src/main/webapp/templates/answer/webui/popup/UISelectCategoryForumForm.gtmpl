@@ -1,58 +1,49 @@
-<%	
-	import org.exoplatform.forum.service.Category ;
-	import org.exoplatform.forum.service.Forum ;
+<%
+	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+	requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.id + "');");
 %>
 <div class="uiSelectCategoryForumForm">
 	<% uiform.begin() %>
 	<h5 class="titleMoveThreads"><%=_ctx.appRes("FAQPortletSetting.label.ChooseForum");%>:</h5>
-	<div class="UITree ScrollArea">
-		<div class="TreeContainer ParentNode">
-		<% 
-			boolean isFist = true;
-			List categories = uicomponent.getCategories(); 
-			for(category in categories) {
-				String categoryName = category.getCategoryName() ;
-				String display = "display:none;";
-				String iconClass = "SmallGrayMinus" ;
-				String isShow = "true";
-				List forums =	uicomponent.getForums(category.getId());
-				if(isFist) {
-					display = "display:block;" ;
-					iconClass = "SmallGrayPlus" ;
-					isFist = false;
-				}
-				if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
-		%>
-			<div class="Node $iconClass">
-			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
-				 	<div class="NodeLabel" onclick ='eXo.answer.UIAnswersPortlet.showTreeNode(this,"$isShow");'>
-				 		<div class="NodeSelected">
-				 			<a>$categoryName</a>
-				 		</div> 
-					</div> 			
-
-				<div class="ChildNodeContainer" style="$display">
-				<% 
-					for(forum in forums) {
-						String forumName = forum.getForumName() ;
-						String objectId = forum.getId() + ";" + categoryName + "/" + forumName;
-						String link = uicomponent.event("AddCategory",objectId ) ;
-						String classForumIcon = "ThreadsIcon";
+	<div class="uiTrees scrollArea">
+		<div class="treeContainer">
+			<ul class="nodeGroup">
+			<% 
+				List categories = uicomponent.getCategories(); 
+				for(category in categories) {
+					String iconClass = "collapseIcon" ;
+					String categoryName = category.getCategoryName() ;
+					List forums =	uicomponent.getForums(category.getId());
+					if(forums.size() < 1) {iconClass = "uiIconEmpty";}
+			%>
+				<li class="node">
+					<a href="javascript:void(0);" class="uiIconNode $iconClass" onclick="eXo.answer.UIAnswersPortlet.showTreeNode(this)">
+						<i class="uiIconCategory uiIconLightGray"></i> <span>$categoryName</span>
+					</a>
+				<%
+				  if(forums.size() > 0) {
 				%>
-					<div class="Node ClearFix">
-						<div class="Icon $classForumIcon"><span></span></div>
-							<div class="NodeLabel"> 
-								<a href="$link">$forumName</a>	
-							</div>
-					</div>
-				<% } %>		
-				</div>
-			</div>
-		<% } %>	
-		 </div>	
+					<ul class="nodeGroup">
+					<% 
+						for(forum in forums) {
+						  String forumName = forum.getForumName() ;
+						  String objectId = forum.getId() + ";" + categoryName + "/" + forumName;
+					%>
+						<li class="node">
+							<a href="javascript:void(0);" class="uiIconNode uiIconEmpty" onclick="<%=uicomponent.event("AddCategory", objectId)%>">
+								<i class="uiIconUIForms uiIconLightGray spaceItem"></i> <span><%=forumName%></span>
+							</a>
+						</li>
+					<% } %>		
+					</ul>
+				<% } %>
+				</li>
+			<% } %>	
+			</ul>
+		</div>
 	</div>
-	 <div class="uiAction">
-      <button href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></button>
-    </div>
+	<div class="uiAction">
+  	<button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></button>
+  </div>
 	<%uiform.end()%>
 </div>
