@@ -882,7 +882,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         topicForm.setMod(uiTopicContainer.isModerator);
         topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
       } else {
-        warning("UICategory.msg.notCheck");
+        warning("UITopicDetail.msg.notCheckTopic");
       }
     }
   }
