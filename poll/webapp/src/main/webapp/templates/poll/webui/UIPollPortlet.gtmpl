@@ -5,11 +5,11 @@
 	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.init('"+uicomponent.id+"');");
 %>
 
-<div class="UIPollPortlet" id="$uicomponent.id">
+<div class="uiPollPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer">
 		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
 	</div>
-	<div class="UIPollContainer">
+	<div class="uiPollContainer horizontalLayout">
 		<%
 			List children = uicomponent.getChildren() ;
 			for(component in children) {

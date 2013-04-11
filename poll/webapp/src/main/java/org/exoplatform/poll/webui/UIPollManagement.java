@@ -51,8 +51,8 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/poll/webui/UIPollManagement.gtmpl",
     events = {
-        @EventConfig(listeners = UIPollManagement.EditPollActionListener.class),
-        @EventConfig(listeners = UIPollManagement.DeletePollActionListener.class),
+        @EventConfig(listeners = UIPollManagement.EditActionListener.class),
+        @EventConfig(listeners = UIPollManagement.DeleteActionListener.class),
         @EventConfig(listeners = UIPollManagement.AddPollActionListener.class),
         @EventConfig(listeners = UIPollManagement.SaveActionListener.class)
     }
@@ -62,7 +62,7 @@ public class UIPollManagement extends BasePollForm {
 
   public static String[]     BEAN_FIELD                  = { "question", "votes", "lastVote", "expire" };
 
-  private static String[]    ACTION                      = { "EditPoll", "DeletePoll" };
+  private static String[]    ACTION                      = { "Edit", "Delete" };
 
   private String[]           dateUnit                    = new String[] { "Never", "Closed", "day(s)", "hour(s)", "minutes" };
 
@@ -118,7 +118,7 @@ public class UIPollManagement extends BasePollForm {
     uiGrid.getUIPageIterator().setPageList(objPageList);
   }
 
-  static public class EditPollActionListener extends EventListener<UIPollManagement> {
+  static public class EditActionListener extends EventListener<UIPollManagement> {
     public void execute(Event<UIPollManagement> event) throws Exception {
       String pollId = event.getRequestContext().getRequestParameter(OBJECTID);
       UIPollManagement pollManagement = event.getSource();
@@ -136,7 +136,7 @@ public class UIPollManagement extends BasePollForm {
     }
   }
 
-  static public class DeletePollActionListener extends EventListener<UIPollManagement> {
+  static public class DeleteActionListener extends EventListener<UIPollManagement> {
     public void execute(Event<UIPollManagement> event) throws Exception {
       UIPollManagement pollManagement = event.getSource();
       String pollId = event.getRequestContext().getRequestParameter(OBJECTID);
