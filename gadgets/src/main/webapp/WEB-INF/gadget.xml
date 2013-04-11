@@ -26,9 +26,10 @@
 		<path>/gadgets/lastpost/Lastpost.xml</path>
 	</gadget>
 
-	<gadget name="pollslist">
+	<!--
+   <gadget name="pollslist">
 		<path>/gadgets/polls/Poll.xml</path>
 	</gadget>
-
+	-->
 
 </gadgets>
