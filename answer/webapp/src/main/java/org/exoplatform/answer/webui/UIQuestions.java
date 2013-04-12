@@ -1028,8 +1028,8 @@ public class UIQuestions extends UIContainer {
           answer.setUsersVoteAnswer(null);
           answer.setActivateAnswers(true);
           answer.setApprovedAnswers(true);
-          questions.getFAQService().saveAnswer(questions.viewingQuestionId_, answer, questions.language_);
           questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_, true);
+          questions.getFAQService().saveAnswer(questions.viewingQuestionId_, answer, questions.language_);
         } else {
           questions.showMessageDeletedQuestion(event.getRequestContext());
           return;
