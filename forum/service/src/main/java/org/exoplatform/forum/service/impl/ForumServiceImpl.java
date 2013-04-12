@@ -365,35 +365,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyForum(Forum forum, int type) throws Exception {
-    List<Topic> oldTopics = getTopics(forum.getCategoryId(), forum.getId());
-    List<Topic> editedTopics = new ArrayList<Topic>();
-    for (Topic topic : oldTopics) {
-      switch (type) {
-        case Utils.CLOSE: {
-          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
-          editedTopic.setIsClosed(forum.getIsClosed());
-          topic.setIsClosed(!topic.getIsActiveByForum());
-          topic.setEditedIsClosed(editedTopic.getIsClosed());
-          editedTopics.add(topic);
-          break;
-        }
-        case Utils.LOCK: {
-          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
-          editedTopic.setIsLock(forum.getIsLock());
-          topic.setEditedIsLock(editedTopic.getIsLock());
-          editedTopics.add(topic);
-          break;
-        }
-      }
-    }
     storage.modifyForum(forum, type);
+    List<Topic> topics = getTopics(forum.getCategoryId(), forum.getId());
     for (ForumEventLifeCycle f : listeners_) {
-      for(Topic topic : editedTopics) {
-        try {
-          f.updateTopic(topic);
-        } catch (Exception e) {
-          log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
-        }
+      try {
+        f.updateTopics(topics, forum.getIsLock());
+      } catch (Exception e) {
+        log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
       }
     }
   }

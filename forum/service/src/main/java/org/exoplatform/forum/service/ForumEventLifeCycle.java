@@ -16,6 +16,8 @@
  */
 package org.exoplatform.forum.service;
 
+import java.util.List;
+
 
 /**
  * Created by The eXo Platform SAS
@@ -51,6 +53,14 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void updateTopic(Topic topic);
+  
+  /**
+   * This will be call after update forum
+   * @param topics
+   * @param isLock
+   * @since 4.0
+   */
+  public void updateTopics(List<Topic> topics, boolean isLock);
   
   /**
    * This will be call after moved topic to other forum.
