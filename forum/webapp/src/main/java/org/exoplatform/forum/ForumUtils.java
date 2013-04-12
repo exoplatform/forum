@@ -43,6 +43,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -628,26 +629,6 @@ public class ForumUtils {
   }
   
   static public RequireJS addScripts(String module, String alias, String... scripts) {
-    PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    RequireJS requireJS;
-    if (!isEmpty(module)) {
-      if (!isEmpty(alias)) {
-        requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
-      } else {
-        requireJS = pContext.getJavascriptManager().require("SHARED/" + module);
-      }
-    } else {
-      requireJS = pContext.getJavascriptManager().getRequireJS();
-    }
-    if(scripts != null) {
-      String script;
-      for (int i = 0; i < scripts.length; i++) {
-        script = scripts[i];
-        if (!isEmpty(script)) {
-          requireJS.addScripts(script + ";");
-        }
-      }
-    }
-    return requireJS;
+    return WebUIUtils.addScripts(module, alias, scripts);
   }
 }

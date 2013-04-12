@@ -1485,17 +1485,18 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   @Override
   public void changeStatusCategoryView(List<String> listCateIds) throws Exception {
-    if (listCateIds == null || listCateIds.size() < 1)
+    if (listCateIds == null || listCateIds.size() < 1) {
       return;
+    }
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node faqHome = getFAQServiceHome(sProvider);
-      Node cat;
       for (String id : listCateIds) {
-        cat = faqHome.getNode(id);
-        cat.setProperty(EXO_IS_VIEW, !cat.getProperty(EXO_IS_VIEW).getBoolean());
+        Node cat = getCategoryNode(sProvider, id);
+        if (cat != null) {
+          cat.setProperty(EXO_IS_VIEW, !cat.getProperty(EXO_IS_VIEW).getBoolean());
+          cat.save();
+        }
       }
-      faqHome.save();
     } catch (Exception e) {
       log.error("Changing status category view failed: ", e);
     }

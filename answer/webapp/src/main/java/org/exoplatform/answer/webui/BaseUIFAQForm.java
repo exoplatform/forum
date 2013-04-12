@@ -16,12 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.answer.webui;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.core.UIComponent;
 
 public class BaseUIFAQForm extends BaseUIForm {
   private FAQService faqService;
@@ -33,7 +31,7 @@ public class BaseUIFAQForm extends BaseUIForm {
    */
   protected FAQService getFAQService() {
     if (faqService == null) {
-      faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
+      faqService = getApplicationComponent(FAQService.class);
     }
     return faqService;
   }
@@ -49,26 +47,8 @@ public class BaseUIFAQForm extends BaseUIForm {
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    WebUIUtils.addScripts("bts_tooltip", null, "setTimeout(function(){eXo.answer.UIAnswersPortlet.initTooltip('" + getId() + "');}, 200);");
+    WebUIUtils.addScripts("ForumUtils", "forumUtils", "forumUtils.initTooltip('" + getId() + "');");
     super.processRender(context);
-  }
-  
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-    UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
-    return openPopup(uiPortlet, componentType, popupId, width, height);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-    UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
-    return openPopup(uiPortlet, componentType, width, height);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-    return openPopup(componentType, width, 0);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-    return openPopup(componentType, popupId, width, 0);
   }
 
 }

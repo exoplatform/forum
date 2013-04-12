@@ -12,7 +12,7 @@
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         UIForumPortlet.initShowUserInfo();
         UIForumPortlet.disableOnClickMenu('SearchForm');
-        UIForumPortlet.initTooltip();
+        UIForumPortlet.initTooltip(id);
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 
@@ -40,12 +40,7 @@
     },
 
     initTooltip : function(id) {
-      var jportlet = findId(UIForumPortlet.id);
-      if(id != null) {
-        jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
-      } else {
-        jportlet.find('[rel=tooltip]').tooltip();
-      }
+      utils.initTooltip(id);
     },
 
     resizeCallback : function() {

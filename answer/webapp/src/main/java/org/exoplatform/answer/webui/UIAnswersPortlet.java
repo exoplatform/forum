@@ -115,8 +115,9 @@ public class UIAnswersPortlet extends UIPortletApplication {
           UIAnswerEditModeForm settingForm = getChild(UIAnswerEditModeForm.class);
           if (settingForm == null) {
             settingForm = addChild(UIAnswerEditModeForm.class, null, "FAQPortletSetting");
+            settingForm.initContainer();
           }
-          settingForm.initContainer().setRendered(true);
+          settingForm.setRendered(true);
         } else {
           String infoMessage = context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode");
           ((UIFormInputInfo) formInputInfo.setRendered(true)).setValue(infoMessage);

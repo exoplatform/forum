@@ -216,7 +216,7 @@ public class FAQUtils {
     }
   }
 
-  private static String getUserFullName(User user) {
+  public static String getUserFullName(User user) {
     String displayName = user.getDisplayName();
     if (isFieldEmpty(displayName)) {
       displayName = new StringBuffer(user.getFirstName()).append(" ").append(user.getLastName()).toString();

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.SelectItem;
 import org.exoplatform.answer.webui.SelectOption;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
@@ -169,7 +170,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       if(checkedList_.containsKey(userName)) {
         uiInput.setChecked(true);
       }
-      uiInput.setHTMLAttribute("title", c.getFullName());
+      uiInput.setHTMLAttribute("title", FAQUtils.getUserFullName(c));
     }
     return users;
   }

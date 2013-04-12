@@ -121,6 +121,12 @@
       ForumUtils.addhideElement(jPopup);
       ForumUtils.cancelEvent(evt);
       jPopup.find('li').on('click', ForumUtils.hideElements);
+    },
+    
+    initTooltip : function(id) {
+      if(id != null) {
+    	gj('#'+id).find('[rel=tooltip]').tooltip();
+      }
     }
   };
 

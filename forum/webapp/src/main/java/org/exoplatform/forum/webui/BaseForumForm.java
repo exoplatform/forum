@@ -16,24 +16,21 @@
  */
 package org.exoplatform.forum.webui;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UIUserSelect;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 
 /**
@@ -60,21 +57,12 @@ public class BaseForumForm extends BaseUIForm {
     }
     return forumService;
   }
+
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
     getUserProfile();
-    ForumUtils.addScripts("bts_tooltip", null, "setTimeout(function(){eXo.forum.UIForumPortlet.initTooltip('" + getId() + "');}, 200);");
-    if (getTemplate() != null)
-    {
-       super.processRender(context);
-       return;
-    }
-    Writer writer = context.getWriter();
-    writer.append("<div class='UIForm ").append(getId()).append("'>");
-    begin();
-    renderChildren(context);
-    end();
-    writer.append("</div>");
+    WebUIUtils.addScripts("ForumUtils", "forumUtils", "forumUtils.initTooltip('" + getId() + "');");
+    super.processRender(context);
   }
 
   /**
@@ -146,24 +134,6 @@ public class BaseForumForm extends BaseUIForm {
       screenName = (new StringBuilder().append("<span title=\"").append(screenName).append("\">").append(((isDelted) ? "<s>" : ForumUtils.EMPTY_STR)).append(ForumUtils.getSubString(screenName, 15)).append(((isDelted) ? "</s></span>" : "</span>"))).toString();
     }
     return screenName;
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-    return openPopup(forumPortlet, componentType, popupId, width, height);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-    return openPopup(forumPortlet, componentType, width, height);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-    return openPopup(componentType, width, 0);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-    return openPopup(componentType, popupId, width, 0);
   }
 
   protected boolean addWatch(String path, UserProfile userProfile) {

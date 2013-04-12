@@ -1,3 +1,9 @@
+<%
+  def rcontext = _ctx.getRequestContext();
+	def requireJS = rcontext.getJavascriptManager().require("SHARED/FaqPortlet", "faqPortlet");
+			requireJS.require("SHARED/bts_tooltip", null); 
+%>
+
 <div id="$uicomponent.id" class="uiFAQPortlet">
 	<%
 		List children = uicomponent.getChildren() ;

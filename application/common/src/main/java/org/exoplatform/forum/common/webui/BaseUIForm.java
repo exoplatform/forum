@@ -27,6 +27,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 
@@ -204,6 +205,24 @@ public class BaseUIForm extends UIForm {
    */
   protected void throwWarning(String message) throws MessageException {
     throw new MessageException(new ApplicationMessage(message, new Object[0], ApplicationMessage.WARNING)) ;
+  }
+  
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
+    UIPortletApplication uiPortlet = getAncestorOfType(UIPortletApplication.class);
+    return openPopup(uiPortlet, componentType, popupId, width, height);
+  }
+
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+    UIPortletApplication uiPortlet = getAncestorOfType(UIPortletApplication.class);
+    return openPopup(uiPortlet, componentType, width, height);
+  }
+
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+    return openPopup(componentType, width, 0);
+  }
+
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+    return openPopup(componentType, popupId, width, 0);
   }
   
   /**

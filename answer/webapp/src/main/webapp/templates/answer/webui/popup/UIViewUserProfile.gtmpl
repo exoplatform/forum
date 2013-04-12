@@ -41,7 +41,7 @@
 								</div>
 								
 								<p>
-									<a class="avatarLarge" href="javascript:void(0)" ><img src="<%=uiform.getAvatarUrl(userName);%>"  alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/></a>
+									<a class="avatarLarge" href="javascript:void(0)" ><img src="<%=uiform.getAvatarUrl(userName);%>"  alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/></a>
 								</p>								
 								<div class="infoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
