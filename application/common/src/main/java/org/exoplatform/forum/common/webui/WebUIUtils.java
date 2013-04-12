@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -77,8 +78,8 @@ public class WebUIUtils {
   static public RequireJS addScripts(String module, String alias, String... scripts) {
     PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     RequireJS requireJS;
-    if (!isEmpty(module)) {
-      if (!isEmpty(alias)) {
+    if (CommonUtils.isEmpty(module) == false) {
+      if (CommonUtils.isEmpty(alias) == false) {
         requireJS = pContext.getJavascriptManager().require("SHARED/" + module, alias);
       } else {
         requireJS = pContext.getJavascriptManager().require("SHARED/" + module);
@@ -90,19 +91,12 @@ public class WebUIUtils {
       String script;
       for (int i = 0; i < scripts.length; i++) {
         script = scripts[i];
-        if (!isEmpty(script)) {
+        if (CommonUtils.isEmpty(script) == false) {
           requireJS.addScripts(script + ";");
         }
       }
     }
     return requireJS;
-  }
-  
-  public static boolean isEmpty(String str) {
-    if (str == null || str.trim().length() == 0)
-      return true;
-    else
-      return false;
   }
   
 }

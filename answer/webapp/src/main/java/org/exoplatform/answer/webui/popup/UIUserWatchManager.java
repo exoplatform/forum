@@ -105,7 +105,7 @@ public class UIUserWatchManager extends UIContainer {
         return paths[0] + " > ... > " + paths[paths.length - 1];
       }
     }
-    return null;
+    return path;
   }
 
   public void setFAQSetting(FAQSetting setting) {

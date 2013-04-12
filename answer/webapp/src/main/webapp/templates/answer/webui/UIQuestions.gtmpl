@@ -209,7 +209,7 @@
 										 String link = FAQUtils.getLinkDiscuss(topicIdDiscuss);
 										 if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 											 if(topicIdDiscuss.equals(uicomponent.discussId)) {
-												 jsmanager.addJavascript("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
+											   requireJS.addScripts("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
 												 uicomponent.discussId = "";
 											 }
 										 }
@@ -240,7 +240,7 @@
 						%>
 								<div class="pull-right name">
 									<a class="avatarMini" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>">
-										<img src="<%=uicomponent.getAvatarUrl(authorOfLastAct)%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+										<img src="<%=uicomponent.getAvatarUrl(authorOfLastAct)%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										<span><%= FAQUtils.getFullName(authorOfLastAct);%></span>
 									</a>
 								</div>
@@ -269,7 +269,7 @@
 								%>
 									<div class="avatarLarge pull-left ">
 										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", author)%>" >
-											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										</a>
 								<% if (uicomponent.viewAuthorInfor) {%>
 								    <div class="authorName" rel="tooltip" data-placement="bottom" title="<%= FAQUtils.getFullName(question.getAuthor());%>"><%= FAQUtils.getFullName(question.getAuthor());%></div>
@@ -341,7 +341,7 @@
 																}
 													%>
 														<li>
-															<a href="javascript:void(0);" class="MenuItem " onclick="window.open('$link'); return false;" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+															<a href="javascript:void(0);" class="MenuItem " onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																<i class="uiIconAnsDiscuss uiIconAnsLightGray" ></i><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>
 															</a>
 														</li>
@@ -740,7 +740,7 @@
 								 			<div class="avatarXSmall pull-left">
 									 <% if(uicomponent.faqSetting_.isEnableViewAvatar()) {%>
 												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
-													<img src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+													<img src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 												</a>
 									 <% } %>
 								 			</div><!-- end avatarXSmall -->
@@ -893,7 +893,7 @@
 											if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 										%>
 											<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
-												<img	src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
+												<img	src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 											</a>
 										<%}%>
 										</div>

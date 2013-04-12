@@ -1,6 +1,5 @@
 (function($, utils) {
   var FaqPortlet = {
-
     executeLink : function(evt) {
       var onclickAction = String(this.getAttribute('actions'));
       $.globalEval(onclickAction);
@@ -46,5 +45,9 @@
     	});
     }
   };
+  // Expose
+  window.eXo = window.eXo || {};
+  window.eXo.faq = window.eXo.faq || {} ;
+  window.eXo.faq.UIFaqPortlet = FaqPortlet;
   return FaqPortlet;
 })(gj, forumUtils);

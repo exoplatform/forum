@@ -1,42 +1,63 @@
-(function(utils, gj) {
+(function(utils, $) {
   var AnswerUtils = {
-    checkedNode : function(elm) {
-      var input = gj(elm).find('input');
-      var parentNode = input.parents('.FAQDomNode');
-      var ancestorNode = parentNode.parents('.FAQDomNode');
-      if (ancestorNode.exists()) {
-        firstInput = ancestorNode.find('input.checkbox:first');
-        if (input.attr('checked') && !firstInput.attr('checked')) {
-          var msg = gj('#viewerSettingMsg');
-          if (msg.exists())
-            alert(msg.html());
-          else
-            alert('You need to check on parent or ancestor of this category first!');
-          input.attr('checked', false);
-          input.attr('disabled', true);
-        }
+    initTreeNode : function(componentId) {
+      var container = $.fn.findId(componentId);
+      var treeContainer = container.find('div.treeContainer:first');
+      treeContainer.find('.nodeGroup').hide();
+      treeContainer.find('.nodeGroup:first').show();
+    },
+    showTreeNode : function (obj) {
+      var thiz = $(obj);
+      var treeContainer = thiz.parents('div.treeContainer:first');
+      treeContainer.find('.nodeGroup').hide();
+      treeContainer.find('.nodeGroup:first').show();
+      
+      var parentNode = thiz.parents('li.node:first');
+      var childrenNodeGroup = parentNode.find('ul.nodeGroup:first').show();
+      
+      var allNodes = treeContainer.find('a.uiIconNode');
+      $.each(allNodes, function(id, elm) {
+         var thizz = $(elm);
+         if(thizz.hasClass('uiIconEmpty')) {
+           thizz.removeClass('nodeSelected');
+         } else {
+           thizz.attr('class', 'uiIconNode collapseIcon');
+         }
+      });
+      
+      if(thiz.hasClass('uiIconEmpty') == false) {
+        thiz.attr('class', 'uiIconNode expandIcon nodeSelected');
+      } else {
+        thiz.addClass('nodeSelected');
       }
-
-      var containerChild = parentNode.find('div.FAQChildNodeContainer');
-      if (containerChild.exists()) {
-        var checkboxes = containerChild.find('input');
-        for ( var i = 0; i < checkboxes.length; ++i) {
-          checkboxes.eq(i).attr('checked', input.attr('checked'));
-          if (!input.attr('checked'))
-            checkboxes.eq(i).attr('disabled', true);
-          else
-            checkboxes.eq(i).attr('disabled', false);
+      
+      AnswerUtils.showNode(thiz);
+    },
+    showNode : function (obj) {
+      if(!obj.parents('div.treeContainer').exists()) return;
+      var parentNode = obj.parents('ul.nodeGroup:first').show().parents('li.node:first');
+      if(parentNode.exists()) {
+        var nThiz = parentNode.find('a.uiIconNode:first');
+        if(nThiz.hasClass('uiIconEmpty') == false) {
+          nThiz.attr('class', 'uiIconNode expandIcon');
         }
+        AnswerUtils.showNode(nThiz);
       }
     },
-    treeView : function(id) {
-      var obj = findId(id);
-      if (obj.exists()) {
-        if (obj.css('display') == '' || obj.css('display') === 'none')
-          obj.show();
-        else
-          obj.hide();
+    checkedNode : function(obj, evt) {
+      var thizz = $(obj);
+      if(obj.checked === true) {
+        var nodes = thizz.parents('.nodeGroup:first').parents('.node');
+        var inputs = nodes.find('input[type=checkbox]:first');
+        inputs.prop("checked", obj.checked);
       }
+
+      var nodeGroup = thizz.parents('.node:first').find('.nodeGroup:first');
+      if (nodeGroup.length > 0) {
+        var inputChilds = nodeGroup.find('.node').find('input[type=checkbox]:first');
+        inputChilds.prop("checked", obj.checked);
+      }
+      utils.cancelEvent(evt);
     }
   };
   // Expose

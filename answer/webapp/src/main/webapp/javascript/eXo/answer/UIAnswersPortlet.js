@@ -15,16 +15,11 @@
     UIAnswersPortlet.controlWorkSpace();
     UIAnswersPortlet.disableContextMenu(UIAnswersPortlet.portletId);
     utils.onResize(UIAnswersPortlet.resizeCallback);
-    UIAnswersPortlet.initTooltip();
+    UIAnswersPortlet.initTooltip(portletId);
   };
   
   UIAnswersPortlet.initTooltip = function(id) {
-    var jportlet = $.fn.findId(UIAnswersPortlet.portletId);
-    if(id != null) {
-      jportlet.find('#'+id).find('[rel=tooltip]').tooltip();
-    } else {
-      jportlet.find('[rel=tooltip]').tooltip();
-    }
+    utils.initTooltip(id);
   };
 
   UIAnswersPortlet.resizeCallback = function() {
@@ -702,8 +697,8 @@
   };
   
   // Expose
-  window.eXo = eXo || {};
-  window.eXo.answer = eXo.answer || {} ;
+  window.eXo = window.eXo || {};
+  window.eXo.answer = window.eXo.answer || {} ;
   window.eXo.answer.UIAnswersPortlet = UIAnswersPortlet;
 
   return UIAnswersPortlet;
