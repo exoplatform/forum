@@ -228,9 +228,10 @@ public class UICategories extends UIContainer {
     this.isGetForumList = isGetForumList;
   }
   
-  private Forum getForum(List<Forum> forums, String spacePrettyName) {
+  private Forum getForum(List<Forum> forums, String spaceGroupId) {
+    spaceGroupId = spaceGroupId.replaceAll(ForumUtils.SLASH + Utils.CATEGORY_SPACE + ForumUtils.SLASH, ForumUtils.EMPTY_STR);
     for (Forum forum : forums) {
-      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spacePrettyName)) {
+      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId)) {
         return forum;
       }
     }
@@ -261,7 +262,7 @@ public class UICategories extends UIContainer {
       String currentUser = UserHelper.getCurrentUser();
       List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
       for (Space space : spaces) {
-        Forum forum = getForum(forums, space.getPrettyName());
+        Forum forum = getForum(forums, space.getGroupId());
         if (forum != null) {
           listForums.add(forum);
         }
