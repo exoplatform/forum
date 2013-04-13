@@ -27,12 +27,6 @@ import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.SessionManager;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Oct 5, 2012  
- */
 public class TopicTestCase extends BaseForumServiceTestCase {
 
   @Override

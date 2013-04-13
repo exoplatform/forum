@@ -29,10 +29,6 @@ import javax.jcr.ImportUUIDBehavior;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 
-/**
- * Created by The eXo Platform SAS Author : Vu Duy Tu tuvd@exoplatform.com Oct
- * 5, 2012
- */
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
   @Override

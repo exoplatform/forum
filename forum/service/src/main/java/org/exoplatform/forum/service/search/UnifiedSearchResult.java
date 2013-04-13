@@ -3,12 +3,6 @@ package org.exoplatform.forum.service.search;
 import org.exoplatform.commons.api.search.data.SearchResult;
 
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * March 12, 2013  
- */
 public class UnifiedSearchResult extends SearchResult {
 
   private String appName = "AppForumPortlet";

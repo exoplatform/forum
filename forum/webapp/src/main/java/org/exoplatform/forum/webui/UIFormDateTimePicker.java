@@ -29,14 +29,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Tran The Trong
- *          trongtt@gmail.com
- * Jul 14, 2006  
- * 
- * A date picker element
- */
 public class UIFormDateTimePicker extends UIFormInputBase<String> {
   /**
    * The DateFormat

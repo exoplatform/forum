@@ -18,14 +18,6 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- *         
- * Dec 5, 2007 11:00:12 AM
- */
-
 public class Tag {
   private String   id;
 

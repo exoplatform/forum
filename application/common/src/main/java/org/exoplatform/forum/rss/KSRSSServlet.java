@@ -31,10 +31,6 @@ import org.exoplatform.container.web.AbstractHttpServlet;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SARL Author : Ha Mai Van ha.mai@exoplatform.com
- * Jan 14, 2009, 8:58:11 AM
- */
 @SuppressWarnings("serial")
 public class KSRSSServlet extends AbstractHttpServlet {
 

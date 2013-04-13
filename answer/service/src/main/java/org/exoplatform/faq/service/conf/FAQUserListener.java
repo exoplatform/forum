@@ -23,13 +23,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Feb 15, 2011  
- */
-
 public class FAQUserListener extends UserEventListener {
 
   private static Log log = ExoLogger.getLogger(FAQUserListener.class);

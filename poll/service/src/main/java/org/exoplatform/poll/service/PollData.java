@@ -19,12 +19,6 @@ package org.exoplatform.poll.service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          tu.duy@exoplatform.com
- * Dec 21, 2010  
- */
 public class PollData {
   public static final String DEFAULT_ID = PollNodeTypes.POLL + "DefaultDataPlugin";
 

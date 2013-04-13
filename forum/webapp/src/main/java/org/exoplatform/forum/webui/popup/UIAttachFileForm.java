@@ -42,12 +42,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UIUploadInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Pham Tuan
- *          tuan.pham@exoplatform.com
- * Aug 24, 2007  
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",

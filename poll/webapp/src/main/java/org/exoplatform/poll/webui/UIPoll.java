@@ -44,13 +44,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
-/**
- * Created by The eXo Platform SARL 
- * Author : Vu Duy Tu 
- *          tu.duy@exoplatform.com 
- * June 26, 2010 9:48:18 AM
- */
-
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/poll/webui/UIPoll.gtmpl",

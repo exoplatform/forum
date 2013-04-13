@@ -23,10 +23,6 @@ import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
-/**
- * Created by The eXo Platform SARL Author : Hung Nguyen Quang
- * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
- */
 public class AuthenticationLoginListener extends Listener<ConversationRegistry, ConversationState> {
 
   private ExoContainerContext context;

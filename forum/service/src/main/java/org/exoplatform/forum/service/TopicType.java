@@ -18,12 +18,6 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 1, 2009 - 7:54:11 AM  
- */
 public class TopicType {
   public static final String DEFAULT_TYPE = "Default";
 

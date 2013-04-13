@@ -23,12 +23,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupEventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 8, 2011  
- */
 public class ForumGroupListener extends GroupEventListener {
   private static final Log log          = ExoLogger.getLogger(ForumGroupListener.class);
 

@@ -38,12 +38,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com 
- * 12 Feb 2009 - 03:59:49
- */
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 

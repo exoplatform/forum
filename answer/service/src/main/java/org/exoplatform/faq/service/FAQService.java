@@ -60,7 +60,6 @@ public interface FAQService extends FAQServiceLegacy {
    * when paretId = null so this category is parent category else sub category  
    * @param    cat is properties that user input to interface will save on data
    * @param    isAddNew is true when add new category else update category
-   * @return  List parent category or list sub category
    * @see     list category
    * @LevelAPI Platform
    */
@@ -70,7 +69,7 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Builds category tree of provided id.
    * 
-   * @param categoryId
+   * @param categoryId Id of category to build tree.
    * @return the CategoryTree
    * @throws Exception
    * @LevelAPI Platform
@@ -99,8 +98,7 @@ public interface FAQService extends FAQServiceLegacy {
    * Gets category by id.
    * 
    * @param    categoryId is address id of the category so you want get
-   * @return  category is id = categoryId
-   * @see     current category
+   * @return  The category of specific provided id.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
@@ -376,8 +374,8 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Searches FAQs by event query.
    * 
-   * @param eventQuery
-   * @return
+   * @param eventQuery Search condition 
+   * @return FAQs that match the search condition.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -1141,7 +1139,7 @@ public interface FAQService extends FAQServiceLegacy {
    * @param categoryId id of the category
    * @param propertyName name of the property
    * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date .  
-   * @return 
+   * @return Object contains property values of category.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -1153,7 +1151,7 @@ public interface FAQService extends FAQServiceLegacy {
    * @param questionId id of the question
    * @param propertyName name of the property
    * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date.
-   * @return
+   * @return Object contains property values of question.
    * @throws Exception
    * @LevelAPI Platform
    */

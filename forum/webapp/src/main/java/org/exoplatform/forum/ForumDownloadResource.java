@@ -22,12 +22,6 @@ import java.io.InputStream;
 import org.exoplatform.download.DownloadResource;
 import org.exoplatform.forum.service.BufferAttachment;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Apr 9, 2013  
- */
 public class ForumDownloadResource extends DownloadResource {
   
   private BufferAttachment attachment;

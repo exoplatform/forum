@@ -74,12 +74,6 @@ import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.picocontainer.Startable;
 import org.quartz.JobDetail;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 10, 2007  
- */
 @ManagedBy(ForumServiceManaged.class)
 public class ForumServiceImpl implements ForumService, Startable {
 

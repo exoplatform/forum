@@ -16,10 +16,6 @@
  */
 package org.exoplatform.faq.service;
 
-/**
- * Created by The eXo Platform SARL
- * May 4, 2009, 5:24:16 PM
- */
 public class Cate {
   private Category category;
 

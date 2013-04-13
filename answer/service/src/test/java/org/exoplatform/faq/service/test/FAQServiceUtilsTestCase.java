@@ -23,12 +23,6 @@ import org.exoplatform.faq.base.FAQServiceBaseTestCase;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.forum.common.jcr.SessionManager;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 5, 2012  
- */
 public class FAQServiceUtilsTestCase extends FAQServiceBaseTestCase {
 
   public FAQServiceUtilsTestCase() throws Exception {

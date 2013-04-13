@@ -18,15 +18,6 @@ package org.exoplatform.faq.service;
 
 import java.util.Date;
 
-/**
- * Created by The eXo Platform SARL
- * 
- * This object intermediate to give search empty or quick search 
- * 
- * Author : Truong Nguyen
- *          truong.nguyen@exoplatform.com
- * May 7, 2008, 4:44:24 PM
- */
 public class ObjectSearchResult {
   private String id;
 

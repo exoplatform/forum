@@ -24,12 +24,6 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.faq.service.ObjectSearchResult;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          thanhvc@exoplatform.com
- * Mar 13, 2013  
- */
 public class AnswerSearchResult implements Collection<ObjectSearchResult> {
   private final long offset;
   private final long limit;

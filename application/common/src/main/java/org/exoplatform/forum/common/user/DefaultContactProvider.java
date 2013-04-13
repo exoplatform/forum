@@ -22,15 +22,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
 
-/**
- * Default implementation for {@link ContactProvider}. 
- * Uses the {@link OrganizationService} and get information from {@link UserProfile}.<br><br>
- * 
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 21, 2008  
- *
- */
 public class DefaultContactProvider implements ContactProvider {
   
   private static Log log = ExoLogger.getLogger(DefaultContactProvider.class);

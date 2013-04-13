@@ -26,12 +26,6 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 31, 2012  
- */
 public class BaseDataForm extends BaseForumForm {
 
   public String       topicId;

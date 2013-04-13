@@ -40,12 +40,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen 
- *          truong.nguyen@exoplatform.com 
- * Oct 13, 2008, 11:30:44 AM
- */
 @ComponentConfig(
     template = "app:/templates/answer/webui/popup/UIUserWatchManager.gtmpl", 
     events = {

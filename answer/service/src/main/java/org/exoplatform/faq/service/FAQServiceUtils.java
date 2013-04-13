@@ -39,12 +39,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *          truong.nguyen@exoplatform.com
- * May 10, 2008, 4:26:37 PM
- */
 public class FAQServiceUtils {
 
   private static final String ANY   = "*".intern();

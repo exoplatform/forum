@@ -21,12 +21,6 @@ import java.io.Writer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 24 Mar 2008, 08:00:59
- */
 public class UIForumCheckBoxInput extends UICheckBoxInput {
 
   private String label; 

@@ -25,12 +25,6 @@ import javax.jcr.Session;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Ngyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 9, 2007
- */
 public class BufferAttachment extends ForumAttachment {
 
   private byte[] bytes;

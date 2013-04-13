@@ -25,12 +25,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * March 9, 2013 11:23:48 AM
- */
 public class UIPollRadioBoxInput extends UIFormRadioBoxInput {
 
   /**

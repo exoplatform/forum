@@ -21,12 +21,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jul 22, 2011  
- */
 public class TestCommonUtils extends TestCase {
 
   public void testIsEmpty() {

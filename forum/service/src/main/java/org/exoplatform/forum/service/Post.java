@@ -22,15 +22,6 @@ import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Tuan Nguyen
- *          tuan.nguyen@exoplatform.com
- * Jul 2, 2007  
- * Editer by Vu Duy Tu
- *         tu.duy@exoplatform.com
- * July 16, 2007
- */
 public class Post {
   private String                id;
 

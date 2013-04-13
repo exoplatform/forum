@@ -22,12 +22,6 @@ import java.util.List;
 
 import org.exoplatform.forum.service.ForumSearch;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Thanh Vu Cong
- *          thanh_vucong@exoplatform.com
- * Apr 9, 2013  
- */
 public class UnifiedSearchOrder {
   
   /**

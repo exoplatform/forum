@@ -21,12 +21,6 @@ import java.io.InputStream;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.base.FAQServiceBaseTestCase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Feb 21, 2013  
- */
 public class FAQPreferenceTemplateUpdaterTestCase extends FAQServiceBaseTestCase {
   private final static String TEMPLATE_PATH = "conf/standalone/FAQViewerPortlet.gtmpl";
 

@@ -39,12 +39,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- *  Mar 3, 2008 2:12:29 PM
- */
 @ComponentConfig(
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/forum/webui/popup/UISelectItemForumForm.gtmpl",

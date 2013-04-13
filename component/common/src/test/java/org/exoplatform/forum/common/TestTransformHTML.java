@@ -21,12 +21,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 6, 2010 - 7:17:11 AM  
- */
 public class TestTransformHTML extends TestCase{
 
   private static List<String> bbcs = Arrays.asList(new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", "CODE"});

@@ -20,13 +20,6 @@ import java.util.HashMap;
 
 import org.exoplatform.services.organization.Group;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 13, 2012  
- */
-
 public class GroupInjector extends AbstractPollInjector {
 
   public static final String NUMBER = "number";

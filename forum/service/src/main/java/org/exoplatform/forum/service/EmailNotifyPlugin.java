@@ -23,12 +23,6 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @author Hung nguyen Quang
- * @email: hung.nguyen@exoplatform.com
- */
 public class EmailNotifyPlugin extends BaseComponentPlugin {
 
   private Map<String, String> serverConfiguration_ = new HashMap<String, String>();

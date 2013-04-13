@@ -8,12 +8,6 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Post;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Tuan Pham
- *          tuan.pham@exoplatform.com
- * Oct 15, 2008  
- */
 public class MessageBean {
   private List<Post> data;
 

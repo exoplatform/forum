@@ -16,12 +16,6 @@
  */
 package org.exoplatform.forum.service.filter.model;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Jan 2, 2013  
- */
 public class ForumFilter {
 
   private String forumId;

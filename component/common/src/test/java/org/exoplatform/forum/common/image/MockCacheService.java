@@ -24,12 +24,6 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ExoCacheConfigPlugin;
 import org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * 1 Jun 2011  
- */
 public class MockCacheService implements CacheService {
 
   @Override

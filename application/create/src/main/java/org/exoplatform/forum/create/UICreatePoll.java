@@ -24,13 +24,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Jan 2, 2013  
- */
-
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
   template = "classpath:groovy/webui/forum/create/UICreate.gtmpl", 
   events = {

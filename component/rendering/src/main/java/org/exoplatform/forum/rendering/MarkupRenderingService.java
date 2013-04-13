@@ -24,9 +24,6 @@ import org.exoplatform.forum.rendering.api.UnsupportedSyntaxException;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.rendering.spi.RendererPlugin;
 
-/**
- * @version $Revision$
- */
 public class MarkupRenderingService {
 
   protected Map<String, Renderer> rendererRegistry;
@@ -53,7 +50,7 @@ public class MarkupRenderingService {
    * Gets Render by provided syntax.
    * 
    * @param syntax The syntax to register.
-   * @return
+   * @return The renderer object that match the provided syntax.
    * @LevelAPI Platform
    */
   public Renderer getRenderer(String syntax) {
@@ -69,7 +66,7 @@ public class MarkupRenderingService {
    * 
    * @param delegate
    * @param target
-   * @return
+   * @return The method that to delegate markup.
    * @LevelAPI Platform
    */
   public <T> String delegateRendering(MarkupRenderDelegate<T> delegate, T target) {

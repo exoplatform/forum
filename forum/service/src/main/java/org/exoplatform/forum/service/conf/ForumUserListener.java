@@ -29,10 +29,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
-/**
- * Created by The eXo Platform SARL Author : Hung Nguyen Quang
- * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
- */
 public class ForumUserListener extends UserEventListener {
 
   private static Log  log = ExoLogger.getLogger(ForumUserListener.class);

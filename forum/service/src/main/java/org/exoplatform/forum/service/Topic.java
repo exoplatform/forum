@@ -24,10 +24,6 @@ import java.util.List;
 import org.exoplatform.commons.utils.PropertyChangeSupport;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * March 2, 2007  
- */
 public class Topic {
   
   /** topic name */

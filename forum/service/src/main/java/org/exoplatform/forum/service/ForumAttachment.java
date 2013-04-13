@@ -20,12 +20,6 @@ import java.io.InputStream;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 10, 2007  
- */
 abstract public class ForumAttachment {
   private String id;
 

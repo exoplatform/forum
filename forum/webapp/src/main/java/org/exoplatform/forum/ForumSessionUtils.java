@@ -29,12 +29,6 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- */
-
 public class ForumSessionUtils {
 
   static private final Log   LOG            = ExoLogger.getLogger(ForumSessionUtils.class);

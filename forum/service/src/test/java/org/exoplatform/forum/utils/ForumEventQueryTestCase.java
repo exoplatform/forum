@@ -28,12 +28,6 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.Utils;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Dec 28, 2009 - 7:00:29 AM  
- */
 public class ForumEventQueryTestCase extends TestCase {
   @Override
   protected void setUp() throws Exception {

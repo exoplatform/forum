@@ -24,14 +24,6 @@ import javax.jcr.Session;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.RepositoryService;
 
-/**
- * Created by The eXo Platform SARL
- * File Attachment is used to store infor of file is attached when upload file
- * or get files of question when view in page.
- * 
- * @author   Duy Tu
- * @since    Nov 10, 2007
- */
 public class FileAttachment {
 
   /** The id. */

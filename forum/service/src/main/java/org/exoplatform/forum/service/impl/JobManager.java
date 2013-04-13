@@ -24,12 +24,6 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 18, 2009  
- */
 @Managed
 @NameTemplate( { @Property(key = "service", value = "forum"), @Property(key = "view", value = "jobs"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that defines rules for administrator role")

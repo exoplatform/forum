@@ -16,12 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.bbcode.spi;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 6, 2009 - 4:28:16 AM  
- */
 public class BBCodeData {
   private String tagName;
 

@@ -19,12 +19,6 @@ package org.exoplatform.forum.service.conf;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 23-10-2008 - 08:34:54  
- */
 public class TopicData {
   private List<PostData> posts = new ArrayList<PostData>();
 

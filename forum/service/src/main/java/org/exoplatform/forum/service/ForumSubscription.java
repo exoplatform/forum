@@ -16,12 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Aug 6, 2009 - 3:38:26 AM  
- */
 public class ForumSubscription {
   private String   id = "";
 

@@ -11,14 +11,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputSet;
 
-
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * March 21, 2013  
- */
-
 @ComponentConfig(
      template = "app:/templates/forum/webui/popup/UIAvatarContainer.gtmpl",
      events = {

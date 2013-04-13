@@ -34,12 +34,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 2, 2008 - 3:33:33 AM  
- */
 public class Utils implements ForumNodeTypes {
   
   private final static Log   LOG                   = ExoLogger.getLogger(Utils.class);

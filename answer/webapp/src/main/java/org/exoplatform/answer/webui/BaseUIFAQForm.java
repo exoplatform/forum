@@ -21,12 +21,6 @@ import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com
- * Jan 18, 2010 - 4:59:43 AM
- */
 public class BaseUIFAQForm extends BaseUIForm {
   private FAQService faqService;
 

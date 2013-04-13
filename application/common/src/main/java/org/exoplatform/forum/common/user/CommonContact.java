@@ -16,14 +16,6 @@
  */
 package org.exoplatform.forum.common.user;
 
-/**
- * 
- * User profile information for forum users.<br><br>
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 21, 2008  
- *
- */
 public class CommonContact {
   private String emailAddress = "";
   private String city = "";

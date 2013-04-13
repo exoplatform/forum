@@ -22,12 +22,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Dec 17, 2008  
- */
 public class UISliderControl extends UIFormInputBase<String> {
   
   

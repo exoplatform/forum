@@ -26,10 +26,6 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
-/**
- * Created by The eXo Platform SARL Author : hung.nguyen@exoplatform.com Aug 02,
- * 2007 9:43:23 AM
- */
 @ComponentConfig(lifecycle = Lifecycle.class)
 public abstract class AbstractPopupAction extends UIContainer {
 

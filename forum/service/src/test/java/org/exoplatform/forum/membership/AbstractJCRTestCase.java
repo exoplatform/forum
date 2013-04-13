@@ -34,12 +34,6 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Oct 8, 2012  
- */
 public abstract class AbstractJCRTestCase  extends BaseForumServiceTestCase {
   
   private static final Log LOG = ExoLogger.getLogger(AbstractJCRTestCase.class);

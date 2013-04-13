@@ -40,13 +40,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com
- * Jun 24, 2009 - 2:26:16 AM
- */
-
 @ComponentConfig(
     lifecycle = UIApplicationLifecycle.class,
     template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"

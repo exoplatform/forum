@@ -30,12 +30,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 30-10-2008 - 10:35:05  
- */
 @ComponentConfig()
 public class UIForumKeepStickPageIterator extends BaseForumForm {
 

@@ -19,12 +19,6 @@ package org.exoplatform.forum.service.filter.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Dec 27, 2012  
- */
 public class CategoryFilter {
   private String              categoryId;
 

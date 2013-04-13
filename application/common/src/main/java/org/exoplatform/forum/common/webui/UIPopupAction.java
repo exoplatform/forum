@@ -21,13 +21,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 26, 2010 - 10:19:17 AM  
- */
-
 @ComponentConfig(lifecycle = Lifecycle.class)
 public class UIPopupAction extends AbstractPopupAction {
   public UIPopupAction() throws Exception {

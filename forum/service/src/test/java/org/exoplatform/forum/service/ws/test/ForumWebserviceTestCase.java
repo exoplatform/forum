@@ -37,13 +37,6 @@ import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Oct 9, 2012  
- */
-
 public class ForumWebserviceTestCase extends AbstractResourceTest {
   ForumWebservice     forumWebservice;
 

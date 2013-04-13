@@ -37,12 +37,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormStringInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Duy Tu
- *    tu.duy@exoplatform.com
- * 14 Apr 2008, 02:57:05  
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/UIQuickSearchForm.gtmpl",

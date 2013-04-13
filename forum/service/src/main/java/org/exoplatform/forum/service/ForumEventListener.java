@@ -18,12 +18,6 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.container.component.BaseComponentPlugin;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : eXoPlatform 
- *          tuvd@exoplatform.com
- * Jul 15, 2010
- */
 public abstract class ForumEventListener extends BaseComponentPlugin implements ForumEventLifeCycle {
 
   public abstract void saveCategory(Category category);

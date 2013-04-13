@@ -19,12 +19,6 @@ package org.exoplatform.faq.service;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- * hung.nguyen@exoplatform.com
- * Jul 11, 2007
- */
 public class QueryStatement {
 
   /** The Constant QUESTION. */

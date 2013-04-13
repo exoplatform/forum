@@ -38,12 +38,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Duy Tu
- *    tu.duy@exoplatform.com
- * 14 Apr 2008, 08:22:52  
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,                   
     template = "app:/templates/forum/webui/UIForumListSearch.gtmpl",

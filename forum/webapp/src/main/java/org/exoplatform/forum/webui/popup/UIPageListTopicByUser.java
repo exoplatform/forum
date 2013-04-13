@@ -50,13 +50,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 05-03-2008  
- */
-
 @ComponentConfig(
     template = "app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
     events = {

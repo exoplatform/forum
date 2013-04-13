@@ -29,13 +29,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 19, 2007 9:18:18 AM 
- */
-
 @ComponentConfig(
    template = "app:/templates/forum/webui/UIForumPageIterator.gtmpl",
    events = {

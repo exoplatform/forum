@@ -24,13 +24,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * May 1, 2008 ,3:22:14 AM
- */
-
 @ComponentConfig(
     template = "app:/templates/answer/webui/popup/UIQuestionManagerForm.gtmpl", 
     events = {

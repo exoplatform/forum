@@ -19,12 +19,6 @@ package org.exoplatform.faq.service.impl;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.faq.service.AnswerEventLifeCycle;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 26, 2010  
- */
 public abstract class AnswerEventListener extends BaseComponentPlugin implements AnswerEventLifeCycle {
 
 }

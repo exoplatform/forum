@@ -35,13 +35,6 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * March 19, 2013  
- */
-
 @Managed
 @NameTemplate( { @Property(key = "product.group.id", value = "org.exoplatform.forum"), @Property(key = "location", value = "{location}") })
 @ManagedDescription("Plugin that allows to migration default template of FAQ viewer.")

@@ -43,12 +43,6 @@ import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.web.url.navigation.NavigationResource;
 import org.exoplatform.web.url.navigation.NodeURL;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Jan 3, 2013  
- */
 public class CreateUtils {
   
   public static final String  SPACES_GROUP           = "spaces";

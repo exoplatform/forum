@@ -25,16 +25,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SARL
- * 
- * This object intermediate to give search Category or question in form advance search.
- * All value user input search will save this object
- * 
- * Author : Truong Nguyen
- * truong.nguyen@exoplatform.com
- * May 5, 2008, 3:48:51 PM
- */
 public class FAQEventQuery implements FAQNodeTypes {
 
   public static final String FAQ_CATEGORY               = "faqCategory";

@@ -32,13 +32,6 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 23, 2009 - 7:42:07 AM  
- */
-
 @ComponentConfig(
    lifecycle = UIApplicationLifecycle.class,
    template = "app:/templates/forum/webui/info/UIForumLinkPortlet.gtmpl",

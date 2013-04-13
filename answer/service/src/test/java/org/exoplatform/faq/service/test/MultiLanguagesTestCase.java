@@ -26,12 +26,6 @@ import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 5, 2012  
- */
 public class MultiLanguagesTestCase extends FAQServiceBaseTestCase {
 
   public MultiLanguagesTestCase() throws Exception {

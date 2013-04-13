@@ -19,12 +19,6 @@ package org.exoplatform.answer.webui;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * May 3, 2008 ,1:48:11 AM
- */
 public class ValidatorDataInput {
   static private List<String> typeImage = Arrays.asList(new String[] { "gif", "jpg", "jpeg", "tiff", "bmp", "png", "tif" });
 

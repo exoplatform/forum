@@ -66,7 +66,7 @@ public interface BBCodeService {
    * Loads a specific BBCode.
    * 
    * @param bbcodeId ID of the BBCode
-   * @return
+   * @return BBCode object of provided id.
    * @throws Exception
    * @LevelAPI Platform
    */

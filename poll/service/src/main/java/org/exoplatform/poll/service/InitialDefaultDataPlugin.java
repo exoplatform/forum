@@ -23,12 +23,6 @@ import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          tu.duy@exoplatform.com
- * Dec 21, 2010  
- */
 @Managed
 @NameTemplate( { @Property(key = "service", value = "poll"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that allows to initialize default data for the poll")

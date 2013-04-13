@@ -16,12 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.conf;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 23-10-2008 - 08:35:14  
- */
 public class PostData {
   private String name;
 

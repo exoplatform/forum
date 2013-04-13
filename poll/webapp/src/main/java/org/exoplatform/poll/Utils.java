@@ -34,13 +34,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 
-/**
- * Created by The eXo Platform SARL 
- * Author : Vu Duy Tu 
- *          tu.duy@exoplatform.com 
- * June 24, 2010 5:35:54 PM
- */
-
 public class Utils {
   public static final String POLL         = "Poll".intern();
 
