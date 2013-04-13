@@ -16,12 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 28 Mar 2008, 07:44:10
- */
 public class ForumStatistic {
   private long   postCount       = 0;
 

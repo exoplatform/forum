@@ -37,12 +37,6 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * 31 May 2011  
- */
 public class ResizeImageServiceImpl implements ResizeImageService {
 
   private static final Log               log = ExoLogger.getLogger(ResizeImageServiceImpl.class);

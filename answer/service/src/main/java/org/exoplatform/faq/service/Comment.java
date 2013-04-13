@@ -20,12 +20,6 @@ import java.util.Date;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- * ha.mai@exoplatform.com
- * Jan 16, 2009, 10:19:51 AM
- */
 public class Comment {
   public static final String COMMENT_ID = "Comment".intern();
   /** The id. */

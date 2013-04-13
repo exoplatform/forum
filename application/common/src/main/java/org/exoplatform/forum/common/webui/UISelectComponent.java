@@ -18,12 +18,6 @@ package org.exoplatform.forum.common.webui;
 
 import org.exoplatform.webui.core.UIComponent;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Pham Tuan
- *          tuan.pham@exoplatform.com
- * Aug 29, 2007  
- */
 public interface UISelectComponent {
   final public static String TYPE_USER = "0".intern() ;
   final public static String TYPE_MEMBERSHIP = "1".intern() ;

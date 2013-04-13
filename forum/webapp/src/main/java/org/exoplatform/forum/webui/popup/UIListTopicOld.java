@@ -38,12 +38,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 16, 2008 - 5:02:24 AM  
- */
 @ComponentConfig(
     template = "app:/templates/forum/webui/popup/UIListTopicOldForm.gtmpl" ,
     events = {

@@ -23,12 +23,6 @@ import java.util.List;
 
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *          truong.nguyen@exoplatform.com
- * Apr 10, 2008, 4:40:22 PM
- */
 public class Utils {
   final public static String FAQ_APP              = "faqApp".intern();
 

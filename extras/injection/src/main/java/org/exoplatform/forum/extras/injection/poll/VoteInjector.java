@@ -22,11 +22,6 @@ import java.util.Random;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.Utils;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu tuvd@exoplatform.com 
- * Aug 30, 2012
- */
 public class VoteInjector extends AbstractPollInjector {
 
   private static final String FROM_POLL      = "fromPoll";

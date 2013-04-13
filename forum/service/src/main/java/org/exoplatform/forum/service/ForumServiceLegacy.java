@@ -16,9 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-/**
- * Created by The eXo Platform SARL.
- */
 public interface ForumServiceLegacy {
 
 }

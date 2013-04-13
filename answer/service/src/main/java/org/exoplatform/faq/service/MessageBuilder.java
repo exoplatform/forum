@@ -20,12 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 7, 2011  
- */
 public class MessageBuilder implements FAQNodeTypes {
   final private static String MIMETYPE_TEXTHTML = TEXT_HTML.intern();
 

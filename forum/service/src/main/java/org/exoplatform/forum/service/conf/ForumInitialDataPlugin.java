@@ -37,9 +37,6 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-/**
- * Created by The eXo Platform SAS Author : eXoPlatform tu.duy@exoplatform.com Dec 7, 2010
- */
 @Managed
 @NameTemplate( { @Property(key = "service", value = "forum"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that allows to initialize data for the forum")

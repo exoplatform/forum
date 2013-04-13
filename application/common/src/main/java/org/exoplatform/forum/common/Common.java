@@ -30,12 +30,6 @@ import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *          truong.nguyen@exoplatform.com
- * Oct 22, 2008, 12:02:18 PM
- */
 public class Common {
   
   public static Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;

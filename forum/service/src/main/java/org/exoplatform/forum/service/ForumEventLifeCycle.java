@@ -17,12 +17,6 @@
 package org.exoplatform.forum.service;
 
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 15, 2010  
- */
 public interface ForumEventLifeCycle {
   /**
    * This will be call after save forum category

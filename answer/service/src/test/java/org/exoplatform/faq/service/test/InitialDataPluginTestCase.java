@@ -25,13 +25,6 @@ import org.exoplatform.faq.base.FAQServiceBaseTestCase;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.InitialDataPlugin;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 1, 2009  
- */
-
 public class InitialDataPluginTestCase extends FAQServiceBaseTestCase {
 
   private static final String DATAZIP_LOCATION = "jar:/conf/faqdata.zip";

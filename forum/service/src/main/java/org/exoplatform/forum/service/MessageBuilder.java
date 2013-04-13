@@ -26,12 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          tu.duy@exoplatform.com
- * Jan 24, 2011  
- */
 public class MessageBuilder {
   public final static String  CONTEN_EMAIL = Utils.DEFAULT_EMAIL_CONTENT;
 

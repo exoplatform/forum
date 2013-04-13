@@ -21,14 +21,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.UserProfile;
 
-/**
- * ContactProvider implementation that uses portal user business profile to populate {@link CommonContact}. 
- * Preferable for corporate forums.<br><br>
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 21, 2008  
- */
 public class BusinessProfileContactProvider implements ContactProvider {
 
   private static Log log = ExoLogger.getLogger(BusinessProfileContactProvider.class);

@@ -24,12 +24,6 @@ import org.exoplatform.webui.form.UIFormInputBase;
 
 import java.io.Writer;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Jan 3, 2013  
- */
 public class UIForumFilter extends UIFormInputBase<String> {
   private String defaultSelectName = null;
 

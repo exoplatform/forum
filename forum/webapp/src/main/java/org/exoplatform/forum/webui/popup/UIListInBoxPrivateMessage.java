@@ -36,12 +36,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 3, 2008 - 9:48:51 AM  
- */
 @ComponentConfig(
     template = "app:/templates/forum/webui/popup/UIListInBoxPrivateMessage.gtmpl",
     events = {

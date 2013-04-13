@@ -16,15 +16,6 @@
  */
 package org.exoplatform.forum.common.user;
 
-
-
-/**
- * Responsible to provide user profile information to the forum.<br><br>
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 21, 2008  
- */
 public interface ContactProvider {
 
   public CommonContact getCommonContact(String userId);

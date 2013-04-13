@@ -44,13 +44,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 27-08-2008 - 04:36:33  
- */
-
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIWatchToolsForm.gtmpl",

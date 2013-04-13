@@ -25,12 +25,6 @@ import javax.jcr.Node;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.NotifyInfo;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Oct 18, 2009  
- */
 public interface DataStorage {
 
   void addPlugin(ComponentPlugin plugin) throws Exception;

@@ -58,11 +58,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
-/**
- * Created by The eXo Platform SARL Author : Hung Nguyen
- * hung.nguyen@exoplatform.com Aus 01, 2007 2:48:18 PM
- */
-
 @ComponentConfigs({
     @ComponentConfig(lifecycle = UIFormLifecycle.class, 
       template = "app:/templates/forum/webui/popup/UIForumForm.gtmpl", 

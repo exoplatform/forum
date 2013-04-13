@@ -22,12 +22,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 5, 2012  
- */
 public class UtilsTestCase extends TestCase {
   
   public UtilsTestCase() throws Exception {

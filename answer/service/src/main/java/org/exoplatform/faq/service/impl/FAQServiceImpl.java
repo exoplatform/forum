@@ -60,12 +60,6 @@ import org.picocontainer.Startable;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Mar 04, 2008  
- */
 @ManagedBy(FAQServiceManaged.class)
 public class FAQServiceImpl implements FAQService, Startable {
 

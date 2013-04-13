@@ -16,12 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          maivanha1610@gmail.com
- * Mar 2, 2009, 11:44:39 AM
- */
 public class Watch {
   private String  id;
 

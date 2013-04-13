@@ -37,12 +37,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com 
- * 12-01-2009 - 10:30:08
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UISelectCategoryForumForm.gtmpl", 

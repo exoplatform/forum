@@ -31,12 +31,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jul 22, 2011  
- */
 public class WebUIUtils {
   private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
 

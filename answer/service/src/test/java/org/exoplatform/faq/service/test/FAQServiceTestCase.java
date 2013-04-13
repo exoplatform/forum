@@ -45,12 +45,6 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.NotifyInfo;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 15, 2012  
- */
 @SuppressWarnings("unused")
 public class FAQServiceTestCase extends FAQServiceBaseTestCase {
 

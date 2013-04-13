@@ -37,12 +37,6 @@ import org.exoplatform.web.controller.metadata.DescriptorBuilder;
 import org.exoplatform.web.controller.router.Router;
 import org.exoplatform.web.controller.router.RouterConfigException;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Feb 21, 2013  
- */
 public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   private final static String CONTROLLER_PATH = "conf/standalone/controller.xml";
   private SearchContext context;

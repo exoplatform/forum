@@ -38,12 +38,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * Mar 19, 2009, 1:52:45 PM
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UIPrintAllQuestions.gtmpl", 

@@ -50,14 +50,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * This aspect is used to collect all the statistics of all the methods of the JCR API.
- * 
- * Created by The eXo Platform SAS
- * Author : Nicolas Filotto 
- *          nicolas.filotto@exoplatform.com
- * 26 mars 2010  
- */
 @Aspect
 public abstract class JCRAPIAspect
 {

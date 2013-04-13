@@ -41,13 +41,6 @@ import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormInputContainer;
 import org.exoplatform.webui.form.validator.Validator;
 
-/**
- * Author : Nhu Dinh Thuan
- *          nhudinhthuan@exoplatform.com
- * Sep 14, 2006
- * 
- * Represents a multi value selector
- */
 @ComponentConfig(
     events = { 
         @EventConfig(listeners = UIFormMultiValueInputSet.AddActionListener.class, phase = Phase.DECODE), 

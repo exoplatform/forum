@@ -39,13 +39,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.input.UIUploadInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * Apr 29, 2008 ,9:41:42 AM
- */
-
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UIAttachmentForm.gtmpl", 

@@ -29,12 +29,6 @@ import junit.framework.TestCase;
 
 import org.exoplatform.forum.common.image.impl.ResizeImageServiceImpl;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * 31 May 2011  
- */
 public class TestResizeImageService extends TestCase {
   
   private ResizeImageServiceImpl resizeImgService;

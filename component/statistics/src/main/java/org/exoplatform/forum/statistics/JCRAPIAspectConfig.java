@@ -24,14 +24,6 @@ import org.exoplatform.services.log.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The configuration of the {@link JCRAPIAspect}
- * 
- * Created by The eXo Platform SAS
- * Author : Nicolas Filotto 
- *          nicolas.filotto@exoplatform.com
- * 9 avr. 2010  
- */
 public class JCRAPIAspectConfig
 {
 

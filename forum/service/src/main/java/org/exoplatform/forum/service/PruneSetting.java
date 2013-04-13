@@ -18,12 +18,6 @@ package org.exoplatform.forum.service;
 
 import java.util.Date;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 20, 2009 - 7:59:08 AM  
- */
 public class PruneSetting {
   private String  id;
 

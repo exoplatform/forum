@@ -52,12 +52,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.NotifyInfo;
 import org.exoplatform.forum.common.jcr.PropertyReader;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 5, 2012  
- */
 public class DataStorageTestCase extends FAQServiceBaseTestCase {
   private DataStorage   dataStorage;
   

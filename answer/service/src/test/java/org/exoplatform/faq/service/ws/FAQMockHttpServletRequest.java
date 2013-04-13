@@ -22,12 +22,6 @@ import java.util.Map;
 
 import org.exoplatform.services.test.mock.MockHttpServletRequest;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 15, 2012  
- */
 public class FAQMockHttpServletRequest extends MockHttpServletRequest {
 
   /**

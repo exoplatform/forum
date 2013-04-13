@@ -11,13 +11,6 @@ import java.util.List;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * July 3, 2007  
- */
-
 public class CategoryForumTestCase extends BaseForumServiceTestCase {
 
   @Override

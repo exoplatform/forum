@@ -22,12 +22,6 @@ import java.io.InputStream;
 import org.exoplatform.download.DownloadResource;
 import org.exoplatform.faq.service.FileAttachment;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Apr 8, 2013  
- */
 public class FAQDownloadResource extends DownloadResource {
   private FileAttachment fileAttachment;
   

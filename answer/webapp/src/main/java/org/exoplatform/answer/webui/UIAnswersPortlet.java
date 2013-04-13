@@ -45,13 +45,6 @@ import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.form.UIFormInputInfo;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com 
- * Mar 04, 2008
- */
-
 @ComponentConfig(
     lifecycle = UIApplicationLifecycle.class, 
     template = "app:/templates/answer/webui/UIAnswersPortlet.gtmpl"

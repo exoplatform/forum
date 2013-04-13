@@ -20,12 +20,6 @@ import java.util.Date;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *         tu.duy@exoplatform.com
- * Octo 25, 2007
- */
 public class Poll {
   private String   id;
 

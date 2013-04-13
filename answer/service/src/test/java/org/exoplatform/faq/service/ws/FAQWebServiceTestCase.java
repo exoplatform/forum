@@ -22,12 +22,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 
-/**
- * Created by The eXo Platform SAS
- * Author : quangpld
- *          quangpld@exoplatform.com
- * Oct 15, 2012  
- */
 public class FAQWebServiceTestCase extends AbstractResourceTest {
   
   private static final String  BASE_URL     = "http://localhost:8080";

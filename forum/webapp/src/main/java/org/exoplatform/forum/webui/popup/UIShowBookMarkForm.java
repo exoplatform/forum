@@ -35,12 +35,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 30, 2008 - 8:19:21 AM  
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIShowBookMarkForm.gtmpl",

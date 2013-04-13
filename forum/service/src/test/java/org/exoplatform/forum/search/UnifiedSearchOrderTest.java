@@ -26,12 +26,6 @@ import junit.framework.TestCase;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Thanh Vu Cong
- *          thanh_vucong@exoplatform.com
- * Apr 9, 2013  
- */
 public class UnifiedSearchOrderTest extends TestCase {
 
   protected void setUp() throws Exception {

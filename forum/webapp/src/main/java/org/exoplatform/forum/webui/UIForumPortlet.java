@@ -77,11 +77,6 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.mortbay.cometd.AbstractBayeux;
 import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
-/**
- * Author : Nguyen Quang Hung
- *          hung.nguyen@exoplatform.com
- * Aug 01, 2007
- */
 @ComponentConfig(
                  lifecycle = UIApplicationLifecycle.class,
                  template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",

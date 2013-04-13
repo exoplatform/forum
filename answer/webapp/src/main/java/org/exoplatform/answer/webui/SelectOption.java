@@ -19,10 +19,6 @@ package org.exoplatform.answer.webui;
 import org.exoplatform.webui.core.model.SelectItemCategory;
 
 /**
- * Created by The eXo Platform SARL 
- * Author : Philippe Aristote 
- *          philippe.aristote@gmail.com
- * 
  * An item in a UIFormInputItemSelector Each item is actually held in a SelectItemCategory, which is held by the UIFormInputItemSelector
  * 
  * @see SelectItemCategory

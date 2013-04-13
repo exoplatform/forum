@@ -23,12 +23,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
-/**
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Mar 04, 2008
- */
-
 @ComponentConfig(
    lifecycle = UIApplicationLifecycle.class,
    template = "app:/templates/forum/webui/info/UIForumStatisticPortlet.gtmpl"

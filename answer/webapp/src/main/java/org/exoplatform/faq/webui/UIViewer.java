@@ -35,13 +35,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com 
- * Jun 24, 2009 - 4:32:48 AM
- */
-
 @ComponentConfig(
     events = { 
         @EventConfig(listeners = UIViewer.ChangePathActionListener.class)

@@ -41,12 +41,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 06-03-2008, 04:41:47
- */
+
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class ,
     template = "app:/templates/forum/webui/popup/UIPageListPostByIP.gtmpl",

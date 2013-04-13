@@ -111,9 +111,6 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.SyndFeedOutput;
 
-/**
- * Created by The eXo Platform SARL Author : Hung Nguyen Quang hung.nguyen@exoplatform.com Jul 10, 2007
- */
 public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private static final Log        log                  = ExoLogger.getLogger(JCRDataStorage.class);

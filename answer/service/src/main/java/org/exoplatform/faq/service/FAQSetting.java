@@ -16,15 +16,6 @@
  */
 package org.exoplatform.faq.service;
 
-/**
- * Created by The eXo Platform SARL
- * 
- * This Object is used to set some properties of FAQ.
- * 
- * Author : Truong Nguyen
- * truong.nguyen@exoplatform.com
- * Apr 10, 2008, 2:07:25 PM
- */
 public class FAQSetting {
   private boolean      enableViewAvatar              = false;
 

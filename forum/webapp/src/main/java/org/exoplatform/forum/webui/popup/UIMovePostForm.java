@@ -43,12 +43,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Aus 15, 2007 2:48:18 PM 
- */
+
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIMovePostForm.gtmpl",

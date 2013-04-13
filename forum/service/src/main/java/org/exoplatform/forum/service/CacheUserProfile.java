@@ -22,12 +22,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Sep 15, 2011  
- */
 public class CacheUserProfile {
 
   private static ExoCache<Serializable, UserProfile> getCache() {

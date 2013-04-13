@@ -19,12 +19,6 @@ package org.exoplatform.faq.service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 24, 2009 - 3:34:44 AM  
- */
 public class SubCategoryInfo {
   private String                id;
 

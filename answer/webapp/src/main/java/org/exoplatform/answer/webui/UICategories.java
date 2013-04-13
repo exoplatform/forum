@@ -50,12 +50,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * Nov 18, 2008, 5:24:36 PM
- */
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,

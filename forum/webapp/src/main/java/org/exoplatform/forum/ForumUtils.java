@@ -59,13 +59,6 @@ import org.exoplatform.web.application.RequireJS;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Dec 21, 2007 5:35:54 PM 
- */
-
 public class ForumUtils {
   protected static Log       log                     = ExoLogger.getLogger(ForumUtils.class);
 

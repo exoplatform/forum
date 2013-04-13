@@ -21,12 +21,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.UserProfile;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 21, 2008  
- */
 public class PersonalProfileContactProvider implements ContactProvider {
 
   private static Log log = ExoLogger.getLogger(PersonalProfileContactProvider.class);

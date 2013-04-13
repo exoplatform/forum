@@ -39,12 +39,6 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.SyndFeedOutput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com
- * Jan 12, 2009, 5:55:37 PM
- */
 public class RSS {
   private static final Log LOG = ExoLogger.getLogger(RSS.class);
   protected static final String CONTENT_PROPERTY = "exo:content".intern();

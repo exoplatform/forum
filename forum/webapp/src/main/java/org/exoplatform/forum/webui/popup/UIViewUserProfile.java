@@ -31,12 +31,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com
- * Aus 01, 2007 2:48:18 PM 
- */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIViewMemberProfile.gtmpl",

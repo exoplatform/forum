@@ -41,12 +41,6 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Jan 4, 2013  
- */
 public class UICreateForm extends BaseUIForm {
   public static final String LOCATION_SELECT_BOX  = "location";
 

@@ -29,13 +29,6 @@ import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *          truong.nguyen@exoplatform.com
- * Oct 28, 2008, 4:25:54 PM
- */
-
 @Managed
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
 @ManagedDescription("Plugin that defines rules for administrator role")

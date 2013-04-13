@@ -6,12 +6,6 @@ package org.exoplatform.forum.service.ws;
 
 import java.util.List;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Tuan Pham
- *          tuan.pham@exoplatform.com
- * Oct 15, 2008  
- */
 public class BeanToJsons<T> {
   private List<T> jsonList;
 

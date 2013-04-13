@@ -34,13 +34,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.services.security.ConversationState;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Feb 21, 2013  
- */
-
 public class AnswerSearchConnector extends SearchServiceConnector {
   
   public static final String  SPACES_GROUP           = "spaces";

@@ -39,12 +39,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Pham Tuan
- *          phamtuanchip@yahoo.de
- * Modifier: Vu Duy Tu
  * @Since 2.2.x         
- * Aug 29, 2007 11:57:56 AM 
  */
 
 @ComponentConfigs({ 

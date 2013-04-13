@@ -19,12 +19,6 @@ package org.exoplatform.forum;
 import java.util.Date;
 
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jul 5, 2011  
- */
 public class TimeConvertUtils extends org.exoplatform.webui.utils.TimeConvertUtils {
 
   public static String convertXTimeAgo(Date myDate, String format, long zoneTime) {

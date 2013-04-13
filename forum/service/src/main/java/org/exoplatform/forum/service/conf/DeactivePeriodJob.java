@@ -21,12 +21,6 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.services.scheduler.PeriodJob;
 import org.quartz.JobDataMap;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com
- * nov 29, 2007
- */
 public class DeactivePeriodJob extends PeriodJob {
   private JobDataMap jdatamap_;
 

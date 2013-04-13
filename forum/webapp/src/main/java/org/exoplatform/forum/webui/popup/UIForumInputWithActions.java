@@ -35,12 +35,6 @@ import org.exoplatform.webui.form.UIFormInputSet;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 9, 2008 - 10:31:58 AM  
- */
 public class UIForumInputWithActions extends UIFormInputSet {
   public static Log             log             = ExoLogger.getLogger(UIForumInputWithActions.class);
 

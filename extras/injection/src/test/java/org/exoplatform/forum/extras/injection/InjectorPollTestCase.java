@@ -31,13 +31,6 @@ import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.OrganizationService;
 
-/**
- * Created by The eXo Platform SEA 
- * Author : Vu Duy Tu 
- * tu.duy@exoplatform.com 
- * Jun 15, 2012
- */
-
 public class InjectorPollTestCase extends BaseInjectorTestCase {
   GroupInjector                   groupInjector;
 

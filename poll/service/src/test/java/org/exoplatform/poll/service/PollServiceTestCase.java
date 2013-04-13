@@ -23,12 +23,6 @@ import org.exoplatform.poll.base.BaseTestCase;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Oct 8, 2012 
- */
 // TODO :
 // * Fix tests to not have to specify the order of execution like this
 // * The order of tests execution changed in Junit 4.11 (https://github.com/KentBeck/junit/blob/master/doc/ReleaseNotes4.11.md)

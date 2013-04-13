@@ -21,16 +21,6 @@ import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-/**
- * Created by The eXo Platform SARL
- * 
- * Data of category is stored in this class, it's used in processing 
- * add new category, edit category
- * 
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 11, 2007  
- */
 public class Category {
   public static final String CATEGORY_ID = "Category";
   

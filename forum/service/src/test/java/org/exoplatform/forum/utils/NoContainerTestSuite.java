@@ -23,12 +23,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Nov 13, 2012  
- */
 @RunWith(Suite.class)
 @SuiteClasses({ 
   UserProfileUtilsTestCase.class,

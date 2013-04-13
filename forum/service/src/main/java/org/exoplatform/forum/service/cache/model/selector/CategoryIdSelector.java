@@ -24,12 +24,6 @@ import org.exoplatform.forum.service.cache.model.key.CategoryKey;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.ObjectCacheInfo;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 30, 2012  
- */
 public class CategoryIdSelector extends ScopeCacheSelector<ScopeCacheKey, Object> {
 
   private final List<String>                        cateIds;

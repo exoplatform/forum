@@ -24,13 +24,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * Created by The eXo Platform SAS 
- * Author : Vu Duy Tu 
- *           tu.duy@exoplatform.com 
- * May 22, 2008 - 2:58:53 AM
- */
-
 public class TransformHTML {
   
   public static final String EMPTY_STR = "";

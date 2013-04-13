@@ -19,10 +19,6 @@ package org.exoplatform.faq.service;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 
-/**
- * Created by The eXo Platform SARL
- * Jul 2, 2009, 4:25:54 PM
- */
 public class TemplatePlugin extends BaseComponentPlugin {
   private String path_;
 

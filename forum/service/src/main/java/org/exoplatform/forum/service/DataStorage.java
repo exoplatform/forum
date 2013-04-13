@@ -33,12 +33,6 @@ import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Oct 17, 2009  
- */
 public interface DataStorage {
 
   public static final int CLOSE_FORUM = 1;

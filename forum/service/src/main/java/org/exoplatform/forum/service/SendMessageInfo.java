@@ -20,12 +20,6 @@ import java.util.List;
 
 import org.exoplatform.services.mail.Message;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *         hung.nguyen@exoplatform.com
- * Aug 26, 2008
- */
 public class SendMessageInfo {
   private List<String> emailAddresses;
 

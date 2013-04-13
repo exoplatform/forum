@@ -54,13 +54,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Ha Mai
- *          ha.mai@exoplatform.com 
- * Apr 17, 2008 ,3:19:00 PM
- */
-
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/answer/webui/popup/UIResponseForm.gtmpl", 

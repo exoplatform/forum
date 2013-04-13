@@ -58,12 +58,6 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.utils.TimeConvertUtils;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen 
- *          truong.nguyen@exoplatform.com 
- * Apr 14, 2008, 2:56:30 PM
- */
 public class FAQUtils {
   public static String       DISPLAYAPPROVED             = "approved";
 

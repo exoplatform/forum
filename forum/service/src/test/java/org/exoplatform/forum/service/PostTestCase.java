@@ -21,12 +21,6 @@ import java.util.List;
 
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Oct 5, 2012  
- */
 public class PostTestCase extends BaseForumServiceTestCase {
 
   @Override

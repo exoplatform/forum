@@ -76,13 +76,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.utils.TimeConvertUtils;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com 
- * Aus 01, 2007 2:48:18 PM
- */
-
 @ComponentConfig(
     template = "app:/templates/answer/webui/UIQuestions.gtmpl", 
     events = { 

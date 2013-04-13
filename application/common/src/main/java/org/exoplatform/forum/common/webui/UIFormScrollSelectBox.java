@@ -27,12 +27,6 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputBase;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tuvd@exoplatform.com
- * Feb 5, 2013  
- */
 public class UIFormScrollSelectBox extends UIFormInputBase<String> {
 
   private String                         onchange_         = null;

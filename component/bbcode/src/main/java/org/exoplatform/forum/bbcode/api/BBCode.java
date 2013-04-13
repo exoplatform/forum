@@ -16,12 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.bbcode.api;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Oct 7, 2009 - 6:57:52 AM  
- */
 public class BBCode {
 
   public static final String BBCODE = "bbcode";

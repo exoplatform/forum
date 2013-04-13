@@ -18,12 +18,6 @@ package org.exoplatform.forum.service;
 
 import java.util.Date;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 9, 2008 - 3:19:31 AM  
- */
 public class ForumPrivateMessage {
   private String  id;
 

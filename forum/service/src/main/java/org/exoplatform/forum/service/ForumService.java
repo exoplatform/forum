@@ -193,13 +193,13 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Modifies the existing {@link Forum} base on Type of updating.
    * <ul>
-   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
    * </ul>
    * 
    * @param forum is the object forum that should be modified
@@ -260,7 +260,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param categoryId the Category's Id
    * @param forumId the Forum's Id
    * @param strQuery Condition to get
-   * @param strOrderBy: the query statement
+   * @param strOrderBy the query statement
    * @return the topic list keeps in {@link JCRPageList}
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -391,13 +391,13 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Modify the existing {@link Topic} list base on updating type.
    * <ul>
-   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
    * </ul>
    * 
    * @param topics the topic list will be updated
@@ -409,13 +409,13 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Modify the merged {@link Topic} list base on updating type.
    * <ul>
-   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
    * </ul>
    * 
    * @param topics the topics
@@ -588,13 +588,13 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Modifies the {@link Post} base on updating type.
    * <ul>
-   *  <li> 1. {@link Utils.CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils.LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils.APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils.STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils.ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils.WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils.HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
+   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
+   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
+   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
+   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
+   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
+   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
    * </ul>
    * 
    * @param posts the posts
@@ -1590,7 +1590,6 @@ public interface ForumService extends ForumServiceLegacy {
    * Updates information of logged in users that records in a queue to statistic and profile
    * </p>
    * 
-   * @param
    * @throws Exception
    * @LevelAPI Platform
    */

@@ -16,12 +16,6 @@
  **/
 package org.exoplatform.faq.service;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 11, 2007  
- */
 public class CategoryLanguage {
   private String language;
 

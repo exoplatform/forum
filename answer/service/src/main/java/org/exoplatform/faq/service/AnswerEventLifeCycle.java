@@ -16,12 +16,6 @@
  */
 package org.exoplatform.faq.service;
 
-/**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 26, 2010  
- */
 public interface AnswerEventLifeCycle {
 
   public void saveQuestion(Question question, boolean isNew);

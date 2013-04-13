@@ -16,12 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-/**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 5, 2008 - 2:33:00 AM  
- */
 public class ForumAdministration {
   private String  forumSortBy;            // name , forumOrder, createdDate, laspostDate, postCount, topicCount
 
