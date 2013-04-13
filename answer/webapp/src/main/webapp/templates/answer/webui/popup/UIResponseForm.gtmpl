@@ -57,7 +57,7 @@
 						<div class="control-group">
 							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.Relation")%>:</label>
 							<div class="controls">
-								<a href="javascript:void(0)" onclick="<%=uicomponent.event("AddRelation")%>"  rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>">
+								<a href="javascript:void(0)" class="actionIcon" onclick="<%=uicomponent.event("AddRelation")%>"  rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>">
 									<i class="uiIconLightGray uiIconPlus"></i>
 								</a>
 								<ul class="listRelated" >
@@ -73,7 +73,7 @@
 									%>
 										<li class="listItem">
 											- $viewString
-											<a href="javascript:void(0)" onclick="$action" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.label.Remove")%>">
+											<a href="javascript:void(0)" class="actionIcon" onclick="$action" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIResponseForm.label.Remove")%>">
 												<i class="uiIconLightGray uiIconTrash"></i>
 											</a>											
 										</li>
