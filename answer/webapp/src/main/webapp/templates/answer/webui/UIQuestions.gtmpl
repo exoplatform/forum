@@ -293,7 +293,7 @@
 													<ul class="dropdown-menu">
 													 <!-- action print question -->
 														<li>
-															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
+															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
 														</li>
 
 													<%
