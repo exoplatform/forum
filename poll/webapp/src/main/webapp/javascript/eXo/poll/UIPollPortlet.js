@@ -6,7 +6,7 @@
         this.portletId = String(elm);
       }
       utils.onResize(UIPollPortlet.onResizeMarkLayer);
-      var jobj = gj('.CollapseButton');
+      var jobj = gj('.actionExpandCollapse:first').find('i');
       if (jobj.exists()) {
         jobj.click(UIPollPortlet.expandCollapse);
       }
@@ -14,41 +14,49 @@
     onResizeMarkLayer : function() {
       utils.setMaskLayer(UIPollPortlet.portletId);
     },
-    privateField : function(elm) {
-      var jelm = findId(elm) || gj(elm);
-      UIPollPortlet.clickPrivateField(jelm);
-      jelm.click(UIPollPortlet.clickPrivateField);
-    },
-    clickPrivateField : function(elm) {
-      var elm = (elm.type) ? this : elm;
-      var jelm = gj(elm);
-      if (jelm.exists()) {
-        var parent = jelm.parents('.OptionField');
-        var childs = parent.find('div.Display');
-        var input = jelm.find('input.checkbox:first');
-        if (input.exists()) {
-          if (String(input.attr('checked')) === "checked") {
-            childs.hide();
-          } else {
-            childs.show();
+    setStyleOfTable : function(contId) {
+      var cont = gj('#'+contId);
+      if (cont.exists()) {
+        gj.each(cont.find('.uiGrid:first').find('th'), function(index, elm) {
+          if (index == 1) {
+            elm.style.width = '60px';
           }
-        }
+          if (index == 2 || index == 3) {
+            elm.style.width = '160px';
+          }
+          if (index == 4) {
+            elm.style.width = '100px';
+          }
+        });
       }
     },
-    expandCollapse : function() {
-      var jobj = gj(this);
-      var forumToolbar = jobj.parents('.ForumToolbar');
-      var contentContainer = forumToolbar.next('div');
-      if (contentContainer.css('display') != 'none') {
-        contentContainer.css('display', 'none');
-        jobj.attr('class', 'IconRight ExpandButton').attr('title',
-            jobj.attr('expand'));
-        forumToolbar.css('borderBottom', 'solid 1px #b7b7b7');
+    privateField : function(id) {
+      var checkbox = gj('#' + id);
+      UIPollPortlet.clickPrivateField(checkbox);
+      checkbox.click(UIPollPortlet.clickPrivateField);
+    },
+    clickPrivateField : function(elm) {
+      elm = (elm.type) ? this : elm;
+      var thizz = gj(elm);
+      if (thizz.exists() && thizz.is(':checkbox')) {
+        var parent = thizz.parents('.form-horizontal:first');
+        var input = parent.find('#GroupPrivate');
+        var groupParent = input.parents('.control-group:first')
+        groupParent.css('display', (thizz.prop('checked') === false) ? 'block' : 'none');
+      }
+    },
+    expandCollapse : function(obj) {
+      var jobject = $(obj)
+      var forumToolbar = jobject.parents(".uiCollapExpand");
+      var contentContainer = forumToolbar.find('.uiExpandContainer');
+      jobject.hide();
+      $('div.tooltip').remove();
+      if (contentContainer.css('display') != "none") {
+        contentContainer.hide(200);
+        forumToolbar.find('.uiIconArrowRight').show().tooltip();
       } else {
-        contentContainer.css('display', 'block');
-        jobj.attr('class', 'IconRight CollapseButton').attr('title',
-            jobj.attr('collapse'));
-        forumToolbar.css('borderBottom', 'none');
+        contentContainer.show(200);
+        forumToolbar.find('.uiIconArrowDown').show().tooltip();
       }
     }
   };

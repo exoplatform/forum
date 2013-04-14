@@ -18,8 +18,9 @@ package org.exoplatform.poll.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.poll.service.PollService;
-import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.application.WebuiRequestContext;
 
 /**
  * Base class for UIForm used in poll application. Provides convenience methods to access the service
@@ -52,21 +53,9 @@ public class BasePollForm extends BaseUIForm {
     this.pollService = pollService;
   }
 
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-    UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
-    return openPopup(pollPortlet, componentType, popupId, width, height);
+  public void processRender(WebuiRequestContext context) throws Exception {
+    WebUIUtils.addScripts("ForumUtils", "forumUtils", "forumUtils.initTooltip('" + getId() + "');");
+    super.processRender(context);
   }
 
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-    UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
-    return openPopup(pollPortlet, componentType, width, height);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-    return openPopup(componentType, width, 0);
-  }
-
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-    return openPopup(componentType, popupId, width, 0);
-  }
 }

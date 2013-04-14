@@ -23,7 +23,8 @@ import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
-import org.exoplatform.commons.utils.ObjectPageList;
+import org.exoplatform.commons.utils.ListAccessImpl;
+import org.exoplatform.commons.utils.SerializablePageList;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
@@ -107,8 +108,7 @@ public class UIPollManagement extends BasePollForm {
       selectPoll.setValue(portletPref.getValue(Utils.POLL_ID_SHOW, polls.get(0).getId()));
     }
     UIGrid uiGrid = getChild(UIGrid.class);
-    ObjectPageList objPageList = new ObjectPageList(polls, 10);
-    uiGrid.getUIPageIterator().setPageList(objPageList);
+    uiGrid.getUIPageIterator().setPageList(new SerializablePageList<Poll>(new ListAccessImpl<Poll>(Poll.class, polls), 10));
   }
 
   static public class EditActionListener extends EventListener<UIPollManagement> {
@@ -120,8 +120,9 @@ public class UIPollManagement extends BasePollForm {
       UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIPollForm pollForm = popupContainer.getChild(UIPollForm.class);
-      if (pollForm == null)
+      if (pollForm == null) {
         pollForm = popupContainer.addChild(UIPollForm.class, null, null);
+      }
       popupContainer.setId("UIEditPollForm");
       pollForm.setUpdatePoll(poll, true);
       popupAction.activate(popupContainer, 655, 455, true);

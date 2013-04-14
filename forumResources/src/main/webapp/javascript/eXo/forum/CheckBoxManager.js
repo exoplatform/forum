@@ -6,11 +6,13 @@
       } else {
         cont = gj(cont);
       }
-      var checkboxes = cont.find('input.checkbox');
+      var table = cont.find('table:first');
+      var checkboxes = table.find('tbody').find('input.checkbox');
       if (!checkboxes.exists())
         return;
-      checkboxes.on('click', this.check);
-      checkboxes.eq(0).off('click').on('click', this.checkAll);
+
+      checkboxes.on('click', CheckBoxManager.check);
+      table.find('thead').find('input.checkbox:first').on('click', CheckBoxManager.checkAll);
     },
 
     checkAll : function() {
@@ -18,8 +20,8 @@
     },
 
     getItems : function(obj) {
-      var table = gj(obj).parents('table');
-      return table.find('input.checkbox');
+      var tbody = gj(obj).parents('table:first').find('tbody');
+      return tbody.find('input.checkbox');
     },
 
     check : function() {
@@ -27,24 +29,23 @@
     },
 
     checkAllItem : function(obj) {
-      var checked = gj(obj).val();
       var items = CheckBoxManager.getItems(obj);
-      for ( var i = 1; i < items.length; i++) {
-        items.eq(i).val(checked);
-      }
+    items.prop("checked", obj.checked);
     },
 
     checkItem : function(obj) {
       var checkboxes = CheckBoxManager.getItems(obj);
+      var checkAllBox = gj(obj).parents('table:first').find('thead').find('input.checkbox:first');
       var len = checkboxes.length;
       var state = true;
-      if (!gj(obj).val()) {
-        checkboxes.eq(0).val(false);
+      if (obj.checked == false) {
+        checkAllBox.prop("checked", false);
       } else {
         for ( var i = 1; i < len; i++) {
-          state = state && checkboxes.eq(i).val();
+          state = state && checkboxes.eq(i).prop("checked");
+          if(state == false) break;
         }
-        checkboxes.eq(0).val(state);
+        checkAllBox.prop("checked", state);
       }
     }
   };

@@ -22,13 +22,13 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
@@ -43,7 +43,6 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
-import org.exoplatform.forum.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;

@@ -17,6 +17,7 @@
 package org.exoplatform.poll.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -179,8 +180,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
   }
 
   public void updateSelect(String selectField, String value) throws Exception {
-    UIFormStringInput GroupPrivate = getUIStringInput(selectField);
-    GroupPrivate.setValue(value);
+    getUIStringInput(selectField).setValue(value);
+    getUICheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).setValue(false);
   }
 
   static public class SaveActionListener extends EventListener<UIPollForm> {
@@ -200,9 +201,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       boolean isAgainVote = uiForm.getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked();
       boolean isMultiVote = uiForm.getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked();
       String sms = "";
-      @SuppressWarnings("unchecked")
       List<UIComponent> childs = uiForm.uiFormMultiValue.getChildren();
-      List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
+      List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue() ;
       List<String> values_ = new ArrayList<String>();
       
       if (childs.size() != values.size()) {

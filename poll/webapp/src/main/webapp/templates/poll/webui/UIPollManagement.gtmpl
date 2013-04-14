@@ -1,23 +1,16 @@
-<div class="$uicomponent.id">
 <%
 	import org.exoplatform.webui.core.UIGrid;
-	uiform.begin() ;
+	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
+	requireJS.addScripts("pollPortlet.setStyleOfTable('"+uicomponent.id+"');");
 %>
+<div class="$uicomponent.id">
+<% uiform.begin() ; %>
 	<% uicomponent.renderChild(UIGrid.class) ; %>
 	<div class="center">
 		<strong><%=_ctx.appRes(uicomponent.getName() + ".label.comment");%></strong>
 		<p style="margin-top: 10px;"><%=_ctx.appRes(uicomponent.getName() + ".label.selectPoll");%>:
 		<% uiform.renderField(uiform.FIELD_SELECT_POLL_SELECTBOX) ; %></p>
 	</div>
-	<script type="text/javascript">
-		var ths = document.getElementsByTagName('th');
-		if(ths) {
-			ths[1].style.width = '60px';
-			ths[2].style.width = '160px';
-			ths[3].style.width = '160px';
-			ths[4].style.width = '100px';
-		}
-	</script>
 	<div class="uiAction">
 		<% for(action in uicomponent.getActions()) { 
 		String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 

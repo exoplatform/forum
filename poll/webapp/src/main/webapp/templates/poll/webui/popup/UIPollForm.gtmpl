@@ -1,8 +1,6 @@
 <% 
-	import org.exoplatform.web.application.JavascriptManager;
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.require("SHARED/UIPollPortlet", "poll").addScripts("poll.privateField('DivCheckBox');");
+	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS() ;
+	requireJS.addScripts("pollPortlet.privateField('" + uicomponent.FIELD_PUBLIC_DATA_CHECKBOX + "');");
 %>
 
 <div class="uiAddPollForm">
@@ -28,7 +26,7 @@
 				<div class="control-group">	
 					<label class="control-label" for="<%=uicomponent.FIELD_PUBLIC_DATA_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX)%>:</label>
 					<div class="controls">
-						<div id="DivCheckBox"><% uiform.renderChild(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX) %></div>
+						<% uiform.renderChild(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX) %>
 					</div>
 				</div>	
 				<div class="control-group">

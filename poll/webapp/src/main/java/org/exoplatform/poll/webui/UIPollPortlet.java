@@ -24,6 +24,7 @@ import javax.portlet.PortletMode;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.security.ConversationState;
@@ -65,6 +66,8 @@ public class UIPollPortlet extends UIPortletApplication {
       getChild(UIPoll.class).setRendered(false);
       ((UIPollManagement) getChild(UIPollManagement.class).setRendered(true)).updateGrid();
     }
+    WebUIUtils.addScripts("bts_tooltip", null, "");
+    WebUIUtils.addScripts("UIPollPortlet", "pollPortlet", "");
     super.processRender(app, context);
   }
 
