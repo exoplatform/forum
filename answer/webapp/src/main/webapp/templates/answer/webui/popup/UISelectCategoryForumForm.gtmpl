@@ -1,6 +1,6 @@
 <%
-	def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
-	requireJS.addScripts("eXo.answer.UIAnswersPortlet.initTreeNode('" + uicomponent.id + "');");
+	_ctx.getRequestContext().getJavascriptManager()
+	.require("SHARED/AnswerUtils", null).addScripts("eXo.answer.AnswerUtils.initTreeNode('" + uicomponent.id + "');");
 %>
 <div class="uiSelectCategoryForumForm">
 	<% uiform.begin() %>
