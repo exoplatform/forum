@@ -28,11 +28,12 @@ import org.exoplatform.answer.webui.SelectOption;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIFormSelectBoxWithGroups;
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.commons.utils.ObjectPageList;
-import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.commons.utils.ListAccessImpl;
+import org.exoplatform.commons.utils.SerializablePageList;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
@@ -70,7 +71,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 
   private static final String FILED_ALL_GROUP    = "all-group";
 
-  private String              selectedAddressId_ = "";
+//  private String              selectedAddressId_ = "";
 
   private String              recipientsType_    = "";
 
@@ -91,7 +92,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
     addUIFormInput(uiSelect);
     uiPageList_ = new UIPageIterator();
     try {
-      setUserList(UserHelper.getPageListUser());
+      setUserList(getAllUserList());
     } catch (Exception e) {
       log.error("Can not set users list, exception: " + e.getMessage());
     }
@@ -99,12 +100,12 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 
   public List<SelectItem> getOptions() throws Exception {
     List<SelectItem> options = new ArrayList<SelectItem>();
-    options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
+    options.add(new SelectOption(getLabel(FILED_ALL_GROUP), FILED_ALL_GROUP));
     try {
-      List<String> groupIds = UserHelper.getAllGroupId();
-      if (!groupIds.isEmpty()) {
-        for (String publicCg : groupIds) {
-          options.add(new SelectOption(publicCg, publicCg));
+      List<Group> groups = UserHelper.getAllGroup();
+      if (!groups.isEmpty()) {
+        for (Group gr : groups) {
+          options.add(new SelectOption(gr.getLabel(), gr.getId()));
         }
       }
     } catch (Exception e) {
@@ -115,7 +116,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 
   private void searchUserProfileByKey(String keyWord) throws Exception {
     try {
-      Map<String, Object> mapObject = new HashMap<String, Object>();
+      Map<String, User> mapObject = new HashMap<String, User>();
       OrganizationService service = this.getApplicationComponent(OrganizationService.class);
       keyWord = "*" + keyWord + "*";
       Query q;
@@ -149,8 +150,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
         mapObject.put(user.getUserName(), user);
       }
 
-      ObjectPageList<User> objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10);
-      uiPageList_.setPageList(objPageList);
+      uiPageList_.setPageList(new SerializablePageList<User>(new ListAccessImpl<User>(User.class, new ArrayList<User>(mapObject.values())), 7));
     } catch (Exception e) {
       log.error("Can not search user by key, exception: " + e.getMessage());
     }
@@ -175,18 +175,20 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
     return users;
   }
 
-  public void setUserList(PageList<User> userList) throws Exception {
+  public void setUserList(SerializablePageList<User> userList) throws Exception {
     uiPageList_.setPageList(userList);
+  }
+
+  public SerializablePageList<User> getAllUserList() throws Exception {
+    ListAccess<User> listAccess = UserHelper.getOrganizationService().getUserHandler().findAllUsers();
+    SerializablePageList<User> pageList = new SerializablePageList<User>(listAccess, 7);
+    return pageList;
   }
 
   public void setAlreadyCheckedUser(List<User> alreadyCheckedUser) throws Exception {
     for (User ct : alreadyCheckedUser) {
       checkedList_.put(ct.getUserName(), ct);
     }
-  }
-
-  public String[] getActions() {
-    return new String[] { "Save", "Cancel" };
   }
 
   public void activate() {
@@ -239,7 +241,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
       for (User user : uiAddressForm.newCheckedList_.values()) {
         if (user.getEmail() != null)
-          toAddress.append(user.getFullName()).append("<").append(user.getEmail()).append("> ,");
+          toAddress.append(FAQUtils.getUserFullName(user)).append("<").append(user.getEmail()).append("> ,");
       }
       List<String> listMail = Arrays.asList(sb.toString().split(","));
       String email = null;
@@ -259,7 +261,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
       uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm.getParent());
+      uiAddressForm.cancelChildPopupAction();
     }
   }
 
@@ -301,14 +303,16 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   static public class ChangeGroupActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
       UIAddressEmailsForm uiAddressForm = event.getSource();
-      String group = ((UIFormSelectBoxWithGroups) uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue();
-      if (group.equals("all-group"))
-        uiAddressForm.setUserList(UserHelper.getPageListUser());
-      else
-        uiAddressForm.setUserList(UserHelper.getUserPageListByGroupId(group));
-      uiAddressForm.selectedAddressId_ = group;
-      uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null);
-      ((UIFormSelectBoxWithGroups) uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(uiAddressForm.selectedAddressId_);
+      String group = uiAddressForm.getUIStringInput(USER_GROUP).getValue();
+      if (group.equals(FILED_ALL_GROUP)) {
+        uiAddressForm.setUserList(uiAddressForm.getAllUserList());
+      } else {
+        OrganizationService service = uiAddressForm.getApplicationComponent(OrganizationService.class);
+        ListAccess<User> listAccess = service.getUserHandler().findUsersByGroupId(group);
+        List<User> results = Arrays.asList(listAccess.load(0, listAccess.getSize()));
+        uiAddressForm.setUserList(new SerializablePageList<User>(new ListAccessImpl<User>(User.class, results), 7));
+      }
+//      uiAddressForm.selectedAddressId_ = group;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);
     }
   }
@@ -335,9 +339,9 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   static public class SearchActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
       UIAddressEmailsForm uiAddressForm = event.getSource();
-      String searchValue = ((UIFormStringInput) uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
+      String searchValue = uiAddressForm.getUIStringInput(USER_SEARCH).getValue();
       if (searchValue == null || searchValue.trim().length() < 1)
-        uiAddressForm.setUserList(UserHelper.getPageListUser());
+        uiAddressForm.setUserList(uiAddressForm.getAllUserList());
       else
         uiAddressForm.searchUserProfileByKey(searchValue);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);
