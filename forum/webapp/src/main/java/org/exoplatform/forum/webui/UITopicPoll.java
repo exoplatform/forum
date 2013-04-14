@@ -27,6 +27,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPollRadioBoxInput;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.info.ForumParameter;
@@ -110,6 +111,19 @@ public class UITopicPoll extends BaseForumForm {
     this.topicId = topicId;
     this.isEditPoll = true;
     this.isAgainVote = false;
+  }
+
+  private void removeChilren() {
+    List<UIComponent> children = getChildren();
+    List<String> childrenIds = new ArrayList<String>(children.size());
+    for (UIComponent child : children) {
+      if (child instanceof UIPollRadioBoxInput || child instanceof UIForumCheckBoxInput) {
+        childrenIds.add(child.getId());
+      }
+    }
+    for (String childId : childrenIds) {
+      removeChildById(childId);
+    }
   }
 
   private void init() throws Exception {
@@ -313,14 +327,7 @@ public class UITopicPoll extends BaseForumForm {
     public void execute(Event<UITopicPoll> event) throws Exception {
       UITopicPoll topicPoll = event.getSource();
       topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + ForumUtils.SLASH + topicPoll.poll_.getId());
-      if (topicPoll.poll_.getIsMultiCheck()) {
-        List<UIComponent> children = topicPoll.getChildren();
-        for (int i = 0; i < children.size(); i++) {
-          topicPoll.removeChild(UIForumCheckBoxInput.class);
-        }
-      } else {
-        topicPoll.removeChild(UIPollRadioBoxInput.class);
-      }
+      topicPoll.removeChilren();
       try {
         UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) topicPoll.getParent();
         topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
