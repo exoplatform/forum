@@ -530,7 +530,7 @@ public class FAQUtils {
       builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
     }
     if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
-        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
     } else {
       String home = uiForm.i18n("UICategoryTree.label.home");

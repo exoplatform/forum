@@ -114,7 +114,7 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
       }
       builder.append("<a href=\"javascript:void(0);\"");
       if (categoryId.equals(Utils.CATEGORY_HOME) == false) {
-        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.UIAnswersPortlet.showTreeNode(this);\">")
+        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\">")
                .append("<i class=\"uiIconCategory uiIconLightGray\"></i>")
                .append(category.getName());
       } else {

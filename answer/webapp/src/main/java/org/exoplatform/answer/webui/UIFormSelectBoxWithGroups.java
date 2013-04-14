@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
@@ -34,7 +32,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
  * 
  */
 public class UIFormSelectBoxWithGroups extends UIFormStringInput {
-  public static Log        log         = ExoLogger.getLogger(UIFormSelectBoxWithGroups.class);
 
   /**
    * It make SelectBox's ability to select multiple values
@@ -256,20 +253,11 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
     for (SelectItem item : options_) {
       String label = item.getLabel();
       if (item instanceof SelectOption) {
-        try {
-          label = res.getString(formId + ".label.option." + ((SelectOption) item).getValue());
-        } catch (MissingResourceException ex) {
-          label = formId + ".label.option." + ((SelectOption) item).getValue();
-        }
         w.write(renderOption(((SelectOption) item), label));
-
       } else if (item instanceof SelectOptionGroup) {
-        label = item.getLabel();
         try {
           label = res.getString(getFrom().getId() + ".optionGroup.label." + label);
-        } catch (MissingResourceException ex) {
-          log.info("Could not find: " + getFrom().getId() + ".optionGroup.label." + label);
-        }
+        } catch (MissingResourceException ex) {}
         w.write("<optgroup label=\"");
         w.write(label);
         w.write("\">\n");
@@ -277,9 +265,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
           label = opt.getLabel();
           try {
             label = res.getString(formId + ".label.option." + opt.getValue());
-          } catch (MissingResourceException ex) {
-            label = formId + ".label.option." + opt.getValue();
-          }
+          } catch (MissingResourceException ex) {}
           w.write(renderOption(opt, label));
 
         }
