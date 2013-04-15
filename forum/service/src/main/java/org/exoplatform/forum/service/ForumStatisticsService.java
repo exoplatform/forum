@@ -17,7 +17,7 @@
 package org.exoplatform.forum.service;
 
 /**
- * @version $Revision$
+ * APIs for Forum's members operations.
  */
 public interface ForumStatisticsService {
 

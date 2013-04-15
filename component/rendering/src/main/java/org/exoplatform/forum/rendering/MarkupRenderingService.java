@@ -24,6 +24,9 @@ import org.exoplatform.forum.rendering.api.UnsupportedSyntaxException;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.rendering.spi.RendererPlugin;
 
+/**
+ * APIs for render information operations.
+ */
 public class MarkupRenderingService {
 
   protected Map<String, Renderer> rendererRegistry;
