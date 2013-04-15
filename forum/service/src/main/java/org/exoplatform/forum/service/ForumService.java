@@ -28,6 +28,10 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.organization.User;
 
+/**
+ * APIs for Forum and all other related objects (Categories, Topics and Posts) operations.
+ *
+ */
 public interface ForumService extends ForumServiceLegacy {
 
   /**

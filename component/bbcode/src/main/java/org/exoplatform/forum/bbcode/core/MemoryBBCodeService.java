@@ -27,9 +27,7 @@ import org.exoplatform.forum.bbcode.api.BBCodeService;
 import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
- * Implementation of BBCodeService that manages BBCodes in memory
-
- * @version $Revision$
+ * APIs to manage initialization data for BBCode operations.
  */
 public class MemoryBBCodeService implements BBCodeService {
 

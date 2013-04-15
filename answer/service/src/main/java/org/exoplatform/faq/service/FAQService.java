@@ -29,6 +29,9 @@ import org.exoplatform.forum.common.NotifyInfo;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
+/**
+ * APIs for FAQ and all other related objects (Categories, Questions and Answers) operations.
+ */
 public interface FAQService extends FAQServiceLegacy {
 
   /**

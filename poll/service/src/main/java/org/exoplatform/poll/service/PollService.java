@@ -21,9 +21,8 @@ import java.util.List;
 import org.exoplatform.container.component.ComponentPlugin;
 
 /**
- * Main Facade for all BBCode related operations
+ * Main Facade for all Poll information operations.
  * 
- * @version $Revision$
  */
 public interface PollService {
   /**

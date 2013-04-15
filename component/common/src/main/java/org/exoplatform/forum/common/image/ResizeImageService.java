@@ -18,6 +18,10 @@ package org.exoplatform.forum.common.image;
 
 import java.io.InputStream;
 
+/**
+ * APIs for resize images operations. Images can be resized by specific input width and height. 
+ *
+ */
 public interface ResizeImageService {
 
   /**
