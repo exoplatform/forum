@@ -23,18 +23,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
@@ -50,7 +47,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -66,17 +62,18 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.exoplatform.webui.form.validator.UserConfigurableValidator;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
     events = {
       @EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
-      @EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class), 
-      @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
-      @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
-      @EventConfig(listeners = UIModeratorManagementForm.SaveActionListener.class), 
-      @EventConfig(listeners = UIModeratorManagementForm.AddValuesAreaActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.SaveActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.AddValuesModForumActionListener.class, phase=Phase.DECODE), 
       @EventConfig(listeners = UIModeratorManagementForm.AddValuesModCategoryActionListener.class, phase=Phase.DECODE), 
       @EventConfig(listeners = UIModeratorManagementForm.CloseActionListener.class, phase=Phase.DECODE),
       @EventConfig(listeners = UIModeratorManagementForm.CancelActionListener.class, phase=Phase.DECODE)
@@ -155,22 +152,20 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private String              valueSearch                        = null;
 
-  private String              userAvartarUrl                     = null;
-
   private String              keyWord                            = ForumUtils.EMPTY_STR;
 
   private boolean             isViewSearchUser                   = false;
 
   private UIForumPageIterator pageIterator                       = null;
   
-  private static final String SearchDefaultValue                 = "UIModeratorManagementForm.label.Search";
-
   public UIModeratorManagementForm() throws Exception {
     pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator");
-    addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
-    titleUser = new String[] { res.getString("UIForumPortlet.label.PermissionAdmin"), res.getString("UIForumPortlet.label.PermissionModerator"), res.getString("UIForumPortlet.label.PermissionUser"), res.getString("UIForumPortlet.label.PermissionGuest") };
+    
+    addUIFormInput(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null)
+        .addValidator(UserConfigurableValidator.class, UserConfigurableValidator.USERNAME));
+
+    titleUser = new String[] { i18n("UIForumPortlet.label.PermissionAdmin"), i18n("UIForumPortlet.label.PermissionModerator"), 
+                               i18n("UIForumPortlet.label.PermissionUser"), i18n("UIForumPortlet.label.PermissionGuest") };
     permissionUser = new String[titleUser.length];
     for (int i = 0; i < titleUser.length; i++) {
       permissionUser[i] = titleUser[i].toLowerCase();
@@ -179,7 +174,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   protected void initPlaceholder() throws Exception {
-    ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+    ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", i18n("UIModeratorManagementForm.label.Search"));
   }
   
   public void setValueSearch(String value) {
@@ -281,7 +276,11 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
             String categoryId = forumSubPath.split("/")[0];
             String forumId = forumSubPath.split("/")[1];
             Forum forum = getForumService().getForum(categoryId, forumId);
-            outPut.append(forum.getForumName() + "\n");
+            if (forum != null) {
+              outPut.append(forum.getForumName() + "\n");
+            } else {
+              removeItemContainsInList(listModerate, forumId);
+            }
           }
         }
       }
@@ -298,12 +297,34 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
             String forumSubPath = value.substring(value.lastIndexOf('(')).replace("(", "");
             String categoryId = forumSubPath.split("/")[0];
             Category category = getForumService().getCategory(categoryId);
-            outPut.append(category.getCategoryName() + "\n");
+            if (category != null) {
+              outPut.append(category.getCategoryName() + "\n");
+            } else {
+              removeItemContainsInList(listModCate, categoryId);
+              removeItemContainsInList(listModerate, categoryId);
+            }
           }
         }
       }
     }
     return outPut.toString();
+  }
+
+  private void removeItemContainsInList(List<String> list, String item) {
+    int index = containsIndexList(list, item);
+    if (index >= 0) {
+      list.remove(index);
+    }
+  }
+
+  private int containsIndexList(List<String> list, String item) {
+    for (int i = 0; i < list.size(); ++i) {
+      String str = list.get(i);
+      if (str.indexOf(item) >= 0) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private List<String> setListCategoryIds() {
@@ -350,7 +371,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   public void setModForunValues(List<String> values) {
-    this.listModerate = values;
+    this.listModerate = new ArrayList<String>(values);
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM);
     String value = stringForumProcess(values);
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value);
@@ -397,13 +418,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
     UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
     List<String> values = Arrays.asList(userProfile.getModerateForums());
-    this.listModerate = values;
+    this.listModerate = new ArrayList<String>(values);
     moderateForums.setValue(stringForumProcess(values));
     moderateForums.setReadOnly(true);
 
     UIFormTextAreaInput moderateCategorys = new UIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE, null);
     List<String> valuesCate = Arrays.asList(userProfile.getModerateCategory());
-    this.listModCate = valuesCate;
+    this.listModCate = new ArrayList<String>(valuesCate);
     moderateCategorys.setValue(stringCategoryProcess(valuesCate));
     moderateCategorys.setReadOnly(true);
 
@@ -463,7 +484,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
     maximumPosts.setValue("id" + userProfile.getMaxPostInPage());
-    boolean isJump = userProfile.getIsShowForumJump();
     // Ban
     UICheckBoxInput isBanned = new UICheckBoxInput(FIELD_ISBANNED_CHECKBOX, FIELD_ISBANNED_CHECKBOX, false);
     boolean isBan = userProfile.getIsBanned();
@@ -565,25 +585,22 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     inputSetProfile.addUIFormInput(avatarContainer);
     inputSetProfile.addUIFormInput(isDisplayAvatar);
 
-    String string = FIELD_MODERATEFORUMS_MULTIVALUE;
-    List<ActionData> actions = new ArrayList<ActionData>();
-    ActionData ad = new ActionData();
-    ad.setActionListener("AddValuesArea");
-    ad.setActionParameter(string);
-    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
-    ad.setActionName(string);
-    actions.add(ad);
-    inputSetProfile.setActionField(string, actions);
-
-    string = FIELD_MODERATECATEGORYS_MULTIVALUE;
-    actions = new ArrayList<ActionData>();
-    ad = new ActionData();
-    ad.setActionListener("AddValuesModCategory");
-    ad.setActionParameter(string);
-    ad.setCssIconClass("uiIconAddIcon uiIconLightGray");
-    ad.setActionName(string);
-    actions.add(ad);
-    inputSetProfile.setActionField(string, actions);
+    String[] fields = new String[] {FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE};
+    String[] actionNames = new String[] {"AddValuesModForum", "AddValuesModCategory"};
+    List<ActionData> actions;
+    ActionData actionData;
+    for (int j = 0; j < fields.length; j++) {
+      String string = fields[j];
+      actionData = new ActionData();
+      actionData.setActionListener(actionNames[j]);
+      actionData.setActionParameter(string);
+      actionData.setCssIconClass("uiIconAddIcon uiIconLightGray");
+      actionData.setActionName(string);
+      actions = new ArrayList<ActionData>();
+      actions.add(actionData);
+      inputSetProfile.setActionField(string, actions);
+    }
+    //
     addUIFormInput(inputSetProfile);
 
     UIFormInputWithActions inputSetOption = new UIFormInputWithActions(FIELD_USEROPTION_FORM);
@@ -602,7 +619,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     inputSetBan.addUIFormInput(banCounter);
     inputSetBan.addUIFormInput(banReasonSummary);
     inputSetBan.addUIFormInput(createdDateBan);
+    //
     addUIFormInput(inputSetBan);
+    
     UIPageListTopicByUser pageListTopicByUser = addChild(UIPageListTopicByUser.class, null, null);
     pageListTopicByUser.setUserName(this.userProfile.getUserId());
     UIPageListPostByUser listPostByUser = addChild(UIPageListPostByUser.class, null, null);
@@ -633,16 +652,12 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return this.forumLinks;
   }
 
-  public void setUserAvatarURL(String userId) {
-    userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, getForumService());
-  }
-
   private void searchUserProfileByKey(String keyword) throws Exception {
     try {
       Map<String, Object> mapObject = new HashMap<String, Object>();
       OrganizationService service = this.getApplicationComponent(OrganizationService.class);
       keyword = "*" + keyword + "*";
-      List results = new CopyOnWriteArrayList();
+      List<Object> results = new CopyOnWriteArrayList<Object>();
       Query q;
       q = new Query();
       q.setUserName(keyword);
@@ -672,7 +687,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         mapObject.put(user.getUserName(), user);
       }
 
-      for (Object object : this.getForumService().searchUserProfile(keyword).getAll()) {
+      for (Object object : getForumService().searchUserProfile(keyword).getAll()) {
         mapObject.put(((UserProfile) object).getUserId(), object);
       }
 
@@ -699,7 +714,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   static public class EditProfileActionListener extends BaseEventListener<UIModeratorManagementForm> {
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
       uiForm.userProfile = uiForm.getForumService().updateUserProfileSetting(uiForm.getUserProfile(userId));
-      uiForm.setUserAvatarURL(userId);
       uiForm.removeChildById("ForumUserProfile");
       uiForm.removeChildById("ForumUserOption");
       uiForm.removeChildById("ForumUserBan");
@@ -928,7 +942,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
   }
 
-  static public class AddValuesAreaActionListener extends BaseEventListener<UIModeratorManagementForm> {
+  static public class AddValuesModForumActionListener extends BaseEventListener<UIModeratorManagementForm> {
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UISelectItemForum selectItemForum = openPopup(popupContainer, UISelectItemForum.class, 400, 0);
@@ -957,12 +971,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   static public class SearchUserActionListener extends EventListener<UIModeratorManagementForm> {
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
       UIModeratorManagementForm uiForm = event.getSource();
-      String keyword = ((UIFormStringInput) uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
-      if (keyword != null && keyword.trim().length() > 0) {
-        if (CommonUtils.isContainSpecialCharacter(keyword)) {
-          uiForm.warning("UIQuickSearchForm.msg.failure");
-          return;
-        }
+      String keyword = uiForm.getUIStringInput(FIELD_SEARCH_USER).getValue();
+      if (Utils.isEmpty(keyword) == false) {
         uiForm.searchUserProfileByKey(keyword);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
       } else {
