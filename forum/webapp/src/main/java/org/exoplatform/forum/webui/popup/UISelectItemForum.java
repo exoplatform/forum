@@ -60,46 +60,62 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
   public void deActivate() {
   }
 
-  public void setForumLinks(List<String> listIds) throws Exception {
-    listIdIsSelected = new ArrayList<String>();
-    listIdIsSelected.addAll(listIds);
+  public void initSelectForum(List<String> listIdIsSelected, String userId) throws Exception {
+    this.listIdIsSelected = listIdIsSelected;
+    forumLinks = new ArrayList<ForumLinkData>();
     String cateQuery = new StringBuffer("[(@").append(Utils.EXO_ID)
                         .append("!='").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("')]").toString();
-   forumLinks = getForumService().getAllLink(cateQuery, ForumUtils.EMPTY_STR);
-   mapListForum.clear();
-   List<ForumLinkData> linkForum;
-   String cateId;
-   for (ForumLinkData forumLink : forumLinks) {
-     if (forumLink.getType().equals(Utils.CATEGORY)) {
-       cateId = forumLink.getId();
-       linkForum = new ArrayList<ForumLinkData>();
-       for (ForumLinkData forumlist : forumLinks) {
-         if (forumlist.getType().equals(Utils.FORUM) && forumlist.getPath().indexOf(cateId) >= 0) {
-           linkForum.add(forumlist);
-           String inputId = forumlist.getPath().replace("/", "");
-           UICheckBoxInput checkbox = getUICheckBoxInput(inputId);
-           if (checkbox == null) {
-             checkbox = new UICheckBoxInput(inputId, inputId, false);
-             addUIFormInput(checkbox);
-           }
-           checkbox.setChecked(getCheckedForum(forumlist.getPath()));
-         }
-       }
-       mapListForum.put(cateId, linkForum);
-     }
-   }
+    forumLinks.addAll(getForumService().getAllLink(cateQuery, ForumUtils.EMPTY_STR));
+    
+    //
+    String strQuryForum = new StringBuffer("[").append(Utils.buildQueryForumInSpaceOfUser(userId))
+                                               .append("]").toString();
+    if (ForumUtils.isEmpty(strQuryForum) == false) {
+      cateQuery = cateQuery.replace("!=", "=");
+      forumLinks.addAll(getForumService().getAllLink(cateQuery, strQuryForum));
+    }
+    
+    //
+    initCheckboxInput();
   }
+  
+  private void initCheckboxInput() {
+    mapListForum.clear();
+    List<ForumLinkData> linkForum;
+    String cateId;
+    for (ForumLinkData forumLink : forumLinks) {
+      if (forumLink.getType().equals(Utils.CATEGORY)) {
+        cateId = forumLink.getId();
+        linkForum = new ArrayList<ForumLinkData>();
+        for (ForumLinkData forumlist : forumLinks) {
+          if (forumlist.getType().equals(Utils.FORUM) && forumlist.getPath().indexOf(cateId) >= 0) {
+            linkForum.add(forumlist);
+            String inputId = forumlist.getPath().replace("/", "");
+            UICheckBoxInput checkbox = getUICheckBoxInput(inputId);
+            if (checkbox == null) {
+              checkbox = new UICheckBoxInput(inputId, inputId, false);
+              addUIFormInput(checkbox);
+            }
+            checkbox.setChecked(getCheckedForum(forumlist.getId()));
+          }
+        }
+        mapListForum.put(cateId, linkForum);
+      }
+    }
+  }
+  
 
   protected List<ForumLinkData> getForumLinks() throws Exception {
     return forumLinks;
   }
 
-  protected boolean getCheckedForum(String forumPath) {
-    return listIdIsSelected.contains(forumPath) ? true : false;
+  protected boolean getCheckedForum(String forumId) {
+    return listIdIsSelected.contains(forumId) ? true : false;
   }
 
   protected List<ForumLinkData> getForums(String categoryId) {
-    return mapListForum.get(categoryId);
+    List<ForumLinkData> forumLinkDatas = mapListForum.get(categoryId);
+    return (forumLinkDatas != null) ? forumLinkDatas : new ArrayList<ForumLinkData>();
   }
 
   private ForumLinkData getForumLinkData(String id) throws Exception {

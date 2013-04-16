@@ -18,15 +18,13 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -35,8 +33,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -62,15 +58,9 @@ import org.exoplatform.webui.event.EventListener;
 public class UICategories extends UIContainer {
   protected ForumService           forumService;
 
-  private Map<String, List<Forum>> mapListForum      = new HashMap<String, List<Forum>>();
-
   private List<Category>           categoryList      = new ArrayList<Category>();
 
-  private Map<String, Forum>       AllForum          = new HashMap<String, Forum>();
-
   public final String              FORUM_LIST_SEARCH = "forumListSearch";
-
-  private boolean                  isGetForumList    = false;
 
   private boolean                  isRenderChild     = false;
 
@@ -189,14 +179,6 @@ public class UICategories extends UIContainer {
     return list;
   }
 
-  public List<Forum> getForums(String categoryId) {
-    return mapListForum.get(categoryId);
-  }
-
-  public Map<String, Forum> getAllForum() {
-    return AllForum;
-  }
-
   protected boolean isShowCategory(String id) {
     List<String> list = new ArrayList<String>();
     list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories());
@@ -224,79 +206,15 @@ public class UICategories extends UIContainer {
     return categoryList;
   }
 
-  public void setIsgetForumList(boolean isGetForumList) {
-    this.isGetForumList = isGetForumList;
-  }
-  
-  private Forum getForum(List<Forum> forums, String spaceGroupId) {
-    spaceGroupId = spaceGroupId.replaceAll(ForumUtils.SLASH + Utils.CATEGORY_SPACE + ForumUtils.SLASH, ForumUtils.EMPTY_STR);
-    for (Forum forum : forums) {
-      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId)) {
-        return forum;
-      }
-    }
-    return null;
-  }
-  
-  private List<Forum> getAccessiblesForumOfCurrentUser() throws Exception {
-    List<Forum> listForums = new ArrayList<Forum>();
-    Category categoryIncludedSpace = forumService.getCategoryIncludedSpace();
-    if(categoryIncludedSpace != null) {
-      
-      String categoryIdOfSpaces = categoryIncludedSpace.getId();
-      // check permission
-      List<String> groupAndMembershipInfos = UserHelper.getAllGroupAndMembershipOfUser(null);
-      
-      StringBuilder strQuery = new StringBuilder();
-      if(!forumService.isAdminRole(groupAndMembershipInfos.get(0))){
-        strQuery.append("(")
-                .append(Utils.buildXpathByUserInfo(Utils.EXO_CREATE_TOPIC_ROLE, groupAndMembershipInfos))
-                .append(" or ").append(Utils.buildXpathByUserInfo(Utils.EXO_MODERATORS, groupAndMembershipInfos));
-        strQuery.append(") and ");
-      }
-      strQuery.append(Utils.getQueryByProperty("", Utils.EXO_IS_CLOSED, "false"));
-      
-      List<Forum> forums = forumService.getForumSummaries(categoryIdOfSpaces, strQuery.toString());
-      
-      SpaceService spaceService = getApplicationComponent(SpaceService.class);
-      String currentUser = UserHelper.getCurrentUser();
-      List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
-      for (Space space : spaces) {
-        Forum forum = getForum(forums, space.getGroupId());
-        if (forum != null) {
-          listForums.add(forum);
-        }
-      }
-    }
-    return listForums;
-  }
-
   private List<Forum> getForumList(String categoryId) throws Exception {
     if (isCollapCategories(categoryId))
       return new ArrayList<Forum>();
-    String strQuery = ForumUtils.EMPTY_STR;
-    if (this.userProfile.getUserRole() > 0)
-      strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
     List<Forum> forumList = new ArrayList<Forum>();
+    forumList = ForumSessionUtils.getForumsOfCategory(categoryId, getUserProfile());
     
-    if (Utils.CATEGORY_SPACE_ID_PREFIX.equals(categoryId)) {
-      forumList = getAccessiblesForumOfCurrentUser();
-    } else {
-      forumList = forumService.getForumSummaries(categoryId, strQuery);
-    }
-    
-    if (mapListForum.containsKey(categoryId)) {
-      mapListForum.remove(categoryId);
-    }
-    mapListForum.put(categoryId, forumList);
-    String forumId;
     List<Forum> listForum = new ArrayList<Forum>();
     for (Forum forum : forumList) {
-      forumId = forum.getId();
-      if (AllForum.containsKey(forumId))
-        AllForum.remove(forumId);
-      AllForum.put(forumId, forum);
-      if (isShowForum(forumId)) {
+      if (isShowForum(forum.getId())) {
         listForum.add(forum);
       }
     }
@@ -304,16 +222,7 @@ public class UICategories extends UIContainer {
   }
 
   private Forum getForumById(String categoryId, String forumId) throws Exception {
-    Forum forum_ = new Forum();
-    if (!mapListForum.isEmpty() && !isGetForumList) {
-      for (Forum forum : mapListForum.get(categoryId)) {
-        if (forum.getId().equals(forumId)) {
-          forum_ = forum;
-          break;
-        }
-      }
-    }
-    return forum_;
+    return forumService.getForum(categoryId, forumId);
   }
 
   protected boolean isCanViewTopic(Category cate, Forum forum, Topic topic) throws Exception {
@@ -400,8 +309,6 @@ public class UICategories extends UIContainer {
       Forum forum = categories.forumService.getForum(id[0], id[1]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if(forum == null){
-        categories.AllForum.clear();
-        categories.mapListForum.clear();
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
                                                                                        null,
                                                                                        ApplicationMessage.WARNING));

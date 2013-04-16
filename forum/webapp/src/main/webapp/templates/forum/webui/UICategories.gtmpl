@@ -314,7 +314,6 @@
 		
 		<%	 } // End if private
 			 }// End for and End ForumCategory
-		 uicomponent.setIsgetForumList(false) ;
 		%>
 	<% } %>
 	<% //Begin RightClick Bookmark	%>

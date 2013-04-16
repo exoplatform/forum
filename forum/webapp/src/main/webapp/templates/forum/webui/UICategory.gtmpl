@@ -31,19 +31,15 @@
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
 							 
 	String categoryId = category.getId();
-	boolean isShowMenu = !UserHelper.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	String userLogin = userProfile.getUserId() ;
-	boolean isAdmin = false ;
-	if(userProfile.getUserRole() == 0) isAdmin = true ;
-	if(isAdmin) isShowMenu = true ;
-	else isShowMenu = false ;
 	String description = category.getDescription() ;
 	if(ForumUtils.isEmpty(description)) description = "";
 	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+	boolean isShowMenu = (userProfile.getUserRole() == UserProfile.ADMIN) ? true : false;
 %>
 
 <div class="uiCategory">

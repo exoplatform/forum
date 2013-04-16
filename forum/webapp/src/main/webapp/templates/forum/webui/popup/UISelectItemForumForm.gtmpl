@@ -28,7 +28,7 @@
 					<% 
 						for(forum in forums) {
 							String forumName = forum.getName() ;
-							String checked = (uicomponent.getCheckedForum(forum.getPath()) == true) ? "checked" : "";
+							String checked = (uicomponent.getCheckedForum(forum.getId()) == true) ? "checked" : "";
 							String inputId = forum.getPath().replace("/", "");
 					%>
 						<li class="node">

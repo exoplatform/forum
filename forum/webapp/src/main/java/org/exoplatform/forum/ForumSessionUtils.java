@@ -16,13 +16,19 @@
  ***************************************************************************/
 package org.exoplatform.forum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.user.ContactProvider;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -48,7 +54,7 @@ public class ForumSessionUtils {
     String url = null;
     try {
       if (forumService == null) {
-        forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        forumService = getComponentInstanceOfType(ForumService.class);
       }
       ForumAttachment attachment = forumService.getUserAvatar(userName);
       url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
@@ -70,7 +76,7 @@ public class ForumSessionUtils {
     try {
       if (userId.indexOf(Utils.DELETED) > 0)
         return new CommonContact();
-      ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
+      ContactProvider provider = getComponentInstanceOfType(ContactProvider.class);
       return provider.getCommonContact(userId);
     } catch (Exception e) {
       return new CommonContact();
@@ -83,5 +89,26 @@ public class ForumSessionUtils {
     url = url.substring(0, url.indexOf(ForumUtils.SLASH, 8));
     link = link.replaceFirst(componentName, "UIBreadcumbs").replaceFirst(actionName, "ChangePath").replace("pathId", objectId).replaceAll("&amp;", "&");
     return (url + link);
+  }
+  
+  public static <T> T getComponentInstanceOfType(Class<T> type) {
+    return type.cast(ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(type));
+  }
+
+  public static List<Forum> getForumsOfCategory(String categoryId, UserProfile userProfile) throws Exception {
+    try {
+      StringBuffer strQuery = new StringBuffer();
+      if (userProfile.getUserRole() != UserProfile.ADMIN) {
+        strQuery.append("((@exo:isClosed='false') or (")
+                .append(Utils.buildXpathByUserInfo("exo:moderators", UserHelper.getAllGroupAndMembershipOfUser(null))).append("))");
+      }
+
+      if (Utils.CATEGORY_SPACE_ID_PREFIX.equals(categoryId)) {
+        strQuery.append(" and ").append(Utils.buildQueryForumInSpaceOfUser(userProfile.getUserId()));
+      }
+      return getComponentInstanceOfType(ForumService.class).getForumSummaries(categoryId, strQuery.toString());
+    } catch (Exception e) {
+      return new ArrayList<Forum>();
+    }
   }
 }

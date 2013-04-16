@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
-import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -81,6 +80,8 @@ import org.exoplatform.webui.form.validator.UserConfigurableValidator;
 )
 public class UIModeratorManagementForm extends BaseForumForm implements UIPopupComponent {
   private List<UserProfile>   userProfiles                       = new ArrayList<UserProfile>();
+  
+  public UserProfile          editUserProfile                    = null;
 
   private String[]            permissionUser                     = null;
 
@@ -256,8 +257,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return userProfile;
   }
 
-  public UserProfile getProfile() {
-    return this.userProfile;
+  public UserProfile getEditProfile() {
+    return editUserProfile;
   }
 
   public void activate() {
@@ -388,51 +389,51 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     this.setForumLinks();
     List<SelectItemOption<String>> list;
     UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
-    userId.setValue(this.userProfile.getUserId());
+    userId.setValue(this.editUserProfile.getUserId());
     userId.setReadOnly(true);
     userId.setDisabled(true);
     UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
-    String screenN = userProfile.getScreenName();
+    String screenN = editUserProfile.getScreenName();
     if (ForumUtils.isEmpty(screenN))
-      screenN = userProfile.getUserId();
+      screenN = editUserProfile.getUserId();
     screenName.setValue(screenN);
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
-    String title = this.userProfile.getUserTitle();
+    String title = this.editUserProfile.getUserTitle();
     boolean isAdmin = false;
     UICheckBoxInput userRole = new UICheckBoxInput(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false);
-    if (this.userProfile.getUserRole() == 0)
+    if (this.editUserProfile.getUserRole() == 0)
       isAdmin = true;
-    if (isAdmin(this.userProfile.getUserId())) {
+    if (isAdmin(this.editUserProfile.getUserId())) {
       userRole.setDisabled(true);
       isAdmin = true;
-      if (this.userProfile.getUserRole() != 0)
+      if (this.editUserProfile.getUserRole() != 0)
         title = Utils.ADMIN;
     }
     userRole.setValue(isAdmin);
     userTitle.setValue(title);
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-    signature.setValue(this.userProfile.getSignature());
+    signature.setValue(this.editUserProfile.getSignature());
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
-    isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
+    isDisplaySignature.setChecked(this.editUserProfile.getIsDisplaySignature());
 
     UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
-    List<String> values = Arrays.asList(userProfile.getModerateForums());
+    List<String> values = Arrays.asList(editUserProfile.getModerateForums());
     this.listModerate = new ArrayList<String>(values);
     moderateForums.setValue(stringForumProcess(values));
     moderateForums.setReadOnly(true);
 
     UIFormTextAreaInput moderateCategorys = new UIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE, null);
-    List<String> valuesCate = Arrays.asList(userProfile.getModerateCategory());
+    List<String> valuesCate = Arrays.asList(editUserProfile.getModerateCategory());
     this.listModCate = new ArrayList<String>(valuesCate);
     moderateCategorys.setValue(stringCategoryProcess(valuesCate));
     moderateCategorys.setReadOnly(true);
 
     UIAvatarContainer avatarContainer = createUIComponent(UIAvatarContainer.class, null, "Avatar");
-    avatarContainer.setUserProfile(this.userProfile);
+    avatarContainer.setUserProfile(this.editUserProfile);
     avatarContainer.setForumService(getForumService());
     UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
-    isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
+    isDisplayAvatar.setChecked(this.editUserProfile.getIsDisplayAvatar());
     // Option
     String[] timeZone1 = getLabel(FIELD_TIMEZONE).split(ForumUtils.SLASH);
     list = new ArrayList<SelectItemOption<String>>();
@@ -440,7 +441,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       list.add(new SelectItemOption<String>(string, ForumUtils.getTimeZoneNumberInString(string)));
     }
     UIFormSelectBox timeZone = new UIFormSelectBox(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list);
-    double timeZoneOld = -userProfile.getTimeZone();
+    double timeZoneOld = -editUserProfile.getTimeZone();
     Date date = getNewDate(timeZoneOld);
     String mark = "-";
     if (timeZoneOld < 0) {
@@ -459,34 +460,34 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       list.add(new SelectItemOption<String>((frm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(frm, date) + ")"), frm));
     }
     UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list);
-    shortdateFormat.setValue(userProfile.getShortDateFormat());
+    shortdateFormat.setValue(editUserProfile.getShortDateFormat());
     list = new ArrayList<SelectItemOption<String>>();
     format = new String[] { "EEE, MMMM dd, yyyy", "EEEE, MMMM dd, yyyy", "EEEE, dd MMMM, yyyy", "EEE, MMM dd, yyyy", "EEEE, MMM dd, yyyy", "EEEE, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
     for (String idFrm : format) {
       list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
     }
     UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list);
-    longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
+    longDateFormat.setValue(editUserProfile.getLongDateFormat().replaceFirst(" ", "="));
     list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>("12-hour", "hh:mm=a"));
     list.add(new SelectItemOption<String>("24-hour", "HH:mm"));
     UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list);
-    timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
+    timeFormat.setValue(editUserProfile.getTimeFormat().replace(' ', '='));
     list = new ArrayList<SelectItemOption<String>>();
     for (int i = 5; i <= 45; i = i + 5) {
       list.add(new SelectItemOption<String>(String.valueOf(i), ("id" + i)));
     }
     UIFormSelectBox maximumThreads = new UIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX, FIELD_MAXTOPICS_SELECTBOX, list);
-    maximumThreads.setValue("id" + userProfile.getMaxTopicInPage());
+    maximumThreads.setValue("id" + editUserProfile.getMaxTopicInPage());
     list = new ArrayList<SelectItemOption<String>>();
     for (int i = 5; i <= 35; i = i + 5) {
       list.add(new SelectItemOption<String>(String.valueOf(i), ("id" + i)));
     }
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
-    maximumPosts.setValue("id" + userProfile.getMaxPostInPage());
+    maximumPosts.setValue("id" + editUserProfile.getMaxPostInPage());
     // Ban
     UICheckBoxInput isBanned = new UICheckBoxInput(FIELD_ISBANNED_CHECKBOX, FIELD_ISBANNED_CHECKBOX, false);
-    boolean isBan = userProfile.getIsBanned();
+    boolean isBan = editUserProfile.getIsBanned();
     isBanned.setChecked(isBan);
     list = new ArrayList<SelectItemOption<String>>();
     String dv = "Day";
@@ -494,9 +495,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     long oneDate = 86400000, until = 0;
     Calendar cal = CommonUtils.getGreenwichMeanTime();
     if (isBan) {
-      until = userProfile.getBanUntil();
+      until = editUserProfile.getBanUntil();
       cal.setTimeInMillis(until);
-      list.add(new SelectItemOption<String>(getLabel("Banned until: ") + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0", ("Until_" + until)));
+      list.add(new SelectItemOption<String>(getLabel("Banned until: ") + TimeConvertUtils.getFormatDate(editUserProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0", ("Until_" + until)));
     }
     while (true) {
       if (i == 2 && dv.equals("Day")) {
@@ -552,23 +553,23 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + i);
         until = cal.getTimeInMillis();
       }
-      list.add(new SelectItemOption<String>(i + " " + getLabel(dv) + " (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0)", ("Until_" + until)));
+      list.add(new SelectItemOption<String>(i + " " + getLabel(dv) + " (" + TimeConvertUtils.getFormatDate(editUserProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0)", ("Until_" + until)));
       ++i;
     }
     UIFormSelectBox banUntil = new UIFormSelectBox(FIELD_BANUNTIL_SELECTBOX, FIELD_BANUNTIL_SELECTBOX, list);
     if (isBan) {
-      banUntil.setValue("Until_" + userProfile.getBanUntil());
+      banUntil.setValue("Until_" + editUserProfile.getBanUntil());
     }
     UIFormTextAreaInput banReason = new UIFormTextAreaInput(FIELD_BANREASON_TEXTAREA, FIELD_BANREASON_TEXTAREA, null);
     UIFormStringInput banCounter = new UIFormStringInput(FIELD_BANCOUNTER_INPUT, FIELD_BANCOUNTER_INPUT, null);
-    banCounter.setValue(userProfile.getBanCounter() + ForumUtils.EMPTY_STR);
+    banCounter.setValue(editUserProfile.getBanCounter() + ForumUtils.EMPTY_STR);
     UIFormTextAreaInput banReasonSummary = new UIFormTextAreaInput(FIELD_BANREASONSUMMARY_MULTIVALUE, FIELD_BANREASONSUMMARY_MULTIVALUE, null);
-    banReasonSummary.setValue(ForumUtils.unSplitForForum(userProfile.getBanReasonSummary()));
+    banReasonSummary.setValue(ForumUtils.unSplitForForum(editUserProfile.getBanReasonSummary()));
     banReasonSummary.setReadOnly(true);
     UIFormStringInput createdDateBan = new UIFormStringInput(FIELD_CREATEDDATEBAN_INPUT, FIELD_CREATEDDATEBAN_INPUT, null);
     if (isBan) {
-      banReason.setValue(userProfile.getBanReason());
-      createdDateBan.setValue(TimeConvertUtils.getFormatDate("MM/dd/yyyy, hh:mm a", userProfile.getCreatedDateBan()));
+      banReason.setValue(editUserProfile.getBanReason());
+      createdDateBan.setValue(TimeConvertUtils.getFormatDate("MM/dd/yyyy, hh:mm a", editUserProfile.getCreatedDateBan()));
     } else {
       banReason.setDisabled(false);
     }
@@ -623,9 +624,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     addUIFormInput(inputSetBan);
     
     UIPageListTopicByUser pageListTopicByUser = addChild(UIPageListTopicByUser.class, null, null);
-    pageListTopicByUser.setUserName(this.userProfile.getUserId());
+    pageListTopicByUser.setUserName(this.editUserProfile.getUserId());
     UIPageListPostByUser listPostByUser = addChild(UIPageListPostByUser.class, null, null);
-    listPostByUser.setUserName(this.userProfile.getUserId());
+    listPostByUser.setUserName(this.editUserProfile.getUserId());
   }
 
   private Date getNewDate(double timeZoneOld) {
@@ -713,7 +714,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   static public class EditProfileActionListener extends BaseEventListener<UIModeratorManagementForm> {
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
-      uiForm.userProfile = uiForm.getForumService().updateUserProfileSetting(uiForm.getUserProfile(userId));
+      uiForm.editUserProfile = uiForm.getForumService().updateUserProfileSetting(uiForm.getUserProfile(userId));
       uiForm.removeChildById("ForumUserProfile");
       uiForm.removeChildById("ForumUserOption");
       uiForm.removeChildById("ForumUserBan");
@@ -739,8 +740,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   static public class SaveActionListener extends BaseEventListener<UIModeratorManagementForm> {
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
-      UserProfile userProfile = uiForm.userProfile;
-      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      UserProfile userProfile = uiForm.editUserProfile;
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
@@ -757,7 +757,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
           userTitle = userProfile.getUserTitle();
       }
 
-      boolean isSetGetNewListForum = false;
       // -----------------
       List<String> oldModerateForum = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums()));
       List<String> newModeratorsForum = new ArrayList<String>();
@@ -778,11 +777,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         }
         if (!newModeratorsForum.isEmpty())
           uiForm.getForumService().saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), false);
-        isSetGetNewListForum = true;
       }
       if (!removeModerateForum.isEmpty()) {
         uiForm.getForumService().saveModerateOfForums(removeModerateForum, userProfile.getUserId(), true);
-        isSetGetNewListForum = true;
       }
 
       uiForm.getForumService().saveUserModerator(userProfile.getUserId(), uiForm.listModerate, false);
@@ -811,11 +808,9 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
           if (userRole > 1)
             userRole = 1;
         }
-        isSetGetNewListForum = true;
       }
       if (removeModerateCate.size() > 0) {
         uiForm.getForumService().saveModOfCategory(removeModerateCate, userProfile.getUserId(), false);
-        isSetGetNewListForum = true;
       }
 
       if (userRole > 1) {
@@ -823,9 +818,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         if (uiForm.listModerate.size() >= 1 && !uiForm.listModerate.get(0).equals(" "))
           userRole = 1;
       }
-
-      if (isSetGetNewListForum)
-        forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
 
       if (userTitle == null || userTitle.trim().length() < 1) {
         userTitle = userProfile.getUserTitle();
@@ -946,7 +938,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UISelectItemForum selectItemForum = openPopup(popupContainer, UISelectItemForum.class, 400, 0);
-      selectItemForum.setForumLinks(uiForm.setListForumIds());
+      selectItemForum.initSelectForum(uiForm.setListForumIds(), uiForm.getUserProfile().getUserId());
     }
   }
 

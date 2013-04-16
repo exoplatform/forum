@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
@@ -170,12 +171,7 @@ public class UICategory extends BaseForumForm {
 
   private Category getCategory() throws Exception {
     if (this.isEditCategory || this.category == null) {
-      try {
-        this.category = getForumService().getCategory(this.categoryId);
-      } catch (Exception e) {
-        log.debug("Failed to get category", e);
-      }
-      this.isEditCategory = false;
+      refreshCategory();
     }
     if(category != null) {
       initForm();
@@ -184,11 +180,7 @@ public class UICategory extends BaseForumForm {
   }
 
   private Category refreshCategory() throws Exception {
-    try {
-      this.category = getForumService().getCategory(this.categoryId);
-    } catch (Exception e) {
-      log.debug("Failed to get category", e);
-    }
+    category = getForumService().getCategory(this.categoryId);
     return category;
   }
 
@@ -202,30 +194,26 @@ public class UICategory extends BaseForumForm {
 
   protected List<Forum> getForumList() throws Exception {
     if (this.isEditForum) {
-      String strQuery = ForumUtils.EMPTY_STR;
-      if (this.userProfile.getUserRole() > 0)
-        strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-      try {
-        this.forums = getForumService().getForumSummaries(this.categoryId, strQuery);
-      } catch (Exception e) {
-        log.debug("Failed to get forum summaries", e);
-      }
+      this.forums = ForumSessionUtils.getForumsOfCategory(categoryId, getUserProfile());
       this.isEditForum = false;
-      this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true);
     }
     List<Forum> listForum = new ArrayList<Forum>();
     UICheckBoxInput checkBoxInput;
+    boolean isAdmin = (getUserProfile().getUserRole() == UserProfile.ADMIN) ? true : false;
     for (Forum forum : this.forums) {
       String forumId = forum.getId();
-      if (getUICheckBoxInput(forumId) != null) {
-        checkBoxInput = getUICheckBoxInput(forumId).setChecked(false);
-      } else {
-        checkBoxInput = new UICheckBoxInput(forumId, forumId, false);
-        addUIFormInput(checkBoxInput);
-        checkBoxInput.setHTMLAttribute("title", forum.getForumName());
+      if(isAdmin) {
+        if (getUICheckBoxInput(forumId) != null) {
+          checkBoxInput = getUICheckBoxInput(forumId).setChecked(false);
+        } else {
+          checkBoxInput = new UICheckBoxInput(forumId, forumId, false);
+          addUIFormInput(checkBoxInput);
+          checkBoxInput.setHTMLAttribute("title", forum.getForumName());
+        }
       }
-      if (isShowForum(forumId))
+      if (isShowForum(forumId)){
         listForum.add(forum);
+      }
     }
     return listForum;
   }
@@ -239,11 +227,7 @@ public class UICategory extends BaseForumForm {
   }
 
   private Forum getForum(String forumId) throws Exception {
-    for (Forum forum : this.forums) {
-      if (forum.getId().equals(forumId))
-        return forum;
-    }
-    return null;
+    return getForumService().getForum(categoryId, forumId);
   }
 
   protected boolean isCanViewTopic(Forum forum, Topic topic) throws Exception {
