@@ -104,7 +104,10 @@ public class ForumSessionUtils {
       }
 
       if (Utils.CATEGORY_SPACE_ID_PREFIX.equals(categoryId)) {
-        strQuery.append(" and ").append(Utils.buildQueryForumInSpaceOfUser(userProfile.getUserId()));
+        if(CommonUtils.isEmpty(strQuery.toString()) == false) {
+          strQuery.append(" and ");
+        }
+        strQuery.append(Utils.buildQueryForumInSpaceOfUser(userProfile.getUserId()));
       }
       return getComponentInstanceOfType(ForumService.class).getForumSummaries(categoryId, strQuery.toString());
     } catch (Exception e) {
