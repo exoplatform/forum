@@ -52,7 +52,7 @@
 					</a>
 				</td>
 			</tr>
-		 <%  }
+		 <% }
 		   } else {%>
 			<tr>
 				<td colspan="4" class="center">
@@ -63,7 +63,9 @@
 		</tbody>
 	</table>
 	<%
-		if(uicomponent.isRenderIterator()) 
-			uicomponent.renderChild(UIForumPageIterator.class) ; 
+		if(uicomponent.isRenderIterator()) {
+			uicomponent.renderChild(UIForumPageIterator.class) ;
+		}
+	uicomponent.renderChild("UIViewPrivateMessageInBox");
 	%>								
 </div>

@@ -16,38 +16,32 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIPopupComponent;
-import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/forum/webui/popup/UIViewPrivateMessageForm.gtmpl",
+    template = "app:/templates/forum/webui/popup/UIViewPrivateMessage.gtmpl",
     events = {
-      @EventConfig(listeners = UIViewPrivateMessageForm.CloseActionListener.class,phase = Phase.DECODE)
+      @EventConfig(listeners = UIViewPrivateMessage.CloseActionListener.class)
     }
 )
-public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent {
+public class UIViewPrivateMessage extends UIContainer {
   private ForumPrivateMessage privateMessage;
 
   private UserProfile         userProfile;
 
   RenderHelper                renderHelper = new RenderHelper();
 
-  public UIViewPrivateMessageForm() {
+  public UIViewPrivateMessage() {
   }
 
   public ForumPrivateMessage getPrivateMessage() {
@@ -77,19 +71,25 @@ public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent
 
   public void deActivate() {
   }
+  
+  public void reset() {
+    setRendered(false);
+    privateMessage = null;
+  }
+  
+  protected boolean isListSendPrivateMessage() {
+    return (this.getParent() instanceof UIListSentPrivateMessage) ? true : false;
+  }
 
-  static public class CloseActionListener extends EventListener<UIViewPrivateMessageForm> {
-    public void execute(Event<UIViewPrivateMessageForm> event) throws Exception {
-      UIViewPrivateMessageForm uiForm = event.getSource();
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer == null) {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      } else {
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      }
+  protected String eventParent(String action, String id) throws Exception {
+    return getParent().event(action, id);
+  }
+  
+  static public class CloseActionListener extends EventListener<UIViewPrivateMessage> {
+    public void execute(Event<UIViewPrivateMessage> event) throws Exception {
+      UIViewPrivateMessage uiForm = event.getSource();
+      uiForm.reset();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent());
     }
   }
 }

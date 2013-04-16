@@ -1,0 +1,38 @@
+<%	
+	import org.exoplatform.forum.service.ForumPrivateMessage ;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumUtils ;
+
+	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
+%>
+
+<div class="uiBox" id="$uicomponent.id">
+	<%if (privateMessage != null) {
+		  String title = privateMessage.getName() ;
+		  String message = privateMessage.getMessage() ;
+		  message = uicomponent.renderMessage(message);
+		  String mailId = privateMessage.getId();
+		  
+		  boolean isListSend = uicomponent.isListSendPrivateMessage();
+		  
+		  String action = uicomponent.eventParent(((isListSend == true) ? "ForwardMessage" : "ReplyMessage"), mailId);
+		  String label = _ctx.appRes("UIPrivateMessageForm.label." + ((isListSend == true) ? "Forward" : "Reply") );
+	%>
+		<h5 class="title">
+			<a href="<%=uicomponent.event("Close")%>" class="uiIconClose pull-right"><div class="ClosePopup" style="width: 16px; height: 16px;"><span></span></div></a>
+			<span class="popupTitle"><%=_ctx.appRes("UIPrivateMessageForm.label.MailTitle");%>: $title </span>
+		</h5>
+		<div class="uiContentBox">
+			$message
+			<div class="uiActionDashed">
+				<button class="btn" onclick="<%=action%>" type="button"><i class="uiIconReply uiIconLightGray"></i> <%=label%></button>&nbsp;
+				<button class="btn" onclick="<%=uicomponent.eventParent("DeleteMessage", mailId)%>" type="button">
+					<i class="uiIconDelete uiIconLightGray"></i> <%=_ctx.appRes("UIPrivateMessageForm.label.Delete");%>
+				</button>
+			</div>
+		</div>
+	<%
+	    ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
+	%>
+	<%} %>
+</div>
