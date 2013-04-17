@@ -17,7 +17,6 @@
 package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.answer.webui.BaseUIFAQForm;
@@ -28,8 +27,6 @@ import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -85,27 +82,16 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
     }
   }
 
-  private boolean hasPermission(Category category, List<String> listOfUser) {
-    if(CommonUtils.isEmpty(category.getModerators()) == false && 
-        Utils.hasPermission(Arrays.asList(category.getModerators()), listOfUser)) {
-      return true;
-    }
-    if (CommonUtils.isEmpty(category.getUserPrivate()) == false) {
-      return Utils.hasPermission(Arrays.asList(category.getUserPrivate()), listOfUser);
-    }
-    return true;
-  }
-
   protected String renderCategoryTree() throws Exception {
     listQuestion.clear();
-    return renderCategoryTree(categoryTree, UserHelper.getAllGroupAndMembershipOfUser(null));
+    return renderCategoryTree(categoryTree);
   }
 
-  private String renderCategoryTree(CategoryTree categoryTree, List<String> listOfUser) throws Exception {
+  private String renderCategoryTree(CategoryTree categoryTree) throws Exception {
     StringBuilder builder = new StringBuilder();
     Category category = categoryTree.getCategory();
     String categoryId = category.getId();
-    if (hasPermission(category, listOfUser)) {
+    if (FAQUtils.hasPermission(category)) {
       List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
       List<Question> questions = getQuestionsByCategoryId(categoryId, faqSetting_);
       String clazz = "collapseIcon";
@@ -149,7 +135,7 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
         }
         for (CategoryTree subTree : categoryTrees) {
           builder.append("<li class=\"node\">");
-          builder.append(renderCategoryTree(subTree, listOfUser));
+          builder.append(renderCategoryTree(subTree));
           builder.append("</li>");
         }
         builder.append("</ul>");
