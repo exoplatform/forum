@@ -149,8 +149,8 @@ public class ForumWebservice implements ResourceContainer {
         if (ip.startsWith(str))
           ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str;
     }
+    strQuery = str;
     return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 
@@ -186,8 +186,8 @@ public class ForumWebservice implements ResourceContainer {
         if (ip.startsWith(str))
           ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str;
     }
+    strQuery = str;
     return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 

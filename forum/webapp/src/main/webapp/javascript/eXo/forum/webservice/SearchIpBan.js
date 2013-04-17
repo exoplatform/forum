@@ -11,16 +11,8 @@
       if (SearchIpBan.jSearchIpBan.exists()) {
         SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.parents('div.restInfo:first');
         SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.uiGrid');
-        SearchIpBan.jSearchIpBan.on('keydown', SearchIpBan.searchIpBanWrapper);
+        SearchIpBan.jSearchIpBan.on('keyup', SearchIpBan.searchIpBan);
       }
-    },
-    
-    searchIpBanWrapper : function(event) {
-      window.setTimeout(SearchIpBan.searchIpBanTimeout, 50);
-    },
-    
-    searchIpBanTimeout : function() {
-      SearchIpBan.searchIpBan(SearchIpBan.jSearchIpBan.val());
     },
     
     searchIpBan : function(keyword) {
@@ -34,16 +26,16 @@
       }
       SearchIpBan.url_ = restUrl;
       $.ajax({
-     type: "GET",
-     url: restUrl
-    }).complete(function (jqXHR) {
-     if (jqXHR.readyState === 4) {
-        SearchIpBan.data = $.parseJSON(jqXHR.responseText);
-        if (SearchIpBan.data.jsonList) {
-        SearchIpBan.updateIpBanList();
-      }
-     }
-    });
+        type : "GET",
+        url : restUrl
+      }).complete(function(jqXHR) {
+        if (jqXHR.readyState === 4) {
+          SearchIpBan.data = $.parseJSON(jqXHR.responseText);
+          if (SearchIpBan.data.jsonList) {
+            SearchIpBan.updateIpBanList();
+          }
+        }
+      });
     },
 
     updateIpBanList : function() {
