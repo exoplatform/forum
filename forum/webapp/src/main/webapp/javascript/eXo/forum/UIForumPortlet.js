@@ -7,7 +7,7 @@
 
     init : function(id) {
       UIForumPortlet.id = id;
-      var jportlet = findId(id);
+      var jportlet = $.fn.findId(id);
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         UIForumPortlet.initShowUserInfo();
@@ -24,14 +24,14 @@
     },
     
     disableOnClickMenu : function (id) {
-      var jportlet = findId(UIForumPortlet.id);
+      var jportlet = $.fn.findId(UIForumPortlet.id);
       if(id != null) {
         jportlet.find('#'+id).off('click mousedown mouseover').on('click mousedown mouseover', utils.cancelEvent);
       }
     },
 
     initShowUserInfo : function(id) {
-      var jportlet = findId(UIForumPortlet.id);
+      var jportlet = $.fn.findId(UIForumPortlet.id);
       if(id != null) {
         jportlet.find('#'+id).find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
       } else {
@@ -189,55 +189,43 @@
       }
     },
 
-    checkAction : function(obj, evt) {
-      UIForumPortlet.showPopup(obj, evt);
-      var uiCategory = $('UICategory');
+    checkActionCategory : function(id) {
+      var uiCategory = $.fn.findId(id);
+      var menuItems = uiCategory.find('.uiCategoryPopupMenu:first').find('a.forumAction');
+      menuItems.data('containerId', {container : id});
+      var checked = (uiCategory.find('input[type=checkbox]:checked').length > 0) ? true : false;
+      UIForumPortlet.enableDisableAction(menuItems, checked);
+      
       var checkboxes = uiCategory.find('input.checkbox');
-      var uiRightClickPopupMenu = $(obj).find('.UIRightClickPopupMenu:first');
-      var clen = checkboxes.length;
-      var menuItems = uiRightClickPopupMenu.find('a');
-      var mlen = menuItems.length;
-      var checked = false;
-      for ( var i = 1; i < clen; i++) {
-        if (checkboxes[i].checked && checkboxes.eq(i).attr('name').indexOf("forum") == 0) {
-          checked = true;
-          break;
-        }
-      }
-      var j = 0;
-      for ( var i = 0; i < mlen; i++) {
-        if (String(menuItems.eq(i).attr('class')).indexOf("AddForumIcon") > 0) {
-          j = i + 1;
-          break;
-        }
-      }
-      for ( var n = j; n < mlen; n++) {
-        var menuItem = menuItems.eq(n);
-        if (!checked) {
-          if (!menuItem.attr("tmpHref")) {
-            menuItem.attr("tmpHref", menuItem.attr('href'));
-            menuItem.attr('href', 'javascript:void(0);');
-            menuItem.attr('tmpClass', $(menuItem[0].parentNode).attr('class'));
-            $(menuItem[0].parentNode).attr('class', 'DisableMenuItem');
+      checkboxes.on('click', function(evt) {
+        UIForumPortlet.checkActionCategory($(this).data('containerId').container);
+      });
+    },
+    
+    enableDisableAction : function(actions, checked) {
+      $.each(actions, function(index, elm) {
+        var thizz = $(elm);
+        if (checked === false) {
+          if (thizz.hasAttr('data-href') === false) {
+            thizz.attr('data-href', thizz.attr('href'));
+            thizz.attr('href', 'javascript:void(0);');
+            thizz.parents('li:first').addClass('disabled');
           }
         } else {
-          if (menuItem.attr("tmpHref")) {
-            menuItem.attr('href', menuItem.attr('tmpHref'));
-            $(menuItem[0].parentNode).attr('class', menuItem.attr('tmpClass'));
-            menuItem.removeAttr("tmpHref");
-            menuItem.removeAttr("tmpClass");
+          if (thizz.hasAttr("data-href")) {
+            thizz.attr('href', thizz.attr('data-href'));
+            thizz.parents('li:first').removeClass('disabled');
           }
         }
-      }
+      });
     },
 
     visibleAction : function(id) {
-      var parent = findId(id);
+      var parent = $.fn.findId(id);
       var addCategory = parent.find('#AddCategory');
       if (addCategory.exists()) {
         addCategory = addCategory.find('a:first');
         var addForum = parent.find('#AddForum').find('a:first');
-        var isIE = document.all ? true : false;
         if ($("#UICategories").exists()) {
           addCategory.attr('class', "actionIcon");//disabled
           addForum.attr('class', "actionIcon");
@@ -340,7 +328,7 @@
     },
 
     initVote : function(voteId, rate) {
-      var vote = findId(voteId);
+      var vote = $.fn.findId(voteId);
       rate = parseInt(rate);
       var optsContainer = vote.find('div.optionsContainer:first');
     optsContainer.attr('data-rate', rate);
@@ -561,7 +549,7 @@
     },
 
     setSizeImages : function(delta, classParant) {
-      var parent_ = findId(classParant);
+      var parent_ = $.fn.findId(classParant);
       var imageContentContainer = parent_.find('div.ImageContentContainer:first');
       if (imageContentContainer.exists()) {
         if (!$('#UIPageDesktop').exists()) {
@@ -600,7 +588,7 @@
     },
 
     resetFielForm : function(idElm) {
-      var elm = findId(idElm);
+      var elm = $.fn.findId(idElm);
       elm.find("input:checkbox").val('false');
       elm.find("input:text").val('');
       if (elm.find("input.UISliderInput").exists()) {
@@ -610,7 +598,7 @@
     },
 
     RightClickBookMark : function(elmId) {
-      var ancestor = findId(elmId);
+      var ancestor = $.fn.findId(elmId);
       var popupContents = ancestor.find('ul.ClickPopupContent');
       if (!popupContents.exists())
         return;
@@ -730,7 +718,7 @@
  * Load more tags items.
  * */
     loadMoreItem : function(id, moreTagLabel) {
-      var parent = findId(id);
+      var parent = $.fn.findId(id);
       var containerMoreItem = parent.find('ul.containerMoreItem:first');
       if(containerMoreItem.exists()) {
         var moreItem = $('<li class="dropdown moreItem pull-right"></li>');
@@ -827,12 +815,11 @@
       var widthMoreItem = topContainer.width() - actionContainer.width() - pageIterContainer.width() - titleTag.width() - 20;
       
       var containerMoreItem = tagsContainer.find('ul.containerMoreItem:first');
-      //containerMoreItem.css('width', widthMoreItem + 'px');
       return widthMoreItem;
     },
 
     executeLink : function(elm, evt) {
-      var onclickAction = String($(elm).attr("data-link"));
+      var onclickAction = String($(elm).attr('data-link'));
       eval(onclickAction);
       evt.preventDefault();
       evt.stopPropagation();
@@ -840,19 +827,14 @@
     },
 
     createLink : function(cpId, isAjax) {
-      if (!isAjax || isAjax === 'false') {
-        var isM = document.getElementById("SetMode");
-        if (isM && isM.innerHTML === 'true') {
-          UIForumPortlet.addLink(cpId, "ActionIsMod");
-        }
-        return;
+      if (isAjax === 'true' || isAjax === true) {
+        UIForumPortlet.addLink(cpId, 'actionOpenLink');
       }
-      UIForumPortlet.addLink(cpId, "ActionLink");
     },
 
     addLink : function(cpId, clazzAction) {
-      var links = findId(cpId).find('a.' + clazzAction);
-      if (links.exists()) {
+      var links = $.fn.findId(cpId).find('a.' + clazzAction);
+      if (links.exists() && links.hasAttr('data-link')) {
         links.on('click', function(e) {
           UIForumPortlet.executeLink(this, e);
         });
@@ -890,9 +872,9 @@
       var cont = document.getElementById(id);
       var uiContextMenu = contextMenu;
       if (!uiContextMenu.classNames)
-        uiContextMenu.classNames = new Array("ActionLink");
+        uiContextMenu.classNames = new Array("actionOpenLink");
       else
-        uiContextMenu.classNames.push("ActionLink");
+        uiContextMenu.classNames.push("actionOpenLink");
       uiContextMenu.setContainer(cont);
       uiContextMenu.setup();
     },
@@ -932,7 +914,7 @@
     },
 
     submitOnKey : function(id) {
-      var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
+      var parentElm = ($.fn.findId(id) || $.fn.findId(UIForumPortlet.id).find('.'+id));
       if (parentElm.exists()) {
         parentElm.off('keydown').on('keydown', function(evt) {
           var key = utils.getKeynum(evt);
@@ -955,7 +937,7 @@
     },
 
     calculateWidthOfActionBar : function(uiRightActionBar) {
-      var uiRightActionBar = findId(uiRightActionBar);
+      var uiRightActionBar = $.fn.findId(uiRightActionBar);
       var textContent = uiRightActionBar.text();
       textContent = textContent.replace(/\n/g, '').replace(/\s\s|\t\t|\r\r/g, '');
       var l = (textContent.length) * 1 + 1;

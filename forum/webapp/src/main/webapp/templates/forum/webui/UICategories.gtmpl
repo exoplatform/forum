@@ -62,12 +62,10 @@
 						String titleCollap = _ctx.appRes("UIForumPortlet.label.Collapse");
 						String classCssCollap = "uiIconArrowDown";
 						boolean isDisplay = true;
-						String styleForumToolBar = "";
 						if(uicomponent.isCollapCategories(categoryId)){
 							titleCollap = _ctx.appRes("UIForumPortlet.label.Expand");
 							classCssCollap = "uiIconArrowRight";
 							isDisplay = false;
-							styleForumToolBar = "style=\"border-bottom:solid 1px #b7b7b7;\""; 
 						}
 						String actionCollap = uicomponent.event("CollapCategory", categoryId + "," + isDisplay);
 		 %>
@@ -78,12 +76,12 @@
 					<i class="$classCssCollap" rel="tooltip" data-placement="bottom" title="$titleCollap" onclick="$actionCollap;"></i>
 				</span>
 
-				<div class="textTitleCategories pull-left" rel="tooltip" data-placement="bottom" title="$title">
+				<div class="textTitleCategories pull-left">
 					<% ++rCNB; %>
 					<%if(uicomponent.useAjax){%>
-					<a class="ActionLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url">$title</a>
+					<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url">$title</a>
 					<%} else {%>
-					<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$url">$title</a>
+					<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url">$title</a>
 					<%}%>
 						
 					<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
@@ -109,8 +107,8 @@
 			%>
 				<tr>
 					<td></td>
-					<td><%=_ctx.appRes("UICategory.label.noForum");%></td>
-					<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
+					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noForum");%></td>
+					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noPost");%></td>
 					<td></td>
 					<td class="center">0</td>
 					<td class="center">0</td>
@@ -130,7 +128,6 @@
 					int dayForumNewPost = uicomponent.getDayForumNewPost();
 					long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 					Date date = new Date();
-					String lastReadPostOfForum = "";
 					for(forum in forums) {
 						String forumId = forum.getId();
 						lastReadPost = uicomponent.getLastReadPostOfForum(forumId);
@@ -218,20 +215,14 @@
 						<i class="$classIconStatusForum" title="$titleIconForum"></i>
 							<% ++rCNB; %>
 							<%if(uicomponent.useAjax){%>
-						<a class="ActionLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
 							<%} else {%>
-						<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
+						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a>
 							<%}%>
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
 							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 						</div>
-						
-						<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
-						String lastRead = uicomponent.event("OpenLastReadTopic", ids+"/"+lastReadPostOfForum);
-						%>
-						<a href="$lastRead" class="ScrollRightButton" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>" style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
-						<% } %>
-						<div class="ForumDescription">$forumDescription</div>
+						<div class="forumDescription">$forumDescription</div>
 					</td>
 				<%
 					if(topicNewPost != null) {
@@ -257,9 +248,9 @@
 							
 								<% ++rCNB; %>
 							<%if(uicomponent.useAjax){%>
-								<a class="ActionLink" id="UIContextPopupMenu${rCNB}" data-link="$openLinkLastPost;" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+								<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="$openLinkLastPost;" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 							<%} else {%>
-								<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+								<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 							<%}%>
 							<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none">
 								<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
@@ -296,7 +287,7 @@
 						</div>
 					</td>
 					<%} else { %> 
-					<td>
+					<td class="noticeEmpty">
 						<%=_ctx.appRes("UICategory.label.availableTheard"); %>
 					</td>
 					<td></td>

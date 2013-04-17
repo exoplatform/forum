@@ -17,7 +17,7 @@
 					if(forums.size() < 1) {iconClass = "uiIconEmpty";}
 			%>
 				<li class="node">
-					<a href="javascript:void(0);" class="uiIconNode $iconClass" onclick="eXo.answer.UIAnswersPortlet.showTreeNode(this)">
+					<a href="javascript:void(0);" class="uiIconNode $iconClass" onclick="eXo.answer.AnswerUtils.showTreeNode(this)">
 						<i class="uiIconCategory uiIconLightGray"></i> <span>$categoryName</span>
 					</a>
 				<%
