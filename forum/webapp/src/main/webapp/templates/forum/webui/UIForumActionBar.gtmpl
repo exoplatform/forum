@@ -58,10 +58,6 @@
 		   i = i + 1;
 		  %>
 		<% }%>
-		<li class="ScrollButtons clearfix" style="width:35px;">
-			<div class="ScrollLeftButton pull-left" rel="tooltip" data-placement="bottom" title="Previous"><span></span></div>
-			<div class="ScrollRightButton pull-left" rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
-		</li>
 	</ul>
 	<% 
 		long numberOfNewMessage = uicomponent.getNewMessage();

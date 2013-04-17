@@ -677,134 +677,35 @@
     closeShareLink : function(obj) {
       $(obj).parents('.UIPopupWindow').hide();
     },
-
-    loadScroll : function(e) {
-      var uiNav = eXo.forum.UIForumPortlet;
-      var container = $("#UIForumActionBar");
-      if (container.exists()) {
-        uiNav.scrollMgr = new navigation.ScrollManager("UIForumActionBar");
-        uiNav.scrollMgr.initFunction = uiNav.initScroll;
-        uiNav.scrollMgr.mainContainer = container.find('td.ControlButtonContainer:first')[0];
-        uiNav.scrollMgr.arrowsContainer = container.find('li.ScrollButtons:first')[0];
-        uiNav.scrollMgr.loadElements("ControlButton", true);
-
-        var button = $(uiNav.scrollMgr.arrowsContainer).find('div');
-        if (button.length >= 2) {
-          uiNav.scrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
-          uiNav.scrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
-        }
-
-        uiNav.scrollManagerLoaded = true;
-        uiNav.initScroll();
-        var lastButton = $('#OpenBookMarkSp');
-        if (lastButton.exists() && lastButton.css('display') == 'none') {
-          $('#OpenBookMark').hide();
-        }
-      }
+    loadScroll : function() {
+      UIForumPortlet.loadMoreForumActionBar('UIForumActionBar', 'More');
     },
-
-    initScroll : function() {
-      var uiNav = UIForumPortlet;
-      if (!uiNav.scrollManagerLoaded)
-        uiNav.loadScroll();
-      var elements = uiNav.scrollMgr.elements;
-      uiNav.scrollMgr.init();
-      if (eXo.core.Browser.isIE6())
-        uiNav.scrollMgr.arrowsContainer.setAttribute("space", 35);
-      uiNav.scrollMgr.checkAvailableSpace();
-      uiNav.scrollMgr.renderElements();
+    loadMoreForumActionBar : function(id, moreTagLabel) {
+      var parent = $.fn.findId(id);
+      var ul = parent.find('ul:first');
+      ul.addClass('actionBarMoreItem').addClass('pull-left');
+      parent.loadMoreItem({
+        ulContainerClass: 'actionBarMoreItem',
+        loadMoreLabel : moreTagLabel,
+        processContainerWidth : UIForumPortlet.processForumActionBarrWidth
+      });
+    },
+    processForumActionBarrWidth : function(parent) {
+      var uiRightActionBar = parent.find('#uiRightActionBar');
+      var widthMoreItem = parent.width() - uiRightActionBar.outerWidth() - 20;
+      return widthMoreItem;
     },
 /*
  * Load more tags items.
  * */
     loadMoreItem : function(id, moreTagLabel) {
       var parent = $.fn.findId(id);
-      var containerMoreItem = parent.find('ul.containerMoreItem:first');
-      if(containerMoreItem.exists()) {
-        var moreItem = $('<li class="dropdown moreItem pull-right"></li>');
-        var div = $('<div data-toggle="dropdown" class="actionIcon"></div>').html(moreTagLabel);
-        div.append($('<i class="uiIconMiniArrowDown"></i>'));
-        moreItem.append(div);
-        UIForumPortlet.moreItem = moreItem;
-        containerMoreItem.append(moreItem.clone());
-        UIForumPortlet.widthMoreAction = containerMoreItem.find('li.moreItem:first').width();
-        
-        
-        var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
-        var fakeContainer = parent.find('ul.fakeContainer:first');
-        var items = fakeContainer.find('li');
-        
-        UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
-        
-        utils.onResize(UIForumPortlet.processResizeWindow);
-      }
-    },
-    
-    processResizeWindow : function() {
-      var parent = $('#UITopicDetail');
-      if(parent.exists()) {
-        var containerMoreItem = parent.find('ul.containerMoreItem:first');
-        if(containerMoreItem.exists()) {
-          var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
-          var tmpUl = parent.find('ul.fakeContainer:first');
-          var itemsMore = null;
-          if(containerMoreItem.find('li.moreItem:first').exists()) {
-              itemsMore = containerMoreItem.find('ul').find('li');
-          }
-          tmpUl.append(containerMoreItem.find('li'));
-          if(itemsMore != null) {
-            tmpUl.append(itemsMore);
-            tmpUl.find('li.moreItem').remove();
-          }
-          var items = tmpUl.find('li');
-          UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
-          
-        }
-      }
-    },
-    
-    processTagRender : function(containerMoreItem, items, maxWidth) {
-      var itemDisplay = [];
-      var itemMenu = [];
-      var lengthItem = 0;
-      var minWidthMenu = 100;
-      var paddingLRMenu = 20;
-      var widthMoreAction = UIForumPortlet.widthMoreAction;
-      
-      $.each(items, function(index, elm) {
-        var it = $(elm);
-        lengthItem += (it.width() + 4);
-        if((lengthItem + widthMoreAction) < maxWidth) {
-          itemDisplay.push(it);
-        } else {
-          if(itemMenu.length === 0) {
-            var moreItem = UIForumPortlet.moreItem.clone();
-            itemDisplay.push(moreItem);
-          }
-          itemMenu.push(it);
-          if((it.width() + paddingLRMenu) > minWidthMenu) {
-            minWidthMenu = it.width() + paddingLRMenu;
-          }
-        }
+      parent.loadMoreItem({
+        loadMoreLabel : moreTagLabel,
+        processContainerWidth : UIForumPortlet.processTagContainerWidth
       });
-      
-      containerMoreItem.empty();
-      for(var i = 0; i < itemDisplay.length; ++i) {
-        containerMoreItem.append(itemDisplay[i]);
-      }
-      
-      var moreItem = containerMoreItem.find('li.moreItem:first');
-      if(moreItem.exists()) {
-        var ulMore = $('<ul class="dropdown-menu menuMore"></ul>');
-        ulMore.css('min-width', minWidthMenu + 'px');
-        for(var i = 0; i < itemMenu.length; ++i) {
-          ulMore.append(itemMenu[i]);
-        }
-        moreItem.append(ulMore);
-      }
-      
     },
-    
+
     processTagContainerWidth : function(parent) {
       var topContainer = parent.find('.topContainer:first');
       var actionContainer = parent.find('.actionContainer:first');
@@ -813,8 +714,6 @@
       var tagsContainer = parent.find('.tagsContainer:first');
       var titleTag = tagsContainer.find('.titleTag:first');
       var widthMoreItem = topContainer.width() - actionContainer.width() - pageIterContainer.width() - titleTag.width() - 20;
-      
-      var containerMoreItem = tagsContainer.find('ul.containerMoreItem:first');
       return widthMoreItem;
     },
 

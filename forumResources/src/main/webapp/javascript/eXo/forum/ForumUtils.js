@@ -1,5 +1,6 @@
 (function (gj) {
   var ForumUtils = {
+    onResizeCallback : {},
     hideElementList : new Array(),
     currWidth : 0,
     cancelEvent : function(evt) {
@@ -51,14 +52,9 @@
 
     onResize : function(callback) {
       if (callback && String(typeof callback) == "function") {
-        eXo.core.Browser.addOnResizeCallback(callback.name, callback);
-        gj(window).resize(function() {
-          eXo.core.Browser.managerResize();
-          if (ForumUtils.currWidth != document.documentElement.clientWidth) {
-            try{callback.call();}catch(e){};
-          }
-          ForumUtils.currWidth = document.documentElement.clientWidth;
-        });
+        var name = String(callback.name + new Date().getTime());
+        ForumUtils.onResizeCallback[name] = callback;
+        eXo.core.Browser.addOnResizeCallback(name, callback);
       }
     },
 
@@ -125,7 +121,7 @@
     
     initTooltip : function(id) {
       if(id != null) {
-    	gj('#'+id).find('[rel=tooltip]').tooltip();
+      gj('#'+id).find('[rel=tooltip]').tooltip();
       }
     }
   };
@@ -151,6 +147,19 @@
     return false ;
   } ;
 
+  gj(window).resize(function(evt) {
+    eXo.core.Browser.managerResize();
+    if (ForumUtils.currWidth != document.documentElement.clientWidth) {
+      try{
+        var callback = ForumUtils.onResizeCallback ;
+        for(var name in callback) {
+          var method = callback[name];
+          if (typeof(method) == "function") method(evt) ;
+        }
+      }catch(e){};
+    }
+    ForumUtils.currWidth = document.documentElement.clientWidth;
+  });
   gj('body').click(ForumUtils.hideElements);
  
  return ForumUtils;
