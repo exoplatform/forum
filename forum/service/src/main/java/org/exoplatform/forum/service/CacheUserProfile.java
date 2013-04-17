@@ -32,7 +32,7 @@ public class CacheUserProfile {
 
   private static ExoCache<Serializable, UserProfile> getCache() {
     CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
-    return cacheService.getCacheInstance("org.exoplatform.forum.UserProfiles");
+    return cacheService.getCacheInstance("forum.UserProfiles");
   }
 
   /**
