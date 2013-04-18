@@ -396,7 +396,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     String screenN = editUserProfile.getScreenName();
     if (ForumUtils.isEmpty(screenN))
       screenN = editUserProfile.getUserId();
-    screenName.setValue(screenN);
+    screenName.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(screenN));
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
     String title = this.editUserProfile.getUserTitle();
     boolean isAdmin = false;
