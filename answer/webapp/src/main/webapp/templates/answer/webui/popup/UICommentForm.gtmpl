@@ -16,7 +16,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Detail")%>:</label>
-				<div class="controls"><%=uicomponent.getQuestionDetail();%></div>
+				<div class="controls theContent"><%=uicomponent.getQuestionDetail();%></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Comment")%>:</label>

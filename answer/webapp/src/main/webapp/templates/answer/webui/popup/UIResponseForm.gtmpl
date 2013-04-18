@@ -14,7 +14,7 @@
 						
 						<div class="control-group">
 							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionContent")%>:</label>
-							<div class="controls"><%=uicomponent.render(uicomponent.questionDetail)%></div>
+							<div class="controls theContent"><%=uicomponent.render(uicomponent.questionDetail)%></div>
 						</div>
 					<% 
 					for(field in uiform.getChildren()) { 
