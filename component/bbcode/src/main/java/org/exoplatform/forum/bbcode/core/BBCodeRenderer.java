@@ -39,7 +39,6 @@ import org.xwiki.rendering.syntax.SyntaxType;
 /**
  * Renderer for BBCode markup. 
  * BBCode lookup is delegated to {@link BBCodeProvider}. By default, this implementation will use a {@link BuiltinBBCodeProvider}
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class BBCodeRenderer implements Renderer {

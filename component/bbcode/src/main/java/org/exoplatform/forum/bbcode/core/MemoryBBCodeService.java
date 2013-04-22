@@ -107,5 +107,18 @@ public class MemoryBBCodeService implements BBCodeService {
     code.setId(code.getTagName() + ((code.isOption()) ? "=" : ""));
     this.bbcodes.put(code.getId(), code);
   }
+  
+  @Override
+  public List<BBCode> getBBCodeActive() throws Exception {
+    List<BBCode> result = new ArrayList<BBCode>();
+    Iterator<BBCode> it = bbcodes.values().iterator();
+    while (it.hasNext()) {
+      BBCode bbCode = (BBCode) it.next();
+      if (bbCode.isActive()) {
+        result.add(bbCode);
+      }
+    }
+    return result;
+  }
 
 }

@@ -32,7 +32,7 @@ public enum CacheType {
   
   BBCODE_DATA("forum.BBCodeData"),
   LIST_BBCODE_DATA("forum.ListBBCodeData");
-
+  
   private final String name;
 
   private CacheType(final String name) {
