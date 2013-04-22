@@ -552,9 +552,8 @@ public class Utils implements ForumNodeTypes {
    * @param userId
    * @return String
    */
-  public static String buildQueryForumInSpaceOfUser(String userId) {
+  public static String buildQueryForumInSpaceOfUser(String userId, List<String> groupIds) {
     if (isEmpty(userId) == false) {
-      List<String> groupIds = getGroupSpaceOfUser(userId);
       if (groupIds.size() > 0) {
         StringBuilder queryForum = new StringBuilder("(");
         for (String groupId : groupIds) {

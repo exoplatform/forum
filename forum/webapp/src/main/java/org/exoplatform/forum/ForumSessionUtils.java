@@ -104,10 +104,14 @@ public class ForumSessionUtils {
       }
 
       if (Utils.CATEGORY_SPACE_ID_PREFIX.equals(categoryId)) {
-        if(CommonUtils.isEmpty(strQuery.toString()) == false) {
+        List<String> groupIds = Utils.getGroupSpaceOfUser(userProfile.getUserId());
+        if (groupIds.isEmpty() == true) {
+          return new ArrayList<Forum>();
+        }
+        if (CommonUtils.isEmpty(strQuery.toString()) == false) {
           strQuery.append(" and ");
         }
-        strQuery.append(Utils.buildQueryForumInSpaceOfUser(userProfile.getUserId()));
+        strQuery.append(Utils.buildQueryForumInSpaceOfUser(userProfile.getUserId(), groupIds));
       }
       return getComponentInstanceOfType(ForumService.class).getForumSummaries(categoryId, strQuery.toString());
     } catch (Exception e) {
