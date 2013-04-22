@@ -43,6 +43,7 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
+import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -522,6 +523,14 @@ public class UITopicForm extends BaseForumForm {
               else {
                 String[] args = new String[] { "forum", "thread" };
                 warning("MessageThread.msg.isModerate", args, false);
+                UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
+                uiForumContainer.setIsRenderChild(true);
+                UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class);
+                topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum, 0);
+                UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
+                event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer);
+                event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
+                forumPortlet.removeCacheUserProfile();
               }
             }
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
