@@ -47,6 +47,13 @@
           List listUser = uiform.getListProFileUser() ; 
           String userRole = "" ;
           String userTitle = "";
+          if (listUser.size() == 0) { %>
+	        <tr>
+	         <td class="empty center" colspan="5">
+	           <%=_ctx.appRes("UIModeratorManagementForm.label.ResultSearchUserIsNull");%>
+	         </td>
+	        </tr>  
+        <% } else {
           for(user in listUser) {
             userTitle = user.getUserTitle();
             if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
@@ -83,8 +90,9 @@
          <% 
          if(classRowTable.equals("EvenRow")) classRowTable = "OddRow";
          else classRowTable = "EvenRow"; 
-          } 
-         %>
+          }
+          }
+	         %>
         </tbody>
       </table> 
     
