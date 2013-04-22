@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.exoplatform.poll.service.ws;
 
 import java.net.URI;
@@ -43,9 +40,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 
 /**
- * Url template: <tt>{rest_context_name}/ks/poll</tt>
- * <br />
- * GET: /{rest_context_name}/ks/poll/viewpoll/{resourceid}
+ * Handles rest request to process Poll. It can be get and voted via rest request are provided.
  * 
  * @anchor PollWebservice
  * 
