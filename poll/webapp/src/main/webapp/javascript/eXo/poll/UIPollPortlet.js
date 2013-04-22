@@ -1,4 +1,4 @@
-(function(utils, gj) {
+(function(utils, $) {
   var UIPollPortlet = {
     portletId : "UIPollPortlet",
     init : function(elm) {
@@ -6,7 +6,7 @@
         this.portletId = String(elm);
       }
       utils.onResize(UIPollPortlet.onResizeMarkLayer);
-      var jobj = gj('.actionExpandCollapse:first').find('i');
+      var jobj = $('.actionExpandCollapse:first').find('i');
       if (jobj.exists()) {
         jobj.click(UIPollPortlet.expandCollapse);
       }
@@ -15,9 +15,9 @@
       utils.setMaskLayer(UIPollPortlet.portletId);
     },
     setStyleOfTable : function(contId) {
-      var cont = gj('#'+contId);
+      var cont = $('#'+contId);
       if (cont.exists()) {
-        gj.each(cont.find('.uiGrid:first').find('th'), function(index, elm) {
+        $.each(cont.find('.uiGrid:first').find('th'), function(index, elm) {
           if (index == 1) {
             elm.style.width = '60px';
           }
@@ -31,13 +31,13 @@
       }
     },
     privateField : function(id) {
-      var checkbox = gj('#' + id);
+      var checkbox = $('#' + id);
       UIPollPortlet.clickPrivateField(checkbox);
       checkbox.click(UIPollPortlet.clickPrivateField);
     },
     clickPrivateField : function(elm) {
       elm = (elm.type) ? this : elm;
-      var thizz = gj(elm);
+      var thizz = $(elm);
       if (thizz.exists() && thizz.is(':checkbox')) {
         var parent = thizz.parents('.form-horizontal:first');
         var input = parent.find('#GroupPrivate');
@@ -46,7 +46,7 @@
       }
     },
     expandCollapse : function(obj) {
-      var jobject = $(obj)
+      var jobject = $(this)
       var forumToolbar = jobject.parents(".uiCollapExpand");
       var contentContainer = forumToolbar.find('.uiExpandContainer');
       jobject.hide();
