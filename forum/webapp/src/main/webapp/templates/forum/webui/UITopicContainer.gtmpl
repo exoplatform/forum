@@ -378,7 +378,7 @@
 						<%}%>
 						$approved
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
+							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 						</div>
 						<div>
 					<% if(max_page > 1) {
