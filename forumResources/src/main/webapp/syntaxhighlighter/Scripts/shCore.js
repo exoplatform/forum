@@ -158,7 +158,7 @@ dp.sh.Toolbar.Create = function(highlighter)
 		if(cmd.check != null && !cmd.check(highlighter))
 			continue;
 		
-		div.innerHTML += '<a href="#" onclick="dp.sh.Toolbar.Command(\'' + name + '\',this);return false;">' + cmd.label + '</a>';
+		div.innerHTML += '<a href="javascript:void(0);" onclick="eXo.dp.sh.Toolbar.Command(\'' + name + '\',this);return false;">' + cmd.label + '</a>';
 	}
 	
 	return div;

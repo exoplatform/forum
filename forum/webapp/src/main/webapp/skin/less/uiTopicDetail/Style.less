@@ -133,27 +133,43 @@
 	}
 	
 	.contentQuote{
-		padding: 15px;
+		font-style: italic;
+		padding: 15px 15px 15px 20px;
 		background: #e6f3ff;
 		margin: 10px 0 0 15px;
 		word-wrap: break-word;
 		.border-radius(2px);
 		.textContent{
-			border-left: solid 5px #aacded;
-			padding-left: 15px;
-			margin-top: 10px;
-		}
-		.textContent:first-child{
 			border-left: none;
 			padding-left: 0;
+			margin-top: 10px;
+			.contentQuote{
+				border-left: solid 5px #aacded;
+				padding: 0px 0px 0px 20px;
+				.titleQuote{
+					line-height: 8px;
+					height: 13px;
+				}
+			}
+			.singleQuote {
+				padding: 5px 0px 5px 20px;
+				margin: 5px 0px;
+			}
+		}
+		.titleQuote{
+			font-weight:bold;
 		}
 	}
 	
 	.textContent {
 		word-wrap: break-word;
 		.contentQuote{
+			font-style: italic;
 			padding-left: 0;
 			margin: 0;
+			.titleQuote{
+				font-weight:bold;
+			}
 		}
 	}
 	ul, ol {
