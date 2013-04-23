@@ -24,8 +24,10 @@ import java.util.List;
 
 import javax.jcr.NodeIterator;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -349,7 +351,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   void setViewCountTopic(String path, String userRead);
-
+  
+  /**
+   * Write the number of topic viewers.
+   * 
+   * @since 2.2.11
+   */
+  void writeViews();
+  
   /**
    * Gets newest {@link Topic}
    * 
@@ -519,6 +528,15 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
+
+  /**
+   * Gets Posts and return ListAccess
+   * @param filter
+   * @return
+   * @throws Exception
+   * @since 2.2.11
+   */
+  ListAccess<Post> getPosts(PostFilter filter) throws Exception;
 
   /**
    * Count number of {@link Post} which match conditions such as isApproved, isHidden and query statement.
@@ -1216,6 +1234,13 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   void updateForumAccess(String userId, String forumId);
+
+  /**
+   * write user access a topic
+   * 
+   * @since 2.2.11
+   */
+  void writeReads();
 
   /**
    * Exports to xml object 

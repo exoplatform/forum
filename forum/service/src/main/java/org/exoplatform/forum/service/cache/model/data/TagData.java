@@ -1,11 +1,8 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Tag;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class TagData implements CachedData<Tag> {
 
   private final String id;

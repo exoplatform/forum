@@ -3,12 +3,9 @@ package org.exoplatform.forum.service.cache.model.data;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class ForumData implements CachedData<Forum> {
 
   public final static ForumData NULL = new ForumData(new Forum());

@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import org.exoplatform.commons.testing.BaseExoContainerTestSuite;
 import org.exoplatform.commons.testing.ConfigTestCase;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.service.cache.TestCacheDataStrorage;
 import org.exoplatform.forum.service.impl.JCRDataStorageTestCase;
 import org.exoplatform.forum.service.ws.test.ForumWebserviceTestCase;
 import org.junit.AfterClass;
@@ -36,6 +37,7 @@ import org.junit.runners.Suite.SuiteClasses;
   PostTestCase.class,
   SearchTestCase.class,
   JCRDataStorageTestCase.class,
+  TestCacheDataStrorage.class,
   ForumWebserviceTestCase.class
 })
 @ConfigTestCase(BaseForumServiceTestCase.class)

@@ -88,24 +88,23 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
   }
 
   public List<String> getTotalpage() throws Exception {
-    int max_Page = pageList.getAvailablePage();
-    if (this.pageSelect > max_Page)
-      this.pageSelect = max_Page;
+    if (this.pageSelect > maxPage)
+      this.pageSelect = maxPage;
     int page = this.pageSelect;
     if (page <= 3) {
       beginTabPage = 1;
-      if (max_Page <= 7)
-        endTabPage = max_Page;
+      if (maxPage <= 7)
+        endTabPage = maxPage;
       else
         endTabPage = 7;
     } else {
-      if (max_Page > (page + 3)) {
+      if (maxPage > (page + 3)) {
         endTabPage = (int) (page + 3);
         beginTabPage = (int) (page - 3);
       } else {
-        endTabPage = max_Page;
-        if (max_Page > 7)
-          beginTabPage = max_Page - 6;
+        endTabPage = maxPage;
+        if (maxPage > 7)
+          beginTabPage = maxPage - 6;
         else
           beginTabPage = 1;
       }

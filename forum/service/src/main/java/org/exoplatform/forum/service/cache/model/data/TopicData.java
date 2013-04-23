@@ -3,13 +3,10 @@ package org.exoplatform.forum.service.cache.model.data;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class TopicData implements CachedData<Topic> {
 
   public final static TopicData NULL = new TopicData(new Topic());

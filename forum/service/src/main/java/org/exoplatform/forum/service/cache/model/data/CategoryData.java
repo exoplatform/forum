@@ -2,13 +2,10 @@ package org.exoplatform.forum.service.cache.model.data;
 
 import java.util.Date;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class CategoryData implements CachedData<Category> {
 
   private static final long serialVersionUID = 1L;

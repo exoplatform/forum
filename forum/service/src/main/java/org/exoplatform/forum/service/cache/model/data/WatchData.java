@@ -1,11 +1,8 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class WatchData implements CachedData<Watch> {
 
   private final String id;
