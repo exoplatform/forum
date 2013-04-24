@@ -719,6 +719,12 @@ public class UIForumPortlet extends UIPortletApplication {
         } else {
           topic = (Topic) this.forumService.getObjectNameById(path, Utils.TOPIC);
         }
+        //Case deleted or moved topic 
+        if (topic == null) {
+          showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
+          renderForumHome();
+          path = Utils.FORUM_SERVICE;
+        }
         if (topic != null) {
           if (path.indexOf(ForumUtils.SLASH) < 0) {
             path = topic.getPath();
