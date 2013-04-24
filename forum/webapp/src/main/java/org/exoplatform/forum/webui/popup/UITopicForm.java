@@ -170,9 +170,9 @@ public class UITopicForm extends BaseForumForm {
     UIForumInputWithActions threadOption = new UIForumInputWithActions(FIELD_THREADOPTION_TAB);
     threadOption.addUIFormInput(topicState);
     threadOption.addUIFormInput(topicStatus);
+    threadOption.addUIFormInput(sticky);
     threadOption.addUIFormInput(moderatePost);
     threadOption.addUIFormInput(checkWhenAddPost);
-    threadOption.addUIFormInput(sticky);
 
     addUIFormInput(threadContent);
     addUIFormInput(threadOption);
