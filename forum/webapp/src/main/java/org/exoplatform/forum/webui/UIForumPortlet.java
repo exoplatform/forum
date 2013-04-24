@@ -719,12 +719,6 @@ public class UIForumPortlet extends UIPortletApplication {
         } else {
           topic = (Topic) this.forumService.getObjectNameById(path, Utils.TOPIC);
         }
-        //Case deleted or moved topic 
-        if (topic == null) {
-          showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
-          renderForumHome();
-          path = Utils.FORUM_SERVICE;
-        }
         if (topic != null) {
           if (path.indexOf(ForumUtils.SLASH) < 0) {
             path = topic.getPath();
@@ -793,18 +787,22 @@ public class UIForumPortlet extends UIPortletApplication {
               path = Utils.FORUM_SERVICE;
             }
           }
-        } else if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
-          if (forumService.getForum(categorySpId, forumSpId) == null) {
+        } else if (ForumUtils.isEmpty(getForumIdOfSpace()) == false) {// open topic removed on forum of space
+          if (forumService.getForum(categorySpId, forumSpId) == null) {// the forum of space had been removed
             forumSpDeleted = true;
             removeAllChildPorletView();
             log.info("The forum in space " + spaceDisplayName + " no longer exists.");
             return;
           } else {
-            showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", ForumUtils.EMPTY_STR);
+            showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
             calculateRenderComponent(forumSpId, context);
           }
+        } else {// open topic removed on normal forum.
+          showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
+          renderForumHome();
+          path = Utils.FORUM_SERVICE;
         }
-      } catch (Exception e) {
+      } catch (Exception e) {// Unknown error
         if (log.isDebugEnabled()){
           log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
         }
