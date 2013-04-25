@@ -283,9 +283,15 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       /**
        * Check validation of data inputed
        */
-      if (fromDate != null && toDate != null && fromDate.after(toDate)) {
-        advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
-        return;
+      if (fromDate != null && toDate != null) {
+        if (fromDate.after(toDate)) {
+          advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
+          return;
+        }
+        if (fromDate.equals(toDate)) {
+          long timeOneDay = ((23 * 60 + 59) * 60 + 59) * 1000;
+          toDate.setTimeInMillis(toDate.getTimeInMillis() +  timeOneDay) ;
+        }
       }
       if (!FAQUtils.isValidEmailAddresses(emailAddress)) {
         advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid");
