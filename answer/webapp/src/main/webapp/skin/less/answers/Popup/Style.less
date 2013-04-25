@@ -104,11 +104,8 @@
 }
 //UISendMailForm
 .uiSendEMailForm {
-	.control-label {
-		width: 100px;
-		&+ .controls {
-			margin-left: 120px;
-		}
+	.form-horizontal .control-To .control-label {
+		padding-top: 0;
 	}
 	.linkTo {
 		text-transform: uppercase;
@@ -120,7 +117,11 @@
 		}
 	}
 }
-
+.searchContent {
+	input[type="text"] {
+		  vertical-align: middle;
+	}
+}
 .multiValueContainer {
 	margin-bottom: 10px;
 }
