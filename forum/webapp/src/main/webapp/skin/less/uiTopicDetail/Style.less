@@ -6,14 +6,22 @@
 	}
 }
 
+.divTable{
+	display: table;
+	width: 100%;
+}
+
+.divRow{
+	display: table-row;
+}
+
+.divCell{
+	display: table-cell;
+}
+
 .contentTopicDetail{
-	padding: 10px;
-	&+ .contentTopicDetail{
-		border-top: solid 1px #d9d9d9;
-	}
-	
 	.postViewContainer{
-		margin-left: 225px;
+		padding-left: 10px;
 		
 		.attachmentContainer{
 			background: #f9f9f9;
@@ -28,15 +36,13 @@
 			}
 			
 			.attachmentContentImage {
-				margin-bottom: 20px;
-				
 				.imageAttachmentBox{
 					display: inline-block;
 					width: 128px;
 					height: 128px;
 					text-align: center;
 					margin-right: 15px;
-					margin-bottom: 15px;
+					margin-bottom: 5px;
 					position: relative;
 					&:hover{
 						.actionAttachImg{
@@ -61,6 +67,9 @@
 						p{
 							a{
 								color: #fff;
+								&:hover{
+									font-weight: bold;
+								}
 							}
 							
 							margin: 45px 0 0 0;
@@ -79,7 +88,7 @@
 			
 		
 			.signature{
-				font-size: italic;
+				font-style: italic;
 				span{
 					border-top: dotted 1px @borderColor;
 					width: 265px;
@@ -238,8 +247,22 @@
 			margin-top: 10px;
 		}
 	}
+	
 	.containerTopicDetail{
 		margin-top: 10px;
+	}
+	
+	.line{ 
+		margin: 10px -10px;
+		background: #cfcfcf;
+		height: 1px;
+		display: block;
+	}
+	
+	.divRow:last-child .line{ 
+		margin: 0;
+		background: none;
+		height: 0;
 	}
 	
 	.forumQuickReply{

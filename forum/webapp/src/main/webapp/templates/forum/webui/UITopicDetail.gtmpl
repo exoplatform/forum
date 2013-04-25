@@ -396,8 +396,9 @@
 		<% } %> 
 		</ul>
 	</div>
-    
+	<div style="padding: 10px; position:relative;">
 <!-- Start ContentContainer -->
+	<div class="divTable">
     <%
     if(isClosed && !canEdit)  isShowPost = false ;
     List checkeds = null;
@@ -464,9 +465,9 @@
         else alert = " " ;
     %>
     
-		<div class="contentTopicDetail clearfix" id="$postId">
+		<div class="contentTopicDetail clearfix divRow" id="$postId">
   <!-- Start MemberContainer -->
-			<div class="memberContainer pull-left">
+			<div class="memberContainer divCell">
 			  
 			<%  String userSmile = "uiIconForumColorOffline";
 				String titleSmile = "Offline" ;
@@ -551,7 +552,7 @@
 			</div>
   <!-- End MemberContainer -->
   <!-- Start PostViewContainer -->
-			<div class="postViewContainer">
+			<div class="postViewContainer divCell">
 			  
 			<% if (idLastPost.equals(postId)) { %>
 			  <div class="postViewHeader clearfix">
@@ -798,11 +799,16 @@
 				</div>
 				
 			</div>
+
 <!-- End PostViewContainer -->
 		
 		
 		</div>
-			
+		
+		<div class="divRow clearfix">
+			<div class="divCell"><span class="line"></span></div>
+			<div class="divCell"><span class="line"></span></div>
+		</div>
     <% }//end for
       ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
      } else {
@@ -814,8 +820,10 @@
     <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
     <% } %>
   <% } %>
+  	</div>
 <!-- End ContentContainer -->
-  </div>  
+  </div>
+  </div>
 <!-- End PostsInThreadContainer -->
   
 	<div class="clearfix">
