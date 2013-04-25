@@ -698,8 +698,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_FORUM_SORT_BY, SortField.ORDER.name()),
-                              reader.string(EXO_FORUM_SORT_BY_TYPE, Direction.ASC.name()));
+      return new SortSettings(reader.string(EXO_FORUM_SORT_BY, SortField.ORDER.toString()),
+                              reader.string(EXO_FORUM_SORT_BY_TYPE, Direction.ASC.toString()));
     } catch (Exception e) {
       Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
       forumAdminNode.getSession().save();
@@ -712,8 +712,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY, SortField.LASTPOST.name()), 
-                              reader.string(EXO_TOPIC_SORT_BY_TYPE, Direction.DESC.name()));
+      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY, SortField.LASTPOST.toString()), 
+                              reader.string(EXO_TOPIC_SORT_BY_TYPE, Direction.DESC.toString()));
     } catch (Exception e) {
       Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
       forumAdminNode.getSession().save();
@@ -2078,7 +2078,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }
     } else {
-      stringBuffer.append(", @").append(strOrderBy);
+      stringBuffer.append(", @exo:").append(strOrderBy);
       if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
         stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }

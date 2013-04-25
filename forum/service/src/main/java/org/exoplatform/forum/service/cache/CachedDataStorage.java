@@ -570,8 +570,16 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.removeCategory(categoryId);  
   }
 
-  // TODO : need range
   public List<Forum> getForums(final String categoryId, final String strQuery) throws Exception {
+    return getForums(categoryId, strQuery, false);
+  }
+
+  public List<Forum> getForumSummaries(final String categoryId, final String strQuery) throws Exception {
+    return getForums(categoryId, strQuery, true);
+  }
+
+  // TODO : need range
+  private List<Forum> getForums(final String categoryId, final String strQuery, final boolean isSummary) throws Exception {
     
     SortSettings sort = storage.getForumSortSettings();
     SortField orderBy = sort.getField();
@@ -582,6 +590,9 @@ public class CachedDataStorage implements DataStorage, Startable {
             new ServiceContext<ListForumData>() {
               public ListForumData execute() {
                 try {
+                  if(isSummary) {
+                    return buildForumInput(storage.getForumSummaries(categoryId, strQuery));
+                  }
                   return buildForumInput(storage.getForums(categoryId, strQuery));
                 } catch (Exception e) {
                   throw new RuntimeException(e);
@@ -591,25 +602,12 @@ public class CachedDataStorage implements DataStorage, Startable {
             new ForumListKey(categoryId, strQuery, orderBy, orderType)
         )
     );
-
+    
   }
+
 
   public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
     return storage.filterForumByName(filterKey, userName, maxSize);
-  }
-
-  public List<Forum> getForumSummaries(final String categoryId, final String strQuery) throws Exception {
-
-    return buildForumOutput(forumListFuture.get(new ServiceContext<ListForumData>() {
-      public ListForumData execute() {
-        try {
-          return buildForumInput(storage.getForumSummaries(categoryId, strQuery));
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
-    }, new ForumListKey(categoryId, strQuery)));
-
   }
 
   public Forum getForum(final String categoryId, final String forumId) {

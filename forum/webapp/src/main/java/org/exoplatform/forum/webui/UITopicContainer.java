@@ -140,8 +140,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private Map<String, Integer>   pageTopicRemember = new HashMap<String, Integer>();
 
-  private Map<String, String>    cssClassMap       = new HashMap<String, String>();
-  
   public UITopicContainer() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null));
     addUIFormInput(new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null));
@@ -167,6 +165,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   public void setLogin(boolean isLogin) {
     this.isLogin = isLogin;
+  }
+
+  public void setOrderBy(String orderBy) {
+    this.strOrderBy = orderBy;
   }
 
   public String getRSSLink(String cateId) {
@@ -297,28 +299,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     UIForumContainer forumContainer = this.getParent();
     if (this.forum != null) {
       forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
-    }
-  }
-
-  public String getCssClassForSorting(String path) {
-    if (cssClassMap.get(path) == null) {
-      return "DownArrow1Icon";
-    }
-    return cssClassMap.get(path);
-  }
-
-  private void setCssClassForSorting(String path, String orderOption) {
-    String[] properties = new String[] { Utils.EXO_NAME, Utils.EXO_LAST_POST_DATE, Utils.EXO_VOTE_RATING, Utils.EXO_POST_COUNT, Utils.EXO_VIEW_COUNT };
-    for (int i = 0; i < properties.length; i++) {
-      if (properties[i].equals(path)) {
-        if (orderOption.equals(Utils.ASCENDING.trim())) {
-          cssClassMap.put(properties[i], "UpArrow1Icon");
-        } else {
-          cssClassMap.put(properties[i], "DownArrow1Icon");
-        }
-      } else {
-        cssClassMap.put(properties[i], "NonArrow1Icon");
-      }
     }
   }
 
@@ -1172,14 +1152,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class SetOrderByActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String path) throws Exception {
-      String orderOption = null;
       uiTopicContainer.strOrderBy = ForumUtils.getOrderBy(uiTopicContainer.strOrderBy, path);
-      if(uiTopicContainer.strOrderBy.indexOf(Utils.ASCENDING.trim()) > 0) {
-        orderOption = Utils.ASCENDING.trim();
-      } else {
-        orderOption = Utils.DESCENDING.trim();
-      }
-      uiTopicContainer.setCssClassForSorting(path, orderOption);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
     }
   }

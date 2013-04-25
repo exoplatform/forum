@@ -286,11 +286,6 @@ public class UIForumActionBar extends UIContainer {
     }
   }
 
-  /*
-   * static public class OpenAdministrationActionListener extends EventListener<UIForumActionBar> { public void execute(Event<UIForumActionBar> event) throws Exception { UIForumActionBar uiActionBar = event.getSource() ; UIForumPortlet forumPortlet = uiActionBar.getParent(); UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ; UIPopupContainer popupContainer =
-   * popupAction.createUIComponent(UIPopupContainer.class, null, null) ; UIForumAdministrationForm administrationForm = popupContainer.addChild(UIForumAdministrationForm.class, null, null) ; administrationForm.setInit(); popupContainer.setId("UIForumAdministration") ; popupAction.activate(popupContainer, 800, 450) ; event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ; } }
-   */
-
   static public class SortSettingActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
