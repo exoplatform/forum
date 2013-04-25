@@ -40,7 +40,7 @@
 					String type = _ctx.appRes("UIForumPortlet.label."+searchEvent.getType()) ;
 			%>
 				<tr>
-					<td class="center"><div rel="tooltip" data-placement="bottom" title="<%=type%>"><%=type%></div></td>
+					<td class="center"><div><%=type%></div></td>
 					<td><a href="<%=uicomponent.event("OpentContent",objId);%>"><%=searchEvent.getName()%></a></td>
 				</tr>
 			<% 
