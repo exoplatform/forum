@@ -4,6 +4,7 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	uiform.begin() 
 	_ctx.getRequestContext().getJavascriptManager().require("SHARED/ForumCheckBoxManager", "checkBoxManager").addScripts("checkBoxManager.init('"+uiform.id+"') ;");
+	uicomponent.initPlaceholder();
 %>
 	<div class="uiInsertAddress">
 		<div class="form-inline resizable">

@@ -33,6 +33,7 @@ import org.exoplatform.commons.utils.SerializablePageList;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
@@ -70,6 +71,8 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   public Map<String, User>    newCheckedList_    = new HashMap<String, User>();
 
   private static final String FILED_ALL_GROUP    = "all-group";
+  
+  private static final String SearchDefaultValue = "UIQuickSeach.label.search";
 
 //  private String              selectedAddressId_ = "";
 
@@ -96,6 +99,10 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
     } catch (Exception e) {
       log.error("Can not set users list, exception: " + e.getMessage());
     }
+  }
+  
+  protected void initPlaceholder() throws Exception {
+    ((UIFormStringInput)getChildById(USER_SEARCH)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
   }
 
   public List<SelectItem> getOptions() throws Exception {
