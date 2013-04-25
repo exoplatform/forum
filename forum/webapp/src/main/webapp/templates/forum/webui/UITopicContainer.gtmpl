@@ -167,9 +167,9 @@
 							<ul class="dropdown-menu">
 								<li>
 									<div class="searchAdvance">
-										<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
+										<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
 										<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-										<br/>
+										</p>
 										<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 									</div>
 								</li>
