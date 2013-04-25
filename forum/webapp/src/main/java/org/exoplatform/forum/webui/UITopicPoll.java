@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
@@ -260,7 +261,7 @@ public class UITopicPoll extends BaseForumForm {
           for (UIComponent child : children) {
             if (child instanceof UIPollRadioBoxInput) {
               for (SelectItemOption<String> option : ((UIPollRadioBoxInput) child).getOptions()) {
-                if (option.getValue().equalsIgnoreCase(((UIPollRadioBoxInput) child).getValue())) {
+                if (CommonUtils.decodeSpecialCharToHTMLnumber(option.getValue()).equalsIgnoreCase(((UIPollRadioBoxInput) child).getValue())) {
                   values.append(i);
                   if (i >= maxOption) {
                     isFailed = true;
