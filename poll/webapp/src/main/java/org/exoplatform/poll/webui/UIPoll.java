@@ -24,6 +24,7 @@ import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPollRadioBoxInput;
@@ -57,7 +58,9 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 public class UIPoll extends BasePollForm {
-  private final String POLL_OPTION_ID  = "option";
+  private final String        POLL_OPTION_ID     = "option";
+
+  private final static String POLL_OPTION_VALUE = "pollOption";
   
   private Poll         poll_;
 
@@ -151,8 +154,8 @@ public class UIPoll extends BasePollForm {
     if (poll_ != null) {
       if (!poll_.getIsMultiCheck()) {
         List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
-        for (String s : poll_.getOption()) {
-          options.add(new SelectItemOption<String>(s, s));
+        for (int i = 0; i < poll_.getOption().length; ++i) {
+          options.add(new SelectItemOption<String>(poll_.getOption()[i], getOptionId(POLL_OPTION_VALUE, i)));
         }
         UIPollRadioBoxInput input = new UIPollRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
@@ -160,12 +163,16 @@ public class UIPoll extends BasePollForm {
       } else {
         String[] options = poll_.getOption();
         for (int i = 0; i < options.length; i++) {
-          UIForumCheckBoxInput checkBoxInput = new UIForumCheckBoxInput(POLL_OPTION_ID + (String.valueOf(i)), 
-                                                  POLL_OPTION_ID + (String.valueOf(i)), options[i], false);
+          UIForumCheckBoxInput checkBoxInput = new UIForumCheckBoxInput(getOptionId(POLL_OPTION_ID, i), 
+                                                                        getOptionId(POLL_OPTION_ID, i), options[i], false);
           addUIFormInput(checkBoxInput.setInTable(true));
         }
       }
     }
+  }
+
+  private String getOptionId(String prefix, int index) {
+    return new StringBuffer(prefix).append(index).toString();
   }
 
   private Poll getPoll() throws Exception {
@@ -259,20 +266,18 @@ public class UIPoll extends BasePollForm {
       int maxOption = topicPoll.poll_.getOption().length;
       boolean isFailed = false;
       int i = 0;
-      if (!topicPoll.poll_.getIsMultiCheck()) {
+      if (topicPoll.poll_.getIsMultiCheck() == false) {
         for (UIComponent child : children) {
           if (child instanceof UIPollRadioBoxInput) {
-            for (SelectItemOption<String> option : ((UIPollRadioBoxInput) child).getOptions()) {
-              if (option.getValue().equalsIgnoreCase(((UIPollRadioBoxInput) child).getValue())) {
-                values.setLength(0);
-                values.append(String.valueOf(i));
-                if(i >= maxOption){
-                  isFailed = true;
-                }
-                break;
-              }
-              ++i;
+            //
+            String indexChecked = ((UIPollRadioBoxInput) child).getValue();
+            if (CommonUtils.isEmpty(indexChecked) == false) {
+              values.append(indexChecked.replaceFirst(POLL_OPTION_VALUE, CommonUtils.EMPTY_STR));
+            } else {
+              isFailed = true;
             }
+
+            //
             break;
           }
         }
