@@ -30,6 +30,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
+import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -63,6 +64,8 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   protected boolean    viewAuthorInfor = true;
 
   private RenderHelper renderHelper    = new RenderHelper();
+  
+  private BuiltinCSSFileTypeProvider    cssFileTypeProvider;
 
   public void activate() {
   }
@@ -76,6 +79,11 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     } catch (Exception e) {
       log.debug("Current user must exist: ", e);
     }
+    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
+  }
+
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
   }
 
   protected String getQuestionRelationById(String questionId) {

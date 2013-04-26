@@ -150,10 +150,10 @@
 														String fileName = fileAttachment.getName();
 														long fileSize = fileAttachment.getSize();
 														String size = uicomponent.convertSize(fileSize);
-														String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(fileType.substring((fileType.indexOf("/")+1)));
+														String typeFileIcon = uicomponent.getCSSByFileType(fileName, fileType);
 												%>
 												<div class="otherAttachmentBox">
-													<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i>&nbsp;$fileName															
+													<i class="$typeFileIcon uiIconLightGray"></i>&nbsp;$fileName															
 													<span>($size)</span>																		
 												</div>
 												<%}

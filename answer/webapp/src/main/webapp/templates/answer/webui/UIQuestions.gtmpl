@@ -604,12 +604,12 @@
 										String fileName = fileAttachment.getName();
 										long fileSize = fileAttachment.getSize();
 										String size = uicomponent.convertSize(fileSize);
-										String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(fileType.substring((fileType.indexOf("/")+1)));
 										String linkImage = FAQUtils.getFileSource(fileAttachment);
+										String typeFileIcon = uicomponent.getCSSByFileType(fileName, fileType);
 								%>
 									<div class="otherAttachmentBox">
 										<a class="AttachmentLabel" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-											<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i>&nbsp;$fileName
+											<i class="$typeFileIcon uiIconLightGray"></i>&nbsp;$fileName
 										</a>
 										<span>($size)</span>
 									</div>

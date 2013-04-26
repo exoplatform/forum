@@ -55,6 +55,7 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
@@ -188,6 +189,8 @@ public class UIQuestions extends UIContainer {
   public UIAnswersPageIterator          pageIterator          = null;
 
   public long                           pageSelect            = 0;
+
+  private BuiltinCSSFileTypeProvider    cssFileTypeProvider;
   
   public UIQuestions() throws Exception {
     backPath_ = null;
@@ -204,6 +207,7 @@ public class UIQuestions extends UIContainer {
     for(int i = 0; i < moderatorActionQues_.length; ++i) {
       iconActionQuesion.put(moderatorActionQues_[i], icons[i]);
     }
+    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
 
   protected boolean isNotInSpace() {
@@ -236,6 +240,10 @@ public class UIQuestions extends UIContainer {
       return true;
     }
     return false;
+  }
+
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
   }
 
   public String getRSSLink() {

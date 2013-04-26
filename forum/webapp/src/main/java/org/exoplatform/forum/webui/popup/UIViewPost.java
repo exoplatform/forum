@@ -16,27 +16,21 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
-
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -50,7 +44,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
@@ -63,30 +56,23 @@ import org.exoplatform.webui.form.UIForm;
       @EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
     }
 )
-public class UIViewPost extends UIForm implements UIPopupComponent {
+public class UIViewPost extends BaseForumForm implements UIPopupComponent {
+  private static Log   log            = ExoLogger.getLogger(UIViewPost.class);
+
   private Post         post;
 
   private boolean      isViewUserInfo = true;
 
-  private ForumService forumService;
-
-  private UserProfile  userProfile;
-
   RenderHelper         renderHelper   = new RenderHelper();
 
-  private static Log   log            = ExoLogger.getLogger(UIViewPost.class);
+  private BuiltinCSSFileTypeProvider cssFileTypeProvider;
 
   public UIViewPost() {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
 
   public void setActionForm(String[] actions) {
     this.setActions(actions);
-  }
-
-  protected UserProfile getUserProfile() {
-    userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    return userProfile;
   }
 
   public String renderPost(Post post) throws RenderingException {
@@ -105,6 +91,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 
   protected String getFileSource(ForumAttachment attachment) throws Exception {
     return ForumUtils.getFileSource(attachment);
+  }
+
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
   }
 
   public void setPostView(Post post) throws Exception {
@@ -146,9 +136,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
       List<Post> posts = new ArrayList<Post>();
       posts.add(post);
       try {
-        uiForm.forumService.modifyPost(posts, Utils.APPROVE);
-        uiForm.forumService.modifyPost(posts, Utils.HIDDEN);
-        uiForm.forumService.modifyPost(posts, Utils.WAITING);
+        uiForm.getForumService().modifyPost(posts, Utils.APPROVE);
+        uiForm.getForumService().modifyPost(posts, Utils.HIDDEN);
+        uiForm.getForumService().modifyPost(posts, Utils.WAITING);
       } catch (Exception e) {
         log.debug("\nModify post fail: ", e);
       }
@@ -163,7 +153,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
       try {
         String[] path = post.getPath().split(ForumUtils.SLASH);
         int l = path.length;
-        uiForm.forumService.removePost(path[l - 4], path[l - 3], path[l - 2], post.getId());
+        uiForm.getForumService().removePost(path[l - 4], path[l - 3], path[l - 2], post.getId());
       } catch (Exception e) {
         log.debug("Removing " + post.getId() + " post fail: ", e);
       }

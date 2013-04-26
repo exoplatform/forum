@@ -38,6 +38,7 @@ import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
@@ -209,6 +210,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   RenderHelper                       renderHelper            = new RenderHelper();
   
   private PostListAccess             postListAccess;
+  
+  private BuiltinCSSFileTypeProvider cssFileTypeProvider;
 
   public UITopicDetail() throws Exception {
     isDoubleClickQuickReply = false;
@@ -221,14 +224,19 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     UIFormTextAreaInput textArea = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
     addUIFormInput(textArea);
     addChild(UIPostRules.class, null, null);
-    this.setActions(new String[] { "QuickReply", "PreviewReply" });
-    this.isLink = true;
+    setActions(new String[] { "QuickReply", "PreviewReply" });
+    isLink = true;
+    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
   
   protected void initPlaceholder() throws Exception {
     ((UIFormTextAreaInput)getChildById(FIELD_MESSAGE_TEXTAREA)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, FIELD_MESSAGE_TEXTAREA));
   }
 
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
+  }
+  
   public boolean isShowQuickReply() {
     return isShowQuickReply;
   }

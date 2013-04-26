@@ -94,11 +94,11 @@
 				%>
 					
 					<% if(typeFile.indexOf("image") < 0) {
-					   String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(typeFile.substring((typeFile.indexOf("/")+1)));
+					  		String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
 					%>
 					<div class="otherAttachmentBox">
 						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
-						<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size})
+						<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size})
 					</div>  
 				  <% } %>
 					
