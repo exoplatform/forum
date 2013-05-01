@@ -38,8 +38,8 @@ import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.webui.BaseEventListener;
-import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -211,8 +211,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   
   private PostListAccess             postListAccess;
   
-  private BuiltinCSSFileTypeProvider cssFileTypeProvider;
-
   public UITopicDetail() throws Exception {
     isDoubleClickQuickReply = false;
     if (getId() == null)
@@ -226,7 +224,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     addChild(UIPostRules.class, null, null);
     setActions(new String[] { "QuickReply", "PreviewReply" });
     isLink = true;
-    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
   
   protected void initPlaceholder() throws Exception {
@@ -234,7 +231,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   protected String getCSSByFileType(String fileName, String fullFileType) {
-    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
+    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
   }
   
   public boolean isShowQuickReply() {

@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -65,10 +65,7 @@ public class UIViewPost extends BaseForumForm implements UIPopupComponent {
 
   RenderHelper         renderHelper   = new RenderHelper();
 
-  private BuiltinCSSFileTypeProvider cssFileTypeProvider;
-
   public UIViewPost() {
-    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
 
   public void setActionForm(String[] actions) {
@@ -94,7 +91,7 @@ public class UIViewPost extends BaseForumForm implements UIPopupComponent {
   }
 
   protected String getCSSByFileType(String fileName, String fullFileType) {
-    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
+    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
   }
 
   public void setPostView(Post post) throws Exception {

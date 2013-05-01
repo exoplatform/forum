@@ -55,10 +55,10 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.BuiltinCSSFileTypeProvider;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -190,8 +190,6 @@ public class UIQuestions extends UIContainer {
 
   public long                           pageSelect            = 0;
 
-  private BuiltinCSSFileTypeProvider    cssFileTypeProvider;
-  
   public UIQuestions() throws Exception {
     backPath_ = null;
     this.categoryId_ = Utils.CATEGORY_HOME;
@@ -207,7 +205,6 @@ public class UIQuestions extends UIContainer {
     for(int i = 0; i < moderatorActionQues_.length; ++i) {
       iconActionQuesion.put(moderatorActionQues_[i], icons[i]);
     }
-    cssFileTypeProvider = new BuiltinCSSFileTypeProvider();
   }
 
   protected boolean isNotInSpace() {
@@ -243,7 +240,7 @@ public class UIQuestions extends UIContainer {
   }
 
   protected String getCSSByFileType(String fileName, String fullFileType) {
-    return cssFileTypeProvider.getCSSByFileNameAndFileType(fileName, fullFileType);
+    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
   }
 
   public String getRSSLink() {
