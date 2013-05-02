@@ -29,6 +29,9 @@ import java.util.Map;
 import javax.jcr.Value;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
@@ -618,9 +621,14 @@ public class Utils implements ForumNodeTypes {
    * @since 2.2.9
    */  
   static public String getCurrentTenantName() {
-    RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
-                                                                                 .getComponentInstanceOfType(RepositoryService.class);
     try {
+      RepositoryService repositoryService = (RepositoryService) PortalContainer.getInstance()
+                                                                               .getComponentInstanceOfType(RepositoryService.class);
+      if (repositoryService == null) {
+        repositoryService = (RepositoryService) RootContainer.getInstance()
+                                                             .getPortalContainer(PortalContainer.getCurrentPortalContainerName())
+                                                             .getComponentInstanceOfType(RepositoryService.class);
+      }
       return repositoryService.getCurrentRepository().getConfiguration().getName();
     } catch (Exception e) {
       if (LOG.isDebugEnabled()) {
