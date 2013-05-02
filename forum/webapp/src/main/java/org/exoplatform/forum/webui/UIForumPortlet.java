@@ -487,7 +487,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void updateAccessTopic(String topicId) throws Exception {
-    String userId = userProfile.getUserId();
+    String userId = getUserProfile().getUserId();
     if (userId != null && userId.length() > 0) {
       forumService.updateTopicAccess(userId, topicId);
     }
@@ -495,7 +495,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void updateAccessForum(String forumId) throws Exception {
-    String userId = userProfile.getUserId();
+    String userId = getUserProfile().getUserId();
     if (userId != null && userId.length() > 0) {
       forumService.updateForumAccess(userId, forumId);
     }
@@ -504,7 +504,7 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public void removeCacheUserProfile() {
     try {
-      forumService.removeCacheUserProfile(userProfile.getUserId());
+      forumService.removeCacheUserProfile(getUserProfile().getUserId());
     } catch (Exception e) {
       log.debug("Failed to remove cache userprofile with user: " + userProfile.getUserId());
     }
@@ -529,7 +529,7 @@ public class UIForumPortlet extends UIPortletApplication {
     try {
       ContinuationService continuation = (ContinuationService) PortalContainer.getInstance()
                                                                          .getComponentInstanceOfType(ContinuationService.class);
-      return continuation.getUserToken(userProfile.getUserId());
+      return continuation.getUserToken(getUserProfile().getUserId());
     } catch (Exception e) {
       log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);
     }

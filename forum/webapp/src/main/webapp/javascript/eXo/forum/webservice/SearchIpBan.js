@@ -15,9 +15,10 @@
       }
     },
     
-    searchIpBan : function(keyword) {
+    searchIpBan : function() {
       // Get data from service, url: /portal/rest/ks/forum/filter/{strIP}/
-      keyword = keyword || 'all';
+      var keyword = String($(this).val());
+      if(keyword.trim().length == 0) keyword = 'all';
       var restPath = SearchIpBan.jTabContent.attr("data-restPath");
       var restUrl = restPath + '/ks/forum/filter/' + keyword + '/';
       var forumId = SearchIpBan.jTabContent.attr("data-forumId");
