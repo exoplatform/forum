@@ -12,7 +12,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Question")%>:</label>
-				<div class="controls"><strong><%=uicomponent.questionContent%></strong></div>
+				<div class="controls theContent"><strong><%=uicomponent.questionContent%></strong></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Detail")%>:</label>

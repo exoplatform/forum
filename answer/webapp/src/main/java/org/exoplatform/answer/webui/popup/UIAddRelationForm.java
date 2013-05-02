@@ -119,6 +119,7 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
             if (quesIdsSelect.contains(question.getId())) {
               isChecked = true;
             }
+            String questionName = question.getQuestion();
             addUIFormInput(new UICheckBoxInput(question.getId(), question.getId(), isChecked));
             builder.append("<li class=\"node\">")
                    .append("<span class=\"uiCheckbox mgl0\"><input name=\"")
@@ -127,8 +128,8 @@ public class UIAddRelationForm extends BaseUIFAQForm implements UIPopupComponent
                    .append(question.getId())
                    .append("\" type=\"checkbox\"")
                    .append((isChecked == true) ? " checked" : "")
-                   .append("/><span>")
-                   .append(question.getQuestion())
+                   .append("/><span title=\"").append(questionName).append("\">")
+                   .append(FAQUtils.getSubString(questionName, 20))
                    .append("</span></span>");
             builder.append("</li>");
           }

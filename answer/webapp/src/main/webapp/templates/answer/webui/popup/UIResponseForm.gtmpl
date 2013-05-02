@@ -9,7 +9,7 @@
 		<div class="form-horizontal resizable">
 						<div class="control-group">
 							<label class="control-label"><%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%>:</label>
-							<div class="controls"><strong><%=uicomponent.render(uicomponent.questionContent)%></strong></div>
+							<div class="controls theContent"><strong><%=uicomponent.render(uicomponent.questionContent)%></strong></div>
 						</div>
 						
 						<div class="control-group">

@@ -406,7 +406,7 @@
 											<%} %>
 											</div><!-- end languageContainer -->
 											<h6>
-												<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
+												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h6>
 
 										</div><!-- end actionBar -->
