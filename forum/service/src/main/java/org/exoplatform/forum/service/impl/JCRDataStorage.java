@@ -3548,8 +3548,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
            */
           Node forumNode = node.getParent();
           Node categoryNode = forumNode.getParent();
-          messageBuilder.setForumName(categoryNode.getProperty(EXO_NAME).getString());
-          messageBuilder.setCatName(forumNode.getProperty(EXO_NAME).getString());
+          messageBuilder.setCatName(categoryNode.getProperty(EXO_NAME).getString());
+          messageBuilder.setForumName(forumNode.getProperty(EXO_NAME).getString());
           messageBuilder.setTopicName(node.getProperty(EXO_NAME).getString());
           boolean isSend = false;
           if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
