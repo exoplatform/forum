@@ -195,6 +195,25 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
 
   }
   
+  public void testPrivateTopic() throws Exception {
+    loginUser(USER_ROOT);
+    
+    assertEquals(2, discussionSearchConnector.search(context, "Topic", Collections.<String> emptyList(), 0, 0, "relevancy", "ASC").size());
+    
+    String spCatId = Utils.CATEGORY + Utils.CATEGORY_SPACE + "spaces";
+    String forumId = Utils.FORUM + "space_test";
+    Topic topic = createdTopic(USER_ROOT);
+    topic.setTopicName("Topic 3");
+    topic.setCanView(new String[] {USER_JOHN});
+    topic.setCanPost(new String[] {USER_JOHN});
+    forumService_.saveTopic(spCatId, forumId, topic, true, false, new MessageBuilder());
+    
+    assertEquals(3, discussionSearchConnector.search(context, "Topic", Collections.<String> emptyList(), 0, 0, "relevancy", "ASC").size());
+    
+    loginUser(USER_DEMO);
+    assertEquals(2, discussionSearchConnector.search(context, "Topic", Collections.<String> emptyList(), 0, 0, "relevancy", "ASC").size());
+  }
+  
   public void testFilterOrder() throws Exception {
     
     Collection<SearchResult> results =  discussionSearchConnector.search(context, "Post", Collections.<String> emptyList(), 0, 0, "relevancy", "ASC");

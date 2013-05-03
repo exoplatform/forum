@@ -5799,6 +5799,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         RowIterator rowIterator = result.getRows();
         while (iter.hasNext()) {
           Node nodeObj = iter.nextNode();
+          if(type.equals(Utils.POST) && hasPermssionViewerPost(nodeObj, listOfUser) == false) {
+            continue;
+          }
           Row row = rowIterator.nextRow();
           listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type));
         }
@@ -5820,6 +5823,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       throw e;
     }
     return UnifiedSearchOrder.processOrder(listSearchResult, sort, order);
+  }
+  
+  private boolean hasPermssionViewerPost(Node postNode, List<String> listOfUser) throws Exception {
+    Node topicNode = postNode.getParent();
+    PropertyReader reader = new PropertyReader(topicNode);
+    List<String> listOfCanviewrs = reader.list(EXO_CAN_VIEW, new ArrayList<String>());
+    return listOfCanviewrs.isEmpty() || Utils.hasPermission(listOfCanviewrs, listOfUser);
   }
 
   private ForumSearch setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {
