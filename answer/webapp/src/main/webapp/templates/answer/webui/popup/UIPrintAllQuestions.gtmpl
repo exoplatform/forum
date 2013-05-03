@@ -295,7 +295,7 @@
 											<div class="responseItemContainerRight">
 												<div class="commentContent">
 													<a href="javascript:void(0)" class="userName"><%=FAQUtils.getFullName(comment.getCommentBy())%></a>
-											<% String commentDetail = uicomponent.answer(comment); %>
+											<% String commentDetail = uicomponent.render(comment); %>
 													<div class="theContent">$commentDetail</div>
 													<div class="date"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
 												</div>
