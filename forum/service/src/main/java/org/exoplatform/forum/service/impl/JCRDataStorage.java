@@ -61,6 +61,7 @@ import javax.jcr.query.RowIterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.ISO8601;
@@ -68,6 +69,7 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.JCRSessionManager;
@@ -7675,8 +7677,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String message = post.string(EXO_MESSAGE);
     listContent.add(message);
     SyndContent description = new SyndContentImpl();
-    description.setType("text/plain");
-    description.setValue("ST[CDATA[" + message + "END]]");
+    description.setType("text/html");
+    description.setValue(getTitleRSS(message));
     final String title = post.string(EXO_NAME);
     final Date created = post.date(EXO_CREATED_DATE);
     final String owner = post.string(EXO_OWNER);
@@ -7692,10 +7694,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String desc = reader.string(EXO_DESCRIPTION, " ");
     SyndFeed feed = new SyndFeedImpl();
     feed.setFeedType("rss_2.0");
-    feed.setTitle(reader.string(EXO_NAME));
+    feed.setTitle(getTitleRSS(reader.string(EXO_NAME))); 
     feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
     feed.setLink(link);
-    feed.setDescription("ST[CDATA[" + desc + "END]]");
+    feed.setDescription(getTitleRSS(desc)); 
     feed.setEncoding("UTF-8");
     return feed;
   }
@@ -7703,7 +7705,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private SyndEntry createNewEntry(String uri, String title, String link, List<String> listContent, SyndContent description, Date pubDate, String author) {
     SyndEntry entry = new SyndEntryImpl();
     entry.setUri(uri);
-    entry.setTitle(title);
+    entry.setTitle(getTitleRSS(title)); 
     entry.setLink(link);
     entry.setContributors(listContent);
     entry.setDescription(description);
@@ -7711,6 +7713,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     entry.setAuthor(author);
     return entry;
   }
+  
+  private String getTitleRSS(String title) {
+    title = CommonUtils.decodeSpecialCharToHTMLnumber(TransformHTML.getPlainText(title));
+    return new StringBuilder("ST[CDATA[").append(StringEscapeUtils.unescapeHtml(TransformHTML.getTitleInHTMLCode(title,null)))
+                                         .append("END]]")
+                                         .toString();
+  } 
 
   public InputStream createUserRss(String userId, String link) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
