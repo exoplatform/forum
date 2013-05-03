@@ -65,6 +65,7 @@
 	<%
 		if(uicomponent.isRenderIterator()) {
 			uicomponent.renderChild(UIForumPageIterator.class) ;
+			print("<div style=\"padding-top:10px\"><span></span></div>");
 		}
 	uicomponent.renderChild("UIViewPrivateMessageInBox");
 	%>								
