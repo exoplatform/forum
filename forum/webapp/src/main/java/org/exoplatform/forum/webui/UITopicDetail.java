@@ -39,7 +39,7 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
+import org.exoplatform.forum.common.webui.cssfile.CssClassUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -230,8 +230,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     ((UIFormTextAreaInput)getChildById(FIELD_MESSAGE_TEXTAREA)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, FIELD_MESSAGE_TEXTAREA));
   }
 
-  protected String getCSSByFileType(String fileName, String fullFileType) {
-    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
+  protected String getCSSByFileType(String fileName, String fileType) {
+    return CssClassUtils.getCSSClassByFileNameAndFileType(fileName, fileType, null);
   }
   
   public boolean isShowQuickReply() {

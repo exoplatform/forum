@@ -31,7 +31,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
+import org.exoplatform.forum.common.webui.cssfile.CssClassUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -79,8 +79,8 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     }
   }
 
-  protected String getCSSByFileType(String fileName, String fullFileType) {
-    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
+  protected String getCSSByFileType(String fileName, String fileType) {
+    return CssClassUtils.getCSSClassByFileNameAndFileType(fileName, fileType, null);
   }
 
   protected String getQuestionRelationById(String questionId) {

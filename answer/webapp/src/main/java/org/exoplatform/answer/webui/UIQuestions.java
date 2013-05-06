@@ -58,7 +58,7 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
+import org.exoplatform.forum.common.webui.cssfile.CssClassUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -239,8 +239,8 @@ public class UIQuestions extends UIContainer {
     return false;
   }
 
-  protected String getCSSByFileType(String fileName, String fullFileType) {
-    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
+  protected String getCSSByFileType(String fileName, String fileType) {
+    return CssClassUtils.getCSSClassByFileNameAndFileType(fileName, fileType, null);
   }
 
   public String getRSSLink() {
