@@ -1453,9 +1453,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     //
     if(isAdminRole(userName)) return true;
     
-    //
-    if( (canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId)) && 
-        (categoryPrivates.isEmpty() || categoryPrivates.contains(categoryId)) ) {
+    //has right to access categories
+    if (categoryPrivates.isEmpty() == false && categoryPrivates.contains(categoryId) == false) {
+      return false;
+    }
+    
+    //has right to create topic
+    if(canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId)) { 
       return true;
     }
     
