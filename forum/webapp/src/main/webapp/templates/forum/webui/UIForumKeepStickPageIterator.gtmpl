@@ -58,15 +58,15 @@
     }   
   }
   
-  for( i = 1 ; i <= 9; i++) {     
+  for( i = 1 ; i <= totalPage; i++) {     
       if (i == 1 && min > 1) render(1, isMod);
       else if (i == min) {
          for (j = min; j <= max; j++) {
           render(j, isMod);            
          }
       } else if (i == dot1 || i == dot2) {
-        print """ <li class="disabled"><a href="javascript:void(0)">...</a></li> """;     
-      } else if (i == 9 && max < totalPage) render(totalPage, isMod);
+        print("<li class=\"disabled\"><a href=\"javascript:void(0)\">...</a></li>"); 
+      } else if (i == totalPage && max < totalPage) render(totalPage, isMod);
   }%>   
         
   <% if(currentPage < totalPage) { %>
