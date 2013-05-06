@@ -197,10 +197,10 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       }
     }
 
-	addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT,
-			this.getLabel("change-title") + " " + contenQuestion.replaceAll("<br>", " ")).addValidator(MandatoryValidator.class));
+    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, contenQuestion.replaceAll("<br\\s*\\/?>", " "))
+	  .addValidator(MandatoryValidator.class));
     UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, "");
-    filedMessage.setValue(stringBuffer.toString());
+    filedMessage.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(stringBuffer.toString()));
     filedMessage.setFCKConfig(WebUIUtils.getFCKConfig());
     filedMessage.setToolBarName("Basic");
     filedMessage.addValidator(MandatoryValidator.class);
@@ -351,7 +351,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
           }
           strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", CommonUtils.getDomainURL() + FAQUtils.getQuestionURI(qsId, false)));
           body.setValue(strBuilder.toString());
-          subject.setValue(sendMailForm.getLabel("change-title") + contenQuestion);
+          subject.setValue(contenQuestion.replaceAll("<br\\s*\\/?>", " "));
           break;
         }
       }

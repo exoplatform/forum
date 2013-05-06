@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
@@ -66,6 +67,8 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.impl.model.PostListAccess;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -359,35 +362,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyForum(Forum forum, int type) throws Exception {
-    List<Topic> oldTopics = getTopics(forum.getCategoryId(), forum.getId());
-    List<Topic> editedTopics = new ArrayList<Topic>();
-    for (Topic topic : oldTopics) {
-      switch (type) {
-        case Utils.CLOSE: {
-          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
-          editedTopic.setIsClosed(forum.getIsClosed());
-          topic.setIsClosed(!topic.getIsActiveByForum());
-          topic.setEditedIsClosed(editedTopic.getIsClosed());
-          editedTopics.add(topic);
-          break;
-        }
-        case Utils.LOCK: {
-          Topic editedTopic = getTopic(topic.getCategoryId(), topic.getForumId(), topic.getId(), "");
-          editedTopic.setIsLock(forum.getIsLock());
-          topic.setEditedIsLock(editedTopic.getIsLock());
-          editedTopics.add(topic);
-          break;
-        }
-      }
-    }
     storage.modifyForum(forum, type);
+    List<Topic> topics = getTopics(forum.getCategoryId(), forum.getId());
     for (ForumEventLifeCycle f : listeners_) {
-      for(Topic topic : editedTopics) {
-        try {
-          f.updateTopic(topic);
-        } catch (Exception e) {
-          log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
-        }
+      try {
+        f.updateTopics(topics, forum.getIsLock());
+      } catch (Exception e) {
+        log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
       }
     }
   }
@@ -597,6 +578,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
+  public void writeReads() {
+    storage.writeReads();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public Topic getLastPostOfForum(String topicPath) throws Exception {
     return storage.getTopicSummary(topicPath, true);
   }
@@ -710,6 +698,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
     return storage.getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public ListAccess<Post> getPosts(PostFilter filter) throws Exception {
+    return new PostListAccess(PostListAccess.Type.POSTS, storage, filter);
   }
 
   /**
@@ -1343,6 +1338,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
+  public void writeViews() {
+    storage.writeViews();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception {
     return storage.exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
   }
@@ -1704,4 +1706,5 @@ public class ForumServiceImpl implements ForumService, Startable {
   public String getCommentIdForOwnerPath(String ownerPath) {
     return storage.getActivityIdForOwner(ownerPath);
   }
+
 }

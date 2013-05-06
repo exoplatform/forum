@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -60,6 +61,7 @@ import javax.jcr.query.RowIterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.ISO8601;
@@ -67,6 +69,7 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.JCRSessionManager;
@@ -118,6 +121,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
@@ -179,6 +183,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private List<InitializeForumPlugin>  defaultPlugins       = new ArrayList<InitializeForumPlugin>();
 
   private List<ForumInitialDataPlugin> dataPlugins          = new ArrayList<ForumInitialDataPlugin>();
+
+  private Map<String, Integer>         updatingView         = new ConcurrentHashMap<String, Integer>();
+
+  private Map<String, List<String>>    updatingRead         = new ConcurrentHashMap<String, List<String>>();
 
   private Map<String, EventListener>   listeners            = new HashMap<String, EventListener>();
 
@@ -692,8 +700,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_FORUM_SORT_BY, SortField.ORDER.name()),
-                              reader.string(EXO_FORUM_SORT_BY_TYPE, Direction.ASC.name()));
+      return new SortSettings(reader.string(EXO_FORUM_SORT_BY, SortField.ORDER.toString()),
+                              reader.string(EXO_FORUM_SORT_BY_TYPE, Direction.ASC.toString()));
     } catch (Exception e) {
       Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
       forumAdminNode.getSession().save();
@@ -706,8 +714,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY, SortField.LASTPOST.name()), 
-                              reader.string(EXO_TOPIC_SORT_BY_TYPE, Direction.DESC.name()));
+      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY, SortField.LASTPOST.toString()), 
+                              reader.string(EXO_TOPIC_SORT_BY_TYPE, Direction.DESC.toString()));
     } catch (Exception e) {
       Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
       forumAdminNode.getSession().save();
@@ -2072,7 +2080,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }
     } else {
-      stringBuffer.append(", @").append(strOrderBy);
+      stringBuffer.append(", @exo:").append(strOrderBy);
       if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
         stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }
@@ -2104,24 +2112,42 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return topics;
   }
 
-  public void setViewCountTopic(String path, String userRead){
+  public void setViewCountTopic(String path, String userRead) {
+    if (userRead != null && userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
+      if (updatingView.containsKey(path)) {
+        int value = updatingView.get((path));
+        updatingView.put(path, value + 1);
+      } else {
+        updatingView.put(path, 1);
+      }
+    }
+  }
+
+  public void writeViews() {
+    //
+    Map<String, Integer> map = updatingView;
+    updatingView = new ConcurrentHashMap<String, Integer>();
+
+    //
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node topicNode = getCategoryHome(sProvider).getNode(path);
-      if (userRead != null && userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
-        long newViewCount = new PropertyReader(topicNode).l(EXO_VIEW_COUNT) + 1;
+
+    for (Map.Entry<String, Integer> entry : map.entrySet()) {
+      try {
+        Node topicNode = getCategoryHome(sProvider).getNode(entry.getKey());
+        long newViewCount = new PropertyReader(topicNode).l(EXO_VIEW_COUNT) + entry.getValue();
         topicNode.setProperty(EXO_VIEW_COUNT, newViewCount);
         if (topicNode.isNew()) {
           topicNode.getSession().save();
         } else {
           topicNode.save();
         }
-      }
-    } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug(String.format("Failed to set view number for topic with path %s", path), e);
+      } catch (Exception e) {
+        if (log.isDebugEnabled()) {
+          log.debug(String.format("Failed to set view number for topic with path %s", entry.getKey()), e);
+        }
       }
     }
+
   }
 
   public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
@@ -3007,6 +3033,61 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  private String makePostsQuery(PostFilter filter) throws Exception {
+    String topicPath = filter.getTopicPath();
+    if(Utils.isEmpty(topicPath)) {
+    topicPath = new StringBuffer("/"+dataLocator.getForumCategoriesLocation())
+    .append("/").append(filter.getCategoryId()).append("/")
+    .append(filter.getForumId()).append("/").append(filter.getTopicId()).toString();
+    }
+
+    StringBuilder strBuilder = new StringBuilder(JCR_ROOT)
+    .append(topicPath).append("//element(*,").append(EXO_POST).append(")")
+    .append(Utils.getPathQuery(filter.getIsApproved(), filter.getIsHidden(), filter.getIsWaiting(), filter.getUserLogin()))
+    .append(" order by @exo:createdDate ascending");
+   
+    return strBuilder.toString();
+  }
+  
+  @Override
+  public List<Post> getPosts(PostFilter filter, int offset, int limit) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
+      QueryImpl query = (QueryImpl) qm.createQuery(makePostsQuery(filter), Query.XPATH);
+      query.setOffset(offset);
+      query.setLimit(limit);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      Node currentNode = null;
+      List<Post> posts = new ArrayList<Post>((int)iter.getSize());
+      while (iter.hasNext()) {
+        currentNode = iter.nextNode();
+        posts.add(getPost(currentNode));
+      }
+      return posts;
+     } catch(Exception e) {
+      logDebug("Failed to get posts by filter of topic " + filter.getTopicId(), e);
+      return new ArrayList<Post>();
+    }
+    
+  }
+
+  public int getPostsCount(PostFilter filter) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      //
+      QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(makePostsQuery(filter).toString(), Query.XPATH);
+      QueryResult result = query.execute();
+      
+      return (int)result.getNodes().getSize();
+    } catch(Exception e) {
+      return 0;
+    }
+    
+  }
+  
   public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
@@ -3469,8 +3550,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
            */
           Node forumNode = node.getParent();
           Node categoryNode = forumNode.getParent();
-          messageBuilder.setForumName(categoryNode.getProperty(EXO_NAME).getString());
-          messageBuilder.setCatName(forumNode.getProperty(EXO_NAME).getString());
+          messageBuilder.setCatName(categoryNode.getProperty(EXO_NAME).getString());
+          messageBuilder.setForumName(forumNode.getProperty(EXO_NAME).getString());
           messageBuilder.setTopicName(node.getProperty(EXO_NAME).getString());
           boolean isSend = false;
           if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
@@ -5720,6 +5801,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         RowIterator rowIterator = result.getRows();
         while (iter.hasNext()) {
           Node nodeObj = iter.nextNode();
+          if(type.equals(Utils.POST) && hasPermssionViewerPost(nodeObj, listOfUser) == false) {
+            continue;
+          }
           Row row = rowIterator.nextRow();
           listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type));
         }
@@ -5741,6 +5825,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       throw e;
     }
     return UnifiedSearchOrder.processOrder(listSearchResult, sort, order);
+  }
+  
+  private boolean hasPermssionViewerPost(Node postNode, List<String> listOfUser) throws Exception {
+    Node topicNode = postNode.getParent();
+    PropertyReader reader = new PropertyReader(topicNode);
+    List<String> listOfCanviewrs = reader.list(EXO_CAN_VIEW, new ArrayList<String>());
+    return listOfCanviewrs.isEmpty() || Utils.hasPermission(listOfCanviewrs, listOfUser);
   }
 
   private ForumSearch setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {
@@ -6953,37 +7044,55 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public void updateTopicAccess(String userId, String topicId){
+  public void updateTopicAccess(String userId, String topicId) {
+    if (updatingRead.containsKey(userId)) {
+      updatingRead.get(userId).add(topicId);
+    } else {
+      List<String> value = new ArrayList<String>();
+      value.add(topicId);
+      updatingRead.put(userId, value);
+    }
+  }
+
+  public void writeReads() {
+    //
+    Map<String, List<String>> map = updatingRead;
+    updatingRead = new ConcurrentHashMap<String, List<String>>();
+    //
     SessionProvider sysSession = CommonUtils.createSystemProvider();
-    try {
-      Node profileHome = getUserProfileHome(sysSession);
-      if (!profileHome.hasNode(userId)) {
-        return;
-      }
-      Node profile = profileHome.getNode(userId);
-      List<String> values = new ArrayList<String>();
-      if (profile.hasProperty(EXO_READ_TOPIC)) {
-        values = Utils.valuesToList(profile.getProperty(EXO_READ_TOPIC).getValues());
-      }
-      int i = 0;
-      boolean isUpdated = false;
-      for (String vl : values) {
-        if (vl.indexOf(topicId) == 0) {
-          values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
-          isUpdated = true;
-          break;
+
+    for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+      try {
+        if (!getUserProfileHome(sysSession).hasNode(entry.getKey())) {
+          return;
         }
-        i++;
+        //
+        Node profile = getUserProfileHome(sysSession).getNode(entry.getKey());
+        List<String> values = new PropertyReader(profile).list(EXO_READ_TOPIC, Collections.EMPTY_LIST);
+        //
+        for (String topicId : entry.getValue()) {
+          //
+          int i = 0;
+          boolean isUpdated = false;
+          for (String vl : values) {
+            if (vl.indexOf(topicId) == 0) {
+              values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
+              isUpdated = true;
+              break;
+            }
+            i++;
+          }
+          //
+          if (!isUpdated) {
+            values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
+          }
+          
+          profile.setProperty(EXO_READ_TOPIC, values.toArray(new String[values.size()]));
+          profile.save();
+        }
+      } catch (Exception e) {
+        logDebug(String.format("Failed to update user %s acess for topic %s", entry.getKey(), "bar"), e);
       }
-      if (!isUpdated) {
-        values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
-      }
-      if (values.size() == 2 && Utils.isEmpty(values.get(0)))
-        values.remove(0);
-      profile.setProperty(EXO_READ_TOPIC, values.toArray(new String[values.size()]));
-      profile.save();
-    } catch (Exception e) {
-      logDebug(String.format("Failed to update user %s acess for topic %s", userId, topicId), e);
     }
   }
 
@@ -7568,8 +7677,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String message = post.string(EXO_MESSAGE);
     listContent.add(message);
     SyndContent description = new SyndContentImpl();
-    description.setType("text/plain");
-    description.setValue("ST[CDATA[" + message + "END]]");
+    description.setType("text/html");
+    description.setValue(getTitleRSS(message));
     final String title = post.string(EXO_NAME);
     final Date created = post.date(EXO_CREATED_DATE);
     final String owner = post.string(EXO_OWNER);
@@ -7585,10 +7694,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String desc = reader.string(EXO_DESCRIPTION, " ");
     SyndFeed feed = new SyndFeedImpl();
     feed.setFeedType("rss_2.0");
-    feed.setTitle(reader.string(EXO_NAME));
+    feed.setTitle(getTitleRSS(reader.string(EXO_NAME))); 
     feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
     feed.setLink(link);
-    feed.setDescription("ST[CDATA[" + desc + "END]]");
+    feed.setDescription(getTitleRSS(desc)); 
     feed.setEncoding("UTF-8");
     return feed;
   }
@@ -7596,7 +7705,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private SyndEntry createNewEntry(String uri, String title, String link, List<String> listContent, SyndContent description, Date pubDate, String author) {
     SyndEntry entry = new SyndEntryImpl();
     entry.setUri(uri);
-    entry.setTitle(title);
+    entry.setTitle(getTitleRSS(title)); 
     entry.setLink(link);
     entry.setContributors(listContent);
     entry.setDescription(description);
@@ -7604,6 +7713,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     entry.setAuthor(author);
     return entry;
   }
+  
+  private String getTitleRSS(String title) {
+    title = CommonUtils.decodeSpecialCharToHTMLnumber(TransformHTML.getPlainText(title));
+    return new StringBuilder("ST[CDATA[").append(StringEscapeUtils.unescapeHtml(TransformHTML.getTitleInHTMLCode(title,null)))
+                                         .append("END]]")
+                                         .toString();
+  } 
 
   public InputStream createUserRss(String userId, String link) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();

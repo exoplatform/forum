@@ -218,15 +218,17 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       String message = CommonUtils.decodeSpecialCharToHTMLnumber(post.getMessage());
       if (isQuote) {// quote
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
-        String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
+        
+        String value = "[QUOTE=" + getForumService().getScreenName(post.getOwner()) + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
       } else if (isPP) {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       } else {// edit
+        this.attachments_.clear();
         editReason.setRendered(true);
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(post.getName()));
         if (post.getAttachments() != null && post.getAttachments().size() > 0) {
-          this.attachments_ = post.getAttachments();
+          this.attachments_.addAll(post.getAttachments());
           this.refreshUploadFileList();
         }
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);

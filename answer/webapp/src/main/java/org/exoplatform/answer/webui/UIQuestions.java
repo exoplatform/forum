@@ -58,6 +58,7 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -188,7 +189,7 @@ public class UIQuestions extends UIContainer {
   public UIAnswersPageIterator          pageIterator          = null;
 
   public long                           pageSelect            = 0;
-  
+
   public UIQuestions() throws Exception {
     backPath_ = null;
     this.categoryId_ = Utils.CATEGORY_HOME;
@@ -236,6 +237,10 @@ public class UIQuestions extends UIContainer {
       return true;
     }
     return false;
+  }
+
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
   }
 
   public String getRSSLink() {
@@ -1021,8 +1026,8 @@ public class UIQuestions extends UIContainer {
           answer.setUsersVoteAnswer(null);
           answer.setActivateAnswers(true);
           answer.setApprovedAnswers(true);
-          questions.getFAQService().saveAnswer(questions.viewingQuestionId_, answer, questions.language_);
           questions.getFAQService().deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, questions.language_, true);
+          questions.getFAQService().saveAnswer(questions.viewingQuestionId_, answer, questions.language_);
         } else {
           questions.showMessageDeletedQuestion(event.getRequestContext());
           return;

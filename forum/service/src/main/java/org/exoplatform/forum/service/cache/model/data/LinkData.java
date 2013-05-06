@@ -1,11 +1,8 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class LinkData implements CachedData<ForumLinkData> {
 
   private final String id;

@@ -3,15 +3,14 @@ package org.exoplatform.forum.service.cache.model.data;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.cache.model.CachedData;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public class PostData  implements CachedData<Post> {
-  
+  private static final long serialVersionUID = 1L;
+  public final static PostData NULL = new PostData(new Post());
+
   private final String id;
   private final String path;
   private final String owner;
@@ -59,6 +58,10 @@ public class PostData  implements CachedData<Post> {
   }
 
   public Post build() {
+
+    if (this == NULL) {
+      return null;
+    }
 
     Post post = new Post();
 

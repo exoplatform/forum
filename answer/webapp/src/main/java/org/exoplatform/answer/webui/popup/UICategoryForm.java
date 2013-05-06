@@ -208,6 +208,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent {
       boolean moderatequestion = uiCategory.getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked();
       boolean moderateAnswer = uiCategory.getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked();
       boolean viewAuthorInfor = uiCategory.getUICheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
+      if (CommonUtils.isEmpty(moderator)) {
+        moderator = FAQUtils.getCurrentUser();
+      }
       String[] users = FAQUtils.splitForFAQ(moderator);
 
       Category cat = uiCategory.currentCategory_;

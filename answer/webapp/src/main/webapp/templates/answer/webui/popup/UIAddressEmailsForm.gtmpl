@@ -4,34 +4,41 @@
 	import org.exoplatform.answer.webui.FAQUtils;
 	uiform.begin() 
 	_ctx.getRequestContext().getJavascriptManager().require("SHARED/ForumCheckBoxManager", "checkBoxManager").addScripts("checkBoxManager.init('"+uiform.id+"') ;");
+	uicomponent.initPlaceholder();
 %>
 	<div class="uiInsertAddress">
-		<div class="form-horizontal resizable">
+		<div class="form-inline resizable">
 		<!-- ======================================= search user ======================================================= -->
 			<div class="searchContent">
 				<div class="control-group">
-					<label class="control-label" for="<%=uicomponent.USER_SEARCH%>"><%=_ctx.appRes("UIAddressEmailsForm.label.user-search") %>: </label>
-					<div class="controls"><% uiform.renderField(uiform.USER_SEARCH) %>&nbsp;&nbsp;<i class="uiIconSearch" onclick="<%=uicomponent.event("Search")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"></i></div>
-				</div>
-				
-				<div class="control-group">
+					<% uiform.renderField(uiform.USER_SEARCH) %>&nbsp;
+					<a class="actionIcon" onclick="<%=uicomponent.event("Search")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>">
+						<i class="uiIconSearch" ></i>
+					</a>
+					&nbsp;&nbsp;&nbsp;
 					<label class="control-label" for="<%=uicomponent.USER_GROUP%>"><%=_ctx.appRes("UIAddressEmailsForm.label.addresses-from-group") %>: </label>
-					<div class="controls"><% uiform.renderField(uiform.USER_GROUP) %></div>
+					<% uiform.renderField(uiform.USER_GROUP) %>		
+				
 				</div>
 			</div>
 		<!-- ======================================= view all users ======================================================= -->
-			<div class="AddressContainer">
-				<div class="ListAddress">
+			<div class="addressContainer">
+				<div class="listAddress">
 					<table id="UIListUsers" class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 						<thead>
 							<tr>
-							<th class="CheckBoxLabel"><input type="checkbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
+							<th class="center">
+							<span class="uiCheckbox" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>">
+							<input type="checkbox"  class="checkbox" value="4" />
+							<span></span>
+							</span>
+							</th>
 							<th>
-								<div class="BlueDownArrowIcon">
+								<div class="blueDownArrowIcon">
 								<div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.name") %></div>
 								</div>
 							</th>
-							<th class="EmailLabel">
+							<th class="emailLabel">
 								<div class="BlueDownArrowIcon">
 								<div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.email") %></div>
 								</div>
@@ -44,7 +51,7 @@
 								checkboxField = uicomponent.getChildById(user.getUserName());
 							%>
 							<tr>
-								<td>
+								<td class="center">
 								<% if (checkboxField != null) { uicomponent.renderField(checkboxField); } %>
 								</td>
 								<td class="text"><%=FAQUtils.getUserFullName(user)%></td>

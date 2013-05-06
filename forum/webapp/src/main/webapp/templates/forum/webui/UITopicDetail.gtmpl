@@ -137,25 +137,25 @@
 
 	</div>
 
-<!-- Start PostsInThreadContainer -->
   <div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 
+<!-- Start PostsInThreadContainer -->
   <div class="uiBox containerTopicDetail">
     <div class="title clearfix">
 		<ul class="pull-right">
 		
 			<li class="defaultStyle forumSeparatorLine">
 			<% if(uicomponent.isWatching(topic.getPath())){ %>
-				<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+				<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 			<% } else { %>
-				<a class="actionIcon" href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+				<a class="actionIcon" href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 			<% } %>
 			</li>
 			
 			
 			<%if(uicomponent.userProfile.getUserRole() < 3){%>
 			<li class="defaultStyle forumSeparatorLine">
-				<a class="actionIcon" href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+				<a class="actionIcon" href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 			</li>
 			
 			
@@ -166,10 +166,8 @@
 		
 			<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
 			<li class="defaultStyle forumSeparatorLine">
-				<div class="dropdown uiDropdown uiActionWithLabel">
-					<div data-toggle="dropdown">
-						<a id="ButtonSearch" href="javaScript:void(0)"><i class="uiIconTag uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
-					</div>
+				<div class="dropdown actionIcon uiActionWithLabel">
+					<div data-toggle="dropdown"><i class="uiIconTag uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.Tag");%></div>
 				  <% /*Begin Popup Menu*/ %>
 					<ul class="dropdown-menu">
 					  <li>
@@ -198,7 +196,7 @@
 				</div>
 			</li>
 			<li class="defaultStyle forumSeparatorLine"  onclick="<%=uicomponent.event("RatingTopic")%>">
-				<a class="actionIcon" href="javaScript:void(0)"><i class="uiIconForumStar uiIconForumLightGray"></i><%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
+				<a class="actionIcon" href="javaScript:void(0)"><i class="uiIconForumStar uiIconForumLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
 			</li>
 			<%}%>
 			
@@ -327,9 +325,9 @@
 					<ul class="dropdown-menu">
 						<li>
 							<div class="searchAdvance">
-								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
+								<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
 								<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-								<br/>
+								</p>
 								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 							</div>
 						</li>
@@ -395,427 +393,427 @@
 			<% } %>
 		<% } %> 
 		</ul>
-	</div>
-    
-<!-- Start ContentContainer -->
-    <%
-    if(isClosed && !canEdit)  isShowPost = false ;
-    List checkeds = null;
-    if(canEdit) checkeds = uicomponent.getListChecked(uicomponent.pageSelect) ;
-    if(checkeds == null) checkeds = new ArrayList<String>();
-    
-    if(posts != null && posts.size() > 0 && isShowPost) {
-      int checked = uiform.pageSelect - 1;
-      String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
-      String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-      String shortDateFormat = userProfile.getShortDateFormat() ;
-      for(post in posts) {
-        String postId = post.getId();
-        String owner = post.getOwner() ;
-        CommonContact contact = uiform.getPersonalContact(owner) ;
-        String location = "" ;
-        boolean isCity = false;
-        if(contact != null) {
-          if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
-          if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
-            if(isCity)location = location + ", ";
-            location = location + contact.getCountry() ;
-          }
-        }
-        UserProfile userInfo = uicomponent.getUserInfo(owner) ;
-        screenName = userInfo.getScreenName() ;
-        String viewScreenName = uicomponent.getShortScreenName(screenName);
-        String namePost = post.getName() ;
-        String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
-        String message = uicomponent.renderPost(post) ;
-        String editBy = post.getModifiedBy() ;
-		
-        List attachments = post.getAttachments() ;
-        String idMessage = "Id" + postId.substring(15);
-        String joinDate = "";
-        Date joinDate_ = userInfo.getJoinedDate();
-        if(joinDate_ != null) {
-          joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_, shortDateFormat, setTime) ;
-        }
-        String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
-        boolean isAnd = false ;
-        if(post.getUserPrivate().length > 1){
-          alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
-          isAnd = true;
-        }
-        if(post.getIsHidden()) {
-          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
-          alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
-          isAnd = true;
-        }
-        if(post.getIsWaiting()) {
-          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
-          alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
-          isAnd = true;
-        }
-        if(isModeratePost) {
-          if(!post.getIsApproved()) {
-            if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
-            else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
-            isAnd = true;
-          }
-        }
-        if(isAnd) alert = alert + "!</span>) "
-        else alert = " " ;
-    %>
-    
-		<div class="contentTopicDetail clearfix" id="$postId">
-  <!-- Start MemberContainer -->
-			<div class="memberContainer pull-left">
-			  
-			<%  String userSmile = "uiIconForumColorOffline";
-				String titleSmile = "Offline" ;
-				if(uicomponent.isOnline(owner)) {
-				   userSmile = "uiIconForumColorOnline";
-				   titleSmile = "Online";
-				}
-			%>
-				<div class="dropdown uiUserInfo">
-					<a href="javascript:void(0)" class="textTitleProfile">
-						<i class="$userSmile"></i>$viewScreenName
-					</a>
-					<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-						<%
-						  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
-						  for(viewAction in menuViewInfos) {
-								if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-								String linkView = uicomponent.event(viewAction, owner) ;
-								String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-								if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
-						%>
-							<li onclick="$linkView">
-								<a href="javaScript:void(0)">$itemLabelView</a>
-							</li>
-						<%
-						  }
-						%>
-					</ul>
-				
-				</div>
-				<div class="rank"><%=userInfo.getUserTitle();%></div>
-				<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
-				  if(isDisplayAvatar) {
-				%>
-				<div class="dropdown uiUserInfo avatarXLarge">
-					<a href="javascript:void(0)">
-						<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-					</a>
-					
-					<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-						<%
-						  for(viewAction in menuViewInfos) {
-							if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-							String linkView = uicomponent.event(viewAction, owner) ;
-							String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-							if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
-						%>
-						  <li onclick="$linkView">
-							  <a href="javaScript:void(0)">$itemLabelView</a>
-						  </li>
-						<%
-						  }
-						%>
-					</ul>
-				</div>
-				<% } %>
-				
-				<div class="infoMember">
-					<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
-				  <% long totalPost = userInfo.getTotalPost();
-					if(totalPost > 0) {
-					   Date lastPostOfUser = userInfo.getLastPostDate() ;
-					   String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
-				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
-					<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
-				  <% } else {%>
-					<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
-				  <% } 
-				   if(!ForumUtils.isEmpty(location)) {
-				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
-				  <%} 
-					Date lastLogin = userInfo.getLastLoginDate();
-					String lastLoginUser = "" ;
-					if(lastLogin != null){
-					  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
-					}
-				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
-				</div>
-			</div>
-  <!-- End MemberContainer -->
-  <!-- Start PostViewContainer -->
-			<div class="postViewContainer">
-			  
-			<% if (idLastPost.equals(postId)) { %>
-			  <div class="postViewHeader clearfix">
-			<% } else { %>              
-				<div class="postViewHeader clearfix">
-			<% } %>
-			  <% if(canEdit) {%>
-				<div class="postViewTitle pull-left">$namePost $alert</div>
-				<div class="pull-right">
-				
-					<span class="postTime pull-left"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
-					
-					<%
-				   if(checked > 0){
-				%>
-				  <%
-					 String isChecked = "";
-					 if(checkeds.contains(postId)){
-					   isChecked = "checked=\"checked\"";
-					 } 
-				  %>
-					<span class="uiCheckbox pull-right">
-						<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" name="$postId" $isChecked/>
-						<span></span>
-					</span>
-				  <%} %>
-					
-				<%
-				   if(isShowIP) {
-					 String ip = post.getRemoteAddr();
-					 if(ip != null && ip.length() > 0) {
-					   String link2 = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanIPThisForum") + "')){" + uicomponent.event("BanIPThisForum", ip).replaceFirst("javascript:", "") + ";}";
-					   String title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BanIP"),ip);
-					   if(uicomponent.isIPBaned(ip)){
-						 title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BannedIP"),ip);
-						 link2 ="javaScript:void(0);";
-					   }
-				%>
-					<div class="pull-right dropdown">
-						
-						<i  data-toggle="dropdown" class="uiIconForumBanIp uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="IP: $ip"></i>
-				
-					<% /*Begin Popup Menu*/ %>
-					  
-						<ul class="dropdown-menu">
-							<li rel="tooltip" data-placement="bottom" title="$title1" onclick="$link2">   
-								<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
-							</li>
-						  <% 
-							if(userProfile.getUserRole() == 0) {
-							String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
-						  %>
-							<li onclick="$link">  
-								<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
-							</li>
-						<% } %>
-						</ul>
-					<% /*End Popup Menu*/ %>
-					</div>
-				<%   }
-				   }
-				%>
-				
-				
-				</div>  
-				  
-				<% } else { %>
-				<div class="postViewTitle pull-left">$namePost $alert</div>
-				<div class="pull-right">
-					<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
-				</div>
-				<% } %>
-			  </div>
-			  
-			<div class="postContentContainer">
-			<% 
-			boolean hasAttachment = false ;
-			if(attachments != null && attachments.size() > 0) hasAttachment = true;
-			if(isDisplayAvatar && !hasAttachment) { 
-			%>  
-			  <div class="postContent">
-			<% } else { %>
-			  <div class="postContentNote">
-			<% } %>
-				<div id="$idMessage" class="containerQuote">$message</div>
-			  </div>
-			
-			<!--- Start Attachment   -->
-			  
-			 <% if(hasAttachment) {%>
-			<div class="attachmentContainer">
-				<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
-				
-				<!-- Start Attach Have Images -->
-				
-				<div class="attachmentContentImage clearfix">
-				<% for(attachment in attachments) {
-					 String urlFile = uicomponent.getFileSource(attachment) ;
-					 String titleFile = attachment.getName();
-					 String fileName = ForumUtils.getSubString(titleFile, 30);
-					 long sizeNumber = attachment.getSize() ;
-					 String size = ForumUtils.getSizeFile(sizeNumber) ;
-					 String typeFile = attachment.mimeType ;
-					 String pathAtt = urlFile.replaceAll("&","(omu)");
-				%>
-					
-					<% if(typeFile.indexOf("image") >= 0 && titleFile.indexOf(".psd") < 0) {
-					   String attLink = uicomponent.getImageUrl(attachment.getPath());
-					%>
-					<div class="imageAttachmentBox pull-left">
-						<a class="imgAttach"><img rel="tooltip" data-placement="bottom" id="imgView${fileName}" src="$attLink" alt="$titleFile"/></a> 
-						<div class="actionAttachImg">
-							<p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
-							<p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
-						</div>
-					</div>  
-				  <% } %>
-					
-				<% } %>
-				</div>
-				
-				<!-- End Attach Have Images -->
-				
-				<!-- Start Attach File -->
-				
-				<div class="attachmentContent clearfix">
-				<% for(attachment in attachments) {
-					 String urlFile = uicomponent.getFileSource(attachment) ;
-					 String titleFile = attachment.getName();
-					 String fileName = ForumUtils.getSubString(titleFile, 30);
-					 long sizeNumber = attachment.getSize() ;
-					 String size = ForumUtils.getSizeFile(sizeNumber) ;
-					 String typeFile = attachment.getMimeType() ;
-				%>
-					
-					<% if(typeFile.indexOf("image") < 0) {
-					   String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(typeFile.substring((typeFile.indexOf("/")+1)));
-					%>
-					<div class="otherAttachmentBox">
-						<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
-						<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
-					</div>  
-				  <% } %>
-					
-				<% } %>
-				
-				</div>
-				
-				<!-- End Attach File -->
-				
-			</div>
-			<% } %>
-			
-			
-			<!--- End Attachment   -->
-			  
-			  <%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-				  post.setMessage(userInfo.getSignature());
-				  post.setId(uicomponent.SIGNATURE);
-				  String signature = uicomponent.renderPost(post);
-			  %>
-				<div class="signature"><span></span><br/>$signature</div>
-			  <%} %>
-			</div>
-				<div class="footPost clearfix">
-				  <%  
-					  if(!ForumUtils.isEmpty(editBy)) {
-					    UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
-					    String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
-			        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
-				  %>
-					<div class="txtLastEdit">
-						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> 
-							<div class="dropdown uiUserInfo">
-								<a href="javascript:void(0);" class="txtEditBy">$editByScreeName</a> 
-							  
-								<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-									<%
-									for(viewAction in menuViewInfos) {
-										if((userProfile.getUserRole() >= 3 || userEditByInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-										String linkView = uicomponent.event(viewAction, editBy) ;
-										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + editByScreeName ;
-									%>
-										<li onclick="$linkView">
-											<a href="javaScript:void(0)">$itemLabelView</a>
-										</li>
-									<%
-									}
-									%>
-								</ul>
-							</div>
-						  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
-						  <%
-							String reason = post.getEditReason() ;
-							if(!ForumUtils.isEmpty(reason)) { 
-							  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
-						  %>
-						  <br/>
-						  $reason
-						  <% } %>
-					</div>
-				<% } %>
-					<div class="btnDetailTopic">
-					  <%
-					  if(isShowMenu) {
-						String[] actions = ["Quote","PrivatePost","Delete","Edit"] ; 
-						boolean isShowAction = true, isShowPri = true ;
-						for(action in actions) {
-						  isShowAction = true;
-						  isShowPri = true ;
-						  String title = _ctx.appRes("UITopicDetail.title." + action);
-						  String label = _ctx.appRes("UITopicDetail.action." + action);
-						  if(!(userLogin.equals(owner))) {
-							if(!canEdit){
-							  if(action.equals("Edit")||action.equals("Delete")){
-								isShowAction = false;
-							  }
-							}
-						  }
-						  if(isShowAction && checked == 0){ 
-							if(action.equals("Edit")||action.equals("Delete")){
-							  isShowAction = false;
-							}
-						  }
-						  if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
-							isShowAction = false;
-						  }
-						  if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
-							isShowAction = false;
-							isShowPri = false;
-						  }
-						  String actionLink = uicomponent.event(action,uiformId,postId);
-						  if(isShowAction) {
-					  %>
-						
-							<a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
-						
-						<%}
-						} 
-					  checked = 1; 
-					  } %>
-					</div>
-				</div>
-				
-			</div>
-<!-- End PostViewContainer -->
-		
-		
 		</div>
+		<div style="padding: 10px; position:relative;">
+<!-- Start ContentContainer -->
+			<div class="divTable">
+    <%
+	    if(isClosed && !canEdit)  isShowPost = false ;
+	    List checkeds = null;
+	    if(canEdit) checkeds = uicomponent.getListChecked(uicomponent.pageSelect) ;
+	    if(checkeds == null) checkeds = new ArrayList<String>();
+	    
+	    if(posts != null && posts.size() > 0 && isShowPost) {
+	      int checked = uiform.pageSelect - 1;
+	      String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
+	      String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	      String shortDateFormat = userProfile.getShortDateFormat() ;
+	      for(post in posts) {
+	        String postId = post.getId();
+	        String owner = post.getOwner() ;
+	        CommonContact contact = uiform.getPersonalContact(owner) ;
+	        String location = "" ;
+	        boolean isCity = false;
+	        if(contact != null) {
+	          if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
+	          if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
+	            if(isCity)location = location + ", ";
+	            location = location + contact.getCountry() ;
+	          }
+	        }
+	        UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+	        screenName = userInfo.getScreenName() ;
+	        String viewScreenName = uicomponent.getShortScreenName(screenName);
+	        String namePost = post.getName() ;
+	        String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
+	        String message = uicomponent.renderPost(post) ;
+	        String editBy = post.getModifiedBy() ;
 			
-    <% }//end for
-      ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
-     } else {
-     uicomponent.renderPoll();
-     if(canEdit){
+	        List attachments = post.getAttachments() ;
+	        String idMessage = "Id" + postId.substring(15);
+	        String joinDate = "";
+	        Date joinDate_ = userInfo.getJoinedDate();
+	        if(joinDate_ != null) {
+	          joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_, shortDateFormat, setTime) ;
+	        }
+	        String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
+	        boolean isAnd = false ;
+	        if(post.getUserPrivate().length > 1){
+	          alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
+	          isAnd = true;
+	        }
+	        if(post.getIsHidden()) {
+	          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
+	          alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
+	          isAnd = true;
+	        }
+	        if(post.getIsWaiting()) {
+	          if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
+	          alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
+	          isAnd = true;
+	        }
+	        if(isModeratePost) {
+	          if(!post.getIsApproved()) {
+	            if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
+	            else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
+	            isAnd = true;
+	          }
+	        }
+	        if(isAnd) alert = alert + "!</span>) "
+	        else alert = " " ;
     %>
-    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
-    <% }else{ %>
-    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
-    <% } %>
-  <% } %>
-<!-- End ContentContainer -->
-  </div>  
+    
+				<div class="contentTopicDetail clearfix divRow" id="$postId">
+		  <!-- Start MemberContainer -->
+					<div class="memberContainer divCell">
+					  
+					<%  String userSmile = "uiIconForumColorOffline";
+						String titleSmile = "Offline" ;
+						if(uicomponent.isOnline(owner)) {
+						   userSmile = "uiIconForumColorOnline";
+						   titleSmile = "Online";
+						}
+					%>
+						<div class="dropdown uiUserInfo">
+							<a href="javascript:void(0)" class="textTitleProfile">
+								<i class="$userSmile"></i>$viewScreenName
+							</a>
+							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
+								<%
+								  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+								  for(viewAction in menuViewInfos) {
+										if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+										String linkView = uicomponent.event(viewAction, owner) ;
+										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
+								%>
+									<li onclick="$linkView">
+										<a href="javaScript:void(0)">$itemLabelView</a>
+									</li>
+								<%
+								  }
+								%>
+							</ul>
+						
+						</div>
+						<div class="rank"><%=userInfo.getUserTitle();%></div>
+						<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
+						  if(isDisplayAvatar) {
+						%>
+						<div class="dropdown uiUserInfo avatarXLarge">
+							<a href="javascript:void(0)">
+								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+							</a>
+							
+							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
+								<%
+								  for(viewAction in menuViewInfos) {
+									if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+									String linkView = uicomponent.event(viewAction, owner) ;
+									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
+								%>
+								  <li onclick="$linkView">
+									  <a href="javaScript:void(0)">$itemLabelView</a>
+								  </li>
+								<%
+								  }
+								%>
+							</ul>
+						</div>
+						<% } %>
+						
+						<div class="infoMember">
+							<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
+						  <% long totalPost = userInfo.getTotalPost();
+							if(totalPost > 0) {
+							   Date lastPostOfUser = userInfo.getLastPostDate() ;
+							   String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
+						  %>
+							<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+							<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
+						  <% } else {%>
+							<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+						  <% } 
+						   if(!ForumUtils.isEmpty(location)) {
+						  %>
+							<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
+						  <%} 
+							Date lastLogin = userInfo.getLastLoginDate();
+							String lastLoginUser = "" ;
+							if(lastLogin != null){
+							  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
+							}
+						  %>
+							<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
+						</div>
+					</div>
+		  <!-- End MemberContainer -->
+		  <!-- Start PostViewContainer -->
+					<div class="postViewContainer divCell">
+						<div class="postViewHeader clearfix">
+					  <% if(canEdit) {%>
+							<div class="postViewTitle pull-left">$namePost $alert</div>
+							<div class="pull-right">
+							
+								<span class="postTime pull-left"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
+								
+								<%
+							   if(checked > 0){
+							%>
+							  <%
+								 String isChecked = "";
+								 if(checkeds.contains(postId)){
+								   isChecked = "checked=\"checked\"";
+								 } 
+							  %>
+								<span class="uiCheckbox pull-right">
+									<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" name="$postId" $isChecked/>
+									<span></span>
+								</span>
+							  <%} %>
+								
+							<%
+							   if(isShowIP) {
+								 String ip = post.getRemoteAddr();
+								 if(ip != null && ip.length() > 0) {
+								   String link2 = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanIPThisForum") + "')){" + uicomponent.event("BanIPThisForum", ip).replaceFirst("javascript:", "") + ";}";
+								   String title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BanIP"),ip);
+								   if(uicomponent.isIPBaned(ip)){
+									 title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BannedIP"),ip);
+									 link2 ="javaScript:void(0);";
+								   }
+							%>
+								<div class="pull-right dropdown">
+									
+									<i  data-toggle="dropdown" class="uiIconForumBanIp uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="IP: $ip"></i>
+							
+								<% /*Begin Popup Menu*/ %>
+								  
+									<ul class="dropdown-menu">
+										<li rel="tooltip" data-placement="bottom" title="$title1" onclick="$link2">   
+											<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+										</li>
+									  <% 
+										if(userProfile.getUserRole() == 0) {
+										String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
+									  %>
+										<li onclick="$link">  
+											<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
+										</li>
+									<% } %>
+									</ul>
+								<% /*End Popup Menu*/ %>
+								</div>
+							<%   }
+							   }
+							%>
+							
+							
+							</div>
+						  
+						<% } else { %>
+							<div class="postViewTitle pull-left">$namePost $alert</div>
+							<div class="pull-right">
+								<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
+							</div>
+						<% } %>
+					  </div>
+					  
+						<div class="postContentContainer">
+						<% 
+							boolean hasAttachment = false ;
+							if(attachments != null && attachments.size() > 0) hasAttachment = true;
+							String classContent = (isDisplayAvatar && hasAttachment == false) ? "postContent" : "postContentNote";
+						%>  
+						  <div class="$classContent">
+								<div id="$idMessage" class="containerQuote">$message</div>
+						  </div>
+						
+						<!--- Start Attachment   -->
+						  
+						 <% if(hasAttachment) {%>
+						<div class="attachmentContainer">
+							<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
+							
+							<!-- Start Attach Have Images -->
+							
+							<div class="attachmentContentImage clearfix">
+							<% for(attachment in attachments) {
+								 String urlFile = uicomponent.getFileSource(attachment) ;
+								 String titleFile = attachment.getName();
+								 String fileName = ForumUtils.getSubString(titleFile, 30);
+								 long sizeNumber = attachment.getSize() ;
+								 String size = ForumUtils.getSizeFile(sizeNumber) ;
+								 String typeFile = attachment.mimeType ;
+								 String pathAtt = urlFile.replaceAll("&","(omu)");
+							%>
+								
+								<% if(typeFile.indexOf("image") >= 0 && titleFile.indexOf(".psd") < 0) {
+								   String attLink = uicomponent.getImageUrl(attachment.getPath());
+								%>
+								<div class="imageAttachmentBox pull-left">
+									<a class="imgAttach"><img rel="tooltip" data-placement="bottom" id="imgView${fileName}" src="$attLink" alt="$titleFile"/></a> 
+									<div class="actionAttachImg">
+										<p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
+										<p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
+									</div>
+								</div>  
+							  <% } %>
+								
+							<% } %>
+							</div>
+							
+							<!-- End Attach Have Images -->
+							
+							<!-- Start Attach File -->
+							
+							<div class="attachmentContent clearfix">
+							<% for(attachment in attachments) {
+								 String urlFile = uicomponent.getFileSource(attachment) ;
+								 String titleFile = attachment.getName();
+								 String fileName = ForumUtils.getSubString(titleFile, 30);
+								 long sizeNumber = attachment.getSize() ;
+								 String size = ForumUtils.getSizeFile(sizeNumber) ;
+								 String typeFile = attachment.getMimeType() ;
+							%>
+								
+								<% if(typeFile.indexOf("image") < 0) {
+								   String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
+								%>
+								<div class="otherAttachmentBox">
+									<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+									<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
+								</div>  
+							  <% } %>
+								
+							<% } %>
+							
+							</div>
+							
+							<!-- End Attach File -->
+							
+						</div>
+						<% } %>
+						
+						
+						<!--- End Attachment   -->
+						  
+						  <%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
+							  post.setMessage(userInfo.getSignature());
+							  post.setId(uicomponent.SIGNATURE);
+							  String signature = uicomponent.renderPost(post);
+						  %>
+							<div class="signature"><span></span><br/>$signature</div>
+						  <%} %>
+						</div>
+							<div class="footPost clearfix">
+							  <%  
+								  if(!ForumUtils.isEmpty(editBy)) {
+								    UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
+								    String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
+						        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
+							  %>
+								<div class="txtLastEdit">
+									  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> 
+										<div class="dropdown uiUserInfo">
+											<a href="javascript:void(0);" class="txtEditBy">$editByScreeName</a> 
+										  
+											<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
+												<%
+												for(viewAction in menuViewInfos) {
+													if((userProfile.getUserRole() >= 3 || userEditByInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+													String linkView = uicomponent.event(viewAction, editBy) ;
+													String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+													if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + editByScreeName ;
+												%>
+													<li onclick="$linkView">
+														<a href="javaScript:void(0)">$itemLabelView</a>
+													</li>
+												<%
+												}
+												%>
+											</ul>
+										</div>
+									  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
+									  <%
+										String reason = post.getEditReason() ;
+										if(!ForumUtils.isEmpty(reason)) { 
+										  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+									  %>
+									  <br/>
+									  $reason
+									  <% } %>
+								</div>
+							<% } %>
+								<div class="btnDetailTopic">
+								  <%
+								  if(isShowMenu) {
+									String[] actions = ["Quote","PrivatePost","Delete","Edit"] ; 
+									boolean isShowAction = true, isShowPri = true ;
+									for(action in actions) {
+									  isShowAction = true;
+									  isShowPri = true ;
+									  String title = _ctx.appRes("UITopicDetail.title." + action);
+									  String label = _ctx.appRes("UITopicDetail.action." + action);
+									  if(!(userLogin.equals(owner))) {
+										if(!canEdit){
+										  if(action.equals("Edit")||action.equals("Delete")){
+											isShowAction = false;
+										  }
+										}
+									  }
+									  if(isShowAction && checked == 0){ 
+										if(action.equals("Edit")||action.equals("Delete")){
+										  isShowAction = false;
+										}
+									  }
+									  if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
+										isShowAction = false;
+									  }
+									  if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
+										isShowAction = false;
+										isShowPri = false;
+									  }
+									  String actionLink = uicomponent.event(action,uiformId,postId);
+									  if(isShowAction) {
+								  %>
+									
+										<a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
+									
+									<%}
+									} 
+								  checked = 1; 
+								  } %>
+								</div>
+							</div>
+							
+						</div>
+		
+		<!-- End PostViewContainer -->
+				
+				
+					</div>
+					
+					<div class="divRow clearfix">
+						<div class="divCell"><span class="line"></span></div>
+						<div class="divCell"><span class="line"></span></div>
+					</div>
+			    <% }//end for
+			      ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
+			     } else {
+			     uicomponent.renderPoll();
+			     if(canEdit){
+			    %>
+			    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
+			    <% }else{ %>
+			    <div class="emptyForum"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
+			    <% } %>
+			  <% } %>
+			  </div>
+	  	</div>
+	<!-- End ContentContainer -->
+  	</div>
 <!-- End PostsInThreadContainer -->
   
 	<div class="clearfix">
@@ -851,15 +849,15 @@
      
         <%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
      
-		<div class="uiAction">
-      <% for(action in uicomponent.getActions()) { 
-             String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-             String link = uicomponent.event(action);
-             if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
-        %>
-      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
-      <%}%>
-		</div>
+			<div class="uiAction">
+	      <% for(action in uicomponent.getActions()) { 
+	             String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	             String link = uicomponent.event(action);
+	             if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
+	        %>
+	      <a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
+	      <%}%>
+			</div>
     </div>
   </div>
 <% } %>

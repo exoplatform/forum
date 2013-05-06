@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
@@ -53,7 +53,7 @@ public class BaseForumForm extends BaseUIForm {
    */
   protected ForumService getForumService() {
     if (forumService == null) {
-      forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      forumService = ForumSessionUtils.getComponentInstanceOfType(ForumService.class);
     }
     return forumService;
   }
@@ -78,12 +78,10 @@ public class BaseForumForm extends BaseUIForm {
   }
   
   public UserProfile getUserProfile() {
-    if (userProfile == null) {
-      try {
-        userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
-      } catch (Exception e) {
-        userProfile = new UserProfile();
-      }
+    try {
+      userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    } catch (Exception e) {
+      userProfile = new UserProfile();
     }
     return userProfile;
   }

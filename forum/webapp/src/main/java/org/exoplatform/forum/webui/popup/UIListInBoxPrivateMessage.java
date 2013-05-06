@@ -58,6 +58,7 @@ public class UIListInBoxPrivateMessage extends UIContainer {
   public UIListInBoxPrivateMessage() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumPageIterator.class, null, "PageListInBoxMessage");
+    addChild(UIViewPrivateMessage.class, null, "UIViewPrivateMessageInBox").setRendered(false);
   }
 
   protected UserProfile getUserProfile() throws Exception {
@@ -100,22 +101,19 @@ public class UIListInBoxPrivateMessage extends UIContainer {
       UIListInBoxPrivateMessage uicontainer = event.getSource();
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
       if (!ForumUtils.isEmpty(objctId)) {
-        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
         try {
           uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
           ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId);
-          UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class);
-          UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-          UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 650);
-          privateMessageForm.setPrivateMessage(privateMessage);
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
-          forumPortlet.getUserProfile();
+          UIViewPrivateMessage viewPrivateMessage = uicontainer.getChild(UIViewPrivateMessage.class);
+          viewPrivateMessage.setPrivateMessage(privateMessage);
+          viewPrivateMessage.setRendered(true);
+          event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
+          uicontainer.getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
         } catch (Exception e) {          
-          event.getRequestContext()
-               .getUIApplication()
+          event.getRequestContext().getUIApplication()
                .addMessage(new ApplicationMessage("UIListInBoxPrivateMessage.msg.fail-view", null, ApplicationMessage.WARNING));
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
       }
     }
   }
@@ -126,9 +124,9 @@ public class UIListInBoxPrivateMessage extends UIContainer {
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
       if (!ForumUtils.isEmpty(objctId)) {
         uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.getUserProfile();
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        uicontainer.getChild(UIViewPrivateMessage.class).reset();
+        uicontainer.getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
       }
     }
   }

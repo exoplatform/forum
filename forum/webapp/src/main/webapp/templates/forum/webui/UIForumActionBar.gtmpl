@@ -9,14 +9,9 @@
 	<ul >
 		<%	String[] actions = [""];
 			String[] iconActions = [""];
-			if(isAdmin) {
-				if(uicomponent.isSpace()) {
-					actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
-					iconActions = ["uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
-				} else {
-					actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
-					iconActions = ["uiIconAddCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
-				}
+			if(isAdmin && !uicomponent.isSpace()) {
+				actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
+				iconActions = ["uiIconAddCategory uiIconLightGray","uiIconForumCreateForum uiIconForumLightGray","uiIconUser uiIconLightGray","uiIconForumAdmin uiIconForumLightGray","uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
 			} else {
 				actions = ["EditProfile","OpenBookMark"];
 				iconActions = ["uiIconSetting uiIconLightGray","uiIconBookmark uiIconLightGray"];
@@ -63,10 +58,6 @@
 		   i = i + 1;
 		  %>
 		<% }%>
-		<li class="ScrollButtons clearfix" style="width:35px;">
-			<div class="ScrollLeftButton pull-left" rel="tooltip" data-placement="bottom" title="Previous"><span></span></div>
-			<div class="ScrollRightButton pull-left" rel="tooltip" data-placement="bottom" title="Next"><span></span></div>
-		</li>
 	</ul>
 	<% 
 		long numberOfNewMessage = uicomponent.getNewMessage();

@@ -487,7 +487,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void updateAccessTopic(String topicId) throws Exception {
-    String userId = userProfile.getUserId();
+    String userId = getUserProfile().getUserId();
     if (userId != null && userId.length() > 0) {
       forumService.updateTopicAccess(userId, topicId);
     }
@@ -495,7 +495,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void updateAccessForum(String forumId) throws Exception {
-    String userId = userProfile.getUserId();
+    String userId = getUserProfile().getUserId();
     if (userId != null && userId.length() > 0) {
       forumService.updateForumAccess(userId, forumId);
     }
@@ -504,7 +504,7 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public void removeCacheUserProfile() {
     try {
-      forumService.removeCacheUserProfile(userProfile.getUserId());
+      forumService.removeCacheUserProfile(getUserProfile().getUserId());
     } catch (Exception e) {
       log.debug("Failed to remove cache userprofile with user: " + userProfile.getUserId());
     }
@@ -529,7 +529,7 @@ public class UIForumPortlet extends UIPortletApplication {
     try {
       ContinuationService continuation = (ContinuationService) PortalContainer.getInstance()
                                                                          .getComponentInstanceOfType(ContinuationService.class);
-      return continuation.getUserToken(userProfile.getUserId());
+      return continuation.getUserToken(getUserProfile().getUserId());
     } catch (Exception e) {
       log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);
     }
@@ -787,18 +787,22 @@ public class UIForumPortlet extends UIPortletApplication {
               path = Utils.FORUM_SERVICE;
             }
           }
-        } else if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
-          if (forumService.getForum(categorySpId, forumSpId) == null) {
+        } else if (ForumUtils.isEmpty(getForumIdOfSpace()) == false) {// open topic removed on forum of space
+          if (forumService.getForum(categorySpId, forumSpId) == null) {// the forum of space had been removed
             forumSpDeleted = true;
             removeAllChildPorletView();
             log.info("The forum in space " + spaceDisplayName + " no longer exists.");
             return;
           } else {
-            showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", ForumUtils.EMPTY_STR);
+            showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
             calculateRenderComponent(forumSpId, context);
           }
+        } else {// open topic removed on normal forum.
+          showWarningMessage(context, "UIForumPortlet.msg.topicEmpty", ForumUtils.EMPTY_STR);
+          renderForumHome();
+          path = Utils.FORUM_SERVICE;
         }
-      } catch (Exception e) {
+      } catch (Exception e) {// Unknown error
         if (log.isDebugEnabled()){
           log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
         }

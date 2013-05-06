@@ -23,6 +23,7 @@
 	String [] scripts = [
 					"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 					"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
+					"eXo.forum.UIForumPortlet.checkActionCategory('"+uicomponent.id+"') ;",
 					"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 					"eXo.forum.UIForumPortlet.goLastPost('top');",
 					"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
@@ -31,19 +32,15 @@
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
 							 
 	String categoryId = category.getId();
-	boolean isShowMenu = !UserHelper.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	String userLogin = userProfile.getUserId() ;
-	boolean isAdmin = false ;
-	if(userProfile.getUserRole() == 0) isAdmin = true ;
-	if(isAdmin) isShowMenu = true ;
-	else isShowMenu = false ;
 	String description = category.getDescription() ;
 	if(ForumUtils.isEmpty(description)) description = "";
 	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
+	boolean isShowMenu = (userProfile.getUserRole() == UserProfile.ADMIN) ? true : false;
 %>
 
 <div class="uiCategory">
@@ -95,9 +92,9 @@
 						<ul class="dropdown-menu">
 							<li>
 								<div class="searchAdvance">
-								<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
+								<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
 								<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-								<br/>
+								</p>
 								<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 								</div>
 							</li>
@@ -113,10 +110,10 @@
 							 <%=_ctx.appRes("UICategory.label.manageCategory");%>
 						<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 						</div>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu uiCategoryPopupMenu">
 						<%
 						String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
-						
+						String liClazz = "";
 						String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlock", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
 						int i = 0;
 						for(action in uicomponent.getActions()) {
@@ -131,7 +128,7 @@
 								String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
 						%>
 							<li>
-								<a href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a <%=liClazz%>href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
 							</li>
 						<% 
 							} else if(action.equals("DeleteCategory")) {
@@ -142,11 +139,13 @@
 							</li>
 						<%} else { %>
 							<li>
-								<a href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a <%=liClazz%>href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
 							</li>
-						<%		if(action.equals("WatchOption")) { %>
+						<%	if(action.equals("WatchOption")) { 
+						  	liClazz = "class=\"forumAction\" ";
+						%>
 							<li class="divider"></li>
-						<%		}
+						<%	}
 							}
 						} %>
 						</ul>
@@ -181,8 +180,8 @@
 			%>
 				<tr>
 					<td></td>
-					<td><%=_ctx.appRes("UICategory.label.noForum");%></td>
-					<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
+					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noForum");%></td>
+					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noPost");%></td>
 					<td></td>
 					<td class="center">0</td>
 					<td class="center">0</td>
@@ -205,16 +204,12 @@
 					String path = "";
 					int dayForumNewPost = uicomponent.getDayForumNewPost();
 					long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-					String lastReadPost = "";
 					for(forum in forums) {
 						String forumId = forum.getId();
-						lastReadPost = uicomponent.getLastReadPostOfForum(forumId);
 
 						String classIconStatusForum = "";
-
 						String classIconReadForum = "";
-						String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
-						
+						String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");						
 						String classIconForum = "";
 
 						String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
@@ -289,14 +284,14 @@
 									<i class="$classIconStatusForum" title="$titleIconForum"></i>
 									<% ++rCNB; %>
 									<%if(uicomponent.useAjax){%>
-											<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+											<a class="actionOpenLink ForumTitle" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
 									<%} else {%>
-											<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+											<a class="actionOpenLink ForumTitle" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
 									<%}%>
 										<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-											<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
+											<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 										</div>
-									<div class="ForumDescription">$forumDescription</div>
+									<div class="forumDescription">$forumDescription</div>
 								</td>
 					 <% if(topicNewPost != null) { 
 								if(uicomponent.userProfile.getUserRole() < 3){
@@ -318,13 +313,13 @@
 										
 									<% ++rCNB; %>
 									<%if(uicomponent.useAjax){%>
-										<a class="ActionLink" id="UIContextPopupMenu${rCNB}" data-link="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="$openLinkLastPost" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 									<%} else {%>
-										<a class="ActionLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" rel="tooltip" data-placement="bottom" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 									<%}%>
 									
 									<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-										<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
+										<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 									</div>
 									<div class="dateTimeForum">$dateTime</div>
 									
@@ -359,7 +354,7 @@
 									</div>
 								</td>
 							<%} else { %> 
-								<td style="height:40px;">
+								<td style="height:40px;" class="noticeEmpty">
 									 <%= _ctx.appRes("UICategory.label.availableTheard"); %>
 								</td>
 								<td></td>

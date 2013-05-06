@@ -19,10 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -60,28 +58,33 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
 
   public void setSelectCateId(List<String> listIdIsSelected) throws Exception {
     this.listIdIsSelected = listIdIsSelected;
-    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    this.forumLinks = forumService.getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
+    String cateQuery = new StringBuffer("[(@").append(Utils.EXO_ID)
+        .append("!='").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("')]").toString();
+    forumLinks = getForumService().getAllLink(cateQuery, ForumUtils.EMPTY_STR);
+    String cateId;
+    for (ForumLinkData forumLink : forumLinks) {
+      if (forumLink.getType().equals(Utils.CATEGORY)) {
+        cateId = forumLink.getId();
+        UICheckBoxInput checkbox = getUICheckBoxInput(cateId);
+        if (checkbox == null) {
+          checkbox = new UICheckBoxInput(cateId, cateId, false);
+          addUIFormInput(checkbox);
+        }
+        checkbox.setChecked(getCheckedCategory(cateId));
+      }
+    }
   }
 
   protected List<ForumLinkData> getForumLinks() throws Exception {
-    String cateId = ForumUtils.EMPTY_STR;
-    for (ForumLinkData forumLink : this.forumLinks) {
-      if (forumLink.getType().equals(Utils.CATEGORY)) {
-        cateId = forumLink.getId();
-        if (getUICheckBoxInput(forumLink.getPath()) == null) {
-          if (listIdIsSelected.contains(cateId))
-            addUIFormInput((new UICheckBoxInput(cateId, cateId, false)).setChecked(true));
-          else
-            addUIFormInput((new UICheckBoxInput(cateId, cateId, false)).setChecked(false));
-        }
-      }
-    }
-    return this.forumLinks;
+    return forumLinks;
   }
 
+  protected boolean getCheckedCategory(String cateId) {
+    return listIdIsSelected.contains(cateId) ? true : false;
+  }
+  
   private String getNameForumLinkData(String id) throws Exception {
-    for (ForumLinkData linkData : this.forumLinks) {
+    for (ForumLinkData linkData : forumLinks) {
       if (linkData.getId().equals(id))
         return linkData.getName();
     }
@@ -96,7 +99,7 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
       for (UIComponent child : children) {
         if (child instanceof UICheckBoxInput) {
           if (((UICheckBoxInput) child).isChecked()) {
-            listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) + "(" + child.getName());
+            listIdSelected.add(uiForm.getNameForumLinkData(child.getId()) + "(" + child.getId());
           }
         }
       }

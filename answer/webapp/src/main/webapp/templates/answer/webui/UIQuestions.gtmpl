@@ -293,7 +293,7 @@
 													<ul class="dropdown-menu">
 													 <!-- action print question -->
 														<li>
-															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
+															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
 														</li>
 
 													<%
@@ -406,7 +406,7 @@
 											<%} %>
 											</div><!-- end languageContainer -->
 											<h6>
-												<a class="questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
+												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h6>
 
 										</div><!-- end actionBar -->
@@ -604,12 +604,12 @@
 										String fileName = fileAttachment.getName();
 										long fileSize = fileAttachment.getSize();
 										String size = uicomponent.convertSize(fileSize);
-										String typeFileIcon = org.apache.commons.lang.StringUtils.capitalize(fileType.substring((fileType.indexOf("/")+1)));
 										String linkImage = FAQUtils.getFileSource(fileAttachment);
+										String typeFileIcon = uicomponent.getCSSByFileType(fileName, fileType);
 								%>
 									<div class="otherAttachmentBox">
 										<a class="AttachmentLabel" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-											<i class="uiIcon16x16File${typeFileIcon} uiIconLightGray"></i>&nbsp;$fileName
+											<i class="$typeFileIcon uiIconLightGray"></i>&nbsp;$fileName
 										</a>
 										<span>($size)</span>
 									</div>

@@ -18,12 +18,19 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.SortSettings;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -51,64 +58,65 @@ public class UISortSettingForm extends BaseForumForm implements UIPopupComponent
   public static final String  FIELD_TOPICSORTBYTYPE_INPUT = "topicSortByType";
 
   private ForumAdministration administration;
+  private Locale locale = null;
 
   public UISortSettingForm() {
+
+    addUIFormInput(new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, null));
+    addUIFormInput(new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, null));
+    addUIFormInput(new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, null));
+    addUIFormInput(new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, null));
   }
 
   public void setInitForm() throws Exception {
     administration = getForumService().getForumAdministration();
-    UIFormSelectBox forumSortBy = initForumSortField();
-    UIFormSelectBox forumSortByType = initForumSortDirectionField();
-    UIFormSelectBox topicSortBy = initTopicSortField();
-    UIFormSelectBox topicSortByType = initTopicSortDirectionField();
-
-    addUIFormInput(forumSortBy);
-    addUIFormInput(forumSortByType);
-    addUIFormInput(topicSortBy);
-    addUIFormInput(topicSortByType);
+  }
+  
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    changeLocale();
+    super.processRender(context);
+  }
+  
+  private void changeLocale() throws Exception {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    Locale locale = portalContext.getLocale();
+    if (this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
+      initFields();
+      this.locale = locale;
+    }
   }
 
-  private UIFormSelectBox initTopicSortDirectionField() {
+  private List<SelectItemOption<String>> getSortDirectionOptions() {
     List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending"));
-    ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending"));
-    UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
+    ls.add(new SelectItemOption<String>(getLabel(SortSettings.Direction.ASC.toString()), SortSettings.Direction.ASC.toString()));
+    ls.add(new SelectItemOption<String>(getLabel(SortSettings.Direction.DESC.toString()), SortSettings.Direction.DESC.toString()));
+    return ls;
+  }
+
+  private void initFields() {
+    UIFormSelectBox topicSortByType = getUIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT).setOptions(getSortDirectionOptions());
     topicSortByType.setValue(administration.getTopicSortByType());
-    return topicSortByType;
-  }
-
-  private UIFormSelectBox initTopicSortField() {
-    String[] idLables = new String[] { "isLock", "createdDate", "modifiedDate", "lastPostDate", "postCount", "viewCount", "numberAttachments" };
+    
     List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name"));
-    for (String string : idLables) {
-      ls.add(new SelectItemOption<String>(this.getLabel(string), string));
+    List<String> topicSorts = SortSettings.getTopicSortBys();
+    for (String sortBy : topicSorts) {
+      ls.add(new SelectItemOption<String>(getLabel(sortBy), sortBy));
     }
-    UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
+    UIFormSelectBox topicSortBy = getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).setOptions(ls);
     topicSortBy.setValue(administration.getTopicSortBy());
-    return topicSortBy;
-  }
-
-  private UIFormSelectBox initForumSortDirectionField() {
-    List<SelectItemOption<String>> ls;
-    ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending"));
-    ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending"));
-    UIFormSelectBox forumSortByType = new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, ls);
+    
+    //
+    UIFormSelectBox forumSortByType = getUIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT).setOptions(getSortDirectionOptions());
     forumSortByType.setValue(administration.getForumSortByType());
-    return forumSortByType;
-  }
-
-  private UIFormSelectBox initForumSortField() {
-    String[] idLables = new String[] { "forumOrder", "isLock", "createdDate", "modifiedDate", "topicCount", "postCount" };
-    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
-    ls.add(new SelectItemOption<String>(this.getLabel("forumName"), "name"));
-    for (String string : idLables) {
-      ls.add(new SelectItemOption<String>(this.getLabel(string), string));
+    
+    ls = new ArrayList<SelectItemOption<String>>();
+    List<String> forumSorts = SortSettings.getForumSortBys();
+    for (String sortBy : forumSorts) {
+      ls.add(new SelectItemOption<String>(this.getLabel(sortBy), sortBy));
     }
-    UIFormSelectBox forumSortBy = new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, ls);
+    UIFormSelectBox forumSortBy = getUIFormSelectBox(FIELD_FORUMSORTBY_INPUT).setOptions(ls);
     forumSortBy.setValue(administration.getForumSortBy());
-    return forumSortBy;
   }
 
   public void activate() {
@@ -136,6 +144,7 @@ public class UISortSettingForm extends BaseForumForm implements UIPopupComponent
       forumAdministration.setTopicSortByType(topicSortByType);
       try {
         uiForm.getForumService().saveForumAdministration(forumAdministration);
+        forumPortlet.findFirstComponentOfType(UITopicContainer.class).setOrderBy(ForumUtils.EMPTY_STR);
       } catch (Exception e) {
         uiForm.log.error("failed to save forum administration", e);
       }

@@ -27,7 +27,6 @@ import org.exoplatform.services.log.Log;
 
 /**
  * Provides Extended BBCodes
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class ExtendedBBCodeProvider implements BBCodeProvider {

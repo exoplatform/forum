@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.exoplatform.faq.service.ws;
 
 import java.io.InputStream;
@@ -19,9 +16,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
- * Url template: <tt>{rest_context_name}/ks/faq</tt>
- * <br />
- * GET: /{rest_context_name}/ks/faq/rss/{resourceid}
+ * Handles rest request to process FAQ. It can be viewed RSS of Answer by provided resource.
  * 
  * @anchor FAQWebservice
  */

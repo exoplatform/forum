@@ -7,7 +7,7 @@
 
     init : function(id) {
       UIForumPortlet.id = id;
-      var jportlet = findId(id);
+      var jportlet = $.fn.findId(id);
       if (jportlet.exists()) {
         jportlet.find('.oncontextmenu').on('contextmenu', utils.returnFalse);
         UIForumPortlet.initShowUserInfo();
@@ -24,14 +24,14 @@
     },
     
     disableOnClickMenu : function (id) {
-      var jportlet = findId(UIForumPortlet.id);
+      var jportlet = $.fn.findId(UIForumPortlet.id);
       if(id != null) {
         jportlet.find('#'+id).off('click mousedown mouseover').on('click mousedown mouseover', utils.cancelEvent);
       }
     },
 
     initShowUserInfo : function(id) {
-      var jportlet = findId(UIForumPortlet.id);
+      var jportlet = $.fn.findId(UIForumPortlet.id);
       if(id != null) {
         jportlet.find('#'+id).find('.uiUserInfo').off('click').on('click', utils.showUserMenu);
       } else {
@@ -189,55 +189,43 @@
       }
     },
 
-    checkAction : function(obj, evt) {
-      UIForumPortlet.showPopup(obj, evt);
-      var uiCategory = $('UICategory');
+    checkActionCategory : function(id) {
+      var uiCategory = $.fn.findId(id);
+      var menuItems = uiCategory.find('.uiCategoryPopupMenu:first').find('a.forumAction');
+      menuItems.data('containerId', {container : id});
+      var checked = (uiCategory.find('input[type=checkbox]:checked').length > 0) ? true : false;
+      UIForumPortlet.enableDisableAction(menuItems, checked);
+      
       var checkboxes = uiCategory.find('input.checkbox');
-      var uiRightClickPopupMenu = $(obj).find('.UIRightClickPopupMenu:first');
-      var clen = checkboxes.length;
-      var menuItems = uiRightClickPopupMenu.find('a');
-      var mlen = menuItems.length;
-      var checked = false;
-      for ( var i = 1; i < clen; i++) {
-        if (checkboxes[i].checked && checkboxes.eq(i).attr('name').indexOf("forum") == 0) {
-          checked = true;
-          break;
-        }
-      }
-      var j = 0;
-      for ( var i = 0; i < mlen; i++) {
-        if (String(menuItems.eq(i).attr('class')).indexOf("AddForumIcon") > 0) {
-          j = i + 1;
-          break;
-        }
-      }
-      for ( var n = j; n < mlen; n++) {
-        var menuItem = menuItems.eq(n);
-        if (!checked) {
-          if (!menuItem.attr("tmpHref")) {
-            menuItem.attr("tmpHref", menuItem.attr('href'));
-            menuItem.attr('href', 'javascript:void(0);');
-            menuItem.attr('tmpClass', $(menuItem[0].parentNode).attr('class'));
-            $(menuItem[0].parentNode).attr('class', 'DisableMenuItem');
+      checkboxes.on('click', function(evt) {
+        UIForumPortlet.checkActionCategory($(this).data('containerId').container);
+      });
+    },
+    
+    enableDisableAction : function(actions, checked) {
+      $.each(actions, function(index, elm) {
+        var thizz = $(elm);
+        if (checked === false) {
+          if (thizz.hasAttr('data-href') === false) {
+            thizz.attr('data-href', thizz.attr('href'));
+            thizz.attr('href', 'javascript:void(0);');
+            thizz.parents('li:first').addClass('disabled');
           }
         } else {
-          if (menuItem.attr("tmpHref")) {
-            menuItem.attr('href', menuItem.attr('tmpHref'));
-            $(menuItem[0].parentNode).attr('class', menuItem.attr('tmpClass'));
-            menuItem.removeAttr("tmpHref");
-            menuItem.removeAttr("tmpClass");
+          if (thizz.hasAttr("data-href")) {
+            thizz.attr('href', thizz.attr('data-href'));
+            thizz.parents('li:first').removeClass('disabled');
           }
         }
-      }
+      });
     },
 
     visibleAction : function(id) {
-      var parent = findId(id);
+      var parent = $.fn.findId(id);
       var addCategory = parent.find('#AddCategory');
       if (addCategory.exists()) {
         addCategory = addCategory.find('a:first');
         var addForum = parent.find('#AddForum').find('a:first');
-        var isIE = document.all ? true : false;
         if ($("#UICategories").exists()) {
           addCategory.attr('class', "actionIcon");//disabled
           addForum.attr('class', "actionIcon");
@@ -340,7 +328,7 @@
     },
 
     initVote : function(voteId, rate) {
-      var vote = findId(voteId);
+      var vote = $.fn.findId(voteId);
       rate = parseInt(rate);
       var optsContainer = vote.find('div.optionsContainer:first');
     optsContainer.attr('data-rate', rate);
@@ -561,7 +549,7 @@
     },
 
     setSizeImages : function(delta, classParant) {
-      var parent_ = findId(classParant);
+      var parent_ = $.fn.findId(classParant);
       var imageContentContainer = parent_.find('div.ImageContentContainer:first');
       if (imageContentContainer.exists()) {
         if (!$('#UIPageDesktop').exists()) {
@@ -600,7 +588,7 @@
     },
 
     resetFielForm : function(idElm) {
-      var elm = findId(idElm);
+      var elm = $.fn.findId(idElm);
       elm.find("input:checkbox").val('false');
       elm.find("input:text").val('');
       if (elm.find("input.UISliderInput").exists()) {
@@ -610,7 +598,7 @@
     },
 
     RightClickBookMark : function(elmId) {
-      var ancestor = findId(elmId);
+      var ancestor = $.fn.findId(elmId);
       var popupContents = ancestor.find('ul.ClickPopupContent');
       if (!popupContents.exists())
         return;
@@ -689,134 +677,35 @@
     closeShareLink : function(obj) {
       $(obj).parents('.UIPopupWindow').hide();
     },
-
-    loadScroll : function(e) {
-      var uiNav = eXo.forum.UIForumPortlet;
-      var container = $("#UIForumActionBar");
-      if (container.exists()) {
-        uiNav.scrollMgr = new navigation.ScrollManager("UIForumActionBar");
-        uiNav.scrollMgr.initFunction = uiNav.initScroll;
-        uiNav.scrollMgr.mainContainer = container.find('td.ControlButtonContainer:first')[0];
-        uiNav.scrollMgr.arrowsContainer = container.find('li.ScrollButtons:first')[0];
-        uiNav.scrollMgr.loadElements("ControlButton", true);
-
-        var button = $(uiNav.scrollMgr.arrowsContainer).find('div');
-        if (button.length >= 2) {
-          uiNav.scrollMgr.initArrowButton(button[0], "left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton");
-          uiNav.scrollMgr.initArrowButton(button[1], "right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton");
-        }
-
-        uiNav.scrollManagerLoaded = true;
-        uiNav.initScroll();
-        var lastButton = $('#OpenBookMarkSp');
-        if (lastButton.exists() && lastButton.css('display') == 'none') {
-          $('#OpenBookMark').hide();
-        }
-      }
+    loadScroll : function() {
+      UIForumPortlet.loadMoreForumActionBar('UIForumActionBar', 'More');
     },
-
-    initScroll : function() {
-      var uiNav = UIForumPortlet;
-      if (!uiNav.scrollManagerLoaded)
-        uiNav.loadScroll();
-      var elements = uiNav.scrollMgr.elements;
-      uiNav.scrollMgr.init();
-      if (eXo.core.Browser.isIE6())
-        uiNav.scrollMgr.arrowsContainer.setAttribute("space", 35);
-      uiNav.scrollMgr.checkAvailableSpace();
-      uiNav.scrollMgr.renderElements();
+    loadMoreForumActionBar : function(id, moreTagLabel) {
+      var parent = $.fn.findId(id);
+      var ul = parent.find('ul:first');
+      ul.addClass('actionBarMoreItem').addClass('pull-left');
+      parent.loadMoreItem({
+        ulContainerClass: 'actionBarMoreItem',
+        loadMoreLabel : moreTagLabel,
+        processContainerWidth : UIForumPortlet.processForumActionBarrWidth
+      });
+    },
+    processForumActionBarrWidth : function(parent) {
+      var uiRightActionBar = parent.find('#uiRightActionBar');
+      var widthMoreItem = parent.width() - uiRightActionBar.outerWidth() - 20;
+      return widthMoreItem;
     },
 /*
  * Load more tags items.
  * */
     loadMoreItem : function(id, moreTagLabel) {
-      var parent = findId(id);
-      var containerMoreItem = parent.find('ul.containerMoreItem:first');
-      if(containerMoreItem.exists()) {
-        var moreItem = $('<li class="dropdown moreItem pull-right"></li>');
-        var div = $('<div data-toggle="dropdown" class="actionIcon"></div>').html(moreTagLabel);
-        div.append($('<i class="uiIconMiniArrowDown"></i>'));
-        moreItem.append(div);
-        UIForumPortlet.moreItem = moreItem;
-        containerMoreItem.append(moreItem.clone());
-        UIForumPortlet.widthMoreAction = containerMoreItem.find('li.moreItem:first').width();
-        
-        
-        var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
-        var fakeContainer = parent.find('ul.fakeContainer:first');
-        var items = fakeContainer.find('li');
-        
-        UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
-        
-        utils.onResize(UIForumPortlet.processResizeWindow);
-      }
-    },
-    
-    processResizeWindow : function() {
-      var parent = $('#UITopicDetail');
-      if(parent.exists()) {
-        var containerMoreItem = parent.find('ul.containerMoreItem:first');
-        if(containerMoreItem.exists()) {
-          var maxWidth = UIForumPortlet.processTagContainerWidth(parent);
-          var tmpUl = parent.find('ul.fakeContainer:first');
-          var itemsMore = null;
-          if(containerMoreItem.find('li.moreItem:first').exists()) {
-              itemsMore = containerMoreItem.find('ul').find('li');
-          }
-          tmpUl.append(containerMoreItem.find('li'));
-          if(itemsMore != null) {
-            tmpUl.append(itemsMore);
-            tmpUl.find('li.moreItem').remove();
-          }
-          var items = tmpUl.find('li');
-          UIForumPortlet.processTagRender(containerMoreItem, items, maxWidth);
-          
-        }
-      }
-    },
-    
-    processTagRender : function(containerMoreItem, items, maxWidth) {
-      var itemDisplay = [];
-      var itemMenu = [];
-      var lengthItem = 0;
-      var minWidthMenu = 100;
-      var paddingLRMenu = 20;
-      var widthMoreAction = UIForumPortlet.widthMoreAction;
-      
-      $.each(items, function(index, elm) {
-        var it = $(elm);
-        lengthItem += (it.width() + 4);
-        if((lengthItem + widthMoreAction) < maxWidth) {
-          itemDisplay.push(it);
-        } else {
-          if(itemMenu.length === 0) {
-            var moreItem = UIForumPortlet.moreItem.clone();
-            itemDisplay.push(moreItem);
-          }
-          itemMenu.push(it);
-          if((it.width() + paddingLRMenu) > minWidthMenu) {
-            minWidthMenu = it.width() + paddingLRMenu;
-          }
-        }
+      var parent = $.fn.findId(id);
+      parent.loadMoreItem({
+        loadMoreLabel : moreTagLabel,
+        processContainerWidth : UIForumPortlet.processTagContainerWidth
       });
-      
-      containerMoreItem.empty();
-      for(var i = 0; i < itemDisplay.length; ++i) {
-        containerMoreItem.append(itemDisplay[i]);
-      }
-      
-      var moreItem = containerMoreItem.find('li.moreItem:first');
-      if(moreItem.exists()) {
-        var ulMore = $('<ul class="dropdown-menu menuMore"></ul>');
-        ulMore.css('min-width', minWidthMenu + 'px');
-        for(var i = 0; i < itemMenu.length; ++i) {
-          ulMore.append(itemMenu[i]);
-        }
-        moreItem.append(ulMore);
-      }
-      
     },
-    
+
     processTagContainerWidth : function(parent) {
       var topContainer = parent.find('.topContainer:first');
       var actionContainer = parent.find('.actionContainer:first');
@@ -825,14 +714,11 @@
       var tagsContainer = parent.find('.tagsContainer:first');
       var titleTag = tagsContainer.find('.titleTag:first');
       var widthMoreItem = topContainer.width() - actionContainer.width() - pageIterContainer.width() - titleTag.width() - 20;
-      
-      var containerMoreItem = tagsContainer.find('ul.containerMoreItem:first');
-      //containerMoreItem.css('width', widthMoreItem + 'px');
       return widthMoreItem;
     },
 
     executeLink : function(elm, evt) {
-      var onclickAction = String($(elm).attr("data-link"));
+      var onclickAction = String($(elm).attr('data-link'));
       eval(onclickAction);
       evt.preventDefault();
       evt.stopPropagation();
@@ -840,19 +726,14 @@
     },
 
     createLink : function(cpId, isAjax) {
-      if (!isAjax || isAjax === 'false') {
-        var isM = document.getElementById("SetMode");
-        if (isM && isM.innerHTML === 'true') {
-          UIForumPortlet.addLink(cpId, "ActionIsMod");
-        }
-        return;
+      if (isAjax === 'true' || isAjax === true) {
+        UIForumPortlet.addLink(cpId, 'actionOpenLink');
       }
-      UIForumPortlet.addLink(cpId, "ActionLink");
     },
 
     addLink : function(cpId, clazzAction) {
-      var links = findId(cpId).find('a.' + clazzAction);
-      if (links.exists()) {
+      var links = $.fn.findId(cpId).find('a.' + clazzAction);
+      if (links.exists() && links.hasAttr('data-link')) {
         links.on('click', function(e) {
           UIForumPortlet.executeLink(this, e);
         });
@@ -890,9 +771,9 @@
       var cont = document.getElementById(id);
       var uiContextMenu = contextMenu;
       if (!uiContextMenu.classNames)
-        uiContextMenu.classNames = new Array("ActionLink");
+        uiContextMenu.classNames = new Array("actionOpenLink");
       else
-        uiContextMenu.classNames.push("ActionLink");
+        uiContextMenu.classNames.push("actionOpenLink");
       uiContextMenu.setContainer(cont);
       uiContextMenu.setup();
     },
@@ -932,7 +813,7 @@
     },
 
     submitOnKey : function(id) {
-      var parentElm = $(document.getElementById(id) || findId(UIForumPortlet.id).find('.'+id));
+      var parentElm = ($.fn.findId(id) || $.fn.findId(UIForumPortlet.id).find('.'+id));
       if (parentElm.exists()) {
         parentElm.off('keydown').on('keydown', function(evt) {
           var key = utils.getKeynum(evt);
@@ -955,7 +836,7 @@
     },
 
     calculateWidthOfActionBar : function(uiRightActionBar) {
-      var uiRightActionBar = findId(uiRightActionBar);
+      var uiRightActionBar = $.fn.findId(uiRightActionBar);
       var textContent = uiRightActionBar.text();
       textContent = textContent.replace(/\n/g, '').replace(/\s\s|\t\t|\r\r/g, '');
       var l = (textContent.length) * 1 + 1;

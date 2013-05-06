@@ -77,12 +77,10 @@ public class UIPollRadioBoxInput extends UIFormRadioBoxInput {
       w.write("'/>\n");
 
       w.write("     <span>");
-      String label = getId() + ".label." + si.getLabel();
+      String label = si.getLabel();
       try {
-        label = res.getString(label);
-      } catch (MissingResourceException e) {
-        label = si.getLabel();
-      }
+        label = res.getString(getId() + ".label." + si.getLabel());
+      } catch (MissingResourceException e) {}
       w.write(label);
       w.write("      </span>\n");
       w.write("    </label>\n");

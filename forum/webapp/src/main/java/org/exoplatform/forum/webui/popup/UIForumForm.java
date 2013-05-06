@@ -428,11 +428,9 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       WebuiRequestContext context = event.getRequestContext();
 
       if (uiForm.isUpdate && !uiForm.isForumUpdate) {
-        if (uiForm.isCategoriesUpdate) {
+        if (uiForm.isCategoriesUpdate && uiForm.isActionBar == false) {
           UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class);
-          uiCategories.setIsgetForumList(true);
-          if (!uiForm.isActionBar)
-            context.addUIComponentToUpdateByAjax(uiCategories);
+           context.addUIComponentToUpdateByAjax(uiCategories);
         } else {
           UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
           uiCategory.setIsEditForum(true);
@@ -441,7 +439,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
         }
         if (uiForm.isActionBar) {
           forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true);
-          forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
           context.addUIComponentToUpdateByAjax(forumPortlet);
         }
       } else {

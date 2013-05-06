@@ -5,12 +5,15 @@
 %>
 <div class="uiBreadcumbs uiGrayLightBox uiForumBreadCrumb clearfix" id="$uicomponent.id">
 	<div class="pull-left">
+		<%
+		String checkPath = "", link = "", id = "", linkHome="";
+		List breadcumbs = uicomponent.getBreadcumbs();
+		if(breadcumbs.size() > 1) {
+		%>
 		<ul class="breadcrumb">
-				<% int t = 0 ;
-					String link = "";
-					String checkPath = ""; 
-					String id = "", linkHome="";
-					for(namePath in uicomponent.getBreadcumbs()) {
+				<%
+					int t = 0 ;
+					for(namePath in breadcumbs) {
 					  checkPath = namePath;
 					  id = uicomponent.getPath(t);
 					  id = id.substring(id.lastIndexOf("/")+1);
@@ -64,6 +67,7 @@
 					} 
 				 %>
 	</ul>
+	<% } %>
 	</div>
 	<div class="pull-right">
 	  <%String toolTip = uicomponent.getToolTip();

@@ -21,75 +21,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.Session;
 
-import org.exoplatform.component.test.AbstractKernelTest;
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.forum.bbcode.api.BBCode;
-import org.exoplatform.forum.bbcode.api.BBCodeService;
+import org.exoplatform.forum.bbcode.base.BaseBBcodeTestCase;
 import org.exoplatform.forum.bbcode.spi.BBCodeData;
 import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
-import org.exoplatform.forum.common.jcr.KSDataLocation;
-import org.exoplatform.forum.common.jcr.SessionManager;
 
-/**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
- * @version $Revision$
- */
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.bbcode.component.core.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.bbcode.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.bbcode.test.portal-configuration.xml")
-})
 
-public class TestBBCodeServiceImpl extends AbstractKernelTest {
+public class TestBBCodeServiceImpl extends BaseBBcodeTestCase {
 
-  private BBCodeServiceImpl bbcodeServiceImpl;
-
-  private BBCodeService     bbcodeService;
-
-  private KSDataLocation    locator;
-
-  private SessionManager    sessionManager;
-
-  private String            bbcodesPath;
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    //
-    begin();
-    
-    bbcodeServiceImpl = new BBCodeServiceImpl();
-    locator = getService(KSDataLocation.class);
-    bbcodeService = getService(BBCodeService.class);
-    
-    bbcodeServiceImpl.setDataLocator(locator);
-    sessionManager = locator.getSessionManager();
-    bbcodesPath = bbcodeServiceImpl.getDataLocator().getBBCodesLocation();
-    
   }
 
   @Override
   public void tearDown() throws Exception {
-    for (BBCode bbcode : bbcodeService.getAll()) {
-      bbcodeService.delete(bbcode.getId());
-    }
-    //
-    end();
+    super.tearDown();
   }
   
-  @SuppressWarnings("unchecked")
-  public <T> T getService(Class<T> clazz) {
-    return (T) getContainer().getComponentInstanceOfType(clazz);
-  }
-  
-  
-
   public void testRegisterBBCodePlugin() throws Exception {
     BBCodePlugin plugin = new BBCodePlugin();
     plugin.setName("plugin1");
@@ -132,6 +82,7 @@ public class TestBBCodeServiceImpl extends AbstractKernelTest {
     assertEquals("example", n.getProperty("exo:example").getString());
     assertEquals(false, n.getProperty("exo:isOption").getBoolean());
     assertEquals(false, n.getProperty("exo:isActive").getBoolean());
+    n.getSession().logout();
   }
 
 
@@ -186,59 +137,4 @@ public class TestBBCodeServiceImpl extends AbstractKernelTest {
     assertNodeNotExists(targetPath);
   }
 
-  private BBCode createBBCode(String tag, String replacement, String description, String example, boolean option, boolean active) {
-    BBCode bbc = new BBCode();
-    bbc.setTagName(tag);
-    bbc.setReplacement(replacement);
-    bbc.setDescription(description);
-    bbc.setExample(example);
-    bbc.setOption(option);
-    bbc.setActive(active);
-    return bbc;
-  }
-  
-  private Session getSession() {
-    Session session = sessionManager.getCurrentSession();
-    if (session == null) {
-      session = sessionManager.openSession();
-    }
-    return session;
-  }
-  
-  private void assertNodeExists(String path) {
-    Session session = getSession();
-    if(path.indexOf("/") == 0) path = path.substring(0);
-    try {
-      session.getRootNode().getNode(path);
-      assertTrue(true);
-    } catch (Exception e) {
-      assertTrue(false);
-    } 
-  }
-
-  private void assertNodeNotExists(String path) {
-    Session session = getSession();
-    if(path.indexOf("/") == 0) path = path.substring(0);
-    try {
-      session.getRootNode().getNode(path);
-      assertTrue(false);
-    } catch (Exception e) {
-      assertTrue(true);
-    } finally{
-      session.logout();
-    }
-  }
-  
-  private Node getNode(String path) throws Exception {
-    return getSession().getRootNode().getNode(path);
-  }
-  
-  private void assertContains(List<String> actual, String... strs) {
-    for (int i = 0; i < strs.length; i++) {
-      if(!actual.contains(strs[i])) {
-        assertTrue(false);
-      }
-    }
-    assertTrue(true);
-  }
 }

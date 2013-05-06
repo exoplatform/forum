@@ -98,7 +98,7 @@
 								<% if(topic.getIsSticky()) {%>
 									<i class="uiIconForumStick"></i>
 								<% } %>
-									<a class="ActionLink $title $textHotTopic" rel="tooltip" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+									<a class="actionOpenLink $title $textHotTopic" rel="tooltip" data-link="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 							</td>
 							<td>
 								<div class="uiVote">

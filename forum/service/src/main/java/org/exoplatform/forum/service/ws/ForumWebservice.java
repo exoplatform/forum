@@ -1,7 +1,3 @@
-/**
- * @author Uoc Nguyen
- * 
- */
 package org.exoplatform.forum.service.ws;
 
 import java.io.InputStream;
@@ -36,9 +32,7 @@ import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
- * Url template: <tt>{rest_context_name}/ks/forum</tt>
- * <br />
- * GET: /{rest_context_name}/ks/forum/getmessage/{maxcount}
+ * Handles rest request to process Forum. It can be get and filtered, process with RSS are also provided.
  * 
  * @anchor ForumWebservice
  * 
@@ -149,8 +143,8 @@ public class ForumWebservice implements ResourceContainer {
         if (ip.startsWith(str))
           ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str;
     }
+    strQuery = str;
     return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 
@@ -186,8 +180,8 @@ public class ForumWebservice implements ResourceContainer {
         if (ip.startsWith(str))
           ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str;
     }
+    strQuery = str;
     return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 

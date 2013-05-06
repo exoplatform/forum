@@ -516,43 +516,56 @@ public class FAQUtils {
   public static String renderCategoryTree(CategoryTree categoryTree, BaseUIFAQForm uiForm, String actionName,  String categoryId, boolean isAddSup) throws Exception {
     StringBuilder builder = new StringBuilder();
     Category category = categoryTree.getCategory();
-    List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
-    String clazz = "collapseIcon";
-    if (categoryTrees.size() == 0){
-      clazz = "uiIconEmpty";
-    }
-
-    builder.append("<a href=\"javascript:void(0);\"");
-    if (isAddSup == false && category.getId().equals(categoryId) == true) {
-      String warning = uiForm.i18n("UIMoveQuestionForm.msg.choice-orther");
-      builder.append(" ondblclick=\"alert('").append(warning).append("');\"");
-    } else {
-      builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
-    }
-    if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
-        builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\">")
-               .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
-    } else {
-      String home = uiForm.i18n("UICategoryTree.label.home");
-      builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
-    }
-    builder.append("</a>");
-
-    
-    if(categoryTrees.size() > 0) {
-      builder.append("<ul class=\"nodeGroup\">");
-      for(CategoryTree subTree : categoryTrees) {
-        if (isAddSup && subTree.getCategory().getPath().indexOf(categoryId) >= 0){
-          continue;
-        }
-        builder.append("<li class=\"node\">");
-        builder.append(renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup));
-        builder.append("</li>");
+    if (hasPermission(category)) {
+      List<CategoryTree> categoryTrees = categoryTree.getSubCategory();
+      String clazz = "collapseIcon";
+      if (categoryTrees.size() == 0){
+        clazz = "uiIconEmpty";
       }
-      builder.append("</ul>");
+  
+      builder.append("<a href=\"javascript:void(0);\"");
+      if (isAddSup == false && category.getId().equals(categoryId) == true) {
+        String warning = uiForm.i18n("UIMoveQuestionForm.msg.choice-orther");
+        builder.append(" ondblclick=\"alert('").append(warning).append("');\"");
+      } else {
+        builder.append(" ondblclick=\"").append(uiForm.event(actionName, category.getId())).append("\"");
+      }
+      if(category.getId().equals(Utils.CATEGORY_HOME) == false) {
+          builder.append(" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\">")
+                 .append("<i class=\"uiIconCategory uiIconLightGray\"></i>").append(category.getName());
+      } else {
+        String home = uiForm.i18n("UICategoryTree.label.home");
+        builder.append(">").append("<i class=\"uiIconHome uiIconLightGray\"></i>  <span>").append(home).append("</span>");
+      }
+      builder.append("</a>");
+  
+      
+      if(categoryTrees.size() > 0) {
+        builder.append("<ul class=\"nodeGroup\">");
+        for(CategoryTree subTree : categoryTrees) {
+          if (isAddSup && subTree.getCategory().getPath().indexOf(categoryId) >= 0){
+            continue;
+          }
+          builder.append("<li class=\"node\">");
+          builder.append(renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup));
+          builder.append("</li>");
+        }
+        builder.append("</ul>");
+      }
     }
-    
     return builder.toString();
+  }
+  
+  public static boolean hasPermission(Category category) {
+    List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
+    if(CommonUtils.isEmpty(category.getModerators()) == false && 
+        Utils.hasPermission(Arrays.asList(category.getModerators()), listOfUser)) {
+      return true;
+    }
+    if (CommonUtils.isEmpty(category.getUserPrivate()) == false) {
+      return Utils.hasPermission(Arrays.asList(category.getUserPrivate()), listOfUser);
+    }
+    return true;
   }
   
 }

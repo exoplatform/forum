@@ -18,7 +18,8 @@ package org.exoplatform.forum.service.cache.model.selector;
 
 import java.util.List;
 
-import org.exoplatform.forum.service.cache.model.ScopeCacheKey;
+import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
+import org.exoplatform.forum.common.cache.model.selector.ScopeCacheSelector;
 import org.exoplatform.forum.service.cache.model.data.CategoryData;
 import org.exoplatform.forum.service.cache.model.key.CategoryKey;
 import org.exoplatform.services.cache.ExoCache;

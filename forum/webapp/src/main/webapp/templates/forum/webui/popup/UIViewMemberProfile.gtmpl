@@ -52,7 +52,7 @@
 				<tr>
 					<td class="memberContainer">
 						<div class="textTitleProfile">
-							<i class="$userSmile" rel="tooltip" data-placement="bottom" title="${userName}'s $titleSmile"></i>$fullName
+							<i class="$userSmile" rel="tooltip" data-placement="bottom" title="${userName}'s $titleSmile"></i><strong>$fullName</strong>
 						</div>
 						<%	
 						String userTitle = userProfileViewer.getUserTitle();

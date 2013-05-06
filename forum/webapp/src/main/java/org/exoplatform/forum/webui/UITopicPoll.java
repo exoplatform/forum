@@ -24,7 +24,7 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
@@ -59,7 +59,9 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 public class UITopicPoll extends BaseForumForm {
-  private final String POLL_OPTION_ID  = "option";
+  private final static String POLL_OPTION_ID  = "option";
+
+  private final static String POLL_OPTION_VALUE  = "pollOption";
 
   private Poll        poll_;
 
@@ -89,7 +91,7 @@ public class UITopicPoll extends BaseForumForm {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     } catch (Exception e) {
       try {
-        userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), ForumUtils.EMPTY_STR);
+        userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), CommonUtils.EMPTY_STR);
       } catch (Exception ex) {
         log.warn("Failed to get default user profile", e);
       }
@@ -136,8 +138,8 @@ public class UITopicPoll extends BaseForumForm {
     if (poll_ != null) {
       if (!poll_.getIsMultiCheck()) {
         List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
-        for (String s : poll_.getOption()) {
-          options.add(new SelectItemOption<String>(s, s));
+        for (int i = 0; i < poll_.getOption().length; ++i) {
+          options.add(new SelectItemOption<String>(poll_.getOption()[i], getOptionId(POLL_OPTION_VALUE, i)));
         }
         UIPollRadioBoxInput input = new UIPollRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
@@ -145,21 +147,25 @@ public class UITopicPoll extends BaseForumForm {
       } else {
         String[] options = poll_.getOption();
         for (int i = 0; i < options.length; i++) {
-          UIForumCheckBoxInput checkBoxInput = new UIForumCheckBoxInput(POLL_OPTION_ID.concat(String.valueOf(i)), 
-                                                                        POLL_OPTION_ID.concat(String.valueOf(i)), options[i], false);
+          UIForumCheckBoxInput checkBoxInput = new UIForumCheckBoxInput(getOptionId(POLL_OPTION_ID, i), 
+                                                                        getOptionId(POLL_OPTION_ID, i), options[i], false);
           addUIFormInput(checkBoxInput.setInTable(true));
         }
       }
     }
   }
+  
+  private String getOptionId(String prefix, int index) {
+    return new StringBuffer(prefix).append(index).toString();
+  }
 
   private Poll getPoll() throws Exception {
-    if (!ForumUtils.isEmpty(categoryId)) {
+    if (!CommonUtils.isEmpty(categoryId)) {
       if (userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId()))
         this.canViewEditMenu = true;
       else
         this.canViewEditMenu = false;
-      pollId = forum.getPath() + ForumUtils.SLASH + topicId + ForumUtils.SLASH + topicId.replace(Utils.TOPIC, Utils.POLL);
+      pollId = forum.getPath() + CommonUtils.SLASH + topicId + CommonUtils.SLASH + topicId.replace(Utils.TOPIC, Utils.POLL);
       try {
         poll_ = pollService.getPoll(pollId);
       } catch (Exception e) {
@@ -190,7 +196,7 @@ public class UITopicPoll extends BaseForumForm {
     userIsBanned = userProfile.getIsBanned();
     if (userIsBanned || userProfile.getUserRole() > 2)
       return true;
-    if (ForumUtils.isEmpty(userVote))
+    if (CommonUtils.isEmpty(userVote))
       return true;
     if (poll_.getTimeOut() > 0) {
       Date today = new Date();
@@ -231,10 +237,10 @@ public class UITopicPoll extends BaseForumForm {
       double tmp = Double.parseDouble(string);
       double k = (tmp * size) / 100;
       int t = (int) Math.round(k);
-      string = ForumUtils.EMPTY_STR + (double) t * 100 / size;
+      string = CommonUtils.EMPTY_STR + (double) t * 100 / size;
       infoVote[j] = string + org.exoplatform.poll.service.Utils.COLON + t;
     }
-    infoVote[l] = ForumUtils.EMPTY_STR + temp;
+    infoVote[l] = CommonUtils.EMPTY_STR + temp;
     if (poll.getIsMultiCheck()) {
       infoVote[l] = String.valueOf(userVotes.length);
     }
@@ -249,26 +255,25 @@ public class UITopicPoll extends BaseForumForm {
   static public class VoteActionListener extends EventListener<UITopicPoll> {
     public void execute(Event<UITopicPoll> event) throws Exception {
       UITopicPoll topicPoll = event.getSource();
-      if (!ForumUtils.isEmpty(topicPoll.pollId)) {
+      if (!CommonUtils.isEmpty(topicPoll.pollId)) {
         topicPoll.poll_ = topicPoll.pollService.getPoll(topicPoll.pollId);
         StringBuffer values = new StringBuffer();
         List<UIComponent> children = topicPoll.getChildren();
         int maxOption = topicPoll.poll_.getOption().length;
         boolean isFailed = false;
         int i = 0;
-        if (!topicPoll.poll_.getIsMultiCheck()) {
+        if (topicPoll.poll_.getIsMultiCheck() == false) {
           for (UIComponent child : children) {
             if (child instanceof UIPollRadioBoxInput) {
-              for (SelectItemOption<String> option : ((UIPollRadioBoxInput) child).getOptions()) {
-                if (option.getValue().equalsIgnoreCase(((UIPollRadioBoxInput) child).getValue())) {
-                  values.append(i);
-                  if (i >= maxOption) {
-                    isFailed = true;
-                  }
-                  break;
-                }
-                ++i;
+              //
+              String indexChecked = ((UIPollRadioBoxInput) child).getValue();
+              if (CommonUtils.isEmpty(indexChecked) == false) {
+                values.append(indexChecked.replaceFirst(POLL_OPTION_VALUE, CommonUtils.EMPTY_STR));
+              } else {
+                isFailed = true;
               }
+
+              //
               break;
             }
           }
@@ -281,7 +286,7 @@ public class UITopicPoll extends BaseForumForm {
                   isFailed = true;
                   break;
                 }
-                values.append(((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : ForumUtils.EMPTY_STR) + String.valueOf(i));
+                values.append(((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : CommonUtils.EMPTY_STR) + String.valueOf(i));
               }
               ++i;
             }
@@ -314,7 +319,7 @@ public class UITopicPoll extends BaseForumForm {
         popupAction = forumPollPortlet.getChild(UIPopupAction.class);
       }
       UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-      String path = topicPoll.categoryId + ForumUtils.SLASH + topicPoll.forumId + ForumUtils.SLASH + topicPoll.topicId;
+      String path = topicPoll.categoryId + CommonUtils.SLASH + topicPoll.forumId + CommonUtils.SLASH + topicPoll.topicId;
       pollForm.setTopicPath(path);
       topicPoll.isEditPoll = true;
       topicPoll.poll_ = topicPoll.getPoll();
@@ -326,7 +331,7 @@ public class UITopicPoll extends BaseForumForm {
   static public class RemovePollActionListener extends EventListener<UITopicPoll> {
     public void execute(Event<UITopicPoll> event) throws Exception {
       UITopicPoll topicPoll = event.getSource();
-      topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + ForumUtils.SLASH + topicPoll.poll_.getId());
+      topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + CommonUtils.SLASH + topicPoll.poll_.getId());
       topicPoll.removeChilren();
       try {
         UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) topicPoll.getParent();

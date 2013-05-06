@@ -39,6 +39,21 @@
       <as>gj</as>
     </depends>
   </module>
+
+  <module>
+    <name>ForumLoadMorePlugins</name>
+    <script>
+      <path>/javascript/eXo/forum/ForumLoadMoreItem.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+      <as>forumUtils</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends>
+  </module>
    
    <module>
       <name>forumFilter</name>

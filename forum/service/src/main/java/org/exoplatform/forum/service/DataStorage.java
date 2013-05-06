@@ -29,6 +29,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
@@ -156,6 +157,26 @@ public interface DataStorage {
   long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
   JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
+
+  /**
+   * Gets a post list by given PostFilter with offset and limit
+   * @param filter: specified PostFilter
+   * @param offset
+   * @param limit
+   * @return List of Posts
+   * @throws Exception
+   * @since 2.2.11
+   */
+  List<Post> getPosts(PostFilter filter, int offset, int limit) throws Exception;
+  
+  /**
+   * Gets count of post by given PostFilter
+   * @param filter: specified PostFilter
+   * @return
+   * @throws Exception
+   * @since 2.2.11
+   */
+  int getPostsCount(PostFilter filter) throws Exception;
 
   long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
@@ -286,6 +307,8 @@ public interface DataStorage {
   void updateTopicAccess(String userId, String topicId);
 
   void updateForumAccess(String userId, String forumId);
+  
+  void writeReads();
 
   List<String> getBookmarks(String userName) throws Exception;
 
@@ -364,6 +387,8 @@ public interface DataStorage {
   KSDataLocation getDataLocation();
 
   void setViewCountTopic(String path, String userRead);
+  
+  void writeViews();
 
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
 

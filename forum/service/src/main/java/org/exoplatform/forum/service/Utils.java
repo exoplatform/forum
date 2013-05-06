@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,10 +29,16 @@ import java.util.Map;
 import javax.jcr.Value;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.User;
 
 public class Utils implements ForumNodeTypes {
@@ -521,6 +528,49 @@ public class Utils implements ForumNodeTypes {
     }
     return query.toString();
   }
+  
+  
+  /**
+   * @param userId
+   * @return
+   */
+  public static List<String> getGroupSpaceOfUser(String userId) {
+    List<String> groupId = new ArrayList<String>();
+    try {
+      @SuppressWarnings("unchecked")
+      Collection<Group> groups = UserHelper.getOrganizationService().getGroupHandler().findGroupsOfUser(userId);
+      for (Group group : groups) {
+        if (group.getId().indexOf(CommonUtils.SLASH + CATEGORY_SPACE) >= 0) {
+          groupId.add(group.getGroupName());
+        }
+      }
+    } catch (Exception e) {
+      LOG.warn("The method findGroupsOfUser() cannot access the database.");
+    }
+    return groupId;
+  }
+  
+  /**
+   * Build Xpath query to get all forums in spaces of user.
+   * @param userId
+   * @return String
+   */
+  public static String buildQueryForumInSpaceOfUser(String userId, List<String> groupIds) {
+    if (isEmpty(userId) == false) {
+      if (groupIds.size() > 0) {
+        StringBuilder queryForum = new StringBuilder("(");
+        for (String groupId : groupIds) {
+          if (queryForum.length() > 10) {
+            queryForum.append(" or ");
+          }
+          queryForum.append("(@").append(Utils.EXO_ID).append("='").append(Utils.FORUM_SPACE_ID_PREFIX).append(groupId).append("')");
+        }
+        queryForum.append(")");
+        return queryForum.toString();
+      }
+    }
+    return CommonUtils.EMPTY_STR;
+  }
 
   /**
    * Checking a user who whether contained Users/MemberShip/Group ? 
@@ -571,9 +621,14 @@ public class Utils implements ForumNodeTypes {
    * @since 2.2.9
    */  
   static public String getCurrentTenantName() {
-    RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
-                                                                                 .getComponentInstanceOfType(RepositoryService.class);
     try {
+      RepositoryService repositoryService = (RepositoryService) PortalContainer.getInstance()
+                                                                               .getComponentInstanceOfType(RepositoryService.class);
+      if (repositoryService == null) {
+        repositoryService = (RepositoryService) RootContainer.getInstance()
+                                                             .getPortalContainer(PortalContainer.getCurrentPortalContainerName())
+                                                             .getComponentInstanceOfType(RepositoryService.class);
+      }
       return repositoryService.getCurrentRepository().getConfiguration().getName();
     } catch (Exception e) {
       if (LOG.isDebugEnabled()) {

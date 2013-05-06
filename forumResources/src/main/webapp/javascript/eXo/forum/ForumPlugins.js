@@ -1,5 +1,11 @@
 (function($) {
 
+  //check has attribute
+  $.fn.hasAttr = function(name) {
+    var attr = $(this).attr(name);
+    return (typeof attr !== 'undefined' && attr !== false) ? true : false;
+  };
+ 
   // check existing element.
   $.fn.exists = function() {
     return ($(this).length > 0);

@@ -25,7 +25,6 @@ import org.exoplatform.forum.bbcode.spi.BBCodeProvider;
 /**
  * Builtin BBCode provider. Porvides definitions for the following standard BBCodes : 
  * I,B,U,COLOR,SIZE,FONT,HIGHLIGHT,LEFT,RIGHT,CENTER,JUSTIFY,EMAIL,URL,GOTO,LIST,IMG,QUOTE,CSS
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BBCodeProvider {

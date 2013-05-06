@@ -47,7 +47,7 @@
 						<i class="$icon "></i>
 					</td>
 					<td>
-						<a class="ActionLink" data-link="<%=uiform.event("OpenLink",linkPath);%>;" href="$linkBm">$linkName</a>
+						<a class="actionOpenLink" data-link="<%=uiform.event("OpenLink",linkPath);%>;" href="$linkBm">$linkName</a>
 					</td>
 					<td class="center">
 						<a class="actionIcon" href="<%=uiform.event("DeleteLink", linkPath);%>" rel="tooltip" data-placement="bottom" title="Delete">

@@ -2,6 +2,7 @@ package org.exoplatform.answer.webui.popup;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.nodetype.ConstraintViolationException;
 
 import org.exoplatform.answer.webui.FAQUtils;
@@ -76,19 +77,18 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
           return;
         }
         try {
-          if (!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)) {
-            importForm.warning("UIImportForm.msg.import-fail", false);
-          } else {
-            importForm.info("UIImportForm.msg.import-successful", false);
-          }
+          service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip);
+          importForm.info("UIImportForm.msg.import-successful", false);
         } catch (AccessDeniedException ace) {
           importForm.warning("UIImportForm.msg.access-denied", false);
         } catch (ConstraintViolationException con) {
           importForm.warning("UIImportForm.msg.constraint-violation-exception", false);
         } catch (ItemExistsException ise) {
           importForm.warning("UIImportForm.msg.CategoryIsExist", false);
+        } catch (PathNotFoundException ise) {
+          importForm.warning("UIImportForm.msg.targetNotFound", false);
         } catch (Exception e) {
-          importForm.warning("UIImportForm.msg.filetype-error", false);
+          importForm.warning("UIImportForm.msg.import-fail", false);
         }
 
         UploadService uploadService = importForm.getApplicationComponent(UploadService.class);

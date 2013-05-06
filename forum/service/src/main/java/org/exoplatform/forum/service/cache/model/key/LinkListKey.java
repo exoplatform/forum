@@ -1,10 +1,8 @@
 package org.exoplatform.forum.service.cache.model.key;
 
-import org.exoplatform.forum.service.cache.model.ScopeCacheKey;
+import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+
 public class LinkListKey extends ScopeCacheKey {
 
   private final String strQueryCate;

@@ -57,6 +57,7 @@ public class UIListSentPrivateMessage extends UIContainer {
   public UIListSentPrivateMessage() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumPageIterator.class, null, "PageListSentMessage");
+    addChild(UIViewPrivateMessage.class, null, "UIViewPrivateMessageInSend").setRendered(false);
   }
 
   protected UserProfile getUserProfile() throws Exception {
@@ -103,11 +104,10 @@ public class UIListSentPrivateMessage extends UIContainer {
       if (!ForumUtils.isEmpty(objctId)) {
         uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
         ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId);
-        UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class);
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 670);
-        privateMessageForm.setPrivateMessage(privateMessage);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+        UIViewPrivateMessage viewPrivateMessage = uicontainer.getChild(UIViewPrivateMessage.class);
+        viewPrivateMessage.setPrivateMessage(privateMessage);
+        viewPrivateMessage.setRendered(true);
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
       }
     }
   }
@@ -118,7 +118,8 @@ public class UIListSentPrivateMessage extends UIContainer {
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
       if (!ForumUtils.isEmpty(objctId)) {
         uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
-        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer.getParent());
+        uicontainer.getChild(UIViewPrivateMessage.class).reset();
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
       }
     }
   }

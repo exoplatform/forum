@@ -28,9 +28,16 @@
 					<% 
 						for(forum in forums) {
 							String forumName = forum.getName() ;
+							String checked = (uicomponent.getCheckedForum(forum.getId()) == true) ? "checked" : "";
+							String inputId = forum.getPath().replace("/", "");
 					%>
 						<li class="node">
-							<%uicomponent.renderChild(forum.getPath())%><i class="uiIconUIForms uiIconLightGray spaceItem"></i>$forumName
+							<a href="javascript:void(0);" class="uiIconNode uiIconEmpty">
+								<span class="uiCheckbox">
+									<input name="<%=inputId%>" id="<%=inputId%>" <%=checked%> type="checkbox"/>
+									<span><i class="uiIconUIForms uiIconLightGray spaceItem"></i>$forumName</span>
+								</span>
+							</a>
 						</li>
 					<% } %>		
 					</ul>

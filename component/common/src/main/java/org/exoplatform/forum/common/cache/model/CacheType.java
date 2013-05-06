@@ -1,16 +1,14 @@
-package org.exoplatform.forum.service.cache.model;
+package org.exoplatform.forum.common.cache.model;
 
 import java.io.Serializable;
 
-import org.exoplatform.forum.service.cache.loader.CacheLoader;
-import org.exoplatform.forum.service.cache.loader.ServiceContext;
+import org.exoplatform.forum.common.cache.CacheLoader;
+import org.exoplatform.forum.common.cache.ServiceContext;
+import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.future.FutureExoCache;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
 public enum CacheType {
   CATEGORY_DATA("forum.CategoryData"),
   CATEGORY_LIST("forum.CategoryList"),
@@ -18,6 +16,9 @@ public enum CacheType {
   FORUM_LIST("forum.ForumList"),
   TOPIC_DATA("forum.TopicData"),
   TOPIC_LIST("forum.TopicList"),
+  POST_DATA("forum.PostData"),
+  POST_LIST("forum.PostList"),
+  POST_LIST_COUNT("forum.PostListCount"),
   WATCH_LIST_DATA("forum.WatchListData"),
   LINK_LIST_DATA("forum.LinkListData"),
   OBJECT_NAME_DATA("forum.ObjectNameData"),
@@ -27,9 +28,10 @@ public enum CacheType {
 
   POLL_DATA("poll.PollData"),
   POLL_LIST("poll.PollList"),
-  POLL_SUMMARY_DATA("poll.PollSummaryData")
-
-  ;
+  POLL_SUMMARY_DATA("poll.PollSummaryData"),
+  
+  BBCODE_DATA("forum.BBCodeData"),
+  LIST_BBCODE_DATA("forum.ListBBCodeData");
   
   private final String name;
 

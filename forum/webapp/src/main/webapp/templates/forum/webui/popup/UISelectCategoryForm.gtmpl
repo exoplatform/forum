@@ -1,5 +1,4 @@
 <%	
-	import org.exoplatform.forum.service.ForumLinkData ;
 	import org.exoplatform.forum.service.Utils ;
 %>
 
@@ -15,10 +14,15 @@
 				 if(category.getType().equals(Utils.CATEGORY)) {
 					String categoryId = category.getId() ;
 					String categoryName = category.getName() ;
+					String checked = (uicomponent.getCheckedCategory(categoryId) == true) ? "checked" : "";
 			%>
 				<li class="node">
-					<%uicomponent.renderChild(categoryId)%>
-					<i class="uiIconCategory uiIconLightGray"></i>&nbsp;$categoryName
+					<a href="javascript:void(0);" class="uiIconNode uiIconEmpty">
+						<span class="uiCheckbox">
+							<input name="<%=categoryId%>" id="<%=categoryId%>" <%=checked%> type="checkbox"/>
+							<span><i class="uiIconCategory uiIconLightGray spaceItem"></i>&nbsp;$categoryName</span>
+						</span>
+					</a>
 				</li>
 			<% } 
 				}%>

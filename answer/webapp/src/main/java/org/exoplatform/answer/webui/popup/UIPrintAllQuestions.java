@@ -31,6 +31,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.cssfile.BuiltinCSSFileTypeUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -63,7 +64,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   protected boolean    viewAuthorInfor = true;
 
   private RenderHelper renderHelper    = new RenderHelper();
-
+  
   public void activate() {
   }
 
@@ -76,6 +77,10 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     } catch (Exception e) {
       log.debug("Current user must exist: ", e);
     }
+  }
+
+  protected String getCSSByFileType(String fileName, String fullFileType) {
+    return BuiltinCSSFileTypeUtils.getCSSClassByFileNameAndFileType(fileName, fullFileType, BuiltinCSSFileTypeUtils.SIZE_16x16);
   }
 
   protected String getQuestionRelationById(String questionId) {
@@ -133,14 +138,13 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   }
 
   public String render(Object obj) throws RenderingException {
-    String content = "";
     if (obj instanceof Question)
-      content = renderHelper.renderQuestion((Question) obj);
+      return renderHelper.renderQuestion((Question) obj);
     else if (obj instanceof Answer)
-      content = renderHelper.renderAnswer((Answer) obj);
+      return renderHelper.renderAnswer((Answer) obj);
     else if (obj instanceof Comment)
-      content = renderHelper.renderComment((Comment) obj);
-    return CommonUtils.decodeSpecialCharToHTMLnumber(content);
+      return renderHelper.renderComment((Comment) obj);
+    return CommonUtils.EMPTY_STR;
   }
 
   public List<Question> getListQuestion() {
@@ -155,10 +159,6 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
       list.add(question);
       return list;
     }
-  }
-
-  public String answer(Comment comment) {
-    return comment.getComments();
   }
 
   public List<Answer> getListAnswers(String questionId) {

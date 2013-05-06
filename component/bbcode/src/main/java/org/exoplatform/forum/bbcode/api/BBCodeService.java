@@ -61,6 +61,12 @@ public interface BBCodeService {
    * @LevelAPI Platform
    */
   public List<String> getActive() throws Exception;
+  
+  /**
+   * @return
+   * @throws Exception
+   */
+  List<BBCode> getBBCodeActive() throws Exception;
 
   /**
    * Loads a specific BBCode.

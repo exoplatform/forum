@@ -160,7 +160,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       String errorUser = UserHelper.checkValueUser(value);
       if (CommonUtils.isEmpty(errorUser) == false) {
         WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-        context.getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.error-input", new String[] { errorUser }, ApplicationMessage.WARNING));
+        context.getUIApplication().addMessage(new ApplicationMessage("UserNameValidator.msg.error-input", new String[] { errorUser }, ApplicationMessage.WARNING));
         ((PortalRequestContext) context.getParentAppRequestContext()).ignoreAJAXUpdateOnPortlets(true);
         return;
       }

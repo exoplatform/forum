@@ -204,9 +204,12 @@ public class UICategories extends BaseUIFAQForm {
     boolean isAdmin = faqSetting_.isAdmin();
     if(!isAdmin) isAdmin = isModerator;
     faqSetting.setIsAdmin(String.valueOf(isAdmin));
-    listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting, true, null));
-    for (Category cat : listCate) {
-      categoryIds.put(cat.getId(), cat.getPath());
+    List<Category> list = getFAQService().getSubCategories(categoryId, faqSetting, true, null);
+    for (Category category : list) {
+      if (FAQUtils.hasPermission(category)) {
+        listCate.add(category);
+        categoryIds.put(category.getId(), category.getPath());
+      }
     }
   }
 

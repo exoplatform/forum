@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -42,7 +43,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
@@ -53,7 +53,7 @@ import org.exoplatform.webui.form.UIForm;
       @EventConfig(listeners = UIWatchToolsForm.CloseActionListener.class, phase=Phase.DECODE)
     }
 )
-public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
+public class UIWatchToolsForm extends BaseForumForm implements UIPopupComponent {
   public final String  WATCHTOOLS_ITERATOR = "WatchToolsPageIterator";
 
   private String       path                = ForumUtils.EMPTY_STR;

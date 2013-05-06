@@ -1711,6 +1711,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     cate.setName(reader.string(EXO_NAME));
     cate.setIndex(reader.l(EXO_INDEX));
     cate.setView(reader.bool(EXO_IS_VIEW));
+    cate.setModerators(reader.strings(EXO_MODERATORS, new String[] {}));
+    cate.setUserPrivate(reader.strings(EXO_USER_PRIVATE, new String[] {}));
     return cate;
   }
   
@@ -3092,7 +3094,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   @Override
   public boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
       List<String> patchNodeImport = new ArrayList<String>();
       Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);
       Session session = categoryNode.getSession();
@@ -3140,10 +3141,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           registerQuestionNodeListener(node);
         }
       }
-    } catch (Exception e) {
-      log.warn(String.format("Failed to import data in category %s :\n %s ", parentId, e.getMessage()));
-      return false;
-    }
     return true;
   }
 

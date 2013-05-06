@@ -167,9 +167,9 @@
 							<ul class="dropdown-menu">
 								<li>
 									<div class="searchAdvance">
-										<input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
+										<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
 										<a class="btn btn-primary actionSubmitLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-										<br/>
+										</p>
 										<a href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 									</div>
 								</li>
@@ -372,13 +372,13 @@
 						
 						<% ++rCNB; %>
 						<%if(uicomponent.isUseAjax) { %>
-							<a class="ActionLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="actionOpenLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 						<%} else { %>
-							<a class="ActionLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
+							<a class="actionOpenLink $title $textHotTopic" id="UIContextPopupMenu${rCNB}" href="$url" rel="tooltip" data-placement="bottom" title="$titlePost"><i class="$iconStatusTopic" title="$titleTopicStatus"></i>$topicTitle</a>
 						<%}%>
 						$approved
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu" style="display:block;"><li></li></ul>
+							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 						</div>
 						<div>
 					<% if(max_page > 1) {
@@ -387,14 +387,14 @@
 								 if(t <= 5) {
 								 number = String.valueOf(t) ;
 						%>
-							<a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink" href="${url+"/" + number}">$number</a>
+							<a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="actionOpenLink" href="${url+"/" + number}">$number</a>
 						<%	 }
 									t = t + 1 ;
 							 }
 							 if(max_page> 5) { 
 								 number = String.valueOf(max_page) ;
 						%>
-							<span>...</span><a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
+							<span>...</span><a data-link="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="actionOpenLink" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a>
 						<% }
 						 }
 						%>
