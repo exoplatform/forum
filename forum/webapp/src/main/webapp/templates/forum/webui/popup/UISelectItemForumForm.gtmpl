@@ -12,10 +12,10 @@
 				List categories = uicomponent.getForumLinks(); 
 				for(category in categories) {
 				 if(category.getType().equals(Utils.CATEGORY)) {
-					String iconClass = "collapseIcon" ;
+					String iconClass = "expandIcon" ;
 					String categoryName = category.getName() ;
 					List forums =	uicomponent.getForums(category.getId());
-					if(forums.size() < 1) {iconClass = "expandIcon";}
+					if(forums.size() < 1) {iconClass = "collapseIcon";}
 			%>
 				<li class="node">
 					<a href="javascript:void(0);" class="uiIconNode $iconClass">

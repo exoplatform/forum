@@ -68,7 +68,7 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
     forumLinks.addAll(getForumService().getAllLink(cateQuery, ForumUtils.EMPTY_STR));
     
     //
-    List<String> groupIds = Utils.getGroupSpaceOfUser(userProfile.getUserId());
+    List<String> groupIds = Utils.getGroupSpaceOfUser(userId);
     String strQuryForum = new StringBuffer("[").append(Utils.buildQueryForumInSpaceOfUser(userId, groupIds))
                                                .append("]").toString();
     if (ForumUtils.isEmpty(strQuryForum) == false) {
