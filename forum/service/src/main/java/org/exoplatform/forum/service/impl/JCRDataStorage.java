@@ -252,7 +252,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void addCalculateModeratorEventListener() throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     Node categoryHome = getCategoryHome(sProvider);
     try {
       NodeIterator iter = categoryHome.getNodes();
@@ -272,6 +272,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     } catch (Exception e) {
       log.error("Failed to add calculate moderator event listener", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -288,7 +290,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void addDeletedUserCalculateListener() {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node profileHome = getUserProfileHome(sProvider);
       if (profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
@@ -296,6 +298,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     } catch (Exception e) {
       log.error("Can not add caculation listerner for deleted user", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -312,7 +316,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void initCategoryListener() {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     listeners.clear();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -337,6 +341,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
     } catch (Exception e) {
       log.error("Failed to init category listenner", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -360,7 +366,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       currentRepo = repositoryService.getCurrentRepository().getConfiguration().getName();
       for (RepositoryEntry repositoryEntry : entries) {
         repositoryService.setCurrentRepositoryName(repositoryEntry.getName());
-        SessionProvider sProvider = CommonUtils.createSystemProvider();
+        SessionProvider sProvider = SessionProvider.createSystemProvider();
         try {
           NodeIterator iter = getNodeIteratorAutoPruneSetting(sProvider, true);
           while (iter.hasNext()) {
@@ -370,6 +376,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (log.isDebugEnabled()) {
             log.debug("Could not perform pruning!", e);
           }
+        } finally {
+          sProvider.close();
         }
       }
     } catch (Exception e) {
@@ -735,7 +743,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void initDefaultData() throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     Set<String> set = new HashSet<String>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -798,6 +806,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumStatisticNode.save();
     } catch (Exception e) {
       log.error("Init default data is failed!!", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -5347,7 +5357,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public ForumStatistic getForumStatistic() throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     ForumStatistic forumStatistic = new ForumStatistic();
     try {
       Node forumStatisticNode = getForumStatisticsNode(sProvider);
@@ -5362,12 +5372,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (log.isDebugEnabled()) {
         log.debug("Failed to load forum statistics", e);
       }
+    } finally {
+      sProvider.close();
     }
+    
     return forumStatistic;
   }
 
   public void saveForumStatistic(ForumStatistic forumStatistic) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node forumStatisticNode = getForumStatisticsNode(sProvider);
       forumStatisticNode.setProperty(EXO_POST_COUNT, forumStatistic.getPostCount());
@@ -5384,6 +5397,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     } catch (Exception e) {
       log.error("Failed to save forum statistics", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -6725,7 +6740,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void evaluateActiveUsers(String strQuery){
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       String path = getUserProfileHome(sProvider).getPath();
       StringBuilder stringBuilder = new StringBuilder();
@@ -6752,6 +6767,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     } catch (Exception e) {
       log.error("Failed to evaluate active users", e);
+    } finally {
+      sProvider.close();
     }
   }
 

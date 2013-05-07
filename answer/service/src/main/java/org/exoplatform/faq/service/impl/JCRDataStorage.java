@@ -301,7 +301,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   public void reInitQuestionNodeListeners() throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       NodeIterator iter = getQuestionsIterator(sProvider);
       if (iter == null)
@@ -312,12 +312,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
     } catch (Exception e) {
       log.error("Failed to get question iterator: ", e);
+    } finally {
+      sProvider.close();
     }
   }
 
   @Override
   public boolean initRootCategory() throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider);
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
@@ -334,6 +336,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     } catch (Exception e) {
       log.error("Could not initialize root category", e);
       return false;
+    } finally {
+      sProvider.close();
     }
   }
 

@@ -159,16 +159,23 @@ public class FAQServiceImpl implements FAQService, Startable {
       log.warn("No default template was configured for FAQ.");
       return;
     }
-    SessionProvider provider = CommonUtils.createSystemProvider();
-    if (!locator.getSessionManager().getSession(provider).getRootNode()
-                .hasNode(locator.getFaqTemplatesLocation() + "/" + Utils.UI_FAQ_VIEWER)) {
-      InputStream in = configManager_.getInputStream(template_.getPath());
-      byte[] data = new byte[in.available()];
-      in.read(data);
-      saveTemplate(new String(data));
+    
+    SessionProvider provider = SessionProvider.createSystemProvider();
+    try {
+      if (!locator.getSessionManager()
+                  .getSession(provider)
+                  .getRootNode()
+                  .hasNode(locator.getFaqTemplatesLocation() + "/" + Utils.UI_FAQ_VIEWER)) {
+        InputStream in = configManager_.getInputStream(template_.getPath());
+        byte[] data = new byte[in.available()];
+        in.read(data);
+        saveTemplate(new String(data));
+      }
+      configManager_ = null;
+      template_ = null;
+    } finally {
+      provider.close();
     }
-    configManager_ = null;
-    template_ = null;
   }
 
   /**
