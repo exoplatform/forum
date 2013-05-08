@@ -96,45 +96,45 @@
       </plugins>
     </pluginManagement>
     <plugins>
-        <!-- Extract templates used by wikbook -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>unpack-templates</id>
-              <phase>generate-sources</phase>
-              <goals>
-                <goal>unpack-dependencies</goal>
-              </goals>
-              <configuration>
-                <includeGroupIds>org.exoplatform.doc</includeGroupIds>
-                <includeArtifactIds>doc-style</includeArtifactIds>
-                <excludes>META-INF/**</excludes>
-                <outputDirectory>${project.build.directory}/templates</outputDirectory>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>default-compile</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-              <!-- Additional configuration to generate wiki pages from wikbook annotations-->
-              <configuration>
-                <compilerArguments>
-                  <sourcepath>${project.build.directory}/templates</sourcepath>
-                </compilerArguments>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
+      <!-- Extract templates used by wikbook -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-templates</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>org.exoplatform.doc</includeGroupIds>
+              <includeArtifactIds>doc-style</includeArtifactIds>
+              <excludes>META-INF/**</excludes>
+              <outputDirectory>${project.build.directory}/templates</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <!-- Additional configuration to generate wiki pages from wikbook annotations-->
+            <configuration>
+              <compilerArguments>
+                <sourcepath>${project.build.directory}/templates</sourcepath>
+              </compilerArguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 </project>
