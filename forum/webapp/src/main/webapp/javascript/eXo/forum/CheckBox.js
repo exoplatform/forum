@@ -2,7 +2,7 @@
   var CheckBox = {
     jqCheckAll : null,
     init : function(cont) {
-      if (typeof (cont) == 'string') cont = findId(cont);
+      if (typeof (cont) == 'string') cont = $.fn.findId(cont);
       if (cont.exists()) {
         var checkboxes = cont.find('input.checkbox');
         if (!checkboxes.exists()) return;

@@ -6,7 +6,7 @@
     component : null,
 
     init : function(compid) {
-      DragDrop.component = findId(compid);
+      DragDrop.component = $.fn.findId(compid);
       DragDrop.component.find('li.faqCategory')
               .on('mousedown', DragDrop.attach);
 

@@ -92,12 +92,12 @@
 			<%	if(isDisplay) {%>
 			<thead>
 				<tr>
-					<th style="width:15px;">&nbsp;</th>
-					<th style="width:35%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
-					<th style="width:25%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-					<th style="width:150px;"><%=_ctx.appRes("UICategory.label.author");%></th>
-					<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
-					<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
+					<th style="width:20px;">&nbsp;</th>
+					<th style="width:30%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
+					<th style="width:35%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+					<th style="width:160px;"><%=_ctx.appRes("UICategory.label.author");%></th>
+					<th style="width:65px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
+					<th style="width:70px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
 				</tr>
 			</thead>
 			<tbody>

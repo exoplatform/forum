@@ -2,7 +2,7 @@
   var MaskLayerControl = {
 
     init : function(root) {
-      root = (typeof (root) == 'string') ? findId(root) : root;
+      root = (typeof (root) == 'string') ? gj.fn.findId(root) : root;
       var jnodeList = gj(root).find('.AttachImage');
       jnodeList.on('click', function() {
         MaskLayerControl.showPicture(this);

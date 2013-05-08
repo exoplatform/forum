@@ -2,7 +2,7 @@
   var CheckBoxManager = {
     init : function(cont) {
       if (typeof (cont) == "string") {
-        cont = findId(cont);
+        cont = gj.fn.findId(cont);
       } else {
         cont = gj(cont);
       }

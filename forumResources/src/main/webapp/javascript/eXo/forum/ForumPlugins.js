@@ -26,5 +26,4 @@
     }
   }
   $.fn.findId = findId;
-  window.findId = findId;
 })(gj);

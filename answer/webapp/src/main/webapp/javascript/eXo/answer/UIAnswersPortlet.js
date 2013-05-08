@@ -609,7 +609,7 @@
   
   UIAnswersPortlet.executeLink = function (evt) {
     var onclickAction = String(this.getAttribute('actions'));
-    eval(onclickAction);
+    $.globalEval(onclickAction);
     utils.cancelEvent(evt);
     return false;
   };

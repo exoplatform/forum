@@ -132,7 +132,7 @@
 							</li>
 						<% 
 							} else if(action.equals("DeleteCategory")) {
-							  String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
+								String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
 						%>
 							<li>
 								<a href="javascript:if(confirm('$confirm')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
@@ -141,11 +141,11 @@
 							<li>
 								<a <%=liClazz%>href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
 							</li>
-						<%	if(action.equals("WatchOption")) { 
-						  	liClazz = "class=\"forumAction\" ";
-						%>
+						<%	if(action.equals("WatchOption")) { %>
 							<li class="divider"></li>
-						<%	}
+						<%	} else if(action.equals("AddForum")){
+									liClazz = "class=\"forumAction\" ";
+								}
 							}
 						} %>
 						</ul>
@@ -158,14 +158,14 @@
 			
 		<thead>
 			<tr>
-				<th style="width:15px;">&nbsp;</th>
-				<th style="width:40%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
-				<th style="width:25%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-				<th style="width:100px;"><%=_ctx.appRes("UICategory.label.author");%></th>
-				<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
-				<th style="width:15px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
+				<th style="width:20px;">&nbsp;</th>
+				<th style="width:30%;"><%=_ctx.appRes("UICategory.label.Forums");%></th>
+				<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+				<th style="width:160px;"><%=_ctx.appRes("UICategory.label.author");%></th>
+				<th style="width:65px;" class="center"><%=_ctx.appRes("UICategory.label.thread");%></th>
+				<th style="width:65px;" class="center"><%=_ctx.appRes("UICategory.label.post");%></th>
 				<% if(isShowMenu) { %>
-				<th style="width:15px;" class="center">
+				<th style="width:15px;" class="left">
 					<span class="uiCheckbox">
 						<input type="checkbox" class="checkbox" name="checkAll"/><span></span>
 					</span>
@@ -362,7 +362,7 @@
 								<td class="center">$topicCount</td>
 								<td class="center">$postCount</td>
 							<% if(isShowMenu){ %>
-								<td class="center"><% uicomponent.renderChild(forumId)%></td>
+								<td class="left"><% uicomponent.renderChild(forumId)%></td>
 							<% } %>
 							 </tr>
 				 <% } 

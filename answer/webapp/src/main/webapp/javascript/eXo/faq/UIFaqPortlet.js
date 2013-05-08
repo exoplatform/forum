@@ -10,7 +10,7 @@
     createLink : function(cpId, isAjax) {
       if (!isAjax || isAjax === 'false')
         return;
-      var comp = findId(cpId);
+      var comp = $.fn.findId(cpId);
       if (comp.exists()) {
         comp.find('a.ActionLink').on('click', this.executeLink);
       }

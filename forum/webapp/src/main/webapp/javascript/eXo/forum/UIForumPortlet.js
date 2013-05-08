@@ -191,12 +191,12 @@
 
     checkActionCategory : function(id) {
       var uiCategory = $.fn.findId(id);
-      var menuItems = uiCategory.find('.uiCategoryPopupMenu:first').find('a.forumAction');
-      menuItems.data('containerId', {container : id});
       var checked = (uiCategory.find('input[type=checkbox]:checked').length > 0) ? true : false;
+      //
+      var menuItems = uiCategory.find('.uiCategoryPopupMenu:first').find('a.forumAction');
       UIForumPortlet.enableDisableAction(menuItems, checked);
-      
-      var checkboxes = uiCategory.find('input.checkbox');
+      //
+      var checkboxes = uiCategory.find('input[type=checkbox]').data('containerId', {container : id});
       checkboxes.on('click', function(evt) {
         UIForumPortlet.checkActionCategory($(this).data('containerId').container);
       });
@@ -206,13 +206,13 @@
       $.each(actions, function(index, elm) {
         var thizz = $(elm);
         if (checked === false) {
-          if (thizz.hasAttr('data-href') === false) {
+          if (thizz.parents('li:first').hasClass('disabled') === false) {
             thizz.attr('data-href', thizz.attr('href'));
             thizz.attr('href', 'javascript:void(0);');
             thizz.parents('li:first').addClass('disabled');
           }
         } else {
-          if (thizz.hasAttr("data-href")) {
+          if (thizz.parents('li:first').hasClass('disabled') === true) {
             thizz.attr('href', thizz.attr('data-href'));
             thizz.parents('li:first').removeClass('disabled');
           }
@@ -719,7 +719,7 @@
 
     executeLink : function(elm, evt) {
       var onclickAction = String($(elm).attr('data-link'));
-      eval(onclickAction);
+      $.globalEval(onclickAction);
       evt.preventDefault();
       evt.stopPropagation();
       return false;
@@ -813,7 +813,10 @@
     },
 
     submitOnKey : function(id) {
-      var parentElm = ($.fn.findId(id) || $.fn.findId(UIForumPortlet.id).find('.'+id));
+      var parentElm = $.fn.findId(id);
+      if(parentElm.exists() === false) {
+        parentElm = $.fn.findId(UIForumPortlet.id).find('.'+id);
+      }
       if (parentElm.exists()) {
         parentElm.off('keydown').on('keydown', function(evt) {
           var key = utils.getKeynum(evt);
@@ -826,7 +829,7 @@
               } else {
                 link = String(searchLinkElm.attr('data-link')).replace('javascript:', '');
               }
-              eval(link);
+              $.globalEval(link);
               utils.cancelEvent(evt);
               evt.preventDefault();
             }
