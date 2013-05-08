@@ -363,7 +363,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   @Override
   public void saveTemplate(String str) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node templateHome = getTemplateHome(sProvider);
       Node fileNode;
@@ -391,6 +391,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
     } catch (Exception e) {
       log.error("Failed to save template: ", e);
+    } finally {
+      sProvider.close();
     }
   }
 
