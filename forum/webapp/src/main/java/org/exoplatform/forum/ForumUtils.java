@@ -316,7 +316,7 @@ public class ForumUtils {
         return str.trim().split(";");
       }
     } else
-      return new String[] { };
+      return new String[] { EMPTY_STR };
   }
 
   public static String unSplitForForum(String[] str) {
