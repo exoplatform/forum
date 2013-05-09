@@ -396,7 +396,8 @@
 		</div>
 		<div style="padding: 10px; position:relative;">
 <!-- Start ContentContainer -->
-			<div class="divTable">
+		
+		<div class="divTable">
     <%
 	    if(isClosed && !canEdit)  isShowPost = false ;
 	    List checkeds = null;

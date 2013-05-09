@@ -82,7 +82,7 @@ public class UICategoryInfo extends UIContainer {
       if (ForumUtils.isEmpty(at))
         at = "at";
       builder.append(strs[0]).append(" ").append(at).append(" ");
-      builder.append(TimeConvertUtils.getFormatDate("EEE, MMM dd,yyyy, hh:mm a", calendar.getTime()));
+      builder.append(TimeConvertUtils.getFormatDate("EEE, MMM dd, yyyy, hh:mm a", calendar.getTime()));
       if (userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
         if (timeZone >= 0)
           builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));

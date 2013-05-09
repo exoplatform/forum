@@ -46,7 +46,7 @@
 				  ++j;
 				%>
 				  <li>
-					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>" class="actionIcon">
+					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
 						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 					</a>
 				   </li>

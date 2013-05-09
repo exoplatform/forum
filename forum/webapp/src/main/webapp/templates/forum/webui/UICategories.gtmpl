@@ -110,8 +110,8 @@
 					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noForum");%></td>
 					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noPost");%></td>
 					<td></td>
-					<td class="center">0</td>
-					<td class="center">0</td>
+					<td class="center noticeEmpty">0</td>
+					<td class="center noticeEmpty">0</td>
 				</tr>
 			<% }else {%>
 			<%
@@ -207,7 +207,7 @@
 			%>
 				<tr class="oncontextmenu">
 					
-					<td class="center">
+					<td class="center" style="padding-left: 8px; padding-right: 3px;">
 						<i class="$classIconReadForum" rel="tooltip" data-placement="bottom" title="$titleNoNewPostForum"></i>
 					</td>
 					
@@ -215,9 +215,9 @@
 						<i class="$classIconStatusForum" title="$titleIconForum"></i>
 							<% ++rCNB; %>
 							<%if(uicomponent.useAjax){%>
-						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
+						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:bold;">$forumTitle</a>
 							<%} else {%>
-						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a>
+						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:bold" >$forumTitle</a>
 							<%}%>
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
 							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>

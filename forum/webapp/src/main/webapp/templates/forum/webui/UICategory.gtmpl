@@ -182,9 +182,9 @@
 					<td></td>
 					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noForum");%></td>
 					<td class="noticeEmpty"><%=_ctx.appRes("UICategory.label.noPost");%></td>
-					<td></td>
-					<td class="center">0</td>
-					<td class="center">0</td>
+					<td class="noticeEmpty"></td>
+					<td class="center noticeEmpty">0</td>
+					<td class="center noticeEmpty">0</td>
 					<% if(isShowMenu){ %>
 					<td></td>
 					<% } %>
@@ -277,7 +277,7 @@
 						String url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
 				%>
 							<tr class="$classRow oncontextmenu">
-								<td class="center">
+								<td class="center" style="padding-left: 8px; padding-right: 3px;">
 									<i class="$classIconReadForum" rel="tooltip" data-placement="bottom" title="$titleNoNewPostForum"></i>
 								</td>
 								<td>

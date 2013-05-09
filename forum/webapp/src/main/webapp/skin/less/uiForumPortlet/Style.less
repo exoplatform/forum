@@ -111,7 +111,9 @@
 		background: url("/forum/skin/DefaultSkin/images/background/SeparatorLine.png") no-repeat left -4px;
 	}
 	
-	.uiForumIconState{ 
+	.uiForumIconState{
+	
+	
 		.forumContains {
 			line-height: 42px;
 			padding: 0px 0px 0px 45px;
@@ -124,6 +126,12 @@
 				margin-right: 20px;
 			}
 		}
+		
+		@media screen and (-webkit-min-device-pixel-ratio:0) {
+			.forumContains {
+				padding: 0px 0px 0px 48px;
+			}
+		} 
 	}
 	
 	.searchAdvance{
@@ -146,7 +154,7 @@
 			padding: 0;
 		}
 		.textInfo{
-			padding: 0 30px;
+			padding: 0 32px;
 		}
 	}
 	
