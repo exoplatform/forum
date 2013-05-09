@@ -120,7 +120,7 @@
 								
 							 <% } 
 								boolean isView = false ;
-								String link , itemLabel, classIcon, classDisable="";
+								String link , itemLabel, classIcon, classDisable="", confirm;
 								String[] actionMenuForum = uicomponent.getActionMenuForum() ;
 								String [] classIcons = ["uiIconEdit", "uiIconUnlockMedium", "uiIconLockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete", "uiIconExport", "uiIconWatch", "uiIconForumBanIp"];
 								int id = 0;
@@ -142,15 +142,17 @@
 										isView = true ;
 									}
 									classDisable = "" ;
+									confirm = "";
 									if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
 										link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
+										confirm = " class=\"confirm\"";
 									}
 									if(isView){
-							 %>
+							%>
 								<li class="$classDisable">
-									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
+									<a href="$link"<%=confirm%>><i class="$classIcon"></i>$itemLabel</a>
 								</li>
-						    <% }
+							<%	}
 							} %>
 							</ul>
 						</div>
@@ -211,9 +213,12 @@
 							 <% 
 								} else {%>
 								<li>
-								<a onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
-									<i class="uiIconDelete"></i>$itemLabel
-								</a>
+									<a href="$link;" class="confirm"
+										 data-number="<%=uicomponent.getTotalChecked()%>" 
+										 data-confirm-one="<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>" 
+										 data-confirm-number="<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>" 
+										 data-confirm-not="<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>">
+										<i class="uiIconDelete"></i>$itemLabel</a>
 								</li>
 								<%}
 							 } %>

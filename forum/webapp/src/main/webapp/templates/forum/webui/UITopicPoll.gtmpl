@@ -48,22 +48,22 @@
 				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
 				<div class="dropdown uiDropdownWithIcon actionIcon pull-right" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
 					<div data-toggle="dropdown">
-						<a href="javaScript:void(0)"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></a>
+						<a href="javaScript:void(0)"><i class="uiIconSettings uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.ThreadTools")%></a>
 					</div>
 					<% /*Begin Popup Menu*/ %>
 					<ul class="dropdown-menu">
-						<li onclick="<%=uicomponent.event("EditPoll")%>">
-							<a href="javaScript:void(0);"><i class="uiIconEdit uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
+						<li>
+							<a href="<%=uicomponent.event("EditPoll")%>"><i class="uiIconEdit uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.EditPoll")%></a>
 						</li>
-						<li onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
+						<li>
 							<% if(poll.getIsClosed() || isTimeOut){ %>
-								<a href="javaScript:void(0);"><i class="uiIconOpen"></i><%=_ctx.appRes("UITopicPoll.label.OpenPoll"); %></a>
+								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconOpen"></i><%=_ctx.appRes("UITopicPoll.label.OpenPoll")%></a>
 							<% } else { %>
-								<a href="javaScript:void(0);"><i class="uiIconMinus"></i><%=_ctx.appRes("UITopicPoll.label.ClosePoll"); %></a>
+								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconMinus"></i><%=_ctx.appRes("UITopicPoll.label.ClosePoll")%></a>
 							<% } %>
 						</li>
-						<li onclick="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
-							<a href="javaScript:void(0);"><i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.RemovePoll"); %></a>
+						<li>
+							<a href="<%=uicomponent.event("RemovePoll","UITopicPoll","poll")%>" class="confirm"><i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.RemovePoll")%></a>
 						</li>
 					</ul>
 					<% /*End Popup Menu*/ %>
@@ -89,7 +89,7 @@
 			<table class="uiGrid table no-border-cell rounded-corners table-striped tableVoting">
 				<thead>
 					<tr>
-						<th style="padding-left: 20px;"><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>
+						<th style="padding-left: 20px;"><%=_ctx.appRes("UITopicPoll.label.PollOptions")%></th>
 					</tr>
 				</thead>
 				<tbody class="contentVoting">

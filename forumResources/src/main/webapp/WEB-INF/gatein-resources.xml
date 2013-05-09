@@ -41,13 +41,35 @@
   </module>
 
   <module>
-    <name>ForumLoadMorePlugins</name>
+    <name>ForumLoadMorePlugin</name>
     <script>
-      <path>/javascript/eXo/forum/ForumLoadMoreItem.js</path>
+      <path>/javascript/eXo/forum/LoadMoreActionPlugin.js</path>
     </script>
     <depends>
       <module>ForumUtils</module>
       <as>forumUtils</as>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>gj</as>
+    </depends>
+  </module>
+
+  <module>
+    <name>ForumConfirmationPlugin</name>
+    <script>
+      <path>/javascript/eXo/forum/UIConfirmationPlugin.js</path>
+    </script>
+    <depends>
+      <module>ForumUtils</module>
+      <as>forumUtils</as>
+    </depends>
+    <depends>
+      <module>uiMaskLayer</module>
+    </depends>
+    <depends>
+      <module>uiPopupWindow</module>
+      <as>popupWindow</as>
     </depends>
     <depends>
       <module>jquery</module>

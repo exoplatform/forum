@@ -38,7 +38,7 @@
 							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="actionIcon" href="<%=uiform.event("EditBBCode", bbcodeId)%>">
 								<i  class="uiIconEdit uiIconLightGray"></i>							
 							</a>
-							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="actionIcon" href="<%=uiform.event("DeleteBBCode", bbcodeId)%>;">
+							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="actionIcon confirm" href="<%=uiform.event("DeleteBBCode", bbcodeId)%>;">
 								<i class="uiIconDelete uiIconLightGray"></i>							
 							</a>
 						</td>

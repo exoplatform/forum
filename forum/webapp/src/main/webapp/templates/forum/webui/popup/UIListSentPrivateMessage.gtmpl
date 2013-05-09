@@ -50,7 +50,7 @@
 					<a class="actionIcon" href="<%=uicomponent.event("ForwardMessage", mailId)%>">
 						<i class="uiIconForumForward uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="Forward Message"></i>							
 					</a>
-					<a class="actionIcon" href="<%=uicomponent.event("DeleteMessage", mailId)%>">
+					<a class="actionIcon confirm" href="<%=uicomponent.event("DeleteMessage", mailId)%>">
 						<i class="uiIconDelete uiIconLightGray" rel="tooltip" data-placement="bottom" title="Delete Message"></i>							
 					</a>
 				</td>

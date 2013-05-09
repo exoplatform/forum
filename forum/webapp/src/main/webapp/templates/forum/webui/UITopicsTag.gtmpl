@@ -43,22 +43,22 @@
       		<div class="pull-left textTitleCategories">
       			<%=_ctx.appRes("UITopicsTag.label.TagName");%>: <strong>$tagName_</strong>
       		</div>
-      		<% if(isShowMenu){ %>
-      		<div class="pull-right dropdown uiDropdownWithIcon actionIcon" style="margin:5px;">
-      			<a data-toggle="dropdown">
-      				<i class="uiIconSettings uiIconLightGray"></i>
-      				<%=_ctx.appRes("UITopicsTag.label.ManageTag");%>
-      				<i class="uiIconMiniArrowDown"></i>
-      			</a>
-      			<ul class="dropdown-menu">
-      				<li>
-						<a href="javascript:void(0)" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicsTag', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveMoreTopic")%>', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){<%=uicomponent.event("RemoveTopic");%>}">
-						<i class="uiIconUntag uiIconLightGray"></i><%=_ctx.appRes("UITopicsTag.label.RemoveTopicsTag");%>
-						</a>
-					</li>
-      			</ul>
-      		</div>
-      		 <%} %>
+      	<% if(isShowMenu){ %>
+					<div class="pull-right dropdown uiDropdownWithIcon actionIcon" style="margin: 5px;">
+						<a data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconMiniArrowDown"></i></a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="<%=uicomponent.event("RemoveTopic");%>" class="confirm"
+									data-number="<%=uicomponent.getTotalChecked()%>" 
+									data-confirm-one="<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>" 
+									data-confirm-number="<%=_ctx.appRes("UITopicsTag.confirm.RemoveMoreTopic")%>" 
+									data-confirm-not="<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>">
+										<i class="uiIconUntag uiIconLightGray"></i><%=_ctx.appRes("UITopicsTag.label.RemoveTopicsTag");%>
+								</a>
+							</li>
+						</ul>
+					</div>
+				<% } %>
       	</caption>
         <thead>
           <tr>

@@ -42,7 +42,7 @@
 							<td>$ip</td>
 							<td class="center">
 								<a class="actionIcon" data-placement="bottom" rel="tooltip" title="View <%=_ctx.appRes("UIBanIPForumManagerForm.label.Posts")%>" href="<%=uicomponent.event("OpenPosts", ip)%>"><i class="uiIconForumTopic uiIconForumLightGray"></i></a>
-								<a href="$unBanLink"  data-placement="bottom" rel="tooltip" title="Delete" class="actionIcon"><i class="uiIconDelete uiIconLightGray"></i></a>
+								<a href="$unBanLink"  data-placement="bottom" rel="tooltip" title="Delete" class="actionIcon confirm"><i class="uiIconDelete uiIconLightGray"></i></a>
 							</td>
 						</tr>
 				<%}%>

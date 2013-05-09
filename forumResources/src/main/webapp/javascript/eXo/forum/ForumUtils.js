@@ -123,7 +123,18 @@
       if(id != null) {
       gj('#'+id).find('[rel=tooltip]').tooltip();
       }
+    },
+    setCookies : function(name, value, expiredays) {
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + expiredays);
+      expiredays = ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+      var path = ';path=/portal';
+      document.cookie = name + "=" + escape(value) + expiredays + path;
+    },
+    getCookie : function(name) {
+      return eXo.core.Browser.getCookie(name);
     }
+    
   };
 
   window.Array.prototype.clear = function() {

@@ -8,7 +8,7 @@
         if (!checkboxes.exists()) return;
         checkboxes.on('click', CheckBox.check);
         CheckBox.jqCheckAll = cont.find('input.checkbox[name=checkAll]:first');
-        CheckBox.jqCheckAll.off('click').on('click', CheckBox.checkAll);
+        CheckBox.jqCheckAll.off('click', CheckBox.check).on('click', CheckBox.checkAll);
         $.each(checkboxes, function(i, it) {
           if($(it).attr('name') !== 'checkAll') {
             CheckBox.checkItem($(it));

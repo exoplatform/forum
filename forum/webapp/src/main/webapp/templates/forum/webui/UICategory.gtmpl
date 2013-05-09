@@ -128,14 +128,17 @@
 								String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
 						%>
 							<li>
-								<a <%=liClazz%>href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a href="$link;" class="forumAction confirm"
+									data-number="0" data-confirm-one="$removeForum" 
+									data-confirm-number="$deleteMoreForum" data-confirm-not="$notCheck">
+										<i class="$classIconItem"></i><%=nameItem%></a>
 							</li>
 						<% 
 							} else if(action.equals("DeleteCategory")) {
 								String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
 						%>
 							<li>
-								<a href="javascript:if(confirm('$confirm')){$link;}"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a href="javascript:if(confirm('$confirm')){$link;}" class="confirm"><i class="$classIconItem"></i><%=nameItem%></a>
 							</li>
 						<%} else { %>
 							<li>

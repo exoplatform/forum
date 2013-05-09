@@ -70,7 +70,7 @@
 					String link_ =  uicomponent.event("DeletePostLink", post.getId());
 					%>
 					<td class="center">
-						<a class="actionIcon" href="$link_" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIViewPost.action.DeletePost");%>">
+						<a class="actionIcon confirm" href="$link_" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIViewPost.action.DeletePost");%>">
 							<i class="uiIconDelete uiIconLightGray"></i>
 						</a>
 						<a class="actionIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">

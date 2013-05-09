@@ -46,6 +46,33 @@
     resizeCallback : function() {
       utils.setMaskLayer(UIForumPortlet.id);
     },
+    
+    initConfirm : function(id) {
+      var component = $.fn.findId(id);
+      var confirms = component.find('.confirm');
+      var divNumber = component.find('div#divChecked');
+      
+      $.each(confirms, function(idx, elm) {
+        var thizz = $(this);
+        if(thizz.hasAttr('id') == false) {
+          thizz.attr('id', id + 'Confirm' + idx);
+        }
+        var settings = {isMulti: false, message : ''};
+        if(thizz.hasAttr('data-number')) {
+          settings.isMulti = true;
+          if(divNumber.exists()) {
+            thizz.on('mousedown keydown', function() {
+              var nb = $('#divChecked').attr("data-checked");
+              $(this).attr('data-number', nb);
+            });
+          }
+        }
+        if(thizz.hasAttr('data-confirm')) {
+          settings.message = thizz.attr('data-confirm');
+        }
+        thizz.confirmation(settings);
+      });
+    },
 
     selectItem : function(obj) {
       var jobj = $(obj);
@@ -189,17 +216,42 @@
       }
     },
 
-    checkActionCategory : function(id) {
+    processCheckBox : function(id, number) {
       var uiCategory = $.fn.findId(id);
-      var checked = (uiCategory.find('input[type=checkbox]:checked').length > 0) ? true : false;
+      var checked = (number > 0) ? true : false;
       //
       var menuItems = uiCategory.find('.uiCategoryPopupMenu:first').find('a.forumAction');
+      menuItems.attr('data-number', number);
       UIForumPortlet.enableDisableAction(menuItems, checked);
+    },
+
+    checkActionCategory : function(id, isNotLoad) {
+      var uiCategory = $.fn.findId(id);
+      var number = uiCategory.find('input[type=checkbox]:checked').length;
+      if(uiCategory.find('input[name=checkAll]:checked').length === 1) {
+        number = number - 1;
+      }
       //
-      var checkboxes = uiCategory.find('input[type=checkbox]').data('containerId', {container : id});
-      checkboxes.on('click', function(evt) {
-        UIForumPortlet.checkActionCategory($(this).data('containerId').container);
-      });
+      UIForumPortlet.processCheckBox(id, number);
+
+      //
+      if(typeof isNotLoad === 'undefined'){
+        var checkboxes = uiCategory.find('input[type=checkbox]').data('containerId', { container : id });
+        checkboxes.on('click', function(evt) {
+          var thizz = $(this);
+          if (thizz.attr('name') === 'checkAll') {
+            var id = thizz.data('containerId').container;
+            if (thizz.is(':checked')) {
+              var number = $.fn.findId(id).find('input[type=checkbox]').length - 1;
+              UIForumPortlet.processCheckBox(id, number);
+            } else {
+              UIForumPortlet.processCheckBox(id, 0);
+            }
+          } else {
+            UIForumPortlet.checkActionCategory(thizz.data('containerId').container, false);
+          }
+        });
+      }
     },
     
     enableDisableAction : function(actions, checked) {
@@ -207,13 +259,15 @@
         var thizz = $(elm);
         if (checked === false) {
           if (thizz.parents('li:first').hasClass('disabled') === false) {
-            thizz.attr('data-href', thizz.attr('href'));
+            thizz.attr('data-action', thizz.attr('href'));
             thizz.attr('href', 'javascript:void(0);');
             thizz.parents('li:first').addClass('disabled');
           }
         } else {
           if (thizz.parents('li:first').hasClass('disabled') === true) {
-            thizz.attr('href', thizz.attr('data-href'));
+            if(thizz.hasClass('confirm') === false) {
+              thizz.attr('href', thizz.attr('data-action'));
+            }
             thizz.parents('li:first').removeClass('disabled');
           }
         }
@@ -291,9 +345,11 @@
       $('div.tooltip').remove();
       if (contentContainer.css('display') != "none") {
         contentContainer.hide(200);
+        forumToolbar.css('border-bottom', 'none');
         forumToolbar.find('.uiIconArrowRight').show().tooltip();
       } else {
         contentContainer.show(200);
+        forumToolbar.css('border-bottom', '1px solid #cfcfcf');
         forumToolbar.find('.uiIconArrowDown').show().tooltip();
       }
     },

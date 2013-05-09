@@ -12,7 +12,7 @@
   }
 
   // find element by id.
-  var findId = function(elm) {
+  $.fn.findId = function(elm) {
 
     if (!$(elm).exists() && String(elm).indexOf('#') != 0
         && $('#' + elm).exists()) {
@@ -25,5 +25,5 @@
       return $(elm);
     }
   }
-  $.fn.findId = findId;
+
 })(gj);

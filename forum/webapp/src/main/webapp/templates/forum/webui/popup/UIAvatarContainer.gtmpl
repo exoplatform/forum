@@ -1,6 +1,9 @@
 <div id="$uicomponent.id">
 <%
-  String avatarUrl = uicomponent.getAvatarUrl();
+	import org.exoplatform.forum.common.webui.WebUIUtils;
+  
+	String avatarUrl = uicomponent.getAvatarUrl();
+	WebUIUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initConfirm('" + uicomponent.id + "');");
 %>
     <div class="avatarLarge">
        <img src="$avatarUrl" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
@@ -12,7 +15,7 @@
       <%
       if(uicomponent.isDefaultAvatar() == false){
       %>
-      <button type="button" onclick="<%=uicomponent.event("SetDeaultAvatar")%>" class="btn btn-mini">
+      <button type="button" onclick="<%=uicomponent.event("SetDeaultAvatar")%>" class="btn btn-mini confirm">
         <%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
       </button>
       <%

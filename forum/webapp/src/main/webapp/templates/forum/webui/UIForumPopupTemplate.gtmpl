@@ -1,0 +1,31 @@
+<div class="UIPopupConfirmation UIPopupWindow UIDragObject uiPopup" style="width: 550px; display: none;">
+	<div class="popupHeader ClearFix">
+		<a class="uiIconClose pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPopupWindow.Close")%>"></a>
+		<span class="PopupTitle popupTitle"><%=_ctx.appRes("UIConfirmation.title")%></span>
+		<span class="PopupTitle popupTitle" style="display:none"><%=_ctx.appRes("UIConfirmation.title.Warning")%></span>
+	</div>
+	<div class="PopupContent popupContent">
+		<ul class="singleMessage popupMessage resizable">
+			<li>
+				<span class="confirmationIcon contentMessage"></span>
+			</li>
+		</ul>
+		<div class="uiAction uiActionBorder">
+			<button type="button" class="btn actionOK"><%=_ctx.appRes("UIConfirmation.label.OK")%></button>
+			<button type="button" class="btn actionClose" style="display:none"><%=_ctx.appRes("UIForumPortlet.label.Close")%></button>
+			<button type="button" class="btn actionCancel" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.Cancel")%></button>
+		</div>
+	</div>			
+</div>
+
+<div class="uiNotification">
+	<div class="popupTitle clearfix">
+		<span class="name pull-left"><i class="uiIconColorBell"></i> <strong>Message</strong></span>
+		<a class="closePopup pull-right"><i class="uiIconClose"></i></a>
+	</div>
+	<div class="nameMessage"></div>
+	<div class="title"></div>
+	<div class="from"></div>
+	<div class="content"></div>
+	<div class="link"></div>
+</div>

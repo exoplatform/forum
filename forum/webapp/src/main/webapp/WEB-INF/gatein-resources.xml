@@ -72,7 +72,10 @@
       <as>forumCheckBoxManager</as>
     </depends>
     <depends>
-      <module>ForumLoadMorePlugins</module>
+      <module>ForumLoadMorePlugin</module>
+    </depends>
+    <depends>
+      <module>ForumConfirmationPlugin</module>
     </depends>
     <depends>
       <module>ForumUtils</module>

@@ -124,7 +124,7 @@
 							<td class="center">$postView</td>
 							<%if(isAdmin){ %>
 							<td class="center">
-								<a class="actionIcon" href="<%=uicomponent.event("DeleteTopic", topicId)%>">
+								<a class="actionIcon confirm" href="<%=uicomponent.event("DeleteTopic", topicId)%>">
 									<i class="uiIconDelete uiIconLightGray"></i>
 								</a>
 							</td>
