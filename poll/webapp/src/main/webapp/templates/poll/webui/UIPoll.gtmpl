@@ -164,6 +164,6 @@
 	</div>
 </div>
 	<%} else {%>
-	<p class="alert alert-info"><i class="uiIconInfo"></i><%=_ctx.appRes("UIPoll.label.NotPermission"); %></p>
+	<p class="alert alert-info"><i class="uiIconInfo"></i><%=_ctx.appRes("UIPoll.label.NoPoll"); %></p>
 	<%} %>
 	<%uiform.end() ;%>
