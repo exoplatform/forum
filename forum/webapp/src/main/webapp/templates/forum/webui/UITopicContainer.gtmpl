@@ -474,9 +474,9 @@
 						if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
 							String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
 						%>
-						<a class="actionIconSmall" href="$lastPostLink" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
+						<a class="actionIconSmall" href="$lastPostLink" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
 					<% } else {%>
-						<a class="actionIconSmall" href="<%=uicomponent.event("OpenTopic", (topicId+"," + max_page + ",true"))%>" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GotoLastPost");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
+						<a class="actionIconSmall" href="<%=uicomponent.event("OpenTopic", (topicId+"," + max_page + ",true"))%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GotoLastPost");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
 					<% } %>
 					
 					</td>
