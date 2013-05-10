@@ -62,8 +62,8 @@
               if(i == navPath.size() -1) {
                 print "<li class='active'>" + viewName + "</li>";
               } else {
-                print "<li><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a></li>";
-                print "<span class='uiIconMiniArrowRight'>&nbsp;</span>";
+                print "<li><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a>";
+                print "<span class='uiIconMiniArrowRight'>&nbsp;</span></li>";
               }
             }
             
