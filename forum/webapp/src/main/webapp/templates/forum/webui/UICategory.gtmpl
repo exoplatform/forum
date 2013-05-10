@@ -114,7 +114,7 @@
 						<%
 						String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
 						String liClazz = "";
-						String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlock", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
+						String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
 						int i = 0;
 						for(action in uicomponent.getActions()) {
 							String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
