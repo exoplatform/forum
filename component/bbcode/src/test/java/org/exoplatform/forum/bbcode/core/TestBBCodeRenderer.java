@@ -85,7 +85,7 @@ public class TestBBCodeRenderer extends TestCase {
     // '+' (plus) symbol is removed from option
     bbc = createOptionedBBCode("size", "<font size='{option}'>{param}</font>");
     markup = "[size=+2]foo[/size]";
-    assertEquals("<font size='2'>foo</font>", renderer.processOptionedTag(markup, bbc));
+    assertEquals("<font size='+2'>foo</font>", renderer.processOptionedTag(markup, bbc));
 
     // '"' (quote) symbols are ignored
     bbc = createOptionedBBCode("url", "<a href='{option}'>{param}</a>");
@@ -157,7 +157,7 @@ public class TestBBCodeRenderer extends TestCase {
     assertEquals("<blockquote cite=\"author\">param</blockquote>", renderer.render("[QUOTE=author]param[/QUOTE]"));
     assertEquals("<span class=\"option\">param</span>", renderer.render("[CSS=option]param[/CSS]"));
     assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=2]param[/SIZE]"));
-    assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=+2]param[/SIZE]"));
+    assertEquals("<font size=\"+2\">param</font>", renderer.render("[SIZE=+2]param[/SIZE]"));
     assertEquals("<font size=\"-2\">param</font>", renderer.render("[SIZE=-2]param[/SIZE]"));
   }
 
