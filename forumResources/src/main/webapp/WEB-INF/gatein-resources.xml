@@ -56,9 +56,9 @@
   </module>
 
   <module>
-    <name>ForumConfirmationPlugin</name>
+    <name>ForumMessagePopupPlugin</name>
     <script>
-      <path>/javascript/eXo/forum/UIConfirmationPlugin.js</path>
+      <path>/javascript/eXo/forum/UIMessagePopupPlugin.js</path>
     </script>
     <depends>
       <module>ForumUtils</module>

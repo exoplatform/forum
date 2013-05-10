@@ -303,6 +303,9 @@
 					<%=_ctx.appRes("UITopicDetail.label.Moderation");%>
 					<i class="uiIconMiniArrowDown"></i>
 					</div>
+					<%
+					if(posts.size() > 1 || uicomponent.pageSelect > 1) {
+					%>
 					<ul class="dropdown-menu">
 					<%
 						String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetCensorPost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
@@ -323,7 +326,6 @@
 									continue;
 								}
 							}
-							if(posts.size() <= 1 && uicomponent.pageSelect <= 1) isView = false ;
 							if(isView) {
 								if(action.equals("DeletePost")) {
 						%>
@@ -346,6 +348,7 @@
 						}
 						%>
 					</ul>
+				<%} %>
 				</div>
 			</li>
 			<% } %>

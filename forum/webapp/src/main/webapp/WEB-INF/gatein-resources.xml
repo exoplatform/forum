@@ -75,7 +75,7 @@
       <module>ForumLoadMorePlugin</module>
     </depends>
     <depends>
-      <module>ForumConfirmationPlugin</module>
+      <module>ForumMessagePopupPlugin</module>
     </depends>
     <depends>
       <module>ForumUtils</module>

@@ -2,7 +2,6 @@
 	<div class="popupHeader ClearFix">
 		<a class="uiIconClose pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPopupWindow.Close")%>"></a>
 		<span class="PopupTitle popupTitle"><%=_ctx.appRes("UIConfirmation.title")%></span>
-		<span class="PopupTitle popupTitle" style="display:none"><%=_ctx.appRes("UIConfirmation.title.Warning")%></span>
 	</div>
 	<div class="PopupContent popupContent">
 		<ul class="singleMessage popupMessage resizable">
@@ -12,10 +11,11 @@
 		</ul>
 		<div class="uiAction uiActionBorder">
 			<button type="button" class="btn actionOK"><%=_ctx.appRes("UIConfirmation.label.OK")%></button>
-			<button type="button" class="btn actionClose" style="display:none"><%=_ctx.appRes("UIForumPortlet.label.Close")%></button>
-			<button type="button" class="btn actionCancel" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.Cancel")%></button>
+			<button type="button" class="btn actionClose"><%=_ctx.appRes("UIForumPortlet.label.Close")%></button>
+			<button type="button" class="btn actionCancel"><%=_ctx.appRes("UIForumPortlet.label.Cancel")%></button>
 		</div>
-	</div>			
+	</div>
+	<span class="Warning" style="display:none"><%=_ctx.appRes("UIConfirmation.title.Warning")%></span>
 </div>
 
 <div class="uiNotification">
