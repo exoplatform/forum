@@ -1534,7 +1534,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (set == null || set.contains("")) {
       return mods;
     }
-    set.addAll(Arrays.asList(mods));
+    for (String mod : mods) {
+      if (! mod.isEmpty()) {
+        set.add(mod);
+      }
+    }
     return set.toArray(new String[set.size()]);
   }
 
