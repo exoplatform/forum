@@ -226,6 +226,39 @@
         </object-param>
 
         <object-param>
+          <name>m3u</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>m3u</string>
+            </field>
+            <field name="cssClass">
+              <string>audioother</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[audioother]]></string>
+            </field>
+          </object>
+        </object-param>
+
+
+        <object-param>
+          <name>mid</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>mid</string>
+            </field>
+            <field name="cssClass">
+              <string>audioother</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[audioother]]></string>
+            </field>
+          </object>
+        </object-param>
+        
+        <object-param>
           <name>wma</name>
           <description></description>
           <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
@@ -721,12 +754,46 @@
           </object>
         </object-param>
 
+
+        <object-param>
+          <name>xlt</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>xlt</string>
+            </field>
+            <field name="cssClass">
+              <string>FileExcel</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[applicationxls,applicationxlt,applicationvndopenxmlformats-officedocumentspreadsheetmlsheet,FileXls,FileXlt]]></string>
+            </field>
+          </object>
+        </object-param>
+        
         <object-param>
           <name>office3</name>
           <description></description>
           <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
             <field name="type">
               <string>office3</string>
+            </field>
+            <field name="cssClass">
+              <string>FileOpenOffice3</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[applicationvndoasisopendocumentspreadsheet-template]]></string>
+            </field>
+          </object>
+        </object-param>
+
+
+        <object-param>
+          <name>ots</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>ots</string>
             </field>
             <field name="cssClass">
               <string>FileOpenOffice3</string>
@@ -839,6 +906,22 @@
           <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
             <field name="type">
               <string>ttf</string>
+            </field>
+            <field name="cssClass">
+              <string>FileFont</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[fonttff,fontotf,fontttc,fonteot,fontdfont,fontttf,fontwoff]]></string>
+            </field>
+          </object>
+        </object-param>
+        
+        <object-param>
+          <name>woff</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>woff</string>
             </field>
             <field name="cssClass">
               <string>FileFont</string>
@@ -988,7 +1071,7 @@
               <string>FileTif</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[imagetiff]]></string>
+              <string><![CDATA[tiff]]></string>
             </field>
           </object>
         </object-param>
@@ -1004,7 +1087,7 @@
               <string>FileXcf</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[imagexcf]]></string>
+              <string><![CDATA[xcf]]></string>
             </field>
           </object>
         </object-param>
@@ -1052,7 +1135,7 @@
               <string>FileSvg</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[imagesvg-xml]]></string>
+              <string><![CDATA[svg-xml]]></string>
             </field>
           </object>
         </object-param>
