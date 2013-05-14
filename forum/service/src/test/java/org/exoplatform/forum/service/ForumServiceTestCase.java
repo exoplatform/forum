@@ -206,20 +206,6 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     //
   }
 
-  public void testTopicType() throws Exception {
-    // set Data
-    initDefaultData();
-    TopicType topicType = createTopicType("Musics");
-    forumService_.saveTopicType(topicType);
-    forumService_.saveTopicType(createTopicType("Dance"));
-    forumService_.saveTopicType(createTopicType("Sing"));
-    topicType = forumService_.getTopicType(topicType.getId());
-    assertNotSame("Can not save and get Topic type.", topicType.getId(), TopicType.DEFAULT_ID);
-    // Check get All
-    List<TopicType> listTopicType = forumService_.getTopicTypes();
-    assertEquals("Can not get all topic type. Size of topicTypes list is not 3.", listTopicType.size(), 3);
-  }
-
   // BookMark
   public void testBookMark() throws Exception {
     // set Data

@@ -87,7 +87,6 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
     topicNew.setOwner(reader.string("exo:owner"));
     topicNew.setTopicName(reader.string("exo:name"));
-    topicNew.setTopicType(reader.string("exo:topicType", " "));
     topicNew.setDescription(reader.string("exo:description"));
     topicNew.setPostCount(reader.l("exo:postCount"));
     topicNew.setViewCount(reader.l("exo:viewCount"));

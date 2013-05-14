@@ -79,8 +79,6 @@ public interface ForumNodeTypes {
 
   public static final String EXO_NUMBER_ATTACHMENTS         = "exo:numberAttachments";
 
-  public static final String EXO_TOPIC_TYPE                 = "exo:topicType";
-
   public static final String EXO_IS_POLL                    = "exo:isPoll";
 
   public static final String EXO_LAST_POST_BY               = "exo:lastPostBy";

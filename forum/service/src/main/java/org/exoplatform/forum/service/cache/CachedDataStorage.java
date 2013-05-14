@@ -42,7 +42,6 @@ import org.exoplatform.forum.service.SortSettings.Direction;
 import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -1314,26 +1313,6 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public long checkPrune(PruneSetting pSetting) throws Exception {
     return storage.checkPrune(pSetting);
-  }
-
-  public List<TopicType> getTopicTypes() {
-    return storage.getTopicTypes();
-  }
-
-  public TopicType getTopicType(String Id) throws Exception {
-    return storage.getTopicType(Id);
-  }
-
-  public void saveTopicType(TopicType topicType) throws Exception {
-    storage.saveTopicType(topicType);
-  }
-
-  public void removeTopicType(String topicTypeId) throws Exception {
-    storage.removeTopicType(topicTypeId);
-  }
-
-  public JCRPageList getPageTopicByType(String type) throws Exception {
-    return storage.getPageTopicByType(type);
   }
 
   public boolean populateUserProfile(User user, UserProfile profileTemplate, boolean isNew) throws Exception {

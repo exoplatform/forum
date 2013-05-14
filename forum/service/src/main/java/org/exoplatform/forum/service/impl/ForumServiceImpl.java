@@ -61,7 +61,6 @@ import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -1580,41 +1579,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public long checkPrune(PruneSetting pSetting) throws Exception {
     return storage.checkPrune(pSetting);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public JCRPageList getPageTopicByType(String type) throws Exception {
-    return storage.getPageTopicByType(type);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public TopicType getTopicType(String Id) throws Exception {
-    return storage.getTopicType(Id);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public List<TopicType> getTopicTypes(){
-    return storage.getTopicTypes();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void removeTopicType(String topicTypeId) throws Exception {
-    storage.removeTopicType(topicTypeId);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void saveTopicType(TopicType topicType) throws Exception {
-    storage.saveTopicType(topicType);
   }
 
   /**

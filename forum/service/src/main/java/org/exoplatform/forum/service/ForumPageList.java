@@ -254,7 +254,6 @@ public class ForumPageList extends JCRPageList {
     topicNew.setId(topicNode.getName());
     topicNew.setPath(topicNode.getPath());
     topicNew.setIcon(reader.string(ForumNodeTypes.EXO_ICON));
-    topicNew.setTopicType(reader.string(ForumNodeTypes.EXO_TOPIC_TYPE, " "));
     topicNew.setTopicName(reader.string(ForumNodeTypes.EXO_NAME));
     topicNew.setOwner(reader.string(ForumNodeTypes.EXO_OWNER));
     topicNew.setCreatedDate(reader.date(ForumNodeTypes.EXO_CREATED_DATE));

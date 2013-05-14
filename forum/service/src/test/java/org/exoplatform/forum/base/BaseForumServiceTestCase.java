@@ -37,7 +37,6 @@ import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -245,13 +244,6 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     forumAdministration.setHeaderSubject("");
     forumAdministration.setNotifyEmailContent("");
     return forumAdministration;
-  }
-
-  public TopicType createTopicType(String name) {
-    TopicType topicType = new TopicType();
-    topicType.setIcon("BlueIcon");
-    topicType.setName(name);
-    return topicType;
   }
 
   public Forum convertToForum(Object object) throws Exception {

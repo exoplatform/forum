@@ -109,7 +109,6 @@ import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -2291,7 +2290,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topic.setLastPostBy(reader.string(EXO_LAST_POST_BY));
       topic.setOwner(reader.string(EXO_OWNER));
       topic.setTopicName(reader.string(EXO_NAME));
-      topic.setTopicType(reader.string(EXO_TOPIC_TYPE, " "));
       topic.setDescription(reader.string(EXO_DESCRIPTION));
       topic.setPostCount(reader.l(EXO_POST_COUNT));
       topic.setViewCount(reader.l(EXO_VIEW_COUNT));
@@ -2617,7 +2615,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_MODIFIED_BY, topic.getModifiedBy());
       topicNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
       topicNode.setProperty(EXO_DESCRIPTION, topic.getDescription());
-      topicNode.setProperty(EXO_TOPIC_TYPE, topic.getTopicType());
       topicNode.setProperty(EXO_ICON, topic.getIcon());
 
       topicNode.setProperty(EXO_IS_MODERATE_POST, topic.getIsModeratePost());
@@ -7468,103 +7465,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
     }
     return 0;
-  }
-
-  private TopicType getTopicType(Node node) throws Exception {
-    TopicType topicType = new TopicType();
-    topicType.setId(node.getName());
-    PropertyReader reader = new PropertyReader(node);
-    topicType.setName(reader.string(EXO_NAME, ""));
-    topicType.setIcon(reader.string(EXO_ICON, ""));
-    return topicType;
-  }
-
-  public List<TopicType> getTopicTypes() {
-    List<TopicType> listTT = new ArrayList<TopicType>();
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node nodeHome = getTopicTypeHome(sProvider);
-      NodeIterator iter = nodeHome.getNodes();
-      while (iter.hasNext()) {
-        Node node = iter.nextNode();
-        listTT.add(getTopicType(node));
-      }
-    } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get topic types", e);
-      }
-    }
-    return listTT;
-  }
-
-  public TopicType getTopicType(String Id) throws Exception {
-    TopicType topicType = new TopicType();
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node nodeHome = getTopicTypeHome(sProvider);
-      topicType = getTopicType(nodeHome.getNode(Id));
-    } catch (Exception e) {
-      topicType.setId(TopicType.DEFAULT_ID);
-      topicType.setName(TopicType.DEFAULT_TYPE);
-    }
-    return topicType;
-  }
-
-  public void saveTopicType(TopicType topicType) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    Node nodeHome = getTopicTypeHome(sProvider);
-    Node node;
-    try {
-      node = nodeHome.getNode(topicType.getId());
-    } catch (Exception e) {
-      node = nodeHome.addNode(topicType.getId(), EXO_TOPIC_TYPE);
-      node.setProperty(EXO_ID, topicType.getId());
-    }
-    node.setProperty(EXO_NAME, topicType.getName());
-    node.setProperty(EXO_ICON, topicType.getIcon());
-    if (nodeHome.isNew()) {
-      nodeHome.getSession().save();
-    } else {
-      nodeHome.save();
-    }
-  }
-
-  public void removeTopicType(String topicTypeId) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    Node nodeHome = getTopicTypeHome(sProvider);
-    try {
-      Node node = nodeHome.getNode(topicTypeId);
-      node.remove();
-    } catch (Exception e) {
-      log.error(String.format("Failed to remove topic type %s", topicTypeId), e);
-    }
-    if (nodeHome.isNew()) {
-      nodeHome.getSession().save();
-    } else {
-      nodeHome.save();
-    }
-  }
-
-  public JCRPageList getPageTopicByType(String type) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node categoryNode = getCategoryHome(sProvider);
-      QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(categoryNode.getPath()).append("//element(*,exo:topic)").append("[@topicType='").append(type).append("']").append(" order by @exo:createdDate descending");
-
-      String pathQuery = stringBuffer.toString();
-      Query query = qm.createQuery(pathQuery, Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
-      JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
-      return pagelist;
-    } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get page topic by type: " + type, e);
-      }
-    }
-    return null;
   }
 
   public InputStream createForumRss(String objectId, String link) throws Exception {

@@ -92,7 +92,6 @@ public class CssClassManager implements Startable {
     for (CssClassPlugin cssClassPlugin : plugins) {
       for (CssClassIconFile cssClass : cssClassPlugin.getCssClassIconFile()) {
         cssClassIconFileData.put(cssClass.getType(), cssClass);
-        LOG.info("Initializing CSS class icon file: " + cssClass.toString());
       }
     }
   }

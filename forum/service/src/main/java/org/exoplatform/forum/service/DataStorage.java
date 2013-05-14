@@ -340,16 +340,6 @@ public interface DataStorage {
 
   long checkPrune(PruneSetting pSetting) throws Exception;
 
-  List<TopicType> getTopicTypes();
-
-  TopicType getTopicType(String Id) throws Exception;
-
-  void saveTopicType(TopicType topicType) throws Exception;
-
-  void removeTopicType(String topicTypeId) throws Exception;
-
-  JCRPageList getPageTopicByType(String type) throws Exception;
-
   /**
    * Create or update a forum user profile
    * @param user user whose profile must be created
