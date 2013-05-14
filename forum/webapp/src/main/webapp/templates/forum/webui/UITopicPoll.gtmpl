@@ -48,7 +48,7 @@
 				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
 				<div class="dropdown uiDropdownWithIcon actionIcon pull-right" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
 					<div data-toggle="dropdown">
-						<a href="javaScript:void(0)"><i class="uiIconSettings uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.ThreadTools")%></a>
+						<i class="uiIconSettings uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.ThreadTools")%>
 					</div>
 					<% /*Begin Popup Menu*/ %>
 					<ul class="dropdown-menu">

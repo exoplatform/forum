@@ -1071,7 +1071,7 @@
               <string>FileTif</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[tiff]]></string>
+              <string><![CDATA[imagetiff]]></string>
             </field>
           </object>
         </object-param>
@@ -1087,7 +1087,7 @@
               <string>FileXcf</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[xcf]]></string>
+              <string><![CDATA[imagexcf]]></string>
             </field>
           </object>
         </object-param>
@@ -1135,7 +1135,7 @@
               <string>FileSvg</string>
             </field>
             <field name="groupFileTypes">
-              <string><![CDATA[svg-xml]]></string>
+              <string><![CDATA[imagesvg-xml]]></string>
             </field>
           </object>
         </object-param>
