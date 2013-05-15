@@ -5,7 +5,6 @@
 @import url('popup/Stylesheet.css');
 @import url('UICategories/Stylesheet.css');
 @import url('UIForumContainer/Stylesheet.css');
-@import url('UIForumLinks/Stylesheet.css');
 @import url('UIForumPortlet/Stylesheet.css');
 @import url('UIPrintView/Stylesheet.css');
 @import url('UITopicDetail/Stylesheet.css');
@@ -101,10 +100,6 @@
 }
 /**************************** UIActionForum *********************************/
 .UIForumPortlet .UIActionForum {
-	padding: 0px;
-}
-
-.UIForumPortlet .UIForumLinks .UIActionForum {
 	padding: 0px;
 }
 

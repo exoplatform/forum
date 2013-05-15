@@ -107,8 +107,6 @@ public class UserProfile {
 
   private long                maxPost                = 10;
 
-  private boolean             isShowForumJump        = true;
-
   private boolean             isAutoWatchMyTopics    = false;
 
   private boolean             isAutoWatchTopicIPost  = false;
@@ -326,14 +324,6 @@ public class UserProfile {
 
   public long getMaxPostInPage() {
     return this.maxPost;
-  }
-
-  public void setIsShowForumJump(boolean isShowForumJump) {
-    this.isShowForumJump = isShowForumJump;
-  }
-
-  public boolean getIsShowForumJump() {
-    return this.isShowForumJump;
   }
 
   public boolean getIsAutoWatchMyTopics() {

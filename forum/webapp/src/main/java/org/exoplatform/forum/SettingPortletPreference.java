@@ -28,8 +28,6 @@ public class SettingPortletPreference {
 
   private boolean      isShowForumActionBar = false;
 
-  private boolean      isShowForumJump      = false;
-
   private boolean      isShowPoll           = false;
 
   private boolean      isShowModerators     = false;
@@ -49,7 +47,7 @@ public class SettingPortletPreference {
   private List<String> invisibleCategories  = new ArrayList<String>();
 
   /*
-   * [ ] Forum Jump [ ] Polls [ ] Moderators [ ] Quick Reply [ ] Icons Legend [ ] Rules [ ] Statistics
+   * [ ] Polls [ ] Moderators [ ] Quick Reply [ ] Icons Legend [ ] Rules [ ] Statistics
    */
   public SettingPortletPreference() {
   }
@@ -84,14 +82,6 @@ public class SettingPortletPreference {
 
   public void setShowForumActionBar(boolean isShowForumActionBar) {
     this.isShowForumActionBar = isShowForumActionBar;
-  }
-
-  public boolean isShowForumJump() {
-    return isShowForumJump;
-  }
-
-  public void setShowForumJump(boolean isShowForumJump) {
-    this.isShowForumJump = isShowForumJump;
   }
 
   public boolean isShowPoll() {

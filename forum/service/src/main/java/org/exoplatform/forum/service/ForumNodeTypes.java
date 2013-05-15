@@ -257,8 +257,6 @@ public interface ForumNodeTypes {
 
   public static final String EXO_MAX_TOPIC                  = "exo:maxTopic";
 
-  public static final String EXO_IS_SHOW_FORUM_JUMP         = "exo:isShowForumJump";
-
   public static final String EXO_BAN_UNTIL                  = "exo:banUntil";
 
   public static final String EXO_BAN_REASON                 = "exo:banReason";

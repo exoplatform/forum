@@ -34,13 +34,11 @@ import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.OrganizationService;
@@ -90,8 +88,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   protected JCRPageList       userPageList;
 
   private boolean             isEdit                             = false;
-
-  private List<ForumLinkData> forumLinks                         = null;
 
   private List<String>        listModerate                       = new ArrayList<String>();
 
@@ -386,7 +382,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   private void initUserProfileForm() throws Exception {
-    this.setForumLinks();
     List<SelectItemOption<String>> list;
     UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
     userId.setValue(this.editUserProfile.getUserId());
@@ -633,24 +628,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
     calendar.setTimeInMillis(calendar.getTimeInMillis() + (long) (timeZoneOld * 3600000));
     return calendar.getTime();
-  }
-
-  private void setForumLinks() throws Exception {
-    UIForumLinks uiForumLinks = this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class);
-    boolean hasGetService = false;
-    if (uiForumLinks == null)
-      hasGetService = true;
-    else
-      this.forumLinks = uiForumLinks.getForumLinks();
-    if (this.forumLinks == null || forumLinks.size() <= 0)
-      hasGetService = true;
-    if (hasGetService) {
-      this.getForumService().getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
-    }
-  }
-
-  protected List<ForumLinkData> getForumLinks() throws Exception {
-    return this.forumLinks;
   }
 
   private void searchUserProfileByKey(String keyword) throws Exception {
@@ -901,8 +878,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       userProfile.setTimeFormat(timeFormat.replace('=', ' '));
       userProfile.setMaxPostInPage(maxPost);
       userProfile.setMaxTopicInPage(maxTopic);
-      userProfile.setIsShowForumJump(false);
-
       userProfile.setIsBanned(isBanned);
       userProfile.setBanUntil(banUntil);
       userProfile.setBanReason(banReason);

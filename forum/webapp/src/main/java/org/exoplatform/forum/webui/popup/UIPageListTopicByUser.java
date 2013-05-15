@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.Category;
@@ -34,7 +32,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -197,7 +194,6 @@ public class UIPageListTopicByUser extends UIContainer {
         uiTopicDetail.setUpdateForum(forum);
         uiTopicDetail.initInfoTopic(categoryId, forumId, topic, 0);
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(categoryId, forumId, topic.getId());
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId + ForumUtils.SLASH + forumId + " "));
         uiTopicDetail.setIdPostView("top");
         forumPortlet.cancelAction();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

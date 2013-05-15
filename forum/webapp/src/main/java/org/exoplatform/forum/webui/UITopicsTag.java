@@ -235,7 +235,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       } else {
         uiTopicDetail.setIdPostView("top");
       }
-      forumPortlet.getChild(UIForumLinks.class).setValueOption(cateId + ForumUtils.SLASH + forumId + " ");
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

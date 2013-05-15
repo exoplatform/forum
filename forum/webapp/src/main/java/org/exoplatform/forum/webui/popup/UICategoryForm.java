@@ -35,7 +35,6 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -328,9 +327,6 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         categoryContainer.updateIsRender(false);
         forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
         forumPortlet.findFirstComponentOfType(UIBreadcumbs.class).setUpdataPath(cat.getId());
-        UIForumLinks forumLinks = forumPortlet.getChild(UIForumLinks.class);
-        forumLinks.setUpdateForumLinks();
-        forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
         warning("UIForumPortlet.msg.catagory-deleted", false);
         forumPortlet.renderForumHome();

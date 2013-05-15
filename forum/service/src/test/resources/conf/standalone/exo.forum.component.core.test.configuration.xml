@@ -96,7 +96,6 @@
           <property name="timeFormat" value="hh:mm a" />
           <property name="maxTopic" value="10" />
           <property name="maxPost" value="10" />
-          <property name="isShowForumJump" value="true" />
         </properties-param>
       </init-params>
     </component-plugin>

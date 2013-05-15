@@ -33,8 +33,6 @@ public class ForumParameter implements Serializable {
 
   private boolean      isRenderRule       = false;
 
-  private boolean      isRenderForumLink  = false;
-
   private boolean      isModerator        = false;
 
   public ForumParameter() {
@@ -149,11 +147,4 @@ public class ForumParameter implements Serializable {
     this.isRenderRule = isRenderRule;
   }
 
-  public boolean isRenderForumLink() {
-    return isRenderForumLink;
-  }
-
-  public void setRenderForumLink(boolean isRenderForumLink) {
-    this.isRenderForumLink = isRenderForumLink;
-  }
 }

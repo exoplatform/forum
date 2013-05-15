@@ -449,7 +449,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       userProfileSetting.setLongDateFormat(longDateFormat.replace('=', ' '));
       userProfileSetting.setMaxPostInPage(maxPost);
       userProfileSetting.setMaxTopicInPage(maxTopic);
-      userProfileSetting.setIsShowForumJump(false);
       userProfileSetting.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
       userProfileSetting.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 
@@ -459,7 +458,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       } catch (Exception e) {
         uiForm.log.error("Can not save forum subscription, exception: ", e);
       }
-      forumPortlet.setRenderForumLink();
       forumPortlet.cancelAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }

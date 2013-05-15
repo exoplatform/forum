@@ -288,10 +288,8 @@ public class UICategories extends UIContainer {
         if (!uiContainer.collapCategories.contains(categoryId)) {
           list = uiContainer.getForumList(categoryId);
         }
-        forumPortlet.setRenderForumLink();
         uiCategory.update(uiContainer.getCategory(categoryId), list);
         categoryContainer.updateIsRender(false);
-        forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
       } catch (Exception e) {        
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
                                                                                        new String[] { ForumUtils.EMPTY_STR },
@@ -319,7 +317,6 @@ public class UICategories extends UIContainer {
         UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0);
-        forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -350,7 +347,6 @@ public class UICategories extends UIContainer {
         uiTopicDetail.initInfoTopic(id[0], id[1], topic, 0);
         uiTopicDetail.setIdPostView("lastpost");
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
       }
       context.addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -402,7 +398,6 @@ public class UICategories extends UIContainer {
             uiTopicDetail.setIdPostView("lastpost");
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
           context.addUIComponentToUpdateByAjax(forumPortlet);
         } else {
           categories.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);

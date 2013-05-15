@@ -79,9 +79,10 @@
 						 	"eXo.forum.UIForumPortlet.ReloadImage();",
 						 	"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
 						 	"eXo.forum.UIForumPortlet.disableOnClickMenu('SearchForm');",
-							"eXo.forum.UIForumPortlet.disableOnClickMenu('AddTag');"
+							"eXo.forum.UIForumPortlet.disableOnClickMenu('AddTag');",
+							"setTimeout(function() {platformLeftNavigation.resize();}, 200);"
 						 	];
-		ForumUtils.addScripts(null, null, scripts);
+		ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", scripts);
 		ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init('" + uicomponent.id + "');");
 		ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 	}

@@ -29,12 +29,6 @@
   
     <portlet-preferences>
       <preference>
-        <name>showForumActionBar</name>
-        <value>true</value> <!-- true/false -->
-        <read-only>false</read-only>
-      </preference>
-
-      <preference>
         <name>forumNewPost</name>
         <value>1</value> <!-- day number -->
         <read-only>false</read-only>
@@ -81,11 +75,6 @@
         <read-only>false</read-only>
       </preference>
 
-      <preference>
-        <name>isShowForumJump</name>
-        <value>false</value><!--true/false -->
-        <read-only>false</read-only>
-      </preference>
       <preference>
         <name>isShowIconsLegend</name>
         <value>true</value><!--true/false -->
@@ -140,8 +129,6 @@
     <expiration-cache>0</expiration-cache>
     <supports>
       <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.forum.ForumStatisticPortlet</resource-bundle>
@@ -168,8 +155,6 @@
     <expiration-cache>0</expiration-cache>
     <supports>
       <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.forum.ForumPollPortlet</resource-bundle>
@@ -201,8 +186,6 @@
     <expiration-cache>0</expiration-cache>
     <supports>
       <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.forum.ForumModeratePortlet</resource-bundle>
@@ -264,8 +247,6 @@
     <expiration-cache>0</expiration-cache>
     <supports>
       <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.forum.ForumQuickReplyPortlet</resource-bundle>
@@ -295,8 +276,6 @@
     <expiration-cache>0</expiration-cache>
     <supports>
       <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.forum.ForumIconStatePortlet</resource-bundle>
@@ -308,41 +287,7 @@
   
     <portlet-preferences></portlet-preferences>
   </portlet>
-  <portlet>
-    <description xml:lang="EN">Forum Link Portlet</description>
-    <portlet-name>ForumLinkPortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Link Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumLinkPortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumLinkPortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Link Portlet</title>
-      <short-title>Forum Link Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
   
-    <portlet-preferences></portlet-preferences>
-    
-    <supported-processing-event>
-      <name>ForumLinkEvent</name>
-    </supported-processing-event>
-  </portlet>
-  
-  <event-definition>
-    <name>ForumLinkEvent</name>
-  </event-definition>
   <event-definition>
     <name>ReLoadPortletEvent</name>
   </event-definition>

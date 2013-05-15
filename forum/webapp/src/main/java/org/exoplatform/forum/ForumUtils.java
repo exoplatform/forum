@@ -535,7 +535,6 @@ public class ForumUtils {
     SettingPortletPreference preference = new SettingPortletPreference();
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    preference.setShowForumActionBar(Boolean.parseBoolean(portletPref.getValue("showForumActionBar", EMPTY_STR)));
     preference.setForumNewPost(Integer.parseInt(portletPref.getValue("forumNewPost", EMPTY_STR)));
     preference.setUseAjax(Boolean.parseBoolean(portletPref.getValue("useAjax", EMPTY_STR)));
     preference.setEnableIPLogging(Boolean.parseBoolean(portletPref.getValue("enableIPLogging", EMPTY_STR)));
@@ -543,7 +542,6 @@ public class ForumUtils {
     preference.setInvisibleCategories(getListInValus(portletPref.getValue("invisibleCategories", EMPTY_STR)));
     preference.setInvisibleForums((getListInValus(portletPref.getValue("invisibleForums", EMPTY_STR))));
     // Show porlet
-    preference.setShowForumJump(Boolean.parseBoolean(portletPref.getValue("isShowForumJump", EMPTY_STR)));
     preference.setShowIconsLegend(Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", EMPTY_STR)));
     preference.setShowModerators(Boolean.parseBoolean(portletPref.getValue("isShowModerators", EMPTY_STR)));
     preference.setShowPoll(Boolean.parseBoolean(portletPref.getValue("isShowPoll", EMPTY_STR)));
@@ -565,7 +563,6 @@ public class ForumUtils {
       listCategoryId = invisibleCategories.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
     }
 
-    portletPref.setValue("isShowForumJump", sPreference.isShowForumJump() + EMPTY_STR);
     portletPref.setValue("isShowIconsLegend", sPreference.isShowIconsLegend() + EMPTY_STR);
     portletPref.setValue("isShowModerators", sPreference.isShowModerators() + EMPTY_STR);
     portletPref.setValue("isShowPoll", sPreference.isShowPoll() + EMPTY_STR);

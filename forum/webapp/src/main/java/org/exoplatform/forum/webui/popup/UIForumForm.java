@@ -36,7 +36,6 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.services.organization.User;
@@ -422,7 +421,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       } catch (Exception e) {
         uiForm.log.error("Save portlet preference is fall, exception: ", e);
       }
-      forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
 
       forumPortlet.cancelAction();
       WebuiRequestContext context = event.getRequestContext();
@@ -448,7 +446,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
           forumPortlet.updateIsRendered(ForumUtils.FORUM);
           uiForumContainer.setIsRenderChild(true);
           uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), true, 1);
-          forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + ForumUtils.SLASH + newForum.getId());
         }
         UIForumDescription forumDescription = uiForumContainer.getChild(UIForumDescription.class);
         forumDescription.setForum(newForum);

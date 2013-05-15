@@ -429,7 +429,6 @@ public class UICategory extends BaseForumForm {
           for (Forum forum : forums) {
             uiCategory.getForumService().removeForum(uiCategory.categoryId, forum.getId());
           }
-          uiCategory.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setUpdateForumLinks();
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-remove-forum", false);
@@ -452,7 +451,6 @@ public class UICategory extends BaseForumForm {
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
         uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 0);
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + forumId));
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         uiCategory.isEditForum = true;
@@ -483,7 +481,6 @@ public class UICategory extends BaseForumForm {
           lastPostId = "lastpost";
         uiTopicDetail.setIdPostView(lastPostId);
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId());
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + id[0] + " "));
       } else {
         Object[] args = { ForumUtils.EMPTY_STR };
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty",
@@ -536,7 +533,6 @@ public class UICategory extends BaseForumForm {
             uiTopicDetail.setIdPostView("lastpost");
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         } else {
           uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);

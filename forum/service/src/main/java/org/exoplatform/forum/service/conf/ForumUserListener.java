@@ -74,11 +74,6 @@ public class ForumUserListener extends UserEventListener {
       log.warn("maxPost is not in format", nfe);
     }
     profileTemplate.setMaxPostInPage(maxPost);
-
-    String strShowForumJump = props.getProperty("isShowForumJump");
-    boolean isShowForumJump = true;
-    isShowForumJump = Boolean.parseBoolean(strShowForumJump);
-    profileTemplate.setIsShowForumJump(isShowForumJump);
   }
 
   public void postSave(User user, boolean isNew) throws Exception {

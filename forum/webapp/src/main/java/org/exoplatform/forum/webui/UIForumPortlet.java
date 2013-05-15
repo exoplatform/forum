@@ -99,8 +99,6 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public static String FORUM_MODERATE_EVENT_PARAMS = "UIForumPortlet.ForumModerateEvent";
 
-  public static String FORUM_LINK_EVENT_PARAMS     = "UIForumPortlet.ForumLinkEvent";
-  
   private ForumService forumService;
 
   private boolean      isCategoryRendered  = true;
@@ -110,8 +108,6 @@ public class UIForumPortlet extends UIPortletApplication {
   private boolean      isTagRendered       = false;
 
   private boolean      isSearchRendered    = false;
-
-  private boolean      isJumpRendered      = false;
 
   private boolean      isShowPoll          = false;
 
@@ -163,7 +159,6 @@ public class UIForumPortlet extends UIPortletApplication {
     addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
     addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
     addChild(UISearchForm.class, null, null).setRendered(isSearchRendered);
-    addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered);
     UIPopupAction popupAction = addChild(UIPopupAction.class, null, "UIForumPopupAction");
     popupAction.getChild(UIPopupWindow.class).setId("UIForumPopupWindow");
     try {
@@ -187,7 +182,6 @@ public class UIForumPortlet extends UIPortletApplication {
         addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
         addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
         addChild(UISearchForm.class, null, null).setRendered(isSearchRendered);
-        addChild(UIForumLinks.class, null, null).setRendered(false);
         updateIsRendered(ForumUtils.CATEGORIES);
         categoryContainer.updateIsRender(true);
       }
@@ -215,7 +209,6 @@ public class UIForumPortlet extends UIPortletApplication {
       removeChild(UIForumContainer.class);
       removeChild(UITopicsTag.class);
       removeChild(UISearchForm.class);
-      removeChild(UIForumLinks.class);
     }
   }
 
@@ -302,10 +295,8 @@ public class UIForumPortlet extends UIPortletApplication {
       isCategoryRendered = false;
       isSearchRendered = true;
     }
-    if (!prefForumActionBar) {
-      if (!isCategoryRendered || isSearchRendered) {
-        isRenderActionBar = false;
-      }
+    if (prefForumActionBar == false && (isCategoryRendered == false || isSearchRendered)) {
+      isRenderActionBar = false;
     }
     getChild(UICategoryContainer.class).setRendered(isCategoryRendered);
     getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
@@ -322,14 +313,9 @@ public class UIForumPortlet extends UIPortletApplication {
     UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
     categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-//    getChild(UIForumLinks.class).setUpdateForumLinks();
     getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
   }
   
-  public void setRenderForumLink() {
-
-  }
-
   public void setRenderQuickReply() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletSession portletSession = pcontext.getRequest().getPortletSession();
@@ -673,7 +659,6 @@ public class UIForumPortlet extends UIPortletApplication {
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
     } else if (path.lastIndexOf(Utils.TAG) >= 0) {
       updateIsRendered(ForumUtils.TAG);
-      getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
       getChild(UITopicsTag.class).setIdTag(path);
     } else if (path.lastIndexOf(Utils.TOPIC) >= 0) {
       boolean isReply = false, isQuote = false;
@@ -738,7 +723,6 @@ public class UIForumPortlet extends UIPortletApplication {
             uiTopicDetail.setUpdateForum(forum);
             uiTopicDetail.initInfoTopic(id[0], id[1], topic, page);
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-            this.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
             uiTopicDetail.setIdPostView(postId);
             uiTopicDetail.setLastPostId(((path.indexOf(Utils.POST) < 0) ? ForumUtils.EMPTY_STR : postId));
             if (isReply || isQuote) {
@@ -924,7 +908,6 @@ public class UIForumPortlet extends UIPortletApplication {
       path = Utils.FORUM_SERVICE;
     }
     getChild(UIBreadcumbs.class).setUpdataPath(path);
-    getChild(UIForumLinks.class).setValueOption(path);
   }
 
   static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {

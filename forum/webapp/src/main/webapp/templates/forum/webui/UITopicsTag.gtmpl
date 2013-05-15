@@ -17,6 +17,7 @@
 							"eXo.forum.CheckBox.init('"+uicomponent.id+"');"
 							];
   ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
+  ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
 %>
 <% uiform.begin() %>
 <%

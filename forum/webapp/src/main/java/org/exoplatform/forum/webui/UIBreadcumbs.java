@@ -97,7 +97,6 @@ public class UIBreadcumbs extends UIContainer {
 
   public void setUpdataPath(String path) throws Exception {
     isLink = false;
-    setRenderForumLink(path);
     String tempPath = ForumUtils.EMPTY_STR;
     String frspId = getAncestorOfType(UIForumPortlet.class).getForumIdOfSpace();
     if(!ForumUtils.isEmpty(frspId)) {
@@ -177,30 +176,6 @@ public class UIBreadcumbs extends UIContainer {
     path_.add(path);
     breadcumbs_.add(breadcumb);
     this.tooltipLink = tooltipLink;
-  }
-
-  private void setRenderForumLink(String path) throws Exception {
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletSession portletSession = pcontext.getRequest().getPortletSession();
-    ActionResponse actionRes = null;
-    if (pcontext.getResponse() instanceof ActionResponse) {
-      actionRes = (ActionResponse) pcontext.getResponse();
-    }
-    ForumParameter param = new ForumParameter();
-    if (getUserProfile().getIsShowForumJump() && !FORUM_SERVICE.equals(path)) {
-      if (path.indexOf(Utils.TOPIC) > 0) {
-        path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
-      }
-      param.setRenderForumLink(true);
-      param.setPath(path);
-    } else {
-      param.setRenderForumLink(false);
-    }
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumLinkEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.FORUM_LINK_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-    }
   }
 
   public boolean isOpen() {

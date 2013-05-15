@@ -326,7 +326,6 @@ public class ForumPageList extends JCRPageList {
     userProfile.setTimeFormat(reader.string(ForumNodeTypes.EXO_TIME_FORMAT, userProfile.getTimeFormat()));
     userProfile.setMaxPostInPage(reader.l(ForumNodeTypes.EXO_MAX_POST, 10));
     userProfile.setMaxTopicInPage(reader.l(ForumNodeTypes.EXO_MAX_TOPIC, 10));
-    userProfile.setIsShowForumJump(reader.bool(ForumNodeTypes.EXO_IS_SHOW_FORUM_JUMP, true));
     userProfile.setModerateForums(reader.strings(ForumNodeTypes.EXO_MODERATE_FORUMS, new String[] {}));
     userProfile.setModerateCategory(reader.strings(ForumNodeTypes.EXO_MODERATE_CATEGORY, new String[] {}));
     userProfile.setNewMessage(reader.l(ForumNodeTypes.EXO_NEW_MESSAGE));

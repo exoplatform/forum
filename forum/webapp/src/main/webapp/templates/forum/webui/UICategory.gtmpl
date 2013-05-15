@@ -30,6 +30,7 @@
 					"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
 						];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
+	ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
 							 
 	String categoryId = category.getId();
 	UserProfile userProfile = uicomponent.getUserProfile();

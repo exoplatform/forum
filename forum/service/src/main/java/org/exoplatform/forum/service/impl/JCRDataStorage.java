@@ -4520,7 +4520,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, userProfile.getTimeFormat()));
       userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST, 10));
       userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC, 10));
-      userProfile.setIsShowForumJump(reader.bool(EXO_IS_SHOW_FORUM_JUMP));
       userProfile.setIsAutoWatchMyTopics(reader.bool(EXO_IS_AUTO_WATCH_MY_TOPICS));
       userProfile.setIsAutoWatchTopicIPost(reader.bool(EXO_IS_AUTO_WATCH_TOPIC_I_POST));
       userProfile.setLastReadPostOfForum(reader.strings(EXO_LAST_READ_POST_OF_FORUM, new String[] {}));
@@ -4633,7 +4632,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, ""));
       userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST));
       userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC));
-      userProfile.setIsShowForumJump(reader.bool(EXO_IS_SHOW_FORUM_JUMP, true));
     } catch (Exception e) {
       userProfile.setUserId(userName);
       userProfile.setUserTitle(Utils.USER);
@@ -4664,7 +4662,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profileNode.setProperty(EXO_TIME_FORMAT, userProfile.getTimeFormat());
       profileNode.setProperty(EXO_MAX_POST, userProfile.getMaxPostInPage());
       profileNode.setProperty(EXO_MAX_TOPIC, userProfile.getMaxTopicInPage());
-      profileNode.setProperty(EXO_IS_SHOW_FORUM_JUMP, userProfile.getIsShowForumJump());
       profileNode.setProperty(EXO_IS_AUTO_WATCH_MY_TOPICS, userProfile.getIsAutoWatchMyTopics());
       profileNode.setProperty(EXO_IS_AUTO_WATCH_TOPIC_I_POST, userProfile.getIsAutoWatchTopicIPost());
       profileNode.save();
@@ -4917,7 +4914,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       newProfileNode.setProperty(EXO_TIME_FORMAT, newUserProfile.getTimeFormat());
       newProfileNode.setProperty(EXO_MAX_POST, newUserProfile.getMaxPostInPage());
       newProfileNode.setProperty(EXO_MAX_TOPIC, newUserProfile.getMaxTopicInPage());
-      newProfileNode.setProperty(EXO_IS_SHOW_FORUM_JUMP, newUserProfile.getIsShowForumJump());
     }
     // UserBan
     if (isBan) {
@@ -4990,7 +4986,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, ""));
     userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST));
     userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC));
-    userProfile.setIsShowForumJump(reader.bool(EXO_IS_SHOW_FORUM_JUMP));
     userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
     if (userProfile.getIsBanned()) {
       if (userProfileNode.hasProperty(EXO_BAN_UNTIL)) {
@@ -7746,8 +7741,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         profile.setProperty(EXO_TIME_FORMAT, profileTemplate.getTimeFormat());
         profile.setProperty(EXO_MAX_TOPIC, profileTemplate.getMaxTopicInPage());
         profile.setProperty(EXO_MAX_POST, profileTemplate.getMaxPostInPage());
-        profile.setProperty(EXO_IS_SHOW_FORUM_JUMP, profileTemplate.getIsShowForumJump());
-
       }
       if (profileHome.isNew()) {
         profileHome.getSession().save();

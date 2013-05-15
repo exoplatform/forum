@@ -549,7 +549,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateIsRendered(ForumUtils.TAG);
-      forumPortlet.getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(objectId);
       forumPortlet.getChild(UITopicsTag.class).setIdTag(objectId);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -595,7 +594,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
             UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
             uiTopicDetail.setUpdateForum(uiTopicContainer.forum);
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId());
-            forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId + " "));
             if (temp[2].equals("true")) {
               uiTopicDetail.setIdPostView("lastpost");
             } else if (temp[2].equals("false")) {
@@ -737,7 +735,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       categoryContainer.updateIsRender(false);
       categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId);
-      forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -773,7 +770,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         categoryContainer.updateIsRender(false);
         categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId);
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId);
-        forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);

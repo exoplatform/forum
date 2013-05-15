@@ -773,7 +773,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
     forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-    forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
     ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(forumPortlet);
   }
 
@@ -887,7 +886,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String tagId) throws Exception {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateIsRendered(ForumUtils.TAG);
-      forumPortlet.getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId);
       forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
