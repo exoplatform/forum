@@ -36,6 +36,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -127,6 +128,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private List<RoleRulesPlugin>   rulesPlugins_        = new ArrayList<RoleRulesPlugin>();
 
+  final static Pattern    highlightPattern             = Pattern.compile(Utils.HIGHLIGHT_PATTERN);
+  
   private SessionManager          sessionManager;
 
   private KSDataLocation          dataLocator;
@@ -2767,12 +2770,16 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           continue;
         }
 
+        String excerptField = "";
         if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
           objectResult = ResultType.QUESTION.get(nodeObj, eventQuery, retrictedCategoryList);
+          excerptField = EXO_NAME;
         } else if (nodeObj.isNodeType(EXO_ANSWER)) {
           objectResult = ResultType.ANSWER.get(nodeObj, eventQuery, retrictedCategoryList);
+          excerptField = EXO_RESPONSES;
         } else if (nodeObj.isNodeType(EXO_COMMENT)) {
           objectResult = ResultType.COMMENT.get(nodeObj, eventQuery, retrictedCategoryList);
+          excerptField = EXO_COMMENTS;
         }
 
         //
@@ -2781,7 +2788,13 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         //
         if (rowObj != null) {
           objectResult.setRelevancy(rowObj.getValue(JCR_SCORE).getLong());
-          objectResult.setExcerpt(rowObj.getValue(REP_EXCERPT).getString());
+          String excerpt = rowObj.getValue(String.format(REP_EXCERPT_PATTERN, excerptField)).getString();
+          
+          //check whether the excerpt have the highlight text
+          if(!highlightPattern.matcher(excerpt).find() && excerptField.equals(EXO_NAME)){
+            excerpt = rowObj.getValue(String.format(REP_EXCERPT_PATTERN, EXO_TITLE)).getString();
+          }
+          objectResult.setExcerpt(excerpt);
         }
 
         searchResult.add(objectResult);
@@ -4073,4 +4086,5 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
     return commentHome.getNode(commentId);
   }
+  
 }

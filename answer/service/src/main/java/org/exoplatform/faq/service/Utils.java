@@ -55,6 +55,8 @@ public class Utils {
   final public static String QUESTION_ID          = String.format("?&%s=", QUESTION_ID_PARAM);
 
   final public static String ANSWER_NOW           = String.format("&%s=", ANSWER_NOW_PARAM);
+  
+  final public static String HIGHLIGHT_PATTERN    = "(.*)<strong>(.*)</strong>(.*)";
 
   /**
    * This method sort list category is date ascending

@@ -129,12 +129,13 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     questionTest = faqService_.getQuestionById(questionTest.getId());
     SearchResult aResult = aResults.get(0);
     assertEquals(questionTest.getQuestion(), aResult.getTitle());
-    assertTrue(aResult.getExcerpt().indexOf("kool") >= 0);
     String url = aResult.getUrl();
     assertTrue(url.indexOf("/portal/classic/answers/?&questionId") >= 0);
     // content is question
     assertEquals(questionTest.getCreatedDate().getTime(), aResult.getDate());
     assertEquals(questionTest.getDetail(), ((UnifiedSearchResult)aResult).getContent());
+    //get excerpt field
+    assertTrue(aResult.getExcerpt().indexOf("kool") >= 0);
     
     // content is answer
     aResults = (List<SearchResult>)answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
@@ -142,11 +143,15 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertEquals("new reponses 1", ((UnifiedSearchResult)aResult).getContent());
     aResult = aResults.get(1);
     assertEquals("new reponses 2", ((UnifiedSearchResult)aResult).getContent());
+    //get excerpt field
+    assertTrue(aResult.getExcerpt().indexOf("reponses") >= 0);
     
     // content is comment
     aResults = (List<SearchResult>)answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     aResult = aResults.get(0);
     assertEquals("comment test", ((UnifiedSearchResult)aResult).getContent());
+    //get excerpt field
+    assertTrue(aResult.getExcerpt().indexOf("comment") >= 0);
 
   }
 

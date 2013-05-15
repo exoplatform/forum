@@ -233,7 +233,7 @@ public class ObjectSearchResult {
    * @return
    */
   public String getExcerpt() {
-    return excerpt;
+    return excerpt == null ? "" : excerpt;
   }
 
   /**

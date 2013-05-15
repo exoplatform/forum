@@ -19,6 +19,7 @@ package org.exoplatform.faq.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -108,4 +109,20 @@ public class UtilsTestCase extends TestCase {
     users.add("demo");
     assertEquals("@exo:isAdmin = 'root' or @exo:isAdmin = 'demo'", Utils.buildQueryListOfUser("exo:isAdmin", users));
   }
+  
+  public void testHighlightMatcher() throws Exception {
+    String input = "dsadsa<strong>test abcdfgh </strong> safsad";
+    String input2 = "<strong> sfsad </strong> safsad";
+    String input3 = "<strong> sfsad </strong>";
+    String input4 = "</strong> safsad";
+    String input5 = "<strong> xxxxxx";
+    //
+    Pattern pattern = Pattern.compile(Utils.HIGHLIGHT_PATTERN);
+    assertTrue(pattern.matcher(input).find());
+    assertTrue(pattern.matcher(input2).find());
+    assertTrue(pattern.matcher(input3).find());
+    assertFalse(pattern.matcher(input4).find());
+    assertFalse(pattern.matcher(input5).find());
+  }
+  
 }

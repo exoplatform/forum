@@ -189,6 +189,8 @@ public interface FAQNodeTypes {
 
   public static final String REP_EXCERPT                  = "rep:excerpt()";
 
+  public static final String REP_EXCERPT_PATTERN          = "rep:excerpt(%s)";
+
   public static final String AT                           = "@";
 
   public static final String EMPTY_STR                    = "";
