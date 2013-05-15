@@ -69,6 +69,14 @@ public class WebUIUtils {
     }
   }
   
+  static public RequireJS addScripts(String module, String alias) {
+    return addScripts(module, alias, "");
+  }
+
+  static public RequireJS addScripts(String[] scripts) {
+    return addScripts(null, null, scripts);
+  }
+
   static public RequireJS addScripts(String module, String alias, String... scripts) {
     PortletRequestContext pContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     RequireJS requireJS;

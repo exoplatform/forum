@@ -52,8 +52,8 @@
       var confirms = component.find('.confirm');
       var divNumber = component.find('div#divChecked');
       
-      $.each(confirms, function(idx, elm) {
-        var thizz = $(this);
+      $.each(confirms, function(idx, element) {
+        var thizz = $(element);
         if(thizz.hasAttr('id') == false) {
           thizz.attr('id', id + 'Confirm' + idx);
         }
@@ -122,28 +122,6 @@
             firstItem.removeAttr('oldClass');
           }
         }
-      }
-    },
-
-    numberIsCheckedForum : function(formName, checkAllName, multiAns, onlyAns, notChecked) {
-      var total = 0;
-      var form = document.forms[formName];
-      if (form) {
-        var checkboxs = form.elements;
-        for ( var i = 0; i < checkboxs.length; i++) {
-          if (checkboxs[i].type == "checkbox" && checkboxs[i].checked && checkboxs[i].name != "checkAll") {
-            total = total + 1;
-          }
-        }
-      }
-      if (total > 1) {
-        var text = String(multiAns).replace("?", "").replace('{0}', total) + " ?";
-        return confirm(text);
-      } else if (total == 1) {
-        return confirm(String(onlyAns).replace("?", "") + " ?");
-      } else {
-        alert(notChecked);
-        return false;
       }
     },
 

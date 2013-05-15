@@ -1,3 +1,6 @@
+<%
+	org.exoplatform.forum.common.webui.WebUIUtils.addScripts("eXo.answer.UIAnswersPortlet.initConfirm('" + uicomponent.id + "');");
+%>
 <div class="uiUserSettingForm">  
   <% uiform.begin() %>
   <div class="uiTabPane uiTabNormal">
@@ -54,7 +57,7 @@
 									<%
 										if(!uicomponent.isDefaultAvatar()){
 									%>
-										<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" class="btn btn-mini">
+										<a href="javaScript:void(0);" onclick="<%=uiform.event("SetDefaultAvatar")%>" class="confirm btn btn-mini" data-confirm="<%=_ctx.appRes("UIUserSettingForm.msg.SetDeFaultAvatar")%>">
 											<%=_ctx.appRes("UIUserSettingForm.action.SetDefaultAvatar")%>
 										</a>
 									<%}%>

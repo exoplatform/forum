@@ -53,6 +53,13 @@
 										</thead>
 										<tbody>
 										<%
+										if (uicomponent.getListWatch().size() == 0) { %>
+										<tr>
+											 <td class="empty center" colspan="5">
+												 <%=_ctx.appRes("UIForumUserSettingForm.label.EmptyData");%>
+											 </td>
+										</tr>
+										<%} else {
 										for(Watch watch : uicomponent.getListWatch()){%>
 											<tr>
 												<td>
@@ -87,7 +94,8 @@
 												</td>
 											</tr>
 										<%	
-										}%>
+										}
+									 }%>
 										</tbody>
 									</table>
 				

@@ -17,5 +17,6 @@
         uicomponent.renderChild(component.getClass()) ; 
       }
     }
+    _ctx.include("app:/templates/answer/webui/UIAnswerPopupTemplate.gtmpl");
   %>
 </div>

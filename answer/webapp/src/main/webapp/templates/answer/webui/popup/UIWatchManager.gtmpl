@@ -1,5 +1,8 @@
 <%
+	import org.exoplatform.forum.common.webui.WebUIUtils;
 	import org.exoplatform.faq.service.Watch ;
+
+	WebUIUtils.addScripts("eXo.answer.UIAnswersPortlet.initConfirm('" + uicomponent.id + "');");
 %>
 
 <div class="uiWatchManager">
@@ -45,7 +48,7 @@
 						 						%>
 	 											<a onclick="$linkCurrent" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="actionIcon"><i class="uiIconWatch uiIconLightGray"></i></a>
 	 											<a onclick="$linkEdit" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="actionIcon"><i class="uiIconEdit uiIconLightGray"></i></a>
-	 											<a onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="actionIcon"><i class="uiIconTrash uiIconLightGray"></i></a>
+	 											<a onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="confirm actionIcon"><i class="uiIconTrash uiIconLightGray"></i></a>
 		 									</td>
 		 								</tr>
 	 								<% 

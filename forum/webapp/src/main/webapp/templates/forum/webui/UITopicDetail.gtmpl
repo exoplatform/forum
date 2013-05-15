@@ -536,14 +536,8 @@
 								
 							<%
 								 if(isShowIP) {
-								 String ip = post.getRemoteAddr();
-								 if(ip != null && ip.length() > 0) {
-									 String link2 = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanIPThisForum") + "')){" + uicomponent.event("BanIPThisForum", ip).replaceFirst("javascript:", "") + ";}";
-									 String title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BanIP"),ip);
-									 if(uicomponent.isIPBaned(ip)){
-									 title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BannedIP"),ip);
-									 link2 ="javaScript:void(0);";
-									 }
+										String ip = post.getRemoteAddr();
+										if(ip != null && ip.length() > 0) {
 							%>
 								<div class="pull-right dropdown">
 									
@@ -552,15 +546,20 @@
 								<% /*Begin Popup Menu*/ %>
 									
 									<ul class="dropdown-menu">
-										<li rel="tooltip" data-placement="bottom" title="$title1" onclick="$link2">	 
-											<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+								 <% if (uicomponent.isIPBaned(ip)) {	%>
+										<li rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BannedIP"),ip) %>">	
+											<a href="javaScript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
 										</li>
+								 <% } else { %>
+										<li rel="tooltip" data-placement="bottom" title="<%=ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BanIP"),ip)%>">	
+											<a href="<%=uicomponent.event("BanIPThisForum", ip) %>" class="confirm" data-confirm="<%=_ctx.appRes("UITopicDetail.confirm.BanIPThisForum") %>"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+										</li>
+								 <% } %>
 										<% 
 										if(userProfile.getUserRole() == 0) {
-										String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
 										%>
-										<li onclick="$link">	
-											<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
+										<li>	
+											<a href="<%=uicomponent.event("BanIPAllForum", ip) %>" class="confirm" data-confirm="<%=_ctx.appRes("UITopicDetail.confirm.BanAllForum")%>"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
 										</li>
 									<% } %>
 									</ul>
@@ -611,25 +610,25 @@
 							%>
 								
 								<% if(typeFile.indexOf("image") >= 0) {
-								     if (typeFile.indexOf("xcf") >= 0 || typeFile.indexOf("svg") >= 0 || typeFile.indexOf("tif") >= 0) { 
-								       String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
-                %>
-		                  <div class="otherAttachmentBox">
-		                    <a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
-		                    <i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
-		                  </div>
-                <%  } else if (titleFile.indexOf(".psd") < 0) {
-                       String attLink = uicomponent.getImageUrl(attachment.getPath());
-                %>
-			                <div class="imageAttachmentBox pull-left">
-			                  <a class="imgAttach"><img rel="tooltip" data-placement="bottom" id="imgView${fileName}" src="$attLink" alt="$titleFile"/></a> 
-			                  <div class="actionAttachImg">
-			                    <p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
-			                    <p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
-			                  </div>
-			                </div>  
-                <% } %>
-               <% } %>
+										 if (typeFile.indexOf("xcf") >= 0 || typeFile.indexOf("svg") >= 0 || typeFile.indexOf("tif") >= 0 || titleFile.indexOf(".psd") > 0) {
+											 String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
+								%>
+											<div class="otherAttachmentBox">
+												<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+												<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
+											</div>
+									<% } else {
+											 String attLink = uicomponent.getImageUrl(attachment.getPath());
+									%>
+											<div class="imageAttachmentBox pull-left">
+												<a class="imgAttach" rel="tooltip" data-placement="bottom" title="$titleFile"><img src="$attLink" id="imgView${fileName}" alt="$titleFile"/></a> 
+												<div class="actionAttachImg">
+													<p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
+													<p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
+												</div>
+											</div>	
+									<% } %>
+								<% } %>
 							<% } %>
 							</div>
 							
@@ -638,24 +637,24 @@
 							<!-- Start Attach File -->
 							
 							<div class="attachmentContent clearfix">
-							<% for(attachment in attachments) {
-								 String urlFile = uicomponent.getFileSource(attachment) ;
-								 String titleFile = attachment.getName();
-								 String fileName = ForumUtils.getSubString(titleFile, 30);
-								 long sizeNumber = attachment.getSize() ;
-								 String size = ForumUtils.getSizeFile(sizeNumber) ;
-								 String typeFile = attachment.getMimeType() ;
+							<%
+							  for(attachment in attachments) {
+									String urlFile = uicomponent.getFileSource(attachment) ;
+									String titleFile = attachment.getName();
+									String fileName = ForumUtils.getSubString(titleFile, 30);
+									long sizeNumber = attachment.getSize() ;
+									String size = ForumUtils.getSizeFile(sizeNumber) ;
+									String typeFile = attachment.getMimeType() ;
 							%>
-								
+
 								<% if(typeFile.indexOf("image") < 0) {
-									 String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
+										String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
 								%>
 								<div class="otherAttachmentBox">
 									<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
 									<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
 								</div>	
 								<% } %>
-								
 							<% } %>
 							
 							</div>
@@ -669,9 +668,9 @@
 						<!--- End Attachment	 -->
 							
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-								post.setMessage(userInfo.getSignature());
-								post.setId(uicomponent.SIGNATURE);
-								String signature = uicomponent.renderPost(post);
+									post.setMessage(userInfo.getSignature());
+									post.setId(uicomponent.SIGNATURE);
+									String signature = uicomponent.renderPost(post);
 							%>
 							<div class="signature"><span></span><br/>$signature</div>
 							<%} %>
@@ -723,33 +722,32 @@
 									for(action in actions) {
 										isShowAction = true;
 										isShowPri = true ;
-										String title = _ctx.appRes("UITopicDetail.title." + action);
-										String label = _ctx.appRes("UITopicDetail.action." + action);
 										if(!(userLogin.equals(owner))) {
-										if(!canEdit){
-											if(action.equals("Edit")||action.equals("Delete")){
-											isShowAction = false;
+											if(!canEdit){
+												if(action.equals("Edit")||action.equals("Delete")){
+													isShowAction = false;
+												}
 											}
 										}
-										}
 										if(isShowAction && checked == 0){ 
-										if(action.equals("Edit")||action.equals("Delete")){
+											if(action.equals("Edit")||action.equals("Delete")){
+												isShowAction = false;
+											}
+										}
+										if(isShowAction && !isCanReply&&(action.equals("Edit") || action.equals("Quote") || action.equals("PrivatePost"))) {
 											isShowAction = false;
 										}
-										}
-										if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
-										isShowAction = false;
-										}
 										if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
-										isShowAction = false;
-										isShowPri = false;
+											isShowAction = false;
+											isShowPri = false;
 										}
-										String actionLink = uicomponent.event(action,uiformId,postId);
 										if(isShowAction) {
+											String actionLink = uicomponent.event(action, uiformId, postId);
+											String title = _ctx.appRes("UITopicDetail.title." + action);
+											String label = _ctx.appRes("UITopicDetail.action." + action);
+											String confirm = (action.equals("Delete") == true) ? "btn confirm" : "btn";
 									%>
-									
-										<a onclick="$actionLink" class="btn" rel="tooltip" data-placement="bottom" title="$title">$label</a>
-									
+										<a onclick="$actionLink" class="$confirm" rel="tooltip" data-placement="bottom" title="$title">$label</a>
 									<%}
 									} 
 									checked = 1; 

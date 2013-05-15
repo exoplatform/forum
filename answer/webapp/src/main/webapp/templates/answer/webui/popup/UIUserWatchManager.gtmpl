@@ -1,8 +1,9 @@
 <% 
+	import org.exoplatform.forum.common.webui.WebUIUtils;
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
-	String compId = uicomponent.getId() ; 
-  def rcontext = _ctx.getRequestContext() ;	
+
+  WebUIUtils.addScripts("eXo.answer.UIAnswersPortlet.initConfirm('" + uicomponent.id + "');");
  %>
 <div class="uiUserWatchManager" id="$uicomponent.id">
    <table class="uiGrid table table-hover table-striped">
@@ -20,13 +21,13 @@
          categoryId = cate.getPath() ;
          path = uicomponent.getCategoriesName(categoryId);
          categoryPathName = uicomponent.getSubPath(path).replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
-				 String unWatch = uicomponent.event("UnWatch", uicomponent.id);
+				 String unWatch = uicomponent.event("UnWatch", categoryId);
          String link = uicomponent.event("Link",categoryId);
       %>
        <tr>
          <td><a rel="tooltip" data-placement="bottom" title="$path" href="$link">$categoryPathName</a></td>
          <td class="center">
-             <a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="actionIcon" >
+             <a onclick="$unWatch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="confirm actionIcon" >
              	<i class="uiIconTrash uiIconLightGray"></i>
              </a>
          </td>

@@ -109,6 +109,9 @@
       <as>forumCheckBoxManager</as>
     </depends>
     <depends>
+      <module>ForumMessagePopupPlugin</module>
+    </depends>
+    <depends>
       <module>ForumUtils</module>
       <as>forumUtils</as>
     </depends>

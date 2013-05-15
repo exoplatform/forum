@@ -16,9 +16,9 @@
 								<label class="control-label">
 									<%if(field.getName().equals("censorKeyword")){ %>
 										<label for="<%=field.getId()%>"><%=fieldName%></label>
-									<%} else {%>
-										<label for="<%=field.getId()%>"><%=fieldName%>:</label>
-									<%} %>
+									<%} else if(field.getName().equals("upload") == false){%>
+                    <label for="<%=field.getId()%>"><%=fieldName%>:</label>
+                  <%} %>
 								</label>
 								<div class="controls">
 									<% uiform.renderField(field) %>

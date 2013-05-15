@@ -22,6 +22,26 @@
     utils.initTooltip(id);
   };
 
+  UIAnswersPortlet.initConfirm = function(id) {
+    var component = $.fn.findId(id);
+    var confirms = component.find('.confirm');
+    
+    $.each(confirms, function(idx, element) {
+      var thizz = $(element);
+      if(thizz.hasAttr('id') == false) {
+        thizz.attr('id', id + 'Confirm' + idx);
+      }
+      var settings = {isMulti: false, message : '', action : ''};
+      if(thizz.hasAttr('data-action')) {
+        settings.action = thizz.attr('data-action');
+      }
+      if(thizz.hasAttr('data-confirm')) {
+        settings.message = thizz.attr('data-confirm');
+      }
+      thizz.confirmation(settings);
+    });
+  };
+
   UIAnswersPortlet.resizeCallback = function() {
     utils.setMaskLayer(UIAnswersPortlet.portletId);
   };
