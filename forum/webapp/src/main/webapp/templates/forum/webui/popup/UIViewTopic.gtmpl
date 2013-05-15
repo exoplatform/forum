@@ -35,8 +35,8 @@
 <!-- Start PostsInThreadContainer -->
 
   <div class="uiBox containerTopicDetail">
-    
-    
+    <div style="padding: 10px; position:relative;">
+		<div class="divTable">
 <!-- Start ContentContainer -->
     <%
     
@@ -102,9 +102,9 @@
         else alert = " " ;
     %>
     
-		<div class="contentTopicDetail clearfix" id="$postId">
+		<div class="contentTopicDetail clearfix divRow" id="$postId">
   <!-- Start MemberContainer -->
-			<div class="memberContainer pull-left">
+			<div class="memberContainer divCell">
 			  
 			<%  String userSmile = "uiIconForumColorOffline";
 				String titleSmile = "Offline" ;
@@ -153,10 +153,10 @@
 			</div>
   <!-- End MemberContainer -->
   <!-- Start PostViewContainer -->
-			<div class="postViewContainer">
+			<div class="postViewContainer divCell">
 			  
 				<div class="postViewHeader clearfix"> 
-					<div class="postViewTitle pull-left"><i class="$classIconPost"></i>$namePost $alert</div>
+					<div class="postViewTitle pull-left">$namePost $alert</div>
 					<div class="pull-right">
 						<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 					</div>
@@ -258,13 +258,13 @@
 				<div class="signature"><span></span><br/>$signature</div>
 			  <%} %>
 			</div>
-				<div class="footPost clearfix">
 				  <%  
-					  if(!ForumUtils.isEmpty(editBy)) {
-					    UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
-					    String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
+				if(!ForumUtils.isEmpty(editBy)) {
+					UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
+					String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
 			        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 				  %>
+				<div class="footPost clearfix">
 					<div class="txtLastEdit">
 						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="textTitleProfile">$editByScreeName</span>
 						  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
@@ -277,22 +277,29 @@
 						  $reason
 						  <% } %>
 					</div>
+				</div>
 				<% } %>
 					
-				</div>
 				
 			</div>
 <!-- End PostViewContainer -->
-		
+			
 		
 		</div>
-			
+		<div class="divRow clearfix">
+			<div class="divCell"><span class="line"></span></div>
+			<div class="divCell"><span class="line"></span></div>
+		</div>	
     <% }//end for
      } 
 	%>
+	
 <!-- End ContentContainer -->
-  </div>  
-<!-- End PostsInThreadContainer -->
+		</div>  
+
+	</div>
+</div>
+  <!-- End PostsInThreadContainer -->
 	<div style="margin-bottom: 10px">
 	<% 
 	if(uicomponent.getIsRenderIter()) {
@@ -302,6 +309,7 @@
 	</div>
 	
 <%uiform.end()%>
+
 
 </div>
 
