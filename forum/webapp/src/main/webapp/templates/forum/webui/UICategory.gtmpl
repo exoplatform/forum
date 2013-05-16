@@ -27,10 +27,10 @@
 					"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 					"eXo.forum.UIForumPortlet.goLastPost('top');",
 					"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
-					"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
+					"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
+					"eXo.forum.UIForumPortlet.controlLeftNavigation();"
 						];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
-	ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
 							 
 	String categoryId = category.getId();
 	UserProfile userProfile = uicomponent.getUserProfile();

@@ -16,7 +16,7 @@
 				"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 				"eXo.forum.UIForumPortlet.initTooltip('"+uicomponent.id+"') ;",
 				"eXo.forum.UIForumPortlet.initShowUserInfo('"+uicomponent.id+"') ;",
-				"setTimeout(function() {platformLeftNavigation.resize();}, 200);"
+				"eXo.forum.UIForumPortlet.controlLeftNavigation();"
 				];
 	
 	UserProfile userProfile = uicomponent.getUserProfile();
@@ -34,7 +34,7 @@
 <div class="uiCategories" id="$componentId">
 
 	<%
-	ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", scripts);
+	ForumUtils.addScripts(null, null, scripts);
 
 	if(uicomponent.getIsRendered()) {
 			uicomponent.renderChild(UIForumListSearch.class);

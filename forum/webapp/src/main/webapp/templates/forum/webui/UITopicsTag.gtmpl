@@ -14,10 +14,10 @@
 							"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
 							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 							"eXo.forum.UIForumPortlet.goLastPost('top');",
-							"eXo.forum.CheckBox.init('"+uicomponent.id+"');"
+							"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
+							"eXo.forum.UIForumPortlet.controlLeftNavigation();"
 							];
   ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
-  ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
 %>
 <% uiform.begin() %>
 <%

@@ -5,7 +5,7 @@
 	String txtTitleResult = _ctx.appRes("UIForumListSearch.label.SearchResult");
 	txtTitleResult = txtTitleResult.replace("{0}", ""+searchEvents.size()).replace("{1}", uicomponent.searchTerm);
 	
-  ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
+  ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.controlLeftNavigation();");
 %>
 <div class="uiForumListSearch">
 	<%uiform.begin();%>

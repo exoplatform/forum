@@ -50,10 +50,10 @@
 							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 							"eXo.forum.UIForumPortlet.goLastPost('top');",
 							"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
-							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');"
+							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
+							"eXo.forum.UIForumPortlet.controlLeftNavigation();"
 							];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
-	ForumUtils.addScripts("platform-left-navigation", "platformLeftNavigation", "setTimeout(function() {platformLeftNavigation.resize();}, 200);");
 %>
 <div class="uiTopicContainer">
 	<% uiform.begin() %>
