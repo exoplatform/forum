@@ -26,7 +26,7 @@ import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -54,7 +54,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIModerationForum extends BaseForumForm implements UIPopupComponent {
   private String[]            path            = new String[] {};
 
-  List<ForumSearch>           list_;
+  List<ForumSearchResult>           list_;
 
   private boolean             isShowIter      = true;
 
@@ -107,11 +107,11 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
   }
 
   @SuppressWarnings("unchecked")
-  protected List<ForumSearch> getListObject() throws Exception {
+  protected List<ForumSearchResult> getListObject() throws Exception {
     try {
       list_ = getForumService().getJobWattingForModerator(getPath());
     } catch (Exception e) {
-      list_ = new ArrayList<ForumSearch>();
+      list_ = new ArrayList<ForumSearchResult>();
       log.error("list of forum search must not null: ", e);
     }
     pageList = new ForumPageList(10, list_.size());
@@ -121,13 +121,13 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     if (pageList.getAvailablePage() <= 1)
       isShowIter = false;
     int pageSelect = pageIterator.getPageSelected();
-    List<ForumSearch> list = new ArrayList<ForumSearch>();
+    List<ForumSearchResult> list = new ArrayList<ForumSearchResult>();
     list.addAll(pageList.getPageSearch(pageSelect, list_));
     return list;
   }
 
-  private ForumSearch getObject(String id) throws Exception {
-    for (ForumSearch obj : list_) {
+  private ForumSearchResult getObject(String id) throws Exception {
+    for (ForumSearchResult obj : list_) {
       if (obj.getId().equals(id))
         return obj;
     }
@@ -136,7 +136,7 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
 
   static public class OpenActionListener extends BaseEventListener<UIModerationForum> {
     public void onEvent(Event<UIModerationForum> event, UIModerationForum moderationForum, final String objectId) throws Exception {
-      ForumSearch forumSearch = moderationForum.getObject(objectId);
+      ForumSearchResult forumSearch = moderationForum.getObject(objectId);
       UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
       if (forumSearch.getType().equals(Utils.TOPIC)) {

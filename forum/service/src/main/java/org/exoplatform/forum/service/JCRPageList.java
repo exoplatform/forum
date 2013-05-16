@@ -88,7 +88,7 @@ abstract public class JCRPageList<E> extends PageList<E> {
     return currentListPage_;
   }
 
-  public List<E> getPageSearch(int page, List<ForumSearch> list) {
+  public List<E> getPageSearch(int page, List<ForumSearchResult> list) {
     checkAndSetPage(page);
     populateCurrentPageSearch(currentPage_, list, false, false);
     return currentListPage_;

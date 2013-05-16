@@ -186,7 +186,7 @@ public class ForumPageList extends JCRPageList {
     int endIndex = pageSize * page;
     if (!isSearchUser) {
       if (!isWatch)
-        currentListPage_ = new ArrayList<ForumSearch>();
+        currentListPage_ = new ArrayList<ForumSearchResult>();
       else
         currentListPage_ = new ArrayList<Watch>();
     } else {

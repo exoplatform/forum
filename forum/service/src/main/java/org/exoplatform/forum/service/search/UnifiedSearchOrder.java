@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 
 public class UnifiedSearchOrder {
   
@@ -33,7 +33,7 @@ public class UnifiedSearchOrder {
    * @return ordered list
    * @since 4.0.0
    */
-  public static List<ForumSearch> processOrder(List<ForumSearch> listSearchResult, String sort, String order) {
+  public static List<ForumSearchResult> processOrder(List<ForumSearchResult> listSearchResult, String sort, String order) {
     
     RelavancyCompatator comparator = new RelavancyCompatator(sort, order);
     Collections.sort(listSearchResult, comparator);
@@ -41,7 +41,7 @@ public class UnifiedSearchOrder {
     return listSearchResult;
   }
   
-  static class RelavancyCompatator implements Comparator<ForumSearch> {
+  static class RelavancyCompatator implements Comparator<ForumSearchResult> {
     
     private String sort;
     private String order;
@@ -52,7 +52,7 @@ public class UnifiedSearchOrder {
     }
 
     @Override
-    public int compare(ForumSearch o1, ForumSearch o2) {
+    public int compare(ForumSearchResult o1, ForumSearchResult o2) {
       if("relevancy".equalsIgnoreCase(sort) && "ASC".equalsIgnoreCase(order)) {
         //ascending order
         return o1.getRelevancy().compareTo(o2.getRelevancy());

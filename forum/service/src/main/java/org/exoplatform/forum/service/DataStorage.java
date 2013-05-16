@@ -272,9 +272,9 @@ public interface DataStorage {
 
   List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception;
 
-  List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
+  List<ForumSearchResult> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
+  List<ForumSearchResult> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
 
   void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 
@@ -290,7 +290,7 @@ public interface DataStorage {
 
   Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
-  List<ForumSearch> getJobWattingForModerator(String[] paths);
+  List<ForumSearchResult> getJobWattingForModerator(String[] paths);
 
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 

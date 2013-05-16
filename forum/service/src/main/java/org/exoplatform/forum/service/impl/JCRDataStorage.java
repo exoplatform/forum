@@ -92,7 +92,7 @@ import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.ForumSubscription;
@@ -121,6 +121,7 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.search.DiscussionSearchResult;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
@@ -5557,8 +5558,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return forumLinks;
   }
 
-  public List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
-    List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
+  public List<ForumSearchResult> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
+    List<ForumSearchResult> listSearchEvent = new ArrayList<ForumSearchResult>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
@@ -5722,10 +5723,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listSearchEvent;
   }
 
-  public List<ForumSearch> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception {
-    List<ForumSearch> listSearchResult = new ArrayList<ForumSearch>();
+  public List<ForumSearchResult> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception {
+    List<ForumSearchResult> listSearchResult = new ArrayList<ForumSearchResult>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    DiscussionSearchResult searchResult;
     try {
+      
+      
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 
@@ -5839,22 +5843,25 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
 
-      if(limit > 0) {
-        int size = listSearchResult.size();
-        if(size > offset) {
-          if(limit > size) {
-            limit = size;
-          }
-          listSearchResult = listSearchResult.subList(offset, limit);
-        } else {
-          listSearchResult.clear();
+      //
+      Iterator<ForumSearchResult> iter = listSearchResult.iterator();
+      searchResult = new DiscussionSearchResult(offset, limit, listSearchResult.size());
+      
+      //
+      while (iter.hasNext()) {
+        searchResult.add(iter.next());
+        //
+        if (searchResult.addMore() == false) {
+          break;
         }
       }
 
     } catch (Exception e) {
       throw e;
     }
-    return UnifiedSearchOrder.processOrder(listSearchResult, sort, order);
+    
+    //
+    return UnifiedSearchOrder.processOrder(searchResult.result(), sort, order);
   }
   
   private boolean hasPermssionViewerPost(Node postNode, List<String> listOfUser) throws Exception {
@@ -5864,8 +5871,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listOfCanviewrs.isEmpty() || Utils.hasPermission(listOfCanviewrs, listOfUser);
   }
 
-  private ForumSearch setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {
-    ForumSearch forumSearch = setPropertyForForumSearch(nodeObj, type);
+  private ForumSearchResult setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {
+    ForumSearchResult forumSearch = setPropertyForForumSearch(nodeObj, type);
     try {
     forumSearch.setRelevancy(row.getValue(JCR_SCORE).getLong());
     forumSearch.setExcerpt(row.getValue(REP_EXCERPT).getString()); 
@@ -5875,11 +5882,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return forumSearch;
   }
   
-  private List<ForumSearch> removeItemInList(List<ForumSearch> listSearchEvent, List<String> forumCanView, List<String> categoryCanView) {
-    List<ForumSearch> tempListSearchEvent = new ArrayList<ForumSearch>();
+  private List<ForumSearchResult> removeItemInList(List<ForumSearchResult> listSearchEvent, List<String> forumCanView, List<String> categoryCanView) {
+    List<ForumSearchResult> tempListSearchEvent = new ArrayList<ForumSearchResult>();
     String path = null;
     String[] strs;
-    for (ForumSearch forumSearch : listSearchEvent) {
+    for (ForumSearchResult forumSearch : listSearchEvent) {
       path = forumSearch.getPath();
       if (!path.contains(Utils.TOPIC)) {// search category or forum
         tempListSearchEvent.add(forumSearch);
@@ -5927,9 +5934,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listForum;
   }
 
-  public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds){
+  public List<ForumSearchResult> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds){
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
+    List<ForumSearchResult> listSearchEvent = new ArrayList<ForumSearchResult>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -5984,8 +5991,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listSearchEvent;
   }
 
-  private List<ForumSearch> getSearchByAttachment(Node categoryHome, String path, String key, List<String> listForumIds, List<String> listOfUser, boolean isAdmin, String type) throws Exception {
-    List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
+  private List<ForumSearchResult> getSearchByAttachment(Node categoryHome, String path, String key, List<String> listForumIds, List<String> listOfUser, boolean isAdmin, String type) throws Exception {
+    List<ForumSearchResult> listSearchEvent = new ArrayList<ForumSearchResult>();
     try {
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuilder strQuery = new StringBuilder();
@@ -6062,8 +6069,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listSearchEvent;
   }
 
-  private ForumSearch setPropertyForForumSearch(Node nodeObj, String type) throws Exception {
-    ForumSearch forumSearch = new ForumSearch();
+  private ForumSearchResult setPropertyForForumSearch(Node nodeObj, String type) throws Exception {
+    ForumSearchResult forumSearch = new ForumSearchResult();
     forumSearch.setId(nodeObj.getName());
     forumSearch.setPath(nodeObj.getPath());
     PropertyReader reader = new PropertyReader(nodeObj);
@@ -6548,9 +6555,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return path;
   }
 
-  public List<ForumSearch> getJobWattingForModerator(String[] paths){
+  public List<ForumSearchResult> getJobWattingForModerator(String[] paths){
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    List<ForumSearch> list = new ArrayList<ForumSearch>();
+    List<ForumSearchResult> list = new ArrayList<ForumSearchResult>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
       String string = categoryHome.getPath();
@@ -6577,9 +6584,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       query = qm.createQuery(stringBuilder.toString(), Query.XPATH);
       result = query.execute();
       iter = result.getNodes();
-      ForumSearch forumSearch;
+      ForumSearchResult forumSearch;
       while (iter.hasNext()) {
-        forumSearch = new ForumSearch();
+        forumSearch = new ForumSearchResult();
         Node node = iter.nextNode();
         forumSearch.setId(node.getName());
         forumSearch.setPath(node.getPath());
@@ -6598,7 +6605,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       result = query.execute();
       iter = result.getNodes();
       while (iter.hasNext()) {
-        forumSearch = new ForumSearch();
+        forumSearch = new ForumSearchResult();
         Node node = iter.nextNode();
         forumSearch.setId(node.getName());
         forumSearch.setPath(node.getPath());

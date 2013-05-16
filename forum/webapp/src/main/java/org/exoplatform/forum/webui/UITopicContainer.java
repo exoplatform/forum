@@ -35,7 +35,7 @@ import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -480,7 +480,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         categoryContainer.updateIsRender(true);
         UICategories categories = categoryContainer.getChild(UICategories.class);
         categories.setIsRenderChild(true);
-        List<ForumSearch> list = uiTopicContainer.getForumService().getQuickSearch(text, type.toString(), path, uiTopicContainer.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
+        List<ForumSearchResult> list = uiTopicContainer.getForumService().getQuickSearch(text, type.toString(), path, uiTopicContainer.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY)));
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);

@@ -18,7 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.util.Date;
 
-public class ForumSearch {
+public class ForumSearchResult {
   private String id;
 
   private String path;
@@ -37,7 +37,7 @@ public class ForumSearch {
 
   private Date   createdDate;
 
-  public ForumSearch() {
+  public ForumSearchResult() {
   }
 
   public String getId() {

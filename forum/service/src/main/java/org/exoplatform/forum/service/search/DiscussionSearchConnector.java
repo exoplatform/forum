@@ -15,7 +15,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
@@ -68,8 +68,8 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
     List<SearchResult> results = new ArrayList<SearchResult>();
     String currentUser = getCurrentUserName();
     try {
-      List<ForumSearch> searchResults = storage.getUnifiedSearch(query, currentUser, offset, limit, sort, order);
-      for (ForumSearch searchResult : searchResults) {
+      List<ForumSearchResult> searchResults = storage.getUnifiedSearch(query, currentUser, offset, limit, sort, order);
+      for (ForumSearchResult searchResult : searchResults) {
         PostId id = new PostId(searchResult.getPath());
         Forum forum = storage.getForum(id.getCategoryId(), id.getForumId());
         Topic topic = storage.getTopic(id.getCategoryId(), id.getForumId(), id.getTopicId(), currentUser);

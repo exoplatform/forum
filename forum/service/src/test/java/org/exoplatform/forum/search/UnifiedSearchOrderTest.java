@@ -23,7 +23,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 
 public class UnifiedSearchOrderTest extends TestCase {
@@ -37,12 +37,12 @@ public class UnifiedSearchOrderTest extends TestCase {
     super.tearDown();
   }
   
-  private List<ForumSearch> makeData() {
-    List<ForumSearch> list = new ArrayList<ForumSearch>(5);
+  private List<ForumSearchResult> makeData() {
+    List<ForumSearchResult> list = new ArrayList<ForumSearchResult>(5);
     Date current = Calendar.getInstance().getTime();
     
     //
-    ForumSearch item = new ForumSearch();
+    ForumSearchResult item = new ForumSearchResult();
     item.setName("zbC");
     item.setRelevancy(100);
     item.setCreatedDate(current);
@@ -50,21 +50,21 @@ public class UnifiedSearchOrderTest extends TestCase {
     list.add(item);
     
     //
-    item = new ForumSearch();
+    item = new ForumSearchResult();
     item.setName("bAc");
     item.setRelevancy(120);
     item.setCreatedDate(current);
     list.add(item);
     
     //
-    item = new ForumSearch();
+    item = new ForumSearchResult();
     item.setName("Dyc");
     item.setRelevancy(122);
     item.setCreatedDate(current);
     list.add(item);
     
     //
-    item = new ForumSearch();
+    item = new ForumSearchResult();
     item.setName("pyc thanh");
     item.setRelevancy(1122);
     item.setCreatedDate(current);
@@ -72,7 +72,7 @@ public class UnifiedSearchOrderTest extends TestCase {
     list.add(item);
     
     //
-    item = new ForumSearch();
+    item = new ForumSearchResult();
     item.setName("zxyc ");
     item.setRelevancy(251);
     item.setCreatedDate(current);
@@ -83,12 +83,12 @@ public class UnifiedSearchOrderTest extends TestCase {
   }
   
   public void testRelevancyASC() throws Exception {
-    List<ForumSearch> list = makeData();
-    List<ForumSearch> result = UnifiedSearchOrder.processOrder(list, "relevancy", "asc");
+    List<ForumSearchResult> list = makeData();
+    List<ForumSearchResult> result = UnifiedSearchOrder.processOrder(list, "relevancy", "asc");
     
     //
-    ForumSearch previous = null;
-    for (ForumSearch e : result) {
+    ForumSearchResult previous = null;
+    for (ForumSearchResult e : result) {
       if (previous == null) {
         previous = e;
       } else {
@@ -100,12 +100,12 @@ public class UnifiedSearchOrderTest extends TestCase {
   }
   
   public void testRelevancyDESC() throws Exception {
-    List<ForumSearch> list = makeData();
-    List<ForumSearch> result = UnifiedSearchOrder.processOrder(list, "relevancy", "desc");
+    List<ForumSearchResult> list = makeData();
+    List<ForumSearchResult> result = UnifiedSearchOrder.processOrder(list, "relevancy", "desc");
     
     //
-    ForumSearch previous = null;
-    for (ForumSearch e : result) {
+    ForumSearchResult previous = null;
+    for (ForumSearchResult e : result) {
       if (previous == null) {
         previous = e;
       } else {
@@ -117,9 +117,9 @@ public class UnifiedSearchOrderTest extends TestCase {
   }
   
   public void testTitleDESC() throws Exception {
-    List<ForumSearch> list = makeData();
-    List<ForumSearch> result = UnifiedSearchOrder.processOrder(list, "title", "desc");
-    ForumSearch item = result.get(0);
+    List<ForumSearchResult> list = makeData();
+    List<ForumSearchResult> result = UnifiedSearchOrder.processOrder(list, "title", "desc");
+    ForumSearchResult item = result.get(0);
     
     assertEquals("zxyc ", item.getName());
   }

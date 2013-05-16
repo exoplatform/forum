@@ -27,7 +27,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.InitializeForumPlugin;
@@ -1149,11 +1149,11 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   }
 
-  public List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
+  public List<ForumSearchResult> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
     return storage.getQuickSearch(textQuery, type_, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator);
   }
 
-  public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) {
+  public List<ForumSearchResult> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) {
     return storage.getAdvancedSearch(eventQuery, listCateIds, listForumIds);
   }
 
@@ -1216,7 +1216,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getPendingMessages();
   }
 
-  public List<ForumSearch> getJobWattingForModerator(String[] paths) {
+  public List<ForumSearchResult> getJobWattingForModerator(String[] paths) {
     return storage.getJobWattingForModerator(paths);
   }
 

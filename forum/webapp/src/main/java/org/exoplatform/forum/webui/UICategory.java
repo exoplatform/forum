@@ -25,7 +25,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -581,7 +581,7 @@ public class UICategory extends BaseForumForm {
         categoryContainer.updateIsRender(true);
         UICategories categories = categoryContainer.getChild(UICategories.class);
         categories.setIsRenderChild(true);
-        List<ForumSearch> list = uiCategory.getForumService().getQuickSearch(text, type.toString(), path, uiCategory.userProfile.getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
+        List<ForumSearchResult> list = uiCategory.getForumService().getQuickSearch(text, type.toString(), path, uiCategory.userProfile.getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         listSearchEvent.setListSearchEvent(text, list, uiCategory.category.getId());
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);

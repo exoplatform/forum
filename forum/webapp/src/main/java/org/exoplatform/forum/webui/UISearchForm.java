@@ -30,7 +30,7 @@ import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.forum.service.ForumEventQuery;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -419,7 +419,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         return;
       }
       eventQuery.setRemain(remain);
-      List<ForumSearch> list = null;
+      List<ForumSearchResult> list = null;
       try {
         list = uiForm.getForumService().getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
       } catch (Exception e) {

@@ -25,7 +25,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -82,7 +82,7 @@ public class UIQuickSearchForm extends BaseUIForm {
               forumIdsOfModerator.add(str);
           }
         }
-        List<ForumSearch> list = null;
+        List<ForumSearchResult> list = null;
         try {
           list = forumService.getQuickSearch(text, type, ForumUtils.EMPTY_STR, userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
         } catch (Exception e) {

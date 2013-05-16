@@ -45,7 +45,7 @@ import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -918,7 +918,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         categoryContainer.updateIsRender(true);
         UICategories categories = categoryContainer.getChild(UICategories.class);
         categories.setIsRenderChild(true);
-        List<ForumSearch> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
+        List<ForumSearchResult> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());

@@ -902,7 +902,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    * @LevelAPI Platform
    */
-  List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
+  List<ForumSearchResult> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
   /**
    * Gets screen name
@@ -923,7 +923,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the advanced search
    * @LevelAPI Platform
    */
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
+  List<ForumSearchResult> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
 
   /**
    * Saves forum statistic.
@@ -1118,7 +1118,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return list of forum
    * @LevelAPI Platform
    */
-  List<ForumSearch> getJobWattingForModerator(String[] paths);
+  List<ForumSearchResult> getJobWattingForModerator(String[] paths);
 
   /**
    * Get number of jobs are waiting for moderator.

@@ -24,7 +24,7 @@ import java.util.Map;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumSearch;
+import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
@@ -49,7 +49,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     }
 )
 public class UIForumListSearch extends BaseForumForm {
-  private List<ForumSearch>   listEvent                    = null;
+  private List<ForumSearchResult>   listEvent                    = null;
 
   private boolean             isShowIter                   = true;
 
@@ -93,7 +93,7 @@ public class UIForumListSearch extends BaseForumForm {
     return pathLastVisit;
   }
 
-  public void setListSearchEvent(String text, List<ForumSearch> listEvent, String pathLastVisit) throws Exception {
+  public void setListSearchEvent(String text, List<ForumSearchResult> listEvent, String pathLastVisit) throws Exception {
     this.listEvent = listEvent;
     searchTerm = text;
     this.setPathLastVisit(GO_BACK + pathLastVisit);
@@ -111,7 +111,7 @@ public class UIForumListSearch extends BaseForumForm {
   }
 
   @SuppressWarnings("unchecked")
-  public List<ForumSearch> getListEvent() {
+  public List<ForumSearchResult> getListEvent() {
     pageList = new ForumPageList(pageSize, listEvent.size());
     pageList.setPageSize(pageSize);
     pageIterator.updatePageList(pageList);
@@ -119,13 +119,13 @@ public class UIForumListSearch extends BaseForumForm {
     if (pageList.getAvailablePage() <= 1)
       isShowIter = false;
     int pageSelect = pageIterator.getPageSelected();
-    List<ForumSearch> list = new ArrayList<ForumSearch>();
+    List<ForumSearchResult> list = new ArrayList<ForumSearchResult>();
     list.addAll(pageList.getPageSearch(pageSelect, this.listEvent));
     return list;
   }
 
-  private ForumSearch getForumSearch(String id) {
-    for (ForumSearch forumSearch : this.listEvent) {
+  private ForumSearchResult getForumSearch(String id) {
+    for (ForumSearchResult forumSearch : this.listEvent) {
       if (forumSearch.getId().equals(id))
         return forumSearch;
     }
@@ -140,7 +140,7 @@ public class UIForumListSearch extends BaseForumForm {
       if(path.indexOf(GO_BACK) >= 0) {
         path = path.replace(GO_BACK, "");
       } else {
-        ForumSearch forumSearch = uiForm.getForumSearch(path);
+        ForumSearchResult forumSearch = uiForm.getForumSearch(path);
         if(!Utils.CATEGORY.equals(forumSearch.getType())) path = forumSearch.getPath();
         if(Utils.POST.equals(forumSearch.getType())) {
           Post post = uiForm.getForumService().getPost("", "", "", path);

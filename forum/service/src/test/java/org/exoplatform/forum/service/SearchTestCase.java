@@ -118,7 +118,7 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     //Search all (category,forum,topic,post) concerns the value of textQuery : owner, message, description, name ...
     String textQuery = "john"; 
     
-    List<ForumSearch> forumSearchs = 
+    List<ForumSearchResult> forumSearchs = 
         forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); 
     //here we found 3 elements : the post of john, the topic contains his post and the forum moderated by john
     assertEquals(forumSearchs.size(),3);
@@ -161,7 +161,7 @@ public void testAdvancedSearch() throws Exception {
     eventQuery.setModerator("") ; //filter by moderator
     
     //Test search "root" in all category
-    List<ForumSearch> forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); 
+    List<ForumSearchResult> forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); 
     assertNotNull(forumSearchs);
     assertEquals(forumSearchs.size(),1);
     assertEquals(forumSearchs.get(0).getName(),"social");
