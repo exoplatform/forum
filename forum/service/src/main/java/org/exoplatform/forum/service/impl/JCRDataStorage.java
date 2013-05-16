@@ -930,12 +930,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       catNode.setProperty(EXO_DESCRIPTION, category.getDescription());
       catNode.setProperty(EXO_MODIFIED_BY, category.getModifiedBy());
       catNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
-      catNode.setProperty(EXO_USER_PRIVATE, category.getUserPrivate());
+      catNode.setProperty(EXO_USER_PRIVATE, convertArray(category.getUserPrivate()));
 
-      catNode.setProperty(EXO_CREATE_TOPIC_ROLE, category.getCreateTopicRole());
-      catNode.setProperty(EXO_POSTER, category.getPoster());
+      catNode.setProperty(EXO_CREATE_TOPIC_ROLE, convertArray(category.getCreateTopicRole()));
+      catNode.setProperty(EXO_POSTER, convertArray(category.getPoster()));
 
-      catNode.setProperty(EXO_VIEWER, category.getViewer());
+      catNode.setProperty(EXO_VIEWER, convertArray(category.getViewer()));
       category.setPath(catNode.getPath());
       catNode.save();
       try {
@@ -1590,8 +1590,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumNode.setProperty(EXO_IS_CLOSED, forum.getIsClosed());
       forumNode.setProperty(EXO_IS_LOCK, forum.getIsLock());
 
-      forumNode.setProperty(EXO_CREATE_TOPIC_ROLE, forum.getCreateTopicRole());
-      forumNode.setProperty(EXO_POSTER, forum.getPoster());
+      forumNode.setProperty(EXO_CREATE_TOPIC_ROLE, convertArray(forum.getCreateTopicRole()));
+      forumNode.setProperty(EXO_POSTER, convertArray(forum.getPoster()));
       // set from category
       strModerators = updateModeratorInForum(catNode, strModerators);
       boolean isEditMod = isNew;
@@ -1616,7 +1616,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
 
-      forumNode.setProperty(EXO_VIEWER, forum.getViewer());
+      forumNode.setProperty(EXO_VIEWER, convertArray(forum.getViewer()));
       catNode.save();
 
       PropertyReader reader = new PropertyReader(forumNode);
@@ -1658,6 +1658,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     } catch (Exception e) {
       log.error("Failed to save forum " + forum.getForumName(), e);
     }
+  }
+  
+  /**
+   * Converts the arrays String what has NULL or EMPTY to ""
+   * It will be applied for these cases such as categories, forums, and topics with fields:
+   *  exo:userPrivate, exo:viewer, exo:canView, exo:createTopicRole, exo:poster, exo:canPost
+   * 
+   * @param strs
+   * @return
+   */
+  private static String[] convertArray(String[] strs) {
+    if (Utils.isEmpty(strs)) {
+      return new String[] { "" };
+    }
+    return strs;
   }
 
   private void setModeratorForum(Session session, String[] strModerators, String[] oldModeratoForums, Forum forum, String categoryId, boolean isNew) throws Exception {
@@ -2628,8 +2643,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
       topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
       topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, topic.getNumberAttachment());
-      topicNode.setProperty(EXO_CAN_POST, Utils.isEmpty(topic.getCanPost()) ? new String[] { "" } : topic.getCanPost());
-      topicNode.setProperty(EXO_CAN_VIEW, Utils.isEmpty(topic.getCanView()) ? new String[] { "" } : topic.getCanView());
+      topicNode.setProperty(EXO_CAN_POST, convertArray(topic.getCanPost()));
+      topicNode.setProperty(EXO_CAN_VIEW, convertArray(topic.getCanView()));
       if (isNew) {
         forumNode.getSession().save();
       } else {
