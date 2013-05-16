@@ -12,14 +12,12 @@
 %>
 <div>
 	<% uiform.begin() %>
-	<div class="UITopicContainer resizable">
-	 	<div class="UIForumContainer">
-			<div class="ContentContainer">
-				<div class="UITopicList">
-					<div style="overflow:auto; margin:2px 0px;" class="ClearFix">
+	<div class="uiTopicContainer resizable">
+	 	
+					<div style="margin-bottom:20px;">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>
-					<table cellspacing="0" cellpadding="0" border="0" class="uiGrid table table-hover table-striped">
+					<table class="uiGrid table table-hover table-striped">
 						<thead>
 							<tr>
 								<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
@@ -43,11 +41,11 @@
 									String iconPost = post.getIcon() ;
 									String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), formatDate, setTime) ;
 							%>
-								<tr class="$classRow">
+								<tr>
 									<td >
 										<label for="$postId"><a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" rel="tooltip" data-placement="bottom" title="$message" class="title">$postTitle</a></label>
 									</td>
-									<td class="Tdbox">
+									<td >
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
 									<%
@@ -56,7 +54,11 @@
 									    checked = "checked=\"checked\"";
 									  }
 									%>
-									<td class="Tdbox center"><input type="checkbox" class="checkbox" id="$postId" name="$postId" $checked/></td>
+									<td class="center">
+										<span class="uiCheckbox">
+											<input type="checkbox" class="checkbox" id="$postId" name="$postId" $checked/><span></span>
+										</span>
+									</td>
 					 			</tr>
 						 	<% i = i + 1;
 						 		}
@@ -70,12 +72,10 @@
 						 	 <% } %>
 						</tbody>
 					</table>
-					<div style="overflow:auto;" class="ClearFix">
+					<div style="margin-bottom:20px;">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>						
-				</div>
-			</div>
-		</div>
+				
 	</div>
 	 <div class="uiAction uiActionBorder">
   <% for(action in uicomponent.getActions()) { 

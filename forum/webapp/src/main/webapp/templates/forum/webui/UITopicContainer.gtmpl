@@ -237,17 +237,17 @@
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:15px;">&nbsp;</th>
 					<th style="width:35%;">
-						<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
+						<div style="cursor:pointer" onclick="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div>
 					</th>
 					<th style="width:18%;">
 						<%=_ctx.appRes("UITopicContainer.label.authorPost");%>
 					</th>
 					<th style="width:145px;">
-						<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
+						<div style="cursor:pointer" onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div>
 					</th>
 					 
 					<th style="width:140px;">
-						<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+						<div style="cursor:pointer" onclick="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></div>
 					</th>
 					
 					<th style="width:25px;" class="center">
