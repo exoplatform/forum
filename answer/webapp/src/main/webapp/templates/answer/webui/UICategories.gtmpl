@@ -3,11 +3,13 @@
 	import org.exoplatform.faq.service.Utils;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.answer.webui.FAQUtils;
+	
 	String compId = uicomponent.getId() ; 
 	uicomponent.setListCate();
 	
 	def requireJS = _ctx.getRequestContext().getJavascriptManager().require("SHARED/AnswerDragDrop", "dragDrop");
 	requireJS.addScripts("eXo.answer.UIAnswersPortlet.initContextMenu('"+compId+"') ;");
+	requireJS.addScripts("eXo.answer.UIAnswersPortlet.initConfirm('" + compId + "');");
 	if(uicomponent.isModerator) {
 		requireJS.addScripts("dragDrop.init('"+compId+"') ;") ;
 	}
@@ -63,7 +65,7 @@
 			<div class="uiCategories">
 				<%
 				 if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
-					<div class="faqBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
+					<div class="faqBack">
 						<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"><i class="uiIconUpLevel uiIconLightGray"></i></a>
 					</div>
 				<%}%>
@@ -105,18 +107,20 @@
 									String linkView = uicomponent.event(viewAction, category.getPath()) ;
 									String itemLabelView = _ctx.appRes("UICategories.action." + viewAction);
 									def icon = "uiIconLightGray uiIcon";
+									String confirm = "";
 									if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("EditCategory")))
 										continue;
 									if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || viewAction.equals("MoveCategory")))
 										linkView = uicomponent.event(viewAction, category.getPath()+"/true") ;
 									if(viewAction.equals("DeleteCategory")) {
+									  confirm = " class=\"confirm\"";
 										linkView = "javaScript:if(confirm('" + _ctx.appRes("UIQuestions.msg.confirm-delete-category") + "')) {" + linkView.replace("javascript:", "") + "}";
 									} else if(viewAction.equals("AddNewQuestion")) {
 										icon = "uiIconAnsLightGray uiIconAns";
 									}
 									icon += viewAction;
 								%>
-								<li><a href="javascript:void(0);" onclick="$linkView"><i class="$icon"></i>&nbsp;$itemLabelView</a></li>
+								<li><a href="javascript:void(0);" onclick="$linkView"$confirm><i class="$icon"></i>&nbsp;$itemLabelView</a></li>
 							<%
 								}
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
