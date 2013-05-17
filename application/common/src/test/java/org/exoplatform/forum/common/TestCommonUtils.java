@@ -83,7 +83,7 @@ public class TestCommonUtils extends TestCase {
     assertEquals("abc aa s s", CommonUtils.encodeSpecialCharInTitle(s));
     // has ignore special characters.
     s = "abc !#:?=.,()+; ddd";
-    assertEquals("abc !#:?=.,()+; ddd",CommonUtils.encodeSpecialCharInTitle(s));
+    assertEquals("abc !#:?=.,&#40;&#41;+; ddd",CommonUtils.encodeSpecialCharInTitle(s));
     // has ignore and not ignore special characters.
     s = "abc !# :?=.,' | ] [";
     assertEquals("abc !# :?=.,&#39; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInTitle(s));

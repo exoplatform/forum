@@ -331,7 +331,7 @@ public class CommonUtils {
     /*
      * charIgnore: Some special characters we ignore
     */
-    String charIgnore = "!#:?=.,()+;~`_";
+    String charIgnore = "!#:?=.,+;~`_";
     return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
   }
 
