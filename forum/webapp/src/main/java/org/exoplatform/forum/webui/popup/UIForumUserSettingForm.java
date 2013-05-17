@@ -29,7 +29,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
@@ -231,7 +230,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     String strSignature = this.userProfileSetting.getSignature();
     if (ForumUtils.isEmpty(strSignature))
       strSignature = ForumUtils.EMPTY_STR;
-    signature.setValue(strSignature);
+    signature.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(strSignature));
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfileSetting.getIsDisplaySignature());
 
@@ -424,7 +423,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         return;
       }
 
-      signature = TransformHTML.enCodeHTMLTitle(signature);
+      signature = CommonUtils.encodeSpecialCharInTitle(signature);
       boolean isDisplaySignature = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
       Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
       boolean isAutoWatchMyTopics = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue();

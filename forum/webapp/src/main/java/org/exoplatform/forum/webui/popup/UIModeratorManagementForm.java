@@ -29,7 +29,6 @@ import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.Category;
@@ -408,7 +407,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     userTitle.setValue(title);
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-    signature.setValue(this.editUserProfile.getSignature());
+    signature.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(editUserProfile.getSignature()));
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.editUserProfile.getIsDisplaySignature());
 
@@ -815,7 +814,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
-      signature = TransformHTML.enCodeHTMLTitle(signature);
+      signature = CommonUtils.encodeSpecialCharInTitle(signature);
       boolean isDisplaySignature = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).isChecked();
       Boolean isDisplayAvatar = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).isChecked();
 
