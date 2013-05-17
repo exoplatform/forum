@@ -382,10 +382,10 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     assertEquals(5, listQuickSearch.size());
     
     Question question6 = createQuestion(categoryId1);
-    question6.setQuestion(CommonUtils.encodeSpecialCharInSearchTerm("()*& test"));
+    question6.setQuestion(CommonUtils.encodeSpecialCharInTitle("()*& test"));
     faqService_.saveQuestion(question6, true, faqSetting_);
     
-    String text = CommonUtils.encodeSpecialCharInSearchTerm("()*& test");
+    String text = CommonUtils.encodeSpecialCharInTitle("()*& test");
     eventQuery.setText(text);
     listQuickSearch = faqService_.getSearchResults(eventQuery);
     assertEquals(1, listQuickSearch.size());

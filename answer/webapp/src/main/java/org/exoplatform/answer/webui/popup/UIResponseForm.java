@@ -218,7 +218,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
-    return CommonUtils.decodeSpecialCharToHTMLnumber(renderHelper.renderQuestion(question));
+    return renderHelper.renderQuestion(question);
   }
 
   protected String getValue(String id) {

@@ -310,7 +310,7 @@ public class CommonUtils {
         }
       }
     }
-    if (!isEmpty(charIgnore)) charIgnore = "!#:?=.,+;~`_";
+    if (!isEmpty(charIgnore)) charIgnore = "&</>!#:?=.,+;~`_";
     return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
   }
 

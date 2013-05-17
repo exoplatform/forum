@@ -546,7 +546,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
           }
         }
         questionDetail = CommonUtils.encodeSpecialCharInSearchTerm(questionDetail);
-        questionContent = CommonUtils.encodeSpecialCharInSearchTerm(questionContent);
+        questionContent = CommonUtils.encodeSpecialCharInTitle(questionContent);
 
         Question question = questionForm.getQuestion();
         if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question

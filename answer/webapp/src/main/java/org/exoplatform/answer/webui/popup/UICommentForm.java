@@ -104,7 +104,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
   protected String getQuestionDetail() {
     Question question = new Question();
     question.setDetail(questionDetail);
-    return CommonUtils.decodeSpecialCharToHTMLnumber(renderHelper.renderQuestion(question));
+    return renderHelper.renderQuestion(question);
   }
 
   public void activate() {
