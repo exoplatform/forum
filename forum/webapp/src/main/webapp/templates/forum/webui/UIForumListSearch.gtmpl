@@ -1,5 +1,4 @@
 <%	
-	import org.exoplatform.forum.service.ForumSearch ;
 	import org.exoplatform.forum.ForumUtils;
 	List searchEvents = uicomponent.getListEvent() ;
 	String txtTitleResult = _ctx.appRes("UIForumListSearch.label.SearchResult");
