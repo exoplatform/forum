@@ -1280,10 +1280,20 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public boolean addBanIPForum(String ip, String forumId) throws Exception {
+    Forum forum = getForum(forumId.split("/")[0], forumId.split("/")[1]);
+    clearForumCache(forum, false);
+    clearForumListCache();
+    clearLinkListCache();
+    clearObjectCache(forum, false);
     return storage.addBanIPForum(ip, forumId);
   }
 
   public void removeBanIPForum(String ip, String forumId) throws Exception {
+    Forum forum = getForum(forumId.split("/")[0], forumId.split("/")[1]);
+    clearForumCache(forum, false);
+    clearForumListCache();
+    clearLinkListCache();
+    clearObjectCache(forum, false);
     storage.removeBanIPForum(ip, forumId);
   }
 

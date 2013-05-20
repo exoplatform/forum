@@ -118,8 +118,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private List<String>           moderators;
 
-  private boolean                isUpdate          = false;
-
   private boolean                isModerator       = false;
 
   private boolean                canAddNewThread   = true;
@@ -191,7 +189,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     this.forumId = forum.getId();
     this.categoryId = categoryId;
     this.pageSelect = page;
-    this.isUpdate = false;
     this.isReload = false;
     if (page == 0)
       pageSelect = getPageTopicRemember(forumId);
@@ -208,14 +205,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return isShowActive;
   }
 
-  public void setIdUpdate(boolean isUpdate) {
-    this.isUpdate = isUpdate;
-  }
-
   public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs, int page) throws Exception {
     this.forumId = forumId;
     this.categoryId = categoryId;
-    this.isUpdate = true;
     this.pageSelect = page;
     this.isReload = false;
     if (page == 0)
@@ -303,11 +295,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private Forum getForum() throws Exception {
-    if (isUpdate || forum == null) {
-      forum = getForumService().getForum(categoryId, forumId);
-      isUpdate = false;
-    }
-    return forum;
+    return getForumService().getForum(categoryId, forumId);
   }
 
   protected void initPage() throws Exception {
@@ -636,7 +624,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forumForm.setCategoryValue(uiTopicContainer.categoryId, false);
       forumForm.setForumValue(forum, true);
       forumForm.setForumUpdate(true);
-      uiTopicContainer.isUpdate = true;
       uiTopicContainer.isReload = false;
     }
   }
@@ -647,7 +634,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forum.setIsLock(true);
       try {
         uiTopicContainer.getForumService().modifyForum(forum, Utils.LOCK);
-        uiTopicContainer.isUpdate = true;
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
@@ -665,7 +651,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forum.setIsLock(false);
       try {
         uiTopicContainer.getForumService().modifyForum(forum, Utils.LOCK);
-        uiTopicContainer.isUpdate = true;
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
@@ -683,7 +668,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forum.setIsClosed(false);
       try {
         uiTopicContainer.getForumService().modifyForum(forum, Utils.CLOSE);
-        uiTopicContainer.isUpdate = true;
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
@@ -701,7 +685,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forum.setIsClosed(true);
       try {
         uiTopicContainer.getForumService().modifyForum(forum, Utils.CLOSE);
-        uiTopicContainer.isUpdate = true;
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
@@ -718,7 +701,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       Forum forum = uiTopicContainer.getForum();
       List<Forum> forums = new ArrayList<Forum>();
       forums.add(forum);
-      uiTopicContainer.isUpdate = true;
       UIMoveForumForm moveForumForm = uiTopicContainer.openPopup(UIMoveForumForm.class, 315, 365);
       moveForumForm.setListForum(forums, uiTopicContainer.categoryId);
       moveForumForm.setForumUpdate(true);
@@ -741,7 +723,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class ExportForumActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
-      uiTopicContainer.isUpdate = true;
       Forum forum = uiTopicContainer.getForum();
       if (forum == null) {
         warning("UITopicContainer.msg.forum-deleted", false);
@@ -1173,7 +1154,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, String path) throws Exception {
       if (path.equals("forum")) {
         path = uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId;
-        uiTopicContainer.isUpdate = true;
       } else {
         path = uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId + ForumUtils.SLASH + path;
       }
@@ -1186,7 +1166,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, String path) throws Exception {
       if (path.equals("forum")) {
         path = uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId;
-        uiTopicContainer.isUpdate = true;
       } else {
         path = uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId + ForumUtils.SLASH + path;
       }

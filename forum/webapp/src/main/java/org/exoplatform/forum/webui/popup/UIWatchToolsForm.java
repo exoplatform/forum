@@ -172,7 +172,6 @@ public class UIWatchToolsForm extends BaseForumForm implements UIPopupComponent 
           event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
         } else if (path.indexOf(Utils.CATEGORY) < path.lastIndexOf(Utils.FORUM)) {
           UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-          topicContainer.setIdUpdate(true);
           event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
         } else {
           UICategory uicategory = forumPortlet.findFirstComponentOfType(UICategory.class);
