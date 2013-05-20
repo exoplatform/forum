@@ -77,6 +77,9 @@
         utils.addhideElement(jmenu);
         utils.cancelEvent(evt);
         gj.event.fix(evt).preventDefault();
+        jmenu.find('a').off('mousedown keydown').on('mousedown keydown', function(evt) {
+          utils.cancelEvent(evt);
+        });
       }
     }
   };
