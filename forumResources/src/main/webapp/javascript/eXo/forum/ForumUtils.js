@@ -97,7 +97,7 @@
     // show users menu
     showUserMenu : function(evt) {
       var evt = evt || window.event;
-      event = gj.event.fix(evt); 
+      var event = gj.event.fix(evt); 
       var jobj = gj(this);
       var jPopup = jobj.find(".uiUserMenuInfo");
       if (!jPopup.exists()) {

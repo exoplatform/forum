@@ -11,7 +11,7 @@
           for ( var j = 0; j < UIContextMenu.classNames.length; j++) {
             var menu = container.find('.' + UIContextMenu.classNames[j]);
             if (menu.exists()) {
-              menu.on('contextmenu', UIContextMenu.show);
+              menu.off('contextmenu').on('contextmenu', UIContextMenu.show);
             }
           }
         }
@@ -58,8 +58,12 @@
     },
 
     show : function(evt) {
+      UIContextMenu.showMenu(this, evt);
+    },
+    
+    showMenu : function(elm, evt) {
       utils.hideElements();
-      var context = gj(this);
+      var context = gj(elm);
       var jmenu = UIContextMenu.getMenu(context, evt);
       if (jmenu && jmenu.exists()) {
         var parent = context.parents('.PORTLET-FRAGMENT');

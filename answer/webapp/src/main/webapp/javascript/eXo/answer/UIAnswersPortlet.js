@@ -586,20 +586,20 @@
     }
   };
   
-  UIAnswersPortlet.initContextMenu = function (id) {
+  UIAnswersPortlet.initContextMenu = function(id) {
     var cont = $.fn.findId(id);
     if (cont.exists()) {
       UIAnswersPortlet.disableContextMenu(id);
-      var uiContextMenu = contextMenu;
-      if (!uiContextMenu.classNames) {
-        uiContextMenu.classNames = new Array("oncontextmenu", "QuestionContextMenu");
+      if ($.browser.msie === true) {
+        cont.find('.oncontextmenu').attr('oncontextmenu', 'return eXo.answer.UIAnswersPortlet.runContextMenu(this, event)');
       } else {
-        uiContextMenu.classNames.push("oncontextmenu");
-        uiContextMenu.classNames.push("QuestionContextMenu");
+        cont.find('.oncontextmenu').off('contextmenu').on('contextmenu', contextMenu.show);
       }
-      uiContextMenu.setContainer(cont.eq(0));
-      uiContextMenu.setup();
     }
+  };
+
+  UIAnswersPortlet.runContextMenu = function(elm, event) {
+    contextMenu.showMenu(elm, event);
   };
   
   UIAnswersPortlet.setSelectboxOnchange = function (id) {
