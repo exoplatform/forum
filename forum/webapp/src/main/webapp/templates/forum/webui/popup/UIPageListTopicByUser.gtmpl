@@ -32,10 +32,10 @@
 							<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
 						</th>
 						<th style="width:20px;" class="center">
-							<i class="uiIconUIForms uiIconLightGray"></i>
+							<i class="uiIconUIForms uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%>"></i>
 						</th>
 						<th style="width:20px;" class="center">
-							<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
+							<i class="uiIconForumViewStatistic uiIconForumLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPageListTopicByUser.label.Views");%>"></i>
 						</th>
 						<%if(isAdmin){ %>
 							<th style="width:20px;" class="center"><%=_ctx.appRes("UIPageListTopicByUser.label.Action");%></th>
@@ -125,7 +125,7 @@
 							<%if(isAdmin){ %>
 							<td class="center">
 								<a class="actionIcon confirm" href="<%=uicomponent.event("DeleteTopic", topicId)%>">
-									<i class="uiIconDelete uiIconLightGray"></i>
+									<i class="uiIconDelete uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%>"></i>
 								</a>
 							</td>
 							<%}%>

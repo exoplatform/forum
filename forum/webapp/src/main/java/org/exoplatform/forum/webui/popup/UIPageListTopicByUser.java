@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -55,10 +56,8 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" )
     }
 )
-public class UIPageListTopicByUser extends UIContainer {
+public class UIPageListTopicByUser extends BaseForumForm {
   private ForumService forumService;
-
-  private UserProfile  userProfile;
 
   private JCRPageList  pageList;
 
@@ -77,7 +76,7 @@ public class UIPageListTopicByUser extends UIContainer {
     addChild(UIForumPageIterator.class, null, "PageListTopicByUser");
   }
 
-  protected UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     isUseAjax = forumPortlet.isUseAjax();
     return this.userProfile = forumPortlet.getUserProfile();

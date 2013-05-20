@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -56,7 +57,7 @@ import org.exoplatform.webui.event.EventListener;
       @EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
     }
 )
-public class UIPageListPostByUser extends UIContainer {
+public class UIPageListPostByUser extends BaseForumForm {
   private ForumService forumService;
 
   private UserProfile  userProfile        = null;
@@ -81,7 +82,7 @@ public class UIPageListPostByUser extends UIContainer {
     return hasEnableIPLogging;
   }
 
-  protected UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     if (this.userProfile == null) {
       UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
       this.userProfile = forumPortlet.getUserProfile();
