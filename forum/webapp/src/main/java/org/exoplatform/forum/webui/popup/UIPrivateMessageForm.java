@@ -60,7 +60,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
         @EventConfig(listeners = UIPrivateMessageForm.AddUserActionListener.class, phase=Phase.DECODE),
         @EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE),
         @EventConfig(listeners = UIPrivateMessageForm.CancelActionListener.class, phase=Phase.DECODE),
-        @EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class)
+        @EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class, phase=Phase.DECODE)
       }
     ),
     @ComponentConfig(
@@ -188,12 +188,16 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       String sendTo = areaInput.getValue();
       sendTo = ForumUtils.removeSpaceInString(sendTo);
       sendTo = ForumUtils.removeStringResemble(sendTo);
+      if (ForumUtils.isEmpty(sendTo)) {
+        messageForm.warning("EmptyFieldValidator.msg.empty-input", messageForm.getLabel(FIELD_SENDTO_TEXT));
+        return;
+      }
+
       sendTo = messageForm.removeCurrentUser(sendTo);
       if (ForumUtils.isEmpty(sendTo)) {
         messageForm.warning("UIPrivateMessageForm.msg.sendToCurrentUser", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXT) });
         return;
       }
-
       String erroUser = UserHelper.checkValueUser(sendTo);
       if (!ForumUtils.isEmpty(erroUser)) {
         messageForm.warning("NameValidator.msg.erroUser-input", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXT), erroUser });
@@ -201,6 +205,10 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       }
       UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
       String mailTitle = stringInput.getValue();
+      if (ForumUtils.isEmpty(mailTitle)) {
+        messageForm.warning("EmptyFieldValidator.msg.empty-input", messageForm.getLabel(FIELD_MAILTITLE_INPUT));
+        return;
+      }
       int maxText = 80;
       if (mailTitle.length() > maxText) {
         messageForm.warning("NameValidator.msg.warning-long-text", new String[] { messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText) });
@@ -232,7 +240,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
           forumPortlet.cancelAction();
         }
       } else {
-        messageForm.warning("NameValidator.msg.empty-input", new String[] { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) });
+        messageForm.warning("EmptyFieldValidator.msg.empty-input", messageForm.getLabel(FIELD_MAILMESSAGE_INPUT));
       }
     }
   }

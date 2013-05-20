@@ -126,8 +126,8 @@ public class UIListInBoxPrivateMessage extends UIContainer {
         uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
         uicontainer.getChild(UIViewPrivateMessage.class).reset();
         uicontainer.getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
-        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
     }
   }
 
