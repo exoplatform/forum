@@ -20,7 +20,7 @@
 
   <external-component-plugins>
     <target-component>org.exoplatform.commons.upgrade.UpgradeProductService</target-component>
-    <component-plugin  profiles="knowledge,default,all">
+    <component-plugin  profiles="all">
       <name>FAQPreferenceTemplateUpdaterPlugin</name>
       <set-method>addUpgradePlugin</set-method>
       <type>org.exoplatform.faq.service.updater.FAQPreferenceTemplateUpdaterPlugin</type>
