@@ -6,12 +6,12 @@
     jTabContent : null,
     request : null,
     
-    init : function(userName) {
-      SearchIpBan.jSearchIpBan = gj('#searchIpBan');
+    init : function(containerId) {
+      SearchIpBan.jSearchIpBan = gj.fn.findId(containerId);
       if (SearchIpBan.jSearchIpBan.exists()) {
-        SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.parents('div.restInfo:first');
+        SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.find('div.restInfo:first');
         SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.uiGrid');
-        SearchIpBan.jSearchIpBan.on('keyup', SearchIpBan.searchIpBan);
+        SearchIpBan.jTabContent.find('input[name=searchIpBan]').on('keyup', SearchIpBan.searchIpBan);
       }
     },
     
@@ -58,26 +58,26 @@
         }
       }
       for ( var i = 0; i < length_; i++) {
-        tBodyNode.append(SearchIpBan.buildIpBanItemNode(SearchIpBan.data.jsonList[i].ip));
+        tBodyNode.append(SearchIpBan.buildIpBanItemNode(SearchIpBan.data.jsonList[i].ip, i));
       }
     },
     
-    buildIpBanItemNode : function(ip) {
-      var JipBanItem = gj('<tr></tr>');
-      JipBanItem.css('background', '#ffffff');
-      JipBanItem.addClass('IpBanItem');
-      var JfieldLabel = gj('<td></td>');
-      JfieldLabel.addClass('FieldLabel');
-      JfieldLabel.html(ip);
-      JipBanItem.append(JfieldLabel[0].cloneNode(true));
-      
-      JfieldLabel.attr('align', 'center');
-      var link = SearchIpBan.jTabContent.attr('data-link');
-      link = String(link).replace('OBJIP', ip);
-      var link2 = String(link).replace('OpenPosts', 'UnBan');
-      JfieldLabel.html('[<a href="' + link + '">Posts</a>]&nbsp;[<a style="color: red;" href="' + link2 + '">X</a>]');
-      JipBanItem.append(JfieldLabel);
-      return JipBanItem;
+    buildIpBanItemNode : function(ip, index) {
+      var JTrItem = SearchIpBan.JUIGrid.find('tfoot').find('tr').clone();
+      JTrItem.find('td:first').html(ip);
+      //
+      var aView = JTrItem.find('a.view');
+      aView.attr('href', aView.attr('href').replace('IPBANNED', ip));
+      //
+      var aDelete = JTrItem.find('a.delete');
+      aDelete.attr('href', aDelete.attr('href').replace('IPBANNED', ip));
+      aDelete.attr('id', 'Confirm'+index);
+      var settings = {isMulti: false, message : ''};
+      aDelete.confirmation(settings);
+      //
+      JTrItem.find('a').tooltip();
+      JTrItem.show();
+      return JTrItem;
     }
   };
 

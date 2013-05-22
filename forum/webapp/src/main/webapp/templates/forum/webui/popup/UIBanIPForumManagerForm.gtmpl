@@ -1,14 +1,14 @@
 <%
 	import org.exoplatform.forum.ForumUtils;
   import org.exoplatform.forum.webui.UIForumPageIterator;
-	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.init();");
+	ForumUtils.addScripts("SearchIpBan", "searchIpBan", "searchIpBan.init('" + uicomponent.id + "');");
 	String forumId = uicomponent.forumId.replaceAll("/",".") ;
-	String linkOp = uicomponent.event("OpenPosts", "OBJIP");
+	String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "')){" + uicomponent.event("UnBan", "IPBANNED") + "}";
 %>
 <div class="uiBanIPForumManagerForm">
 	<% uiform.begin() %>
 	<div class="resizable">	
-		<div id="UITabContent" data-restPath="<%=uicomponent.getRestPath();%>" data-forumId="$forumId" data-link="$linkOp" class="contentContainer restInfo">
+		<div id="UITabContent" data-restPath="<%=uicomponent.getRestPath();%>" data-forumId="$forumId" class="contentContainer restInfo">
 			<div class="uiQuickSearchForm">
 				<span for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</span>
 				<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
@@ -32,22 +32,31 @@
 						 </td>
 					</tr>  
 				<%	} else {
-					for(int i = 0; i < ips.length; ++i){
-						if(i%2 == 0) color = "#edf3ee";
-						else color = "#ffffff";
-						String ip = ips[i];
-						String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
+						for(int i = 0; i < ips.length; ++i){
+							if(i%2 == 0) color = "#edf3ee";
+							else color = "#ffffff";
+							String ip = ips[i];
+							String linkUnBan = unBanLink.replace("IPBANNED", ip);
 				%>
 						<tr>
 							<td>$ip</td>
 							<td class="center">
-								<a class="actionIcon" data-placement="bottom" rel="tooltip" title="View <%=_ctx.appRes("UIBanIPForumManagerForm.label.Posts")%>" href="<%=uicomponent.event("OpenPosts", ip)%>"><i class="uiIconForumTopic uiIconForumLightGray"></i></a>
-								<a href="$unBanLink"  data-placement="bottom" rel="tooltip" title="Delete" class="actionIcon confirm"><i class="uiIconDelete uiIconLightGray"></i></a>
+								<a class="actionIcon" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIBanIPForumManagerForm.label.ViewPosts")%>" href="<%=uicomponent.event("OpenPosts", ip)%>"><i class="uiIconForumTopic uiIconForumLightGray"></i></a>
+								<a href="$linkUnBan"  data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPrivateMessageForm.label.Delete")%>" class="actionIcon confirm"><i class="uiIconDelete uiIconLightGray"></i></a>
 							</td>
 						</tr>
-				<%}%>
-				<% } %>
+					<%}	%>
+				<%} %>
 				</tbody>
+				<tfoot>
+					<tr style="display:none">
+						<td>IP</td>
+						<td class="center">
+							<a class="actionIcon view" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIBanIPForumManagerForm.label.ViewPosts")%>" href="<%=uicomponent.event("OpenPosts", "IPBANNED")%>"><i class="uiIconForumTopic uiIconForumLightGray"></i></a>
+							<a class="actionIcon delete" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UIPrivateMessageForm.label.Delete")%>" href="$unBanLink"><i class="uiIconDelete uiIconLightGray"></i></a>
+						</td>
+					</tr>
+				</tfoot>
 			</table>
 			<table class="typeInputIp">
 				<tr>
