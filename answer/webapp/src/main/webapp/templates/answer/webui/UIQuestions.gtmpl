@@ -134,7 +134,7 @@
 							<div class="boxNum boxNumGray">
 								<%
 									int numberAnswer = question.getNumberOfPublicAnswers();
-									String numberAnswerLabel = (numberAnswer > 0) ? _ctx.appRes("UIQuestions.label.answers") : _ctx.appRes("UIAdvancedSearchForm.label.Response");
+									String numberAnswerLabel = (numberAnswer > 1) ? _ctx.appRes("UIQuestions.label.answers") : _ctx.appRes("UIAdvancedSearchForm.label.Response");
 								%>
 								<h5><%=numberAnswer%></h5>
 								<span><%=numberAnswerLabel%></span>

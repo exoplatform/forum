@@ -77,6 +77,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     currentUser_ = FAQUtils.getCurrentUser();
     UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
     commentContent.setFCKConfig(WebUIUtils.getFCKConfig());
+    commentContent.setHeight("250px");
     commentContent.setToolBarName("Basic");
     this.addChild(commentContent);
     User user = FAQUtils.getCurrentUserObject();
