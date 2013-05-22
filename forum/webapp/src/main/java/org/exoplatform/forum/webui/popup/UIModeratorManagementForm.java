@@ -404,7 +404,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         title = Utils.ADMIN;
     }
     userRole.setValue(isAdmin);
-    userTitle.setValue(title);
+    userTitle.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(title));
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
     signature.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(editUserProfile.getSignature()));
@@ -720,6 +720,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
+      screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       long userRole = 2;
       boolean isAdmin = inputSetProfile.getUICheckBoxInput(FIELD_USERROLE_CHECKBOX).isChecked();
       if (isAdmin)
@@ -732,7 +733,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         else if (userTitle.equals(Utils.ADMIN))
           userTitle = userProfile.getUserTitle();
       }
-
+      userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
       // -----------------
       List<String> oldModerateForum = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums()));
       List<String> newModeratorsForum = new ArrayList<String>();

@@ -221,7 +221,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       screenN = userProfileSetting.getUserId();
     screenName.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(screenN));
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
-    userTitle.setValue(this.userProfileSetting.getUserTitle());
+    userTitle.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(userProfileSetting.getUserTitle()));
     if (this.userProfileSetting.getUserRole() > 0) {
       userTitle.setReadOnly(true);
       userTitle.setDisabled(true);
@@ -414,6 +414,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
           userTitle = userProfileSetting.getUserTitle();
         }
       }
+      userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
       int maxText = ForumUtils.MAXSIGNATURE;
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
       if (ForumUtils.isEmpty(signature)) {
