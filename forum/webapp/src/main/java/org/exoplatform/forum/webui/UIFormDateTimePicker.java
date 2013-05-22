@@ -198,7 +198,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
       w.write('\'');
     }
     renderHTMLAttributes(w);
-    w.write("title=\"" + titleShowCalendar + "\" rel=\"tooltip\" data-placement=\"bottom\"/>");
+    w.write("/>");
     w.write("<div style=\"display:none\" class=\"dataInfo\" data-lang=\"" + getLang() + "\" data-fistweekday=\"" + getFirstDayOfWeek() + "\" data-format=\"" + getFormatStyle() + "\"><span></span></div>");
     w.write("</div>");
     
