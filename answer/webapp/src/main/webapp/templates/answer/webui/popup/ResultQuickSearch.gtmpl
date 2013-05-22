@@ -15,7 +15,7 @@
 					<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
 				</div>
 			<% } %>
-			<button type="button" class="btn btn-primary" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><%= _ctx.appRes("UIQuickSeach.title.advance-search"); %></button>
+			<button type="button" class="btn btn-primary" onclick="<%=uicomponent.event("AdvancedSearch");%>"><%= _ctx.appRes("UIQuickSeach.title.advance-search"); %></button>
 		</div>
  									<table class="uiGrid table  no-border-cell table-hover table-striped" cellspacing="0" border="0" cellpadding="0">
  										<thead>
@@ -48,11 +48,11 @@
  												
  												<% if(result.getType().equals("faqCategory")) {
  												 %>
- 												 	<td><a href="$categoryLink" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
+ 												 	<td><a href="$categoryLink">$name</a></td>
  												 	<td>$date</td> 													
  													<td class="center">-</td>
  													<% } else { %>
- 													<td><a href="$linkQuestion" rel="tooltip" data-placement="bottom" title="$title">$name</a></td>
+ 													<td><a href="$linkQuestion">$name</a></td>
  												 	<td>$date</td>
  													<td class="center">$result.numberOfAnswer</td>
  													<% } %>
@@ -62,7 +62,7 @@
  											} else {
  										 %>
  										 <tr>	
-											<td class="tdbox" colspan="3">
+											<td class="empty center" colspan="3">
 												<%= _ctx.appRes("ResultSearch.title.no-matches"); %>
 											</td>
   										</tr>
