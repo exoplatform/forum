@@ -309,6 +309,14 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       
       UIFormSelectBox categorySelectBox = newForumForm.getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX);
       String categoryId = categorySelectBox.getValue();
+      Category category = uiForm.getForumService().getCategory(categoryId);
+      if (category == null) {
+        uiForm.warning("UICategory.msg.CategoryNotExist");
+        forumPortlet.renderForumHome();
+        forumPortlet.cancelAction();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        return;
+      }
       String forumTitle = newForumForm.getUIStringInput(FIELD_FORUMTITLE_INPUT).getValue();
       forumTitle = forumTitle.trim();
       int maxText = 50;// ForumUtils.MAXTITLE ;

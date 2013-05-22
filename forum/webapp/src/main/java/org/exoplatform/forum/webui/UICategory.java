@@ -335,7 +335,7 @@ public class UICategory extends BaseForumForm {
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-lock-forum", false);
-          event.getSource().log.warn("Failed to lock forums", e);
+          event.getSource().log.debug("Failed to lock forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -358,7 +358,7 @@ public class UICategory extends BaseForumForm {
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-unlock-forum", false);
-          event.getSource().log.warn("Failed to unlock forums", e);
+          event.getSource().log.debug("Failed to unlock forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -379,7 +379,7 @@ public class UICategory extends BaseForumForm {
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-open-forum", false);
-          event.getSource().log.warn("Failed to open forums", e);
+          event.getSource().log.debug("Failed to open forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -399,7 +399,7 @@ public class UICategory extends BaseForumForm {
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-close-forum", false);
-          event.getSource().log.warn("Failed to close forums", e);
+          event.getSource().log.debug("Failed to close forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -432,7 +432,7 @@ public class UICategory extends BaseForumForm {
           uiCategory.isEditForum = true;
         } catch (Exception e) {
           warning("UICategory.msg.fail-remove-forum", false);
-          event.getSource().log.warn("Failed to remove forums", e);
+          event.getSource().log.debug("Failed to remove forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
