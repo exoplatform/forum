@@ -292,6 +292,8 @@ public class FAQUtils {
       String str = list.toString();
       str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
       portletPref.setValue("displayCategories", str);
+    } else {
+      portletPref.setValue("displayCategories", "");
     }
     
     //

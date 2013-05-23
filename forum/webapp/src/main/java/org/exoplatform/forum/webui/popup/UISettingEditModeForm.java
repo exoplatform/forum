@@ -230,8 +230,8 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
       listCategoryinv = new ArrayList<String>(categoryIds);
       listforuminv = new ArrayList<String>(forumIds);
     } else {
-      listCategoryinv.isEmpty();
-      listforuminv.isEmpty();
+      listCategoryinv.clear();
+      listforuminv.clear();
       if(forumIds.size() != allForumSize) {
         listforuminv = new ArrayList<String>(forumIds);
       }
