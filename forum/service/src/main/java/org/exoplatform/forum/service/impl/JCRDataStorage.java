@@ -2927,8 +2927,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       list = new ArrayList<String>();
       list2 = new ArrayList<String>();
       Node profileNode = iter.nextNode();
-      list.addAll(Utils.valuesToList(profileNode.getProperty(EXO_LAST_READ_POST_OF_FORUM).getValues()));
-      list2.addAll(list);
+      PropertyReader reader = new  PropertyReader(profileNode); 
+      list = reader.list(EXO_LAST_READ_POST_OF_FORUM, new ArrayList<String>()); 
+      list2 = new ArrayList<String>(list); 
+      
       boolean isRead = false;
       for (String string : list) {
         if (destForumId != null && string.indexOf(destForumId) >= 0) { // this forum is read, can check last access topic forum and topic
@@ -2936,34 +2938,32 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           try {
             long lastAccessTopicTime = 0;
             long lastAccessForumTime = 0;
-            if (profileNode.hasProperty(EXO_LAST_READ_POST_OF_TOPIC)) {// check last read of src topic
-              List<String> listAccess = new ArrayList<String>();
-              listAccess.addAll(Utils.valuesToList(profileNode.getProperty(EXO_LAST_READ_POST_OF_TOPIC).getValues()));
-              for (String string2 : listAccess) {// for only run one.
-                if (string2.indexOf(topicId) >= 0) {
-                  lastAccessTopicTime = Long.parseLong(string2.split(",")[2]);
-                  if (lastAccessTopicTime > 0) {// check last read dest forum
-                    Value[] values = profileNode.getProperty(EXO_READ_FORUM).getValues();
-                    for (Value vl : values) {// for only run one.
-                      String str = vl.getString();
-                      if (str.indexOf(destForumId) >= 0) {
-                        if (str.indexOf(":") > 0) {
-                          lastAccessForumTime = Long.parseLong(str.split(":")[1]);
-                          break;
-                        }
+            // check last read of src topic
+            List<String> readTopics = reader.list(EXO_READ_TOPIC, new ArrayList<String>());
+            for (String tpId : readTopics) {// for only run one.
+              String[] info = tpId.split(CommonUtils.COLON);
+              if (tpId.indexOf(topicId) >= 0 && info.length > 1) {
+                lastAccessTopicTime = Long.parseLong(info[1]);
+                if (lastAccessTopicTime > 0) {// check last read dest forum
+                  List<String> values = reader.list(EXO_READ_FORUM, new ArrayList<String>());
+                  for (String str : values) {// for only run one.
+                    if (str.indexOf(destForumId) >= 0) {
+                      if (str.indexOf(CommonUtils.COLON) > 0) {
+                        lastAccessForumTime = Long.parseLong(str.split(CommonUtils.COLON)[1]);
+                        break;
                       }
                     }
                   }
-                  if (lastAccessTopicTime > lastAccessForumTime) {
-                    list2.remove(string);
-                    list2.add(destForumId + "," + string2.substring(0, string2.lastIndexOf(","))); // replace topic,post id
-                  }
-                  break;
                 }
+                if (lastAccessTopicTime > lastAccessForumTime) {
+                  list2.remove(string);
+                  list2.add(destForumId + CommonUtils.COMMA + info[0] + CommonUtils.SLASH + info[1]); // replace topic,post id
+                }
+                break;
               }
             }
           } catch (Exception e) {
-            log.error("Failed to calculate last read", e);
+            log.warn("Can not calculate last read of user: " + profileNode.getName());
           }
         }
         if (string.indexOf(srcForumId) >= 0) {// remove last read src forum if last read this forum is this topic.
@@ -2971,7 +2971,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
       if (!isRead && destForumId != null) {
-        list2.add(destForumId + "," + topicId + "/" + topicId.replace(Utils.TOPIC, Utils.POST));
+        list2.add(destForumId + CommonUtils.COMMA + topicId + CommonUtils.SLASH + topicId.replace(Utils.TOPIC, Utils.POST));
       }
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, list2.toArray(new String[list2.size()]));
     }
