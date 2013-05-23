@@ -49,8 +49,8 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
 	<%uiform.end()%>
+	</div>
 	<div class="uiAction uiActionBorder">
 	<% for(action in uicomponent.getActions()) { 
 		String actionLabel = _ctx.appRes("UIBBCodeManagerForm.action." + action); 
