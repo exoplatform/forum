@@ -40,7 +40,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     events = {
       @EventConfig(listeners = UIBBCodeManagerForm.AddNewBBCodeActionListener.class), 
       @EventConfig(listeners = UIBBCodeManagerForm.EditBBCodeActionListener.class), 
-      @EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class, confirm = "UIBBCodeManagerForm.msg.confirm-delete-BBCode"), 
+      @EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class), 
       @EventConfig(listeners = UIBBCodeManagerForm.SaveActionListener.class),
       @EventConfig(listeners = UIBBCodeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
     }

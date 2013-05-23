@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.bbcode.api.BBCodeService;
 import org.exoplatform.forum.bbcode.core.BBCodeRenderer;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.log.ExoLogger;
@@ -113,7 +114,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     if (bbcode.getTagName().equalsIgnoreCase("list")) {
       replacement.setReadOnly(true);
     }
-    this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(bbcode.getDescription());
+    this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(bbcode.getDescription()));
     this.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).setValue(bbcode.getExample());
     this.getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).setChecked(bbcode.isOption());
   }
@@ -126,6 +127,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     boolean isOption = (Boolean) getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
     if (ForumUtils.isEmpty(description))
       description = " ";
+    description = CommonUtils.encodeSpecialCharInTitle(description);
     bbcode.setTagName(tagName.toUpperCase());
     bbcode.setReplacement(replacement);
     bbcode.setDescription(description);

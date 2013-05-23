@@ -2,8 +2,8 @@
 	List bbcodes = uiform.getListBBcode();
 %>
 <div class="uiBBCodeManagerForm">
-	<% uiform.begin() %>
 	<div class="resizable">
+	<% uiform.begin() %>
 		<div class="horizontalLayout">
 			<table class="uiGrid table table-striped">
 				<thead>
@@ -17,6 +17,7 @@
 				<tbody>
 				<%
 					int l = 0;
+					String confirm = _ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode");
 					for(bbcode in bbcodes) {
 						if(l%2 == 0) classCssInbox = "whileRow";
 						else classCssInbox = "OddRow";
@@ -36,9 +37,10 @@
 						<td style="width:40px;" class="center"><% uiform.renderField(uiform.getIdCheckBox(bbcodeId)); %></td>
 						<td style="width:60px;" class="center">
 							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="actionIcon" href="<%=uiform.event("EditBBCode", bbcodeId)%>">
-								<i  class="uiIconEdit uiIconLightGray"></i>							
+								<i	class="uiIconEdit uiIconLightGray"></i>							
 							</a>
-							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="actionIcon confirm" href="<%=uiform.event("DeleteBBCode", bbcodeId)%>;">
+							<a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" 
+								 class="actionIcon confirm" data-confirm="$confirm" href="javascript:void(0);" data-action="<%=uiform.event("DeleteBBCode", bbcodeId)%>;">
 								<i class="uiIconDelete uiIconLightGray"></i>							
 							</a>
 						</td>
@@ -48,13 +50,13 @@
 			</table>
 		</div>
 	</div>
+	<%uiform.end()%>
 	<div class="uiAction uiActionBorder">
 	<% for(action in uicomponent.getActions()) { 
 		String actionLabel = _ctx.appRes("UIBBCodeManagerForm.action." + action); 
 		String link = uicomponent.event(action) ;
 	%>
 		<button onclick="$link" class="btn" type="button">$actionLabel</button>
-      <%}%>
-    </div>
-	<%uiform.end()%>
+			<%}%>
+	</div>
 </div>
