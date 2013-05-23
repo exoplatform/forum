@@ -21,8 +21,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -32,6 +33,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
@@ -45,7 +47,6 @@ import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -126,7 +127,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   protected String           tabId                              = "ForumUserProfile";
 
-  private String[]           permissionUser                     = null;
+  private Map<String, String>permissionUser                     = new HashMap<String, String>();
 
   private List<Watch>        listWatches                        = new ArrayList<Watch>();
 
@@ -137,9 +138,11 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
   UIForumPageIterator        pageIterator;
 
   public UIForumUserSettingForm() throws Exception {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
-    permissionUser = new String[] { res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(), res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(), res.getString("UIForumPortlet.label.PermissionUser").toLowerCase() };
+    permissionUser.clear();
+    permissionUser.put("0", WebUIUtils.getLabel("UIForumPortlet", "PermissionAdmin"));
+    permissionUser.put("1", WebUIUtils.getLabel("UIForumPortlet", "PermissionModerator"));
+    permissionUser.put("2", WebUIUtils.getLabel("UIForumPortlet", "PermissionUser"));
+    permissionUser.put("3", WebUIUtils.getLabel("UIForumPortlet", "PermissionGuest"));
     setActions(new String[] { "Save", "Cancel" });
     setAddColonInLabel(true);
   }
@@ -406,15 +409,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
       screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       UserProfile userProfileSetting = uiForm.userProfileSetting;
-      if (userTitle == null || userTitle.trim().length() < 1) {
-        userTitle = userProfileSetting.getUserTitle();
+      if (ForumUtils.isEmpty(userTitle)) {
+        userTitle = uiForm.permissionUser.get(userProfileSetting.getUserRole());
       } else {
-        int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
-        if (newPos >= 0 && newPos < userProfileSetting.getUserRole()) {
-          userTitle = userProfileSetting.getUserTitle();
+        userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
+        boolean newPos = uiForm.permissionUser.values().contains(userTitle);
+        if (newPos) {
+          userTitle = uiForm.permissionUser.get(userProfileSetting.getUserRole());
         }
       }
-      userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
       int maxText = ForumUtils.MAXSIGNATURE;
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
       if (ForumUtils.isEmpty(signature)) {

@@ -723,17 +723,20 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       long userRole = 2;
       boolean isAdmin = inputSetProfile.getUICheckBoxInput(FIELD_USERROLE_CHECKBOX).isChecked();
-      if (isAdmin)
-        userRole = 0;
-      else if (uiForm.isAdmin(userProfile.getUserId())) {
+      if (isAdmin || uiForm.isAdmin(userProfile.getUserId())) {
         isAdmin = true;
         userRole = 0;
-        if (userTitle == null || userTitle.trim().length() == 0)
-          userTitle = Utils.ADMIN;
-        else if (userTitle.equals(Utils.ADMIN))
-          userTitle = userProfile.getUserTitle();
       }
-      userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
+      //
+      if (ForumUtils.isEmpty(userTitle)) {
+        if (isAdmin) {
+          userTitle = Utils.ADMIN;
+        } else {
+          userTitle = userProfile.getUserTitle();
+        }
+      } else {
+        userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
+      }
       // -----------------
       List<String> oldModerateForum = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums()));
       List<String> newModeratorsForum = new ArrayList<String>();
