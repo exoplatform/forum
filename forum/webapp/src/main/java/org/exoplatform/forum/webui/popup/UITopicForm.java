@@ -32,6 +32,7 @@ import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.common.webui.cssfile.CssClassUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -98,8 +99,6 @@ public class UITopicForm extends BaseForumForm {
 
   public static final String    FIELD_STICKY_CHECKBOX            = "Sticky";
   
-  final static public String    ACT_REMOVE                       = "remove";
-
   final static public String    FIELD_ATTACHMENTS                = "attachments";
 
   final static public String    USER_SELECTOR_POPUPWINDOW        = "UITopicUserPopupWindow";
@@ -220,15 +219,16 @@ public class UITopicForm extends BaseForumForm {
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
-      fileUpload.setActionType(ActionData.TYPE_LINK);
-      String fileName = ForumUtils.getSizeFile(attachdata.getSize());
-      fileName = attachdata.getName() + "(" + fileName + ")";
-      fileUpload.setActionName(fileName);
+      fileUpload.setActionType(ActionData.TYPE_ATT);
+      String fileName = attachdata.getName();;
+      fileUpload.setActionName(fileName + "(" + ForumUtils.getSizeFile(attachdata.getSize()) + ")");
       fileUpload.setShowLabel(true);
+      fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileName(fileName, null));
+      
       uploadedFiles.add(fileUpload);
       ActionData removeAction = new ActionData();
       removeAction.setActionListener("RemoveAttachment");
-      removeAction.setActionName(ACT_REMOVE);
+      removeAction.setActionName("UITopicForm.action.RemoveAttachment");
       removeAction.setActionParameter(attachdata.getId());
       removeAction.setActionType(ActionData.TYPE_ICON);
       removeAction.setCssIconClass("uiIconDelete uiIconLightGray");

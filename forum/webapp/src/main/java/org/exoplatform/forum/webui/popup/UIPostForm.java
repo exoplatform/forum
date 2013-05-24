@@ -30,6 +30,7 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.common.webui.cssfile.CssClassUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -72,8 +73,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   public static final String    FIELD_EDITREASON_INPUT = "editReason";
 
   public static final String    FIELD_LABEL_QUOTE      = "ReUser";
-
-  final static public String    ACT_REMOVE             = "remove";
 
   final static public String    FIELD_ATTACHMENTS      = "Attachments";
 
@@ -163,14 +162,16 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
-      fileUpload.setActionType(ActionData.TYPE_LINK);
-      String size = ForumUtils.getSizeFile(attachdata.getSize());
-      fileUpload.setActionName(attachdata.getName() + "(" + size + ")");
+      fileUpload.setActionType(ActionData.TYPE_ATT);
+      String fileName = attachdata.getName();
+      fileUpload.setActionName(fileName + "(" + ForumUtils.getSizeFile(attachdata.getSize()) + ")");
       fileUpload.setShowLabel(true);
+      fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileName(fileName, null));
       uploadedFiles.add(fileUpload);
+
       ActionData removeAction = new ActionData();
       removeAction.setActionListener("RemoveAttachment");
-      removeAction.setActionName(ACT_REMOVE);
+      removeAction.setActionName("UITopicForm.action.RemoveAttachment");
       removeAction.setActionParameter(attachdata.getId());
       removeAction.setActionType(ActionData.TYPE_ICON);
       removeAction.setCssIconClass("uiIconDelete uiIconLightGray");

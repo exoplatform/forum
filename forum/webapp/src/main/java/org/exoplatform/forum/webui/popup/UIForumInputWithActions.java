@@ -24,6 +24,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -100,16 +101,17 @@ public class UIForumInputWithActions extends UIFormInputSet {
     ResourceBundle res = context.getApplicationResourceBundle();
 
     for (UIComponent inputEntry : getChildren()) {
-      if (!inputEntry.isRendered())
+      if (inputEntry.isRendered() == false) {
         continue;
+      }
       String label;
       try {
         label = uiForm.getLabel(res, inputEntry.getId());
-        if (inputEntry instanceof UIFormInputBase)
+        if (inputEntry instanceof UIFormInputBase) {
           ((UIFormInputBase) inputEntry).setLabel(label);
+        }
       } catch (MissingResourceException ex) {
         label = inputEntry.getId();
-        log.info("\n " + uiForm.getId() + ".label." + inputEntry.getId() + " not found value");
       }
       if (!mapLabelInfo.isEmpty() && mapLabelInfo.containsKey(inputEntry.getId())) {
         w.write("<div class=\"control-group\">");
@@ -126,47 +128,57 @@ public class UIForumInputWithActions extends UIFormInputSet {
       List<ActionData> actions = actionField.get(inputEntry.getName());
       if (actions != null) {
         for (ActionData action : actions) {
-          String actionLabel;
-          try {
-            actionLabel = uiForm.getLabel(res, action.getActionName());
-          } catch (MissingResourceException ex) {
-            actionLabel = action.getActionName();
-          }
-          String actionLink;
+          String actionLink, actionLabel;
           if (action.getActionParameter() != null) {
             actionLink = ((UIComponent) getParent()).event(action.getActionListener(), action.getActionParameter());
           } else {
             actionLink = ((UIComponent) getParent()).event(action.getActionListener());
           }
-          w.write("<a title=\"" + actionLabel + "\" class=\"actionIcon\" href=\"" + actionLink + "\">");
-          if (action.getActionType() == ActionData.TYPE_ICON) {
-            w.write("<i alt=\"" + ForumUtils.getSubString(actionLabel, 30) + "\" class=\"" + action.getCssIconClass() + "\"></i>");
-            if (action.isShowLabel)
-              w.write(ForumUtils.getSubString(actionLabel, 30));
-          } else if (action.getActionType() == ActionData.TYPE_LINK) {
-            w.write(ForumUtils.getSubString(actionLabel, 30));
-          } else if (action.getActionType() == ActionData.TYPE_ATT) {
-            String size = ForumUtils.EMPTY_STR;
-            if (actionLabel.lastIndexOf("(") > 0) {
-              size = actionLabel.substring(actionLabel.lastIndexOf("("));
-              actionLabel = actionLabel.substring(0, actionLabel.lastIndexOf("("));
-            }
-            String type = ForumUtils.EMPTY_STR;
-            int dot = actionLabel.lastIndexOf(".");
-            if (dot > 0) {
-              type = actionLabel.substring(dot);
-              actionLabel = actionLabel.substring(0, dot);
-            }
 
-            actionLabel = ForumUtils.getSubString(actionLabel, 30) + type + size;
+          if (action.getActionType() == ActionData.TYPE_ATT) {
+            actionLabel = action.getActionName();
+            w.write("<span title=\"" + actionLabel + "\" rel=\"tooltip\" data-placement=\"bottom\">");
             w.write("<i class=\"" + action.getCssIconClass() + "\"></i>");
-            if (action.isShowLabel)
+            if (action.isShowLabel) {
+              String size = ForumUtils.EMPTY_STR;
+
+              if (actionLabel.lastIndexOf("(") > 0) {
+                size = actionLabel.substring(actionLabel.lastIndexOf("("));
+                actionLabel = actionLabel.substring(0, actionLabel.lastIndexOf("("));
+              }
+              String type = ForumUtils.EMPTY_STR;
+              int dot = actionLabel.lastIndexOf(".");
+              if (dot > 0) {
+                type = actionLabel.substring(dot - 1);
+                actionLabel = actionLabel.substring(0, dot);
+              }
+
+              actionLabel = ForumUtils.getSubString(actionLabel, 30);
+              //
+              w.write(new StringBuilder(actionLabel).append(type).append(size).toString());
+            }
+            w.write("</span>");
+
+          } else {
+            actionLabel = WebUIUtils.getLabel(null, action.getActionName());
+
+            w.write("<a title=\"" + actionLabel + "\" class=\"actionIcon\" rel=\"tooltip\" data-placement=\"bottom\" href=\"" + actionLink + "\">");
+            actionLabel = ForumUtils.getSubString(actionLabel, 30);
+            if (action.getActionType() == ActionData.TYPE_ICON) {
+              w.write("<i alt=\"" + actionLabel + "\" class=\"" + action.getCssIconClass() + "\"></i>");
+              if (action.isShowLabel) {
+                w.write(actionLabel);
+              }
+            } else if (action.getActionType() == ActionData.TYPE_LINK) {
               w.write(actionLabel);
+            }
+            w.write("</a>");
           }
-          w.write("</a>");
-          w.write("&nbsp;");
-          if (action.isBreakLine())
+          if (action.isBreakLine()) {
             w.write("<br/>");
+          } else {
+            w.write("&nbsp;");
+          }
         }
       }
       if (inputEntry.getId().equals(actionIdAddItem)) {
