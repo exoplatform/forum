@@ -59,14 +59,14 @@
 	
 	<div class="uiBox">
 		<h6 class="title">
-			<%= _ctx.appRes("UICategories.title.Categories"); %>
+			<%= _ctx.appRes("UICategories.title.Categories") %>
 		</h6>
 		<div class="uiContentBox">
 			<div class="uiCategories">
 				<%
 				 if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
-					<div class="faqBack">
-						<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"><i class="uiIconUpLevel uiIconLightGray"></i></a>
+					<div class="faqBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
+						<a href="javascript:void(0);"><i class="uiIconUpLevel uiIconLightGray"></i></a>
 					</div>
 				<%}%>
 					
@@ -85,7 +85,7 @@
 						<li class="$classCss faqCategory oncontextmenu" id="UIContextPopupMenu$i">
 							<input type="hidden" class="infoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
 							
-							<a onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
+							<a onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>" href="javascript:void(0);">
 								<i class="uiIconArrowRight uiIconLightGray"></i>&nbsp;<%=FAQUtils.getSubString(category.getName(), 20);%>
 							</a>
 							<%
@@ -113,14 +113,14 @@
 									if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || viewAction.equals("MoveCategory")))
 										linkView = uicomponent.event(viewAction, category.getPath()+"/true") ;
 									if(viewAction.equals("DeleteCategory")) {
-									  confirm = " class=\"confirm\"";
-										linkView = "javaScript:if(confirm('" + _ctx.appRes("UIQuestions.msg.confirm-delete-category") + "')) {" + linkView.replace("javascript:", "") + "}";
+									  confirm = "class=\"confirm\"";
+										linkView = uicomponent.event(viewAction, uiform.id, category.getPath()) ;
 									} else if(viewAction.equals("AddNewQuestion")) {
 										icon = "uiIconAnsLightGray uiIconAns";
 									}
 									icon += viewAction;
 								%>
-								<li><a href="javascript:void(0);" onclick="$linkView"$confirm><i class="$icon"></i>&nbsp;$itemLabelView</a></li>
+								<li><a href="javascript:void(0);" onclick="$linkView" <%=confirm%>><i class="$icon"></i>&nbsp;$itemLabelView</a></li>
 							<%
 								}
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){

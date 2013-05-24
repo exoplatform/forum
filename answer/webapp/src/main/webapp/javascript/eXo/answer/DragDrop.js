@@ -15,97 +15,96 @@
     },
 
     attach : function(evt) {
-      var dnd = eXo.answer.DragDrop;
       var dragObject = this.cloneNode(true);
       $(dragObject).attr('class', 'faqDnDCategory');
       $('body').append(dragObject);
       $(dragObject).css('width', $(this).width());
-      dnd.rootNode = this;
+      DragDrop.rootNode = this;
 
-      dnd.mousePos = {
+      DragDrop.mousePos = {
         x : evt.clientX,
         y : evt.clientY
       };
-      dnd.setup(dragObject, [ "faqCategory", "faqBack", "faqTmpCategory" ]);
+      DragDrop.setup(dragObject, [ "faqCategory", "faqBack", "faqTmpCategory" ]);
 
-      dnd.dropCallback = function(dragObj, target) {
+      DragDrop.dropCallback = function(dragObj, target) {
         $(dragObj).remove();
-        if (this.lastTarget)
-          $(this.lastTarget).css('border', '');
-        if (target && dnd.isMoved) {
-          var action = this.getAction(this.dragObject, target);
+        if (DragDrop.lastTarget)
+          $(DragDrop.lastTarget).css('border', 'none');
+        if (target && DragDrop.isMoved) {
+          var action = DragDrop.getAction(DragDrop.dragObject, target);
           if (!action) {
-            this.showElement();
+            DragDrop.showElement();
             return;
           }
           $.globalEval(action);
         } else {
-          this.showElement();
+          DragDrop.showElement();
         }
       }
-      dnd.dragCallback = function(dragObj, target) {
-        if (dnd.lastTarget) {
-          $(dnd.lastTarget).css('border', '');
-          if ($(dnd.lastTarget).hasClass('faqHighlightCategory')) {
-            $(dnd.lastTarget).removeClass('faqHighlightCategory');
+
+      DragDrop.dragCallback = function(dragObj, target) {
+        if (DragDrop.lastTarget) {
+          $(DragDrop.lastTarget).css('border', '');
+          if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory')) {
+            $(DragDrop.lastTarget).removeClass('faqHighlightCategory');
           }
         }
 
         if (!target)
           return;
-        dnd.lastTarget = target;
+        DragDrop.lastTarget = target;
 
-        if ($(target).hasClass('faqBack'))
-          $(target).click();
+        if ($(target).hasClass('faqBack')) {
+          $(target).trigger('click');
+        }
         if ($(target).hasClass('faqTmpCategory')) {
-          $(dnd.lastTarget).addClass('faqHighlightCategory');
+          $(DragDrop.lastTarget).addClass('faqHighlightCategory');
         }
         $(target).css('border', 'dotted 1px #cfcfcf');
-        if (!dnd.hided)
-          dnd.hideElement(dnd.rootNode);
+        if (DragDrop.hided === false)
+          DragDrop.hideElement(DragDrop.rootNode);
       }
     },
 
     setup : function(dragObject, targetClass) {
       DragDrop.dragObject = dragObject;
       DragDrop.targetClass = targetClass;
-      $(document).on('mousemove', eXo.answer.DragDrop.onDrag);
-      $(document).on('mouseup', eXo.answer.DragDrop.onDrop);
+      $(document).on('mousemove', DragDrop.onDrag);
+      $(document).on('mouseup', DragDrop.onDrop);
     },
 
     onDrag : function(evt) {
-      var dnd = eXo.answer.DragDrop;
-      var dragObject = dnd.dragObject;
+      var dragObject = DragDrop.dragObject;
       $(dragObject).css('left', evt.pageX + 2);
       $(dragObject).css('top', evt.pageY + 2);
-      if (dnd.dragCallback) {
-        var target = dnd.findTarget(evt);
-        dnd.dragCallback(dragObject, target);
+      if (DragDrop.dragCallback) {
+        var target = DragDrop.findTarget(evt);
+        DragDrop.dragCallback(dragObject, target);
       }
     },
 
     onDrop : function(evt) {
       evt = evt || window.event;
-      var dnd = eXo.answer.DragDrop;
-      dnd.isMoved = true;
-      if (dnd.mousePos.x == evt.clientX && dnd.mousePos.y == evt.clientY) {
-        dnd.isMoved = false;
+      DragDrop.isMoved = true;
+      if (DragDrop.mousePos.x == evt.clientX && DragDrop.mousePos.y == evt.clientY) {
+        DragDrop.isMoved = false;
       }
-      if (dnd.dropCallback) {
-        var target = dnd.findTarget(evt);
-        dnd.dropCallback(dnd.dragObject, target);
+      if (DragDrop.dropCallback) {
+        var target = DragDrop.findTarget(evt);
+        DragDrop.dropCallback(DragDrop.dragObject, target);
       }
-      delete dnd.dragObject;
-      delete dnd.targetClass;
-      delete dnd.dragCallback;
-      delete dnd.hided;
-      delete dnd.rootNode;
-      $(document).off('mousemove', eXo.answer.DragDrop.onDrag);
-      $(document).off('mouseup', eXo.answer.DragDrop.onDrop);
+      delete DragDrop.dragObject;
+      delete DragDrop.targetClass;
+      delete DragDrop.dragCallback;
+      delete DragDrop.hided;
+      delete DragDrop.rootNode;
+      $(document).off('mousemove', DragDrop.onDrag);
+      $(document).off('mouseup', DragDrop.onDrop);
     },
 
     findTarget : function(evt) {
-      var targetClass = eXo.answer.DragDrop.targetClass;
+      var targetClass = DragDrop.targetClass;
       if (targetClass) {
         var i = targetClass.length;
         while (i--) {
@@ -117,7 +116,7 @@
     },
 
     disableSelection : function(jelm) {
-      jelm.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
+      jelm.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', function(){return false;});
     },
 
     hideElement : function(obj) {
@@ -127,17 +126,16 @@
     },
 
     showElement : function() {
-      var dnd = eXo.answer.DragDrop;
-      if (!dnd.rootNode)
+      if (!DragDrop.rootNode)
         return;
-      var preElement = $(dnd.rootNode).prev('li');
+      var preElement = $(DragDrop.rootNode).prev('li');
       if (preElement.exists())
         preElement.css('display', '');
-      $(dnd.rootNode).css('display', '');
-      if (dnd.lastTarget) {
-        $(dnd.lastTarget).css('border', '');
-        if ($(dnd.lastTarget).hasClass('faqHighlightCategory'))
-          $(dnd.lastTarget).removeClass('faqHighlightCategory');
+      $(DragDrop.rootNode).css('display', '');
+      if (DragDrop.lastTarget) {
+        $(DragDrop.lastTarget).css('border', '');
+        if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory'))
+          $(DragDrop.lastTarget).removeClass('faqHighlightCategory');
       }
     },
 
@@ -164,11 +162,6 @@
       return actionLink;
     }
   };
-
-  // Expose
-  window.eXo = eXo || {};
-  window.eXo.answer = eXo.answer || {};
-  window.eXo.answer.DragDrop = DragDrop;
 
   return DragDrop;
 })(gj, forumUtils, forumEventManager, window, document);
