@@ -561,8 +561,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Category removeCategory(String categoryId) throws Exception {
-    ObjectNameKey key = new ObjectNameKey(categoryId);
-    objectNameData.remove(key);
+    objectNameData.clearCache();
     categoryData.remove(new CategoryKey(categoryId));
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();

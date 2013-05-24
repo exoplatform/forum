@@ -43,6 +43,19 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     removeAllData();
     super.tearDown();
   }
+  
+  public void testGetObjectNameByPathAfterDeleted() throws Exception {
+    Category cate = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cate, true);
+    String catId = cate.getId();
+    Forum forum = createdForum();
+    forumService_.saveForum(catId, forum, true);
+    String forumId = forum.getId();
+    
+    forumService_.removeCategory(catId);
+    Object objectForum = forumService_.getObjectNameByPath(catId+"/"+forumId);
+    assertNull(objectForum);
+  }
 
   public void testForumStatic() throws Exception {
     ForumStatistic forumStatistic = new ForumStatistic();
