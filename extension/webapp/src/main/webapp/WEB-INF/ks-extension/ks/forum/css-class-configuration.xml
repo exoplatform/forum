@@ -66,6 +66,22 @@
         </object-param>
 
         <object-param>
+          <name>xz</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>xz</string>
+            </field>
+            <field name="cssClass">
+              <string>FileArchiveDefault</string>
+            </field>
+            <field name="groupFileTypes">
+              <string></string>
+            </field>
+          </object>
+        </object-param>
+
+        <object-param>
           <name>tar</name>
           <description></description>
           <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">

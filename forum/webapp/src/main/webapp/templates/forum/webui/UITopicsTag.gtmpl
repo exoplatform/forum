@@ -42,14 +42,15 @@
       <table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
       	<caption class="rounded-corners-top">
       		<div class="pull-left textTitleCategories">
-      			<%=_ctx.appRes("UITopicsTag.label.TagName");%>: <strong>$tagName_</strong>
+      			<%=_ctx.appRes("UITopicsTag.label.TagName")%>: <strong>$tagName_</strong>
       		</div>
       	<% if(isShowMenu){ %>
-					<div class="pull-right dropdown uiDropdownWithIcon actionIcon" style="margin: 5px;">
-						<a data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconMiniArrowDown"></i></a>
+					<div class="pull-right dropdown uiDropdownWithIcon" style="padding: 5px;">
+						<a href="javascript:void(0)" class="actionIcon" data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconMiniArrowDown"></i></a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="<%=uicomponent.event("RemoveTopic");%>" class="confirm"
+								<a href="javascript:void(0)" class="confirm"
+									data-action="<%=uicomponent.event("RemoveTopic")%>" 
 									data-number="<%=uicomponent.getTotalChecked()%>" 
 									data-confirm-one="<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>" 
 									data-confirm-number="<%=_ctx.appRes("UITopicsTag.confirm.RemoveMoreTopic")%>" 
@@ -65,7 +66,7 @@
           <tr>
 	          <th style="width:15px;">&nbsp;</th>
 						<th style="width:15px;">&nbsp;</th>
-						<th style="width:40%;">
+						<th style="width:35%;">
 							<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 						</th>
 						<th style="width:18%;">
@@ -75,20 +76,20 @@
 							<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 						</th>
 						 
-						<th style="width:120px;">
+						<th style="width:140px;">
 							<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 						</th>
 						
-						<th style="width:15px;" class="center">
+						<th style="width:25px;" class="center">
 							<i class="uiIconAttach uiIconLightGray" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></i>
 						</th>
-						<th style="width:15px;" class="center">
+						<th style="width:25px;" class="center">
 							<a href="<%=uicomponent.event("SetOrderBy","postCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Replies");%>">
 								 <i class="uiIconUIForms uiIconLightGray"></i>
 							</a>
 						</th>
 						
-						<th style="width:15px;" class="center">
+						<th style="width:25px;" class="center">
 							<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>" data-placement="bottom" rel="tooltip" title="<%=_ctx.appRes("UITopicContainer.label.Views");%>">
 								<i class="uiIconForumViewStatistic uiIconForumLightGray"></i>
 							</a>

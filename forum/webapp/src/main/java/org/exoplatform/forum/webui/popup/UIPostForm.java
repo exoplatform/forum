@@ -166,7 +166,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       String fileName = attachdata.getName();
       fileUpload.setActionName(fileName + "(" + ForumUtils.getSizeFile(attachdata.getSize()) + ")");
       fileUpload.setShowLabel(true);
-      fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileName(fileName, null));
+      fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileNameAndFileType(fileName, attachdata.getMimeType(), null));
       uploadedFiles.add(fileUpload);
 
       ActionData removeAction = new ActionData();

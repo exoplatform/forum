@@ -231,7 +231,7 @@
 
       if(isEmptyAction(fullAction) === false) {
         //
-        if(fullAction.indexOf('confirm')) {
+        if(fullAction.indexOf('confirm') > 0) {
           getVlaueConfirm(fullAction);
         }
         
