@@ -27,6 +27,7 @@ import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.forum.common.image.FileNotSupportedException;
 import org.exoplatform.forum.common.image.ResizeImageService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
@@ -74,6 +75,11 @@ public class UIAttachmentForm extends BaseUIFAQForm implements UIPopupComponent 
     this.setRendered(false);
   }
 
+  private void warningMessage(UploadService uploadService, String uploadId) {
+    warning("UIAttachmentForm.msg.fileIsNotImage");
+    uploadService.removeUploadResource(uploadId);
+  }
+
   static public class SaveActionListener extends EventListener<UIAttachmentForm> {
     public void execute(Event<UIAttachmentForm> event) throws Exception {
       UIAttachmentForm attachMentForm = event.getSource();
@@ -92,12 +98,16 @@ public class UIAttachmentForm extends BaseUIFAQForm implements UIPopupComponent 
         InputStream stream = new FileInputStream(new File(uploadResource.getStoreLocation()));
         if (attachMentForm.isChangeAvatar) {
           if (uploadResource.getMimeType().indexOf("image") < 0) {
-            attachMentForm.warning("UIAttachmentForm.msg.fileIsNotImage");
-            uploadService.removeUploadResource(uploadResource.getUploadId());
+            attachMentForm.warningMessage(uploadService, uploadResource.getUploadId());
             return;
           }
-          ResizeImageService resizeImgService = (ResizeImageService) attachMentForm.getApplicationComponent(ResizeImageService.class);
-          stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+          try {
+            ResizeImageService resizeImgService = (ResizeImageService) attachMentForm.getApplicationComponent(ResizeImageService.class);
+            stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+          } catch (FileNotSupportedException e) {
+            attachMentForm.warningMessage(uploadService, uploadResource.getUploadId());
+            return;
+          }
         }
         size = (long) uploadResource.getUploadedSize();
         if (size > 0) {

@@ -31,6 +31,7 @@ import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
+import org.exoplatform.forum.common.image.FileNotSupportedException;
 import org.exoplatform.forum.common.image.ResizeImageService;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
@@ -49,6 +50,7 @@ public class ResizeImageServiceImpl implements ResizeImageService {
 
   /**
    * {@inheritDoc}
+   * @throws FileNotSupportedException 
    * 
    * @see ResizeImageService#resizeImage(String, InputStream, int, int, boolean)
    */
@@ -56,7 +58,7 @@ public class ResizeImageServiceImpl implements ResizeImageService {
                                  InputStream is,
                                  int requestWidth,
                                  int requestHeight,
-                                 boolean keepAspectRatio) {
+                                 boolean keepAspectRatio) throws FileNotSupportedException {
     File file = null;
     Image image = null;
     InputStream result = null;
@@ -66,8 +68,9 @@ public class ResizeImageServiceImpl implements ResizeImageService {
       try {
         result = new BufferedInputStream(new FileInputStream(cacheFile));
       } catch (FileNotFoundException e) {
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
           log.debug("Cached image is not found", e);
+        }
       }
     } else {
       try {
@@ -84,11 +87,12 @@ public class ResizeImageServiceImpl implements ResizeImageService {
         file = File.createTempFile(imageName, ".png");
         file.deleteOnExit();
         ImageIO.write(renderedImage, "png", file);
-      } catch (IOException e) {
-        if (log.isDebugEnabled())
-          log.debug("Can't not get image", e);
+      } catch (Exception e) {
+        throw new FileNotSupportedException("Can't not get image");
       } finally {
-        image.flush();
+        if(image != null) {
+          image.flush();
+        }
       }
 
       try {
@@ -106,7 +110,7 @@ public class ResizeImageServiceImpl implements ResizeImageService {
    * 
    * @see ResizeImageService#resizeImageByWidth(String, InputStream, int)
    */
-  public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth) {
+  public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth) throws FileNotSupportedException {
     return resizeImage(imageName, is, requestWidth, 0, true);
   }
 
@@ -115,7 +119,7 @@ public class ResizeImageServiceImpl implements ResizeImageService {
    * 
    * @see ResizeImageService#resizeImageByHeight(String, InputStream, int)
    */
-  public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight) {
+  public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight) throws FileNotSupportedException {
     return resizeImage(imageName, is, 0, requestHeight, true);
   }
   

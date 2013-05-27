@@ -25,6 +25,7 @@ import java.util.List;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.image.FileNotSupportedException;
 import org.exoplatform.forum.common.image.ResizeImageService;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Utils;
@@ -93,6 +94,11 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
   public void setChangeAvatarOfUser(String changeAvatarOfUser) {
     this.changeAvatarOfUser = changeAvatarOfUser;
   }
+  
+  private void warningMessage(UploadService uploadService, String uploadId, String message) {
+    warning(message);
+    uploadService.removeUploadResource(uploadId);
+  }
 
   static public class SaveActionListener extends EventListener<UIAttachFileForm> {
     public void execute(Event<UIAttachFileForm> event) throws Exception {
@@ -113,18 +119,16 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
         }
         InputStream stream = new FileInputStream(new File(uploadResource.getStoreLocation()));
         if(uiForm.isChangeAvatar_){
-          if (uploadResource.getMimeType().indexOf("image") < 0) {
-            uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
-            uploadService.removeUploadResource(uploadResource.getUploadId());
+          if (uploadResource.getMimeType().indexOf("image") < 0 ) {
+            uiForm.warningMessage(uploadService, uploadResource.getUploadId(), "UIAttachFileForm.msg.fileIsNotImage");
             return;
           }
           ResizeImageService resizeImgService = (ResizeImageService) ExoContainerContext.getCurrentContainer()
                                                   .getComponentInstanceOfType(ResizeImageService.class);
           try {
             stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
-          } catch (Exception e) {
-            uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
-            uploadService.removeUploadResource(uploadResource.getUploadId());
+          } catch (FileNotSupportedException e) {
+            uiForm.warningMessage(uploadService, uploadResource.getUploadId(), "UIAttachFileForm.msg.fileIsNotImage");
             return;
           }
         }
@@ -139,9 +143,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
             attachfile.setSize((long) uploadResource.getUploadedSize());
             files.add(attachfile);
           } catch (Exception e) {
-            uiForm.log.error("Can not attach file, exception: ", e);
-            uiForm.warning("UIAttachFileForm.msg.upload-error");
-            uploadService.removeUploadResource(uploadResource.getUploadId());
+            uiForm.warningMessage(uploadService, uploadResource.getUploadId(), "UIAttachFileForm.msg.upload-error");
             return;
           }
         } else {

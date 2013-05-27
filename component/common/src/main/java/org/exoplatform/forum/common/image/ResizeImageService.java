@@ -39,7 +39,7 @@ public interface ResizeImageService {
                                  InputStream is,
                                  int requestWidth,
                                  int requestHeight,
-                                 boolean keepAspectRatio);
+                                 boolean keepAspectRatio) throws FileNotSupportedException;
 
   /**
    * Resizes the given image input stream to the adapt requested width and keep
@@ -50,7 +50,7 @@ public interface ResizeImageService {
    * @param requestWidth the new image width
    * @LevelAPI Platform
    */
-  public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth);
+  public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth) throws FileNotSupportedException;
 
   /**
    * Resizes the given image input stream to the adapt requested height and keep
@@ -62,5 +62,5 @@ public interface ResizeImageService {
    * @return the resized input stream
    * @LevelAPI Platform
    */
-  public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight);
+  public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight) throws FileNotSupportedException;
 }
