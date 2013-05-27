@@ -136,6 +136,10 @@ public class Utils implements ForumNodeTypes {
   public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." + "<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <strong>$OBJECT_NAME</strong> with the following content: "
                                                        + "<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <strong>$POSTER</strong> .</div><div>Go directly to the post: " + "<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">Click here." + "</a></div>".intern();
 
+  //for search condition
+  public static final String ASTERISK_STR          = "*";
+  public static final String PERCENT_STR           = "%";
+  
   /**
    * Clear characters that have a codepoint < 31 (non printable) from a string
    * @param s string input
@@ -735,6 +739,18 @@ public class Utils implements ForumNodeTypes {
       return path.substring(0, path.lastIndexOf(TOPIC) + getTopicId(path).length());
     }
     return null;
+  }
+  
+  /**
+   * Filter all invalid character (anything except word, number, space and search wildcard) from search conditional.
+   * @param input the input string
+   * @return String after remove all special characters
+   * @since 4.0.x
+   */
+  public static String removeSpecialCharacterInDiscusstionFilter(String input){
+    String result = input.replaceAll("[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\?\\*%0-9]", " ");
+    result = result.replaceAll("\\s+", " ");
+    return result.trim();
   }
 
 }

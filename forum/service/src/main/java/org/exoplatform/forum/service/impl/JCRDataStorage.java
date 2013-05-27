@@ -39,6 +39,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -197,7 +198,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private String                       repository;
 
   private String                       workspace;
-
+  
+  private static final Pattern         HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
+  
   public JCRDataStorage() {
   }
 
@@ -5735,6 +5738,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       String pathQuery = categoryHome.getPath();
 
+      //process query for asterisk 
+      String asteriskQuery = processSearchCondition(textQuery);
       textQuery = StringUtils.replace(textQuery, "'", "&apos;");
 
       boolean isAdmin = isAdminRole(userId);
@@ -5770,7 +5775,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
         // Append text query
         if (textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
-          queryString.append("(jcr:contains(., '").append(textQuery).append("'))");
+          if(textQuery.contains(Utils.PERCENT_STR)){
+            if(type.equals(Utils.POST)){
+              queryString.append("((jcr:like(@exo:message, '").append(textQuery).append("'))");
+              queryString.append(" or (jcr:like(@exo:message, '").append(asteriskQuery).append("')))");
+            }else if (type.equals(Utils.TOPIC)){
+              queryString.append("( jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
+              queryString.append(" or jcr:like(@exo:name, '").append(asteriskQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");;
+              queryString.append(")");
+            }
+          }else {
+            queryString.append("((jcr:contains(., '").append(textQuery).append("'))");
+            queryString.append(" or (jcr:contains(., '").append(asteriskQuery).append("')))");
+          }
           isAnd = true;
         }
 
@@ -5839,7 +5856,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             continue;
           }
           Row row = rowIterator.nextRow();
-          listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type));
+          listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type, textQuery));
         }
       }
 
@@ -5871,11 +5888,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return listOfCanviewrs.isEmpty() || Utils.hasPermission(listOfCanviewrs, listOfUser);
   }
 
-  private ForumSearchResult setPropertyUnifiedSearch(Row row, Node nodeObj, String type) throws Exception {
+  private ForumSearchResult setPropertyUnifiedSearch(Row row, Node nodeObj, String type, String originQuery) throws Exception {
     ForumSearchResult forumSearch = setPropertyForForumSearch(nodeObj, type);
     try {
-    forumSearch.setRelevancy(row.getValue(JCR_SCORE).getLong());
-    forumSearch.setExcerpt(row.getValue(REP_EXCERPT).getString()); 
+      //
+      forumSearch.setRelevancy(row.getValue(JCR_SCORE).getLong());
+      originQuery = Utils.removeSpecialCharacterInDiscusstionFilter(originQuery);
+
+      String excerptField = "";
+      if(type.equals(Utils.POST)){
+        excerptField = EXO_MESSAGE;
+      }else if(type.equals(Utils.TOPIC)){
+        excerptField = EXO_DESCRIPTION;
+      }
+      //
+      String excerpt = row.getValue(String.format(REP_EXCERPT_PATTERN, excerptField)).getString();
+      //if excerpt does not contain highlight text and text query, using field name to display excerpt
+      if(!HIGHLIHT_PATTERN.matcher(excerpt).find() && excerpt.toLowerCase().indexOf(originQuery) < 0) {
+        excerpt = row.getValue(String.format(REP_EXCERPT_PATTERN, EXO_NAME)).getString();
+      }
+      forumSearch.setExcerpt(excerpt);
     }catch (Exception e){
       e.printStackTrace();
     }
@@ -8244,4 +8276,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return null;
   }
+  
+  /**
+   * Process the search condition correspond to each context
+   * @param searchCondition the search condition
+   */
+  private String processSearchCondition(String searchCondition) {
+    StringBuffer searchConditionBuffer = new StringBuffer();
+
+    //process the special characters
+    searchCondition = Utils.removeSpecialCharacterInDiscusstionFilter(searchCondition);
+    
+    if (!searchCondition.contains(Utils.ASTERISK_STR) && !searchCondition.contains(Utils.PERCENT_STR)) {
+      if (searchCondition.startsWith(Utils.ASTERISK_STR) == false) {
+        searchConditionBuffer.append(Utils.ASTERISK_STR).append(searchCondition);
+      }
+      if (searchCondition.endsWith(Utils.ASTERISK_STR) == false) {
+        searchConditionBuffer.append(Utils.ASTERISK_STR);
+      }
+    } else {
+      searchCondition = searchCondition.replace(Utils.ASTERISK_STR, Utils.PERCENT_STR);
+      searchConditionBuffer.append(Utils.PERCENT_STR).append(searchCondition).append(Utils.PERCENT_STR);
+    }
+    return searchConditionBuffer.toString();
+  }
+  
 }

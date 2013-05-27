@@ -2741,6 +2741,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     Node categoryHome = getCategoryHome(sProvider, null);
     eventQuery.setPath(categoryHome.getPath());
     
+    //get origin text query
+    String textQuery = Utils.removeSpecialCharacterInAnswerFilter(eventQuery.getQuestion());
     
     try {
       
@@ -2791,7 +2793,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           String excerpt = rowObj.getValue(String.format(REP_EXCERPT_PATTERN, excerptField)).getString();
           
           //check whether the excerpt have the highlight text
-          if(!highlightPattern.matcher(excerpt).find() && excerptField.equals(EXO_NAME)){
+          if(!highlightPattern.matcher(excerpt).find() && excerptField.equals(EXO_NAME) && excerpt.toLowerCase().indexOf(textQuery) < 0){
             excerpt = rowObj.getValue(String.format(REP_EXCERPT_PATTERN, EXO_TITLE)).getString();
           }
           objectResult.setExcerpt(excerpt);

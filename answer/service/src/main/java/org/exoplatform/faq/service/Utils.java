@@ -57,6 +57,10 @@ public class Utils {
   final public static String ANSWER_NOW           = String.format("&%s=", ANSWER_NOW_PARAM);
   
   final public static String HIGHLIGHT_PATTERN    = "(.*)<strong>(.*)</strong>(.*)";
+  
+  //for search condition
+  public static final String ASTERISK_STR         = "*";
+  public static final String PERCENT_STR          = "%";
 
   /**
    * This method sort list category is date ascending
@@ -210,5 +214,17 @@ public class Utils {
       }
     }
     return query.toString();
+  }
+  
+  /**
+   * Filter all invalid character (anything except word, number, space and search wildcard) from search conditional.
+   * @param input the input string
+   * @return String after remove all special characters
+   * @since 4.0.x
+   */
+  public static String removeSpecialCharacterInAnswerFilter(String input){
+    String result = input.replaceAll("[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\?\\*%0-9]", " ");
+    result = result.replaceAll("\\s+", " ");
+    return result.trim();
   }
 }

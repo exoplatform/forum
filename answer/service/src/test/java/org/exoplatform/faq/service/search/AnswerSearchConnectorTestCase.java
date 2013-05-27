@@ -62,6 +62,11 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     questionTest.setQuestion("Questiontest kool 1");
     questionTest.setDetail("foo detail");
     faqService_.saveQuestion(questionTest, true, new FAQSetting());
+    
+    Question quest = createQuestion(Utils.CATEGORY_HOME + "/" + cat.getId());
+    quest.setQuestion("Question with Close word");
+    quest.setDetail("foo detail");
+    faqService_.saveQuestion(quest, true, new FAQSetting());
 
     Question question = createQuestion(Utils.CATEGORY_HOME + "/" + cat.getId());;
     question.setQuestion("Questiontest B");
@@ -108,24 +113,30 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   }
 
   public void testFilter() throws Exception {
-    assertEquals(3, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(3, answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
     
     //offset =1 && limit =10
-    assertEquals(2, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 1, 10, "relevancy", "ASC").size());
+    assertEquals(2, answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 1, 10, "relevancy", "ASC").size());
     
     //offset =2 && limit =10
-    assertEquals(1, answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 2, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 2, 10, "relevancy", "ASC").size());
     
-    assertEquals(2, answerSearchConnector.search(context, "foo", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(3, answerSearchConnector.search(context, " foo~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
     
     //return 2 result for 2 answer.
-    assertEquals(2, answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
-    assertEquals(1, answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(2, answerSearchConnector.search(context, " reponses~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, " comment~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    
+    //test for special characters in Unified Search
+    assertEquals(2, answerSearchConnector.search(context, " repon~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(4, answerSearchConnector.search(context, " ques~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, " clo~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, " clo*~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
 
   }
 
   public void testData() throws Exception {
-    List<SearchResult> aResults = (List<SearchResult>) answerSearchConnector.search(context, "kool", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
+    List<SearchResult> aResults = (List<SearchResult>) answerSearchConnector.search(context, " kool~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC");
     questionTest = faqService_.getQuestionById(questionTest.getId());
     SearchResult aResult = aResults.get(0);
     assertEquals(questionTest.getQuestion(), aResult.getTitle());
@@ -138,7 +149,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertTrue(aResult.getExcerpt().indexOf("kool") >= 0);
     
     // content is answer
-    aResults = (List<SearchResult>)answerSearchConnector.search(context, "reponses", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    aResults = (List<SearchResult>)answerSearchConnector.search(context, " reponses~", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     aResult = aResults.get(0);
     assertEquals("new reponses 1", ((UnifiedSearchResult)aResult).getContent());
     aResult = aResults.get(1);
@@ -147,7 +158,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertTrue(aResult.getExcerpt().indexOf("reponses") >= 0);
     
     // content is comment
-    aResults = (List<SearchResult>)answerSearchConnector.search(context, "comment", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    aResults = (List<SearchResult>)answerSearchConnector.search(context, " comment~", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     aResult = aResults.get(0);
     assertEquals("comment test", ((UnifiedSearchResult)aResult).getContent());
     //get excerpt field
@@ -156,19 +167,19 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
   }
 
   public void testOrder() throws Exception {
-    List<SearchResult> rTitleAsc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
+    List<SearchResult> rTitleAsc = (List<SearchResult>) answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "title", "ASC");
     assertEquals("Questiontest B", rTitleAsc.get(0).getTitle());
     assertEquals("Questiontest C", rTitleAsc.get(1).getTitle());
 
-    List<SearchResult> rTitleDesc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
+    List<SearchResult> rTitleDesc = (List<SearchResult>) answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
     assertEquals("Questiontest kool 1", rTitleDesc.get(0).getTitle());
     assertEquals("Questiontest C", rTitleDesc.get(1).getTitle());
 
-    List<SearchResult> rDateAsc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
+    List<SearchResult> rDateAsc = (List<SearchResult>) answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "date", "ASC");
     assertEquals("Questiontest kool 1", rDateAsc.get(0).getTitle());
     assertEquals("Questiontest B", rDateAsc.get(1).getTitle());
 
-    List<SearchResult> rDateDesc = (List<SearchResult>) answerSearchConnector.search(context, "Questiontest", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
+    List<SearchResult> rDateDesc = (List<SearchResult>) answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
     assertEquals("Questiontest C", rDateDesc.get(0).getTitle());
     assertEquals("Questiontest B", rDateDesc.get(1).getTitle());
   }
