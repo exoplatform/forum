@@ -75,7 +75,7 @@
 			toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 	  %>
 		<div class="pull-right permaLink">
-			<a onclick="window.open('$link'); return false;" href="$link" ><i class="uiIconPermalink uiIconLightGray" data-placement="bottom" rel="tooltip" title="$toolTip"></i></a>
+			<a class="actionIcon" onclick="window.open('$link'); return false;" href="$link" ><i class="uiIconPermalink uiIconLightGray" data-placement="bottom" rel="tooltip" title="$toolTip"></i></a>
 		</div>
 		<%}%>
 
