@@ -120,7 +120,13 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
           }
           ResizeImageService resizeImgService = (ResizeImageService) ExoContainerContext.getCurrentContainer()
                                                   .getComponentInstanceOfType(ResizeImageService.class);
-          stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+          try {
+            stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+          } catch (Exception e) {
+            uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
+            uploadService.removeUploadResource(uploadResource.getUploadId());
+            return;
+          }
         }
         size = (long) uploadResource.getUploadedSize();
         if (size > 0){
