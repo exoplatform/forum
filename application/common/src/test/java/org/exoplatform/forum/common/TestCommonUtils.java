@@ -131,6 +131,9 @@ public class TestCommonUtils extends TestCase {
     // ignore case
     List<String> ig = Arrays.asList(new String[]{"&gt;", "&lt;", "&#46;"});
     assertEquals("Text ...&lt;div class=\"&XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'&#46;,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
+    
+    //
+    assertEquals("Text ...&lt;div class=\"&XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'.,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumberIgnore(input));
   }
   
   public void testIsContainSpecialCharacter() {

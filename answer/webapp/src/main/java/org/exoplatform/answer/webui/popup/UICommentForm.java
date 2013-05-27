@@ -136,7 +136,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     FAQUtils.getEmailSetting(faqSetting_, false, false);
     if (commentId.indexOf("new") < 0) {
       comment = getFAQService().getCommentById(question.getPath(), commentId, language);
-      ((UIFormWYSIWYGInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(comment.getComments()));
+      ((UIFormWYSIWYGInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
     }
   }
 

@@ -266,7 +266,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         input = input.replace("<p>", "");
         input = input.substring(0, input.lastIndexOf("</p>") - 1);
       }
-      inputQuestionDetail.setValue(input);
+      inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(input));
     }
     addChild(inputQuestionContent);
     addChild(inputQuestionDetail);
@@ -346,11 +346,11 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       emailQ.setValue(question_.getEmail());
       
       if(mapLanguage.containsKey(this.editLanguage)){
-        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(this.editLanguage).getDetail()));
-        inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(this.editLanguage).getQuestion()));        
+        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(mapLanguage.get(editLanguage).getDetail()));
+        inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(editLanguage).getQuestion()));        
       }else{
+        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(question_.getDetail()));
         inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getQuestion()));
-        inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getDetail()));
       }
     } catch (Exception e) {
       log.error("Set question is fall, exception: " + e.getMessage());

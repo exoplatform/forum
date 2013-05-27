@@ -216,7 +216,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
     editReason.setRendered(false);
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
-      String message = CommonUtils.decodeSpecialCharToHTMLnumber(post.getMessage());
+      String message = CommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
       if (isQuote) {// quote
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
         

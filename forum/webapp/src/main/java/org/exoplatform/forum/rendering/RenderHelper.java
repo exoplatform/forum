@@ -16,9 +16,6 @@
  */
 package org.exoplatform.forum.rendering;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
@@ -32,8 +29,6 @@ import org.exoplatform.forum.service.Post;
 public class RenderHelper {
 
   private MarkupRenderingService markupRenderingService;
-
-  private static List<String> lIgnore = Arrays.asList(CommonUtils.LESS_THAN, CommonUtils.GREATER_THAN);
 
   public RenderHelper() {
   }
@@ -55,7 +50,7 @@ public class RenderHelper {
   static class PostDelegate implements MarkupRenderDelegate<Post> {
 
     public String getMarkup(Post post) {
-      return CommonUtils.decodeSpecialCharToHTMLnumber(post.getMessage(), lIgnore);
+      return CommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
     }
 
     /**

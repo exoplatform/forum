@@ -284,7 +284,7 @@ public class UITopicForm extends BaseForumForm {
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
-      threadContent.getChild(UIFormWYSIWYGInput.class).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getDescription()));
+      threadContent.getChild(UIFormWYSIWYGInput.class).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(topic.getDescription()));
 
       getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).setValue(topic.getIsClosed());
       

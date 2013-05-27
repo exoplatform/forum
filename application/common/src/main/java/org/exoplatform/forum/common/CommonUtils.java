@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -91,10 +92,12 @@ public class CommonUtils {
   public static final String         DOMAIN_KEY   = "gatein.email.domain.url".intern();
 
   public static final String         FROM_KEY     = "gatein.email.smtp.from".intern();
-
+  
   private static List<String>        tokens     = new ArrayList<String>();
 
   private static Map<String, String> charcodes  = new HashMap<String, String>();
+
+  private static List<String> ignoreLessThanAndGreaterThan = Arrays.asList(CommonUtils.LESS_THAN, CommonUtils.GREATER_THAN);
   /*
    *  The distance code number content special character.
    *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
@@ -451,6 +454,16 @@ public class CommonUtils {
     return decodeSpecialCharToHTMLnumber(s, new ArrayList<String>());
   }
   
+  /**
+   *  Decode special chars to HTML number ignore char Less than '<' and Greater than '>' 
+   * 
+   * @param str
+   * @return
+   */
+  public static String decodeSpecialCharToHTMLnumberIgnore(String str) {
+    return decodeSpecialCharToHTMLnumber(str, ignoreLessThanAndGreaterThan);
+  }
+
   /**
    * Get current time GMT/Zulu or UTC,(zone time is 0+GMT)
    * @return Calendar 

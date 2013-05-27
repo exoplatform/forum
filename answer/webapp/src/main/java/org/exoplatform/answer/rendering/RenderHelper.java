@@ -16,9 +16,6 @@
  */
 package org.exoplatform.answer.rendering;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
@@ -36,8 +33,6 @@ public class RenderHelper {
 
   private MarkupRenderingService markupRenderingService;
   
-  private static List<String> lIgnore = Arrays.asList(CommonUtils.LESS_THAN, CommonUtils.GREATER_THAN);
-
   public RenderHelper() {
   }
 
@@ -74,7 +69,7 @@ public class RenderHelper {
   static class AnswerDelegate implements MarkupRenderDelegate<Answer> {
 
     public String getMarkup(Answer answer) {
-      return CommonUtils.decodeSpecialCharToHTMLnumber(answer.getResponses(), lIgnore);
+      return CommonUtils.decodeSpecialCharToHTMLnumberIgnore(answer.getResponses());
     }
 
     public String getSyntax(Answer target) {
@@ -86,7 +81,7 @@ public class RenderHelper {
   static class CommentDelegate implements MarkupRenderDelegate<Comment> {
 
     public String getMarkup(Comment comment) {
-      return CommonUtils.decodeSpecialCharToHTMLnumber(comment.getComments(), lIgnore);
+      return CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments());
     }
 
     public String getSyntax(Comment target) {
@@ -98,7 +93,7 @@ public class RenderHelper {
   static class QuestionDelegate implements MarkupRenderDelegate<Question> {
 
     public String getMarkup(Question question) {
-      return CommonUtils.decodeSpecialCharToHTMLnumber(question.getDetail(), lIgnore);
+      return CommonUtils.decodeSpecialCharToHTMLnumberIgnore(question.getDetail());
     }
 
     public String getSyntax(Question target) {

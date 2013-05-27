@@ -148,7 +148,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     setQuestionId(question, language, answer.getApprovedAnswers());
     mapAnswers.clear();
     mapAnswers.put(answer.getLanguage(), answer);
-    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(answer.getResponses()));
+    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(answer.getResponses()));
     listLanguageToReponse.clear();
     listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
