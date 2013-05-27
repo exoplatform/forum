@@ -23,7 +23,9 @@
 			<%
 			String categoryName = uicomponent.getCurrentName();
 			if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
-				<% if(categoryName.indexOf("<img") >= 0) { %>
+				<% if(categoryName.indexOf("<img") >= 0) { 
+				   categoryName="<i class=\"uiIconHome uiIconLightGray\"></i>";
+				%>
 					<%=categoryName%>
 				<% } else { %>
 					<%=categoryName%>
@@ -66,7 +68,7 @@
 				<%
 				 if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
 					<div class="faqBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
-						<a href="javascript:void(0);"><i class="uiIconUpLevel uiIconLightGray"></i></a>
+						<a class="actionIcon" href="javascript:void(0);"><i class="uiIconUpLevel uiIconLightGray"></i></a>
 					</div>
 				<%}%>
 					
