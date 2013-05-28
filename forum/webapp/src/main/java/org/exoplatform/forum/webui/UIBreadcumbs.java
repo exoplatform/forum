@@ -49,7 +49,7 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
     }
 )
-public class UIBreadcumbs extends BaseForumForm {
+public class UIBreadcumbs extends UIContainer {
 
   private static Log         log           = ExoLogger.getExoLogger(UIBreadcumbs.class);
 
@@ -83,11 +83,6 @@ public class UIBreadcumbs extends BaseForumForm {
     useAjax = forumPortlet.isUseAjax();
   }
   
-  public UserProfile getUserProfile() {
-    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-    return forumPortlet.getUserProfile();
-  }
-
   public void setUpdataPath(String path) throws Exception {
     isLink = false;
     String tempPath = ForumUtils.EMPTY_STR;
