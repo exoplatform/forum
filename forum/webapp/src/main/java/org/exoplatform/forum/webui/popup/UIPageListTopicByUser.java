@@ -30,7 +30,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -56,7 +55,7 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" )
     }
 )
-public class UIPageListTopicByUser extends BaseForumForm {
+public class UIPageListTopicByUser extends UIContainer {
   private ForumService forumService;
 
   private JCRPageList  pageList;
@@ -76,10 +75,10 @@ public class UIPageListTopicByUser extends BaseForumForm {
     addChild(UIForumPageIterator.class, null, "PageListTopicByUser");
   }
 
-  public UserProfile getUserProfile() {
+  private UserProfile getUserProfile() {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     isUseAjax = forumPortlet.isUseAjax();
-    return this.userProfile = forumPortlet.getUserProfile();
+    return forumPortlet.getUserProfile();
   }
 
   public boolean isUseAjax() {
@@ -95,7 +94,7 @@ public class UIPageListTopicByUser extends BaseForumForm {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     try {
       boolean isMod = false;
-      if (this.userProfile.getUserRole() == 0)
+      if (getUserProfile().getUserRole() == 0)
         isMod = true;
       pageList = forumService.getPageTopicByUser(this.userName, isMod, strOrderBy);
       forumPageIterator.updatePageList(pageList);
@@ -156,7 +155,7 @@ public class UIPageListTopicByUser extends BaseForumForm {
       String forumId = id[i - 2];
       Forum forum = new Forum();
       boolean isRead = true;
-      if (uiForm.userProfile.getUserRole() > 0) {
+      if (forumPortlet.getUserProfile().getUserRole() > 0) {
         try {
           Category category = uiForm.forumService.getCategory(categoryId);
           forum = uiForm.forumService.getForum(categoryId, forumId);

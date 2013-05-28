@@ -12,6 +12,8 @@
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
+	
+	ForumUtils.addScripts("bts_tooltip", null, "eXo.forum.UIForumPortlet.initTooltip('"+uicomponent.id+"') ;");
 %>
 
 <div class="uiPageListPostByUser" id="$uicomponent.id">

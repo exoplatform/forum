@@ -6,6 +6,7 @@
 	import org.exoplatform.forum.TimeConvertUtils ;
 	
 	ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;");
+	ForumUtils.addScripts("bts_tooltip", null, "eXo.forum.UIForumPortlet.initTooltip('"+uicomponent.id+"') ;");
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;

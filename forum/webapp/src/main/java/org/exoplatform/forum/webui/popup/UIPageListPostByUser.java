@@ -31,7 +31,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -57,10 +56,8 @@ import org.exoplatform.webui.event.EventListener;
       @EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
     }
 )
-public class UIPageListPostByUser extends BaseForumForm {
+public class UIPageListPostByUser extends UIContainer {
   private ForumService forumService;
-
-  private UserProfile  userProfile        = null;
 
   private String       userName           = ForumUtils.EMPTY_STR;
 
@@ -82,13 +79,10 @@ public class UIPageListPostByUser extends BaseForumForm {
     return hasEnableIPLogging;
   }
 
-  public UserProfile getUserProfile() {
-    if (this.userProfile == null) {
-      UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-      this.userProfile = forumPortlet.getUserProfile();
-      hasEnableIPLogging = forumPortlet.isEnableIPLogging();
-    }
-    return this.userProfile;
+  private UserProfile getUserProfile() {
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    hasEnableIPLogging = forumPortlet.isEnableIPLogging();
+    return forumPortlet.getUserProfile();
   }
 
   public void setUserName(String userId) {
@@ -101,20 +95,21 @@ public class UIPageListPostByUser extends BaseForumForm {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     List<Post> posts = null;
     try {
-      boolean isMod = false;
-      if (this.userProfile.getUserRole() < 2)
-        isMod = true;
-      JCRPageList pageList = forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy);
+      UserProfile userProfile = getUserProfile();
+      boolean isMod = (userProfile.getUserRole() < 2) ? true : false;
+      JCRPageList pageList = forumService.getPagePostByUser(this.userName, userProfile.getUserId(), isMod, strOrderBy);
       forumPageIterator.updatePageList(pageList);
-      if (pageList != null)
+      if (pageList != null) {
         pageList.setPageSize(10);
+      }
       posts = pageList.getPage(forumPageIterator.getPageSelected());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
       log.trace("\nThe post must exist: " + e.getMessage() + "\n" + e.getCause());
     }
-    if (posts == null)
+    if (posts == null) {
       posts = new ArrayList<Post>();
+    }
     this.posts = posts;
     return posts;
   }
@@ -146,7 +141,7 @@ public class UIPageListPostByUser extends BaseForumForm {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       Forum forum = uiForm.forumService.getForum(categoryId, forumId);
       Topic topic = uiForm.forumService.getTopic(categoryId, forumId, topicId, ForumUtils.EMPTY_STR);
-      if (uiForm.userProfile.getUserRole() > 0) {
+      if (forumPortlet.getUserProfile().getUserRole() > 0) {
         Category cate = uiForm.forumService.getCategory(categoryId);
         isRead = forumPortlet.checkCanView(cate, forum, topic);
       }
@@ -185,7 +180,7 @@ public class UIPageListPostByUser extends BaseForumForm {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       Forum forum = uiForm.forumService.getForum(categoryId, forumId);
       Topic topic = uiForm.forumService.getTopic(categoryId, forumId, topicId, ForumUtils.EMPTY_STR);
-      if (uiForm.userProfile.getUserRole() > 0) {
+      if (forumPortlet.getUserProfile().getUserRole() > 0) {
         Category cate = uiForm.forumService.getCategory(categoryId);
         isRead = forumPortlet.checkCanView(cate, forum, topic);
       }

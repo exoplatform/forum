@@ -44,7 +44,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
       @EventConfig(listeners = UIQuickSearchForm.SearchActionListener.class)
     }
 )
-public class UIQuickSearchForm extends BaseUIForm {
+public class UIQuickSearchForm extends BaseForumForm {
   final static private String FIELD_SEARCHVALUE  = "inputValue";
 
   private static final String SearchDefaultValue = "UIQuickSearchForm.label.Search";
