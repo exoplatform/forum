@@ -1,6 +1,7 @@
 package org.exoplatform.answer.webui.popup;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.InvalidSerializedDataException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.nodetype.ConstraintViolationException;
@@ -87,6 +88,8 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
           importForm.warning("UIImportForm.msg.CategoryIsExist", false);
         } catch (PathNotFoundException ise) {
           importForm.warning("UIImportForm.msg.targetNotFound", false);
+        } catch (InvalidSerializedDataException e) {
+          importForm.warning("UIImportForm.msg.filetype-error", false);
         } catch (Exception e) {
           importForm.warning("UIImportForm.msg.import-fail", false);
         }
