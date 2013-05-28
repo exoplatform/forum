@@ -351,7 +351,7 @@ public class UIForumActionBar extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       popupContainer.addChild(UIBanIPForumManagerForm.class, null, null);
       popupContainer.setId("BanIPForumManagerForm");
-      popupAction.activate(popupContainer, 450, 500);
+      popupAction.activate(popupContainer, 430, 500);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

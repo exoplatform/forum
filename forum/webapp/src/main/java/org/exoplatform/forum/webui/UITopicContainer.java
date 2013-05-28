@@ -1197,7 +1197,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class BanIpForumToolsActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
-      UIBanIPForumManagerForm ipForumManager = uiTopicContainer.openPopup(UIBanIPForumManagerForm.class, "BanIPForumManagerForm", 450, 500);
+      UIBanIPForumManagerForm ipForumManager = uiTopicContainer.openPopup(UIBanIPForumManagerForm.class, "BanIPForumManagerForm", 430, 500);
       ipForumManager.setForumId(uiTopicContainer.categoryId + ForumUtils.SLASH + uiTopicContainer.forumId);
     }
   }

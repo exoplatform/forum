@@ -9,16 +9,23 @@
 	<% uiform.begin() %>
 	<div class="resizable">	
 		<div id="UITabContent" data-restPath="<%=uicomponent.getRestPath();%>" data-forumId="$forumId" class="contentContainer restInfo">
-			<div class="uiQuickSearchForm">
-				<span for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</span>
-				<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
-
-			</div>
+			<table class="uiGrid uiGridFilter">
+				<tbody>
+					<tr>
+						<td class="td-label">
+							<label class="control-label" for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</label>
+						</td>
+						<td class="controls">
+								<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			<table class="uiGrid table  table-hover table-striped">
 				<thead>
 					<tr>
 						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.BannedIP");%></th>
-						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Action");%></th>
+						<th class="center control-action"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Action");%></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -58,22 +65,23 @@
 					</tr>
 				</tfoot>
 			</table>
-			<table class="typeInputIp">
-				<tr>
-					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
-					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
-					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
-					<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
-					<td style="vertical-align:top;">
-						<a class="btn btn-primary" href="<%=uicomponent.event("AddIp")%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%></a>
-					</td>
-				</tr>
+			<table class="uiGrid typeInputIp">
+				<tbody>
+					<tr>
+						<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
+						<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
+						<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
+						<td><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
+						<td style="vertical-align:top;">
+							<a class="btn btn-primary" href="<%=uicomponent.event("AddIp")%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%></a>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 			<div class="clearfix">
 			<% 
 				uicomponent.renderChild(UIForumPageIterator.class) ;
 			%>
-
 			</div>
 
 		</div>
