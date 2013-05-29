@@ -2742,7 +2742,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     eventQuery.setPath(categoryHome.getPath());
     
     //get origin text query
-    String textQuery = Utils.removeSpecialCharacterInAnswerFilter(eventQuery.getQuestion());
+    String textQuery = CommonUtils.removeSpecialCharacterForSearch(eventQuery.getQuestion());
     
     try {
       

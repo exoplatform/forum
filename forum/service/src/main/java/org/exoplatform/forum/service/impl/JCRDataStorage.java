@@ -49,7 +49,6 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
@@ -5739,7 +5738,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String pathQuery = categoryHome.getPath();
 
       //process query for asterisk 
-      String asteriskQuery = processSearchCondition(textQuery);
+      String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
       textQuery = StringUtils.replace(textQuery, "'", "&apos;");
 
       boolean isAdmin = isAdminRole(userId);
@@ -5775,7 +5774,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
         // Append text query
         if (textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
-          if(textQuery.contains(Utils.PERCENT_STR)){
+          if(textQuery.contains(CommonUtils.PERCENT_STR)){
             if(type.equals(Utils.POST)){
               queryString.append("((jcr:like(@exo:message, '").append(textQuery).append("'))");
               queryString.append(" or (jcr:like(@exo:message, '").append(asteriskQuery).append("')))");
@@ -5893,7 +5892,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       //
       forumSearch.setRelevancy(row.getValue(JCR_SCORE).getLong());
-      originQuery = Utils.removeSpecialCharacterInDiscusstionFilter(originQuery);
+      originQuery = CommonUtils.removeSpecialCharacterForSearch(originQuery);
 
       String excerptField = "";
       if(type.equals(Utils.POST)){
@@ -8276,29 +8275,5 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return null;
   }
-  
-  /**
-   * Process the search condition correspond to each context
-   * @param searchCondition the search condition
-   */
-  private String processSearchCondition(String searchCondition) {
-    StringBuffer searchConditionBuffer = new StringBuffer();
 
-    //process the special characters
-    searchCondition = Utils.removeSpecialCharacterInDiscusstionFilter(searchCondition);
-    
-    if (!searchCondition.contains(Utils.ASTERISK_STR) && !searchCondition.contains(Utils.PERCENT_STR)) {
-      if (searchCondition.startsWith(Utils.ASTERISK_STR) == false) {
-        searchConditionBuffer.append(Utils.ASTERISK_STR).append(searchCondition);
-      }
-      if (searchCondition.endsWith(Utils.ASTERISK_STR) == false) {
-        searchConditionBuffer.append(Utils.ASTERISK_STR);
-      }
-    } else {
-      searchCondition = searchCondition.replace(Utils.ASTERISK_STR, Utils.PERCENT_STR);
-      searchConditionBuffer.append(Utils.PERCENT_STR).append(searchCondition).append(Utils.PERCENT_STR);
-    }
-    return searchConditionBuffer.toString();
-  }
-  
 }

@@ -527,7 +527,7 @@ public class FAQEventQuery implements FAQNodeTypes {
     StringBuilder answerSearch = new StringBuilder("");
     if (response != null && response.length() > 0) {
       answerSearch.append("( exo:responseLanguage='").append(language).append("'");
-      if(response.contains(Utils.PERCENT_STR)){
+      if(response.contains(CommonUtils.PERCENT_STR)){
         answerSearch.append(" and (jcr:like(@exo:responses,'" + response + "')");
       }else {
         answerSearch.append(" and (jcr:contains(@exo:responses,'" + response + "')");
@@ -543,7 +543,7 @@ public class FAQEventQuery implements FAQNodeTypes {
     StringBuilder commentSearch = new StringBuilder();
     if (comment != null && comment.length() > 0) {
       commentSearch.append("( exo:commentLanguage='").append(language).append("'");
-      if(comment.contains(Utils.PERCENT_STR)){
+      if(comment.contains(CommonUtils.PERCENT_STR)){
         commentSearch.append(" and (jcr:like(@exo:comments,'" + comment + "')");
       }else {
         commentSearch.append(" and (jcr:contains(@exo:comments,'" + comment + "')");
@@ -673,7 +673,7 @@ public class FAQEventQuery implements FAQNodeTypes {
     //for asterisk condition search
     if(asteriskConditionSearch != null && asteriskConditionSearch.length() > 0){
       String jcrQuery = "jcr:contains";
-      if(asteriskConditionSearch.contains(Utils.PERCENT_STR)) {
+      if(asteriskConditionSearch.contains(CommonUtils.PERCENT_STR)) {
         jcrQuery = "jcr:like";
       }
       //

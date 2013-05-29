@@ -57,42 +57,49 @@ import org.w3c.dom.Document;
 
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class CommonUtils {
   private static Log log = ExoLogger.getLogger(CommonUtils.class);
   
-  public static final String         COMMA        = ",".intern();
+  public static final String         COMMA        = ",";
 
-  public static final String         SLASH        = "/".intern();
+  public static final String         SLASH        = "/";
 
-  public static final String         EMPTY_STR    = "".intern();
+  public static final String         EMPTY_STR    = "";
 
-  public static final String         COLON        = ":".intern();
+  public static final String         COLON        = ":";
 
-  public static final String         SEMICOLON    = ";".intern();
+  public static final String         SEMICOLON    = ";";
 
-  public static final String         SPACE        = " ".intern();
-
-  public static final String         AMP_NUMBER   = "&#".intern();
-
-  public static final String         LESS_THAN    = "&lt;".intern();
-
-  public static final String         GREATER_THAN = "&gt;".intern();
-
-  public static final String         QUOT         = "&quot;".intern();
-
-  public static final String         AMP_SPACE    = "&nbsp;".intern();
-
-  public static final String         AMP_HEX      = "&#x26;".intern();
-
-  public static final String         AMP          = "&amp;".intern();
-
-  public static final String         DOMAIN_KEY   = "gatein.email.domain.url".intern();
-
-  public static final String         FROM_KEY     = "gatein.email.smtp.from".intern();
+  public static final String         SPACE        = " ";
   
+  public static final String         ASTERISK_STR = "*";
+
+  public static final String         PERCENT_STR  = "%";
+
+  public static final String         AMP_NUMBER   = "&#";
+
+  public static final String         LESS_THAN    = "&lt;";
+
+  public static final String         GREATER_THAN = "&gt;";
+
+  public static final String         QUOT         = "&quot;";
+
+  public static final String         AMP_SPACE    = "&nbsp;";
+
+  public static final String         AMP_HEX      = "&#x26;";
+
+  public static final String         AMP          = "&amp;";
+
+  public static final String         DOMAIN_KEY   = "gatein.email.domain.url";
+
+  public static final String         FROM_KEY     = "gatein.email.smtp.from";
+
+  private static final String        SPECIAL_CHARACTOR_FORSERACH_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\?\\*%0-9]";
+  
+  private static final String        SPECIAL_CHARACTOR_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\ %0-9]";
+
   private static List<String>        tokens     = new ArrayList<String>();
 
   private static Map<String, String> charcodes  = new HashMap<String, String>();
@@ -106,6 +113,14 @@ public class CommonUtils {
   private static int[] CHAR_CODES = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
   
   
+  /**
+   * Generates checksum for files, and get a file ending in .sha1 
+   * This task can also be used to perform checksum verifications. 
+   * 
+   * @param b
+   * @return
+   * @throws Exception
+   */
   static public String generateCheckSum(byte[] b) throws Exception {
     try{
       MessageDigest md = MessageDigest.getInstance("SHA1");
@@ -165,15 +180,14 @@ public class CommonUtils {
   
   public static String getImageUrl(String imagePath) throws Exception {
     StringBuilder url = new StringBuilder() ;
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
     try {
-      ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
+      ExoContainerContext exoContext = getComponent(ExoContainerContext.class);
       url.append(SLASH).append(exoContext.getRestContextName());
     } catch (Exception e) {
       url.append("/portal");
       log.error("Can not get portal name or rest context name, exception: ",e);
     }
-    RepositoryService rService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
+    RepositoryService rService = getComponent(RepositoryService.class) ;
     url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath).append(SLASH);
     return url.toString();
   }
@@ -196,12 +210,13 @@ public class CommonUtils {
   }
   
   /**
-   * This function will change email address in 'from' field by address of mail service which is configured as system property : <code>gatein.email.smtp.from</code> or
-   * <code>mail.from</code>. <br>
-   * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity with authentication of smtp configuration.<br>
-   * It's because of 2 reasons: <li>we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel.</li> <li>Almost
-   * authenticated smtp systems do not allow to separate email address in <code>from</code> field of message from smtp authentication</b> (for now, GMX, MS exchange deny, Gmail
-   * efforts to modify the such value)</li>
+   * This function will change email address in 'from' field by address of mail service 
+   * which is configured as system property : <code>gatein.email.smtp.from</code> or <code>mail.from</code>. <br>
+   * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity
+   * with authentication of smtp configuration.<br> It's because of 2 reasons: 
+   * <li>we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel.</li>
+   * <li>Almost authenticated smtp systems do not allow to separate email address in <code>from</code> field 
+   * of message from smtp authentication</b> (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)</li>
    * 
    * @param from
    * @return null if can not find suitable sender.
@@ -227,15 +242,21 @@ public class CommonUtils {
     }
   }
 
+  /**
+   * @return
+   */
   public static String getDomainURL() {
     Properties props = new Properties(System.getProperties());
     String domain = props.getProperty(DOMAIN_KEY);
     return isEmpty(domain) ? EMPTY_STR : domain;
   }
 
+  /**
+   * @param s
+   * @return
+   */
   public static String processBBCode(String s) {
-    MarkupRenderingService markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
-    .getComponentInstanceOfType(MarkupRenderingService.class);
+    MarkupRenderingService markupRenderingService = getComponent(MarkupRenderingService.class);
     Renderer r = markupRenderingService.getRenderer(SupportedSyntaxes.bbcode.name());
     return r.render(s);
   }
@@ -246,9 +267,6 @@ public class CommonUtils {
    * @param type key for the component
    * @return
    */
-  public static <T>T getComponent(Class<T> type) {
-    return type.cast(ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(type));
-  }
   
   public static ExoContainer getExoContainer(JobExecutionContext context) {
     if(context == null) return null;
@@ -291,7 +309,61 @@ public class CommonUtils {
     }
     return true;
   }
+  
+  /**
+   * Filter all invalid character (anything except word, number, space and search wildcard) from search conditional.
+   * @param input the input string
+   * @return String after remove all special characters
+   * @since 4.0.x
+   */
+  public static String removeSpecialCharacterForSearch(String input) {
+    if (isEmpty(input)) {
+      return input;
+    }
+    String result = input.replaceAll(SPECIAL_CHARACTOR_FORSERACH_REGEX, " ");
+    result = result.replaceAll("\\s+", " ");
+    return result.trim();
+  }
 
+  /**
+   * To check the input content has special characters or not.
+   * @param input
+   * @return
+   */
+  public static boolean hasSpecialCharacter(String input){
+    if (isEmpty(input)) {
+      return false;
+    }
+    String result = input.replaceAll(SPECIAL_CHARACTOR_REGEX, "").replaceAll("_", "");
+    return result.equals(input) == false;
+  }
+
+  /**
+   * Process the search condition correspond to each context
+   * @param searchCondition the search condition
+   */
+  public static String processSearchCondition(String searchCondition) {
+    if (isEmpty(searchCondition)) {
+      return searchCondition;
+    }
+    StringBuffer searchConditionBuffer = new StringBuffer();
+    //process the special characters
+    searchCondition = removeSpecialCharacterForSearch(searchCondition);
+    
+    if (!searchCondition.contains(ASTERISK_STR) && !searchCondition.contains(PERCENT_STR)) {
+      if (searchCondition.startsWith(ASTERISK_STR) == false) {
+        searchConditionBuffer.append(ASTERISK_STR).append(searchCondition);
+      }
+      if (searchCondition.endsWith(ASTERISK_STR) == false) {
+        searchConditionBuffer.append(ASTERISK_STR);
+      }
+    } else {
+      searchCondition = searchCondition.replace(ASTERISK_STR, PERCENT_STR);
+      searchConditionBuffer.append(PERCENT_STR).append(searchCondition).append(PERCENT_STR);
+    }
+    return searchConditionBuffer.toString();
+  }
+  
   /**
    * Encode special character, use for input search
    * @param String s, the string input
@@ -475,9 +547,13 @@ public class CommonUtils {
     calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
     return calendar;
   }
+  
+  public static <T>T getComponent(Class<T> type) {
+    return type.cast(PortalContainer.getInstance().getComponentInstanceOfType(type));
+  }
 
   public static SessionProvider createSystemProvider() {
-    SessionProviderService sessionProviderService = (SessionProviderService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SessionProviderService.class);
+    SessionProviderService sessionProviderService = getComponent(SessionProviderService.class);
     return sessionProviderService.getSystemSessionProvider(null);
   }
 

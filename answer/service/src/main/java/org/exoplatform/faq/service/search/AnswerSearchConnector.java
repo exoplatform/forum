@@ -75,7 +75,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     
     List<SearchResult> results = new ArrayList<SearchResult>();
     
-    String asteriskQuery = processSearchCondition(query);
+    String asteriskQuery = CommonUtils.processSearchCondition(query);
 
     FAQEventQuery eventQuery = new FAQEventQuery();
     eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
@@ -302,29 +302,6 @@ public class AnswerSearchConnector extends SearchServiceConnector {
 
   private String getCurrentUserName() {
     return ConversationState.getCurrent().getIdentity().getUserId();
-  }
-  
-  /**
-   * Process the search condition correspond to each context
-   * @param searchCondition the search condition
-   */
-  private String processSearchCondition(String searchCondition) {
-    StringBuffer searchConditionBuffer = new StringBuffer();
-    //process the special characters
-    searchCondition = Utils.removeSpecialCharacterInAnswerFilter(searchCondition);
-    
-    if (!searchCondition.contains(Utils.ASTERISK_STR) && !searchCondition.contains(Utils.PERCENT_STR)) {
-      if (searchCondition.startsWith(Utils.ASTERISK_STR) == false) {
-        searchConditionBuffer.append(Utils.ASTERISK_STR).append(searchCondition);
-      }
-      if (searchCondition.endsWith(Utils.ASTERISK_STR) == false) {
-        searchConditionBuffer.append(Utils.ASTERISK_STR);
-      }
-    } else {
-      searchCondition = searchCondition.replace(Utils.ASTERISK_STR, Utils.PERCENT_STR);
-      searchConditionBuffer.append(Utils.PERCENT_STR).append(searchCondition).append(Utils.PERCENT_STR);
-    }
-    return searchConditionBuffer.toString();
   }
   
 }

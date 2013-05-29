@@ -151,16 +151,51 @@ public class TestCommonUtils extends TestCase {
     assertEquals(true, CommonUtils.isContainSpecialCharacter(input));
   }
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  public void testRemoveSpecialCharacter() {
+    String input = null;
+    assertNull(CommonUtils.removeSpecialCharacterForSearch(input));
+    input = "";
+    assertEquals("", CommonUtils.removeSpecialCharacterForSearch(input));
+    input = "a  bc ";
+    assertEquals("a bc", CommonUtils.removeSpecialCharacterForSearch(input));
+    input = " a&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_bc    ";
+    assertEquals("a ? * % * _bc", CommonUtils.removeSpecialCharacterForSearch(input));
+  }
+
+  public void testHasSpecialCharacter() {
+    String input = null;
+    assertFalse(CommonUtils.hasSpecialCharacter(input));
+    input = "";
+    assertFalse(CommonUtils.hasSpecialCharacter(input));
+    input = "abc";
+    assertFalse(CommonUtils.hasSpecialCharacter(input));
+    input = " AB a X bcS 012 9 ";
+    assertFalse(CommonUtils.hasSpecialCharacter(input));
+    input = "!@#";
+    assertTrue(CommonUtils.hasSpecialCharacter(input));
+  }
+
+  public void testProcessSearchCondition() {
+    String input = null;
+    assertNull(CommonUtils.processSearchCondition(input));
+    input = "";
+    assertEquals("", CommonUtils.processSearchCondition(input));
+
+    input = "abc";
+    assertEquals("*abc*", CommonUtils.processSearchCondition(input));
+
+    input = " AB a X bcS 012 9 ";
+    assertEquals("*AB a X bcS 012 9*", CommonUtils.processSearchCondition(input));
+
+    input = " *AB %a X bcS% 012* *a9* ";
+    assertEquals("%%AB %a X bcS% 012% %a9%%", CommonUtils.processSearchCondition(input));
+
+    input = "  &#<>[]/:\"=.,$()\\+@!^-}{;`~  ";
+    assertEquals("**", CommonUtils.processSearchCondition(input));
+
+    input = "  a&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_bc  ";
+    assertEquals("%a ? % % % _bc%", CommonUtils.processSearchCondition(input));
+  }
   
   
   
