@@ -133,7 +133,7 @@ public class TestCommonUtils extends TestCase {
     assertEquals("Text ...&lt;div class=\"&XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'&#46;,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
     
     //
-    assertEquals("Text ...&lt;div class=\"&XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'.,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumberIgnore(input));
+    assertEquals("Text ...&lt;div class=\"&amp;XZY\"&gt;Test&lt;/div&gt;()\"/-=~`'.,<strong>too</strong>", CommonUtils.decodeSpecialCharToHTMLnumberIgnore(input));
   }
   
   public void testIsContainSpecialCharacter() {
