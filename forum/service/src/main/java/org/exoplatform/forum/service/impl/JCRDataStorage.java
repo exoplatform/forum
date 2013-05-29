@@ -5739,7 +5739,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       //process query for asterisk 
       String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
-      textQuery = StringUtils.replace(textQuery, "'", "&apos;");
+      textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
       boolean isAdmin = isAdminRole(userId);
 

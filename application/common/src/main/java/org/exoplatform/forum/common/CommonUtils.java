@@ -104,7 +104,7 @@ public class CommonUtils {
 
   private static Map<String, String> charcodes  = new HashMap<String, String>();
 
-  private static List<String> ignoreLessThanAndGreaterThan = Arrays.asList(CommonUtils.LESS_THAN, CommonUtils.GREATER_THAN);
+  private static List<String> ignoreLessThanAndGreaterThan = Arrays.asList(LESS_THAN, GREATER_THAN, AMP);
   /*
    *  The distance code number content special character.
    *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
