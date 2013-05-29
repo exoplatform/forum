@@ -119,8 +119,12 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     this.getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).setChecked(bbcode.isOption());
   }
 
-  private void setBBcode() throws Exception {
+  private boolean setBBcode() throws Exception {
     String tagName = getUIStringInput(FIELD_TAGNAME_INPUT).getValue();
+    if (CommonUtils.hasSpecialCharacter(tagName)) {
+      warning("ForumNameValidator.msg.Invalid-char", getLabel(FIELD_TAGNAME_INPUT));
+      return false;
+    }
     String replacement = getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
     String description = getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
     String example = getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
@@ -133,9 +137,11 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     bbcode.setDescription(description);
     bbcode.setExample(example);
     bbcode.setOption(isOption);
-    if (bbcode.getId() == null)
+    if (bbcode.getId() == null) {
       bbcode.setId(bbcode.getTagName() + ((bbcode.isOption()) ? "=" : ForumUtils.EMPTY_STR));
+    }
     this.example = example;
+    return true;
   }
   
   protected String getReplaceByBBCode() throws Exception {
@@ -145,7 +151,9 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
   static public class SaveActionListener extends EventListener<UIAddBBCodeForm> {
     public void execute(Event<UIAddBBCodeForm> event) throws Exception {
       UIAddBBCodeForm uiForm = event.getSource();
-      uiForm.setBBcode();
+      if(uiForm.setBBcode() == false){
+        return;
+      }
       uiForm.listBBCode = new ArrayList<BBCode>();
       try {
         uiForm.listBBCode.addAll(uiForm.bbCodeService.getAll());

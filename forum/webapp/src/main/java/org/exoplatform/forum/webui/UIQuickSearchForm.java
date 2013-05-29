@@ -18,18 +18,14 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
