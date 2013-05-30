@@ -430,11 +430,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
   }
 
-  private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getTopicTypesLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
-  }
-
   private Node getForumSystemHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getForumSystemLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
@@ -2786,7 +2781,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.setProperty(EXO_TOPIC_COUNT, readerFor.l(EXO_TOPIC_COUNT) - 1);
         // update PostCount for Forum
         long newPostCount = readerFor.l(EXO_POST_COUNT) - (topic.getPostCount() + 1);
-        forumNode.setProperty(EXO_POST_COUNT, newPostCount);
+        forumNode.setProperty(EXO_POST_COUNT, (newPostCount > 0) ? newPostCount : 0);
       }
       topicNode.remove();
       forumNode.save();
@@ -3982,9 +3977,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // set srcTopicNode
       long temp = srcTopicNode.getProperty(EXO_POST_COUNT).getLong();
       temp = temp - totalpost;
-      if (temp < 0)
-        temp = 0;
-      srcTopicNode.setProperty(EXO_POST_COUNT, temp);
+      srcTopicNode.setProperty(EXO_POST_COUNT, (temp > -1) ? temp : -1);
       temp = srcTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
       temp = temp - totalAtt;
       if (temp < 0)
@@ -4004,9 +3997,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // set srcForumNode
       temp = srcForumNode.getProperty(EXO_POST_COUNT).getLong();
       temp = temp - totalpost;
-      if (temp < 0)
-        temp = 0;
-      srcForumNode.setProperty(EXO_POST_COUNT, temp);
+      srcForumNode.setProperty(EXO_POST_COUNT, (temp > 0) ? temp : 0);
 
       if (forumHomeNode.isNew()) {
         forumHomeNode.getSession().save();

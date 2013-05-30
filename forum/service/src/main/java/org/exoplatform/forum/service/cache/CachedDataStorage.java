@@ -1410,7 +1410,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
-    clearTopicCache(srcTopicPath);
+    clearTopicCache(Utils.getCategoryId(srcTopicPath), Utils.getForumId(srcTopicPath), Utils.getTopicId(srcTopicPath));
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
     clearPostListCache();
     clearPostListCountCache(Utils.getTopicId(destTopicPath));

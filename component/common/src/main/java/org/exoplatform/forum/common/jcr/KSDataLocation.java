@@ -60,8 +60,6 @@ public class KSDataLocation {
 
   private String               forumDataLocation;
 
-  private String               topicTypesLocation;
-
   private String               forumSystemLocation;
 
   private String               banIPLocation;
@@ -149,7 +147,6 @@ public class KSDataLocation {
     forumBanIPLocation = getPath(Locations.FORUM_BAN_IP);
 
     forumDataLocation = getPath(Locations.FORUM_DATA);
-    topicTypesLocation = getPath(Locations.TOPIC_TYPE_HOME);
     forumCategoriesLocation = getPath(Locations.FORUM_CATEGORIES_HOME);
     tagsLocation = getPath(Locations.TAG_HOME);
     bbcodesLocation = getPath(Locations.BBCODE_HOME);
@@ -240,14 +237,6 @@ public class KSDataLocation {
    */
   public String getForumDataLocation() {
     return forumDataLocation;
-  }
-
-  /**
-   * 
-   * @return root path for all topic types
-   */
-  public String getTopicTypesLocation() {
-    return topicTypesLocation;
   }
 
   /**
