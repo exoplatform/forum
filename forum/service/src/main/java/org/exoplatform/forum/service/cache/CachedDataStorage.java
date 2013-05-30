@@ -184,7 +184,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
     Topic topic = getTopic(categoryId, forumId, topicId, null);
     clearTopicCache(topic);
-    clearTopicCache(topic.getPath());
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
@@ -1411,11 +1410,21 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+    clearTopicCache(srcTopicPath);
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
+    clearPostListCache();
+    clearPostListCountCache(Utils.getTopicId(destTopicPath));
+    clearTopicCache(destTopicPath);
+    clearForumCache(Utils.getCategoryId(destTopicPath), Utils.getForumId(destTopicPath), false);
   }
 
   public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
     storage.splitTopic(newTopic, fistPost, postPathMove, mailContent, link);
+    String oldTopicPath = Utils.getTopicPath(postPathMove.get(0));
+    clearPostListCache();
+    clearPostListCountCache(Utils.getTopicId(oldTopicPath));
+    clearTopicCache(oldTopicPath);
+    clearForumCache(Utils.getCategoryId(oldTopicPath), Utils.getForumId(oldTopicPath), false);
   }
 
   public void updateUserProfileInfo(String name) throws Exception {
