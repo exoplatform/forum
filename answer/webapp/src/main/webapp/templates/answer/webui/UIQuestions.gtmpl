@@ -44,7 +44,7 @@
 					String linkRss = uicomponent.getRSSLink() ;
 		%>
 			<li>
-				<a class="actionIcon" href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
+				<a class="uiActionWithLabel" href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
 			</li>
 		<%}
 			if(canEditQuestion) {
@@ -52,7 +52,7 @@
 			<li>
 				<div class="uiDropdownWithIcon dropdown">
 					<!--a class="dropdown-toggle" data-toggle="dropdown" onclick="eXo.answer.UIAnswersPortlet.viewTitle('FAQCategroManager');" href="javascript:void(0);"-->
-					<a class="actionIcon	dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+					<a class="uiActionWithLabel	dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
 						<i class="uiIconAnsManageCategory"></i>
 						<%=_ctx.appRes("UIQuestions.action.ManageCategory"); %>&nbsp;
 						<i class="uiIconMiniArrowDown"></i>
@@ -76,7 +76,7 @@
 				</div>
 			</li>
 			<li>
-				<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("QuestionManagament", cateId);%>" type="button"><i class="uiIconAnsManageQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.QuestionManagament");%></a>
+				<a class="uiActionWithLabel" href="javascript:void(0);" onclick="<%=uicomponent.event("QuestionManagament", cateId);%>" type="button"><i class="uiIconAnsManageQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.QuestionManagament");%></a>
 			</li>
 		<% } %>
 
@@ -88,11 +88,11 @@
 				String actionSetting = uicomponent.event("Setting");
 		%>
 			<li>
-				<a class="actionIcon" onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Settings")%></a>
+				<a class="uiActionWithLabel" onclick="$actionSetting" href="javascript:void(0);"><i class="uiIconSetting uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Settings")%></a>
 			</li>
 	 <% } %>
 			<li>
-				<a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", null)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
+				<a class="uiActionWithLabel" onclick="<%=uicomponent.event("PrintAllQuestion", null)%>" href="javascript:void(0);"><i class="uiIconPrint uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.Print")%></a>
 			</li>
 		</ul>
 
