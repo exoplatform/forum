@@ -1,4 +1,4 @@
-.UIForumPortlet, .uiForumPortlet {
+.uiForumPortlet {
 	background: none;
 	padding: 20px;
 	.pagination{
@@ -7,6 +7,11 @@
 	.uiBox{
 		.box-shadow(none);
 		margin-bottom: 10px;
+	}
+	.uiCategories, .uiCategory{
+		.uiGrid.table .noticeEmpty {
+			color: #999999;
+		}
 	}
 	.uiCategories, .uiCategory, .forumContainer{
 		.uiGrid.table td, .uiGrid.table th{
@@ -20,21 +25,11 @@
 	background: @white;
 	padding: 4px 10px;
 	
-	.RightLine {
-		float: right;
-		line-height: 25px;
-	}
-	
-	.DefaultStyle .DisableAction {
-		opacity: 0.5;
-	}
-	
 	.ToolbarActionsTag {
 		float: right;
 		margin: 2px 6px 0px 0px;
 		cursor: pointer;
 	}
-	
 	.privateMessage{
 		position: relative;
 		.numberMessage{
