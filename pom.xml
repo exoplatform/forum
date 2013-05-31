@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum</artifactId>
-  <version>4.0.x-SNAPSHOT</version>
+  <version>4.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Forum</name>
   <description>eXo Forum manages forum, answer and poll.</description>
