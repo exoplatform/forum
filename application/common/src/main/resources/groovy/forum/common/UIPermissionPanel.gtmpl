@@ -1,32 +1,61 @@
 <%
-  def rcontext = _ctx.getRequestContext();
-  def url = uicomponent.event("EnterPermission");
+	import org.exoplatform.forum.common.webui.WebUIUtils;
 
-  String eventURL = uicomponent.event("EnterPermission");
+  String eventURL = uicomponent.event("AddPermission");
   eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
   
-  def requireJS = rcontext.getJavascriptManager().require("SHARED/jquery", "gj");
-  requireJS.addScripts("gj(\"#$uicomponent.id #UIPermissionInput\").on(\"blur\", function() { var eventURL = '" + eventURL+ "&objectId=' + gj(this).val(); javascript:ajaxGet(eventURL); });");
-  requireJS.require("SHARED/bts_tooltip").addScripts("gj('#$uicomponent.id').find('[rel=tooltip]').tooltip();");
+  String script = 
+  "(function(jq) {" +
+    "jq('#${uicomponent.id} .addButton')" +
+    "    .on('click'," +
+    "        function() {" +
+    "          var input = jq('input#${uicomponent.PERMISSION_INPUT}');" +
+    "          var eventURL = '" + eventURL + "&objectId=' + input.val();" +
+    "          input.val('');" +
+    "          processInput(input);" +
+    "          window.ajaxGet(eventURL);" +
+    "        });" +
+//
+    "function processInput(thizz) {" +
+    "  var val = thizz.val();" +
+    "  if (jq.trim(val).length == 0) {" +
+    "    jq('#${uicomponent.id} .addButton').attr('disabled', 'disabled');" +
+    "  } else {" +
+    "    jq('#${uicomponent.id} .addButton').removeAttr('disabled');" +
+    "  }" +
+    "}" +
+//
+    "var input = jq('#${uicomponent.id} #${uicomponent.PERMISSION_INPUT}')" +
+    "     .on('keyup', function() { processInput(jq(this)); });" +
+    "jq('#${uicomponent.id}').find('[rel=tooltip]').tooltip();" +
+//
+    "processInput(input);" +
+
+  "})(gj);";
+
+  WebUIUtils.addScripts("bts_tooltip", null);
+  WebUIUtils.addScripts("jquery", "gj", script);
 
 %>
 
 <div id="$uicomponent.id">
   <%
     uicomponent.initPlaceholder();
-    uicomponent.renderChild("UIPermissionGrid");
-    uicomponent.renderChild("UIPermissionInput");
+    uicomponent.renderChild(uicomponent.PERMISSION_GRID);
   %>
-	<span style="vertical-align: top">
-		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIUserSelector");%>">
+	<div style="vertical-align:top; padding-buttom:5px">
+		<%
+			uicomponent.renderChild(uicomponent.PERMISSION_INPUT);
+		%>
+		<a class="actionIcon" href="<%=uicomponent.event("OpenUserPopup")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIUserSelector")%>">
 			<i class="uiIconUser uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIMemberShipSelector");%>">
+		<a class="actionIcon" href="<%=uicomponent.event("OpenRoleAndGroupPopup", "1")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIMemberShipSelector")%>">
 			<i class="uiIconMembership uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector");%>">
+		<a class="actionIcon" href="<%=uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector")%>">
 			<i class="uiIconGroup uiIconLightGray"></i>
 		</a>
-		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add");%></button>
-	</span>
+		<button class="btn addButton" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add")%></button>
+  </div>
 </div>
