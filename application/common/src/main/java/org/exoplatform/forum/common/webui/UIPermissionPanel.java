@@ -23,7 +23,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.container.UIContainer;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -49,8 +48,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
       events = { 
          @EventConfig(listeners = UIPermissionPanel.OpenUserPopupActionListener.class),
          @EventConfig(listeners = UIPermissionPanel.OpenRoleAndGroupPopupActionListener.class),
-         @EventConfig(listeners = UIPermissionPanel.AddPermissionActionListener.class),
-         @EventConfig(listeners = UIPermissionPanel.EnterPermissionActionListener.class)
+         @EventConfig(listeners = UIPermissionPanel.AddPermissionActionListener.class)
       }
    ),
    
@@ -67,7 +65,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 })
 public class UIPermissionPanel extends UIContainer implements UISelector {
 
-  private static final String PERMISSION_INPUT = "UIPermissionInput";
+  private static final String PERMISSION_INPUT = "permissionInput";
 
   private static final String PERMISSION_GRID  = "UIPermissionGrid";
 
@@ -79,14 +77,16 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
 
   public UIPermissionPanel() throws Exception {
     setId("UIPermissionPanel");
-    UIFormStringInput input = new UIFormStringInput(PERMISSION_INPUT, PERMISSION_INPUT, null);
+    UIFormStringInput stringInput = new UIFormStringInput(PERMISSION_INPUT, PERMISSION_INPUT, null);
     UIPermissionGrid grid = createUIComponent(UIPermissionGrid.class, null, PERMISSION_GRID);
-    addChild(input);
+    addChild(stringInput);
     addChild(grid);
   }
   
   protected void initPlaceholder() throws Exception {
-    ((UIFormStringInput)getChildById(PERMISSION_INPUT)).setHTMLAttribute("placeholder",  WebUIUtils.getLabel(null, selectOwner));
+    UIFormStringInput stringInput = (UIFormStringInput) getChildById(PERMISSION_INPUT);
+    stringInput.setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, selectOwner));
+    stringInput.setHTMLAttribute("style", "vertical-align: top; margin:0px; padding-left:3px");
   }
 
   public String getSpaceGroupId() {
@@ -140,32 +140,24 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
     context.addUIComponentToUpdateByAjax(popupWindow.getParent());
   }
 
-  public static class EnterPermissionActionListener extends EventListener<UIPermissionPanel> {
-    @Override
-    public void execute(Event<UIPermissionPanel> event) throws Exception {
-      UIPermissionPanel panel = event.getSource();
-      UIFormStringInput input = panel.getChildById(PERMISSION_INPUT);
-      input.setValue(event.getRequestContext().getRequestParameter(OBJECTID));
-      Util.getPortalRequestContext().setResponseComplete(true);
-    }
-  }
-
   public static class AddPermissionActionListener extends EventListener<UIPermissionPanel> {
     @Override
     public void execute(Event<UIPermissionPanel> event) throws Exception {
       UIPermissionPanel panel = event.getSource();
-      UIFormStringInput input = panel.getChildById(PERMISSION_INPUT);
       UIPermissionGrid grid = panel.getChildById(PERMISSION_GRID);
-      String value = input.getValue();
+      String value = event.getRequestContext().getRequestParameter(OBJECTID);
       String errorUser = UserHelper.checkValueUser(value);
       if (CommonUtils.isEmpty(errorUser) == false) {
         WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-        context.getUIApplication().addMessage(new ApplicationMessage("UserNameValidator.msg.error-input", new String[] { errorUser }, ApplicationMessage.WARNING));
+        ApplicationMessage message = new ApplicationMessage("UserNameValidator.msg.error-input", 
+                                                            new String[] { String.format("\"%s\"", errorUser) }, 
+                                                            ApplicationMessage.WARNING);
+        context.getUIApplication().addMessage(message);
         ((PortalRequestContext) context.getParentAppRequestContext()).ignoreAJAXUpdateOnPortlets(true);
         return;
       }
       grid.setOwners(splitValues(value));
-      input.setValue(null);
+      ((UIFormStringInput)panel.getChildById(PERMISSION_INPUT)).setValue("");
       event.getRequestContext().addUIComponentToUpdateByAjax(panel);
     }
   }
@@ -183,8 +175,9 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       }
 
       UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(POPUP_WINDOW_ID);
-      if (uiPopupWindow == null)
+      if (uiPopupWindow == null){
         uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, POPUP_WINDOW_ID, POPUP_WINDOW_ID);
+      }
 
       //
       UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
