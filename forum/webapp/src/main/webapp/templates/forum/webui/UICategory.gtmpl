@@ -273,11 +273,7 @@
 						} else {
 							actionBookmark = uicomponent.event("ShareLink","forum//"+path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
 						}
-						String lineHeight = "line-height:12px;";
-						if(ForumUtils.isEmpty(forumDescription)) {
-							lineHeight = "line-height:28px;";
-						}
-						String link = uicomponent.event("OpenForumLink", forumId);
+
 						String url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
 				%>
 							<tr class="$classRow oncontextmenu">
@@ -286,15 +282,16 @@
 								</td>
 								<td>
 									<i class="$classIconStatusForum" title="$titleIconForum"></i>
-									<% ++rCNB; %>
-									<%if(uicomponent.useAjax){%>
-											<a class="actionOpenLink ForumTitle" id="UIContextPopupMenu${rCNB}" data-link="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
-									<%} else {%>
-											<a class="actionOpenLink ForumTitle" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a>
-									<%}%>
-										<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
-											<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
-										</div>
+									<% ++rCNB; 
+									String dataLink = "";
+									if (uicomponent.useAjax) {
+									  dataLink = "data-link=\"" + uicomponent.event("OpenForumLink", forumId) + "\"";
+									}
+									%>
+									<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" <%=dataLink%> style="line-height:16px;font-weight:bold" >$forumTitle</a>
+									<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
+										<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
+									</div>
 									<div class="forumDescription">$forumDescription</div>
 								</td>
 					 <% if(topicNewPost != null) { 

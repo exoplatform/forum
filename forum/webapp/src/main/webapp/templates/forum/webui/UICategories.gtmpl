@@ -200,10 +200,6 @@
 							actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 						}
 						actionBookmark += ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","") ;
-						String lineHeight = "line-height:14px;";
-						if(ForumUtils.isEmpty(forumDescription)) {
-							lineHeight = "line-height:28px;";
-						}
 						url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
 			%>
 				<tr class="oncontextmenu">
@@ -214,12 +210,13 @@
 					
 					<td>
 						<i class="$classIconStatusForum" title="$titleIconForum"></i>
-							<% ++rCNB; %>
-							<%if(uicomponent.useAjax){%>
-						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" data-link="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:bold;">$forumTitle</a>
-							<%} else {%>
-						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:bold" >$forumTitle</a>
-							<%}%>
+							<% ++rCNB; 
+							String dataLink = "";
+							if (uicomponent.useAjax) {
+							  dataLink = "data-link=\"" + uicomponent.event("OpenForumLink", ids) + "\"";
+							}
+							%>
+						<a class="actionOpenLink" id="UIContextPopupMenu${rCNB}" href="$url" <%=dataLink%> style="line-height:16px;font-weight:bold" >$forumTitle</a>
 						<div id="UIPopupMenu${rCNB}" class="dropdown uiDropdownWithIcon" style="display:none;">
 							<ul data-bookmark="$actionBookmark" class="ClickPopupContent dropdown-menu dropdownArrowTop" style="display:block;"><li></li></ul>
 						</div>
