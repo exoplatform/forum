@@ -1,4 +1,4 @@
-(function(utils, gj) {
+(function(utils, $) {
   var SearchIpBan = {
     searchIpBan : null,
     JUIGrid : null,
@@ -7,18 +7,18 @@
     request : null,
     
     init : function(containerId) {
-      SearchIpBan.jSearchIpBan = gj.fn.findId(containerId);
+      SearchIpBan.jSearchIpBan = $.fn.findId(containerId);
       if (SearchIpBan.jSearchIpBan.exists()) {
         SearchIpBan.jTabContent = SearchIpBan.jSearchIpBan.find('div.restInfo:first');
-        SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.uiGrid');
+        SearchIpBan.JUIGrid = SearchIpBan.jTabContent.find('table.table-data-viewer');
         SearchIpBan.jTabContent.find('input[name=searchIpBan]').on('keyup', SearchIpBan.searchIpBan);
       }
     },
     
     searchIpBan : function() {
       // Get data from service, url: /portal/rest/ks/forum/filter/{strIP}/
-      var keyword = String($(this).val());
-      if(keyword.trim().length == 0) keyword = 'all';
+      var keyword = $.trim($(this).val());
+      if(keyword.length == 0) keyword = 'all';
       var restPath = SearchIpBan.jTabContent.attr("data-restPath");
       var restUrl = restPath + '/ks/forum/filter/' + keyword + '/';
       var forumId = SearchIpBan.jTabContent.attr("data-forumId");
@@ -46,7 +46,7 @@
       
       // Fill up with new list
       var length_ = SearchIpBan.data.jsonList.length;
-      var pageIter = gj('#IpBanPageIterator');
+      var pageIter = $('#IpBanPageIterator');
       if (pageIter.exists()) {
         pageIter.hide();
         var url = String(SearchIpBan.url_);
