@@ -64,6 +64,7 @@ import javax.jcr.query.RowIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
@@ -133,6 +134,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private SessionManager          sessionManager;
 
   private KSDataLocation          dataLocator;
+  
+  private final int EXCERPT_MAX_LENGTH = 430;
 
   public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
@@ -2796,7 +2799,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           if(!highlightPattern.matcher(excerpt).find() && excerptField.equals(EXO_NAME) && excerpt.toLowerCase().indexOf(textQuery) < 0){
             excerpt = rowObj.getValue(String.format(REP_EXCERPT_PATTERN, EXO_TITLE)).getString();
           }
-          objectResult.setExcerpt(excerpt);
+          objectResult.setExcerpt(CommonUtils.getExcerpt(excerpt, textQuery, EXCERPT_MAX_LENGTH));
         }
 
         searchResult.add(objectResult);
@@ -2873,7 +2876,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     protected abstract ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception;
   }
   
-
   private ObjectSearchResult getResultObj(Node node) throws Exception {
     ObjectSearchResult objectResult = new ObjectSearchResult();
     if (node.isNodeType(EXO_FAQ_CATEGORY)) {

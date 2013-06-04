@@ -365,6 +365,72 @@ public class CommonUtils {
   }
   
   /**
+   * Get excerpt of given string with start position is the first position of textQuery.
+   * @param str 
+   *            the give string
+   * @param textQuery
+   *            the text that we truncate at the first appear
+   * @param maxLength
+   *            max of string length
+   * @return the excerpt string
+   */
+  public static String getExcerpt(String str, String textQuery, int maxLength) {
+    //
+    if(str.length() <= maxLength) return str;
+    
+    //look for highlight to truncate 
+    int position = str.indexOf("<strong>");
+    //if not found
+    if(position < 0) {
+      position = Math.max(0, str.indexOf(textQuery));
+    }
+    return centerTrunc(str, position, maxLength);
+  }
+  
+  /**
+   * Truncates large Strings showing the string around the specific middle position with the specific length.
+   * 
+   * @param str
+   *            the string to truncate
+   * @param middlePosition
+   *            the middle position we will show string around 
+   * @param maxLength
+   *            the max length of string to show
+   * @return the truncated string
+   */
+  public static final String centerTrunc( String str, int middlePosition, int maxLength) {
+      StringBuffer buf = null;
+      //
+      if ( str.length() <= maxLength )
+      {
+          return str;
+      }
+      
+      int halfLength = maxLength / 2;
+      //start position
+      int start = 0;
+      
+      if( middlePosition > halfLength ) {
+        start = ( middlePosition - halfLength );
+      }
+      
+      //end position
+      int end = Math.min( str.length(), start + maxLength );
+
+      buf = new StringBuffer();
+      buf.append(str.substring( start, end ));
+      
+      //complete first & last words
+      String ret = buf.substring(buf.indexOf(" "));
+      //
+      if(start > 0)  ret = "..." + ret;
+      
+      ret = ret.substring(0, ret.lastIndexOf(" ")) + " ...";
+      
+      return ret;
+  }
+  
+  /**
    * Encode special character, use for input search
    * @param String s, the string input
    * @return String 
