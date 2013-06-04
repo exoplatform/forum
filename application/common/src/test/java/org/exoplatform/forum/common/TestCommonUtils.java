@@ -197,6 +197,30 @@ public class TestCommonUtils extends TestCase {
     assertEquals("%a ? % % % _bc%", CommonUtils.processSearchCondition(input));
   }
   
-  
+  public void testGetExcerpt() throws Exception {
+    String str = "Revived after the Restoration of 1660. They ended again in 1852, when the common land on " +
+    		         "which they had been staged was partitioned and enclosed. Since 1966 the Games have been held" +
+    		         " each year on the Friday after Spring Bank Holiday. Events have included the tug of war, " +
+    		         "the first stirrings of Britain's Olympic beginnings. (Full article...) excerpt The Cotswold " +
+    		         " throwing, fighting with swords, and wrestling. By the time of James's death in 1625, many Puritan" +
+    		         " landowners had forbidden their workers to attend, and the outbreak of the English Civil War in 1642";
+    
+    String expecString = "... and enclosed. Since 1966 the Games have been held each year on the Friday after Spring" +
+    		                 " Bank Holiday. Events have included the tug of war, the first stirrings of Britain's Olympic beginnings." +
+    		                 " (Full article...) excerpt The Cotswold  throwing, fighting with swords, and wrestling. By the time" +
+    		                 " of James's death in 1625, many Puritan landowners had forbidden their workers to attend, and the" +
+    		                 " outbreak of the English Civil War in ...";
+    
+    String truncStr = CommonUtils.getExcerpt(str, "excerpt", 430);
+    //
+    assertEquals(expecString, truncStr);
+    
+    int middlePosition = str.indexOf("excerpt");
+    //
+    truncStr = CommonUtils.centerTrunc( str, middlePosition, 430);
+    
+    //
+    assertEquals(expecString, truncStr);
+  }
   
 }

@@ -200,6 +200,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   
   private static final Pattern         HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
   
+  private final int EXCERPT_MAX_LENGTH = 430;
+  
   public JCRDataStorage() {
   }
 
@@ -5897,7 +5899,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if(!HIGHLIHT_PATTERN.matcher(excerpt).find() && excerpt.toLowerCase().indexOf(originQuery) < 0) {
         excerpt = row.getValue(String.format(REP_EXCERPT_PATTERN, EXO_NAME)).getString();
       }
-      forumSearch.setExcerpt(excerpt);
+      forumSearch.setExcerpt(CommonUtils.getExcerpt(excerpt, originQuery, EXCERPT_MAX_LENGTH));
     }catch (Exception e){
       e.printStackTrace();
     }
