@@ -21,7 +21,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<table class="uiGrid table  table-hover table-striped">
+			<table class="uiGrid table table-hover table-striped table-data-viewer">
 				<thead>
 					<tr>
 						<th class="center"><%=_ctx.appRes("UIBanIPForumManagerForm.label.BannedIP");%></th>
