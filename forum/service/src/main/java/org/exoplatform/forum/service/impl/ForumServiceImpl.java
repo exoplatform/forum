@@ -724,6 +724,8 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
+    if (post.getUserPrivate().length > 1)
+      return;
     for (ForumEventLifeCycle f : listeners_) {
       try {
         if (isNew)
