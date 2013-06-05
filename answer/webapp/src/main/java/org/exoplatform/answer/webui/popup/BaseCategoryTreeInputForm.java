@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.answer.webui.BaseUIFAQForm;
+import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryTree;
 import org.exoplatform.faq.service.Utils;
@@ -82,7 +83,7 @@ public class BaseCategoryTreeInputForm extends BaseUIFAQForm {
              .append("    <input onclick=\"eXo.answer.AnswerUtils.checkedNode(this)\" type=\"checkbox\" ")
              .append(isChecked ? "checked " : "").append("name=\"").append(category.getId())
              .append("\" class=\"checkbox\" id=\"").append(category.getId()).append("\">")
-             .append("    <span><i class=\"uiIconCategory uiIconLightGray\"></i> ").append(category.getName()).append("</span>")
+             .append("    <span><i class=\"uiIconCategory uiIconLightGray\"></i> ").append(FAQUtils.getSubString(category.getName(), 20)).append("</span>")
              .append("  </span>");
       builder.append("</a>");
     }
