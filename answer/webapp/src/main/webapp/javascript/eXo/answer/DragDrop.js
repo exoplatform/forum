@@ -1,4 +1,4 @@
-(function($, utils, eventManager, window, document) {
+(function($, eventManager, window, document) {
 
   var DragDrop = {
     dragObject : null,
@@ -7,80 +7,100 @@
 
     init : function(compid) {
       DragDrop.component = $.fn.findId(compid);
-      DragDrop.component.find('li.faqCategory')
-              .on('mousedown', DragDrop.attach);
+      DragDrop.component.find('li.faqCategory').on('mousedown', DragDrop.attach);
 
       var leftColumn = DragDrop.component.parents('#FAQViewCategoriesColumn');
       DragDrop.disableSelection(leftColumn);
     },
 
     attach : function(evt) {
-      var dragObject = this.cloneNode(true);
-      $(dragObject).attr('class', 'faqDnDCategory');
-      $('body').append(dragObject);
-      $(dragObject).css('width', $(this).width());
       DragDrop.rootNode = this;
+      DragDrop.hided = false;
+
+      DragDrop.dragObject = this.cloneNode(true);
+
+      var jDragObject = $(DragDrop.dragObject);
+
+      jDragObject.css('width', $(this).width()).attr('class', 'faqDnDCategory');
+      var ul = $('<ul class="faqDn"></ul>');
+      ul.append(jDragObject);
+
+      $('#UIPortalApplication').append(ul);
 
       DragDrop.mousePos = {
         x : evt.clientX,
         y : evt.clientY
       };
-      DragDrop.setup(dragObject, [ "faqCategory", "faqBack", "faqTmpCategory" ]);
+      DragDrop.setup([ "faqCategory", "faqBack", "faqTmpCategory" ]);
+    },
 
-      DragDrop.dropCallback = function(dragObj, target) {
-        $(dragObj).remove();
-        if (DragDrop.lastTarget)
-          $(DragDrop.lastTarget).css('border', 'none');
-        if (target && DragDrop.isMoved) {
-          var action = DragDrop.getAction(DragDrop.dragObject, target);
-          if (!action) {
-            DragDrop.showElement();
-            return;
-          }
+    dragCallback : function(target) {
+      if (DragDrop.lastTarget) {
+        $(DragDrop.lastTarget).css('border', 'none');
+        if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory')) {
+          $(DragDrop.lastTarget).removeClass('faqHighlightCategory');
+        }
+      }
+
+      if (!target) {
+        return;
+      }
+
+      DragDrop.lastTarget = target;
+
+      var jTarget = $(target);
+      if (jTarget.hasClass('faqBack')) {
+        jTarget.trigger('click');
+      }
+      if (jTarget.hasClass('faqTmpCategory')) {
+        jTarget.addClass('faqHighlightCategory');
+      }
+      jTarget.css('border', 'dotted 1px #cfcfcf');
+      if (DragDrop.hided === false) {
+        DragDrop.hideElement(DragDrop.rootNode);
+      }
+    },
+
+    dropCallback : function(target) {
+      if (DragDrop.lastTarget) {
+        $(DragDrop.lastTarget).css('border', 'none');
+      }
+      if (target && DragDrop.isMoved) {
+        var action = DragDrop.getAction(DragDrop.dragObject, target);
+        if (action && action.length > 0) {
           $.globalEval(action);
         } else {
           DragDrop.showElement();
         }
-      }
-
-      DragDrop.dragCallback = function(dragObj, target) {
-        if (DragDrop.lastTarget) {
-          $(DragDrop.lastTarget).css('border', '');
-          if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory')) {
-            $(DragDrop.lastTarget).removeClass('faqHighlightCategory');
-          }
-        }
-
-        if (!target)
-          return;
-        DragDrop.lastTarget = target;
-
-        if ($(target).hasClass('faqBack')) {
-          $(target).trigger('click');
-        }
-        if ($(target).hasClass('faqTmpCategory')) {
-          $(DragDrop.lastTarget).addClass('faqHighlightCategory');
-        }
-        $(target).css('border', 'dotted 1px #cfcfcf');
-        if (DragDrop.hided === false)
-          DragDrop.hideElement(DragDrop.rootNode);
+      } else {
+        DragDrop.showElement();
       }
     },
 
-    setup : function(dragObject, targetClass) {
-      DragDrop.dragObject = dragObject;
+    setup : function(targetClass) {
       DragDrop.targetClass = targetClass;
+      $(DragDrop.dragObject).css({
+        'border' : 'solid 1px #cfcfcf',
+        'background' : '#fff'
+      });
+      if($.browser.msie) {
+        $(document).on('dragstart', function(e){
+          return false;
+        });
+      }
       $(document).on('mousemove', DragDrop.onDrag);
       $(document).on('mouseup', DragDrop.onDrop);
     },
 
     onDrag : function(evt) {
-      var dragObject = DragDrop.dragObject;
-      $(dragObject).css('left', evt.pageX + 2);
-      $(dragObject).css('top', evt.pageY + 2);
-      if (DragDrop.dragCallback) {
+      if (DragDrop.dragObject) {
+        var jDragObject = $(DragDrop.dragObject);
+        jDragObject.css({
+          'left' : (evt.pageX + 2) + 'px',
+          'top' : (evt.pageY + 2) + 'px',
+        });
         var target = DragDrop.findTarget(evt);
-        DragDrop.dragCallback(dragObject, target);
+        DragDrop.dragCallback(target);
       }
     },
 
@@ -90,52 +110,68 @@
       if (DragDrop.mousePos.x == evt.clientX && DragDrop.mousePos.y == evt.clientY) {
         DragDrop.isMoved = false;
       }
-      if (DragDrop.dropCallback) {
+      if (DragDrop.dragObject) {
         var target = DragDrop.findTarget(evt);
-        DragDrop.dropCallback(DragDrop.dragObject, target);
+        DragDrop.dropCallback(target);
       }
+      DragDrop.endDrop();
+    },
+    
+    endDrop : function() {
       delete DragDrop.dragObject;
       delete DragDrop.targetClass;
-      delete DragDrop.dragCallback;
       delete DragDrop.hided;
       delete DragDrop.rootNode;
+      $('#UIPortalApplication  > ul.faqDn').remove();
+      
+      if($.browser.msie) {
+        $(document).off('dragstart');
+      }
       $(document).off('mousemove', DragDrop.onDrag);
       $(document).off('mouseup', DragDrop.onDrop);
     },
-
+    
     findTarget : function(evt) {
       var targetClass = DragDrop.targetClass;
       if (targetClass) {
         var i = targetClass.length;
         while (i--) {
           var target = eventManager.getEventTargetByClass(evt, targetClass[i]);
-          if (target)
+          if (target) {
             return target;
+          }
         }
       }
+      return null;
     },
 
     disableSelection : function(jelm) {
-      jelm.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', function(){return false;});
+      jelm.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', function() {
+        return false;
+      });
     },
 
     hideElement : function(obj) {
       $(obj).prev('li').css('display', 'none');
       $(obj).css('display', 'none');
-      this.hided = true;
+      DragDrop.hided = true;
     },
 
     showElement : function() {
-      if (!DragDrop.rootNode)
+      if (!DragDrop.rootNode) {
         return;
+      }
+      DragDrop.hided = false;
       var preElement = $(DragDrop.rootNode).prev('li');
-      if (preElement.exists())
-        preElement.css('display', '');
-      $(DragDrop.rootNode).css('display', '');
+      if (preElement.exists()) {
+        preElement.css('display', 'block');
+      }
+      $(DragDrop.rootNode).css('display', 'block');
       if (DragDrop.lastTarget) {
-        $(DragDrop.lastTarget).css('border', '');
-        if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory'))
+        $(DragDrop.lastTarget).css('border', 'none');
+        if ($(DragDrop.lastTarget).hasClass('faqHighlightCategory')) {
           $(DragDrop.lastTarget).removeClass('faqHighlightCategory');
+        }
       }
     },
 
@@ -149,14 +185,15 @@
           top = 'top';
         }
         var preElementInfo = preElement.find('input.infoCategory:first');
-        if (info.attr('id') == preElementInfo.attr('id'))
+        if ($.trim(info.attr('id')) == $.trim(preElementInfo.attr('id'))) {
           return false;
+        }
         var actionLink = info.attr('value');
-        actionLink = actionLink.replace("=objectId", ("=" + info.attr('id') + "," + preElementInfo.attr('id') + "," + top));
+        actionLink = actionLink.replace("=objectId", ("=" + $.trim(info.attr('id')) + "," + $.trim(preElementInfo.attr('id')) + "," + top));
       } else if ($(target).hasClass('faqCategory')) {
         var actionLink = info.attr('value');
         var targetInfo = $(target).find('input.infoCategory:first');
-        actionLink = actionLink.replace("=objectId", "=" + info.attr('id') + "," + targetInfo.attr('id'));
+        actionLink = actionLink.replace("=objectId", "=" + $.trim(info.attr('id')) + "," + $.trim(targetInfo.attr('id')) );
         actionLink = actionLink.replace("ChangeIndex", "MoveCategoryInto");
       }
       return actionLink;
@@ -164,4 +201,4 @@
   };
 
   return DragDrop;
-})(gj, forumUtils, forumEventManager, window, document);
+})(gj, forumEventManager, window, document);

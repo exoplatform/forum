@@ -56,10 +56,6 @@
       <path>/javascript/eXo/answer/DragDrop.js</path>
     </script>
     <depends>
-      <module>ForumUtils</module>
-      <as>forumUtils</as>
-    </depends>
-    <depends>
       <module>ForumEventManager</module>
       <as>forumEventManager</as>
     </depends>
