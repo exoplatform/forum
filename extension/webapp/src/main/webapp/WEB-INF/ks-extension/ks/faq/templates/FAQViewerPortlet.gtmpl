@@ -1,6 +1,7 @@
 <%  
   import org.exoplatform.faq.service.CategoryInfo;
   import org.exoplatform.faq.service.Utils;
+  import org.exoplatform.answer.webui.FAQUtils;
   
   def requireJS = _ctx.getRequestContext()
       .getJavascriptManager().require("SHARED/FaqPortlet", "faq");
@@ -87,7 +88,7 @@
 
       <%
       for(categoryInfo in subCategoryInfos){ 
-          String categoryName = categoryInfo.getName();
+          String categoryName = FAQUtils.getSubString(categoryInfo.getName(), 20);
           List questionInfos = categoryInfo.getQuestionInfos();
           List subCategories = categoryInfo.getSubCateInfos();
       
@@ -100,7 +101,7 @@
           <%} 
             int j = 0;
             for(subCategory in subCategories) { 
-              String subCateName = subCategory.getName();
+              String subCateName = FAQUtils.getSubString(subCategory.getName(), 20);
               String subPath = subCategory.getPath();
           %>
           <a class="childItem" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
@@ -159,7 +160,7 @@
 			
       <!-- Questions in sub-categories -->
       <%for(categoryInfo in subCategoryInfos) { 
-        String categoryName = categoryInfo.getName();
+        String categoryName = FAQUtils.getSubString(categoryInfo.getName(), 20);
         List questionInfos = categoryInfo.getQuestionInfos();
         String id = categoryInfo.getId();
       %>
