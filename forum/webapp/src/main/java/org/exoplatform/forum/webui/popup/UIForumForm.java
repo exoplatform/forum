@@ -496,6 +496,10 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
   private void setDefaultEmail(UIFormInputWithActions moderationOptions, String moderators) throws Exception {
     UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
     UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
+    UICheckBoxInput boxInput = getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX);
+    if (! boxInput.isChecked()) {
+      return;
+    }
     Set<String> listModerator = new HashSet<String>();
     if (!ForumUtils.isEmpty(moderators)) {
       String[] moderators_ = ForumUtils.splitForForum(moderators);
