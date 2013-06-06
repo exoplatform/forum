@@ -26,7 +26,7 @@
 			$message
 			<div class="uiActionDashed">
 				<button class="btn" onclick="<%=action%>" type="button"><i class="uiIconReply uiIconLightGray"></i> <%=label%></button>&nbsp;
-				<button class="btn" onclick="<%=uicomponent.eventParent("DeleteMessage", mailId)%>" type="button">
+				<button class="btn confirm" onclick="<%=uicomponent.eventParent("DeleteMessage", mailId)%>" type="button">
 					<i class="uiIconDelete uiIconLightGray"></i> <%=_ctx.appRes("UIPrivateMessageForm.label.Delete");%>
 				</button>
 			</div>

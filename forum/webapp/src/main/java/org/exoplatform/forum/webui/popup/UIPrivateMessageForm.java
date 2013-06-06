@@ -97,10 +97,10 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   public static final String USER_SELECTOR_POPUPWINDOW = "UIPMUserPopupWindow";
 
   public UIPrivateMessageForm() throws Exception {
-    UIFormStringInput SendTo = new UIFormStringInput(FIELD_SENDTO_TEXT, FIELD_SENDTO_TEXT, null);
-    SendTo.addValidator(MandatoryValidator.class);
-    UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
-    MailTitle.addValidator(MandatoryValidator.class);
+    UIFormStringInput sendTo = new UIFormStringInput(FIELD_SENDTO_TEXT, FIELD_SENDTO_TEXT, null);
+    sendTo.addValidator(MandatoryValidator.class);
+    UIFormStringInput mailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
+    mailTitle.addValidator(MandatoryValidator.class);
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
@@ -108,8 +108,8 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     formWYSIWYGInput.setHeight("220px");
     formWYSIWYGInput.setWidth("98%");
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
-    sendMessageTab.addUIFormInput(SendTo);
-    sendMessageTab.addUIFormInput(MailTitle);
+    sendMessageTab.addUIFormInput(sendTo);
+    sendMessageTab.addUIFormInput(mailTitle);
     sendMessageTab.addUIFormInput(formWYSIWYGInput);
 
     String[] strings = new String[] { "SelectUser", "SelectMemberShip", "SelectGroup" };
@@ -148,11 +148,11 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   }
 
   public void setSendtoField(String str) {
-     ((UIFormStringInput)findComponentById(FIELD_SENDTO_TEXT)).setValue(str);
+     getUIStringInput(FIELD_SENDTO_TEXT).setValue(str);
   }
 
   public void updateSelect(String selectField, String value) throws Exception {
-    UIFormStringInput fieldInput = findComponentById(selectField);
+    UIFormStringInput fieldInput = getUIStringInput(selectField);
     String values = fieldInput.getValue();
     fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
   }
@@ -183,9 +183,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   static public class SendPrivateMessageActionListener extends EventListener<UIPrivateMessageForm> {
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
       UIPrivateMessageForm messageForm = event.getSource();
-      UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
-      UIFormStringInput areaInput = messageForm.findComponentById(FIELD_SENDTO_TEXT);
-      String sendTo = areaInput.getValue();
+      UIFormInputWithActions messageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+      UIFormStringInput inputSendTo = messageForm.getUIStringInput(FIELD_SENDTO_TEXT);
+      String sendTo = inputSendTo.getValue();
       sendTo = ForumUtils.removeSpaceInString(sendTo);
       sendTo = ForumUtils.removeStringResemble(sendTo);
       if (ForumUtils.isEmpty(sendTo)) {
@@ -203,8 +203,8 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         messageForm.warning("NameValidator.msg.erroUser-input", new String[] { messageForm.getLabel(FIELD_SENDTO_TEXT), erroUser });
         return;
       }
-      UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
-      String mailTitle = stringInput.getValue();
+      UIFormStringInput mailTitleInput = messageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+      String mailTitle = mailTitleInput.getValue();
       if (ForumUtils.isEmpty(mailTitle)) {
         messageForm.warning("EmptyFieldValidator.msg.empty-input", messageForm.getLabel(FIELD_MAILTITLE_INPUT));
         return;
@@ -215,7 +215,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         return;
       }
       mailTitle = CommonUtils.encodeSpecialCharInTitle(mailTitle);
-      UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class);
+      UIFormWYSIWYGInput formWYSIWYGInput = messageTab.getChild(UIFormWYSIWYGInput.class);
       String message = formWYSIWYGInput.getValue();
       if (!ForumUtils.isEmpty(message)) {
         ForumPrivateMessage privateMessage = new ForumPrivateMessage();
@@ -228,8 +228,8 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         } catch (Exception e) {
           messageForm.log.warn("Failed to save private message", e);
         }
-        areaInput.setValue(ForumUtils.EMPTY_STR);
-        stringInput.setValue(ForumUtils.EMPTY_STR);
+        inputSendTo.setValue(ForumUtils.EMPTY_STR);
+        mailTitleInput.setValue(ForumUtils.EMPTY_STR);
         formWYSIWYGInput.setValue(ForumUtils.EMPTY_STR);
         messageForm.info("UIPrivateMessageForm.msg.sent-successfully", false);
         if (messageForm.fullMessage) {
@@ -273,9 +273,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   }
 
   public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) throws Exception {
-    UIFormInputWithActions MessageTab = this.getChildById(FIELD_SENDMESSAGE_TAB);
-    UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
-    UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
+    UIFormInputWithActions messageTab = getChildById(FIELD_SENDMESSAGE_TAB);
+    UIFormStringInput stringInput = messageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+    UIFormWYSIWYGInput message = messageTab.getChild(UIFormWYSIWYGInput.class);
     String content = privateMessage.getMessage();
     
     String replyLabel = getLabel(FIELD_REPLY_LABEL) + CommonUtils.COLON;
@@ -286,11 +286,11 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     title = getTitleMessage(getTitleMessage(title, replyLabel), forwardLabel);
 
     if (isReply) {
-      UIFormStringInput areaInput = findComponentById(FIELD_SENDTO_TEXT);
-      areaInput.setValue(privateMessage.getFrom());
+      setSendtoField(privateMessage.getFrom());
       stringInput.setValue(replyLabel + title);
       content = new StringBuffer("<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">").append(content).append("</div>").toString();
     } else {
+      setSendtoField(CommonUtils.EMPTY_STR);
       stringInput.setValue(forwardLabel + title);
     }
     message.setValue(content);

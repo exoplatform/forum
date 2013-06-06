@@ -3,8 +3,9 @@
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.popup.UIViewPrivateMessage;
 	UserProfile userProfile = uicomponent.getUserProfile();
-	List InBoxmails = uicomponent.getListInBoxPrivateMessage() ;
+	List InBoxmails = uicomponent.getPrivateMessages() ;
 %>
 <div class="ForumMail UIInBox uiListInboxMessage" id="$uicomponent.id">
 	<%
@@ -67,6 +68,6 @@
 			uicomponent.renderChild(UIForumPageIterator.class) ;
 			print("<div style=\"padding-top:10px\"><span></span></div>");
 		}
-	uicomponent.renderChild("UIViewPrivateMessageInBox");
+	uicomponent.renderChild(UIViewPrivateMessage.class);
 	%>								
 </div>

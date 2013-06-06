@@ -1,8 +1,17 @@
 (function(Cometd, $, window, document) {
   var ForumTotalJob = {
+    currentUser : '',
     init : function(eXoUser, eXoToken, contextName) {
+      ForumTotalJob.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
       if (String(eXoToken)) {
         if (!Cometd.isConnected()) {
+          if (ForumTotalJob.currentUser !== eXoUser || ForumTotalJob.currentUser === '') {
+            ForumTotalJob.currentUser = eXoUser;
+            document.cookie = 'forumCurrentUserId=' + escape(eXoUser) + ';path=/portal';
+            Cometd._connecting = false;
+            Cometd.currentTransport = null;
+            Cometd.clientId = null;
+          }
           Cometd.url = '/' + contextName + '/cometd';
           Cometd.exoId = eXoUser;
           Cometd.exoToken = eXoToken;

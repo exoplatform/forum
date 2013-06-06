@@ -8,7 +8,7 @@
 	}
 //
   org.exoplatform.forum.ForumUtils.addScripts("bts_tooltip", null, null);
-	org.exoplatform.forum.ForumUtils.addScripts("UIForumPortlet", "forum", "eXo.forum.UIForumPortlet.init('"+uicomponent.id+"');");
+	org.exoplatform.forum.ForumUtils.addScripts("UIForumPortlet", "forumPortlet", "forumPortlet.init('"+uicomponent.id+"');");
 %>
 
 	<div class="ParentMaskLayer" id="ForumPortlet">

@@ -9,7 +9,8 @@
       from : "From",
       briefContent : "Brief content",
       GoDirectly : "Go directly to the TYPE: LINK Click here.",
-      title : "Title"
+      title : "Title",
+      currentUser : ""
   };
 
   ForumSendNotification.initParam = function(notification, message, post, titeName, from, briefContent, GoDirectly, Title) {
@@ -21,12 +22,20 @@
     ForumSendNotification.briefContent = briefContent;
     ForumSendNotification.GoDirectly = GoDirectly;
     ForumSendNotification.title = Title || ForumSendNotification.title;
+    ForumSendNotification.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
   };
 
   ForumSendNotification.init = function(portId, eXoUser, eXoToken, contextName) {
     ForumSendNotification.portletId = portId;
     if (String(eXoToken) != '') {
-      if (!Cometd.isConnected()) {
+      if (Cometd.isConnected() === false) {
+        if (ForumSendNotification.currentUser !== eXoUser || ForumSendNotification.currentUser === '') {
+          ForumSendNotification.currentUser = eXoUser;
+          document.cookie = 'forumCurrentUserId=' + escape(eXoUser) + ';path=/portal';
+          Cometd._connecting = false;
+          Cometd.currentTransport = null;
+          Cometd.clientId = null;
+        }
         Cometd.url = '/' + contextName + '/cometd';
         Cometd.exoId = eXoUser;
         Cometd.exoToken = eXoToken;
@@ -149,4 +158,3 @@
   return ForumSendNotification;
 
 })(cometd, gj, document, window);
-

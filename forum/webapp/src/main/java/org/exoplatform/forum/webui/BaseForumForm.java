@@ -62,7 +62,7 @@ public class BaseForumForm extends BaseUIForm {
   public void processRender(WebuiRequestContext context) throws Exception {
     getUserProfile();
     WebUIUtils.addScripts("ForumUtils", "forumUtils", "forumUtils.initTooltip('" + getId() + "');");
-    WebUIUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initConfirm('" + getId() + "');");
+    WebUIUtils.addScripts("UIForumPortlet", "forumPortlet", "forumPortlet.initConfirm('" + getId() + "');");
     super.processRender(context);
   }
 
