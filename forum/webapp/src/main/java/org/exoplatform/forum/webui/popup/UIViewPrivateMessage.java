@@ -16,16 +16,17 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 
 @ComponentConfig(
@@ -78,7 +79,7 @@ public class UIViewPrivateMessage extends UIContainer {
   }
   
   protected boolean isListSendPrivateMessage() {
-    return (this.getParent() instanceof UIListSentPrivateMessage) ? true : false;
+    return ((UIListPrivateMessage) getParent()).getMessageType().equals(Utils.SEND_MESSAGE) ? true : false;
   }
 
   protected String eventParent(String action, String id) throws Exception {
@@ -87,9 +88,12 @@ public class UIViewPrivateMessage extends UIContainer {
   
   static public class CloseActionListener extends EventListener<UIViewPrivateMessage> {
     public void execute(Event<UIViewPrivateMessage> event) throws Exception {
-      UIViewPrivateMessage uiForm = event.getSource();
-      uiForm.reset();
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent());
+      UIViewPrivateMessage uiViewPrivateMessage = event.getSource();
+      uiViewPrivateMessage.reset();
+      UIListPrivateMessage container = uiViewPrivateMessage.getParent();
+      WebUIUtils.addScripts("ForumUtils", "forumUtils", "forumUtils.initTooltip('" + container.getId() + "');");
+      WebUIUtils.addScripts("UIForumPortlet", "forumPortlet", "forumPortlet.initConfirm('" + container.getId() + "');");
+      event.getRequestContext().addUIComponentToUpdateByAjax(container);
     }
   }
 }

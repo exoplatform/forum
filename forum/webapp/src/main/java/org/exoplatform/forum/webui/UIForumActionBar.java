@@ -121,16 +121,16 @@ public class UIForumActionBar extends UIContainer {
   
   protected void initJavaScripts() {
     List<String> scripts = new ArrayList<String>();
-    scripts.add("eXo.forum.UIForumPortlet.loadScroll();");
+    scripts.add("forumPortlet.loadScroll();");
     if(getUserProfile().getUserRole() <=1) {
-      scripts.add("eXo.forum.UIForumPortlet.visibleAction('"+getId()+"');");
+      scripts.add("forumPortlet.visibleAction('"+getId()+"');");
       StringBuilder init = new StringBuilder("forumJob.init('");
       init.append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("');");
       ForumUtils.addScripts("ForumTotalJob", "forumJob", init.toString());
     }
-    ForumUtils.addScripts(null, null, scripts.toArray(new String[]{}));
+    ForumUtils.addScripts("UIForumPortlet", "forumPortlet", scripts.toArray(new String[]{}));
   }
 
   static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {
