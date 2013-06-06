@@ -16,23 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.util.List;
-
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
-import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -44,91 +32,13 @@ import org.exoplatform.webui.event.EventListener;
       @EventConfig(listeners = UIListInBoxPrivateMessage.ReplyMessageActionListener.class)
     }
 )
-public class UIListInBoxPrivateMessage extends UIContainer {
-  private ForumService              forumService;
-
-  private UserProfile               userProfile      = null;
-
-  private List<ForumPrivateMessage> listInbox        = null;
-
-  private String                    userName         = ForumUtils.EMPTY_STR;
-
-  private boolean                   isRenderIterator = false;
+public class UIListInBoxPrivateMessage extends UIListPrivateMessage {
 
   public UIListInBoxPrivateMessage() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    addChild(UIForumPageIterator.class, null, "PageListInBoxMessage");
-    addChild(UIViewPrivateMessage.class, null, "UIViewPrivateMessageInBox").setRendered(false);
-  }
-
-  protected UserProfile getUserProfile() throws Exception {
-    if (userProfile == null) {
-      userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    }
-    this.userName = userProfile.getUserId();
-    return userProfile;
-  }
-
-  protected boolean isRenderIterator() {
-    return isRenderIterator;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-    JCRPageList pageList = this.forumService.getPrivateMessage(userName, Utils.RECEIVE_MESSAGE);
-    UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
-    forumPageIterator.updatePageList(pageList);
-    pageList.setPageSize(10);
-    int page = forumPageIterator.getPageSelected();
-    this.listInbox = pageList.getPage(page);
-    if (pageList.getAvailable() > 10) {
-      isRenderIterator = true;
-    }
-    return this.listInbox;
-  }
-
-  private ForumPrivateMessage getPrivateMessage(String id) throws Exception {
-    List<ForumPrivateMessage> list = this.listInbox;
-    for (ForumPrivateMessage forumPrivateMessage : list) {
-      if (forumPrivateMessage.getId().equals(id))
-        return forumPrivateMessage;
-    }
-    return null;
-  }
-
-  static public class ViewMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
-    public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
-      UIListInBoxPrivateMessage uicontainer = event.getSource();
-      String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
-      if (!ForumUtils.isEmpty(objctId)) {
-        try {
-          uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-          ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId);
-          UIViewPrivateMessage viewPrivateMessage = uicontainer.getChild(UIViewPrivateMessage.class);
-          viewPrivateMessage.setPrivateMessage(privateMessage);
-          viewPrivateMessage.setRendered(true);
-          event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
-          uicontainer.getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
-        } catch (Exception e) {          
-          event.getRequestContext().getUIApplication()
-               .addMessage(new ApplicationMessage("UIListInBoxPrivateMessage.msg.fail-view", null, ApplicationMessage.WARNING));
-        }
-        event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
-      }
-    }
-  }
-
-  static public class DeleteMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
-    public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
-      UIListInBoxPrivateMessage uicontainer = event.getSource();
-      String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
-      if (!ForumUtils.isEmpty(objctId)) {
-        uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-        uicontainer.getChild(UIViewPrivateMessage.class).reset();
-        uicontainer.getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
-    }
+    super();
+    getChild(UIForumPageIterator.class).setId("PageListInBoxMessage");
+    getChild(UIViewPrivateMessage.class).setId("UIViewPrivateMessageInBox");
+    setMessageType(Utils.RECEIVE_MESSAGE);
   }
 
   static public class ReplyMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {

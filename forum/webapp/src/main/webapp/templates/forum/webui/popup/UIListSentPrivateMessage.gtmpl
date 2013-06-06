@@ -4,9 +4,10 @@
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.webui.popup.UIViewPrivateMessage;
 
 	UserProfile userProfile = uicomponent.getUserProfile();
-	List sendmails = uicomponent.getPrivateMessageSendByUser() ;
+	List sendmails = uicomponent.getPrivateMessages() ;
 %>
 <div class="ForumMail Send uiListSentPrivate" id="$uicomponent.id">
 	<%
@@ -70,6 +71,6 @@
 			uicomponent.renderChild(UIForumPageIterator.class) ; 
 			print("<div style=\"padding-top:10px\"><span></span></div>");
 		}
-  uicomponent.renderChild("UIViewPrivateMessageInSend");
+  uicomponent.renderChild(UIViewPrivateMessage.class);
 	%>					
 </div>

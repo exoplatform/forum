@@ -537,7 +537,7 @@ public class UIForumPortlet extends UIPortletApplication {
                .append(WebUIUtils.getLabel(getId(), "from")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "briefContent")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("');");
-      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { init.toString(), initParam.toString() });
+      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
     }
   }
 
