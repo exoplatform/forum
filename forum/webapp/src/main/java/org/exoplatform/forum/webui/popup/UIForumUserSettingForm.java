@@ -410,12 +410,12 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       UserProfile userProfileSetting = uiForm.userProfileSetting;
       if (ForumUtils.isEmpty(userTitle)) {
-        userTitle = uiForm.permissionUser.get(userProfileSetting.getUserRole());
+        userTitle = uiForm.permissionUser.get(String.valueOf(userProfileSetting.getUserRole()));
       } else {
         userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
         boolean newPos = uiForm.permissionUser.values().contains(userTitle);
         if (newPos) {
-          userTitle = uiForm.permissionUser.get(userProfileSetting.getUserRole());
+          userTitle = uiForm.permissionUser.get(String.valueOf(userProfileSetting.getUserRole()));
         }
       }
       int maxText = ForumUtils.MAXSIGNATURE;

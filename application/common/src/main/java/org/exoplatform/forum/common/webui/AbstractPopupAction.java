@@ -93,7 +93,7 @@ public abstract class AbstractPopupAction extends UIContainer {
     String id = "UIPopup";
     UIComponent parent = getParent();
     if (parent != null && parent.getId() != null) {
-      id = getParent().getId();
+      id = parent.getId();
       if (!id.contains("Portlet") || id.contains("Container")) {
         id = getAncestorOfType(UIPortletApplication.class).getId().replaceFirst("Portlet", "");
         setId(id + "ChildPopupAction");
@@ -101,8 +101,9 @@ public abstract class AbstractPopupAction extends UIContainer {
       }
     }
     // prepare new child popup
-    AbstractPopupAction childPopupAction = popupContainer.addChild(getClass(), null, getName() + "ChildPopupAction")
-                                                         .setRendered(true);
+    AbstractPopupAction childPopupAction = popupContainer.getChild(AbstractPopupAction.class);
+    childPopupAction.setId(getName() + "ChildPopupAction").setRendered(true);
+    
     childPopupAction.getChild(UIPopupWindow.class).setId(getName() + "ChildPopupWindow");
     return popupContainer;
   }
