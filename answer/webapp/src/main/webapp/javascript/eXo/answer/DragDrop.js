@@ -97,7 +97,7 @@
         var jDragObject = $(DragDrop.dragObject);
         jDragObject.css({
           'left' : (evt.pageX + 2) + 'px',
-          'top' : (evt.pageY + 2) + 'px',
+          'top' : (evt.pageY + 2) + 'px'
         });
         var target = DragDrop.findTarget(evt);
         DragDrop.dragCallback(target);
@@ -134,8 +134,7 @@
     findTarget : function(evt) {
       var targetClass = DragDrop.targetClass;
       if (targetClass) {
-        var i = targetClass.length;
-        while (i--) {
+        for(var i = 0; i < targetClass.length; ++i) {
           var target = eventManager.getEventTargetByClass(evt, targetClass[i]);
           if (target) {
             return target;
@@ -177,6 +176,7 @@
 
     getAction : function(obj, target) {
       var info = $(obj).find('input.infoCategory:first');
+      var actionLink = '';
       if ($(target).hasClass('faqTmpCategory')) {
         var preElement = $(target).prev('li');
         var top = ' ';
@@ -186,14 +186,12 @@
         }
         var preElementInfo = preElement.find('input.infoCategory:first');
         if ($.trim(info.attr('id')) == $.trim(preElementInfo.attr('id'))) {
-          return false;
+          return actionLink;
         }
-        var actionLink = info.attr('value');
-        actionLink = actionLink.replace("=objectId", ("=" + $.trim(info.attr('id')) + "," + $.trim(preElementInfo.attr('id')) + "," + top));
+        actionLink = info.attr('value').replace("=objectId", ("=" + $.trim(info.attr('id')) + "," + $.trim(preElementInfo.attr('id')) + "," + top));
       } else if ($(target).hasClass('faqCategory')) {
-        var actionLink = info.attr('value');
         var targetInfo = $(target).find('input.infoCategory:first');
-        actionLink = actionLink.replace("=objectId", "=" + $.trim(info.attr('id')) + "," + $.trim(targetInfo.attr('id')) );
+        actionLink = info.attr('value').replace("=objectId", "=" + $.trim(info.attr('id')) + "," + $.trim(targetInfo.attr('id')) );
         actionLink = actionLink.replace("ChangeIndex", "MoveCategoryInto");
       }
       return actionLink;
