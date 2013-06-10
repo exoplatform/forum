@@ -7,6 +7,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputSet;
@@ -57,19 +58,18 @@ public class UIAvatarContainer extends UIFormInputSet {
       UIPopupContainer popupContainer = uiAvatar.getAncestorOfType(UIPopupContainer.class);
       
       AbstractPopupAction popupAction = popupContainer.getChild(AbstractPopupAction.class);
-      UIPopupContainer container = popupAction.prepareForNewForm();
-
-      UIAttachFileForm attachFileForm = container.addChild(UIAttachFileForm.class, null, null);
+      popupAction.getChild(UIPopupWindow.class).setId("UIForumChildPopupWindow");
+      UIAttachFileForm attachFileForm = popupAction.createUIComponent(UIAttachFileForm.class, null, null);
       attachFileForm.setRendered(true);
-      popupAction.activate(container, 500, 0);
-      container.setId("UploadAvatar");
-      attachFileForm.setChangeAvatarOfUser(uiAvatar.getUserProfile().getUserId());
+      popupAction.activate(attachFileForm, 500, 0);
 
+      attachFileForm.setId("UploadAvatar");
+      attachFileForm.setChangeAvatarOfUser(uiAvatar.getUserProfile().getUserId());
       attachFileForm.updateIsTopicForm(false);
       attachFileForm.setIsChangeAvatar(true);
       attachFileForm.setMaxField(1, true);
       
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
 

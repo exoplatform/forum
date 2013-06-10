@@ -268,7 +268,7 @@ public class UIForumActionBar extends UIContainer {
       UIForumActionBar uiActionBar = event.getSource();
       UIForumPortlet forumPortlet = uiActionBar.getParent();
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+      UIPopupContainer popupContainer = popupAction.prepareForNewForm();
       UIForumUserSettingForm forumUserSettingForm = popupContainer.addChild(UIForumUserSettingForm.class, null, null);
       popupContainer.setId("ForumUserSettingForm");
       forumUserSettingForm.activate();
