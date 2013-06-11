@@ -879,6 +879,7 @@ public class UIQuestions extends UIContainer {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions question = event.getSource();
       String userId = event.getRequestContext().getRequestParameter(OBJECTID);
+      userId = CommonUtils.decodeSpecialCharToHTMLnumber(userId);
       User user = UserHelper.getUserByUserId(userId);
       if (user != null) {
         UIAnswersPortlet portlet = question.getAncestorOfType(UIAnswersPortlet.class);

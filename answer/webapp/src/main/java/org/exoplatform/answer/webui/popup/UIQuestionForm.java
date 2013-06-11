@@ -340,9 +340,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       isApproved_ = question_.isApproved();
       isActivated_ = question_.isActivated();
       initPage(false);
-      UIFormStringInput authorQ = this.getChildById(AUTHOR);
-      authorQ.setValue(question_.getAuthor());
-      UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
+      UIFormStringInput authorQ = getUIStringInput(AUTHOR);
+      authorQ.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getAuthor()));
+      UIFormStringInput emailQ = getUIStringInput(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail());
       
       if(mapLanguage.containsKey(this.editLanguage)){
@@ -507,13 +507,14 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         String author = questionForm.inputAuthor.getValue();
         String emailAddress = questionForm.inputEmailAddress.getValue();
         String questionContent = questionForm.inputQuestionContent.getValue();
-        if (author == null || author.trim().length() < 1) {
+        if (CommonUtils.isEmpty(author)) {
           warning("UIQuestionForm.msg.author-is-null");
           return;
         } else if (FAQUtils.getCurrentUser() == null && UserHelper.getUserByUserId(author) != null) {
           warning("UIQuestionForm.msg.author-is-duplicate");
           return;
         }
+        author = CommonUtils.encodeSpecialCharInTitle(author);
         if (emailAddress == null || emailAddress.trim().length() < 1 || !FAQUtils.isValidEmailAddresses(emailAddress)) {
           warning("UIQuestionForm.msg.email-address-invalid");
           return;
