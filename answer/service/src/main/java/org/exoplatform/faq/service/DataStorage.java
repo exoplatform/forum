@@ -234,4 +234,6 @@ public interface DataStorage {
   void saveActivityIdForComment(String ownerPath, String commentId, String language, String activityId);
 
   String getActivityIdForComment(String ownerPath, String commentId, String language);
+
+  List<String> getAllActivityIdsByCatetory(String categoryId) throws Exception;
 }
