@@ -1303,6 +1303,31 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
     return null;
   }
+  
+  @Override
+  public List<String> getAllActivityIdsByCatetory(String categoryId) throws Exception {
+    List<String> activityIds = new ArrayList<String>();
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node categoryNode = getCategoryNode(sProvider, categoryId);
+      QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
+      StringBuffer queryString = new StringBuffer(JCR_ROOT);
+      queryString.append(categoryNode.getPath()).append("//element(*,exo:faqQuestion)");
+      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+      NodeIterator result = query.execute().getNodes();
+      
+      while (result.hasNext()) {
+        Node questionNode = result.nextNode();
+        String activityId = ActivityTypeUtils.getActivityId(questionNode);
+        if (CommonUtils.isEmpty(activityId) == false) {
+          activityIds.add(activityId);
+        }
+      }
+    } catch (Exception e) {
+      log.debug("Failed to get all activity ids through category: ", e);
+    }
+    return activityIds;
+  }
 
   @Override
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {

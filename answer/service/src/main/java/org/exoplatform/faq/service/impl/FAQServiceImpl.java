@@ -462,6 +462,14 @@ public class FAQServiceImpl implements FAQService, Startable {
   }
 
   public void removeCategory(String categoryId) throws Exception {
+    //
+    List<String> activityIds = jcrData_.getAllActivityIdsByCatetory(categoryId);
+    for (String activityId : activityIds) {
+      for (AnswerEventListener ae : listeners_) {
+        ae.removeQuestion(activityId);
+      }
+    }
+    
     jcrData_.removeCategory(categoryId);
   }
 
