@@ -3435,10 +3435,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       List<String> pathName = new ArrayList<String>();
       String categoryName;
       while (node.isNodeType(EXO_FAQ_CATEGORY)) {
-        if (node.hasProperty(EXO_NAME))
+        if (node.hasProperty(EXO_NAME)) {
           categoryName = node.getProperty(EXO_NAME).getString();
-        else
+        } else {
           categoryName = node.getName();
+        }
         pathName.add(categoryName);
         node = node.getParent();
       }
@@ -3449,7 +3450,22 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       // declare category info
       if (categoryNode.hasNodes()) {
         List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>();
-        NodeIterator subIter = categoryNode.getNodes();
+        
+        List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
+        StringBuilder strQuery = new StringBuilder();
+        
+        strQuery.append(JCR_ROOT).append(categoryNode.getPath()).append("/element(*,").append(EXO_FAQ_CATEGORY).append(")[")
+        
+        .append("(").append(Utils.buildXpathHasProperty(EXO_USER_PRIVATE))
+        .append(" or ").append(Utils.buildQueryListOfUser(EXO_USER_PRIVATE, listOfUser)).append(")")
+        .append(" or (").append(Utils.buildQueryListOfUser(EXO_MODERATORS, listOfUser)).append(")")
+        .append("]");
+        
+        QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
+        Query query = qm.createQuery(strQuery.toString(), Query.XPATH);
+        QueryResult result = query.execute();
+        
+        NodeIterator subIter = result.getNodes();
         Node sub;
         SubCategoryInfo subCat;
         while (subIter.hasNext()) {

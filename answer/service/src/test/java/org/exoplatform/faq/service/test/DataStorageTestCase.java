@@ -625,6 +625,22 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
     //
     categoryInfo = dataStorage.getCategoryInfo(categoryId1, categoryIdScoped);
     assertEquals(5, categoryInfo.getQuestionInfos().size());
+    
+    Category cate4 = createCategory("Category 4 has not question", 4);
+    cate4.setUserPrivate(new String[] { USER_DEMO });
+    cate4.setModerators(new String[] { USER_DEMO });
+    faqService_.saveCategory(Utils.CATEGORY_HOME, cate4, true);
+    
+    //
+    loginUser(USER_DEMO);
+    categoryInfo = dataStorage.getCategoryInfo(Utils.CATEGORY_HOME, categoryIdScoped);
+    assertEquals(4, categoryInfo.getSubCateInfos().size());
+    
+    //
+    loginUser(USER_ROOT);
+    categoryInfo = dataStorage.getCategoryInfo(Utils.CATEGORY_HOME, categoryIdScoped);
+    assertEquals(3, categoryInfo.getSubCateInfos().size());
+    
   }
   
   public void testMoveCategory() throws Exception {

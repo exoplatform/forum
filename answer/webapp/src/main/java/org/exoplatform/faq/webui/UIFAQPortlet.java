@@ -17,12 +17,10 @@
 package org.exoplatform.faq.webui;
 
 import javax.portlet.PortletMode;
-import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -30,7 +28,6 @@ import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.common.router.ExoRouter;
 import org.exoplatform.social.common.router.ExoRouter.Route;
-import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -47,26 +44,14 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 public class UIFAQPortlet extends UIPortletApplication {
   private final static String SLASH     = "/".intern();
   
+  private final static String SPACE_PRETTY_NAME = "spacePrettyName";
+
+  private boolean             isInSpace         = false;
+
+  private String              pathOfCateSpace   = null;
+
   public UIFAQPortlet() throws Exception {
     addChild(UIViewer.class, null, null);
-  }
-  
-  public String getDisplaySpaceName() {
-    PortalRequestContext plcontext = Util.getPortalRequestContext();
-    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
-    Route route = ExoRouter.route(requestPath);
-    if (route == null) {
-      return null;
-    }
-    //
-    String spacePrettyName = route.localArgs.get("spacePrettyName");
-
-    if (spacePrettyName != null) {
-      SpaceService sService = getApplicationComponent(SpaceService.class);
-      Space space = sService.getSpaceByPrettyName(spacePrettyName);
-      return (space != null) ? space.getDisplayName() : CommonUtils.AMP_SPACE;
-    }
-    return CommonUtils.AMP_SPACE;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
@@ -91,23 +76,56 @@ public class UIFAQPortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
   
+  private Space getSpace() {
+    PortalRequestContext plcontext = Util.getPortalRequestContext();
+    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
+    Route route = ExoRouter.route(requestPath);
+    if (route == null) {
+      return null;
+    }
+    //
+    String spacePrettyName = route.localArgs.get(SPACE_PRETTY_NAME);
+
+    if (spacePrettyName != null) {
+      SpaceService sService = getApplicationComponent(SpaceService.class);
+      Space space = sService.getSpaceByPrettyName(spacePrettyName);
+      return space;
+    }
+    return null;
+  }
+  
   public String getPathOfCateSpace() {
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences pref = pcontext.getRequest().getPreferences();
-      String url;
-      if ((url = pref.getValue(SpaceUtils.SPACE_URL, null)) != null) {
-        SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
-        FAQService fService = (FAQService) getApplicationComponent(FAQService.class);
-        Space space = sService.getSpaceByUrl(url);
-        String pathOfCateSpace = Utils.CATEGORY_HOME + SLASH + Utils.CATE_SPACE_ID_PREFIX + space.getPrettyName();
-        if (fService.isExisting(pathOfCateSpace)) {
-          return pathOfCateSpace;
-        }
+    if (FAQUtils.isFieldEmpty(pathOfCateSpace)) {
+      Space space = getSpace();
+      if (space != null) {
+        isInSpace = true;
+        pathOfCateSpace = buildPathOfSpace(space.getPrettyName());
+      } else {
+        isInSpace = false;
+        pathOfCateSpace = Utils.CATEGORY_HOME;
       }
-      return Utils.CATEGORY_HOME;
-    } catch (Exception e) {
-      return Utils.CATEGORY_HOME;
-    }    
+    }
+    return pathOfCateSpace;
+  }
+  
+  public String getDisplaySpaceName() {
+    Space space = getSpace();
+    if (space != null) {
+      isInSpace = true;
+      pathOfCateSpace = buildPathOfSpace(space.getPrettyName());
+      return space.getDisplayName();
+    }
+    pathOfCateSpace = Utils.CATEGORY_HOME;
+    return CommonUtils.AMP_SPACE;
+  }
+  
+  public String buildPathOfSpace(String spaceName) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(Utils.CATEGORY_HOME).append(SLASH).append(Utils.CATE_SPACE_ID_PREFIX).append(spaceName);
+    return sb.toString();
+  }
+
+  public boolean isInSpace() {
+    return isInSpace;
   }
 }

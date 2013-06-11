@@ -17,6 +17,7 @@
 package org.exoplatform.faq.base;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 
 @ConfiguredBy({
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
@@ -52,6 +54,8 @@ import org.exoplatform.services.security.Identity;
 public abstract class FAQServiceBaseTestCase extends BaseExoTestCase {
 
   protected static Log    LOG         = ExoLogger.getLogger(FAQServiceBaseTestCase.class);
+
+  protected Collection<MembershipEntry> membershipEntries = new ArrayList<MembershipEntry>();
 
   protected static String USER_ROOT   = "root";
 
@@ -281,5 +285,19 @@ public abstract class FAQServiceBaseTestCase extends BaseExoTestCase {
     watch.setUser(user);
     watch.setEmails(mail);
     return watch;
+  }
+  
+  public void setMembershipEntry(String group, String membershipType, boolean isNew) {
+    MembershipEntry membershipEntry = new MembershipEntry(group, membershipType);
+    if (isNew) {
+      membershipEntries.clear();
+    }
+    membershipEntries.add(membershipEntry);
+  }
+
+  public void loginUser(String userId) {
+    Identity identity = new Identity(userId, membershipEntries);
+    ConversationState state = new ConversationState(identity);
+    ConversationState.setCurrent(state);
   }
 }

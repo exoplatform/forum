@@ -47,8 +47,6 @@ public class UIViewer extends UIContainer {
 
   protected boolean    useAjax      = false;
 
-  private boolean      isInSpace    = false;
-
   private RenderHelper renderHelper = new RenderHelper();
 
   public UIViewer() {
@@ -65,7 +63,7 @@ public class UIViewer extends UIContainer {
   }
 
   public boolean isInSpace() {
-    return isInSpace;
+    return getAncestorOfType(UIFAQPortlet.class).isInSpace();
   }
 
   public void setPath(String path) {
@@ -98,16 +96,14 @@ public class UIViewer extends UIContainer {
 
   protected CategoryInfo getCategoryInfo() throws Exception {
     useAjax = FAQUtils.getUseAjaxFAQPortlet();
-    if(path.indexOf(Utils.CATE_SPACE_ID_PREFIX) >= 0) {
-      isInSpace = true;
-    } else {
-      isInSpace = false;
+    if (isInSpace()) {
+      path = getAncestorOfType(UIFAQPortlet.class).getPathOfCateSpace();
     }
     return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
   }
   
   String getDisplaySpaceName() {
-    return ((UIFAQPortlet)this.getParent()).getDisplaySpaceName();
+    return getAncestorOfType(UIFAQPortlet.class).getDisplaySpaceName();
   }
 
   protected String render(String s) {
