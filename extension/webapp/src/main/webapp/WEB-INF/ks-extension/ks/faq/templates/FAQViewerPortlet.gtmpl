@@ -2,13 +2,14 @@
   import org.exoplatform.faq.service.CategoryInfo;
   import org.exoplatform.faq.service.Utils;
   import org.exoplatform.answer.webui.FAQUtils;
-  
+  String tooltip = "";
   def requireJS = _ctx.getRequestContext()
       .getJavascriptManager().require("SHARED/FaqPortlet", "faq");
-  
   requireJS.addScripts("faq.focusQuestion();")
   .addScripts("faq.createLink('$uicomponent.id', '$uicomponent.useAjax');")
   .addScripts("faq.backtotop();");
+  requireJS.require("SHARED/jquery", "jq").require("SHARED/bts_tooltip", null)
+  .addScripts("(function(gj) { gj('*[rel=tooltip]').tooltip();}) (jq);");
 %>
 <div class="roundCornerBoxWithTitle">
 	<h5 class="titleBox"><%= uicomponent.getDisplaySpaceName(); %></h5>
@@ -60,10 +61,11 @@
               if(link == Utils.CATEGORY_HOME) {
                   viewName = "FAQ home";
               }
+              tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + viewName + "\"";
               if(i == navPath.size() -1) {
-                print "<li class='active'>" + viewName + "</li>";
+                print "<li class='active' "+tooltip+">" + viewName + "</li>";
               } else {
-                print "<li><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a>";
+                print "<li " + tooltip + "><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a>";
                 print "<span class='uiIconMiniArrowRight'>&nbsp;</span></li>";
               }
             }
@@ -91,20 +93,21 @@
           String categoryName = FAQUtils.getSubString(categoryInfo.getName(), 20);
           List questionInfos = categoryInfo.getQuestionInfos();
           List subCategories = categoryInfo.getSubCateInfos();
-      
+          tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + categoryInfo.getName() + "\"";
       %>    
 			<div class="questionList">
         <h5>
-          <a href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
+          <a href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>" <%=tooltip%>>$categoryName</a>
           <%if (!subCategories.isEmpty()) {%>
             <span>&#91;</span>
           <%} 
             int j = 0;
             for(subCategory in subCategories) { 
               String subCateName = FAQUtils.getSubString(subCategory.getName(), 20);
+              tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + subCategory.getName() + "\"";
               String subPath = subCategory.getPath();
           %>
-          <a class="childItem" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+          <a class="childItem" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>" <%=tooltip%>>$subCateName</a>
           <%
              if(j != (subCategories.size-1)) {
                  print "<span> | </span>";
@@ -161,11 +164,12 @@
       <!-- Questions in sub-categories -->
       <%for(categoryInfo in subCategoryInfos) { 
         String categoryName = FAQUtils.getSubString(categoryInfo.getName(), 20);
+        tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + categoryInfo.getName() + "\"";
         List questionInfos = categoryInfo.getQuestionInfos();
         String id = categoryInfo.getId();
       %>
       <div class="answerList">
-        <h5>$categoryName</h5>
+        <h5><span <%=tooltip%>>$categoryName</span></h5>
         <%for(questionInfo in questionInfos) {
           String question = questionInfo.getQuestion();
           question = uicomponent.render(question);

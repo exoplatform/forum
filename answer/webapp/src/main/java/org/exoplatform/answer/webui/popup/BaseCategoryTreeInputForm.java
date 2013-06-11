@@ -77,13 +77,14 @@ public class BaseCategoryTreeInputForm extends BaseUIFAQForm {
         categoryScoping.addUIFormInput(checkBoxInput);
       }
       checkBoxInput.setValue(isChecked);
-
-      builder.append("<a href=\"javascript:void(0);\" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\">")
+      String categoryName = FAQUtils.getSubString(category.getName(), 20);
+      String tooltip = " rel=\"tooltip\" data-placement=\"bottom\" title=\""+category.getName()+"\"";
+      builder.append("<a href=\"javascript:void(0);\" class=\"uiIconNode ").append(clazz).append("\" onclick=\"eXo.answer.AnswerUtils.showTreeNode(this);\""+tooltip+">")
              .append("  <span class=\"uiCheckbox\">")
              .append("    <input onclick=\"eXo.answer.AnswerUtils.checkedNode(this)\" type=\"checkbox\" ")
              .append(isChecked ? "checked " : "").append("name=\"").append(category.getId())
              .append("\" class=\"checkbox\" id=\"").append(category.getId()).append("\">")
-             .append("    <span><i class=\"uiIconCategory uiIconLightGray\"></i> ").append(FAQUtils.getSubString(category.getName(), 20)).append("</span>")
+             .append("    <span><i class=\"uiIconCategory uiIconLightGray\"></i> ").append(categoryName).append("</span>")
              .append("  </span>");
       builder.append("</a>");
     }
