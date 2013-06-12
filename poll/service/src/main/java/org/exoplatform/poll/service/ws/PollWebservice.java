@@ -40,7 +40,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 
 /**
- * Handles rest request to process Poll. It can be get and voted via rest request are provided.
+ * Handles REST request to process Poll.
  * 
  * @anchor PollWebservice
  * 
@@ -65,15 +65,15 @@ public class PollWebservice implements ResourceContainer {
   }
   
   /**
-   * Views poll by id.
+   * Views a poll by its Id.
    * 
-   * @param pollId id of poll to view.
-   * @param sc security context.
-   * @param uriInfo The request information
+   * @param pollId The poll Id to view.
+   * @param sc The security context which gets the information of the current user.
+   * @param uriInfo The URI information which gets the information of the current user.
    * 
    * @anchor PollWebservice.viewPoll
    * 
-   * @return the response is json-data
+   * @return The response is JSON data.
    * 
    * @throws Exception
    * 
@@ -129,16 +129,16 @@ public class PollWebservice implements ResourceContainer {
   }
 
   /**
-   * Votes poll by id.
+   * Votes for a poll by its Id.
    * 
-   * @param pollId id of poll to view.
-   * @param indexVote
-   * @param sc security context.
-   * @param uriInfo The request information
+   * @param pollId The poll Id to vote.
+   * @param indexVote The vote indexes selected by the current user.
+   * @param sc The security context which gets the information of the current user.
+   * @param uriInfo The URI information which gets the information of the current user.
    * 
    * @anchor PollWebservice.votePoll
    * 
-   * @return the response is json-data
+   * @return The response is JSON data.
    * 
    * @throws Exception
    * 
