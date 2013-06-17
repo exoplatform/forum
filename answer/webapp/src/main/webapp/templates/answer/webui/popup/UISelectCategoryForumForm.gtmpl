@@ -4,7 +4,7 @@
 %>
 <div class="uiSelectCategoryForumForm">
 	<% uiform.begin() %>
-	<h5 class="titleMoveThreads"><%=_ctx.appRes("FAQPortletSetting.label.ChooseForum");%>:</h5>
+	<h6 class="titleMoveThreads"><%=_ctx.appRes("FAQPortletSetting.label.ChooseForum");%>:</h6>
 	<div class="uiTrees scrollArea">
 		<div class="treeContainer">
 			<ul class="nodeGroup">
