@@ -516,7 +516,6 @@
 					<div class="postViewContainer divCell">
 						<div class="postViewHeader clearfix">
 							<% if(canEdit) {%>
-							<div class="postViewTitle pull-left pull-left">$namePost $alert</div>
 							<div class="pull-right">
 								
 								<span class="postTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
@@ -569,11 +568,12 @@
 								</span>
 								<%} %>
 							</div>
+							<div class="postViewTitle pull-left">$namePost $alert</div>
 							<% } else { %>
-							<div class="postViewTitle pull-left pull-left">$namePost $alert</div>
 							<div class="pull-right">
 								<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 							</div>
+							<div class="postViewTitle pull-left">$namePost $alert</div>
 							<% } %>
 						</div>
 						
