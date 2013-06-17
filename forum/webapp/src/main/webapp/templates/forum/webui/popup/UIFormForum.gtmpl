@@ -1,7 +1,6 @@
 <%
 	String id = "ui" + uicomponent.id.substring(2);
 %>
-
 <div class="uiFormForum $id">
 	<% uiform.begin() %>
   <div class="resizable">
@@ -13,16 +12,21 @@
 						<div class="control-group">
 							<%fieldName = uicomponent.getLabel(field.getName());%>
 							<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
+								<% if(field.getName().equals("upload") == false) {%>
 								<label class="control-label">
 									<%if(field.getName().equals("censorKeyword")){ %>
 										<label for="<%=field.getId()%>"><%=fieldName%></label>
-									<%} else if(field.getName().equals("upload") == false){%>
+									<%} else {%>
                     <label for="<%=field.getId()%>"><%=fieldName%>:</label>
                   <%} %>
 								</label>
+								
 								<div class="controls">
 									<% uiform.renderField(field) %>
 								</div>
+								<%} else {%>
+									<div class="controlUpload"><% uiform.renderField(field) %></div>
+								<%} %>
 							<%} else {%>
 								<div class="controls">
 									<label><% uiform.renderField(field) %></label>
