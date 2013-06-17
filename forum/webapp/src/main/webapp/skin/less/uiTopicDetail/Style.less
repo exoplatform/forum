@@ -123,15 +123,23 @@
 	.postViewHeader{
 		background: #f9f9f9;
 		padding: 10px 15px;
-		height:20px;
+		min-height:20px;
 		margin-bottom: 5px;
 		.border-radius(2px);
 		.postViewTitle{
 			font-family: @sansBoldFontFamily;
 			font-weight: bold;
 			font-size: 14px;
+			overflow: hidden;
+			word-wrap: break-word;
 		}
-		
+		> .pull-right {
+			margin-left: 20px;
+		}
+		.uiCheckbox {
+			width: 13px;
+			margin-right: 0;
+		}
 		.postTime{
 			color: @grayLight;
 			margin-right: 10px;

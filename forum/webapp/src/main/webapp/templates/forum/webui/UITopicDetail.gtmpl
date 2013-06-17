@@ -568,12 +568,12 @@
 								</span>
 								<%} %>
 							</div>
-							<div class="postViewTitle pull-left">$namePost $alert</div>
+							<div class="postViewTitle">$namePost $alert</div>
 							<% } else { %>
 							<div class="pull-right">
 								<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 							</div>
-							<div class="postViewTitle pull-left">$namePost $alert</div>
+							<div class="postViewTitle">$namePost $alert</div>
 							<% } %>
 						</div>
 						
