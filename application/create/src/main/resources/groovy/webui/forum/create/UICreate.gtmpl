@@ -26,7 +26,7 @@
                 <%fieldName = uiform.getLabel(field.getName());%>
                 <%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>                        
                   <td >
-                      <label for="<%=field.getId()%>"><%=fieldName%></label>
+                      <label for="<%=field.getId()%>"><%=fieldName%>:</label>
                   </td>
                   <td >
                       <% uiform.renderField(field) %>
