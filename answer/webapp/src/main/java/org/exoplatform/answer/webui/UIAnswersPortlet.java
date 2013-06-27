@@ -136,9 +136,14 @@ public class UIAnswersPortlet extends UIPortletApplication {
   public void renderPortletByURL() throws Exception {
     try {
       PortalRequestContext portalContext = Util.getPortalRequestContext();
-      String cateId = getSpaceCategoryId();
       if (portalContext.getRequestParameter(OBJECTID) == null && !portalContext.useAjax()) {
-        if (!FAQUtils.isFieldEmpty(cateId)) {
+        String cateId = getSpaceCategoryId();
+        String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
+        //
+        if (FAQUtils.isFieldEmpty(questionId) == false) {
+          String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
+          viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
+        } else if (FAQUtils.isFieldEmpty(cateId) == false) {
           UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
           UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
           UICategories categories = findFirstComponentOfType(UICategories.class);
@@ -146,13 +151,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
           uiBreadcums.setRenderSearch(true);
           uiQuestions.setCategoryId(Utils.CATEGORY_HOME + SLASH + cateId);
           categories.setPathCategory(Utils.CATEGORY_HOME + SLASH + cateId);
-        } else {
-          String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
-          String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
-          if (!FAQUtils.isFieldEmpty(questionId)) {
-            viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
-          }
-        }
+        } 
       }
     } catch (Exception e) {
       log.error("can not render the selected category", e);
