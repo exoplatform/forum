@@ -914,7 +914,7 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
     while (iterator.hasNext()) {
       emails = iterator.next().getEmailAddresses();
     }
-    assertEquals(emails.toString(), "[quangpld@exoplatform.com, pldquang@gmail.com, quangpld@yahoo.com]");
+    assertEquals(emails.toString(), "[pldquang@gmail.com, quangpld@yahoo.com]");
   }
   
   public void testGetMessageInfo() throws Exception {

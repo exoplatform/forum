@@ -601,7 +601,7 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
       NotifyInfo notifyInfo = iterator.next();
       emails = notifyInfo.getEmailAddresses();
     }
-    assertEquals(emails.toString(), "[dttempmail@gmail.com, duytucntt@gmail.com, tu.duy@exoplatform.com]");
+    assertEquals(emails.toString(), "[duytucntt@gmail.com, tu.duy@exoplatform.com]");
   }
 
 }
