@@ -236,8 +236,10 @@ public class Utils {
    */
   public static int getQuestionPoint(Question question) {
     //
-    int questionPoint = 0;
+    if (question.getAnswers() == null) return 0;
 
+    //
+    int questionPoint = 0;
     for (Answer answer : question.getAnswers()) {
       if (answer != null) {
         questionPoint += answer.getMarkVotes();
