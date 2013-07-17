@@ -57,9 +57,9 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputInfo;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 @ComponentConfig(
    lifecycle = UIFormLifecycle.class,
@@ -150,16 +150,19 @@ public class UITopicForm extends BaseForumForm {
     UIForumCheckBoxInput sticky = new UIForumCheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, 
                                                            getLabel(FIELD_STICKY_CHECKBOX), false);
 
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
-    formWYSIWYGInput.setToolBarName("Basic");
-    formWYSIWYGInput.setWidth("98%");
+    //UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
+    //formWYSIWYGInput.addValidator(MandatoryValidator.class);
+    //formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
+    //formWYSIWYGInput.setToolBarName("Basic");
+    //formWYSIWYGInput.setWidth("98%");
+    
+    UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
+    richtext.setToolbar("Forum");
 
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
     threadContent.addUIFormInput(topicTitle);
     threadContent.addUIFormInput(editReason);
-    threadContent.addUIFormInput(formWYSIWYGInput);
+    threadContent.addUIFormInput(richtext);
     threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null));
     threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList());
     threadContent.setActionIdAddItem(FIELD_ATTACHMENTS);
@@ -284,7 +287,7 @@ public class UITopicForm extends BaseForumForm {
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
-      threadContent.getChild(UIFormWYSIWYGInput.class).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(topic.getDescription()));
+      threadContent.getChild(UIFormRichtextInput.class).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(topic.getDescription()));
 
       getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).setValue(topic.getIsClosed());
       
@@ -313,7 +316,7 @@ public class UITopicForm extends BaseForumForm {
       int t = 0, k = 1;
       UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
       String topicTitle = (" " + threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).getValue()).trim();
-      String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+      String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
       String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
@@ -384,7 +387,7 @@ public class UITopicForm extends BaseForumForm {
             uiForm.isDoubleClickSubmit = false;
             return;
           }
-          String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+          String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
           String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.trim().length();
