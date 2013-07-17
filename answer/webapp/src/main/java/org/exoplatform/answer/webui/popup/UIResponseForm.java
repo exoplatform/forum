@@ -52,7 +52,8 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
+
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
@@ -89,7 +90,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   // form input :
   private UIFormSelectBox                questionLanguages_;
 
-  private UIFormWYSIWYGInput             inputResponseQuestion_;
+  private UIFormRichtextInput             inputResponseQuestion_;
 
   private UICheckBoxInput   checkShowAnswer_;
 
@@ -132,9 +133,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UIResponseForm() throws Exception {
     isChildOfQuestionManager_ = false;
-    inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "");
-    inputResponseQuestion_.setFCKConfig(WebUIUtils.getFCKConfig());
-    inputResponseQuestion_.setToolBarName("Basic");
+    inputResponseQuestion_ = new UIFormRichtextInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "");
+    inputResponseQuestion_.setToolbar("FAQ");
     checkShowAnswer_ = new UICheckBoxInput(SHOW_ANSWER, SHOW_ANSWER, false);
     isApproved_ = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
     this.setActions(new String[] { "Save", "Cancel" });

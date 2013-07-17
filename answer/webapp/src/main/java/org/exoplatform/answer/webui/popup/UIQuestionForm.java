@@ -60,7 +60,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
+
 
 
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
@@ -102,7 +103,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private UIFormStringInput              inputQuestionContent = null;
 
-  private UIFormWYSIWYGInput             inputQuestionDetail  = null;
+  private UIFormRichtextInput             inputQuestionDetail  = null;
 
   private UIFormSelectBox                selectLanguage       = null;
 
@@ -257,9 +258,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       log.error("Set Attachcments in to InputActachcment is fall, exception: " + e.getMessage());
     }
 
-    inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "");
-    inputQuestionDetail.setFCKConfig(WebUIUtils.getFCKConfig());
-    inputQuestionDetail.setToolBarName("Basic");
+    inputQuestionDetail = new UIFormRichtextInput(QUESTION_DETAIL, QUESTION_DETAIL, "");
+    inputQuestionDetail.setToolbar("FAQ");
     if (!questionContents_.isEmpty()) {
       String input = questionContents_.get(0);
       if (input != null && input.indexOf("<p>") >= 0 && input.indexOf("</p>") >= 0) {
