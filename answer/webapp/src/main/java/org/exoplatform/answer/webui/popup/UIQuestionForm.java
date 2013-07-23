@@ -659,7 +659,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         if (!isNew && question.getPath().equals(questions.viewingQuestionId_)) {
           questions.updateLanguageMap();
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class));
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersPortlet.class));
       } catch (Exception e) {
         questionForm.log.debug("Failed to save action creating question.", e);
       }

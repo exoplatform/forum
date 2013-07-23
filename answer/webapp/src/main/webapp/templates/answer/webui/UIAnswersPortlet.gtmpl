@@ -2,6 +2,12 @@
   def rcontext = _ctx.getRequestContext();
   def requireJS = rcontext.getJavascriptManager().require("SHARED/UIAnswersPortlet", "answer");
 %>
+<script src="/forumResources/syntaxhighlighter/Scripts/shCore.js" type="text/javascript"></script>
+<script src="/forumResources/syntaxhighlighter/Scripts/shAutoloader.js" type="text/javascript"></script>
+
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shCore.css"></link>
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shThemeDefault.css"></link>
+
 <div class="UIAnswersPortlet uiAnswersPortlet" id="$uicomponent.id">
 	<% 
 		requireJS.require("SHARED/bts_tooltip", null); 
@@ -20,3 +26,4 @@
     _ctx.include("app:/templates/answer/webui/UIAnswerPopupTemplate.gtmpl");
   %>
 </div>
+<script type="text/javascript" src="/forumResources/syntaxhighlighter/load_syntaxhighlighter.js"></script>

@@ -9,7 +9,7 @@ CKEDITOR.plugins.add('helpBBCode',
 				{
 					label : editor.lang.CancelUpdateInline,
 					command : 'helpBBCode.cmd',
-					icon : mypath + 'helpBBCode.gif'
+					icon : mypath + 'helpBBCode.png'
 				}
 			);
 			var cmd = editor.addCommand('helpBBCode.cmd', {exec:showHelpBBCode});
