@@ -7,6 +7,9 @@
 <script src="/forumResources/syntaxhighlighter/Scripts/shCore.js" type="text/javascript"></script>
 <script src="/forumResources/syntaxhighlighter/Scripts/shAutoloader.js" type="text/javascript"></script>
 
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shCore.css"></link>
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shThemeDefault.css"></link>
+
 <div class="uiResponseForm">
 	<% uiform.begin() %>
 		<div class="form-horizontal resizable">
