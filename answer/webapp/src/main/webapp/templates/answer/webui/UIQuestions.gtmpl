@@ -857,6 +857,8 @@
                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
                        </button>
 											<!--	Begin popup menu	-->
+											<%
+												if(canEditComment) {%>
 											<ul class="dropdown-menu">
 												<li>
 													<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/" + comment.getId())%>">
@@ -868,17 +870,14 @@
 														<i class="uiIconTrash uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 													</a>
 												</li>
-
-												<%
-												if(canEditComment) {
-													if (uicomponent.faqSetting_.isCanEdit()){%>
+													<%if (uicomponent.faqSetting_.isCanEdit()){%>
 												 <li>
 													<a	href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
 													</a>
 												</li>
-												<%}
-												} else if (uicomponent.faqSetting_.isCanEdit()) { %>
+												<%}%>
+												<%} else if (uicomponent.faqSetting_.isCanEdit()) { %>
 												<li>
 													<a href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
