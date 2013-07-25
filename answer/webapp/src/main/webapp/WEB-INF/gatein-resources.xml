@@ -8,7 +8,8 @@
     <application-name>faq</application-name>
     <portlet-name>AnswersPortlet</portlet-name>
     <skin-name>Default</skin-name>
-    <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-path>/skin/css/answers.css</css-path>
+    <css-path>/skin/css/faq.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
 
@@ -16,7 +17,8 @@
     <application-name>faq</application-name>
     <portlet-name>FAQPortlet</portlet-name>
     <skin-name>Default</skin-name>
-    <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-path>/skin/css/answers.css</css-path>
+    <css-path>/skin/css/faq.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
 
