@@ -849,14 +849,16 @@
 										++commentCount;
 								%>
 								<div class="responseItemContainer	<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
-									<div class="moreAction ">
+											<!--	Begin popup menu	-->
+											<%
+												if(canEditComment) {%>
+												<div class="moreAction ">
 										<div class="pull-right uiDropdownWithIcon dropdown">
 											<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
                          <i class="uiIconSettings uiIconLightGray"></i>
                            <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
                        </button>
-											<!--	Begin popup menu	-->
 											<ul class="dropdown-menu">
 												<li>
 													<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/" + comment.getId())%>">
@@ -868,17 +870,25 @@
 														<i class="uiIconTrash uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 													</a>
 												</li>
-
-												<%
-												if(canEditComment) {
-													if (uicomponent.faqSetting_.isCanEdit()){%>
+													<%if (uicomponent.faqSetting_.isCanEdit()){%>
 												 <li>
 													<a	href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
 													</a>
 												</li>
-												<%}
-												} else if (uicomponent.faqSetting_.isCanEdit()) { %>
+												</ul>
+										</div>
+									</div>
+												<%}%>
+												<%} else if (uicomponent.faqSetting_.isCanEdit()) { %>
+												<div class="moreAction ">
+										<div class="pull-right uiDropdownWithIcon dropdown">
+											<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+                         <i class="uiIconSettings uiIconLightGray"></i>
+                           <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
+                         <i class="uiIconMiniArrowDown uiIconLightGray"></i>
+                       </button>
+                       						<ul class="dropdown-menu">
 												<li>
 													<a href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
@@ -889,10 +899,11 @@
 														 <i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 													</a>
 												</li>
-											<%} %>
-											</ul>
+												</ul>
 										</div><!-- end dropdown menu comments -->
 									</div>
+											<%} %>
+											
 
 									<div class="responseItem">
 										<div class="avatarXSmall pull-left">
