@@ -149,13 +149,7 @@ public class UITopicForm extends BaseForumForm {
                                                                      getLabel(FIELD_NOTIFYWHENADDPOST_CHECKBOX), false);
     UIForumCheckBoxInput sticky = new UIForumCheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, 
                                                            getLabel(FIELD_STICKY_CHECKBOX), false);
-
-    //UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    //formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    //formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
-    //formWYSIWYGInput.setToolBarName("Basic");
-    //formWYSIWYGInput.setWidth("98%");
-    
+        
     UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     richtext.setToolbar("Forum");
 

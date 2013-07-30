@@ -51,7 +51,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
@@ -199,10 +199,9 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, contenQuestion.replaceAll("<br\\s*\\/?>", " "))
 	  .addValidator(MandatoryValidator.class));
-    UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, "");
+    UIFormRichtextInput filedMessage = new UIFormRichtextInput(FILED_MESSAGE, FILED_MESSAGE, "");
     filedMessage.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(stringBuffer.toString()));
-    filedMessage.setFCKConfig(WebUIUtils.getFCKConfig());
-    filedMessage.setToolBarName("Basic");
+    filedMessage.setToolbar("Forum");
     filedMessage.addValidator(MandatoryValidator.class);
     addChild(filedMessage);
   }
@@ -243,7 +242,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       String fullFrom = fromName + " (" + from + ") <" + sendMailForm.getServerConfig().get("account") + ">";
       String to = ((UIFormStringInput) sendMailForm.getChildById(FILED_TO)).getValue();
       String subject = ((UIFormStringInput) sendMailForm.getChildById(FILED_SUBJECT)).getValue();
-      String body = ((UIFormWYSIWYGInput) sendMailForm.getChildById(FILED_MESSAGE)).getValue();
+      String body = ((UIFormRichtextInput) sendMailForm.getChildById(FILED_MESSAGE)).getValue();
       if (to != null && to.indexOf(";") > -1)
         to = to.replace(';', ',');
       if (FAQUtils.isFieldEmpty(fromName)) {
@@ -330,7 +329,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     public void execute(Event<UISendMailForm> event) throws Exception {
       UISendMailForm sendMailForm = event.getSource();
       UIFormSelectBox formSelectBox = sendMailForm.getChildById(FILED_QUESTION_LANGUAGE);
-      UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE);
+      UIFormRichtextInput body = sendMailForm.getChildById(FILED_MESSAGE);
       UIFormStringInput subject = sendMailForm.getChildById(FILED_SUBJECT);
       String language = formSelectBox.getValue();
       String contenQuestion = "", qsId = sendMailForm.questionId;

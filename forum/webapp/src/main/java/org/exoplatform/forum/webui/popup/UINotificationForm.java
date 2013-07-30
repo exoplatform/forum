@@ -37,7 +37,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
+
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
@@ -78,8 +79,8 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     UIFormInputWithActions notifyEmailMoveTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_MOVE_TAB);
     UICheckBoxInput enableHeaderSubject = initEnableHeaderField();
     UIFormStringInput headerSubject = initEnableHeaderSubjectField();
-    UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
-    UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
+    UIFormRichtextInput notifyEmail = initNotifyEmailField();
+    UIFormRichtextInput notifyEmailMoved = initNotifyMoveField();
 
     notifyEmailAddNewTab.addUIFormInput(enableHeaderSubject);
     notifyEmailAddNewTab.addUIFormInput(headerSubject);
@@ -104,27 +105,23 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     notifyEmailTab.setActionField(param, actions);
   }
 
-  private UIFormWYSIWYGInput initNotifyMoveField() {
+  private UIFormRichtextInput initNotifyMoveField() {
     String value = administration.getNotifyEmailMoved();
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("EmailToAuthorMoved");
-    UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
-    notifyEmailMoved.setToolBarName("Basic");
-    notifyEmailMoved.setFCKConfig(WebUIUtils.getFCKConfig());
+    UIFormRichtextInput notifyEmailMoved = new UIFormRichtextInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
+    notifyEmailMoved.setToolbar("Forum");
     notifyEmailMoved.setValue(value);
-    notifyEmailMoved.setWidth("94%");
     return notifyEmailMoved;
   }
 
-  private UIFormWYSIWYGInput initNotifyEmailField() {
+  private UIFormRichtextInput initNotifyEmailField() {
     String value = administration.getNotifyEmailContent();
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("notifyEmailContentDefault");
-    UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
-    notifyEmail.setToolBarName("Basic");
-    notifyEmail.setFCKConfig(WebUIUtils.getFCKConfig());
+    UIFormRichtextInput notifyEmail = new UIFormRichtextInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
+    notifyEmail.setToolbar("Forum");
     notifyEmail.setValue(value);
-    notifyEmail.setWidth("94%");
     return notifyEmail;
   }
 
@@ -163,9 +160,9 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
       UIFormInputWithActions notifyEmailMoveTab = getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB);
       boolean enableHeaderSubject = (Boolean) notifyEmailAddNewTab.getUICheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
       String headerSubject = notifyEmailAddNewTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
-      String notifyEmail = notifyEmailAddNewTab.getChild(UIFormWYSIWYGInput.class).getValue();
+      String notifyEmail = notifyEmailAddNewTab.getChild(UIFormRichtextInput.class).getValue();
 
-      String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormWYSIWYGInput.class).getValue();
+      String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormRichtextInput.class).getValue();
       if (notifyEmail == null || notifyEmail.replaceAll("<p>", ForumUtils.EMPTY_STR).replaceAll("</p>", ForumUtils.EMPTY_STR).replaceAll("&nbsp;", ForumUtils.EMPTY_STR).trim().length() < 1) {
         warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
         return;
@@ -198,9 +195,9 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
   static public class GetDefaultMailActionListener extends BaseEventListener<UINotificationForm> {
     public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objectId) throws Exception {
       if (objectId.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
-        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB)).getChild(UIFormWYSIWYGInput.class).setValue(getLabel("notifyEmailContentDefault"));
+        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB)).getChild(UIFormRichtextInput.class).setValue(getLabel("notifyEmailContentDefault"));
       } else {
-        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB)).getChild(UIFormWYSIWYGInput.class).setValue(getLabel("EmailToAuthorMoved"));
+        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB)).getChild(UIFormRichtextInput.class).setValue(getLabel("EmailToAuthorMoved"));
       }
       refresh();
     }

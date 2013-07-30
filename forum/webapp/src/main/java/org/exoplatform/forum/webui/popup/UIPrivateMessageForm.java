@@ -47,8 +47,9 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
+import org.exoplatform.webui.form.UIFormRichtextInput;
+
 
 @ComponentConfigs ( 
   {
@@ -101,12 +102,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     sendTo.addValidator(MandatoryValidator.class);
     UIFormStringInput mailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
     mailTitle.addValidator(MandatoryValidator.class);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, ForumUtils.EMPTY_STR);
+    UIFormRichtextInput formWYSIWYGInput = new UIFormRichtextInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    formWYSIWYGInput.setToolBarName("Basic");
-    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
-    formWYSIWYGInput.setHeight("220px");
-    formWYSIWYGInput.setWidth("98%");
+    formWYSIWYGInput.setToolbar("Forum");
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(sendTo);
     sendMessageTab.addUIFormInput(mailTitle);
@@ -215,7 +213,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         return;
       }
       mailTitle = CommonUtils.encodeSpecialCharInTitle(mailTitle);
-      UIFormWYSIWYGInput formWYSIWYGInput = messageTab.getChild(UIFormWYSIWYGInput.class);
+      UIFormRichtextInput formWYSIWYGInput = messageTab.getChild(UIFormRichtextInput.class);
       String message = formWYSIWYGInput.getValue();
       if (!ForumUtils.isEmpty(message)) {
         ForumPrivateMessage privateMessage = new ForumPrivateMessage();
@@ -275,7 +273,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) throws Exception {
     UIFormInputWithActions messageTab = getChildById(FIELD_SENDMESSAGE_TAB);
     UIFormStringInput stringInput = messageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
-    UIFormWYSIWYGInput message = messageTab.getChild(UIFormWYSIWYGInput.class);
+    UIFormRichtextInput message = messageTab.getChild(UIFormRichtextInput.class);
     String content = privateMessage.getMessage();
     
     String replyLabel = getLabel(FIELD_REPLY_LABEL) + CommonUtils.COLON;
