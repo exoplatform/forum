@@ -770,7 +770,6 @@
           </object>
         </object-param>
 
-
         <object-param>
           <name>xlt</name>
           <description></description>
@@ -783,6 +782,22 @@
             </field>
             <field name="groupFileTypes">
               <string><![CDATA[applicationxls,applicationxlt,applicationvndopenxmlformats-officedocumentspreadsheetmlsheet,FileXls,FileXlt]]></string>
+            </field>
+          </object>
+        </object-param>
+
+        <object-param>
+          <name>sxc</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>sxc</string>
+            </field>
+            <field name="cssClass">
+              <string>FileExcel</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[FileSxc]]></string>
             </field>
           </object>
         </object-param>
@@ -1056,6 +1071,22 @@
             </field>
             <field name="groupFileTypes">
               <string><![CDATA[imagepsd]]></string>
+            </field>
+          </object>
+        </object-param>
+
+        <object-param>
+          <name>psb</name>
+          <description></description>
+          <object type="org.exoplatform.forum.common.webui.cssfile.CssClassIconFile">
+            <field name="type">
+              <string>psb</string>
+            </field>
+            <field name="cssClass">
+              <string>FilePsd</string>
+            </field>
+            <field name="groupFileTypes">
+              <string><![CDATA[imagepsb]]></string>
             </field>
           </object>
         </object-param>
