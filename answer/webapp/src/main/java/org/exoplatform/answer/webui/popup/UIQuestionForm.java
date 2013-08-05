@@ -259,7 +259,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     }
 
     inputQuestionDetail = new UIFormRichtextInput(QUESTION_DETAIL, QUESTION_DETAIL, "");
-    inputQuestionDetail.setToolbar("FAQ");
+    inputQuestionDetail.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
+    inputQuestionDetail.setIsPasteAsPlainText(true);
     if (!questionContents_.isEmpty()) {
       String input = questionContents_.get(0);
       if (input != null && input.indexOf("<p>") >= 0 && input.indexOf("</p>") >= 0) {

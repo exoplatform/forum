@@ -77,8 +77,9 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
   public UICommentForm() throws Exception {
     currentUser_ = FAQUtils.getCurrentUser();
     UIFormRichtextInput commentContent = new UIFormRichtextInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
-    commentContent.setToolbar("FAQ");
+    commentContent.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
     commentContent.setHeight("'250px'");
+    commentContent.setIsPasteAsPlainText(true);
     this.addChild(commentContent);
     User user = FAQUtils.getCurrentUserObject();
     if(user != null) {

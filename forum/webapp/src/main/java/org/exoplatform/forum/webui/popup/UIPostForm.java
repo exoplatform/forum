@@ -122,7 +122,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     
     
     UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    richtext.setToolbar("Forum");
+    richtext.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.setIsPasteAsPlainText(true);
     
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);

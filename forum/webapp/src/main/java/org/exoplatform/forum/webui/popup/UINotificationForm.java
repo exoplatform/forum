@@ -110,7 +110,8 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("EmailToAuthorMoved");
     UIFormRichtextInput notifyEmailMoved = new UIFormRichtextInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
-    notifyEmailMoved.setToolbar("Forum");
+    notifyEmailMoved.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    notifyEmailMoved.setIsPasteAsPlainText(true);
     notifyEmailMoved.setValue(value);
     return notifyEmailMoved;
   }
@@ -120,7 +121,8 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("notifyEmailContentDefault");
     UIFormRichtextInput notifyEmail = new UIFormRichtextInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
-    notifyEmail.setToolbar("Forum");
+    notifyEmail.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    notifyEmail.setIsPasteAsPlainText(true);
     notifyEmail.setValue(value);
     return notifyEmail;
   }

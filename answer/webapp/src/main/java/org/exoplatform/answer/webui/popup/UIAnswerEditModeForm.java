@@ -28,7 +28,6 @@ import org.exoplatform.answer.webui.ValidatorDataInput;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -167,7 +166,8 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
 
   private UIFormRichtextInput addNewUIFormRichtextInput(String id) {
 	  UIFormRichtextInput wysiwygInput = new UIFormRichtextInput(id, id, "");
-    wysiwygInput.setToolbar("Forum");
+    wysiwygInput.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    wysiwygInput.setIsPasteAsPlainText(true);
     return wysiwygInput;
   }
 

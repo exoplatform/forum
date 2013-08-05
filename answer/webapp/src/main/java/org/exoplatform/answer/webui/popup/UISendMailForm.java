@@ -201,7 +201,8 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 	  .addValidator(MandatoryValidator.class));
     UIFormRichtextInput filedMessage = new UIFormRichtextInput(FILED_MESSAGE, FILED_MESSAGE, "");
     filedMessage.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(stringBuffer.toString()));
-    filedMessage.setToolbar("Forum");
+    filedMessage.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    filedMessage.setIsPasteAsPlainText(true);
     filedMessage.addValidator(MandatoryValidator.class);
     addChild(filedMessage);
   }

@@ -134,7 +134,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   public UIResponseForm() throws Exception {
     isChildOfQuestionManager_ = false;
     inputResponseQuestion_ = new UIFormRichtextInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "");
-    inputResponseQuestion_.setToolbar("FAQ");
+    inputResponseQuestion_.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
+    inputResponseQuestion_.setIsPasteAsPlainText(true);
     checkShowAnswer_ = new UICheckBoxInput(SHOW_ANSWER, SHOW_ANSWER, false);
     isApproved_ = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
     this.setActions(new String[] { "Save", "Cancel" });
