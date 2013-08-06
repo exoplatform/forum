@@ -22,7 +22,7 @@
   <parent>
     <artifactId>forum</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.0.2</version>
+    <version>4.0.x-SNAPSHOT</version>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras</artifactId>
