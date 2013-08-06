@@ -112,6 +112,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     UIFormRichtextInput notifyEmailMoved = new UIFormRichtextInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
     notifyEmailMoved.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
     notifyEmailMoved.setIsPasteAsPlainText(true);
+    notifyEmailMoved.setWidth("94%");
     notifyEmailMoved.setValue(value);
     return notifyEmailMoved;
   }
@@ -123,6 +124,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     UIFormRichtextInput notifyEmail = new UIFormRichtextInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
     notifyEmail.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
     notifyEmail.setIsPasteAsPlainText(true);
+    notifyEmail.setWidth("94%");
     notifyEmail.setValue(value);
     return notifyEmail;
   }
