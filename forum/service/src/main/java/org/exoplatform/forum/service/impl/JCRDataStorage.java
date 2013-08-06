@@ -917,7 +917,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         catNode.setProperty(EXO_OWNER, category.getOwner());
         catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         boolean isIncludedSpace = category.isIncludedSpace() || category.getId().contains(Utils.CATEGORY_SPACE);
-        catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        try {
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        } catch (Exception e) {
+          catNode.addMixin("mix:forumCategory");
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        }
         categoryHome.getSession().save();
         addModeratorCalculateListener(catNode);
       } else {
