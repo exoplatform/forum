@@ -412,7 +412,18 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>
-	</nodeType> 
+	</nodeType>
+	
+	<nodeType name="mix:forumCategory" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+    <propertyDefinitions>
+      <propertyDefinition name="exo:includedSpace" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+        <defaultValues>
+          <defaultValue>false</defaultValue>
+        </defaultValues>
+      </propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
 	
 	<nodeType name="exo:forumCategory" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
