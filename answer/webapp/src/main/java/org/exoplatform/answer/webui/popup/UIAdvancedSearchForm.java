@@ -298,7 +298,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
         return;
       }
       
-      text = CommonUtils.encodeSpecialCharInSearchTerm(text);
+      text = CommonUtils.encodeSpecialCharInTitle(text);
       categoryName = CommonUtils.encodeSpecialCharInSearchTerm(categoryName);
       question = CommonUtils.encodeSpecialCharInSearchTerm(question);
       response = CommonUtils.encodeSpecialCharInContent(response);

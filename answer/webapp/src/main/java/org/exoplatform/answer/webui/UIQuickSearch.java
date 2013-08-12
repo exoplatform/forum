@@ -79,7 +79,7 @@ public class UIQuickSearch extends BaseUIFAQForm {
       UIFormStringInput formStringInput = uiQuickSearch.getUIStringInput(FIELD_SEARCHVALUE);
       String text = formStringInput.getValue();
       if (text != null && text.trim().length() > 0) {
-        text = CommonUtils.encodeSpecialCharInSearchTerm(text);
+      	text = CommonUtils.encodeSpecialCharInTitle(text);
         FAQService faqService = FAQUtils.getFAQService();
         List<ObjectSearchResult> list = new ArrayList<ObjectSearchResult>();
         FAQEventQuery eventQuery = new FAQEventQuery();
