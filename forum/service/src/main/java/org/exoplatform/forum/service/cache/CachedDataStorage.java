@@ -178,7 +178,9 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearTopicCache(String topicPath) throws Exception {
-    topicData.remove(new TopicKey(topicPath, true));
+    topicData.remove(new TopicKey(topicPath, false));
+    topicData.remove(new TopicKey(topicPath.toUpperCase(), true));
+    topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
   }
 
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
@@ -236,7 +238,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     
     // Clear watching item data
     if (!Utils.isEmpty(topicId)) {
-      topicData.remove(new TopicKey(categoryId + "/" + forumId + "/" + topicId, false));
+      clearTopicCache(categoryId + "/" + forumId + "/" + topicId);
     } else if (!Utils.isEmpty(forumId)) {
       forumData.remove(new ForumKey(categoryId, forumId));
     } else {
@@ -686,7 +688,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public Topic getTopicSummary(final String topicPath) {
 
-    return topicDataFuture.get(
+    Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
             try {
@@ -704,7 +706,10 @@ public class CachedDataStorage implements DataStorage, Startable {
         },
         new TopicKey(topicPath, false)
     ).build();
-
+    //
+    got.setIsPoll(topicHasPoll(got.getPath()));
+    
+    return got;
   }
 
   public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
@@ -714,8 +719,29 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getTopicSummary(topicPath, isLastPost);
   }
 
-  public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
-    return storage.getTopicByPath(topicPath, isLastPost);
+  public Topic getTopicByPath(final String topicPath, final boolean isLastPost) throws Exception {
+    Topic got = topicDataFuture.get(
+        new ServiceContext<TopicData>() {
+          public TopicData execute() {
+            try {
+              Topic got = storage.getTopicByPath(topicPath, isLastPost);
+              if (got != null) {
+                return new TopicData(got);
+              }
+              else {
+                return TopicData.NULL;
+              }
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+        },
+        new TopicKey(topicPath.toUpperCase(), isLastPost)
+    ).build();
+    //
+    got.setIsPoll(topicHasPoll(got.getPath()));
+    
+    return got;
   }
 
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
@@ -1489,6 +1515,11 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public String getActivityIdForOwner(String ownerPath) {
     return storage.getActivityIdForOwner(ownerPath);
+  }
+
+  @Override
+  public boolean topicHasPoll(String topicPath) {
+    return storage.topicHasPoll(topicPath);
   }
 
 }
