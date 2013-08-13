@@ -2208,6 +2208,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  @Override
+  public boolean topicHasPoll(String topicPath) {
+    try {
+      return new PropertyReader(getTopicNodeByPath(topicPath, false)).bool(EXO_IS_POLL, false);
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
     return getTopicNodeSummary(getTopicNodeByPath(topicPath, isLastPost));
   }
