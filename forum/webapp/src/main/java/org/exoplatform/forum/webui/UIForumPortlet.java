@@ -597,7 +597,7 @@ public class UIForumPortlet extends UIPortletApplication {
         if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
           if (!topic.getIsActive() || !topic.getIsActiveByForum())
             return false;
-          String[] canCreadPost = ForumUtils.arraysMerge(cate.getCreateTopicRole(), ForumUtils.arraysMerge(topic.getCanPost(), forum.getCreateTopicRole()));
+          String[] canCreadPost = ForumUtils.arraysMerge(cate.getPoster(), ForumUtils.arraysMerge(topic.getCanPost(), forum.getPoster()));
           if (!ForumUtils.isArrayEmpty(canCreadPost)) {
             return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
           }
