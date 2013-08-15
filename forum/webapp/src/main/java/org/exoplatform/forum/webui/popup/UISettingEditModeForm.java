@@ -181,7 +181,7 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
   }
 
   private boolean isForumChecked(String forumId) {
-    return (listforuminv.contains(forumId) == true || listCategoryinv.isEmpty());
+    return (listforuminv.contains(forumId) == true || listforuminv.isEmpty());
   }
 
   protected List<Forum> getForumList(String categoryId) throws Exception {
@@ -226,18 +226,26 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
         }
       }
     }
-    if(categoryIds.size() != allCategorySize) {
-      listCategoryinv = new ArrayList<String>(categoryIds);
-      listforuminv = new ArrayList<String>(forumIds);
+    listCategoryinv.clear();
+    listforuminv.clear();
+    
+    processValue(categoryIds, listCategoryinv, allCategorySize);
+    if(listCategoryinv.contains("_")) {
+      listforuminv.add("_");
     } else {
-      listCategoryinv.clear();
-      listforuminv.clear();
-      if(forumIds.size() != allForumSize) {
-        listforuminv = new ArrayList<String>(forumIds);
-      }
+      processValue(forumIds, listforuminv, allForumSize);
     }
   }
 
+  private void processValue(Set<String> inputs, List<String> values, int size) {
+    //
+    if (inputs.size() != size) {
+      if (inputs.size() == 0) {
+        values.add("_");
+      }
+      values.addAll(inputs);
+    }
+  }
   static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
     public void execute(Event<UISettingEditModeForm> event) throws Exception {
       UISettingEditModeForm editModeForm = event.getSource();
