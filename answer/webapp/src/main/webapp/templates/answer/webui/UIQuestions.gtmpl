@@ -281,7 +281,6 @@
 										</a>
 								<% if (uicomponent.viewAuthorInfor) {%>
 								    <div class="authorName" rel="tooltip" data-placement="bottom" title="<%= FAQUtils.getFullName(question.getAuthor());%>"><%= FAQUtils.getFullName(question.getAuthor());%></div>
-								    <div class="authorEmail" rel="tooltip" data-placement="bottom" title="<%= question.getEmail();%>"><%= question.getEmail();%></div>
 								<% } %>
 									</div>
 							<% } %>
