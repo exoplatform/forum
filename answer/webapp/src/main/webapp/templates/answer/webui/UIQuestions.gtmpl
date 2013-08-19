@@ -394,6 +394,9 @@
 											</div><!-- end moreAction -->
 
 											<!-- action translation question -->
+										<%
+											if(listQuestLanguage.length > 1) {
+										%>
 											<div class="languageContainer pull-right">
 											<%
 
@@ -406,12 +409,14 @@
 													}
 											%>
 											<span class="uiRadio">
-												<input type="radio" name="language" $ischeck onclick="$linkView"/>
+												<input type="radio" name="language" <%=ischeck%> onclick="$linkView"/>
 												<span>$quesLanguage</span>
 										 	</span>
-
 											<%} %>
 											</div><!-- end languageContainer -->
+										<%
+											}
+										%>
 											<h5>
 												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h5>
@@ -935,7 +940,7 @@
 			<% } %> <!-- end for question -->
 
 				<!-- Print actions -->
-				<div class="PrintAction" title="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"><%=_ctx.appRes("UIQuestions.action.Print")%></div>
+				<div style="display:none" class="PrintAction" title="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"><%=_ctx.appRes("UIQuestions.action.Print")%></div>
 
 			</div>
 
