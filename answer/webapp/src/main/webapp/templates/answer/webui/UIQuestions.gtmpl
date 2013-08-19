@@ -233,9 +233,9 @@
 
 							</div><!-- end dropdown -->
 
-							<h6 class="titleWithBorder disableContextMenu" id="UIContextPopupMenu$questionIndex">
+							<h5 class="titleWithBorder disableContextMenu" id="UIContextPopupMenu$questionIndex">
 								<a class="questions questionRightClickMenu" href="$linkQuestion" data-contextid="$contextMenuId">$questionContent</a>
-							</h6>
+							</h5>
 
 						<%if(!question.isApproved()) {%>
 							<p class="alert alert-info"><i class="uiIconInfo"></i><%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%></p>
@@ -412,9 +412,9 @@
 
 											<%} %>
 											</div><!-- end languageContainer -->
-											<h6>
+											<h5>
 												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
-											</h6>
+											</h5>
 
 										</div><!-- end actionBar -->
 
@@ -524,7 +524,7 @@
 											<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
 												<!-- action Sort answer by vote -->
 												<p class="sortAnswer">
-													<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+													<a class="uiActionWithLabel" href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
 														<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote");%>	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 												</p>
