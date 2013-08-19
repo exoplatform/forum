@@ -28,7 +28,7 @@
     <application-name>poll</application-name>
     <portlet-name>PollPortlet</portlet-name>
     <skin-name>Default</skin-name>
-    <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-path>/skin/css/pollPortlet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
 
