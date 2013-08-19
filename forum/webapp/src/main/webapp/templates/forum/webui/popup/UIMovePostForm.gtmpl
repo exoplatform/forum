@@ -8,7 +8,7 @@
 
 <div class="uiSelectCategoryForm horizontalLayout">
 	<% uiform.begin() %>
-	<p>Choose a Destination Forum:</p>
+	<p><%=_ctx.appRes("UIMovePostForm.label.ChooseDestinationTopic")%>:</p>
 	<div class="uiTrees scrollArea">
 		<div class="treeContainer">
 			<ul class="nodeGroup">
