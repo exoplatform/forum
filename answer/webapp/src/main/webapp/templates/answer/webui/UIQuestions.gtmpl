@@ -291,7 +291,7 @@
 											<div class="moreAction pull-right">
 												<div class="pull-right uiDropdownWithIcon dropdown">
 
-													<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+													<button data-toggle="dropdown" class="btn" type="button">
 	                          <i class="uiIconSettings uiIconLightGray"></i>
 	                            <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
 	                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
@@ -397,22 +397,31 @@
 										<%
 											if(listQuestLanguage.length > 1) {
 										%>
-											<div class="languageContainer pull-right">
+											<div class="languageContainer pull-right uiDropdownWithIcon dropdown">
+											
+											
+												<button data-toggle="dropdown" class="btn" type="button">
+                          <span><%=uicomponent.language_%>&nbsp;</span>
+                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
+                        </button>
+												<!--	Begin popup menu	-->
+												<ul class="dropdown-menu">
+											
 											<%
-
 												for(String quesLanguage in listQuestLanguage) {
 													String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
 													String color = "#914ab6";
 													String ischeck = "";
 													if(quesLanguage.equals(uicomponent.language_)){
-														ischeck = "checked";
+														continue;
 													}
 											%>
-											<span class="uiRadio">
-												<input type="radio" name="language" <%=ischeck%> onclick="$linkView"/>
-												<span>$quesLanguage</span>
-										 	</span>
+													<li>
+														 <a class="actionIcon" onclick="<%=linkView%>"><%=quesLanguage%></a>
+													</li>
 											<%} %>
+											
+												</ul>
 											</div><!-- end languageContainer -->
 										<%
 											}
@@ -688,7 +697,7 @@
 									<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
 										<div class="moreAction">
 											<div class="pull-right uiDropdownWithIcon dropdown">
-												<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+												<button data-toggle="dropdown" class="btn" type="button">
 													<i class="uiIconSettings uiIconLightGray"></i>
 														<span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
@@ -855,7 +864,7 @@
 								<div class="responseItemContainer	<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
 									<div class="moreAction ">
 										<div class="pull-right uiDropdownWithIcon dropdown">
-											<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
+											<button data-toggle="dropdown" class="btn" type="button">
                          <i class="uiIconSettings uiIconLightGray"></i>
                            <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
                          <i class="uiIconMiniArrowDown uiIconLightGray"></i>
