@@ -398,29 +398,22 @@
 											if(listQuestLanguage.length > 1) {
 										%>
 											<div class="languageContainer pull-right uiDropdownWithIcon dropdown">
-											
-											
 												<button data-toggle="dropdown" class="btn" type="button">
                           <span><%=uicomponent.language_%>&nbsp;</span>
                           <i class="uiIconMiniArrowDown uiIconLightGray"></i>
                         </button>
 												<!--	Begin popup menu	-->
 												<ul class="dropdown-menu">
-											
 											<%
 												for(String quesLanguage in listQuestLanguage) {
-													String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
-													String color = "#914ab6";
-													String ischeck = "";
 													if(quesLanguage.equals(uicomponent.language_)){
 														continue;
 													}
 											%>
 													<li>
-														 <a class="actionIcon" onclick="<%=linkView%>"><%=quesLanguage%></a>
+														 <a class="actionIcon" onclick="<%=uicomponent.event("ChangeLanguage", quesLanguage)%>"><%=quesLanguage%></a>
 													</li>
 											<%} %>
-											
 												</ul>
 											</div><!-- end languageContainer -->
 										<%
