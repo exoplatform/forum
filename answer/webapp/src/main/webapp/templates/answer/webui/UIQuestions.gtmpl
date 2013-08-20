@@ -29,6 +29,7 @@
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
 	boolean isViewRootCate = uicomponent.isViewRootCate;
 	String currentUser = FAQUtils.getCurrentUser() ;
+	String viewProfileLabel = _ctx.appRes("UIQuestionsInfo.title.ViewUserProfile");
 %>
 
 <div class="uiQuestions uiBox" id="$uicomponent.id">
@@ -247,7 +248,7 @@
 							if (authorOfLastAct != null && !authorOfLastAct.isEmpty()) {
 						%>
 								<div class="pull-right name">
-									<a class="avatarMini" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>">
+									<a class="avatarMini" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>">
 										<img src="<%=uicomponent.getAvatarUrl(authorOfLastAct)%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										<span><%= FAQUtils.getFullName(authorOfLastAct);%></span>
 									</a>
@@ -276,12 +277,12 @@
 										String author = question.getAuthor();
 								%>
 									<div class="avatarLarge pull-left ">
-										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", author)%>" >
+										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", author)%>">
 											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										</a>
-								<% if (uicomponent.viewAuthorInfor) {%>
-								    <div class="authorName" rel="tooltip" data-placement="bottom" title="<%= FAQUtils.getFullName(question.getAuthor());%>"><%= FAQUtils.getFullName(question.getAuthor());%></div>
-								<% } %>
+									<% if (uicomponent.viewAuthorInfor) {%>
+									    <a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", author)%>"><%= FAQUtils.getFullName(question.getAuthor());%></a>
+									<% } %>
 									</div>
 							<% } %>
 
@@ -753,7 +754,7 @@
 								 		<!-- View user who answered quesetion	-->
 								 			<div class="avatarXSmall pull-left">
 									 <% if(uicomponent.faqSetting_.isEnableViewAvatar()) {%>
-												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
+												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
 													<img src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 												</a>
 									 <% } %>
@@ -762,7 +763,7 @@
 								 			<div class="responseItemContainerRight">
 								 		<% if(answer.getApprovedAnswers() && answer.getActivateAnswers()) { %>
 												<div class="answerContent">
-													<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
+													<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
 													<span class="userName">
 															<%= FAQUtils.getFullName(owner);%>
 														</span>
@@ -771,7 +772,7 @@
 												</div>
 										<% } else { %>
 												<div class="answerContent">
-													 <a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
+													 <a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
 													   <span class="userName">
 													     <%= FAQUtils.getFullName(owner);%>
 													   </span>
@@ -906,7 +907,7 @@
 										<%
 											if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 										%>
-											<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
+											<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
 												<img	src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 											</a>
 										<%}%>
@@ -914,7 +915,7 @@
 									<% String commentDetail = uicomponent.render(comment); %>
 										<div class="responseItemContainerRight">
 											<div class="commentContent">
-												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
+												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>">
 													<span class="userName">
 														<%= FAQUtils.getFullName(owner);%>
 													</span>
