@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,7 +65,6 @@ import javax.jcr.query.RowIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
@@ -3005,17 +3005,22 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       Node category = getFAQServiceHome(sProvider).getNode(path);
       while (category.isNodeType(EXO_FAQ_CATEGORY)) {
-        if (category.hasProperty(EXO_NAME)) {
-          list.add(category.getProperty(EXO_NAME).getString());
-        } else {
+        if (category.getName().equals(Utils.CATEGORY_HOME) || category.hasProperty(EXO_NAME) == false) {
           list.add(category.getName());
+        } else {
+          list.add(category.getProperty(EXO_NAME).getString());
         }
         category = category.getParent();
       }
-      for (int i = list.size() - 1; i >= 0; i--) {
-        if (i != list.size() - 1)
+      Collections.reverse(list);
+      Iterator<String> iter = list.iterator();
+      boolean hasNext = iter.hasNext();
+      while (hasNext) {
+        names.append(iter.next());
+        hasNext = iter.hasNext();
+        if (hasNext) {
           names.append(" > ");
-        names.append(list.get(i));
+        }
       }
     } catch (Exception e) {
       log.error("Failed to get parent categories name", e);

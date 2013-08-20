@@ -313,6 +313,7 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     eventQuery.setText("test");
     eventQuery.setAdmin(true);
     eventQuery.setUserId(USER_ROOT);
+    eventQuery.setUserMembers(new ArrayList<String>());
 
     // quick search (for all questions and categories)
     eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
@@ -375,6 +376,7 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     eventQuery.setModerator("demo");
     eventQuery.setUserId(USER_ROOT);
     eventQuery.setLanguage("English");
+    eventQuery.setUserMembers(new ArrayList<String>());
 
     // quick search (for all questions and categories)
     eventQuery.setType(FAQEventQuery.FAQ_QUESTION);

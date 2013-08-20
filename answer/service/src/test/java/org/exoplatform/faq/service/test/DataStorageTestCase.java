@@ -844,6 +844,7 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
     eventQuery.setAdmin(true);
     eventQuery.setUserId(USER_ROOT);
     eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
+    eventQuery.setUserMembers(new ArrayList<String>());
     assertEquals(7, dataStorage.getSearchResults(eventQuery).size());
     
     //
@@ -909,9 +910,16 @@ public class DataStorageTestCase extends FAQServiceBaseTestCase {
   }
 
   public void testGetParentCategoriesName() throws Exception {
+    Category rootCate = dataStorage.getCategoryById(Utils.CATEGORY_HOME);
+    rootCate.setName("new name");
+    dataStorage.saveCategory(null, rootCate, false);
+    rootCate = dataStorage.getCategoryById(Utils.CATEGORY_HOME);
+    assertEquals("new name", rootCate.getName());
     assertEquals("categories > Category 1 to test question", dataStorage.getParentCategoriesName(categoryId1));
     assertEquals("categories > Category 2 to test question", dataStorage.getParentCategoriesName(categoryId2));
     assertEquals("categories > Category 3 has not question", dataStorage.getParentCategoriesName(categoryId3));
+    dataStorage.removeCategory(Utils.CATEGORY_HOME);
+    dataStorage.initRootCategory();
   }
   
   public void testGetPendingMessages() throws Exception {
