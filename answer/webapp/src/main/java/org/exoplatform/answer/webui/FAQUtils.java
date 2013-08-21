@@ -409,7 +409,7 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("No forum settings found for date format. Will use format " + format);
     }
-    format = format.replace("EEE,MMM", "EEE, MMM").replaceAll("D", "E");
+    format = format.replaceAll("D", "E").replace("EEE,MMM", "EEE, MMM").replace("d,y", "d, y");
     return TimeConvertUtils.getFormatDate(myDate, format);
   }
 
