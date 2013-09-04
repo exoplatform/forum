@@ -30,7 +30,7 @@
 		padding-left: 10px;
 		width: 100%;
 		.attachmentContainer{
-			background: #f9f9f9;
+			background: @grayLighter;
 			padding: 18px;
 			margin-top: 10px;
 			
@@ -103,7 +103,7 @@
 			border-top: dotted 1px @borderColor;
 			margin-top: 20px;
 			padding-top: 5px;
-			color: #b3b3b3;
+			color: @grayLight;
 			text-align: right;
 			.txtLastEdit{
 				font-size: @baseFontSize - 1;
@@ -120,7 +120,7 @@
 	}
 	
 	.postViewHeader{
-		background: #f9f9f9;
+		background: @grayLighter;
 		padding: 10px 15px;
 		min-height:20px;
 		margin-bottom: 5px;
@@ -208,8 +208,8 @@
 		.tagItem{
 			background: #e0e8f5;
 			.border-radius(3px);
-			color: #2f5e92;
-			border: 1px solid #3f6fbb;
+			color: @blue;
+			border: 1px solid @blueLight;
 			padding: 1px 5px;
 			display: inline-block;
 		}
@@ -239,23 +239,6 @@
 		}
 	}
 	
-	.searchTagName{
-		.dropdown-menu{
-			li.selected{
-				text-decoration: none;
-				color: #ffffff;
-				background-color: #0081c2;
-				background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
-				background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
-				background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
-				background-image: -o-linear-gradient(top, #0088cc, #0077b3);
-				background-image: linear-gradient(to bottom, #0088cc, #0077b3);
-				background-repeat: repeat-x;
-				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
-			}
-		}
-	}
-	
 	.uiBox {
 		&.uiPostRules{
 			margin-top: 10px;
@@ -268,7 +251,7 @@
 	
 	.line{ 
 		margin: 10px -10px;
-		background: #cfcfcf;
+		background: @grayDarkWhiteSmoke;
 		height: 1px;
 		display: block;
 	}
