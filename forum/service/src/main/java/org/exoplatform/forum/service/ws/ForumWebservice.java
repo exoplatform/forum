@@ -32,7 +32,7 @@ import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
- * Handles rest request to process Forum. It can be get and filtered, process with RSS are also provided.
+ * Handles REST request to process Forum.
  * 
  * @anchor ForumWebservice
  * 
@@ -62,15 +62,15 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Gets recent posts for user and limited by number post.
+   * Gets recent posts for users which are limited by the maximum number of posts rendered.
    * 
-   * @param maxcount is max number post for render in gadget
-   * @param sc is SecurityContext for get userId login when we use rest link to render gadget.
-   * @param uriInfo is UriInfo for get userId login when we render gadget via gadgets service
+   * @param maxcount The maximum number of posts rendered in the gadget.
+   * @param sc The security context which gets the information of the current user.
+   * @param uriInfo The URI information which gets the information of the current user.
    * 
    * @anchor ForumWebservice.getMessage
    * 
-   * @return the response is json-data content list recent post for user.
+   * @return JSON data content list of the recent posts for user.
    * 
    * @throws Exception the exception
    * 
@@ -92,13 +92,13 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Gets recent public post limited by number post.
+   * Gets recent public posts which are limited by the maximum number of posts rendered.
    * 
-   * @param maxcount is max number post for render in gadget
+   * @param maxcount The maximum number of posts rendered in the gadget.
    * 
    * @anchor ForumWebservice.getPulicMessage
    * 
-   * @return the response is json-data content list recent public post.
+   * @return JSON data content list of the recent public posts.
    * 
    * @throws Exception the exception
    * 
@@ -113,13 +113,13 @@ public class ForumWebservice implements ResourceContainer {
   }
   
   /**
-   * Filters ips.
+   * Filters banned IPs in all forums of eXo Platform.
    * 
-   * @param str ip to filter.
+   * @param str The keyword to search the banned IP from the IPs list.
    * 
    * @anchor ForumWebservice.filterIps
    * 
-   * @return the response is json-data
+   * @return The response is JSON data.
    * 
    * @throws Exception
    * 
@@ -149,14 +149,14 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Filters banned IP.
+   * Filters banned IPs in a given forum.
    * 
-   * @param forumId id of forum
-   * @param str banned ip to filter
+   * @param forumId The forum Id.
+   * @param str The keyword to search the banned IP from the IPs list.
    * 
    * @anchor ForumWebservice.filterIpBanForum
    * 
-   * @return the response is json-data
+   * @return The response is JSON data.
    * 
    * @throws Exception
    * 
@@ -186,14 +186,14 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Filters tag of forum by name.
+   * Filters tags of the forum by name.
    * 
-   * @param str tag name to filter
-   * @param userAndTopicId id of user and topic
+   * @param str The keyword to search the tag name in a topic.
+   * @param userAndTopicId The Id of users and topics which are separated by a comma.
    * 
    * @anchor ForumWebservice.filterTagNameForum
    * 
-   * @return the response is json-data
+   * @return The response is JSON data.
    * 
    * @throws Exception
    * 
@@ -224,13 +224,13 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Gets forum rss information.
-   * 
-   * @param resourceid source to get rss.
+   * Gets RSS feeds of a category, forum or topic.
+   *
+   * @param resourceid The object Id to get RSS feeds.
    * 
    * @anchor ForumWebservice.viewrss
    * 
-   * @return the response is xml-data contain returned rss.
+   * @return The response is xml data which contains returned RSS.
    * 
    * @throws Exception
    * 
@@ -251,13 +251,13 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   /**
-   * Gets user rss information.
+   * Gets RSS feeds of a user.
    * 
-   * @param resourceid source to get rss
+   * @param resourceid The user Id to get RSS feeds.
    * 
    * @anchor ForumWebservice.userrss
    * 
-   * @return the response is xml-data contains returned rss
+   * @return The response is xml data which contains returned RSS.
    * 
    * @throws Exception
    * 
@@ -278,16 +278,16 @@ public class ForumWebservice implements ResourceContainer {
   }
   
   /**
-   * Filters forum by name and returned result by provided size.
+   * Filters forums by name and returned results are limited by the _maxSize_ parameter.
    * 
-   * @param forumName the name to be filtered
-   * @param maxSize limit of returned result.
-   * @param sc security context to get request information
-   * @param uriInfo The resquest information
-   * 
+   * @param forumName The keyword input to search for forums by name.
+   * @param maxSize The maximum returned results.
+   * @param sc The security context which gets the information of the current user.
+   * @param uriInfo The URI information which gets the information of the current user.
+   *
    * @anchor ForumWebservice.filterForum
    * 
-   * @return the response is json-data contain forum filtered by name.
+   * @return The response is JSON data which contains forums filtered by name.
    * 
    * @throws Exception
    * 

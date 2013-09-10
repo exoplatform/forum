@@ -16,7 +16,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
- * Handles rest request to process FAQ. It can be viewed RSS of Answer by provided resource.
+ * Handles REST request to process FAQ.
  * 
  * @anchor FAQWebservice
  */
@@ -31,13 +31,13 @@ public class FAQWebservice implements ResourceContainer {
   }
 
   /**
-   * Views rss by provided source.
+   * Views RSS feeds by the provided source.
    * 
-   * @param resourceid the source of rss to view.
+   * @param resourceid The RSS source Id to view.
    * 
    * @anchor FAQWebservice.viewrss
    * 
-   * @return the response is xml-data contain returned rss.
+   * @return The response is xml data which contains the returned RSS.
    * 
    * @throws Exception
    * 

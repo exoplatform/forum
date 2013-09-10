@@ -20,13 +20,16 @@
   <Content type="html">
     <![CDATA[
 			<script type="text/javascript" src="skin/lastpost.js"></script>
-      <link href="skin/lastpost.css" type="text/css" rel="stylesheet"/>
-			<div class="UIGadgetThemes UIYellowThemes">
-				<div class="TitGad ClearFix">
-					<a href="#demo" class="IconDropDown" id="ShowAll" target="_blank">__MSG_showall__</a>
-					<div class="ContTit">__MSG_title__</div>
-				</div>
-				<div class="GadCont LastPost" id="ItemContainer"></div>
+			<link rel="stylesheet" type="text/css" href="/eXoResources/skin/bootstrap/css/bootstrap.css" />    
+			<link rel="stylesheet" type="text/css" href="/eXoResources/skin/css/Core.css" />
+			<link rel="stylesheet" type="text/css" href="/exo-gadget-resources/skin/exo-gadget/gadget-common.css" />
+			<link href="skin/lastpost.css" type="text/css" rel="stylesheet"/>
+			<div class="UIGadgetThemes uiBox">
+				<h6 class="titlle">
+					__MSG_title__
+					<a href="#demo" class="btn btn-primary btn-mini pull-right" id="ShowAll" target="_blank">__MSG_showall__</a>
+				</h6>
+				<div class="uiContentBox LastPost" id="ItemContainer"></div>
 			</div>
     ]]>
   </Content>

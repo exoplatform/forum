@@ -1230,6 +1230,11 @@ public class FAQServiceImpl implements FAQService, Startable {
     try {
       Node answerNode = jcrData_.getFAQServiceHome(sProvider).getNode(answerPath);
       MultiLanguages.voteAnswer(answerNode, userName, isUp);
+      
+      for (AnswerEventListener ae : listeners_) {
+        ae.voteQuestion(answerNode.getParent().getParent().getName());
+      }
+      
     } catch (Exception e) {
       log.error("\nFail to vote answer\n", e);
     }
