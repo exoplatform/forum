@@ -234,9 +234,10 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  protected String getCategoryPath(String questionPath) {
+  protected String getCategoryPathName(String questionPath) {
     try {
-      return getFAQService().getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/" + Utils.QUESTION_HOME)));
+      String categoryPath = questionPath.substring(0, questionPath.indexOf("/" + Utils.QUESTION_HOME));
+      return FAQUtils.getCategoryPathName(getFAQService().getParentCategoriesName(categoryPath), true);
     } catch (Exception e) {
       log.error("Can not get category path, exception: " + e.getMessage());
       return questionPath;

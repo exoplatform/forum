@@ -43,6 +43,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.user.ContactProvider;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -139,6 +140,20 @@ public class FAQUtils {
       }
     }
   }
+  
+  
+  public static String getCategoryPathName(String categoryPathName, boolean isReplaceIcon) {
+    if (isFieldEmpty(categoryPathName)) {
+      return "";
+    }
+    StringBuffer buffer = new StringBuffer(WebUIUtils.getLabel("UIBreadcumbs", Utils.CATEGORY_HOME));
+    categoryPathName = categoryPathName.replaceFirst(Utils.CATEGORY_HOME, "");
+    if(isReplaceIcon == true) {
+      categoryPathName = categoryPathName.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
+    }
+
+    return buffer.append(categoryPathName).toString();
+  } 
 
   public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
     if (isFieldEmpty(addressList))
@@ -394,7 +409,7 @@ public class FAQUtils {
     } catch (Exception e) {
       log.debug("No forum settings found for date format. Will use format " + format);
     }
-    format = format.replace("EEE,MMM", "EEE, MMM").replaceAll("D", "E");
+    format = format.replaceAll("D", "E").replace("EEE,MMM", "EEE, MMM").replace("d,y", "d, y");
     return TimeConvertUtils.getFormatDate(myDate, format);
   }
 

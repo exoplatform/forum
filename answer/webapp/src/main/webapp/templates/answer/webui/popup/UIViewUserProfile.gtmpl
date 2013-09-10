@@ -37,7 +37,7 @@
 						<div class="span3">
 							<div class="userContent ">
 								<div class="titleBar">
-									<i class="uiIconAnwserColorBusy pull-left"></i><div class="userName">$fullName</div>
+									<i class="uiIconAnwserColorOnline pull-left"></i><div class="userName">$fullName</div>
 								</div>
 								
 								<p>

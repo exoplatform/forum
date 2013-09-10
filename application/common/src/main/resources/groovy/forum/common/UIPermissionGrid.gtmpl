@@ -49,7 +49,7 @@
 			 
 				<td class="center">
 					<span class="uiCheckbox">
-						<input type="checkbox" rel="tooltip" data-placement="bottom" title="View Pages" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
+						<input type="checkbox" $checked class="checkbox" onclick="<%=uicomponent.event("TogglePermission", owner + "," + permission)%>">
 						<span></span>
 					</span>
 				</td>

@@ -19,10 +19,16 @@ package org.exoplatform.forum.service.cache;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.Node;
+import javax.jcr.Session;
+
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.DataStorage;
+import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 
 public class TestCacheDataStrorage extends BaseForumServiceTestCase {
@@ -116,4 +122,47 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     }
   }
   
+  public void testTopicHasPoll() throws Exception {
+    // set Data
+    initDefaultData();
+    // get from data storage
+    Topic topic = cacheDataStorage.getTopic(categoryId, forumId, topicId, null);
+    String oldName = topic.getTopicName();
+
+    // get by path
+    Topic topicByPath = cacheDataStorage.getTopicByPath(topic.getPath(), false);
+    assertFalse(topicByPath.getIsPoll());
+    assertEquals(oldName, topicByPath.getTopicName());
+
+    // get summary
+    Topic topicSummary = cacheDataStorage.getTopicSummary(topic.getPath());
+    assertFalse(topicSummary.getIsPoll());
+    assertEquals(oldName, topicSummary.getTopicName());
+    
+    
+    // save new data for topic and clear topic cached
+    String newName = "Topic Rename";
+    topic.setTopicName(newName);
+    cacheDataStorage.saveTopic(categoryId, forumId, topic, false, false, new MessageBuilder());
+    saveHasPoll(topic.getPath());
+
+    //
+    topicByPath = cacheDataStorage.getTopicByPath(topic.getPath(), false);
+    assertTrue(topicByPath.getIsPoll());
+    assertEquals(newName, topicByPath.getTopicName());
+
+    //
+    topicSummary = cacheDataStorage.getTopicSummary(topic.getPath());
+    assertTrue(topicSummary.getIsPoll());
+    assertEquals(newName, topicSummary.getTopicName());
+  }
+  
+  private void saveHasPoll(String topicPath) throws Exception {
+    KSDataLocation dataLocation = getService(KSDataLocation.class);
+    Session session = dataLocation.getSessionManager().createSession();
+    Node node = (Node) session.getItem(topicPath);
+    node.setProperty(ForumNodeTypes.EXO_IS_POLL, true);
+    session.save();
+    session.logout();
+  }
 }

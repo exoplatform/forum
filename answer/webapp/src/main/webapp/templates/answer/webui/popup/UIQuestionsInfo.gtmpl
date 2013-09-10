@@ -1,14 +1,9 @@
 <%
-	import java.util.Map;
-	import java.util.HashMap;
 	import org.exoplatform.faq.service.Question;
-	import org.exoplatform.answer.webui.FAQUtils;	
 %>
 
 <div class="uiQuestionInfo $uicomponent.id">
-	<% uiform.begin() 
-	Map<String, String> mapPath = new HashMap<String, String>();
-	%>
+	<% uiform.begin() %>
 	<div class="uiFormTabPane uiTabNormal uiTabPane">
 		<ul class="nav nav-tabs">
 		<%
@@ -64,15 +59,10 @@
 							linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
 							linkEdit = uicomponent.event("EditQuestion", question.getPath()) ;
 							actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getPath()) ;
-							if(!mapPath.containsKey(question.getCategoryId())){
-								String categoryPathName = uicomponent.getCategoryPath(question.getPath());
-								categoryPathName = categoryPathName.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
-								mapPath.put(question.getCategoryId(), categoryPathName);
-							}
 						%>
 						<tr>
 							<td><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
-							<td class="pathCategory"><%=mapPath.get(question.getCategoryId())%></td>
+							<td class="pathCategory"><%=uicomponent.getCategoryPathName(question.getPath())%></td>
 							<td class="center actionContainer">
 							<%if(question.isApproved()) {%>
 									<div class="anable">
@@ -157,15 +147,10 @@
 						for(Question question in questionNotAnswered) {
 							linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
 							linkResponse = uicomponent.event("ResponseQuestion", question.getPath()+"/"+question.getLanguage()) ;
-							if(!mapPath.containsKey(question.getCategoryId())) {
-								String categoryPathName = uicomponent.getCategoryPath(question.getPath());
-								categoryPathName = categoryPathName.replaceAll(" > ", "<i class=\"uiIconArrowRightMini uiIconLightGray\"></i>");
-								mapPath.put(question.getCategoryId(), categoryPathName);
-							}
 						%>
 						<tr>
 							<td><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-							<td class="pathCategory"><%=mapPath.get(question.getCategoryId())%></td>
+							<td class="pathCategory"><%=uicomponent.getCategoryPathName(question.getPath())%></td>
 							<td>
 							<%
 								String linkResponseByLanguage = "";
