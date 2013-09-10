@@ -423,13 +423,8 @@ public class ForumUtils {
   public static String[] arraysMerge(String[] strs1, String[] strs2) {
     if(isArrayEmpty(strs1)) return strs2;
     if(isArrayEmpty(strs2)) return strs1;
-    Set<String> set = new HashSet<String>();
-    for (int i = 0; i < strs1.length; i++) {
-      set.add(strs1[i]);
-    }
-    for (int i = 0; i < strs2.length; i++) {
-      set.add(strs2[i]);
-    }
+    Set<String> set = new HashSet<String>(Arrays.asList(strs1));
+    set.addAll(Arrays.asList(strs2));
     return set.toArray(new String[set.size()]);
   }
   

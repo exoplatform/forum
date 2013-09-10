@@ -17,7 +17,9 @@
 package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersContainer;
@@ -26,14 +28,15 @@ import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIBreadcumbs;
 import org.exoplatform.answer.webui.UICategories;
 import org.exoplatform.answer.webui.UIQuestions;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -49,64 +52,66 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 public class UIUserWatchManager extends UIContainer {
-  private FAQSetting            faqSetting_            = null;
+  private FAQSetting              faqSetting_            = null;
 
   protected UIAnswersPageIterator pageIteratorCate;
 
   protected JCRPageList           pageListCate;
 
-  private UIAnswersPageIterator pageIteratorQues;
+  private UIAnswersPageIterator   pageIteratorQues;
 
-  private UIAnswersPageIterator pageIteratorCates;
+  private UIAnswersPageIterator   pageIteratorCates;
 
-  private JCRPageList           pageListQues;
+  private JCRPageList             pageListQues;
 
-  private JCRPageList           pageListCates;
+  private JCRPageList             pageListCates;
 
-  private String                LIST_QUESTIONS_WATCHED = "listQuestionsWatch";
+  private String                  LIST_QUESTIONS_WATCHED = "listQuestionsWatch";
 
-  private String                LIST_CATES_WATCHED     = "listCatesWatch";
+  private String                  LIST_CATES_WATCHED     = "listCatesWatch";
 
-  private String                emailAddress;
+  private static String          FULL_PATH_NAME         = "fullPathName";
 
-  private static FAQService     faqService_;
+  private static String          SUB_PATH_NAME          = "subPathName";
+
+  private String                  emailAddress;
+
+  private static FAQService      faqService_;
 
   public UIUserWatchManager() throws Exception {
     setId("UIUswerWatchManager");
     addChild(UIAnswersPageIterator.class, null, LIST_QUESTIONS_WATCHED);
     addChild(UIAnswersPageIterator.class, null, LIST_CATES_WATCHED);
     emailAddress = FAQUtils.getEmailUser(null);
-    faqService_ = (FAQService) PortalContainer.getInstance()
-                                              .getComponentInstanceOfType(FAQService.class);
+    faqService_ = CommonUtils.getComponent(FAQService.class);
   }
 
-  public String getEmailAddress() {
+  protected String getEmailAddress() {
     return emailAddress;
   }
 
-  public List<Category> getListCategory() throws Exception {
-    return getListCategoriesWatch();
-  }
-
-  public String getCategoriesName(String categoryId) throws Exception {
-    return faqService_.getParentCategoriesName(categoryId);
-  }
-
-  public static String getSubPath(String path) {
-    if (FAQUtils.isFieldEmpty(path) == false) {
-      String[] paths = path.split(" > ");
+  protected static Map<String, String> getCategoryPathName(String categoryPath) throws Exception {
+    String pathName = faqService_.getParentCategoriesName(categoryPath);
+    Map<String, String> dataPathName = new HashMap<String, String>();
+    if (FAQUtils.isFieldEmpty(pathName) == false) {
+      dataPathName.put(FULL_PATH_NAME, FAQUtils.getCategoryPathName(pathName, false));
+      String[] paths = pathName.split(" > ");
       if (paths.length > 3) {
-        return paths[0] + " > ... > " + paths[paths.length - 1];
+        pathName = new StringBuffer(paths[0]).append(" > ... > ").append(paths[paths.length - 1]).toString();
       }
+      dataPathName.put(SUB_PATH_NAME, FAQUtils.getCategoryPathName(pathName, true));
+    } else {
+      dataPathName.put(FULL_PATH_NAME, "");
+      dataPathName.put(SUB_PATH_NAME, "");
     }
-    return path;
+    return dataPathName;
   }
 
   public void setFAQSetting(FAQSetting setting) {
     this.faqSetting_ = setting;
   }
 
-  private List<Category> getListCategoriesWatch() {
+  protected List<Category> getListCategory() {
     try {
       if (pageListCates == null) {
         pageListCates = faqService_.getWatchedCategoryByUser(FAQUtils.getCurrentUser());
@@ -167,42 +172,43 @@ public class UIUserWatchManager extends UIContainer {
       return 1;
     }
   }
+  
+  private static void warning(WebuiRequestContext ctx, String msgKey) {
+    ctx.getUIApplication().addMessage(new ApplicationMessage(msgKey, null, ApplicationMessage.WARNING));
+  }
 
   static public class LinkActionListener extends EventListener<UIUserWatchManager> {
     public void execute(Event<UIUserWatchManager> event) throws Exception {
       UIUserWatchManager watchManager = event.getSource();
-      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+      WebuiRequestContext ctx = event.getRequestContext();
+      String categoryId = ctx.getRequestParameter(OBJECTID);
       UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
-      UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class);
-      if (!faqService_.isExisting(categoryId)) {        
-        event.getRequestContext().getUIApplication()
-        .addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));        
-
+      UIAnswersContainer uiContainer = uiPortlet.getChild(UIAnswersContainer.class);
+      UIQuestions uiQuestions = uiContainer.getChild(UIQuestions.class);
+      if (faqService_.isExisting(categoryId) == false) {
+        warning(ctx, "UIQuestions.msg.category-id-deleted");
         uiQuestions.setDefaultLanguage();
-        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
+        uiPortlet.getChild(UIPopupAction.class).deActivate();
+        ctx.addUIComponentToUpdateByAjax(uiPortlet);
         return;
       }
       uiQuestions.setCategoryId(categoryId);
-      UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-      UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
-      breadcumbs.setUpdataPath(categoryId);
-      categories.setPathCategory(categoryId);
-      event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
-      UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
+      uiContainer.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
+      uiContainer.getChild(UICategories.class).setPathCategory(categoryId);
+      ctx.addUIComponentToUpdateByAjax(uiContainer);
     }
   }
 
   static public class UnWatchActionListener extends EventListener<UIUserWatchManager> {
     public void execute(Event<UIUserWatchManager> event) throws Exception {
       UIUserWatchManager watchManager = event.getSource();
-      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+      WebuiRequestContext ctx = event.getRequestContext();
+      String categoryId = ctx.getRequestParameter(OBJECTID);
       if (faqService_.isExisting(categoryId) == false) {
-        event.getRequestContext().getUIApplication()
-          .addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));        
+        warning(ctx, "UIQuestions.msg.category-id-deleted");
+        UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
+        uiPortlet.findFirstComponentOfType(UIQuestions.class).setDefaultLanguage();
+        ctx.addUIComponentToUpdateByAjax(uiPortlet);
         return;
       }
       faqService_.unWatchCategory(categoryId, FAQUtils.getCurrentUser());

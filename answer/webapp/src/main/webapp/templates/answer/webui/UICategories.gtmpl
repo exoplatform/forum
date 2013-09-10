@@ -45,9 +45,15 @@
 				long numberOfQuestion = cateInfo[1] ;
 				long questionNotAnswer = cateInfo[2] ;
 				long questionNotApproved = cateInfo[3] ;
+
+				String label = "UICategories.title.Questions";
+				if(numberOfQuestion <= 1) {
+				  label = "UICommentForm.title.Question";
+				}
+				String numberQuestion = numberOfQuestion + " " + _ctx.appRes(label);
 			%>
 			<ul>
-			<li><a id="uicategoriesCateInfors0" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[0]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a></li>
+			<li><a id="uicategoriesCateInfors0" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[0]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberQuestion</a></li>
 			<li><a id="uicategoriesCateInfors1" href="javascript:void(0)" style="font-weight:<%=uicomponent.font_weight[1]%>;" onclick="eXo.answer.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a></li>
 			<%
 				if(uicomponent.isModerator) {%>
