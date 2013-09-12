@@ -21,6 +21,12 @@
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.portlet</groupId>
@@ -37,6 +43,12 @@
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>xpp3</groupId>
+          <artifactId>xpp3_min</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
@@ -70,6 +82,24 @@
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.core</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.xml.stream</groupId>
+          <artifactId>stax-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.javaee</groupId>
+          <artifactId>jboss-transaction-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.ow2.spec.ee</groupId>
+          <artifactId>ow2-jta-1.1-spec</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -84,10 +114,22 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.platform-ui</groupId>
@@ -104,6 +146,28 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<groupId>log4j</groupId>
+      		<artifactId>log4j</artifactId>
+      	</exclusion>
+      	<exclusion>
+          <groupId>javax.xml.stream</groupId>
+          <artifactId>stax-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
@@ -112,6 +176,16 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.web.resources</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.apache.ant</groupId>
+      		<artifactId>ant</artifactId>
+      	</exclusion>
+      	<exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
@@ -120,6 +194,12 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.eXo</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>org.gatein.portal</groupId>
+          <artifactId>exo.portal.webui.core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
@@ -128,6 +208,32 @@
     <dependency>
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.portal</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<groupId>commons-logging</groupId>
+      		<artifactId>commons-logging</artifactId>
+      	</exclusion>
+      	<exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-beanutils</groupId>
+          <artifactId>commons-beanutils-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gatein.portal</groupId>
+          <artifactId>exo.portal.webui.core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>rome</groupId>
+          <artifactId>modules</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.gatein.portal</groupId>
