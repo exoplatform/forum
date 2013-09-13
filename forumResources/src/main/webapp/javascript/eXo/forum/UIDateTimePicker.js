@@ -90,7 +90,7 @@
       var dayOfMonth = 1;
       var validDay = 0;
       var startDayOfWeek = UIDateTimePicker.getDayOfWeek(UIDateTimePicker.currentDate.getFullYear(), UIDateTimePicker.currentDate.getMonth() + 1, dayOfMonth);
-      var daysInMonth = UIDateTimePicker.getDaysInMonth(UIDateTimePicker.currentDate.getFullYear(), UIDateTimePicker.currentDate.getMonth());
+      var maxDayInMonth = UIDateTimePicker.getDaysInMonth(UIDateTimePicker.currentDate.getFullYear(), UIDateTimePicker.currentDate.getMonth());
       var clazz = null;
       var dayIdx = UIDateTimePicker.fistWeekDay;
       var table = '';
@@ -128,15 +128,16 @@
       _nday = 1;
     
       table += '  <table class="weekDays">';
+
       for ( var week = 0; week < 6; week++) {
         table += "    <tr classCurrentWeek" + week + ">";
+        validDay = 1;
         for ( var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
           var currentWeekDay = (dayOfWeek + UIDateTimePicker.fistWeekDay) % 7;
-          if (week == 0 && startDayOfWeek == currentWeekDay) {
-            validDay = 1;
-          } else if (validDay == 1 && dayOfMonth > daysInMonth) {
+          if (dayOfMonth > maxDayInMonth) {
             validDay = 0;
           }
+
           if (validDay) {
             if (dayOfMonth == UIDateTimePicker.selectedDate.getDate() && 
                 UIDateTimePicker.currentDate.getFullYear() == UIDateTimePicker.selectedDate.getFullYear() &&

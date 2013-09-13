@@ -630,13 +630,16 @@
     },
 
     resetFielForm : function(idElm) {
-      var elm = $.fn.findId(idElm);
-      elm.find("input:checkbox").val('false');
-      elm.find("input:text").val('');
-      if (elm.find("input.UISliderInput").exists()) {
-        eXo.webui.UISliderControl.reset(elm.find("input.UISliderInput"));
+      var form = $.fn.findId(idElm);
+      form.find("input:checkbox").attr('checked', false);
+      var slider = form.find(".uiFormSliderInput");
+      if (slider.exists()) {
+        $.each(slider, function(i, item) {
+          eXo.forum.UISliderControl.reset($(item));
+        });
       }
-      elm.find("textarea").val('');
+      form.find("input:text").val('');
+      form.find("textarea").val('');
     },
 
     RightClickBookMark : function(elmId) {
