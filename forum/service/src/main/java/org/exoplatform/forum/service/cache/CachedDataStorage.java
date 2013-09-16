@@ -1426,13 +1426,19 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-    forumData.select(new ForumPathSelector(new String[] {Utils.getForumPath(postPaths[0]), Utils.getForumPath(destTopicPath)}, forumData));
-    clearForumListCache();
-    for (String postPath : postPaths) {
-      clearTopicCache(postPath.substring(0, postPath.lastIndexOf("/")));
-    }
     storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+
+    String srcTopicPath = Utils.getTopicPath(postPaths[0]);
+    //
+    forumData.select(new ForumPathSelector(new String[] {Utils.getForumPath(srcTopicPath), Utils.getForumPath(destTopicPath)}, forumData));
+    clearForumListCache();
+    //
+    clearTopicCache(srcTopicPath);
     clearTopicCache(destTopicPath);
+    //
+    clearPostListCache();
+    clearPostListCountCache(srcTopicPath);
+    clearPostListCountCache(destTopicPath);
   }
 
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
