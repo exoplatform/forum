@@ -632,13 +632,13 @@
     resetFielForm : function(idElm) {
       var form = $.fn.findId(idElm);
       form.find("input:checkbox").attr('checked', false);
+      form.find("input:text").val('');
       var slider = form.find(".uiFormSliderInput");
       if (slider.exists()) {
         $.each(slider, function(i, item) {
           eXo.forum.UISliderControl.reset($(item));
         });
       }
-      form.find("input:text").val('');
       form.find("textarea").val('');
     },
 
