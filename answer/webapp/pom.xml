@@ -252,7 +252,7 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.platform-ui</groupId>
-      <artifactId>platform-ui-web-eXoResources</artifactId>
+      <artifactId>platform-ui-skin</artifactId>
       <type>war</type>
       <scope>provided</scope>
     </dependency>
