@@ -37,7 +37,6 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -47,7 +46,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
+import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -145,10 +144,10 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     UICheckBoxInput isUnLock = new UICheckBoxInput(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
     UICheckBoxInput isClosed = new UICheckBoxInput(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
     UICheckBoxInput isOpent = new UICheckBoxInput(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
-    UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false);
-    UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false);
-    UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false);
-    UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false);
+    UIFormDateTimeInput FromDateCreated = new UIFormDateTimeInput(FROMDATECREATED, FROMDATECREATED, null, false);
+    UIFormDateTimeInput ToDateCreated = new UIFormDateTimeInput(TODATECREATED, TODATECREATED, null, false);
+    UIFormDateTimeInput FromDateCreatedLastPost = new UIFormDateTimeInput(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false);
+    UIFormDateTimeInput ToDateCreatedLastPost = new UIFormDateTimeInput(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false);
 
     UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0", 300);// Sliders
     UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0", 500);
@@ -175,6 +174,15 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     addUIFormInput(moderator);
     setActions(new String[] { "Search", "ResetField", "Cancel" });
     setAddColonInLabel(true);
+    setPlaceholderDateTimePicker();
+  }
+  
+  private void setPlaceholderDateTimePicker() {
+    List<UIFormDateTimeInput> containers = new ArrayList<UIFormDateTimeInput>();
+    findComponentOfType(containers, UIFormDateTimeInput.class);
+    for (UIFormDateTimeInput uiFormDateTimeInput : containers) {
+      uiFormDateTimeInput.setHTMLAttribute("placeholder", "mm/dd/yyyy");
+    }
   }
 
   protected void setLocale() throws Exception {
@@ -197,11 +205,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
     if (userProfile == null)
       setUserProfile(null);
-    String showCalendar = getLabel("ShowCalendar");
-    getUIFormDateTimePicker(FROMDATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
-    getUIFormDateTimePicker(TODATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
-    getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
-    getUIFormDateTimePicker(TODATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
   }
 
   public boolean getIsSearchCate() {
@@ -318,19 +321,14 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
   }
 
-  private Calendar getCalendar(UIFormDateTimePicker dateTimeInput, String faled) throws Exception {
+  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String faled) throws Exception {
     Calendar calendar = dateTimeInput.getCalendar();
     if (!ForumUtils.isEmpty(dateTimeInput.getValue())) {
       if (calendar == null) {
-        Object[] args = { faled };
-        throw new MessageException(new ApplicationMessage("NameValidator.msg.erro-format-date", args, ApplicationMessage.WARNING));
+        warning("NameValidator.msg.erro-format-date", faled);
       }
     }
     return calendar;
-  }
-
-  public UIFormDateTimePicker getUIFormDateTimePicker(String name) {
-    return (UIFormDateTimePicker) findComponentById(name);
   }
 
   static public class SearchActionListener extends EventListener<UISearchForm> {
@@ -376,10 +374,10 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       String viewCountMin = uiForm.getUISliderControl(FIELD_VIEWCOUNTMIN_SLIDER).getValue();
 
       String moderator = uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
-      Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATED), FROMDATECREATED);
-      Calendar toDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
-      Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
-      Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
+      Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(FROMDATECREATED), FROMDATECREATED);
+      Calendar toDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(TODATECREATED), TODATECREATED);
+      Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
+      Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
       if (fromDateCreated != null && toDateCreated != null && fromDateCreated.after(toDateCreated)) {
         uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
         return;
@@ -455,16 +453,16 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       UISearchForm uiForm = event.getSource();
       uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
       uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue(ForumEventQuery.VALUE_IN_ENTIRE);
-      uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
-      uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setValue(null);
+      uiForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).setValue(null);
       uiForm.getUICheckBoxInput(FIELD_ISLOCK_CHECKBOX).setValue(false);
       uiForm.getUICheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
       uiForm.getUICheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
       uiForm.getUICheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
       uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue(ForumUtils.EMPTY_STR);
-      uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue(ForumUtils.EMPTY_STR);
-      uiForm.getUIFormDateTimePicker(TODATECREATED).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIFormDateTimeInput(FROMDATECREATED).setValue(null);
+      uiForm.getUIFormDateTimeInput(TODATECREATED).setValue(null);
       uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue(ForumUtils.EMPTY_STR);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }

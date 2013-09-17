@@ -180,21 +180,6 @@
   </module>
 
   <module>
-    <name>ForumDateTimePicker</name>
-    <script>
-      <path>/javascript/eXo/forum/UIDateTimePicker.js</path>
-    </script>
-    <depends>
-      <module>ForumUtils</module>
-      <as>utils</as>
-    </depends>
-    <depends>
-      <module>jquery</module>
-      <as>gj</as>
-    </depends>
-  </module>
-
-  <module>
     <name>Syntaxhighlighter</name>
     <depends>
       <module>shLoadConfig</module>
