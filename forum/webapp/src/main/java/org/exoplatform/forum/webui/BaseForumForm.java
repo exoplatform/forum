@@ -135,10 +135,10 @@ public class BaseForumForm extends BaseUIForm {
     return screenName;
   }
 
-  protected boolean addWatch(String path, UserProfile userProfile) {
+  protected boolean addWatch(String path) {
     List<String> values = new ArrayList<String>();
     try {
-      values.add(userProfile.getEmail());
+      values.add(getUserProfile().getEmail());
       getForumService().addWatch(1, path, values, userProfile.getUserId());
       setListWatches();
       info("UIAddWatchingForm.msg.successfully", false);
@@ -149,9 +149,9 @@ public class BaseForumForm extends BaseUIForm {
     }
   }
 
-  protected boolean unWatch(String path, UserProfile userProfile) {
+  protected boolean unWatch(String path) {
     try {
-      getForumService().removeWatch(1, path, userProfile.getUserId() + ForumUtils.SLASH + getEmailWatching(path));
+      getForumService().removeWatch(1, path, getUserProfile().getUserId() + ForumUtils.SLASH + getEmailWatching(path));
       setListWatches();
       info("UIAddWatchingForm.msg.UnWatchSuccessfully", false);
       return true;

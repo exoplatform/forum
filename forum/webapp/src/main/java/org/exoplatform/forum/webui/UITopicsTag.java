@@ -237,15 +237,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     }
   }
 
-  static public class OpenTopicsTagActionListener extends BaseEventListener<UITopicsTag> {
-    public void onEvent(Event<UITopicsTag> event, UITopicsTag topicsTag, final String tagId) throws Exception {
-      UIForumPortlet forumPortlet = topicsTag.getParent();
-      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId);
-      topicsTag.setIdTag(tagId);
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-    }
-  }
-
   static public class RemoveTopicActionListener extends BaseEventListener<UITopicsTag> {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag topicsTag, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = topicsTag.getParent();
