@@ -60,18 +60,26 @@
 			<div class="control-group">
 				<label class="control-label" for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>:</label>
 				<div class="controls">
-					<%uiform.renderField(uiform.FROMDATECREATED); %>
+					<div class="dateTimeInputContainer pull-left">
+						<%uiform.renderField(uiform.FROMDATECREATED); %>
+					</div>
 					<div class="pull-left dateTimeAnd"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
-					<%uiform.renderField(uiform.TODATECREATED); %>
+					<div class="dateTimeInputContainer pull-left">
+						<%uiform.renderField(uiform.TODATECREATED); %>
+					</div>
 				</div>
 			</div>
 			<% if(uiform.getIsSearchTopic()){ %>
 			<div class="control-group">
 				<label class="control-label" for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>:</label>
 				<div class="controls clearfix">
-					<%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %>
+					<div class="dateTimeInputContainer pull-left">
+						<%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %>
+					</div>
 					<div class="pull-left dateTimeAnd"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
-					<%uiform.renderField(uiform.TODATECREATEDLASTPOST); %>
+					<div class="dateTimeInputContainer pull-left">
+						<%uiform.renderField(uiform.TODATECREATEDLASTPOST); %>
+					</div>
 				</div>
 			</div>
 			<% } 

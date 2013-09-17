@@ -42,12 +42,12 @@ public class UISliderControl extends UIFormInputBase<String> {
     w.write("<div class=\"uiFormSliderInput clearfix\" id=\"uiSliderContainer" + getName() + "\" >");
     w.write("  <div class=\"slideSearch pull-left\">");
     w.write("    <div class=\"slide slideContainer\">");
-    w.write("      <div class=\"slideRange sllideHeader\" style=\"width: 0%;\"></div>");
+    w.write("      <div class=\"slideRange sllideHeader\" style=\"width: 0px;\"></div>");
     w.write("      <a href=\"javascript:void(0);\" class=\"circleDefault\" style=\"left: 0%;\"></a>");
     w.write("    </div>");
     w.write("  </div>");
     w.write("  <div class=\"boxNumber pull-left\">");
-    w.write(new StringBuilder("    <input class=\"uiSliderInput\" type=\"text\" name=\"").append(getName()).append("\" id=\"").append(getName()).append("\" value=\"").append(value_).append("\"/>").toString());
+    w.write(new StringBuilder("    <input class=\"uiSliderInput\" type=\"text\" name=\"").append(getName()).append("\" id=\"").append(getName()).append("\" value=\"").append(value_).append("\" readonly disabled/>").toString());
     w.write("  </div>");
     w.write("</div>");
 
