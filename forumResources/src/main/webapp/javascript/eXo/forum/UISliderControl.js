@@ -98,10 +98,27 @@
       }
     },
 
-    reset : function() {
-
+    reset : function(elm) {
+      if (typeof elm === 'string') {
+        elm = $('#' + elm);
+      }
+      if (elm && elm.length > 0) {
+        var circleDefault = elm.find('.circleDefault:first').css('left', '0px');
+        var datas = circleDefault.data('infoSlider');
+        datas.percent = 0;
+        datas.currentMouse = 0;
+        circleDefault.data('infoSlider', datas);
+        elm.find('.slideRange:first').css('width', '0px');
+        elm.find('input.uiSliderInput:first').val('0');
+      }
     }
   };
+  
+  window.eXo = window.eXo || {};
+  window.eXo.forum = window.eXo.forum || {};
+  window.eXo.forum.UISliderControl = {};
+  window.eXo.forum.UISliderControl.reset = UISliderControl.reset;
+
   $(document.body).on('mouseup', UISliderControl.end);
   return UISliderControl;
 })(utils, gj);

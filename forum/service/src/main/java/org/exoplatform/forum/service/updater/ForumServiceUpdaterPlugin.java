@@ -18,11 +18,17 @@ package org.exoplatform.forum.service.updater;
 
 import java.io.InputStream;
 
+import javax.jcr.Node;
+import javax.jcr.Session;
+
 import org.exoplatform.commons.upgrade.UpgradeProductPlugin;
 import org.exoplatform.commons.version.util.VersionComparator;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.service.ForumNodeTypes;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -30,6 +36,7 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -49,9 +56,28 @@ public class ForumServiceUpdaterPlugin extends UpgradeProductPlugin {
     try {
       registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml", ExtendedNodeTypeManager.IGNORE_IF_EXISTS);
       registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml", ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
+      //
+      upgradeCategorySpace();
       LOG.info(String.format("Successfully to migrate forum from %s to %s", oldVersion, newVersion));
     } catch (Exception e) {
       LOG.warn(String.format("Failed to migrate forum from %s to %s", oldVersion, newVersion), e);
+    }
+  }
+
+  private void upgradeCategorySpace() throws Exception {
+    KSDataLocation dataLocator = CommonUtils.getComponent(KSDataLocation.class);
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Session session = dataLocator.getSessionManager().getSession(sProvider);
+    Node cateHome = session.getRootNode().getNode(dataLocator.getForumCategoriesLocation());
+    if (cateHome.hasNode(Utils.CATEGORY_SPACE_ID_PREFIX)) {
+      Node cateSpace = cateHome.getNode(Utils.CATEGORY_SPACE_ID_PREFIX);
+      try {
+        cateSpace.setProperty(ForumNodeTypes.EXO_INCLUDED_SPACE, true);
+      } catch (Exception e) {
+        cateSpace.addMixin("mix:forumCategory");
+        cateSpace.setProperty(ForumNodeTypes.EXO_INCLUDED_SPACE, true);
+      }
+      session.save();
     }
   }
 

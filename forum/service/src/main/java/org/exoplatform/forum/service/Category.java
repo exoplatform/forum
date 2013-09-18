@@ -207,4 +207,13 @@ public class Category {
   public void setIncludedSpace(boolean includedSpace) {
     this.includedSpace = includedSpace;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o != null && o instanceof Category) {
+      return getId().equals(((Category) o).getId());
+    }
+
+    return super.equals(o);
+  }
 }
