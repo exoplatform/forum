@@ -749,6 +749,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
     protected List<String> topicIdSelected() throws Exception {
       List<String> topicIds = new ArrayList<String>();
+      topicIdNotExist.clear();
       for (String topicId : component.getIdSelected()) {
         String topicPath = new StringBuffer(getForumPath()).append(ForumUtils.SLASH).append(topicId).toString();
         if (isExisting(topicPath)) {
