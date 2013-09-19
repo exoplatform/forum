@@ -513,4 +513,70 @@ public class UtilsTestCase extends TestCase {
     assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484",
                  Utils.getTopicPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
+  
+  public void testGetSubPath() {
+    String path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00";
+    String expected = "forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00";
+
+    assertEquals(expected, Utils.getSubPath(path));
+
+    assertEquals(expected, Utils.getSubPath(expected));
+
+    path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f";
+    expected = "forumCategorya779f0d57f00010108ac0b087a59082f";
+    assertEquals(expected, Utils.getSubPath(path));
+    assertEquals(expected, Utils.getSubPath(expected));
+  }
+
+  public void testGetObjectType() {
+    String path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f000/post9r8fsdfsdf";
+    assertEquals("post", Utils.getObjectType(path));
+
+    path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f000";
+    assertEquals("topic", Utils.getObjectType(path));
+
+    path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721";
+    assertEquals("forum", Utils.getObjectType(path));
+
+    path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f";
+    assertEquals("forumCategory", Utils.getObjectType(path));
+
+    path = "post9r8fsdfsdf";
+    assertEquals("post", Utils.getObjectType(path));
+
+    path = "topica779f2877f000";
+    assertEquals("topic", Utils.getObjectType(path));
+
+    path = "foruma779f0ea7f00010162d38dbc5ae76721";
+    assertEquals("forum", Utils.getObjectType(path));
+
+    path = "forumCategorya779f0d57f00010108ac0b087a59082f";
+    assertEquals("forumCategory", Utils.getObjectType(path));
+  }
+
+  public void testGetIdByType() {
+    String path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f000/post9r8fsdfsdf";
+    assertEquals("post9r8fsdfsdf", Utils.getIdByType(path, "post"));
+
+    assertEquals("topica779f2877f000", Utils.getIdByType(path, "topic"));
+
+    assertEquals("foruma779f0ea7f00010162d38dbc5ae76721", Utils.getIdByType(path, "forum"));
+
+    assertEquals("forumCategorya779f0d57f00010108ac0b087a59082f", Utils.getIdByType(path, "forumCategory"));
+
+    path = "post9r8fsdfsdf";
+    assertEquals("post9r8fsdfsdf", Utils.getIdByType(path, "post"));
+
+    path = "topica779f2877f000";
+    assertEquals("topica779f2877f000", Utils.getIdByType(path, "topic"));
+
+    path = "foruma779f0ea7f00010162d38dbc5ae76721";
+    assertEquals("foruma779f0ea7f00010162d38dbc5ae76721", Utils.getIdByType(path, "forum"));
+
+    path = "forumCategorya779f0d57f00010108ac0b087a59082f";
+    assertEquals("forumCategorya779f0d57f00010108ac0b087a59082f", Utils.getIdByType(path, "forumCategory"));
+
+    path = "tagd57f00010108ac0bffsdf010162d38dbc5ae7672";
+    assertEquals("tagd57f00010108ac0bffsdf010162d38dbc5ae7672", Utils.getIdByType(path, "tag"));
+  }
 }

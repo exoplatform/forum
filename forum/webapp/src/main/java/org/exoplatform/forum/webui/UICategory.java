@@ -620,7 +620,7 @@ public class UICategory extends BaseForumForm {
 
   static public class AddWatchingActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiform, final String path) throws Exception {
-      isUnWatch = !uiform.addWatch(path, uiform.userProfile);
+      isUnWatch = !uiform.addWatch(path);
       if(!isUnWatch) uiform.isEditCategory = true;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiform);
     }
@@ -628,7 +628,7 @@ public class UICategory extends BaseForumForm {
 
   static public class UnWatchActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
-      if(uiCategory.unWatch(path, uiCategory.userProfile)) {
+      if(uiCategory.unWatch(path)) {
         isUnWatch = true;
         uiCategory.isEditCategory = true;
       }
@@ -642,7 +642,6 @@ public class UICategory extends BaseForumForm {
       forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
       UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
-      searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(uiCategory.category.getPath());
       searchForm.setSelectType(Utils.FORUM);
       searchForm.setSearchOptionsObjectType(Utils.FORUM);

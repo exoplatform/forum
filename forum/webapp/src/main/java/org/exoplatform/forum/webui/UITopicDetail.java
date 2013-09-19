@@ -1671,7 +1671,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
       UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
-      searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setPath(topicDetail.topic.getPath());
       searchForm.setSelectType(Utils.POST);
       searchForm.setSearchOptionsObjectType(Utils.POST);
@@ -1725,7 +1724,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       if (topicDetail.getTopic() != null) {
         StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append(ForumUtils.SLASH)
                               .append(topicDetail.forumId).append(ForumUtils.SLASH).append(topicDetail.topicId);
-        if(topicDetail.addWatch(buffer.toString(), topicDetail.userProfile)) {
+        if(topicDetail.addWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
         }
@@ -1742,7 +1741,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicDetail.isEditTopic = true;
         StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append(ForumUtils.SLASH)
                               .append(topicDetail.forumId).append(ForumUtils.SLASH).append(topicDetail.topicId);
-        if(topicDetail.unWatch(buffer.toString(), topicDetail.userProfile)) {
+        if(topicDetail.unWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
         }
