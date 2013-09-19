@@ -134,8 +134,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearCategoryCache(Category category) throws Exception {
     if (category != null) {
       clearCategoryCache(category.getId());
-      objectNameData.remove(new ObjectNameKey(category.getPath()));
-      objectNameData.remove(new ObjectNameKey(category.getId(), Utils.CATEGORY));
+      clearObjectCache(category, false);
     }
   }
 
@@ -192,7 +191,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearTopicCache(Topic topic) throws Exception {
     if (topic != null) {
       clearTopicCache(topic.getPath());
-      objectNameData.remove(new ObjectNameKey(topic.getPath()));
       objectNameData.remove(new ObjectNameKey(topic.getId(), Utils.TOPIC));
     }
     
@@ -205,20 +203,16 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearObjectCache(Forum forum, boolean isPutNewKey) throws Exception {
     if (forum != null) {
       ForumData forumData = new ForumData(forum);
-      String categoryId = forum.getCategoryId();
       String forumId = forum.getId();
       if (isPutNewKey) {
-        objectNameData.put(new ObjectNameKey(categoryId + "/" + forumId), forumData);
         objectNameData.put(new ObjectNameKey(forumId, Utils.FORUM), forumData);
       } else {
-        objectNameData.remove(new ObjectNameKey(categoryId + "/" + forumId));
         objectNameData.remove(new ObjectNameKey(forumId, Utils.FORUM));
       }
     }
   }
   
   private void clearObjectCache(Category category, boolean isNew) throws Exception {
-    
     if (isNew) {
       CategoryData categoryData = new CategoryData(category);
       objectNameData.put(new ObjectNameKey(category.getId(), Utils.CATEGORY), categoryData);
@@ -1114,56 +1108,67 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Object getObjectNameByPath(final String path) throws Exception {
-    
+
     String type = Utils.getObjectType(path);
     String id = Utils.getIdByType(path, type);
-    
-    ObjectNameKey key = new ObjectNameKey(id, type);
-    CachedData data = objectNameData.get(key);
 
+    ObjectNameKey key = new ObjectNameKey(id, type);
+    CachedData<?> data = objectNameData.get(key);
+    //
     if (data == null) {
       Object got = storage.getObjectNameByPath(path);
-      if (got instanceof Post) {
-        objectNameData.put(key, new PostData((Post) got));
-      } else if (got instanceof Topic) {
-        objectNameData.put(key, new TopicData((Topic) got));
-      } else if (got instanceof Forum) {
-        objectNameData.put(key, new ForumData((Forum) got));
-      } else if (got instanceof Category) {
-        objectNameData.put(key, new CategoryData((Category) got));
-      } else if (got instanceof Tag) {
-        objectNameData.put(key, new TagData((Tag) got));
-      } else {
-        objectNameData.put(key, TopicData.NULL);
+      return getObjectNameByKey(got, key);
+    } else {
+      // check path
+      Object got = data.build();
+      String sPath = getPath(got);
+      if (path.indexOf(sPath) < 0) {
+        return null;
       }
       return got;
-    } else {
-      return data.build();
+    }
+  }
+
+  private Object getObjectNameByKey(Object got, ObjectNameKey key) throws Exception {
+    if (got instanceof Post) {
+      objectNameData.put(key, new PostData((Post) got));
+    } else if (got instanceof Topic) {
+      objectNameData.put(key, new TopicData((Topic) got));
+    } else if (got instanceof Forum) {
+      objectNameData.put(key, new ForumData((Forum) got));
+    } else if (got instanceof Category) {
+      objectNameData.put(key, new CategoryData((Category) got));
+    } else if (got instanceof Tag) {
+      objectNameData.put(key, new TagData((Tag) got));
+    }
+    return got;
+  }
+  
+  private String getPath(Object got) {
+    String path = null;
+    if (got instanceof Post) {
+      path = ((Post) got).getPath();
+    } else if (got instanceof Topic) {
+      path = ((Topic) got).getPath();
+    } else if (got instanceof Forum) {
+      path = ((Forum) got).getPath();
+    } else if (got instanceof Category) {
+      path = ((Category) got).getPath();
+    } else if (got instanceof Tag) {
+      path = ((Tag) got).getId();
     }
 
+    return Utils.getSubPath(path);
   }
 
   public Object getObjectNameById(String id, String type) throws Exception {
 
     ObjectNameKey key = new ObjectNameKey(id, type);
     CachedData<?> data = objectNameData.get(key);
-
+    //
     if (data == null) {
       Object got = storage.getObjectNameById(id, type);
-      if (got instanceof Post) {
-        objectNameData.put(key, new PostData((Post) got));
-      } else if (got instanceof Topic) {
-        objectNameData.put(key, new TopicData((Topic) got));
-      } else if (got instanceof Forum) {
-        objectNameData.put(key, new ForumData((Forum) got));
-      } else if (got instanceof Category) {
-        objectNameData.put(key, new CategoryData((Category) got));
-      } else if (got instanceof Tag) {
-        objectNameData.put(key, new TagData((Tag) got));
-      } else {
-        objectNameData.put(key, TopicData.NULL);
-      }
-      return got;
+      return getObjectNameByKey(got, key);
     } else {
       return data.build();
     }
