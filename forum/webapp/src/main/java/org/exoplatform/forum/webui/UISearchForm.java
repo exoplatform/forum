@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
@@ -31,7 +30,6 @@ import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSearchResult;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -202,9 +200,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     list.add(new SelectItemOption<String>(getLabel("Titles"), ForumEventQuery.VALUE_IN_TITLE));
     UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
     boxInput.setValue(ForumEventQuery.VALUE_IN_ENTIRE);
-
-    if (userProfile == null)
-      setUserProfile(null);
   }
 
   public boolean getIsSearchCate() {
@@ -257,16 +252,8 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     }
   }
 
-  public void setUserProfile(UserProfile userProfile) {
-    this.userProfile = (userProfile != null) ? userProfile : this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-  }
-
   private boolean getIsMod() {
-    if (this.userProfile != null) {
-      if (this.userProfile.getUserRole() < 2)
-        return true;
-    }
-    return false;
+    return (getUserProfile().getUserRole() < 2) ? true : false;
   }
 
   public void setSelectType(String type){
@@ -292,15 +279,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
     return (UIFormRadioBoxInput) findComponentById(name);
-  }
-
-  public String getLabel(ResourceBundle res, String id) {
-    String label = getId() + ".label." + id;
-    try {
-      return res.getString(label);
-    } catch (Exception e) {
-      return id;
-    }
   }
 
   private String checkValue(String input) throws Exception {
@@ -389,7 +367,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       }      
       ForumEventQuery eventQuery = new ForumEventQuery();
       eventQuery.setListOfUser(UserHelper.getAllGroupAndMembershipOfUser(null));
-      eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
+      eventQuery.setUserPermission(uiForm.getUserProfile().getUserRole());
       eventQuery.setType(type);
       eventQuery.setKeyValue(keyValue);
       eventQuery.setValueIn(valueIn);

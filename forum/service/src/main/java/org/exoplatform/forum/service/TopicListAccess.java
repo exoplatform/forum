@@ -64,7 +64,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
     query.setCaseInsensitiveOrder(true);
     query.setOffset(index);
-    query.setLimit(index + length);
+    query.setLimit(length);
     QueryResult result = query.execute();
     List<Topic> topicList = new ArrayList<Topic>();
     NodeIterator iter = result.getNodes();

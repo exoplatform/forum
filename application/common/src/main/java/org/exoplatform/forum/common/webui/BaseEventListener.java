@@ -38,7 +38,7 @@ public abstract class BaseEventListener<T extends BaseUIForm> extends EventListe
    */
   protected T component;
   
-  public final void execute(Event<T> event) throws Exception {
+  public void execute(Event<T> event) throws Exception {
     this.component = event.getSource();
     String objectId = event.getRequestContext().getRequestParameter(UIComponent.OBJECTID);
     onEvent(event, component, objectId);
