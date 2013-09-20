@@ -37,9 +37,11 @@
 								 String fileName = ForumUtils.getSubString(titleFile, 30);
 								 long sizeNumber = attachment.getSize() ;
 								 String size =ForumUtils.getSizeFile(sizeNumber) ;
+								 String typeFile = attachment.getMimeType() ;
+								 String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
 						%>
 							<div class="attachmentBox">
-								<a rel="tooltip" data-placement="bottom" title="$titleFile" href="#"><i class="uiIconAttach"></i> $fileName</a>
+								<a rel="tooltip" data-placement="bottom" title="$titleFile" href="#"><i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>
 								<div class="size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 							</div>
 						<% } %>
