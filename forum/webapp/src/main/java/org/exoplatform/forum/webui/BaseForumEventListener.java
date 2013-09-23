@@ -42,7 +42,7 @@ public abstract class BaseForumEventListener<T extends BaseUIForm> extends BaseE
   protected boolean isExisting(String objectId) {
     Object object = null;
     try {
-      if (objectId.indexOf(CommonUtils.SLASH) > 0) {
+      if (objectId.indexOf(CommonUtils.SLASH) >= 0) {
         object = forumService.getObjectNameByPath(objectId);
       } else {
         String type = Utils.getObjectType(objectId);
@@ -81,12 +81,16 @@ public abstract class BaseForumEventListener<T extends BaseUIForm> extends BaseE
     notExist("UIForumPortlet.msg.catagory-deleted");
   }
 
-  private void notExist(String msg) throws Exception {
+  protected void notExist(String msg) throws Exception {
     warning(msg, false);
     forumPortlet.renderForumHome();
     context.addUIComponentToUpdateByAjax(forumPortlet);
   }
   
+  protected void onError(Throwable e) throws Exception {
+    notExist("UIForumPortlet.msg.do-not-permission");
+    ExoLogger.getLogger(component.getClass()).error("Failed to run action " + getClass().getName(), e);
+  }
 
   public final void execute(Event<T> event) throws Exception {
     if (forumService == null) {
@@ -101,8 +105,7 @@ public abstract class BaseForumEventListener<T extends BaseUIForm> extends BaseE
       try {
         onEvent(event, component, objectId);
       } catch (Exception e) {
-        notExist("UIForumPortlet.msg.do-not-permission");
-        ExoLogger.getLogger(component.getClass()).error("Failed to run action " + getClass().getName(), e);
+        onError(e);
       }
     } else {
       errorEvent();

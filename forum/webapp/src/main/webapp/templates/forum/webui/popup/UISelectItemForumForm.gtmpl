@@ -1,5 +1,7 @@
 <%	
 	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.ForumUtils;
+	ForumUtils.addScripts("UIForumPortlet", "forumPortlet", "forumPortlet.initTreeNode('" + uiform.id + "');");
 %>
 
 <div class="uiSelectCategoryForm horizontalLayout">
@@ -12,10 +14,12 @@
 				List categories = uicomponent.getForumLinks(); 
 				for(category in categories) {
 				 if(category.getType().equals(Utils.CATEGORY)) {
-					String iconClass = "expandIcon" ;
+					String iconClass = "collapseIcon" ;
 					String categoryName = category.getName() ;
 					List forums =	uicomponent.getForums(category.getId());
-					if(forums.size() < 1) {iconClass = "collapseIcon";}
+					if(forums.size() < 1) {
+					  iconClass = "uiIconEmpty";
+					}
 			%>
 				<li class="node">
 					<a href="javascript:void(0);" class="uiIconNode $iconClass">
@@ -24,7 +28,7 @@
 				<%
 				    if(forums.size() > 0) {
 				%>
-					<ul class="nodeGroup">
+					<ul class="nodeGroup" style="display:none;">
 					<% 
 						for(forum in forums) {
 							String forumName = forum.getName() ;
@@ -32,7 +36,7 @@
 							String inputId = forum.getPath().replace("/", "");
 					%>
 						<li class="node">
-							<a href="javascript:void(0);" class="uiIconNode uiIconEmpty">
+							<a href="javascript:void(0);" class="lastNode">
 								<span class="uiCheckbox">
 									<input name="<%=inputId%>" id="<%=inputId%>" <%=checked%> type="checkbox"/>
 									<span><i class="uiIconUIForms uiIconLightGray spaceItem"></i>$forumName</span>
