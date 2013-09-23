@@ -2826,92 +2826,87 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node forumHomeNode = getForumHomeNode(sProvider);
-      long tmp = 0;
-      String forumName = null;
-      Node destForumNode = (Node) forumHomeNode.getSession().getItem(destForumPath);
-      PropertyReader destForumReader = new PropertyReader(destForumNode);
-      forumName = destForumReader.string(EXO_NAME);
-      String owner = destForumReader.string(EXO_OWNER);
-      if (!Utils.isEmpty(owner) && owner.indexOf(":") > 0) {
-        owner = ForumServiceUtils.getUserPermission(new String[] { owner }).get(0);
-      }
-      if (Utils.isEmpty(owner)) {
-        owner = topics.get(0).getEditReason();
-      }
-      String headerSubject = new StringBuilder("[").append(new PropertyReader(destForumNode.getParent()).string(EXO_NAME))
-                                                   .append("][").append(forumName).append("] ").toString();
-      MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, headerSubject, true);
-      messageBuilder.setOwner(getScreenName(sProvider, owner));
-      messageBuilder.setAddType(forumName);
-      messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
-      // ----------------------- finish ----------------------
-      String destForumId = destForumNode.getName(), srcForumId = CommonUtils.EMPTY_STR;
-      for (Topic topic : topics) {
-        String topicPath = topic.getPath();
-        String newTopicPath = destForumPath + "/" + topic.getId();
-        // Forum remove Topic(srcForum)
-        Node srcForumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
-        srcForumId = srcForumNode.getName();
-        // Move Topic
-        forumHomeNode.getSession().getWorkspace().move(topicPath, newTopicPath);
-        // Set TopicCount srcForum
-        tmp = srcForumNode.getProperty(EXO_TOPIC_COUNT).getLong();
-        if (tmp > 0)
-          tmp = tmp - 1;
-        else
-          tmp = 0;
-        srcForumNode.setProperty(EXO_TOPIC_COUNT, tmp);
-        // setPath for srcForum
-        queryLastTopic(sProvider, srcForumNode.getPath());
-        // Topic Move
-        Node topicNode = (Node) forumHomeNode.getSession().getItem(newTopicPath);
-        topicNode.setProperty(EXO_PATH, destForumNode.getName());
-        long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
-        // Forum add Topic (destForum)
-        destForumNode.setProperty(EXO_TOPIC_COUNT, destForumReader.l(EXO_TOPIC_COUNT) + 1);
-        // setPath destForum
-        queryLastTopic(sProvider, destForumNode.getPath());
-        // Set PostCount
-        tmp = srcForumNode.getProperty(EXO_POST_COUNT).getLong();
-        if (tmp > topicPostCount)
-          tmp = tmp - topicPostCount;
-        else
-          tmp = 0;
-        srcForumNode.setProperty(EXO_POST_COUNT, tmp);
-        destForumNode.setProperty(EXO_POST_COUNT, destForumReader.l(EXO_POST_COUNT) + topicPostCount);
+    Node forumHomeNode = getForumHomeNode(sProvider);
+    long tmp = 0;
+    String forumName = null;
+    Node destForumNode = (Node) forumHomeNode.getSession().getItem(destForumPath);
+    PropertyReader destForumReader = new PropertyReader(destForumNode);
+    forumName = destForumReader.string(EXO_NAME);
+    String owner = destForumReader.string(EXO_OWNER);
+    if (!Utils.isEmpty(owner) && owner.indexOf(":") > 0) {
+      owner = ForumServiceUtils.getUserPermission(new String[] { owner }).get(0);
+    }
+    if (Utils.isEmpty(owner)) {
+      owner = topics.get(0).getEditReason();
+    }
+    String headerSubject = new StringBuilder("[").append(new PropertyReader(destForumNode.getParent()).string(EXO_NAME))
+                                                 .append("][").append(forumName).append("] ").toString();
+    MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, headerSubject, true);
+    messageBuilder.setOwner(getScreenName(sProvider, owner));
+    messageBuilder.setAddType(forumName);
+    messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
+    // ----------------------- finish ----------------------
+    String destForumId = destForumNode.getName(), srcForumId = CommonUtils.EMPTY_STR;
+    for (Topic topic : topics) {
+      String topicPath = topic.getPath();
+      String newTopicPath = destForumPath + "/" + topic.getId();
+      // Forum remove Topic(srcForum)
+      Node srcForumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+      srcForumId = srcForumNode.getName();
+      // Move Topic
+      forumHomeNode.getSession().getWorkspace().move(topicPath, newTopicPath);
+      // Set TopicCount srcForum
+      tmp = srcForumNode.getProperty(EXO_TOPIC_COUNT).getLong();
+      if (tmp > 0)
+        tmp = tmp - 1;
+      else
+        tmp = 0;
+      srcForumNode.setProperty(EXO_TOPIC_COUNT, tmp);
+      // setPath for srcForum
+      queryLastTopic(sProvider, srcForumNode.getPath());
+      // Topic Move
+      Node topicNode = (Node) forumHomeNode.getSession().getItem(newTopicPath);
+      topicNode.setProperty(EXO_PATH, destForumNode.getName());
+      long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
+      // Forum add Topic (destForum)
+      destForumNode.setProperty(EXO_TOPIC_COUNT, destForumReader.l(EXO_TOPIC_COUNT) + 1);
+      // setPath destForum
+      queryLastTopic(sProvider, destForumNode.getPath());
+      // Set PostCount
+      tmp = srcForumNode.getProperty(EXO_POST_COUNT).getLong();
+      if (tmp > topicPostCount)
+        tmp = tmp - topicPostCount;
+      else
+        tmp = 0;
+      srcForumNode.setProperty(EXO_POST_COUNT, tmp);
+      destForumNode.setProperty(EXO_POST_COUNT, destForumReader.l(EXO_POST_COUNT) + topicPostCount);
 
-        // send email after move topic:
-        messageBuilder.setObjName(topic.getTopicName());
-        messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topic.getTopicName());
-        messageBuilder.setLink(link.replaceFirst("pathId", topic.getId()));
-        Set<String> set = new HashSet<String>();
-        // set email author this topic
-        set.add(getEmailUser(sProvider, topic.getOwner()));
-        // set email watch this topic, forum, category parent of this topic
-        set.addAll(calculateMoveEmail(topicNode));
-        // set email watch old category, forum parent of this topic
-        set.addAll(calculateMoveEmail(srcForumNode));
-        if (!Utils.isEmpty(set.toArray(new String[set.size()]))) {
-          sendEmailNotification(new ArrayList<String>(set), messageBuilder.getContentEmailMoved());
-        }
-        try {
-          calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
-        } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Failed to calculate last read", e);
-          }
+      // send email after move topic:
+      messageBuilder.setObjName(topic.getTopicName());
+      messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topic.getTopicName());
+      messageBuilder.setLink(link.replaceFirst("pathId", topic.getId()));
+      Set<String> set = new HashSet<String>();
+      // set email author this topic
+      set.add(getEmailUser(sProvider, topic.getOwner()));
+      // set email watch this topic, forum, category parent of this topic
+      set.addAll(calculateMoveEmail(topicNode));
+      // set email watch old category, forum parent of this topic
+      set.addAll(calculateMoveEmail(srcForumNode));
+      if (!Utils.isEmpty(set.toArray(new String[set.size()]))) {
+        sendEmailNotification(new ArrayList<String>(set), messageBuilder.getContentEmailMoved());
+      }
+      try {
+        calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
+      } catch (Exception e) {
+        if (log.isDebugEnabled()) {
+          log.debug("Failed to calculate last read", e);
         }
       }
-      if (forumHomeNode.isNew()) {
-        forumHomeNode.getSession().save();
-      } else {
-        forumHomeNode.save();
-      }
-    } catch (Exception e) {
-      log.error("Failed to move topic", e);
-      throw e;
+    }
+    if (forumHomeNode.isNew()) {
+      forumHomeNode.getSession().save();
+    } else {
+      forumHomeNode.save();
     }
   }
 
@@ -3929,145 +3924,141 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) {
+  public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node forumHomeNode = getForumHomeNode(sProvider);
-      // Node Topic move Post
-      String srcTopicPath = postPaths[0];
-      srcTopicPath = srcTopicPath.substring(0, srcTopicPath.lastIndexOf("/"));
-      Node srcTopicNode = (Node) forumHomeNode.getSession().getItem(srcTopicPath);
-      Node srcForumNode = (Node) srcTopicNode.getParent();
-      Node destTopicNode = (Node) forumHomeNode.getSession().getItem(destTopicPath);
-      Node destForumNode = (Node) destTopicNode.getParent();
-      long totalAtt = 0;
-      long totalpost = (long) postPaths.length;
-      Node postNode = null;
-      boolean destModeratePost = false;
-      if (destTopicNode.hasProperty(EXO_IS_MODERATE_POST)) {
-        destModeratePost = destTopicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean();
-      }
-      boolean srcModeratePost = false;
-      if (srcTopicNode.hasProperty(EXO_IS_MODERATE_POST)) {
-        srcModeratePost = srcTopicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean();
-      }
-      PropertyReader destTopicReader = new PropertyReader(destTopicNode);
-      boolean isActiveByTopic = destTopicReader.bool(EXO_IS_APPROVED) && destTopicReader.bool(EXO_IS_ACTIVE)
-                                && destTopicReader.bool(EXO_IS_ACTIVE_BY_FORUM) && !destTopicReader.bool(EXO_IS_CLOSED)
-                                && !destTopicReader.bool(EXO_IS_WAITING);
-      boolean unAproved = false;
-      String path;
-      for (int i = 0; i < totalpost; ++i) {
-        // totalAtt = totalAtt + post.getNumberAttach();
-        path = postPaths[i];
-        String newPostPath = destTopicPath + path.substring(path.lastIndexOf("/"));
-        forumHomeNode.getSession().getWorkspace().move(path, newPostPath);
-        postPaths[i] = newPostPath;
-        // Node Post move
-        postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
-        postNode.setProperty(EXO_PATH, destForumNode.getName());
-        postNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
-        if (isCreatNewTopic && i == 0) {
-          postNode.setProperty(EXO_IS_FIRST_POST, true);
-        } else {
-          postNode.setProperty(EXO_IS_FIRST_POST, false);
-        }
-        if (!destModeratePost) {
-          postNode.setProperty(EXO_IS_APPROVED, true);
-        } else {
-          if (!postNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
-            unAproved = true;
-          }
-        }
-        postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, isActiveByTopic);
-      }
-
-      // set destTopicNode
-      destTopicNode.setProperty(EXO_POST_COUNT, destTopicNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
-      destTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, destTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + totalAtt);
-      destForumNode.setProperty(EXO_POST_COUNT, destForumNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
-      // update last post for destTopicNode
-      destTopicNode.setProperty(EXO_LAST_POST_BY, postNode.getProperty(EXO_OWNER).getValue().getString());
-      destTopicNode.setProperty(EXO_LAST_POST_DATE, postNode.getProperty(EXO_CREATED_DATE).getValue().getDate());
-
-      // set srcTopicNode
-      long temp = srcTopicNode.getProperty(EXO_POST_COUNT).getLong();
-      temp = temp - totalpost;
-      srcTopicNode.setProperty(EXO_POST_COUNT, (temp > -1) ? temp : -1);
-      temp = srcTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
-      temp = temp - totalAtt;
-      if (temp < 0)
-        temp = 0;
-      srcTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, temp);
-      // update last post for srcTopicNode
-      NodeIterator nodeIterator = srcTopicNode.getNodes();
-      long posLast = nodeIterator.getSize() - 1;
-      nodeIterator.skip(posLast);
-      while (nodeIterator.hasNext()) {
-        Node node = nodeIterator.nextNode();
-        if (node.isNodeType(EXO_POST))
-          postNode = node;
-      }
-      srcTopicNode.setProperty(EXO_LAST_POST_BY, postNode.getProperty(EXO_OWNER).getValue().getString());
-      srcTopicNode.setProperty(EXO_LAST_POST_DATE, postNode.getProperty(EXO_CREATED_DATE).getValue().getDate());
-      // set srcForumNode
-      temp = srcForumNode.getProperty(EXO_POST_COUNT).getLong();
-      temp = temp - totalpost;
-      srcForumNode.setProperty(EXO_POST_COUNT, (temp > 0) ? temp : 0);
-
-      if (forumHomeNode.isNew()) {
-        forumHomeNode.getSession().save();
+    Node forumHomeNode = getForumHomeNode(sProvider);
+    // Node Topic move Post
+    String srcTopicPath = postPaths[0];
+    srcTopicPath = srcTopicPath.substring(0, srcTopicPath.lastIndexOf("/"));
+    Node srcTopicNode = (Node) forumHomeNode.getSession().getItem(srcTopicPath);
+    Node srcForumNode = (Node) srcTopicNode.getParent();
+    Node destTopicNode = (Node) forumHomeNode.getSession().getItem(destTopicPath);
+    Node destForumNode = (Node) destTopicNode.getParent();
+    long totalAtt = 0;
+    long totalpost = (long) postPaths.length;
+    Node postNode = null;
+    boolean destModeratePost = false;
+    if (destTopicNode.hasProperty(EXO_IS_MODERATE_POST)) {
+      destModeratePost = destTopicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean();
+    }
+    boolean srcModeratePost = false;
+    if (srcTopicNode.hasProperty(EXO_IS_MODERATE_POST)) {
+      srcModeratePost = srcTopicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean();
+    }
+    PropertyReader destTopicReader = new PropertyReader(destTopicNode);
+    boolean isActiveByTopic = destTopicReader.bool(EXO_IS_APPROVED) && destTopicReader.bool(EXO_IS_ACTIVE)
+                              && destTopicReader.bool(EXO_IS_ACTIVE_BY_FORUM) && !destTopicReader.bool(EXO_IS_CLOSED)
+                              && !destTopicReader.bool(EXO_IS_WAITING);
+    boolean unAproved = false;
+    String path;
+    for (int i = 0; i < totalpost; ++i) {
+      // totalAtt = totalAtt + post.getNumberAttach();
+      path = postPaths[i];
+      String newPostPath = destTopicPath + path.substring(path.lastIndexOf("/"));
+      forumHomeNode.getSession().getWorkspace().move(path, newPostPath);
+      postPaths[i] = newPostPath;
+      // Node Post move
+      postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
+      postNode.setProperty(EXO_PATH, destForumNode.getName());
+      postNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
+      if (isCreatNewTopic && i == 0) {
+        postNode.setProperty(EXO_IS_FIRST_POST, true);
       } else {
-        forumHomeNode.save();
+        postNode.setProperty(EXO_IS_FIRST_POST, false);
       }
-      String objectName = new StringBuilder("[").append(destForumNode.getParent().getProperty(EXO_NAME).getString())
-                              .append("][").append(destForumNode.getProperty(EXO_NAME).getString()).append("] ").toString();
-      MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, objectName, true);
-      String topicName = destTopicNode.getProperty(EXO_NAME).getString();
-      String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString();
-      messageBuilder.setOwner(getScreenName(sProvider, ownerTopic));
-      messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topicName);
-      messageBuilder.setAddType(topicName);
-      link = link.replaceFirst("pathId", destTopicNode.getProperty(EXO_ID).getString());
-      messageBuilder.setTypes(Utils.TOPIC, Utils.POST, "", "");
-      for (int i = 0; i < totalpost; ++i) {
-        postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
-        messageBuilder.setObjName(postNode.getProperty(EXO_NAME).getString());
-        messageBuilder.setLink(link + "/" + postNode.getName());
-        Set<String> set = new HashSet<String>();
-        // set email author this topic
-        set.add(getEmailUser(sProvider, postNode.getProperty(EXO_OWNER).getString()));
-        // set email watch this topic, forum, category parent of this post
-        set.addAll(calculateMoveEmail(destTopicNode));
-        // set email watch old category, forum, topic parent of this post
-        set.addAll(calculateMoveEmail(srcTopicNode));
-        if (!Utils.isEmpty(set.toArray(new String[set.size()]))) {
-          sendEmailNotification(new ArrayList<String>(set), messageBuilder.getContentEmailMoved());
+      if (!destModeratePost) {
+        postNode.setProperty(EXO_IS_APPROVED, true);
+      } else {
+        if (!postNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
+          unAproved = true;
         }
       }
+      postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, isActiveByTopic);
+    }
 
-      Set<String> userIdsp = new HashSet<String>();
-      if (destModeratePost && srcModeratePost) {
-        if (srcForumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        if (unAproved && destForumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-      } else if (srcModeratePost && !destModeratePost) {
-        if (srcForumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-      } else if (!srcModeratePost && destModeratePost) {
-        if (unAproved && destForumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
+    // set destTopicNode
+    destTopicNode.setProperty(EXO_POST_COUNT, destTopicNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
+    destTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, destTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + totalAtt);
+    destForumNode.setProperty(EXO_POST_COUNT, destForumNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
+    // update last post for destTopicNode
+    destTopicNode.setProperty(EXO_LAST_POST_BY, postNode.getProperty(EXO_OWNER).getValue().getString());
+    destTopicNode.setProperty(EXO_LAST_POST_DATE, postNode.getProperty(EXO_CREATED_DATE).getValue().getDate());
+
+    // set srcTopicNode
+    long temp = srcTopicNode.getProperty(EXO_POST_COUNT).getLong();
+    temp = temp - totalpost;
+    srcTopicNode.setProperty(EXO_POST_COUNT, (temp > -1) ? temp : -1);
+    temp = srcTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
+    temp = temp - totalAtt;
+    if (temp < 0)
+      temp = 0;
+    srcTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, temp);
+    // update last post for srcTopicNode
+    NodeIterator nodeIterator = srcTopicNode.getNodes();
+    long posLast = nodeIterator.getSize() - 1;
+    nodeIterator.skip(posLast);
+    while (nodeIterator.hasNext()) {
+      Node node = nodeIterator.nextNode();
+      if (node.isNodeType(EXO_POST))
+        postNode = node;
+    }
+    srcTopicNode.setProperty(EXO_LAST_POST_BY, postNode.getProperty(EXO_OWNER).getValue().getString());
+    srcTopicNode.setProperty(EXO_LAST_POST_DATE, postNode.getProperty(EXO_CREATED_DATE).getValue().getDate());
+    // set srcForumNode
+    temp = srcForumNode.getProperty(EXO_POST_COUNT).getLong();
+    temp = temp - totalpost;
+    srcForumNode.setProperty(EXO_POST_COUNT, (temp > 0) ? temp : 0);
+
+    if (forumHomeNode.isNew()) {
+      forumHomeNode.getSession().save();
+    } else {
+      forumHomeNode.save();
+    }
+    String objectName = new StringBuilder("[").append(destForumNode.getParent().getProperty(EXO_NAME).getString())
+                            .append("][").append(destForumNode.getProperty(EXO_NAME).getString()).append("] ").toString();
+    MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, objectName, true);
+    String topicName = destTopicNode.getProperty(EXO_NAME).getString();
+    String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString();
+    messageBuilder.setOwner(getScreenName(sProvider, ownerTopic));
+    messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topicName);
+    messageBuilder.setAddType(topicName);
+    link = link.replaceFirst("pathId", destTopicNode.getProperty(EXO_ID).getString());
+    messageBuilder.setTypes(Utils.TOPIC, Utils.POST, "", "");
+    for (int i = 0; i < totalpost; ++i) {
+      postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
+      messageBuilder.setObjName(postNode.getProperty(EXO_NAME).getString());
+      messageBuilder.setLink(link + "/" + postNode.getName());
+      Set<String> set = new HashSet<String>();
+      // set email author this topic
+      set.add(getEmailUser(sProvider, postNode.getProperty(EXO_OWNER).getString()));
+      // set email watch this topic, forum, category parent of this post
+      set.addAll(calculateMoveEmail(destTopicNode));
+      // set email watch old category, forum, topic parent of this post
+      set.addAll(calculateMoveEmail(srcTopicNode));
+      if (!Utils.isEmpty(set.toArray(new String[set.size()]))) {
+        sendEmailNotification(new ArrayList<String>(set), messageBuilder.getContentEmailMoved());
       }
-      if (!userIdsp.isEmpty()) {
-        getTotalJobWatting(sProvider, userIdsp);
+    }
+
+    Set<String> userIdsp = new HashSet<String>();
+    if (destModeratePost && srcModeratePost) {
+      if (srcForumNode.hasProperty(EXO_MODERATORS)) {
+        userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
       }
-    } catch (Exception e) {
-      log.error(String.format("Failed to move post to destination with path %s", destTopicPath), e);
+      if (unAproved && destForumNode.hasProperty(EXO_MODERATORS)) {
+        userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty(EXO_MODERATORS).getValues()));
+      }
+    } else if (srcModeratePost && !destModeratePost) {
+      if (srcForumNode.hasProperty(EXO_MODERATORS)) {
+        userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
+      }
+    } else if (!srcModeratePost && destModeratePost) {
+      if (unAproved && destForumNode.hasProperty(EXO_MODERATORS)) {
+        userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty(EXO_MODERATORS).getValues()));
+      }
+    }
+    if (!userIdsp.isEmpty()) {
+      getTotalJobWatting(sProvider, userIdsp);
     }
   }
 

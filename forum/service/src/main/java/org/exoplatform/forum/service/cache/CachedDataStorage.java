@@ -656,13 +656,14 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
-    for (Forum forum : forums) {
-      clearForumCache(forum, false);
-      clearObjectCache(forum, false);
-    }
-    clearForumListCache();
-    clearLinkListCache();
     storage.moveForum(forums, destCategoryPath);
+    //
+    topicData.clearCache();
+    postData.clearCache();
+    objectNameData.clearCache();
+    watchListData.clearCache();
+    forumData.clearCache();
+    clearForumListCache();
   }
 
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
