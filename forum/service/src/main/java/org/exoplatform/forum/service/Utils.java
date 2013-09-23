@@ -32,6 +32,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
@@ -652,14 +653,7 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getCategoryId(String path) {
-    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.CATEGORY) != -1) {
-      String category = path.substring(path.lastIndexOf(Utils.CATEGORY));
-      if (category.indexOf("/") != -1) {
-        category = category.substring(0, category.indexOf("/"));
-      }
-      return category;
-    }
-    return null;
+    return getIdByType(path, CATEGORY);
   }
 
   /**
@@ -682,14 +676,7 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getForumId(String path) {
-    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.FORUM) != -1) {
-      String forumId = path.substring(path.lastIndexOf(Utils.FORUM));
-      if (forumId.indexOf("/") != -1) {
-        forumId = forumId.substring(0, forumId.indexOf("/"));
-      }
-      return forumId;
-    }
-    return null;
+    return getIdByType(path, FORUM);
   }
 
   /**
@@ -712,14 +699,7 @@ public class Utils implements ForumNodeTypes {
    * @since 4.0
    */
   public static String getTopicId(String path) {
-    if (isEmpty(path) == false && path.lastIndexOf(TOPIC) != -1) {
-      String topicId = path.substring(path.lastIndexOf(TOPIC));
-      if (topicId.indexOf("/") != -1) {
-        topicId = topicId.substring(0, topicId.indexOf("/"));
-      }
-      return topicId;
-    }
-    return null;
+    return getIdByType(path, TOPIC);
   }
   
   /**
@@ -734,5 +714,53 @@ public class Utils implements ForumNodeTypes {
     }
     return null;
   }
+
+  /**
+   * Get object id by path and type
+   * @param path
+   * @param type
+   * @return
+   * @since 4.1
+   */
+  public static String getIdByType(String path, String type) {
+    if (isEmpty(path) == false && path.indexOf(type) != -1) {
+      String objectId = path.substring(path.lastIndexOf(type));
+      if (objectId.indexOf("/") != -1) {
+        objectId = objectId.substring(0, objectId.indexOf("/"));
+      }
+      return objectId;
+    }
+    return null;
+  }
+
+  /**
+   * Get sub path.
+   * @param path
+   * @return
+   * @since 4.1
+   */  
+  public static String getSubPath(String path) {
+    String forumHome = KSDataLocation.Locations.FORUM_CATEGORIES_HOME;
+    if (isEmpty(path) == false && path.indexOf(forumHome) >= 0) {
+      int index = path.indexOf(forumHome) + forumHome.length() + 1;
+      return path.substring(index);
+    }
+    return path;
+  }
   
+  /**
+   * Get type of object (category/forum/topic/post) by path.
+   * @param path
+   * @return
+   * @since 4.1
+   */   
+  public static String getObjectType(String objectIdOrPath) {
+    objectIdOrPath = getSubPath(objectIdOrPath);
+    if (objectIdOrPath.indexOf(POST) >= 0) return POST;
+    if (objectIdOrPath.indexOf(TOPIC) >= 0) return TOPIC;
+    if (objectIdOrPath.indexOf(CATEGORY) == 0 && objectIdOrPath.lastIndexOf(FORUM) > 0 || 
+        objectIdOrPath.indexOf(CATEGORY) < 0 && objectIdOrPath.lastIndexOf(FORUM) == 0) return FORUM;
+    if (objectIdOrPath.indexOf(CATEGORY) == 0) return CATEGORY;
+    return "";
+  }
 }

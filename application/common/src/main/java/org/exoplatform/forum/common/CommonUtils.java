@@ -548,20 +548,19 @@ public class CommonUtils {
     if (isEmpty(s)){
       return s;
     }
-    getValueTokens();
     for (String token : tokens) {
       if (lIgnore.contains(token)){
         continue;
       }
-      while (s.indexOf(token) >= 0) {
+      while (token != null && s.indexOf(token) >= 0) {
         s = StringUtils.replace(s, token, charcodes.get(token));
       }
     }
     return s;
   }
   
-  private static void getValueTokens() {
-    if(tokens.size() <= 0) {
+  static {
+    if(tokens.isEmpty()) {
       String token;
       // Tokens by HTML(Decimal) code.
       for (int t = Character.MIN_CODE_POINT; t < Character.MAX_CODE_POINT; t++) {

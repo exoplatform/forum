@@ -21,6 +21,12 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
+      <exclusions>
+      	<exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- This dependency is used for tests compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
