@@ -53,8 +53,13 @@
     });
   };
   
-  ForumSendNotification.getPlainText = function(str) {
-    return $.trim($('<span></span>').html(str).text().replace(/</gi, '&lt;').replace(/>/gi, '&gt;'));
+
+  ForumSendNotification.getPlainText = function(str, number) {
+    var text = $.trim($('<span></span>').html(str).text().replace(/</gi, '&lt;').replace(/>/gi, '&gt;'));
+    if (number !== undefined && text.length > number) {
+      text = text.substr(0, number) + '...';
+    }
+    return text;
   };
   
   ForumSendNotification.buildLink = function(link, type, alink) {
@@ -93,7 +98,7 @@
       msgBox.find('.from:first').html('<strong>' + component.from + ':</strong> ' + message.from);
       msgBox.find('.title:first').html('<strong>' + component.title + ':</strong> ' + component.getPlainText(message.name).replace(/Reply:/g, ''));
       //
-      var cont = component.getPlainText(message.message);
+      var cont = component.getPlainText(message.message, 100);
       msgBox.find('.content:first').html('<strong>' + component.briefContent + ':</strong> ' + cont);
       msgBox.find('.link:first').find('a').on('mouseup', component.closeBox);
       //
