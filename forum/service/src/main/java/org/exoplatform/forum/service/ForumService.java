@@ -31,15 +31,15 @@ import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.services.organization.User;
 
 /**
- * APIs for Forum and all other related objects (Categories, Topics and Posts) operations.
+ * Manages Forums and all its related objects (categories, topics and posts).
  *
  */
 public interface ForumService extends ForumServiceLegacy {
 
   /**
-   * Adds component plug-in what keeps email configuration for Forum. 
+   * Adds a component plugin which keeps email configuration for Forums. 
    * 
-   * @param plugin the provided email configuration plug-in
+   * @param plugin The plugin to be added.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -48,9 +48,9 @@ public interface ForumService extends ForumServiceLegacy {
   void addPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds the role plug-in what define role rule in forum.
+   * Adds a role plugin which defines role rules in Forums.
    * 
-   * @param plugin the provided role rules plug-in
+   * @param plugin The plugin to be added.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.0.x
@@ -58,9 +58,9 @@ public interface ForumService extends ForumServiceLegacy {
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds the initialization data when runs forum first time.
+   * Adds a plugin which initializes data when Forums is started at first time.
    *  
-   * @param plugin the provided initialization data plug-in
+   * @param plugin The plugin to be added.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.0.x
@@ -68,48 +68,47 @@ public interface ForumService extends ForumServiceLegacy {
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds the initialization default data when runs forum first time.
+   * Adds a plugin which initializes the default data when Forums is started at first time.
    * 
-   * @param plugin
+   * @param plugin The plugin to be added.
    * @throws Exception
    * @LevelAPI Platform
    */
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Returns {@link Category} list contained in forum.
+   * Gets categories in Forums.
    * 
-   * @return the list category
+   * @return Categories.
    * @LevelAPI Platform
    */
   List<Category> getCategories();
 
   /**
    * 
-   * Returns the {@link Category} to which the specified key is stored, 
-   * or null if forum does not contain any {@link Category} for the key.
+   * Gets a category by its provided Id.
    * 
-   * @param categoryId is the id of category.
-   * @return the category
+   * @param categoryId Id of the category.
+   * @return A category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Category getCategory(String categoryId);
 
   /**
-   * Returns the {@link Category} to which keeps {@link Forum} under Space context. 
+   * Gets a category which contains the forum spaces. 
    * 
-   * @return the category
+   * @return A category.
    * @throws Exception
    * @LevelAPI Platform
    */
   Category getCategoryIncludedSpace();
 
   /**
-   * Gets user and group have edit permission in the {@link Category}
+   * Gets users or groups who have permission to edit topics in a category.
    * 
-   * @param categoryId id of category
-   * @param type type of category
+   * @param categoryId Id of the category.
+   * @param type Type of the category.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.2.x
@@ -117,11 +116,10 @@ public interface ForumService extends ForumServiceLegacy {
   String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception;
 
   /**
-   * Saves {@link Category}, also checks exists category or not.
-   * If not to create new else update exists category
+   * Saves a category which is added or updated.
    * 
-   * @param category is the category
-   * @param isNew optional add new or not.
+   * @param category The category to be saved.
+   * @param isNew If "true", the new category is added. If "false", the category is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.0.x
@@ -129,10 +127,10 @@ public interface ForumService extends ForumServiceLegacy {
   void saveCategory(Category category, boolean isNew) throws Exception;
 
   /**
-   * Calculates moderator information for category
+   * Checks information about a moderator of a category.
    * 
-   * @param categoryPath path of category
-   * @param isNew is calculate new or not
+   * @param categoryPath Path to the category.
+   * @param isNew If "true", the new information is added. If "false", the information is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.2.x
@@ -140,11 +138,11 @@ public interface ForumService extends ForumServiceLegacy {
   void calculateModerator(String categoryPath, boolean isNew) throws Exception;
 
   /**
-   * Saves moderator to the {@link Category} list for specified userId
+   * Sets a moderator for a category.
    *
-   * @param moderatorCate the category list
-   * @param userId the userId
-   * @param isAdd optional value add new or not
+   * @param moderatorCate The moderator.
+   * @param userId Id of the moderator.
+   * @param isAdd If "true", the moderator is added. If "false", the moderator is removed.
    * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.2.x
@@ -152,350 +150,345 @@ public interface ForumService extends ForumServiceLegacy {
   void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd);
 
   /**
-   * Removes the {@link Category} the specified key from the forum if present.
+   * Removes a category by its provided Id.
    * 
-   * @param categoryId the removed categoryId.
-   * @return the category removed
+   * @param categoryId Id of the category to be removed.
+   * @return The removed category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Category removeCategory(String categoryId) throws Exception;
 
   /**
-   * Returns the {@link Forum} list which contains 
-   * the specified {@link Category}'s Id and match query condition.
+   * Gets a list of forums by a specific category Id and a query condition.
    * 
-   * @param categoryId is the id of category have list forum
-   * @param strQuery condition to get
-   * @return the list forum
+   * @param categoryId Id of the category.
+   * @param strQuery The query condition.
+   * @return Forums.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   /**
-   * Returns the {@link CategoryFilter} list which match forumName and userName specification.
+   * Gets a list of category filters by a forum name and username.
    * 
-   * @param filterKey - the key to search forum.
-   * @param userName - the identify of user.
-   * @param maxSize - limit of forum result
-   * @return - list of {@link CategoryFilter}.
+   * @param filterKey The key to search for a forum.
+   * @param userName Name of the user.
+   * @param maxSize The maximum number of category filters which are returned.
+   * @return Category filters.
    * @throws Exception
    * @LevelAPI Platform
    */
   List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
 
   /**
-   * Returns the {@link Forum} which contains 
-   * the specified {@link Category}'s Id and {@link Forum}'s Id.
+   * Gets a forum by a specific category Id and forum Id.
    * 
-   * @param categoryId is the id of category identify.
-   * @param forumId is the id of forum identify.
-   * @return the forum
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @return The forum.
    * @LevelAPI Platform
    */
   Forum getForum(String categoryId, String forumId);
 
   /**
-   * Modifies the existing {@link Forum} base on Type of updating.
+   * Modifies an existing forum with various types.
    * <ul>
-   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
+   *  <li>1. {@link Utils#CLOSE}: Closes a given forum.</li>
+   *  <li>2. {@link Utils#LOCK}: Locks a given forum.</li>
+   *  <li>3. {@link Utils#APPROVE}: Approves a given forum.</li>
+   *  <li>4. {@link Utils#STICKY}: Sticks a given forum.</li>
+   *  <li>5. {@link Utils#ACTIVE}: Activates a given forum.</li>
+   *  <li>6. {@link Utils#WAITING}: Waits for a given forum.</li>
+   *  <li>7. {@link Utils#HIDDEN}: Hides a given forum.</li>
    * </ul>
    * 
-   * @param forum is the object forum that should be modified
-   * @param type is choose when modify this forum.
+   * @param forum The forum to be modified.
+   * @param type A type to modify the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void modifyForum(Forum forum, int type) throws Exception;
 
   /**
-   * Creates new or update Forum.
+   * Saves a forum into a specific category.
    * 
-   * @param categoryId is the id of category identify.
-   * @param forum the forum.
-   * @param isNew true is new forum, else update forum
+   * @param categoryId Id of the category.
+   * @param forum The forum to be saved.
+   * @param isNew If "true", the new forum is added. If "false", the forum is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception;
 
   /**
-   * Saves or remove user is moderator of list forum
+   * Saves or removes a moderator to/from a list of forums.
    * 
-   * @param forumPaths {@link Forum} path list will be updated moderator.
-   * @param userName the userName
-   * @param isDelete is false when you want to add userId into list moderator of
-   *          forums isDelete is true when you want to remove userId from list
-   *          moderator of forums.
+   * @param forumPaths Paths to the forums.
+   * @param userName Name of the moderator.
+   * @param isDelete If "true", the modertator is removed. If "false", the moderator is added.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception;
 
   /**
-   * Removes the forum base on {@link Category}'s Id and {@link Forum}'s Id.
+   * Removes a forum by its category Id and forum Id.
    * 
-   * @param categoryId is the id of category.
-   * @param forumId is the id of forum need remove.
-   * @return the forum
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum to be removed.
+   * @return The forum
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Forum removeForum(String categoryId, String forumId) throws Exception;
 
   /**
-   * Moves {@link Forum} list to destination {@link Category}
+   * Moves a list of forums to a specific category.
    * 
-   * @param forums the forum list
-   * @param destCategoryPath the target {@link Category}
+   * @param forums Forums to be moved.
+   * @param destCategoryPath Path to the target category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void moveForum(List<Forum> forums, String destCategoryPath) throws Exception;
 
   /**
-   * Gets the topic list specified {@link Forum}
+   * Gets a list of topics by a specific category Id, forum Id and query condition.
    * 
-   * @param categoryId the Category's Id
-   * @param forumId the Forum's Id
-   * @param strQuery Condition to get
-   * @param strOrderBy the query statement
-   * @return the topic list keeps in {@link JCRPageList}
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param strQuery The query condition.
+   * @param strOrderBy The returned topics are shown by the ascending or descending order.
+   * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 
   /**
-   * Gets the {@link Topic} list which match userName
+   * Gets a list of topics by a given username.
    * 
-   * @param userName the owner {@link Topic}
-   * @param isMod the viewer is moderator or not
-   * @param strOrderBy is a string. It's content have command to set 'order by' of Query. This function will return page topic has 'order by'
-   *        by strOrderby. 
-   * @return the topic list keeps in {@link JCRPageList}
+   * @param userName Name of the user.
+   * @param isMod If "true", only topics moderated by the user is returned.
+   * @param strOrderBy The order type for topics (ascending or descending).
+   * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
 
   /**
-   * Gets the {@link Topic} list which match created date.
+   * Gets a list of topics which were created before a given date.
    * 
-   * @param date the created date
-   * @param forumPatch the {@link Forum} path
-   * @return the {@link Topic} list keeps in {@link JCRPageList}
+   * @param date The given date.
+   * @param forumPatch Path to the forum which contains topics.
+   * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
 
   /**
-   * Gets the {@link Topic} list which match created date.
+   * Gets a list of topics which were created before a given date.
    * 
-   * @param date the date
-   * @param forumPatch path of forum
-   * @return the {@link Topic} list
+   * @param date The given date.
+   * @param forumPatch Path to the forum which contains topics.
+   * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception;
 
   /**
-   * Count number for these topic which match created date.
+   * Gets the total number of topics which were created before a given date.
    * 
-   * @param date the created date
-   * @param forumPatch the {@link Forum} path
-   * @return the count number
+   * @param date The given date.
+   * @param forumPatch Path to the forum which contains topics.
+   * @return The total number of topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   long getTotalTopicOld(long date, String forumPatch);
 
   /**
-   * Gets the topic list specified {@link Forum}
+   * Gets a list of topics by category Id and forum Id.
    * 
-   * @param categoryId the Category's Id
-   * @param forumId the Forum's Id
-   * @return the {@link Topic} list
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @return A lis of topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
   /**
-   * Gets the {@link Post} specified {@link Topic}
+   * Gets a topic by category Id, forum Id and topic Id.
    * 
-   * @param categoryId the Category's Id
-   * @param forumId the Forum's Id
-   * @param topicId the topic id
-   * @param userRead the viewer
-   * @return the {@link Post}
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param userRead The user who views the topic.
+   * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
 
   /**
-   * Updates topic viewers 
+   * Counts the number of topic viewers.
    * 
-   * @param path path of topic
-   * @param userRead the viewer
+   * @param path Path to the topic.
+   * @param userRead The user who views the topic.
    * @LevelAPI Platform
    */
   void setViewCountTopic(String path, String userRead);
   
   /**
-   * Write the number of topic viewers.
+   * Saves the number of topic viewers.
    * 
    * @since 2.2.11
    */
   void writeViews();
   
   /**
-   * Gets newest {@link Topic}
+   * Gets a topic by its path and post condition.
    * 
-   * @param topicPath the topic path
-   * @param isLastPost is the last post
-   * @return the topic
+   * @param topicPath Path to the topic.
+   * @param isLastPost If "true", the returned topic is one which has the last post.
+   * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
   /**
-   * Gets newest {@link Post}
+   * Gets the last post of a forum.
    * 
-   * @param lastTopicPath
-   * @return the topic contain last post of forum.
+   * @param lastTopicPath Path to the topic which contains the last post.
+   * @return The topic which contains the last post.
    * @throws Exception
    * @LevelAPI Platform
    */
   Topic getLastPostOfForum(String lastTopicPath) throws Exception;
   
   /**
-   * Returns Topic's summary information
+   * Gets a topic by its path.
    * 
-   * @param topicPath the topic path
-   * @return the {@link Topic}
+   * @param topicPath Path to the topic.
+   * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Topic getTopicSummary(String topicPath) throws Exception;
 
   /**
-   * Gets more information for specified {@link Topic}
+   * Gets more information about a given topic.
    * 
-   * @param topic the topic object
-   * @param isSummary included summary information or not.
-   * @return the topic
+   * @param topic The topic which is required to have more information.
+   * @param isSummary If "true", the summary information about the topic is included.
+   * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
 
   /**
-   * Modify the existing {@link Topic} list base on updating type.
+   * Modifies a list of topics with various types.
    * <ul>
-   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE}: Closes a given topic.</li>
+   *  <li> 2. {@link Utils#LOCK}: Locks a given topic.</li>
+   *  <li> 3. {@link Utils#APPROVE}: Approves a given topic.</li>
+   *  <li> 4. {@link Utils#STICKY}: Sticks a given topic.</li>
+   *  <li> 5. {@link Utils#ACTIVE}: Activates a given topic.</li>
+   *  <li> 6. {@link Utils#WAITING}: Waits for a given topic.</li>
+   *  <li> 7. {@link Utils#HIDDEN}: Hides a given topic.</li>
    * </ul>
    * 
-   * @param topics the topic list will be updated
-   * @param type specified action type
+   * @param topics Topics to be modified.
+   * @param type The selected modification type.
    * @LevelAPI Platform
    */
   void modifyTopic(List<Topic> topics, int type);
   
   /**
-   * Modify the merged {@link Topic} list base on updating type.
+   * Modifies a list of merged topics with various types.
    * <ul>
-   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
+   *  <li> 1. {@link Utils#CLOSE}: Closes the given list of merged topics.</li>
+   *  <li> 2. {@link Utils#LOCK}: Locks the given list of merged topics.</li>
+   *  <li> 3. {@link Utils#APPROVE}: Approves the given list of merged topics.</li>
+   *  <li> 4. {@link Utils#STICKY}: Sticks the given list of merged topics.</li>
+   *  <li> 5. {@link Utils#ACTIVE}: Activates the given list of merged topics.</li>
+   *  <li> 6. {@link Utils#WAITING}: Waits for the given list of merged topics.</li>
+   *  <li> 7. {@link Utils#HIDDEN}: Hides the given list of merged topics.</li>
    * </ul>
    * 
-   * @param topics the topics
-   * @param type the type
+   * @param topics Merged topics.
+   * @param type The selected modification type.
    * @LevelAPI Platform
    */
   void modifyMergedTopic(List<Topic> topics, int type);
 
   /**
-   * Save or update {@link Topic}.
+   * Saves or updates a topic by category Id and forum Id.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topic the topic
-   * @param isNew is the new
-   * @param isMove is the move
-   * @param messageBuilder Message builder
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topic The topic to be saved or updated.
+   * @param isNew If "true", the new topic is added. If "false", the topic is updated.
+   * @param isMove If "true", the topic is moved.
+   * @param messageBuilder Builds an email message.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception;
 
   /**
-   * Removes the topic.
+   * Removes a topic.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @return the topic
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
   /**
-   * Move topic list to target {@link Forum}
+   * Moves a list of topics to a forum.
    * 
-   * @param topics the topics
-   * @param destForumPath the target of forum path
-   * @param mailContent mail to send notification
-   * @param link to topic
+   * @param topics Topics to be moved.
+   * @param destForumPath Path to the target forum.
+   * @param mailContent Content of the email notification.
+   * @param link Link to a specific topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 
   /**
-   * Merge two topics to be new one.
+   * Merges two topics into one.
    * 
-   * @param srcTopicPath path of moved topic
-   * @param destTopicPath the target of topic
-   * @param mailContent mail to send notification
-   * @param link to topic
-   * @param topicMergeTitle new topic's name
+   * @param srcTopicPath Path to the source topic.
+   * @param destTopicPath Path to the target topic.
+   * @param mailContent Content of the email notification.
+   * @param link Link to a specific topic.
+   * @param topicMergeTitle Title of new topic which has been merged.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link, String topicMergeTitle) throws Exception;
 
   /**
-   * Splits specified {@link Topic} to two one.
+   * Splits a topic into 2 ones.
    * 
-   * @param newTopic - the new topic create when split topic.
-   * @param firstPost - the fist post of new topic.
-   * @param postPathMove - the list path's posts move to new topic
-   * @param mailContent - the mail content to send notification
-   * @param link to topic
+   * @param newTopic The new topic which is created after being split.
+   * @param firstPost The fist post of the new topic.
+   * @param postPathMove Path to the post which is moved to the topic.
+   * @param mailContent Content of the email notification.
+   * @param link Link to the new topic.
    * @throws Exception
    * @LevelAPI Platform
    * @since 4.0
@@ -503,506 +496,502 @@ public interface ForumService extends ForumServiceLegacy {
   void splitTopic(Topic newTopic, Post firstPost, List<String> postPathMove, String mailContent, String link) throws Exception;
 
   /**
-   * Gets the post list in specified {@link Forum} 
-   * which match conditions such as isApproved, isHidden and query statement.
+   * Gets a list of posts in a given forum that match with conditions, including "Approved", "Hidden" and query statement.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param isApproved is the approved
-   * @param isHidden is the hidden
-   * @param strQuery the str query
-   * @param userLogin the user login
-   * @return the {@link Post} list
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param isApproved If "true", only approved posts are returned.
+   * @param isHidden If "true", only hidden posts are returned.
+   * @param strQuery The query statement.
+   * @param userLogin Name of the user who logs in.
+   * @return Posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 
   /**
-   * Gets the post list in specified {@link Topic} 
+   * Gets a list of posts in a given topic.
    * 
-   * @param topicPath path of topic
-   * @return the {@link Post} list
+   * @param topicPath Path to the topic.
+   * @return Posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
 
   /**
-   * Gets Posts and return ListAccess
-   * @param filter
-   * @return
+   * Gets posts which are returned as ListAccess.
+   * @param filter The condition to get posts.
+   * @return The posts.
    * @throws Exception
    * @since 2.2.11
    */
   ListAccess<Post> getPosts(PostFilter filter) throws Exception;
 
   /**
-   * Count number of {@link Post} which match conditions such as isApproved, isHidden and query statement.
+   * Gets the number of available posts which match with conditions, including "Approved", "Hidden" and query statement.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param isApproved is the approved
-   * @param isHidden is the hidden
-   * @param userLogin the user login
-   * @return the count number
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param isApproved If "true", only approved posts are returned.
+   * @param isHidden If "true", only hidden posts are returned.
+   * @param userLogin Name of the user who logs in.
+   * @return The number of available posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
-   * Gets specified {@link Post} position number in the {@link Topic}.
+   * Gets an index of the last read post in a specific topic.
    * 
-   * @param path path of post
-   * @param isApproved is the approved
-   * @param isHidden is the hidden
-   * @param userLogin the user login
-   * @return index of the post
+   * @param path Path to the post.
+   * @param isApproved If "true", the last read post must be an approved one.
+   * @param isHidden If "true", the last read post must be a hidden one.
+   * @param userLogin Name of the user who logs in.
+   * @return The post index.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
-   * Gets the {@link Post} list by poster.
+   * Gets a list of posts by a specific user.
    * 
-   * @param userName the user name
-   * @param userId the poster
-   * @param isMod the role of poster
-   * @param strOrderBy is a string. It's content have command Query. This function
-   *        will return page post suitable to content of that strQuery
-   * @return the {@link Post} list
+   * @param userName Name of the current viewer.
+   * @param userId Id of the poster.
+   * @param isMod If "true", the poster is moderator.
+   * @param strOrderBy The order type for posts (ascending or descending).
+   * @return Posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
   /**
-   * Return {@link Post} base on {@link Category}'s Id, {@link Forum}'s Id, {@link Topic}'s Id and {@link Post}'s Id
+   * Gets a post based on category Id, forum Id, topic Id and post Id.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param postId the post id
-   * @return the post
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param postId Id of the post.
+   * @return The post.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception;
 
   /**
-   * Saves or updates {@link Post} base on provided isNew. 
+   * Saves or updates a post. 
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param post the post
-   * @param isNew is the new
-   * @param messageBuilder Message builder
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param post The post.
+   * @param isNew If "true", the new post is added. If "false", the post is updated.
+   * @param messageBuilder Builds an email message.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception;
 
   /**
-   * Modifies the {@link Post} base on updating type.
+   * Modifies a list of posts with various types.
    * <ul>
-   *  <li> 1. {@link Utils#CLOSE} : close specified {@link Forum}</li>
-   *  <li> 2. {@link Utils#LOCK} : lock specified {@link Forum}</li>
-   *  <li> 3. {@link Utils#APPROVE} : approve specified {@link Forum}</li>
-   *  <li> 4. {@link Utils#STICKY} : sticky specified {@link Forum}</li>
-   *  <li> 5. {@link Utils#ACTIVE} : active specified {@link Forum}</li>
-   *  <li> 6. {@link Utils#WAITING} : wait specified {@link Forum}</li>
-   *  <li> 7. {@link Utils#HIDDEN} : hide specified {@link Forum}</li>
+   *  <li>1. {@link Utils#CLOSE}: Closes the given post.</li>
+   *  <li>2. {@link Utils#LOCK}: Locks the given post.</li>
+   *  <li>3. {@link Utils#APPROVE}: Approves the given post.</li>
+   *  <li>4. {@link Utils#STICKY}: Sticks the given post.</li>
+   *  <li>5. {@link Utils#ACTIVE}: Activates the given post.</li>
+   *  <li>6. {@link Utils#WAITING}: Waits for the given post.</li>
+   *  <li>7. {@link Utils#HIDDEN}: Hides the given post.</li>
    * </ul>
    * 
-   * @param posts the posts
-   * @param type type of post
+   * @param posts The posts.
+   * @param type The modification type.
    * @LevelAPI Platform
    */
   void modifyPost(List<Post> posts, int type);
 
   /**
-   * Removes the {@link Post}.
+   * Removes a post.
    * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param postId the post id
-   * @return the post
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param topicId Id of the topic.
+   * @param postId Id of the post.
+   * @return The post.
    * @LevelAPI Platform
    */
   Post removePost(String categoryId, String forumId, String topicId, String postId);
 
   /**
-   * Move post to the the target {@link Topic} 
+   * Moves a list of posts to a given topic.
    * 
-   * @param postPaths Paths to move post
-   * @param destTopicPath the destination topic path
-   * @param isCreatNewTopic New topic or update
-   * @param mailContent Content of mail
-   * @param link Link to move
+   * @param postPaths Paths to the moved posts.
+   * @param destTopicPath Path to the destination topic.
+   * @param isCreatNewTopic If "true", the new topic is created. If "false", the topic is updated.
+   * @param mailContent Content of the email notification.
+   * @param link Link to the topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
 
   /**
-   * Gets the object name by path.
+   * Gets the object name by its path.
    * 
-   * @param path the path
-   * @return the object name by path
+   * @param path Path to the object name.
+   * @return The object name.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Object getObjectNameByPath(String path) throws Exception;
 
   /**
-   * Gets the object name by path.
+   * Gets the object name by its path.
    * 
-   * @param id Identity to get
-   * @param type  The type to get
-   * @return the object name by path
+   * @param id Identity to get the object name.
+   * @param type Type of the object.
+   * @return The object name.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Object getObjectNameById(String id, String type) throws Exception;
 
   /**
-   * Gets the all link.
+   * Gets all links of a given forum.
    * 
-   * @param strQueryCate is a string. It's content have command Query. This function
-   *        will return page category suitable to content of that strQueryCate
-   * @param strQueryForum is a string. It's content have command Query. This function
-   *        will return page forum suitable to content of that strQueryForum
-   * @return the all link
+   * @param strQueryCate The query condition of the category.
+   * @param strQueryForum The query condition of the forum.
+   * @return All links.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception;
 
   /**
-   * Gets the forum home path.
+   * Gets the home path of a given forum.
    * 
-   * @return the forum home path
+   * @return The home path.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   String getForumHomePath() throws Exception;
 
   /**
-   * Puts the tags into specified {@link Topic}
+   * Adds a list of tags to a specific topic.
    * 
-   * @param tags the list tag is add
-   * @param userName UserName
-   * @param topicPath the topic path
+   * @param tags Tags to be added.
+   * @param userName Name of the current viewer.
+   * @param topicPath Path to the topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void addTag(List<Tag> tags, String userName, String topicPath) throws Exception;
 
   /**
-   * Removes the Tag out the {@link Topic}}
+   * Removes a tag from a given topic.
    * 
-   * @param tagId the tag id
-   * @param userName the user id
-   * @param topicPath the topic path
+   * @param tagId Id of the tag to be removed.
+   * @param userName Name of the current viewer.
+   * @param topicPath Path to the topic.
    * @LevelAPI Platform
    */
   void unTag(String tagId, String userName, String topicPath);
 
   /**
-   * Gets the {@link Tag} base on {@link Tag}'s Id
+   * Gets a tag by its Id.
    * 
-   * @param tagId the tag id
-   * @return the tag
+   * @param tagId Id of the tag.
+   * @return The tag.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Tag getTag(String tagId) throws Exception;
 
   /**
-   * Gets all the {@link Tag} list.
+   * Gets all tag names by query statement and topic Id.
    * 
-   * @param strQuery query to get tags
-   * @param userAndTopicId input id
-   * @return the list names of tags
+   * @param strQuery The query statement.
+   * @param userAndTopicId The 'userId,topicId' pattern.
+   * @return Tag names.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getAllTagName(String strQuery, String userAndTopicId) throws Exception;
 
   /**
-   * Gets all the tag name in topic.
+   * Gets all tag names in a given topic.
    * 
-   * @param userAndTopicId 'userId,topicId' pattern
-   * @return the list names of tags
+   * @param userAndTopicId The 'userId,topicId' pattern.
+   * @return The tag names.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getTagNameInTopic(String userAndTopicId) throws Exception;
 
   /**
-   * Gets all the {@link Tag} list.
+   * Gets all tags.
    * 
-   * @return the tags
+   * @return The tags.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Tag> getAllTags() throws Exception;
 
   /**
-   * Gets the tags by user.
+   * Gets a list of tags by their Ids.
    * 
-   * @param tagIds the list tag id of user tag in topic.
-   * @return the tags by user add in topic
+   * @param tagIds Ids of the tags.
+   * @return The tags.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Tag> getMyTagInTopic(String[] tagIds) throws Exception;
 
   /**
-   * Gets the topics by tag.
+   * Gets topics by a given tag.
    * 
-   * @param userIdAndtagId the user id and tag id (userId:tagId)
-   * @param strOrderBy the topic order by
-   * @return the topics by tag of user tag
+   * @param userIdAndtagId The 'userId:tagId' pattern.
+   * @param strOrderBy The order type for topics (ascending or descending).
+   * @return The topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception;
 
   /**
-   * Creates new {@link Tag}
+   * Saves a new tag.
    * 
-   * @param newTag the new tag
+   * @param newTag The tag to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveTag(Tag newTag) throws Exception;
 
   /**
-   * Save user profile.
+   * Saves the user profile.
    * 
-   * @param userProfile the user profile
-   * @param isOption is the option
-   * @param isBan is the ban
+   * @param userProfile The user profile to be saved.
+   * @param isOption If "true", only some basic information is saved. If "false", all information is saved.
+   * @param isBan If "true", the profile of the banned user is still saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
 
   /**
-   * Save user profile.
+   * Saves the user profile.
    * 
-   * @param user user want to update
+   * @param user The user who wants to update his profile.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void updateUserProfile(User user) throws Exception;
 
   /**
-   * Save user moderator.
+   * Sets the moderator role to a user in a forum or a category.
    * 
-   * @param userName the username of a user
-   * @param ids optional categoryId list or forumId list
-   * @param isModeCate true: update Category otherwise update Forum 
+   * @param userName Name of the user.
+   * @param ids Ids in the forum or category.
+   * @param isModeCate If "true", the moderator role of the category is set to the user. If "false", the moderator role of the forum is set to set to the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
 
   /**
-   * Search for user profile
+   * Searches for a user profile.
    * 
-   * @param userSearch user want to search
-   * @return forum page list
+   * @param userSearch The user who wants to search.
+   * @return A list of user profiles.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList searchUserProfile(String userSearch) throws Exception;
 
   /**
-   * Gets the user info.
+   * Gets information about a user.
    * 
-   * @param userName the user name
-   * @return the user info
+   * @param userName Name of the user.
+   * @return The user information.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getUserInfo(String userName) throws Exception;
 
   /**
-   * Gets all moderators.
+   * Gets Ids of forums or categories where the user is moderator.
    * 
-   * @param userName the user name
-   * @param isModeCate is category or not
-   * @return list of users
+   * @param userName Name of the user.
+   * @param isModeCate If "true", Ids of categories are returned. If "false", Ids of forums are returned.
+   * @return Ids.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getUserModerator(String userName, boolean isModeCate) throws Exception;
 
   /**
-   * Save user bookmark.
+   * Saves a user's bookmark.
    * 
-   * @param userName the user name
-   * @param bookMark the book mark
-   * @param isNew is the new
+   * @param userName Name of the user who bookmarks.
+   * @param bookMark The bookmark to be saved.
+   * @param isNew If "true", the new bookmark is added. If "false", the bookmark is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception;
 
   /**
-   * Save to post if this post has an user read
+   * Saves Ids of the last read posts into a topic or forum.
    * 
-   * @param userId the user name
-   * @param lastReadPostOfForum last post was read
-   * @param lastReadPostOfTopic last post was read
+   * @param userId Name of the current user.
+   * @param lastReadPostOfForum The number of the last read posts in a forum.
+   * @param lastReadPostOfTopic The number of the last read posts in a topic.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception;
 
   /**
-   * Save user collap Categories.
+   * Saves a collapsed category.
    * 
-   * @param userName the user name
-   * @param categoryId the book mark
-   * @param isAdd is the new
+   * @param userName Name of the current user.
+   * @param categoryId Id of the collapsed category.
+   * @param isAdd If "true", the new collapsed category is added. If "false", the collapsed category is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception;
 
   /**
-   * Gets the page list user profile.
+   * Gets all user profiles.
    * 
-   * @return the page list user profile
-   * @throws Exception the exception
+   * @return A list of user profiles.
+   * @throws Exception the exception.
    * @LevelAPI Platform
    */
   JCRPageList getPageListUserProfile() throws Exception;
 
   /**
-   * Gets the quick search.
+   * Gets a quick search.
    * 
-   * @param textQuery the text query
-   * @param type is type user and type object(forum, topic and post)
-   * @param pathQuery the path query
-   * @param userId Id of user
-   * @param listCateIds category ids
-   * @param listForumIds Forum ids
-   * @param forumIdsOfModerator the list of forumId witch user searching has role is 'moderator'.   
-   * @return the quick search
+   * @param textQuery The text query.
+   * @param type Type of object to search (forum, topic or post).
+   * @param pathQuery The path by which the quick search is performed.
+   * @param userId The user who performs the quick search.
+   * @param listCateIds A list of categories where the quick search is performed.
+   * @param listForumIds A list of forums where the quick search is performed.
+   * @param forumIdsOfModerator Ids of the forums where the user is moderator.   
+   * @return A list of search results.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<ForumSearchResult> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
   /**
-   * Gets screen name
+   * Gets a screen name.
    * 
-   * @param userName username of user
-   * @return screen name
+   * @param userName Name of the user.
+   * @return The screen name.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   String getScreenName(String userName) throws Exception;
 
   /**
-   * Gets the advanced search.
+   * Gets an advanced search.
    * 
-   * @param eventQuery the event query
-   * @param listCateIds List of category
-   * @param listForumIds List of forum id
-   * @return the advanced search
+   * @param eventQuery The search condition.
+   * @param listCateIds A list of categories where the advanced search is performed.
+   * @param listForumIds A list of forums where the advanced search is performed.
+   * @return A list of search results.
    * @LevelAPI Platform
    */
   List<ForumSearchResult> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
 
   /**
-   * Saves forum statistic.
+   * Saves statistics of Forums.
    * 
-   * @param forumStatistic the forum statistic
-   * @throws Exception the exception
+   * @param forumStatistic The Forums statistics to be saved.
+   * @throws Exception the exception.
    * @LevelAPI Platform
    */
   void saveForumStatistic(ForumStatistic forumStatistic) throws Exception;
 
   /**
-   * Gets the forum statistic.
+   * Gets statistics of Forums.
    * 
-   * @return the forum statistic
+   * @return The Forums statistics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   ForumStatistic getForumStatistic() throws Exception;
 
   /**
-   * Saves forum administration.
+   * Saves the administration settings of Forums.
    * 
-   * @param forumAdministration the forum administration
+   * @param forumAdministration The Forums administration settings to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveForumAdministration(ForumAdministration forumAdministration) throws Exception;
 
   /**
-   * Gets the forum administration.
+   * Gets the administration settings of Forums.
    * 
-   * @return the forum administration
+   * @return Information about the Forum administration settings.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   ForumAdministration getForumAdministration() throws Exception;
 
   /**
-   * Update informations for topics and posts
+   * Updates information about topics and posts.
    * 
-   * @param topicCoutn number of  topics
-   * @param postCount number of posts
+   * @param topicCoutn The number of topics.
+   * @param postCount The number of posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void updateStatisticCounts(long topicCoutn, long postCount) throws Exception;
 
   /**
-   * User login.
+   * Sets the login information of a user.
    * 
-   * @param userId the user id
+   * @param userId Id of the current user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void userLogin(String userId) throws Exception;
 
   /**
-   * User logout.
+   * Sets the logout information of a user.
    * 
-   * @param userId the user id
+   * @param userId Id of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void userLogout(String userId) throws Exception;
 
   /**
-   * Checks if is online.
+   * Checks if a user is online or not.
    * 
-   * @param userId the user id
-   * @return true, if is online
+   * @param userId Id of the user.
+   * @return If "true", the checked user is online.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   boolean isOnline(String userId) throws Exception;
 
   /**
-   * Gets the online users.
+   * Gets users who are online.
    * 
-   * @return the online users
+   * @return The online users.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
@@ -1011,613 +1000,607 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the last login.
    * 
-   * @return the last login
+   * @return Id of the user who did the last login.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   String getLastLogin() throws Exception;
 
   /**
-   * Gets the private message.
+   * Gets private messages of a user.
    * 
-   * @param userName the user name
-   * @param type the type
-   * @return the private message
+   * @param userName Name of the user.
+   * @param type Two message types: Sent or Received.
+   * @return Private messages.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getPrivateMessage(String userName, String type) throws Exception;
 
   /**
-   * Gets new private message.
+   * Gets the count of new private messages.
    * 
-   * @param userName the user name
-   * @return number of private messages
+   * @param userName Name of the user.
+   * @return The count of new private messages.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   long getNewPrivateMessage(String userName) throws Exception;
 
   /**
-   * Saves private message.
+   * Saves a private message.
    * 
-   * @param privateMessage the private message
+   * @param privateMessage The private message to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void savePrivateMessage(ForumPrivateMessage privateMessage) throws Exception;
 
   /**
-   * Saves read message.
+   * Saves a read message.
    * 
-   * @param messageId the message id
-   * @param userName the user name
-   * @param type the type
+   * @param messageId Id of the message to be saved.
+   * @param userName Name of the current user.
+   * @param type Two message types: Sent or Received.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveReadMessage(String messageId, String userName, String type) throws Exception;
 
   /**
-   * Removes the private message.
+   * Removes a private message.
    * 
-   * @param messageId the message id
-   * @param userName the user name
-   * @param type the type
+   * @param messageId Id of the message.
+   * @param userName Name of the current user.
+   * @param type Two message types: Sent or Received.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void removePrivateMessage(String messageId, String userName, String type) throws Exception;
 
   /**
-   * Get descriptions of forum
+   * Gets information subscribed by a user.
    * 
-   * @param userId username of an user
-   * @return subscription of forum
+   * @param userId Id of the current user.
+   * @return The subscription information.
    * @LevelAPI Platform
    */
   ForumSubscription getForumSubscription(String userId);
 
   /**
-   * Save descriptions of forum
+   * Saves a subscription of a user.
    * 
-   * @param forumSubscription informations want to save
-   * @param userId username of an user
+   * @param forumSubscription The subscription information to be saved.
+   * @param userId Id of the current user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception;
 
   /**
-   * Adds the watch.
+   * Adds a watch.
    * 
-   * @param watchType the watch type
-   * @param path the path
-   * @param values the values
-   * @param currentUser Current user information
+   * @param watchType Type of watch (RSS or Email).
+   * @param path Path to the watched object.
+   * @param values Content of the email notification.
+   * @param currentUser Information about the current user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 
   /**
-   * Remove the watch.
+   * Removes a watch.
    * 
-   * @param watchType the watch type
-   * @param path the path
-   * @param values the values
+   * @param watchType Type of watch (RSS or Email).
+   * @param path Path to the unwatched object. 
+   * @param values The value to remove.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void removeWatch(int watchType, String path, String values) throws Exception;
 
   /**
-   * Get job waiting for moderator.
+   * Gets a waiting job which needs to be moderated by the current user.
    * 
-   * @param paths the paths
-   * @return list of forum
+   * @param paths Paths in Forums where the user is moderator.
+   * @return Topics and posts which are waiting for the moderator to validate.
    * @LevelAPI Platform
    */
   List<ForumSearchResult> getJobWattingForModerator(String[] paths);
 
   /**
-   * Get number of jobs are waiting for moderator.
+   * Gets the number of waiting jobs which need to be moderated by the current user.
    * 
-   * @param userId username of an user
-   * @return number of jobs
+   * @param userId Id of the user.
+   * @return The number of waiting jobs.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
   /**
-   * Get information of message
+   * Gets information to build a message.
    * 
-   * @param name name of message
-   * @return message information
+   * @param name Name of the message.
+   * @return The message information.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   SendMessageInfo getMessageInfo(String name) throws Exception;
 
   /**
-   * Get messages are pending
+   * Gets messages which are pending (not sent).
    * 
-   * @return pending messages
+   * @return The pending messages.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
   /**
-   * Check admin role
+   * Checks if a user is administrator or not.
    * 
-   * @param userName username of an user
-   * @return is admin or not
+   * @param userName Id of the checked user.
+   * @return The returned value is "true" if the user is administrator.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   boolean isAdminRole(String userName) throws Exception;
   
   /**
-   * Check admin role by checking xml config
+   * Checks if a user is administrator or not in the XML configuration.
    * 
-   * @param userName username of an user
-   * @return is admin or not
+   * @param userName Id of the checked user.
+   * @return The returned value is "true" if the user is administrator.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   boolean isAdminRoleConfig(String userName) throws Exception;
 
   /**
-   * Gets recent public posts limited by number post.
+   * Gets a list of new public posts with a given limit.
    * 
-   * @param number is number of post
-   * @return the list recent public post.
+   * @param number The limit size.
+   * @return New public posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Post> getNewPosts(int number) throws Exception;
   
   /**
-   * Gets recent posts for user and limited by number post.
+   * Gets a list of recent posts by a user with a given limit.
    * 
-   * @param userName is userId for check permission.
-   * @param number is number of post
-   * @return the list recent post for user.
+   * @param userName Id of the user.
+   * @param number The limit size.
+   * @return The recent posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Post> getRecentPostsForUser(String userName, int number) throws Exception;
 
   /**
-   * Searches  node
+   * Searches by a query statement.
    * 
-   * @param queryString query
-   * @return iterator of nodes
+   * @param queryString The query statement.
+   * @return The nodes.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   NodeIterator search(String queryString) throws Exception;
 
   /**
-   * Evaluates active of users 
+   * Evaluates a list of active users by a query statement.
    * 
-   * @param query input a query
+   * @param query The query statement.
    * @LevelAPI Platform
    */
   void evaluateActiveUsers(String query);
 
   /**
-   * Creates a user profile
+   * Creates a new user profile.
    * 
-   * @param user saved user
+   * @param user The user whose profile is created.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void createUserProfile(User user) throws Exception;
 
   /**
-   * Updates user access a topic 
+   * Updates the access information to a topic of a user. 
    * 
-   * @param userId username of an user
-   * @param topicId id of a topic
+   * @param userId Id of the user.
+   * @param topicId Id of the topic.
    * @LevelAPI Platform
    */
   void updateTopicAccess(String userId, String topicId);
 
   /**
-   * Updates user access a forum 
+   * Updates the access information to a forum of a user.
    * 
-   * @param userId username of an user
-   * @param forumId id of a forum
+   * @param userId Id of the user.
+   * @param forumId Id of the forum.
    * @LevelAPI Platform
    */
   void updateForumAccess(String userId, String forumId);
 
   /**
-   * write user access a topic
+   * Marks topics which have been read, then saves them into the user profile.
    * 
    * @since 2.2.11
    */
   void writeReads();
 
   /**
-   * Exports to xml object 
+   * Exports data of a category or a forum to an XML file. 
    * 
-   * @param categoryId id of category
-   * @param forumId id of forum
-   * @param objectIds ids
-   * @param nodePath path of node
-   * @param bos byte array output stream
-   * @param isExportAll is export all or not
+   * @param categoryId Id of the category.
+   * @param forumId Id of the forum.
+   * @param objectIds Id of the category or forum.
+   * @param nodePath Path to the category or forum which is exported.
+   * @param bos The input byte stream. If this value is null, the output is a zip-typed file.
+   * @param isExportAll If "true", all is exported.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception;
 
   /**
-   * Imports a stream 
-   * 
-   * @param nodePath path of node
-   * @param bis byte array input stream
-   * @param typeImport type of import
+   * Imports data into a category or a forum. 
+   *  
+   * @param nodePath Path to the data which is imported.
+   * @param bis The input stream to import.
+   * @param typeImport Type of import. Refer to {@link ImportUUIDBehavior}.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
 
   /**
-   * Gets profiles of users
+   * Gets basic profiles of users.
    * 
-   * @param userList list of users
-   * @return list of profiles
+   * @param userList Users.
+   * @return The profiles.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<UserProfile> getQuickProfiles(List<String> userList) throws Exception;
 
   /**
-   * Gets profile of an user
+   * Gets basic profiles of a user.
    * 
-   * @param userName username
-   * @return object user profile
+   * @param userName Id of the user.
+   * @return Profile information of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getQuickProfile(String userName) throws Exception;
 
   /**
-   * Gets more informations of user 
+   * Gets detailed profile information of a user.
    * 
-   * @param userProfile profile of user
-   * @return user profile
+   * @param userProfile The profile information of the user.
+   * @return The detailed profile information of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getUserInformations(UserProfile userProfile) throws Exception;
 
   /**
-   * Gets default user profile
+   * Gets the default profile information of a user.
    * 
-   * @param userName username of a user
-   * @param ip current ip
-   * @return user profile
+   * @param userName Id of the user.
+   * @param ip Ip of the user.
+   * @return The default profile information.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getDefaultUserProfile(String userName, String ip) throws Exception;
 
   /**
-   * Updates user profile
+   * Updates settings of the user profile.
    * 
-   * @param userProfile input user profile
-   * @return user profile
+   * @param userProfile The input user profile.
+   * @return The updated settings of the user profile.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception;
 
   /**
-   * Gets bookmarks of user
+   * Gets bookmarks of a user.
    * 
-   * @param userName username of a user
-   * @return bookmarks
+   * @param userName Id of the user.
+   * @return Bookmarks.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getBookmarks(String userName) throws Exception;
 
   /**
-   * Gets user profile
+   * Gets the profile settings by a user Id.
    * 
-   * @param userName username of a user
-   * @return user profile
+   * @param userName Id of the user.
+   * @return Profile information of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getUserSettingProfile(String userName) throws Exception;
 
   /**
-   * Gets user profile manager
+   * Gets the management information of a user profile.
    * 
-   * @param userName username of a user
-   * @return user profile
+   * @param userName Id of the user.
+   * @return Profile information of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   UserProfile getUserProfileManagement(String userName) throws Exception;
 
   /**
-   * Saves user profile
+   * Saves the settings information of a user profile.
    * 
-   * @param userProfile saved user profile
+   * @param userProfile The user profile information to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveUserSettingProfile(UserProfile userProfile) throws Exception;
 
   /**
-   * Updates forum
+   * Updates information of a forum.
    * 
-   * @param path path to forum
+   * @param path Path to the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void updateForum(String path) throws Exception;
 
   /**
-   * Gets list of banded ips
+   * Gets a list of banned Ips.
    * 
-   * @return list banded ips
+   * @return The banned Ips.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getBanList() throws Exception;
 
   /**
-   * Adds ip to ban
+   * Adds an Ip to the list of banned Ips.
    * 
-   * @param ip add ip
+   * @param ip Ip to be added.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   boolean addBanIP(String ip) throws Exception;
 
   /**
-   * Removes banded ip
+   * Removes a banned Ip.
    * 
-   * @param ip removed banded ip
+   * @param ip Ip to be removed.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void removeBan(String ip) throws Exception;
 
   /**
-   * Gets list of band ips in forum
+   * Gets a list of banned Ips in a forum.
    * 
-   * @param forumId id of forum
-   * @return list band ips
+   * @param forumId Id of the forum.
+   * @return The banned Ips in the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<String> getForumBanList(String forumId) throws Exception;
 
   /**
-   * Adds ip to list of band ips in forum
+   * Adds an Ip to the list of banned Ips in a forum.
    * 
-   * @param ip add ip
-   * @param forumId id of forum
+   * @param ip Ip to be added.
+   * @param forumId Id of the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   boolean addBanIPForum(String ip, String forumId) throws Exception;
 
   /**
-   * Removes ip from list of band ips in forum
+   * Removes an Ip from the list of banned Ips in a forum.
    * 
-   * @param ip removed ip
-   * @param forumId id of forum
+   * @param ip Ip to be removed.
+   * @param forumId Id of the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void removeBanIPForum(String ip, String forumId) throws Exception;
 
   /**
-   * Gets list of posts
+   * Gets a list of posts by a given Ip.
    * 
-   * @param ip input ip
-   * @param strOrderBy input order
-   * @return list of posts
+   * @param ip Ip to get the list of posts.
+   * @param strOrderBy The returned posts are shown in the ascending or descending order.
+   * @return The posts.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
 
   /**
-   * Registers listener
+   * Registers a listener for a category.
    * 
-   * @param categoryId id of category
+   * @param categoryId Id of the category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void registerListenerForCategory(String categoryId) throws Exception;
 
   /**
-   * Removes listener
+   * Removes a listener from a category.
    * 
-   * @param path path of category
+   * @param path Path to the category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void unRegisterListenerForCategory(String path) throws Exception;
 
   /**
-   * Gets avatar
+   * Gets an avatar by a given username.
    * 
-   * @param userName username
-   * @return avatar
+   * @param userName Id of the user.
+   * @return The user avatar.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   ForumAttachment getUserAvatar(String userName) throws Exception;
 
   /**
-   * Saves avatar for user
+   * Saves an avatar for a user.
    * 
-   * @param userId username
-   * @param fileAttachment avatar
+   * @param userId Id of the user.
+   * @param fileAttachment The avatar data to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception;
 
   /**
-   * Sets default avatar
+   * Sets a default avatar.
    * 
-   * @param userName username
+   * @param userName Id of the user.
    * @LevelAPI Platform
    */
   void setDefaultAvatar(String userName);
 
   /**
-   * Gets watches
+   * Gets a list of watches by a user.
    * 
-   * @param userId username
-   * @return watches by user
+   * @param userId Id of the user.
+   * @return The watches.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Watch> getWatchByUser(String userId) throws Exception;
 
   /**
-   * Updates watch email addresss for user 
+   * Updates an email address of a watch for a user.
    * 
-   * @param listNodeId watch node
-   * @param newEmailAdd watch email address
-   * @param userId username
+   * @param listNodeId A list of Ids of the watched nodes.
+   * @param newEmailAdd The new email address to be updated.
+   * @param userId Id of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception;
 
   /**
-   * Gets prune settings
-   * @return list of prune settings
+   * Gets settings of all prunes.
+   * 
+   * @return Settings of all prunes.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<PruneSetting> getAllPruneSetting() throws Exception;
 
   /**
-   * Gets prune setting
+   * Gets settings of a prune by a forum path.
    * 
-   * @param forumPath path of forum
-   * @return prune setting
+   * @param forumPath Path to the forum.
+   * @return Settings information of the prune.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   PruneSetting getPruneSetting(String forumPath) throws Exception;
 
   /**
-   * Saves a prune setting
+   * Saves settings of a prune.
    * 
-   * @param pruneSetting input prune setting
+   * @param pruneSetting The prune settings to be saved.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void savePruneSetting(PruneSetting pruneSetting) throws Exception;
 
   /**
-   * Runs prune setting
+   * Runs settings of a prune.
    * 
-   * @param pSetting input prune setting
+   * @param pSetting The prune setting to be run.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void runPrune(PruneSetting pSetting) throws Exception;
 
   /**
-   * Runs prune setting
+   * Runs settings of a prune by a forum path.
    * 
-   * @param forumPath path of forum
+   * @param forumPath Path to the forum.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void runPrune(String forumPath) throws Exception;
 
   /**
-   * Checks prune setting
+   * Checks if settings of a prune is applied to topics or not.
    * 
-   * @param pSetting input prune setting
-   * @return prune setting
+   * @param pSetting The prune settings to be checked.
+   * @return The number of topics to be pruned.  
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   long checkPrune(PruneSetting pSetting) throws Exception;
 
   /**
-   * Gets list of topics
+   * Gets a list of topics.
    * 
-   * @param categoryId id of category
-   * @param forumId id of forum
-   * @param string condition
-   * @param strOrderBy input order
-   * @return topic page list
+   * @param categoryId Id of the category containing the topics.
+   * @param forumId Id of the forum.
+   * @param string The input condition.
+   * @param strOrderBy The returned topics are shown in the ascending or descending order.
+   * @param pageSize The limit size to get topics.
+   * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   LazyPageList<Topic> getTopicList(String categoryId, String forumId, String string, String strOrderBy, int pageSize) throws Exception;
 
   /**
-   * Gets summaries
+   * Gets summaries of Forums.
    * 
-   * @param categoryId id of category
-   * @param strQuery query
-   * @return page list of forums
+   * @param categoryId Id of the category.
+   * @param strOrderBy The returned forums are shown by the ascending or descending order.
+   * @return The list of forums.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
 
   /**
-   * Updates user profile
+   * Updates the user profile information.
    * 
-   * @param name username
+   * @param name Id of the user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void updateUserProfileInfo(String name) throws Exception;
 
   /**
-   * <p>
-   * Adds a new member to the forum. The forum profile is created and statistics
-   * updated
-   * </p>
+   * Adds a new member to a forum. The forum profile is created and its statistics is updated.
    * 
-   * @param user user that becomes a new forum member
-   * @param profileTemplate user profile template to be used for default settings
+   * @param user The user to be added.
+   * @param profileTemplate The user profile template to be used for default settings.
    * @throws Exception
    * @LevelAPI Platform
    */
   void addMember(User user, UserProfile profileTemplate) throws Exception;
 
   /**
-   * <p>
-   * Removes an existing member from the forum. The forum profile is deleted and
-   * statistics updated
-   * </p>
+   * Removes an existing member from a forum. The forum profile is deleted and its statistics is updated.
    * 
-   * @param user user that leaves forum
+   * @param user The user who is removed from the forum.
    * @throws Exception
    * @LevelAPI Platform
    */
   void removeMember(User user) throws Exception;
 
   /**
-   * <p>
-   * Updates information of logged in users that records in a queue to statistic and profile
-   * </p>
+   * Updates information of logged-in users.
    * 
    * @throws Exception
    * @LevelAPI Platform
@@ -1625,147 +1608,139 @@ public interface ForumService extends ForumServiceLegacy {
   public void updateLoggedinUsers() throws Exception;
 
   /**
-   * Updates when delete an user
+   * Updates statistics when a user is deleted.
    * 
-   * @param userName username
+   * @param userName Id of the removed user.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void calculateDeletedUser(String userName) throws Exception;
 
   /**
-   * Updates data when delete a group
+   * Updates statistics when a group is deleted.
    * 
-   * @param groupId the identity of group.
-   * @param groupName the name of group
+   * @param groupId Id of the deleted group.
+   * @param groupName Name of the deleted group.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception;
 
   /**
-   * Creates RSS
+   * Creates an RSS of Forums.
    * 
-   * @param objectId id of forum
-   * @param link the link to get rss
-   * @return input stream
+   * @param objectId Id of any object which needs to create RSS (forum, topic).
+   * @param link The link to get RSS.
+   * @return RSS data information.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public InputStream createForumRss(String objectId, String link) throws Exception;
 
   /**
-   * Creates RSS of user
+   * Creates an RSS of a user.
    * 
-   * @param userId username
-   * @param link link of RSS
-   * @return input stream
+   * @param userId Id of the user.
+   * @param link The link to get the RSS.
+   * @return RSS data information.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public InputStream createUserRss(String userId, String link) throws Exception;
 
   /**
-   * Adds listener
+   * Adds a listener plugin.
    * 
-   * @param listener add listener
+   * @param listener The forum listener to be added.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void addListenerPlugin(ForumEventListener listener) throws Exception;
   
   /**
-   * Removes user-profile of user login cache in service
+   * Removes data of user profile from cache of a user.
    * 
-   * @param userName 
+   * @param userName Id of the user.
    * @throws Exception 
    * @LevelAPI Platform
    */
   public void removeCacheUserProfile(String userName) throws Exception;
   
   /**
-   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
-   * into Node what is owner created activity via Id
+   * Saves information of a forum activity by the owner Id that is used for processing the activity streams.
    * 
-   * @param ownerId - the Id's Node what is owner created activity
-   * @param activityId - the Id's activity created. 
+   * @param ownerId Id of the user who has created the forum activity.
+   * @param activityId Id of the forum activity.
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveActivityIdForOwnerId(String ownerId, String activityId);
 
   /**
-   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
-   * into Node what is owner created activity via patch
+   * Saves information of a forum activity by the owner path that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param activityId - the Id's activity created. 
+   * @param ownerPath Path to the user who has created the forum activity.
+   * @param activityId Id of the forum activity. 
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveActivityIdForOwnerPath(String ownerPath, String activityId);
 
   /**
-   * Gets value of exo:activityId property in specified node via Id. 
-   * If property is not existing then return null.
+   * Gets information of a forum activity by the owner Id that is used for processing the activity streams.
    * 
-   * @param ownerId - the Id's Node what is owner created activity
-   * @return String - the Id's activity created. 
+   * @param ownerId Id of the user who has created the forum activity.
+   * @return Id of the forum activity.
    * @LevelAPI Platform
    * @since 4.0
    */
   public String getActivityIdForOwnerId(String ownerId);
 
   /**
-   * Gets value of exo:activityId property in specified node via path. 
-   * If property is not existing then return null.
+   * Gets information of a forum activity by the owner path that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @return String - the Id's activity created. 
+   * @param ownerPath Path to the user who has created the forum activity.
+   * @return Id of the forum activity.
    * @LevelAPI Platform
    * @since 4.0
    */
   public String getActivityIdForOwnerPath(String ownerPath);
   
   /**
-   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
-   * into post's Node what is owner created activity via Id
+   * Saves information of a comment by the owner Id.
    * 
-   * @param ownerId - the Id's Node what is owner created activity
-   * @param commentId - the Id's activity created. 
+   * @param ownerId Id of the user who has commented.
+   * @param commentId Id of the comment.
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveCommentIdForOwnerId(String ownerId, String commentId);
 
   /**
-   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
-   * into post's Node what is owner created activity via patch
+   * Saves information of a comment by the owner path.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param commentId - the Id's activity created. 
+   * @param ownerPath Path to the user who has commented.
+   * @param commentId Id of the comment. 
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveCommentIdForOwnerPath(String ownerPath, String commentId);
 
   /**
-   * Get value of exo:activityId property in specified post's node via Id. 
-   * If property is not existing then return null.
+   * Gets information of a comment by the owner Id.
    * 
-   * @param ownerId - the Id's Node what is owner created activity
-   * @return String - the Id's activity created. 
+   * @param ownerId Id of the user who has commented.
+   * @return Id of the comment.
    * @LevelAPI Platform
    * @since 4.0
    */
   public String getCommentIdForOwnerId(String ownerId);
 
   /**
-   * Get value of exo:activityId property in specified post's node via path. 
-   * If property is not existing then return null.
+   * Gets information of a comment by the owner path.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @return String - the Id's activity created. 
+   * @param ownerPath Path to the user who has commented.
+   * @return Id of the comment.
    * @LevelAPI Platform
    * @since 4.0
    */
