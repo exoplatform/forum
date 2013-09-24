@@ -30,14 +30,14 @@ import org.exoplatform.forum.common.NotifyInfo;
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
 /**
- * APIs for FAQ and all other related objects (Categories, Questions and Answers) operations.
+ * APIs for FAQ and all operations of other related objects (Categories, Questions and Answers).
  */
 public interface FAQService extends FAQServiceLegacy {
 
   /**
-   * Adds the plugin.
+   * Adds a plugin to the list of FAQ plugins.
    * 
-   * @param plugin the plugin
+   * @param plugin The plugin to be added.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -45,24 +45,24 @@ public interface FAQService extends FAQServiceLegacy {
   public void addPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds plugin to initialize default FAQ data.
+   * Adds a plugin which initializes the default FAQ data.
    * 
-   * @param plugin
+   * @param plugin The plugin to be added.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception;
 
   /**
-   * This method should check exists category or NOT to create new or update exists category
+   * Checks if a category is existing or not. If "true", the category is created. If "false", the existing category will be updated.
    * <p>
-   * This function is used to add new or edit category in list. User will input information of fields need
-   * in form add category, so user save then category will persistent in data
+   * This function is used to add new or update an existing category. The user will input information in required fields 
+   * of the Add Category form, then save the category into database.
    * 
-   * @param    parentId is address id of the category parent where user want add sub category
-   * when paretId = null so this category is parent category else sub category  
-   * @param    cat is properties that user input to interface will save on data
-   * @param    isAddNew is true when add new category else update category
+   * @param    parentId The address Id of the parent category where the user wants to add a sub-category.
+   * When paretId is "null", this category does not contain any sub-categories.
+   * @param    cat The category information provided by the user.
+   * @param    isAddNew If "true", the new category is added. If "false", the category is updated.
    * @see     list category
    * @LevelAPI Platform
    */
@@ -70,38 +70,38 @@ public interface FAQService extends FAQServiceLegacy {
   
   
   /**
-   * Builds category tree of provided id.
+   * Builds a category tree by its provided Id.
    * 
-   * @param categoryId Id of category to build tree.
-   * @return the CategoryTree
+   * @param categoryId Id of the category.
+   * @return The category tree.
    * @throws Exception
    * @LevelAPI Platform
    */
   CategoryTree buildCategoryTree(String categoryId) throws Exception;
 
   /**
-   * Changes status of view of category.
+   * Changes status of a category to "hidden" or "shown".
    * 
-   * @param   listCateIds is address ids of the category need to change 
+   * @param   listCateIds Ids of a category which is changed.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void changeStatusCategoryView(List<String> listCateIds) throws Exception;
 
   /**
-   * Removes specific category by provided id.
+   * Removes a specific category by its provided Id.
    * 
-   * @param    categoryId is address id of the category need remove 
+   * @param categoryId Id of the category which is removed. 
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void removeCategory(String categoryId) throws Exception;
 
   /**
-   * Gets category by id.
+   * Gets a category by its Id.
    * 
-   * @param    categoryId is address id of the category so you want get
-   * @return  The category of specific provided id.
+   * @param categoryId Id of the category.
+   * @return  The category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
@@ -110,7 +110,7 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Gets all categories.
    * 
-   * @return Category list
+   * @return Categories.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -118,13 +118,13 @@ public interface FAQService extends FAQServiceLegacy {
   public List<Category> getAllCategories() throws Exception;
 
   /**
-   * Get all categories of specific provided user.
+   * Get all categories of a given user.
    * 
-   * @param user      the name of user
+   * @param user Name of the user.
    * 
-   * @return Category list
+   * @return Categories.
    * 
-   * @throws Exception if can't found user
+   * @throws Exception if the given user is not found.
    * @LevelAPI Platform
    */
   public List<String> getListCateIdByModerator(String user) throws Exception;
@@ -132,11 +132,11 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Gets all sub-categories of a category.
    * 
-   * @param categoryId the category id
-   * @param faqSetting
-   * @param isGetAll
-   * @param userView the list of users to view categories.
-   * @return Category list
+   * @param categoryId Id of the category.
+   * @param faqSetting Settings of FAQ.
+   * @param isGetAll Deprecated. 
+   * @param userView Users who have the view permission on sub-categories of a category.
+   * @return Sub-categories.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -146,46 +146,42 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Moves a category to another one.
    * 
-   * @param categoryId the category id should move
-   * @param destCategoryId : category is moved
+   * @param categoryId Id of the category which is moved.
+   * @param destCategoryId Id of the destination category.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void moveCategory(String categoryId, String destCategoryId) throws Exception;
 
   /**
-   * Saves question after create new question or edit infor of quesiton which is existed.
-   * If param <code>isAddNew</code> is <code>true</code> then create new question node
-   * and set properties of question object to this node else reset infor for
-   * this question node
+   * Saves information for a question which is added or updated.
    * 
-   * @param question  the question
-   * @param isAddNew  is <code>true</code> if create new question node
-   *                  and is <code>false</code> if edit question node
-   * @param faqSetting Setting FAQ information
-   * @return the question node
+   * @param question The question to be added or updated.
+   * @param isAddNew If "true", the new question node is added. If "false", the question is updated.
+   * @param faqSetting Settings of FAQ.
+   * @return The question node.
    * 
-   * @throws Exception if path of question nod not found
+   * @throws Exception if the question node's path is not found.
    * @LevelAPI Platform
    */
   public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Deletes question by question's id. Check question if it's existed then remove it
+   * Deletes a question by its Id.
    * 
-   * @param questionId  the id of question is deleted
+   * @param questionId Id of the question which is deleted.
    * 
-   * @throws Exception  if question not found
+   * @throws Exception if the question is not found.
    * @LevelAPI Platform
    */
   public void removeQuestion(String questionId) throws Exception;
 
   /**
-   * Gets a question by id.
+   * Gets a question by its  Id.
    * 
-   * @param questionId the question id
+   * @param questionId Id of the question
    * 
-   * @return Question
+   * @return The question
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -193,151 +189,131 @@ public interface FAQService extends FAQServiceLegacy {
   public Question getQuestionById(String questionId) throws Exception;
 
   /**
-   * Gets all questions
+   * Gets all questions.
    * 
    * 
-   * @return List of question
+   * @return Questions.
    * 
-   * @throws Exception  if attachment not foune
+   * @throws Exception if the attachment is not found.
    * @LevelAPI Platform
    */
   public QuestionPageList getAllQuestions() throws Exception;
 
   /**
-   * Gets all questions not yet answered, the first get all questions 
-   * which have property response is null (have not yet answer) then
-   * convert to list of question object
+   * Gets all questions which are not yet answered.
    * 
-   * @param categoryId the id of category
-   * @param isApproved Question approved or not
-   * @return List of question
+   * @param categoryId Id of the category which contains unanswered questions.
+   * @param isApproved If "true", only approved questions are got.
+   * @return Questions.
    * 
-   * @throws Exception  if lost attachment
+   * @throws Exception if the attachment is lost.
    * @LevelAPI Platform
    */
   public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception;
 
   /**
-   * Gets questions are activated and approved in the category.
-   * The first get category from id which is specified by param <code>categoryId</code>
-   * then lookup questions of this category, only question is activated and approved  
-   * via category identify, the last convert to list of question object
+   * Gets activated and approved questions of a category by its Id.
    * 
-   * @param categoryId  the category id
-   * @param faqSetting FAQ setting information
-   * @return Question list
+   * @param categoryId  Id of the category.
+   * @param faqSetting Settings of FAQ.
+   * @return Questions.
    * 
-   * @throws Exception  if can't found category
+   * @throws Exception if the category is not found.
    * @LevelAPI Platform
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Gets all questions of the category.
-   * The first get category from id which is specified by param <code>categoryId</code>
-   * then get all questions of this category and put them into an question page list object
+   * Gets all questions of a category by its Id.
    * 
-   * @param categoryId    the id of category
-   * @param faqSetting FAQ setting information
-   * @return Question page list
+   * @param categoryId Id of the category.
+   * @param faqSetting Settings of FAQ.
+   * @return Questions.
    * 
-   * @throws Exception    when category not found
+   * @throws Exception when the category is not found.
    * @LevelAPI Platform
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Gets some informations of category: Lookup category node by category's id
-   * and count sub-categories and questions are contained in this category.
+   * Gets some information of a category by its Id, 
+   * including the number of its sub-categories, total of questions,
+   * the number of questions which are unapproved and not yet answered.
    * 
-   * @param categoryId the category id
-   * @param setting FAQ setting information
-   * @return              number of sub-categories
-   * number of questions
-   * number of questions is not approved
-   * number of question is have not yet answered
+   * @param categoryId Id of the category.
+   * @param setting Settings of FAQ.
+   * @return The number of sub-categories; 
+   * The number of questions; 
+   * The number of unapproved questions;
+   * The number of questions which are not yet answered;
    * 
-   * @throws  Exception   if not found category by id
-   * if not found question or lose file attach
+   * @throws Exception if the category or question is not found by its Id, or the attached file is lost.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public long[] getCategoryInfo(String categoryId, FAQSetting setting) throws Exception;
 
   /**
-   * Gets questions in list categories.
-   * <p>
-   * With each category in the list categories, if <code>isNotYetAnswer</code>
-   * is <code>false</code> get all questoin in this catgory else get questions 
-   * which is not yet answered, and put them in to a QuestionPageList object
+   * Gets all questions from a list of categories by its Id.
    * 
-   * @param listCategoryId  the list category id
-   * @param isNotYetAnswer  is <code>true</code> if get qeustions not yet answered
-   *                        is <code>false</code> if want get all questions in list categories
+   * @param listCategoryId  Id of the categories list.
+   * @param isNotYetAnswer  If "true", all questions which are not yet answered are got. 
+   * If "false", all questions are got.
    * 
-   * @return Question page list
+   * @return Questions at the page list.
    * 
-   * @throws Exception      the exception
+   * @throws Exception the exception
    * @LevelAPI Platform
    */
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception;
 
   /**
-   * Gets path of question. For example question A is included in category C and C is child of
-   * category B, then, this function will be return C > B
+   * Gets a question path.
    * 
-   * @param categoryId  id of category is contain question
-   * @return  name of categories
+   * @param categoryId Id of the category containing the question.
+   * @return The category path.
    * @throws Exception
    * @LevelAPI Platform
    */
   public String getCategoryPathOfQuestion(String categoryId) throws Exception;
 
   /**
-   * Gets all language nodes of question node which have id is specified,
-   * with each language node get properties of them and set into 
-   * QuestionLanguage object. One QuestionLanguage object have properties: 
-   * <ul>
-   * <li> Language: the name of language
-   * <li> Question: content of questions is written by Language
-   * <li> Response: content of response is written by Language
-   * </ul>
+   * Gets all languages of a question by its Id.
    * 
-   * @param questionId  the id of question
+   * @param questionId Id of the question.
    * 
-   * @return list languages are support by the question
+   * @return Languages.
    * @LevelAPI Platform
    */
   public List<QuestionLanguage> getQuestionLanguages(String questionId);
 
   /**
-   * Moves all of questions to category which have id is  specified.
+   * Moves questions to a category.
    * 
-   * @param questions the questions
-   * @param destCategoryId the dest category id
-   * @param questionLink the question link
-   * @param faqSetting the FAQSetting
+   * @param questions The questions to be moved.
+   * @param destCategoryId Id of the destination category.
+   * @param questionLink URL of the question.
+   * @param faqSetting Settings of FAQ.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Updates FAQ setting information.
+   * Updates the settings information of FAQ.
    * 
-   * @param faqSetting FAQ setting information
-   * @param userName name of user who setting
+   * @param faqSetting Settings of FAQ.
+   * @param userName Name of the user for whom the FAQ settings are updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void saveFAQSetting(FAQSetting faqSetting, String userName) throws Exception;
 
   /**
-   * Adds watch a category. You have to register your email for whenever there is new question is inserted 
-   * in the category or new category then there will  a notification sent to you.
+   * Adds a watch to a category. The notifications will be sent to your registered email when any new questions are added to the watched category.
    * 
-   * @param    id of category with user want add watch on that category 
-   * @param    watch added watch object
+   * @param id Id of the category which is watched.
+   * @param watch The user who watches the category.
    * @throws Exception the exception
    * @LevelAPI Platform
    *  
@@ -345,75 +321,71 @@ public interface FAQService extends FAQServiceLegacy {
   public void addWatchCategory(String id, Watch watch) throws Exception;
 
   /**
-   * Deletes watch in one category. 
+   * Deletes a watch from a category. 
    * 
-   * @param   categoryId is id of current category
-   * @param   user user want delete watch 
+   * @param categoryId Id of the category.
+   * @param user The user whose watch is removed by himself or someone else.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void deleteCategoryWatch(String categoryId, String user) throws Exception;
 
   /**
-   * Un-watches in one category. 
+   * Unwatches a category. 
    * 
-   * @param   categoryId is id of current category
-   * @param   userCurrent is user current then you unwatch
+   * @param categoryId Id of the category which is unwatched.
+   * @param userCurrent The user whose watch is removed by himself or someone else.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void unWatchCategory(String categoryId, String userCurrent) throws Exception;
 
   /**
-   * Un-watches one question. 
+   * Unwatches a question. 
    * 
-   * @param   questionID is id of current category
-   * @param   userCurrent is user current then you un watch
+   * @param questionID Id of the question which is unwatched.
+   * @param userCurrent The user whose watch is removed by himself or someone else.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public void unWatchQuestion(String questionID, String userCurrent) throws Exception;
 
   /**
-   * Searches FAQs by event query.
+   * Searches for information in FAQ.
    * 
-   * @param eventQuery Search condition 
-   * @return FAQs that match the search condition.
+   * @param eventQuery The Search condition.
+   * @return The FAQ information matching with the search condition.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception;
 
   /**
-   * Gets path of category by category id.
+   * Gets paths of a category by its Id.
    * 
-   * @param  categoryId id of category
-   * @return list category name is sort(path of this category)
+   * @param  categoryId Id of the category.
+   * @return Paths of the category and of its sub-categories.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public List<String> getCategoryPath(String categoryId) throws Exception;
 
   /**
-   * Gets messages to send notify.
+   * Gets messages which are not yet sent.
    * 
    * @LevelAPI Platform
    */
   public Iterator<NotifyInfo> getPendingMessages();
 
   /**
-   * Adds language for question node, this function only use for Question node, 
-   * and language node is added not default.
+   * Adds a language to a question. The added language is never set as default.
    * <p>
-   * the first, get this language node if it's existed, opposite add new language node.
-   * Then set properties for this node: node's name, question's content and
-   * response's content.
+   * First, this method checks if a language node is existing or not. 
+   * If the language node is not existing, it will be added.
+   * Next, this method sets properties for the language node: name, content of question and response.
    * 
-   * @param questionNode  add language node for this question node
-   * @param language      The QuestionLanguage object which is add for the question node,
-   *                      language object have some properties: name, question's content
-   *                      and response's content. Property <code>response</code> may be don't need
-   *                      setting value if question not yet answered
+   * @param questionNode The question to which a language is added.
+   * @param language Information of the added language.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -421,39 +393,38 @@ public interface FAQService extends FAQServiceLegacy {
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception;
 
   /**
-   * Gets setting of user to view data (categories and questions). At first time user come, 
-   * system will create setting for user (automatically) base on setting of admin 
-   * (Default setting of FAQ system). After that, when user login again, his setting is getted.
+   * Gets settings of a user that are used for displaying categories and questions. When the user signs up, 
+   * the system will automatically create settings based on settings of administrator.
    * 
-   * @param userName  the name of user
-   * @param faqSetting  the setting of user
-   * @throws Exception  when can't find user or faqSetting
+   * @param userName Name of the user.
+   * @param faqSetting Settings of FAQ.
+   * @throws Exception when the user or FAQ settings is/are not found.
    * @LevelAPI Platform
    */
   public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Gets informations about message.
+   * Gets information of a message.
    * 
-   * @param name  key of message
-   * @return informations contain message and email addresses. 
+   * @param name Key to get the message.
+   * @return Information which contains message and email addresses. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public NotifyInfo getMessageInfo(String name) throws Exception;
 
   /**
-   * Checks permission of user.
+   * Checks if a user is administrator or not.
    * 
-   * @param userName  id or user name of user who is checked permission
-   * @return  return <code>true</code> if user is admin. The current user is implied if userName is null.
+   * @param userName Name of the checked user.
+   * @return The "true" value is returned if the user is admin.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isAdminRole(String userName) throws Exception;
 
   /**
-   * Gets all user is administration.
+   * Gets all users who are administrators of FAQ.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -461,9 +432,9 @@ public interface FAQService extends FAQServiceLegacy {
   public List<String> getAllFAQAdmin() throws Exception;
 
   /**
-   * Adds the plugin.
+   * Adds a plugin which defines the "administrator" role.
    * 
-   * @param plugin the plugin
+   * @param plugin The plugin to be added.
    * 
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -471,54 +442,54 @@ public interface FAQService extends FAQServiceLegacy {
   public void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds watch for a question.
+   * Adds a watch to a question.
    * 
-   * @param questionId id of question
-   * @param watch contains information of users
-   * @param isNew add new or edit 
+   * @param questionId Id of the question.
+   * @param watch Information of the user who watches the question.
+   * @param isNew If "true", a new watch is added. If "false", the watch is edited.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception;
 
   /** 
-   * Saves topic.
+   * Saves a topic.
    * 
-   * @param questionId Question to discuss
-   * @param pathDiscuss path to discussion 
+   * @param questionId Id of the question which is discussed in the topic.
+   * @param pathDiscuss Path to the discussion.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss) throws Exception;
 
   /**
-   * Gets list of questions that user watches.
+   * Gets a list of questions watched by a user.
    * 
-   * @param faqSetting setting of user
-   * @param currentUser username
-   * @return List of questions 
+   * @param faqSetting Settings of FAQ.
+   * @param currentUser Name of the user who watches questions.
+   * @return Questions.
    * @throws Exception
    * @LevelAPI Platform
    */
   public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception;
 
   /**
-   * Gets category node.
+   * Gets a category by its Id.
    * 
-   * @param categoryId id of category
-   * @return node of category 
+   * @param categoryId Id of the category.
+   * @return The category.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Node getCategoryNodeById(String categoryId) throws Exception;
 
   /**
-   * Imports data to category.
+   * Imports data to a category.
    * 
-   * @param categoryId the id of category
-   * @param inputStream the data
-   * @param isZip data is zip or not
-   * @return informations contain message and email addresses. 
+   * @param categoryId Id of the category.
+   * @param inputStream The data.
+   * @param isZip Data is zip-typed or not.
+   * @return If the import is successful, the returned value is "true". If not, the returned value is "false".
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -527,18 +498,18 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Swaps two categories.
    * 
-   * @param cateId1 id of category 1
-   * @param cateId2 id of category 2 
+   * @param cateId1 Id of the Category 1.
+   * @param cateId2 Id of the Category 2.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void swapCategories(String cateId1, String cateId2) throws Exception;
 
   /**
-   * Gets max index of categories.
+   * Gets the maximum index of categories.
    * 
-   * @param parentId id of parent
-   * @return index 
+   * @param parentId Id of the parent category.
+   * @return An index value.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -547,18 +518,18 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Removes an answer.
    * 
-   * @param questionId id of question
-   * @param answerId id of answer 
+   * @param questionId Id of the question whose answer is removed.
+   * @param answerId Id of the answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void deleteAnswer(String questionId, String answerId) throws Exception;
 
   /**
-   * Removes comment of question.
+   * Removes a question's comment.
    * 
-   * @param questionId id of question
-   * @param commentId id of comment 
+   * @param questionId Id of the question whose comment is removed.
+   * @param commentId Id of the comment.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -567,174 +538,174 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Saves an answer.
    * 
-   * @param questionId id of question
-   * @param answer saved answer
-   * @param isNew save new or edit 
+   * @param questionId Id of the question.
+   * @param answer The answer to be saved.
+   * @param isNew If "true", the new answer is added. If "false", the answer is updated.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception;
 
   /**
-   * Saves comment of question.
+   * Saves a question's comment.
    * 
-   * @param questionId id of question
-   * @param comment saved comment
-   * @param isNew save new or edit 
+   * @param questionId Id of the question.
+   * @param comment The saved comment.
+   * @param isNew If "true", the new answer is added. If "false", the answer is updated.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception;
 
   /**
-   * Gets comment of question.
+   * Gets a question's comment.
    * 
-   * @param questionId id of question
-   * @param commentId id of comment
-   * @return comment 
+   * @param questionId Id of the question.
+   * @param commentId Id of the comment.
+   * @return A comment.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Comment getCommentById(String questionId, String commentId) throws Exception;
 
   /**
-   * Gets answer of question.
+   * Gets a question's answer.
    * 
-   * @param questionId id of question
-   * @param answerid id of answer
-   * @return an Answer 
+   * @param questionId Id of the question.
+   * @param answerid Id of the answer.
+   * @return The answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Answer getAnswerById(String questionId, String answerid) throws Exception;
 
   /**
-   * Saves an answer.
+   * Saves answers.
    * 
-   * @param questionId id of question
-   * @param answers saved answers 
+   * @param questionId Id of the question which contains the saved answers.
+   * @param answers The saved answers.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveAnswer(String questionId, Answer[] answers) throws Exception;
 
   /**
-   * Gets comments of question.
+   * Gets comments of a question.
    * 
-   * @param questionId id of question
-   * @return comment page list 
+   * @param questionId Id of the question.
+   * @return Comments.
    * @throws Exception
    * @LevelAPI Platform
    */
   public JCRPageList getPageListComment(String questionId) throws Exception;
 
   /**
-   * Gets answers of question.
+   * Gets answers of a question.
    * 
-   * @param questionId id of question
-   * @param isSortByVote sort by vote
-   * @return answers page list 
+   * @param questionId Id of the question.
+   * @param isSortByVote If "true", the returned answers will be sorted by vote.
+   * @return Answers.
    * @throws Exception
    * @LevelAPI Platform
    */
   public JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception;
 
   /**
-   * Get list questions that user watches
-   * @param userId username 
-   * @return question page list 
+   * Gets a list of questions watched by a user.
+   * @param userId Name of the user who watches questions.
+   * @return Questions.
    * @throws Exception
    * @LevelAPI Platform
    */
   public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception;
 
   /**
-   * Gets avatar of user.
+   * Gets a user's avatar.
    * 
-   * @param userName username
-   * @return avatar of user 
+   * @param userName Name of the user.
+   * @return The avatar
    * @throws Exception
    * @LevelAPI Platform
    */
   public FileAttachment getUserAvatar(String userName) throws Exception;
 
   /**
-   * Saves avatar of an user.
+   * Saves an avatar of the user.
    * 
-   * @param userId username
-   * @param fileAttachment avatar of user 
+   * @param userId Name of the user.
+   * @param fileAttachment Avatar of the user. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception;
 
   /**
-   * Checks that user is watching a category.
+   * Checks if a user is watching a category or not.
    * 
-   * @param userId username
-   * @param cateId id of category
-   * @return true if user is watching and false if isn't 
+   * @param userId Name of the user.
+   * @param cateId Id of the category.
+   * @return The returned value is "true" if the user is watching the category. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isUserWatched(String userId, String cateId);
 
   /**
-   * Sets default avatar for an user.
+   * Sets a default avatar for a user.
    * 
-   * @param userName username 
+   * @param userName Name of the user.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void setDefaultAvatar(String userName) throws Exception;
 
   /**
-   * Gets list pending questions in a category.
+   * Gets a list of pending questions in a category.
    * 
-   * @param categoryId id of category
-   * @param faqSetting settings
-   * @return question page list 
+   * @param categoryId Id of the category.
+   * @param faqSetting Settings of FAQ.
+   * @return Pending questions.
    * @throws Exception
    * @LevelAPI Platform
    */
   public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception;
 
   /**
-   * Exports category to stream.
+   * Exports a category.
    * 
-   * @param categoryId id of category
-   * @param createZipFile create zip file or not
-   * @return input stream of category 
+   * @param categoryId Id of the exported category.
+   * @param createZipFile The category is exported into a zip file or not.
+   * @return The exported data.
    * @throws Exception
    * @LevelAPI Platform
    */
   public InputStream exportData(String categoryId, boolean createZipFile) throws Exception;
 
   /**
-   * Checks a path exist or not.
+   * Checks if a path is existing or not.
    * 
-   * @param path path need check
-   * @return exist or not 
+   * @param path The path to be checked.
+   * @return The returned value is "true" if the path is existing.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isExisting(String path) throws Exception;
 
   /**
-   * Gets path of Category by id.
+   * Gets a category path by its Id.
    * 
-   * @param id category id 
-   * @return path of category
+   * @param id Id of the category. 
+   * @return The category path.
    * @throws Exception
    * @LevelAPI Platform
    */
   public String getCategoryPathOf(String id) throws Exception;
 
   /**
-   * Gets titles of questions active.
+   * Gets titles of questions, then maps them to their paths.
    * 
-   * @param paths  path of questions
-   * @return list titles of questions 
+   * @param paths Paths to the questions.
+   * @return Titles of questions which are mapped to their paths.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -743,169 +714,169 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Gets titles of questions.
    * 
-   * @param paths  path of questions
-   * @return list titles of questions 
+   * @param paths Paths to the questions.
+   * @return The titles of questions.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<String> getQuestionContents(List<String> paths) throws Exception;
 
   /**
-   * Checks moderate answer or not.
+   * Checks if moderation is applied to answers of a category or not.
    * 
-   * @param id id of category
-   * @return answer or not 
+   * @param id Id of the category.
+   * @return The returned value is "true" if moderation is enabled.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isModerateAnswer(String id) throws Exception;
 
   /**
-   * Gets question node.
+   * Gets a question by its Id.
    * 
-   * @param path id of question
-   * @return question node 
+   * @param path Path to the question.
+   * @return The question. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public Node getQuestionNodeById(String path) throws Exception;
 
   /**
-   * Gets name of parent category.
+   * Gets name of a parent category.
    * 
-   * @param path id of category
-   * @return name of parent category 
+   * @param path Path to the parent category.
+   * @return Name of the parent category.
    * @throws Exception
    * @LevelAPI Platform
    */
   public String getParentCategoriesName(String path) throws Exception;
 
   /**
-   * Gets email addresses that watch in a category.
+   * Gets email addresses that are watched in a category.
    * 
-   * @param categoryId id of category
-   * @return question page list 
+   * @param categoryId Id of the category.
+   * @return The email addresses.
    * @throws Exception
    * @LevelAPI Platform
    */
   public QuestionPageList getListMailInWatch(String categoryId) throws Exception;
 
   /**
-   * Checks user is moderator or not.
+   * Checks if a user is moderator of a category or not.
    * 
-   * @param categoryId id of category
-   * @param user username
-   * @return user is moderator or not. The current user is implied if user is null.
+   * @param categoryId Id of the category.
+   * @param user Name of the user.
+   * @return The returned value is "true" if the user is moderator of the category.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isCategoryModerator(String categoryId, String user) throws Exception;
 
   /**
-   * Adds language to a question.
+   * Adds a language to a question.
    * 
-   * @param questionPath patch of question
-   * @param language question language 
+   * @param questionPath Path to the question.
+   * @param language Information of the added language.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void addLanguage(String questionPath, QuestionLanguage language) throws Exception;
 
   /**
-   * Deletes language in a answer.
+   * Deletes an answer's language.
    * 
-   * @param questionPath path of question
-   * @param answerId id of answer
-   * @param language deleted language 
+   * @param questionPath Path to the question.
+   * @param answerId Id of the answer.
+   * @param language The language to be deleted. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception;
 
   /**
-   * Deletes language in a comment.
+   * Deletes a comment's language.
    * 
-   * @param questionPath path of question
-   * @param commentId id of comment
-   * @param language deleted language 
-   * @param isPromoted true in case a comment is promoted to an answer
+   * @param questionPath Path to the question.
+   * @param commentId Id of the comment.
+   * @param language The language to be deleted.
+   * @param isPromoted If "true", the comment is promoted to an answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void deleteCommentQuestionLang(String questionPath, String commentId, String language, boolean isPromoted) throws Exception;
 
   /**
-   * Gets language of question.
+   * Gets a question's language.
    * 
-   * @param questionPath path of question
-   * @param language got language
-   * @return Language of question 
+   * @param questionPath Path to the question.
+   * @param language Type of the language.
+   * @return Language of the question.
    * @throws Exception
    * @LevelAPI Platform
    */
   public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception;
 
   /**
-   * Gets Comment of question.
+   * Gets a question's comment by the question path and comment Id.
    * 
-   * @param questionPath path of question
-   * @param commentId id of comment
-   * @param language
-   * @return comment of question 
+   * @param questionPath Path to the question.
+   * @param commentId Id of the comment.
+   * @param language Type of the language.
+   * @return A question's comment. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public Comment getCommentById(String questionPath, String commentId, String language) throws Exception;
 
   /**
-   * Gets answer object.
+   * Gets an answer by its Id.
    * 
-   * @param questionPath path of question
-   * @param answerid id of answer
-   * @param language  
-   * @return answer has inputed id  
+   * @param questionPath Path to the question.
+   * @param answerid Id of the answer.
+   * @param language Type of the language.
+   * @return The answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception;
 
   /**
-   * Saves an answer of question.
+   * Saves an answer.
    * 
-   * @param questionPath path of question
-   * @param answer object answer want to save
-   * @param languge language of answer 
+   * @param questionPath Path to the question.
+   * @param answer The answer to be saved.
+   * @param languge The language type of the saved answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveAnswer(String questionPath, Answer answer, String languge) throws Exception;
 
   /**
-   * Saves an answer of question.
+   * Saves an answer.
    * 
-   * @param questionPath path of question
-   * @param questionLanguage language of answer 
+   * @param questionPath Path to the question.
+   * @param questionLanguage The language type of the saved answer.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception;
 
   /**
-   * Saves comment of a question.
+   * Saves a question's comment.
    * 
-   * @param questionPath path of question
-   * @param comment comment want to save
-   * @param languge language of comment 
+   * @param questionPath Path to the question.
+   * @param comment The comment to be saved.
+   * @param languge The language type of comment.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveComment(String questionPath, Comment comment, String languge) throws Exception;
 
   /**
-   * Removes languages from question.
+   * Removes languages from a question.
    * 
-   * @param questionPath path of question
-   * @param listLanguage removed languages 
+   * @param questionPath Path to the question.
+   * @param listLanguage A list of removed languages.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -914,9 +885,9 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Votes for an answer.
    * 
-   * @param answerPath path of answer
-   * @param userName username of user vote for answer
-   * @param isUp up or not 
+   * @param answerPath Path of the answer.
+   * @param userName Name of the user who has voted for the answer.
+   * @param isUp If this value is "true", the answer is voted up. If "false", the answer is voted down. 
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -925,117 +896,117 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Votes for a question.
    * 
-   * @param questionPath path of question
-   * @param userName username of user vote for question
-   * @param number value user vote 
+   * @param questionPath Path to the question.
+   * @param userName Name of the user who has voted for the question.
+   * @param number The value of ratings (from 0 to 5 points).
    * @throws Exception
    * @LevelAPI Platform
    */
   public void voteQuestion(String questionPath, String userName, int number) throws Exception;
 
   /**
-   * Gets moderators of question or category.
+   * Gets moderators of a question or a category.
    * 
-   * @param path path of question or category
-   * @return array users are moderator 
+   * @param path Path to the question or category.
+   * @return Moderators.
    * @throws Exception
    * @LevelAPI Platform
    */
   public String[] getModeratorsOf(String path) throws Exception;
 
   /**
-   * Removes vote for question.
+   * Removes a vote from a question.
    * 
-   * @param questionPath path of question
-   * @param userName username remove vote 
+   * @param questionPath Path to the question.
+   * @param userName Name of the user who unvotes the question.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void unVoteQuestion(String questionPath, String userName) throws Exception;
 
   /**
-   * Checks view author information or not.
+   * Checks if the author information is displayed or not.
    * 
-   * @param id id of question
-   * @return is view author information or not
+   * @param id Id of the question.
+   * @return The returned value is "true" if the author information is displayed.
    * @LevelAPI Platform
    */
   public boolean isViewAuthorInfo(String id);
 
   /**
-   * Gets number of categories.
+   * Gets the number of existing categories.
    * 
-   * @return number of categories 
-   * @throws Exception
+   * @return Categories.
+   * @throws Exception 
    * @LevelAPI Platform
    */
   public long existingCategories() throws Exception;
 
   /**
-   * Gets name of category.
+   * Gets a category name.
    * 
-   * @param categoryPath path of category
-   * @return name of category
+   * @param categoryPath Path to the category.
+   * @return The category name.
    * @throws Exception
    * @LevelAPI Platform
    */
   public String getCategoryNameOf(String categoryPath) throws Exception;
 
   /**
-   * Gets quick questions.
+   * Gets quick questions from a list of categories.
    * 
-   * @param listCategoryId id of some categories
-   * @param isNotYetAnswer is answer or not
-   * @return list of questions 
+   * @param listCategoryId Id of the categories.
+   * @param isNotYetAnswer If this value is "true", only quick questions which are not yet answered are got.
+   * @return Quick questions.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception;
 
   /**
-   * Gets list of categories.
+   * Gets a list of categories.
    * 
-   * @return list of categories 
+   * @return Categories.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<Cate> listingCategoryTree() throws Exception;
 
   /**
-   * Gets list of watches.
+   * Gets a list of watches in a category.
    * 
-   * @param categoryId id of category
-   * @return list of watches in a category 
+   * @param categoryId Id of the category.
+   * @return Watches.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<Watch> getWatchByCategory(String categoryId) throws Exception;
 
   /**
-   * Gets information has watch or not.
+   * Checks if a category has been watched or not.
    * 
-   * @param categoryPath path of category
-   * @return has watch or has not 
+   * @param categoryPath Path to the category.
+   * @return The returned value is "true" if the category has been watched. 
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean hasWatch(String categoryPath);
 
   /**
-   * Gets informations about category.
+   * Gets information of a category.
    * 
-   * @param categoryPath path of category
-   * @param categoryIdScoped list sub of category
-   * @return informations in CategoryInfo object 
+   * @param categoryPath Path to the category.
+   * @param categoryIdScoped A list of sub-categories.
+   * @return The category information.
    * @throws Exception
    * @LevelAPI Platform
    */
   public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception;
 
   /**
-   * Gets template of questions.
+   * Gets a question's template.
    * 
-   * @return template 
+   * @return The template.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -1044,75 +1015,75 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Saves a template.
    * 
-   * @param str template 
+   * @param str The template to be saved.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void saveTemplate(String str) throws Exception;
 
   /**
-   * Checks category is exist or not.
+   * Checks if a category is existing or not.
    * 
-   * @param name name of category
-   * @param path path of category
-   * @return is exist or not 
+   * @param name Name of the category.
+   * @param path Path to the category.
+   * @return The returned value is "true" if the category is existing.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isCategoryExist(String name, String path);
 
   /**
-   * Updates relatives for a question.
+   * Updates relatives of a question.
    * 
-   * @param questionPath path of question
-   * @param relatives input relatives 
+   * @param questionPath Path to the question.
+   * @param relatives Relative paths of the question.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
 
   /**
-   * Checks question has moderator or not.
+   * Checks if moderation is applied to a question or not.
    * 
-   * @param id id of question
-   * @return is moderate or not 
+   * @param id Id of the question.
+   * @return The returned value is "true" if moderation is enabled.
    * @throws Exception
    * @LevelAPI Platform
    */
   public boolean isModerateQuestion(String id) throws Exception;
 
   /**
-   * Creates RSS for answer.
+   * Creates an RSS for a set of answers under a category.
    * 
-   * @param cateId id of category
-   * @return stream of answer rss 
+   * @param cateId Id of the category.
+   * @return RSS.
    * @throws Exception
    * @LevelAPI Platform
    */
   public InputStream createAnswerRSS(String cateId) throws Exception;
 
   /**
-   * Saves last active information of question.
+   * Updates the last active information of a question.
    *  
-   * @param absPathOfItem path of question 
+   * @param absPathOfItem Path to the question.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void reCalculateLastActivityOfQuestion(String absPathOfItem) throws Exception;
 
   /**
-   * Adds listener for answer.
+   * Adds a listener plugin.
    *  
-   * @param listener answer event listener 
+   * @param listener The listener plugin to be added.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void addListenerPlugin(AnswerEventListener listener) throws Exception;
   
   /**
-   * Removes listener for answer.
+   * Removes a listener plugin.
    *  
-   * @param listener answer event listener 
+   * @param listener The listener plugin to be removed.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -1121,112 +1092,106 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Gets comments of a question.
    *  
-   * @param questionId id of question
-   * @return comments of question 
+   * @param questionId Id of the question.
+   * @return Comments.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Comment[] getComments(String questionId) throws Exception;
   
   /**
-   * Calculates deleted user.
+   * Updates information of answers related to a deleted user.
    * 
-   * @param userName
+   * @param userName Name of the deleted user.
    * @throws Exception
    */
   public void calculateDeletedUser(String userName) throws Exception;
   
   /**
-   * Reads  property of the category by its name.
+   * Reads a category property by its name.
    * 
-   * @param categoryId id of the category
-   * @param propertyName name of the property
-   * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date .  
-   * @return Object contains property values of category.
+   * @param categoryId Id of the category.
+   * @param propertyName Name of the property.
+   * @param returnType A returned type of the property. The supported types are String[], String, Long, Boolean, Double and Date.  
+   * @return A property.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Object readCategoryProperty(String categoryId, String propertyName, Class returnType) throws Exception;
   
   /**
-   * Reads property of the question by its name.
+   * Reads a question property by its name.
    * 
-   * @param questionId id of the question
-   * @param propertyName name of the property
-   * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date.
-   * @return Object contains property values of question.
+   * @param questionId Id of the question.
+   * @param propertyName Name of the property.
+   * @param returnType A returned type of the property. The supported types are String[], String, Long, Boolean, Double and Date.
+   * @return A property.
    * @throws Exception
    * @LevelAPI Platform
    */
   public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception;
   
   /**
-   * Defines Mixin type exo:activityInfo for question node that means to add exo:activityId property 
-   * into Node what is owner created activity via patch
+   * Saves information of a question activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param activityId - the Id's activity created. 
+   * @param ownerPath Path to the question activity.
+   * @param activityId Id of the question activity. 
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveActivityIdForQuestion(String ownerPath, String activityId);
 
   /**
-   * Gets value of exo:activityId property in question node via path. 
-   * If property is not existing then return null.
+   * Gets information of a question activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @return String - the Id's activity created.
+   * @param ownerPath Path to the question activity.
+   * @return Id of the question activity.
    * @LevelAPI Platform 
    * @since 4.0
    */
   public String getActivityIdForQuestion(String ownerPath);
   
   /**
-   * Defines Mixin type exo:activityInfo for answer node that means to add exo:activityId property 
-   * into Node what is owner created activity via patch
+   * Saves information of an answer activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param answer
-   * @param activityId - the Id's activity created. 
+   * @param ownerPath Path to the answer activity.
+   * @param answer Information of the answer which is used for creating or updating the activity.
+   * @param activityId Id of the answer activity.
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveActivityIdForAnswer(String ownerPath, Answer answer, String activityId);
 
   /**
-   * Gets value of exo:activityId property in answer node via path. 
-   * If property is not existing then return null.
+   * Gets information of an answer activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param answer
-   * @return String - the Id's activity created. 
+   * @param ownerPath Path to the answer activity.
+   * @param answer Information of the answer which is used for getting the activity.
+   * @return Id of the answer activity. 
    * @LevelAPI Platform
    * @since 4.0
    */
   public String getActivityIdForAnswer(String ownerPath, Answer answer);
   
   /**
-   * Defines Mixin type exo:activityInfo for comment node that means to add exo:activityId property 
-   * into Node what is owner created activity base on provided path.
+   * Saves information of a comment activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param commentId - the id of comment posted for the question
-   * @param language - the language of comment
-   * @param activityId - the Id's activity created. 
+   * @param ownerPath Path to the comment activity.
+   * @param commentId Id of the comment.
+   * @param language Language of the comment.
+   * @param activityId Id of the comment activity. 
    * @LevelAPI Platform
    * @since 4.0
    */
   public void saveActivityIdForComment(String ownerPath, String commentId, String language, String activityId);
 
   /**
-   * Gets value of exo:activityId property in comment node base on provided path. 
-   * If property is not existing then return null.
-   * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param commentId - the id of comment posted for the question
-   * @param language - the language of comment
-   * @return String - the Id's activity created. 
+   * Get information of a comment activity that is used for processing the activity streams.
+   *  
+   * @param ownerPath Path to the comment activity.
+   * @param commentId Id of the comment.
+   * @param language Language of the comment.
+   * @return Id of the comment activity.  
    * @LevelAPI Platform
    * @since 4.0
    */
