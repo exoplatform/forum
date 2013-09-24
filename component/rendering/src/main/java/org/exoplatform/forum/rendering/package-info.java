@@ -1,4 +1,4 @@
 /**
- * Provides classes to manage rendering forum. Services to register and delegate Renderer are provided.
+ * Provides classes to manage rendering forums. Services which register and delegate the Renderer are provided.
  */
 package org.exoplatform.forum.rendering;

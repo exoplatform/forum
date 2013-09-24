@@ -17,23 +17,23 @@
 package org.exoplatform.forum.service;
 
 /**
- * APIs for Forum's members operations.
+ * Manages operations of members in Forums.
  */
 public interface ForumStatisticsService {
 
   /**
-   * Increases user count and last member.
+   * Increases the count of users when a new member is added.
    * 
-   * @param userName
+   * @param userName Name of the added member.
    * @throws Exception 
    * @LevelAPI Platform
    */
   void addMember(String userName) throws Exception;
 
   /**
-   * Decreases user count.
+   * Decreases the count of users when a member is removed.
    * 
-   * @param userName
+   * @param userName Name of the removed member.
    * @throws Exception
    * @LevelAPI Platform
    */

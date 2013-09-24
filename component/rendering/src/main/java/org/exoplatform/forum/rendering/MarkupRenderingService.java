@@ -25,7 +25,7 @@ import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.forum.rendering.spi.RendererPlugin;
 
 /**
- * APIs for render information operations.
+ * Renders information.
  */
 public class MarkupRenderingService {
 
@@ -42,7 +42,7 @@ public class MarkupRenderingService {
   /**
    * Registers a render.
    * 
-   * @param renderer
+   * @param renderer The render to be registered.
    * @LevelAPI Platform
    */
   public void registerRenderer(Renderer renderer) {
@@ -50,10 +50,10 @@ public class MarkupRenderingService {
   }
 
   /**
-   * Gets Render by provided syntax.
+   * Gets a render by its given syntax.
    * 
-   * @param syntax The syntax to register.
-   * @return The renderer object that match the provided syntax.
+   * @param syntax The syntax by which the render is got.
+   * @return A render.
    * @LevelAPI Platform
    */
   public Renderer getRenderer(String syntax) {
@@ -65,11 +65,11 @@ public class MarkupRenderingService {
   }
 
   /**
-   * Convenience method to delegate markup of an object.
+   * Delegates a markup to a render.
    * 
-   * @param delegate
-   * @param target
-   * @return The method that to delegate markup.
+   * @param delegate The object which performs the delegation.
+   * @param target The markup to be delegated.
+   * @return The markup.
    * @LevelAPI Platform
    */
   public <T> String delegateRendering(MarkupRenderDelegate<T> delegate, T target) {
