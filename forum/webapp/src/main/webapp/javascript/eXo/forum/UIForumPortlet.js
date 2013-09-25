@@ -416,19 +416,23 @@
       var vote = $.fn.findId(voteId);
       rate = parseInt(rate);
       var optsContainer = vote.find('div.optionsContainer:first');
-    optsContainer.attr('data-rate', rate);
+      optsContainer.attr('data-rate', rate);
       var options = optsContainer.children('i');
       options.on('mouseover', UIForumPortlet.overVote);
       options.on('blur', UIForumPortlet.overVote);
 
-      vote.on('mouseover', UIForumPortlet.parentOverVote);
-      //vote.on('blur', UIForumPortlet.parentOverVote);
       optsContainer.on('mouseover', utils.cancelEvent);
       optsContainer.on('blur', utils.cancelEvent);
+      
+      vote.on('mouseover', function() {
+        UIForumPortlet.parentOverVote(this);
+      });
+
+      UIForumPortlet.parentOverVote(vote);
     },
 
-    parentOverVote : function(event) {
-      var optsCon = $(this).find('div.optionsContainer:first');
+    parentOverVote : function(elm) {
+      var optsCon = $(elm).find('div.optionsContainer:first');
       var opts = optsCon.children('i');
       var rate = optsCon.attr('data-rate');
       for ( var j = 0; j < opts.length; j++) {
@@ -448,7 +452,6 @@
           break;
         opts.eq(i).attr('class', 'uiIconNormalVote');
       }
-    optsCon.attr('data-rate', (i+1));
       if (opts.eq(i).attr('class') == "uiIconOverVote")
         return;
       for (; i >= 0; i--) {

@@ -17,7 +17,9 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
@@ -51,13 +53,30 @@ public class UIRatingForm extends BaseForumForm implements UIPopupComponent {
   
   private double userRateValue = 0.0;
 
+  private double currentRateValue = 0.0;
+
   public UIRatingForm() throws Exception {
   }
 
-  public void updateRating(Topic topic, boolean isAlreadyVoted, double userRateValue) {
+  public void updateRating(Topic topic) {
     this.topic = topic;
-    this.isAlreadyVoted = isAlreadyVoted;
-    this.userRateValue = userRateValue;
+    
+    String userName = getUserProfile().getUserId();
+    String[] userVoteRating = topic.getUserVoteRating();
+    Map<String, Double> datas = new HashMap<String, Double>();
+    for (String string : userVoteRating) {
+      if (string.indexOf(":") > 0) {
+        String[] votes = string.split(":");
+        datas.put(votes[0], Double.parseDouble(votes[1]));
+      }
+    }
+    isAlreadyVoted = datas.containsKey(userName) ? true : false;
+    if(isAlreadyVoted == true) {
+      userRateValue = datas.get(userName);
+    } else {
+      userRateValue = 0.0;
+    }
+    currentRateValue = topic.getVoteRating();
   }
   
   public boolean isAlreadyVoted() {
@@ -66,6 +85,10 @@ public class UIRatingForm extends BaseForumForm implements UIPopupComponent {
   
   public double getUserRateValue() {
     return userRateValue;
+  }
+
+  public double getCurrentRateValue() {
+    return currentRateValue;
   }
   
   public String[] getStarNumber() throws Exception {
