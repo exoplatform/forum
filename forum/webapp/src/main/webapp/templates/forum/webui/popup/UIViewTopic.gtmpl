@@ -1,6 +1,6 @@
 <%
 	import org.exoplatform.forum.service.UserProfile;
-    import org.exoplatform.forum.service.Topic ;
+  import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.common.user.CommonContact;
@@ -107,15 +107,15 @@
 			<div class="memberContainer divCell">
 			  
 			<%  String userSmile = "uiIconForumColorOffline";
-				String titleSmile = "Offline" ;
+				String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner) ;
 				if(uicomponent.isOnline(owner)) {
 				   userSmile = "uiIconForumColorOnline";
-				   titleSmile = "Online";
+				   titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
 				}
 			%>
 				
 				<span class="textTitleProfile">
-					<i class="$userSmile"></i>$viewScreenName
+					<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
 				</span>
 				<div class="rank"><%=userInfo.getUserTitle();%></div>
 				<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 

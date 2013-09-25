@@ -3239,6 +3239,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     postNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
     postNew.setIsHidden(reader.bool(EXO_IS_HIDDEN));
     postNew.setIsWaiting(reader.bool(EXO_IS_WAITING));
+    postNew.setFirstPost(reader.bool(EXO_IS_FIRST_POST));
     postNew.setIsActiveByTopic(reader.bool(EXO_IS_ACTIVE_BY_TOPIC));
     postNew.setUserPrivate(reader.strings(EXO_USER_PRIVATE));
     postNew.setNumberAttach(reader.l(EXO_NUMBER_ATTACH));
