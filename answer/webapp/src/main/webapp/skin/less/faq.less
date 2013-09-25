@@ -25,7 +25,7 @@
 .faqCont {
 	padding: 10px 20px;
 	.answersBlock {
-		margin-top: 20px;
+		margin-top: 15px;
 	}
 	.answersBlock [class^="uiIcon"] {
 		padding-left: 7px;
@@ -39,13 +39,11 @@
 		line-height: 35px;
 		padding-left: 10px;
 	}
-	li {
-		line-height: 30px;
-	} 
+	
 }
 
 .viewerQuestion, .viewerAnswer {
-	padding: 10px 25px;
+	padding: 5px 25px;
 	> div {
 		margin-bottom: 20px;
 	}
@@ -56,9 +54,15 @@
 }
 
 .questionList {
-	padding: 0 15px 10px;
+	padding: 0 15px 0px;
 	> ul {
 		padding-left: 10px;
+		li + li {
+			padding: 10px 0 0 0;
+		}
+	}
+	h5 span{
+		font-weight: normal;
 	}
 	h5:first-child a:first-child, h5:first-child a:first-child:hover {
 		color: @textColor;
@@ -71,7 +75,7 @@
 }
 
 .answerList {
-	padding: 0 15px 10px;
+	padding: 0 15px 0px;
 	
 	> h5:first-child {
 		background-color: @grayWhiteSmoke;
@@ -91,6 +95,7 @@
 		word-wrap: break-word;
 		color: @gray;
 		padding-left: 22px;
+		font-style: italic;
 	}
 	
 	.answers {
