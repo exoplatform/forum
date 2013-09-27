@@ -5,24 +5,31 @@
       notification : "Notification",
       message : "message",
       post : "post",
-      titeName : "You have received a new private TYPE",
+      titeName : "You have received a new private {0}",
       from : "From",
       briefContent : "Brief content",
-      GoDirectly : "Go directly to the TYPE: LINK Click here.",
+      GoDirectly : "Go directly to the {0}",
+      ClickHere : "Click here.",
       title : "Title",
-      currentUser : ""
+      currentUser : "",
+      postLink :"/portal/intranet/forum/topic/topicID"
   };
 
-  ForumSendNotification.initParam = function(notification, message, post, titeName, from, briefContent, GoDirectly, Title) {
-    ForumSendNotification.notification = notification;
-    ForumSendNotification.messageLabel = message;
-    ForumSendNotification.postLabel = post;
-    ForumSendNotification.titeName = titeName;
-    ForumSendNotification.from = from;
-    ForumSendNotification.briefContent = briefContent;
-    ForumSendNotification.GoDirectly = GoDirectly;
+  ForumSendNotification.initParam = function(notification, message, post, titeName, from, briefContent, GoDirectly, ClickHere, Title) {
+    ForumSendNotification.notification = notification || ForumSendNotification.notification;
+    ForumSendNotification.messageLabel = message || ForumSendNotification.messageLabel;
+    ForumSendNotification.postLabel = post || ForumSendNotification.postLabel;
+    ForumSendNotification.titeName = titeName || ForumSendNotification.titeName;
+    ForumSendNotification.from = from || ForumSendNotification.from;
+    ForumSendNotification.briefContent = briefContent || ForumSendNotification.briefContent;
+    ForumSendNotification.GoDirectly = GoDirectly || ForumSendNotification.GoDirectly;
+    ForumSendNotification.ClickHere = ClickHere || ForumSendNotification.ClickHere;
     ForumSendNotification.title = Title || ForumSendNotification.title;
     ForumSendNotification.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
+  };
+  
+  ForumSendNotification.setPostLink = function(link) {
+    ForumSendNotification.postLink = link;
   };
 
   ForumSendNotification.init = function(portId, eXoUser, eXoToken, contextName) {
@@ -57,13 +64,9 @@
     return $.trim($('<span></span>').html(str).text().replace(/</gi, '&lt;').replace(/>/gi, '&gt;'));
   };
   
-  ForumSendNotification.buildLink = function(link, type, alink) {
-    link = link.replace('TYPE', type);
-    var key = " LINK.";
-    if(link.indexOf(key) < 0) {
-      key = " LINK";
-    }
-    link = link.replace(key, '<a style="color:#204AA0" href="' + alink + '">') + '</a>';
+  ForumSendNotification.buildLink = function(type, alink) {
+    var link = ForumSendNotification.GoDirectly.replace('{0}', type);
+    link = link + ': <a style="color:#204AA0" href="' + alink + '">' + ForumSendNotification.ClickHere + '</a>';
     return link;
   };
 
@@ -76,17 +79,17 @@
       name.html(name.html().replace('Message', component.notification));
       msgBox.find('.closePopup:first').on('click', component.closeBox);
       //
-      var link = String(component.GoDirectly);
       if(message.type === 'PrivatePost') {
-        var titeName = component.titeName.replace('TYPE', component.postLabel);
+        var link = component.postLink.replace('topicID', String(message.id));
+        var titeName = component.titeName.replace('{0}', component.postLabel);
         msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
-        msgBox.find('.link:first').html(component.buildLink(link, component.postLabel, String(message.id)));
+        msgBox.find('.link:first').html(component.buildLink(component.postLabel, link));
       } else {
-        var titeName = component.titeName.replace('TYPE', component.messageLabel);
+        var titeName = component.titeName.replace('{0}', component.messageLabel);
         msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
         var alink = $('#privateMessageLink');
         if (alink.exists()) {
-          msgBox.find('.link:first').html(component.buildLink(link, component.messageLabel, alink.attr('href')));
+          msgBox.find('.link:first').html(component.buildLink(component.messageLabel, alink.attr('href')));
         }
       }
       //
