@@ -3483,12 +3483,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // send notification message to user's private post.
       if (post.getUserPrivate().length > 1) {
         ForumPrivateMessage message = new ForumPrivateMessage();
-        message.setFrom(getScreenName(sProvider, post.getOwner()));
+        message.setFrom(post.getOwner());
         message.setSendTo(post.getUserPrivate()[0] + "," + post.getUserPrivate()[1]);
         message.setType("PrivatePost");
         message.setName(post.getName());
         message.setMessage(post.getMessage());
-        message.setId(post.getLink() + "/" + post.getId());
+        message.setId(topicId + "/" + post.getId());
         sendNotificationMessage(message);
       }
     } catch (Exception e) {
@@ -6728,12 +6728,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private void getTotalJobWatting(SessionProvider sProvider, Set<String> userIds) {
     try {
-      JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
-      Category cat = new Category();
-      ContinuationService continuation = getContinuationService();
+      ContinuationService continuation = CommonUtils.getComponent(ContinuationService.class);
       if (continuation != null) {
         Set<String> set = new HashSet<String>(ForumServiceUtils.getUserPermission(userIds.toArray(new String[userIds.size()])));
         set.addAll(getAllAdministrator(sProvider));
+        JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
+        Category cat = new Category();
         for (String userId : set) {
           if (Utils.isEmpty(userId) || userId.indexOf(CommonUtils.SLASH) > 0 || userId.indexOf(CommonUtils.COLON) > 0) continue;
           int job = getTotalJobWaitingForModerator(getForumHomeNode(sProvider).getSession(), userId);
@@ -6749,24 +6749,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  protected ContinuationService getContinuationService() {
-    ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
-    return continuation;
-  }
-
   public void sendNotificationMessage(ForumPrivateMessage message) {
     try {
       if (message != null) {
+        ContinuationService continuation = CommonUtils.getComponent(ContinuationService.class);
         String[] sendTo = message.getSendTo().replaceAll(";", ",").split(",");
-        JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
-        ContinuationService continuation = getContinuationService();
-        JsonValue json = generatorImpl.createJsonObject(message);
         String from = message.getFrom();
         message.setFrom(getScreenName(from));
+        JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
+        JsonValue json = generatorImpl.createJsonObject(message);
         for (int i = 0; i < sendTo.length; i++) {
-          if (sendTo[i].equals(from))
+          String to = sendTo[i].trim(); 
+          if (to.equals(from)) {
             continue;
-          continuation.sendMessage(sendTo[i], "/eXo/Application/Forum/NotificationMessage", json, message.toString());
+          }
+          continuation.sendMessage(to, "/eXo/Application/Forum/NotificationMessage", json, message.toString());
         }
       }
     } catch (Exception e) {
