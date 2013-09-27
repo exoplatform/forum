@@ -522,13 +522,14 @@ public class UIForumPortlet extends UIPortletApplication {
     return ForumUtils.EMPTY_STR;
   }
 
-  protected void initSendNotification() {
+  protected void initSendNotification() throws Exception {
     if(getUserProfile().getUserRole() <=2 ) {
+      String postLink = ForumUtils.createdSubForumLink(Utils.TOPIC, "topicID", false);
       StringBuilder init = new StringBuilder("forumNotify.init('");
       init.append(getId()).append("', '")
           .append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
-          .append(getCometdContextName()).append("');");
+          .append(getCometdContextName()).append("'); forumNotify.setPostLink('").append(postLink).append("');");
       StringBuilder initParam = new StringBuilder("forumNotify.initParam('");
       initParam.append(WebUIUtils.getLabel(getId(), "Notification")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "message")).append("', '")
@@ -536,7 +537,9 @@ public class UIForumPortlet extends UIPortletApplication {
                .append(WebUIUtils.getLabel(getId(), "titeName")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "from")).append("', '")
                .append(WebUIUtils.getLabel(getId(), "briefContent")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("');");
+               .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "ClickHere")).append("', '")
+               .append(WebUIUtils.getLabel(getId(), "Title")).append("');");
       ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
     }
   }
