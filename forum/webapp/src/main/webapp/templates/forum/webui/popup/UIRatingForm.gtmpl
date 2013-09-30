@@ -1,6 +1,6 @@
 <%
   import org.exoplatform.forum.ForumUtils ;
-  org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initVote('$uicomponent.id', 5) ;");
+  ForumUtils.addScripts("UIForumPortlet", "forumPortlet", "forumPortlet.initVote('" + uicomponent.id + "', "+ uicomponent.getCurrentRateValue()+ ");");
 %>
 	<% uiform.begin(); 
      boolean isVoted = uicomponent.isAlreadyVoted();
@@ -28,7 +28,6 @@
 					<i class="uiIconNormalVote" onclick="$onclick" rel="tooltip" data-placement="bottom" title="$title"></i>
 				 <% i = i + 1;
 					 } %>
-					
 			</div>
 			<% } else {
 			    String[] classNames = uicomponent.getStarNumber() ; 

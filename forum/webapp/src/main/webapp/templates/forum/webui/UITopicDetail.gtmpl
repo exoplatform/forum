@@ -430,16 +430,17 @@
 					<!-- Start MemberContainer -->
 					<div class="memberContainer divCell">
 						
-						<%	String userSmile = "uiIconForumColorOffline";
-							String titleSmile = "Offline" ;
+						<%
+							String userSmile = "uiIconForumColorOffline";
+							String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
 							if(uicomponent.isOnline(owner)) {
-							userSmile = "uiIconForumColorOnline";
-							titleSmile = "Online";
+								userSmile = "uiIconForumColorOnline";
+								titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
 							}
 						%>
 						<div class="dropdown uiUserInfo">
 							<a href="javascript:void(0)" class="textTitleProfile">
-							<i class="$userSmile"></i>$viewScreenName
+							<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
 							</a>
 							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 								<%

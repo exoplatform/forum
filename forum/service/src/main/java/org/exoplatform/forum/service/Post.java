@@ -55,7 +55,9 @@ public class Post {
 
   private boolean               isHidden        = false;
   
-  private boolean               isWaiting           = false;
+  private boolean               isWaiting       = false;
+
+  private boolean               isFirstPost     = false;
 
   private long                  numberAttach    = 0;
 
@@ -214,6 +216,14 @@ public class Post {
 
   public void setIsWaiting(boolean isWaiting) {
     this.isWaiting = isWaiting;
+  }
+
+  public boolean getIsFirstPost() {
+    return isFirstPost;
+  }
+
+  public void setFirstPost(boolean isFirstPost) {
+    this.isFirstPost = isFirstPost;
   }
 
   public boolean getIsActiveByTopic() {

@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.ForumNodeTypes;
