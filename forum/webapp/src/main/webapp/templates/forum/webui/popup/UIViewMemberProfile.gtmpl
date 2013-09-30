@@ -17,11 +17,10 @@
 	String userName = userProfileViewer.getUserId() ;
 	long totalPost = userProfileViewer.getTotalPost();
 	
-	CommonContact contact = uiform.getContact(userName) ;
-	fullName = uiform.getScreenName(userName);
+	String fullName = uiform.getScreenName(userName);
 	String location = "" ;
-	String fullName = "";
 	boolean isCity = false;
+	CommonContact contact = uiform.getContact(userName) ;
 	String birthDay = contact.getBirthday() ;
 	if(!ForumUtils.isEmpty(contact.getCity())) {isCity = true; location = contact.getCity();}
 	if(!ForumUtils.isEmpty(contact.getCountry())) {
@@ -39,10 +38,10 @@
 		createdDate = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getJoinedDate(), shortDateFormat, setTime) ;
 	}
 	String userSmile = "uiIconForumColorOffline";
-	String titleSmile = "Offline" ;
+	String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", userName);
 	if(uicomponent.isOnline(userName)) {
 		 userSmile = "uiIconForumColorOnline";
-		 titleSmile = "Online";
+		 titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", userName);
 	}
 	userName = (userName.contains(Utils.DELETED))?userName.substring(0, userName.indexOf(Utils.DELETED)):userName;
 %>
@@ -52,7 +51,7 @@
 				<tr>
 					<td class="memberContainer">
 						<div class="textTitleProfile">
-							<i class="$userSmile" rel="tooltip" data-placement="bottom" title="${userName}'s $titleSmile"></i><strong>$fullName</strong>
+							<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i><strong>$fullName</strong>
 						</div>
 						<%	
 						String userTitle = userProfileViewer.getUserTitle();

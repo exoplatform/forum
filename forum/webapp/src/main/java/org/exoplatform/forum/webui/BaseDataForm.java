@@ -108,25 +108,26 @@ public class BaseDataForm extends BaseForumForm {
     return forums;
   }
 
-  public List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
+  public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
     List<Topic> topics = new ArrayList<Topic>();
+    Forum forum = getForumService().getForum(categoryId, forumId);
+    boolean isMode = (getUserProfile().getUserRole() == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()));
     for (Topic topic : getForumService().getTopics(categoryId, forumId)) {
       if (topic.getId().equalsIgnoreCase(topicId)) {
         if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
           continue;
       }
-      if (getUserProfile().getUserRole() == UserProfile.MODERATOR) {
-        if (!isMode) {
-          if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() ||
-               topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
-            continue;
-          if (!canViewPosts.contains(categoryId) && canViewPosts.contains(forumId) && topic.getCanView().length > 0 && 
-              !ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()))
-            continue;
-          if (!canAddPosts.contains(categoryId) && canAddPosts.contains(forumId) && topic.getCanPost().length > 0 && 
-              !ForumServiceUtils.hasPermission(topic.getCanPost(), userProfile.getUserId()))
-            continue;
-        }
+
+      if (!isMode) {
+        if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() ||
+             topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
+          continue;
+        if (!canViewPosts.contains(categoryId) && canViewPosts.contains(forumId) && topic.getCanView().length > 0 && 
+            !ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()))
+          continue;
+        if (!canAddPosts.contains(categoryId) && canAddPosts.contains(forumId) && topic.getCanPost().length > 0 && 
+            !ForumServiceUtils.hasPermission(topic.getCanPost(), userProfile.getUserId()))
+          continue;
       }
       topics.add(topic);
     }

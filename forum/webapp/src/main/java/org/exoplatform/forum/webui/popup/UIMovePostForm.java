@@ -19,23 +19,18 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.jcr.ItemExistsException;
 
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.forum.common.TransformHTML;
-import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.webui.BaseDataForm;
+import org.exoplatform.forum.webui.BaseForumEventListener;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -72,47 +67,57 @@ public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
   }
 
   protected boolean getSelectForum(String forumId) throws Exception {
-    if (this.posts.get(0).getPath().contains(forumId))
+    if (this.posts.get(0).getPath().contains(forumId)) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
   
-  static public class SaveActionListener extends BaseEventListener<UIMovePostForm> {
-    public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
-      if (!ForumUtils.isEmpty(topicPath)) {
-        try {
-          String[] temp = topicPath.split(ForumUtils.SLASH);
-          // set link
-          String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
-          //
-          WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-          ResourceBundle res = context.getApplicationResourceBundle();
-          Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC());
-          String[] postPath = new String[uiForm.posts.size()];
-          int i = 0;
-          for (Post post : uiForm.posts) {
-            postPath[i] = post.getPath();
-            ++i;
-          }
-          uiForm.getForumService().movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
-          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.cancelAction();
-          UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-          UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class);
-          topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
-          topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
-          UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
-          forumDescription.setForumId(temp[temp.length - 3], temp[temp.length - 2]);
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-        } catch (ItemExistsException e) {
-          warning("UIImportForm.msg.ObjectIsExist");
-          return;
-        } catch (Exception e) {
-          warning("UIMovePostForm.msg.parent-deleted");
-          return;
-        }
+  static public class SaveActionListener extends BaseForumEventListener<UIMovePostForm> {
+    @Override
+    public boolean isValid(UIMovePostForm component, String objectId) throws Exception {
+      if (ForumUtils.isEmpty(objectId)) {
+        return false;
       }
+      if (isExisting(objectId) == false) {
+        return false;
+      }
+      return true;
+    }
+
+    @Override
+    public void errorEvent() throws Exception {
+      warning("UIForumPortlet.msg.topicEmpty", false);
+      context.addUIComponentToUpdateByAjax(component);
+    }
+
+    @Override
+    protected void onError(Throwable e) throws Exception {
+      forumPortlet.cancelAction();
+      notExist("UIMovePostForm.msg.parent-deleted");
+      component.log.error("Failed to move topic(s) to forum ", e);
+    }
+
+    public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
+      String[] temp = topicPath.split(ForumUtils.SLASH);
+      // set link
+      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
+      //
+      Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC());
+      List<String> postPaths = new ArrayList<String>(uiForm.posts.size());
+      for (Post p : uiForm.posts) {
+        postPaths.add(p.getPath());
+      }
+      uiForm.getForumService().movePost(postPaths.toArray(new String[postPaths.size()]), topicPath, false, WebUIUtils.getLabel(null, "UINotificationForm.label.EmailToAuthorMoved"), link);
+      forumPortlet.cancelAction();
+      UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+      UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class);
+      topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
+      topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
+      UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
+      forumDescription.setForumId(temp[temp.length - 3], temp[temp.length - 2]);
+      context.addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 
