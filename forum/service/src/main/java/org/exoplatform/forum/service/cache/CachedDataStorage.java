@@ -87,6 +87,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private static final Log LOG = ExoLogger.getLogger(CachedDataStorage.class);
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
+  private static final String SCREEN_NAME_KEY = "screenName";
 
   private DataStorage storage;
   private CacheService service;
@@ -656,13 +657,14 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
-    for (Forum forum : forums) {
-      clearForumCache(forum, false);
-      clearObjectCache(forum, false);
-    }
-    clearForumListCache();
-    clearLinkListCache();
     storage.moveForum(forums, destCategoryPath);
+    //
+    topicData.clearCache();
+    postData.clearCache();
+    objectNameData.clearCache();
+    watchListData.clearCache();
+    forumData.clearCache();
+    clearForumListCache();
   }
 
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
@@ -973,7 +975,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public String getScreenName(final String userName) throws Exception {
 
-    SimpleCacheKey key = new SimpleCacheKey("screen", userName);
+    SimpleCacheKey key = new SimpleCacheKey(SCREEN_NAME_KEY, userName);
 
     return (String) miscDataFuture.get(
         new ServiceContext<SimpleCacheData>() {
@@ -997,7 +999,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
-    miscData.remove(new SimpleCacheKey("screen", userProfile.getUserId()));
+    miscData.remove(new SimpleCacheKey(SCREEN_NAME_KEY, userProfile.getUserId()));
   }
 
   public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {
@@ -1383,10 +1385,19 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void calculateDeletedUser(String userName) throws Exception {
     storage.calculateDeletedUser(userName);
+    clearPostListCache();
+    topicData.clearCache();
+    forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
+    clearForumListCache();
+    categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());
+    categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
+    //
+    miscData.remove(new SimpleCacheKey(SCREEN_NAME_KEY, userName));
   }
 
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     storage.calculateDeletedGroup(groupId, groupName);
+    topicData.clearCache();
     forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
     forumList.select(new ScopeCacheSelector<ForumListKey, ListForumData>());
     categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());

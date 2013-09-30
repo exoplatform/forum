@@ -141,18 +141,32 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     assertEquals("Forum in category can not content moderatort user admin", list.contains(USER_JOHN), true);
 
     // test moveForum, Move list Forum from Category 'cat' to Category 'cate'
+    
+    // create new topic on forums
+    Topic topic = createdTopic(USER_ROOT);
+    forumService_.saveTopic(catId, forumId, topic, true , false, new MessageBuilder());
 
     // create new Category
     Category cate = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cate, true);
     Category cateNew = forumService_.getCategory(cate.getId());
-
+    
     // move forum
     forumService_.moveForum(forums, cateNew.getPath());
 
     // get forum in new category
-    forum = forumService_.getForum(cate.getId(), forumId);
+    forum = forumService_.getForum(cateNew.getId(), forumId);
     assertNotNull(forum);
+    
+    // get Topic in forum
+    topic = (Topic) forumService_.getObjectNameById(topic.getId(), Utils.TOPIC);
+    assertNotNull(topic);
+    assertEquals(forumId, topic.getForumId());
+    assertEquals(cateNew.getId(), topic.getCategoryId());
+    //
+    topic = (Topic) forumService_.getTopic(cateNew.getId(), forumId, topic.getId(), USER_DEMO);
+    assertNotNull(topic);
+    assertEquals(cateNew.getId(), topic.getCategoryId());
 
     // remove Forum and return this Forum
     for (Forum forum2 : forums) {

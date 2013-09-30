@@ -66,16 +66,14 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
     String cateQuery = new StringBuffer("[(@").append(Utils.EXO_ID)
                         .append("!='").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("')]").toString();
     forumLinks.addAll(getForumService().getAllLink(cateQuery, ForumUtils.EMPTY_STR));
-    
     //
     List<String> groupIds = Utils.getGroupSpaceOfUser(userId);
-    String strQuryForum = new StringBuffer("[").append(Utils.buildQueryForumInSpaceOfUser(userId, groupIds))
-                                               .append("]").toString();
+    String strQuryForum = Utils.buildQueryForumInSpaceOfUser(userId, groupIds);
+        
     if (ForumUtils.isEmpty(strQuryForum) == false) {
       cateQuery = cateQuery.replace("!=", "=");
-      forumLinks.addAll(getForumService().getAllLink(cateQuery, strQuryForum));
+      forumLinks.addAll(getForumService().getAllLink(cateQuery, new StringBuffer("[").append(strQuryForum).append("]").toString()));
     }
-    
     //
     initCheckboxInput();
   }

@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
   
 import java.util.ArrayList;
 import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
