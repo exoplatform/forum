@@ -27,9 +27,7 @@ import java.util.List;
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
-import org.exoplatform.forum.service.impl.JCRDataStorage;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
@@ -375,8 +373,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(UserProfile.USER, forumService_.getUserInfo(USER_DEMO).getUserRole());
     assertEquals(USER_ROOT, ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
     assertEquals(USER_ROOT, ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
-    // checking again data not from cache. Currently, can not clear cache when remove  group.
-    assertEquals(USER_ROOT, ArrayToString(CommonsUtils.getService(JCRDataStorage.class).getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+    assertEquals(USER_ROOT, ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
   }
 
   public void testImportXML() throws Exception {

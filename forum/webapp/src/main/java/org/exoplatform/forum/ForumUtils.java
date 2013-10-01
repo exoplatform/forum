@@ -38,6 +38,7 @@ import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
@@ -126,14 +127,18 @@ public class ForumUtils {
     return link.toString();
   }
 
-  public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {    
-    String containerName = ((ExoContainerContext) ExoContainerContext.getCurrentContainer()
-                           .getComponentInstanceOfType(ExoContainerContext.class)).getPortalContainerName();
-    String pageNodeSelected = Util.getUIPortal().getSelectedUserNode().getURI();
+  public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
-    String host = fullUrl.substring(0, fullUrl.indexOf(containerName) -1);
-    return buildLink((host + portalContext.getPortalURI()), containerName , pageNodeSelected, type, id, isPrivate);
+    String host = fullUrl.substring(fullUrl.indexOf(SLASH, 8));
+    return new StringBuffer(host).append(createdSubForumLink(type, id, isPrivate)).toString();
+  }
+
+  public static String createdSubForumLink(String type, String id, boolean isPrivate) throws Exception {    
+    String containerName = CommonsUtils.getService(ExoContainerContext.class).getPortalContainerName();
+    String pageNodeSelected = Util.getUIPortal().getSelectedUserNode().getURI();
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    return buildLink(portalContext.getPortalURI(), containerName , pageNodeSelected, type, id, isPrivate);
   }
 
   public static String buildLink(String portalURI, String containerName, String selectedNode, String type, String id, boolean isPrivate){
