@@ -14,7 +14,7 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin:2px 0px;" class="ClearFix">
+					<div style="overflow:auto; margin:2px 0px;" class="clearfix">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 
 					</div>

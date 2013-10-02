@@ -339,7 +339,7 @@
         </table>              
     </div>
   </div>
-  <div class="ClearFix">
+  <div class="clearfix">
     <%_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
   </div>
   
