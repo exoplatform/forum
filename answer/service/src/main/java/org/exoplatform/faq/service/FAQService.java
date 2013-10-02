@@ -54,9 +54,9 @@ public interface FAQService extends FAQServiceLegacy {
   public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception;
 
   /**
-   * Checks if a category is existing or not. If "true", the category is created. If "false", the existing category will be updated.
+   * Checks if a category exists or not. If "true", the new category is created. If "false", the category will be updated.
    * <p>
-   * This function is used to add new or update an existing category. The user will input information in required fields 
+   * This function is used to add new or update the category. The user will input information into required fields 
    * of the Add Category form, then save the category into database.
    * 
    * @param    parentId The address Id of the parent category where the user wants to add a sub-category.
@@ -380,8 +380,8 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Adds a language to a question. The added language is never set as default.
    * <p>
-   * First, this method checks if a language node is existing or not. 
-   * If the language node is not existing, it will be added.
+   * This method checks if a language node exists or not. 
+   * If the language node does not exist, it will be added.
    * Next, this method sets properties for the language node: name, content of question and response.
    * 
    * @param questionNode The question to which a language is added.
@@ -682,10 +682,10 @@ public interface FAQService extends FAQServiceLegacy {
   public InputStream exportData(String categoryId, boolean createZipFile) throws Exception;
 
   /**
-   * Checks if a path is existing or not.
+   * Checks if a path exists or not.
    * 
    * @param path The path to be checked.
-   * @return The returned value is "true" if the path is existing.
+   * @return The returned value is "true" if the path has already existed.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -1022,11 +1022,11 @@ public interface FAQService extends FAQServiceLegacy {
   public void saveTemplate(String str) throws Exception;
 
   /**
-   * Checks if a category is existing or not.
+   * Checks if a category exists or not.
    * 
    * @param name Name of the category.
    * @param path Path to the category.
-   * @return The returned value is "true" if the category is existing.
+   * @return The returned value is "true" if the category has already existed.
    * @throws Exception
    * @LevelAPI Platform
    */
