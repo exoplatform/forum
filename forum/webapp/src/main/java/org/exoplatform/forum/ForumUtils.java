@@ -50,6 +50,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -624,5 +625,19 @@ public class ForumUtils {
   
   static public RequireJS addScripts(String module, String alias, String... scripts) {
     return WebUIUtils.addScripts(module, alias, scripts);
+  }
+  
+
+  public static UserProfile getDeletedUserProfile(ForumService forumService, String userName) {
+    UserProfile profile;
+    try {
+      profile = forumService.getQuickProfile(userName + Utils.DELETED);
+    } catch (Exception e) {
+      profile = new UserProfile();
+      profile.setUserId(userName);
+      profile.setScreenName("<s>" + userName + "</s>");
+      profile.setUserTitle(UserProfile.USER_REMOVED);
+    }
+    return profile;
   }
 }
