@@ -131,7 +131,7 @@ public class ForumUtils {
   public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
-    String host = fullUrl.substring(fullUrl.indexOf(SLASH, 8));
+    String host = fullUrl.substring(0, fullUrl.indexOf(SLASH, 8));
     return new StringBuffer(host).append(createdSubForumLink(type, id, isPrivate)).toString();
   }
 
