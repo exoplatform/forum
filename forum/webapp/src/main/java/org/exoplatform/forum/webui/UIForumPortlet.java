@@ -949,17 +949,16 @@ public class UIForumPortlet extends UIPortletApplication {
   static public class ViewPublicUserInfoActionListener extends EventListener<UIForumPortlet> {
     public void execute(Event<UIForumPortlet> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource();
-      String userId = event.getRequestContext().getRequestParameter(OBJECTID);
+      String userId = event.getRequestContext().getRequestParameter(OBJECTID).trim();
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null);
+      UserProfile selectProfile;
       try {
-        UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim()));
-        viewUserProfile.setUserProfileViewer(selectProfile);
+        selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId));
       } catch (Exception e) {
-        log.debug("Fail to set user profile.", e);
-        showWarningMessage(event.getRequestContext(), "UITopicDetail.msg.userIsDeleted", new String[] { userId });
-        return;
+        selectProfile = ForumUtils.getDeletedUserProfile(forumPortlet.forumService, userId);
       }
+      viewUserProfile.setUserProfileViewer(selectProfile);
       popupAction.activate(viewUserProfile, 670, 400, true);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

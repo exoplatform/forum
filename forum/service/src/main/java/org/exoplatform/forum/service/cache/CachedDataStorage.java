@@ -98,6 +98,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
   private static final String FORUM_CAN_VIEW_KEY = "userCanView";
   private static final String PROFILE_KEY = "profile";
+  private static final String SCREEN_NAME_KEY = "screenName";
 
   private DataStorage storage;
   private CacheService service;
@@ -1127,7 +1128,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public String getScreenName(final String userName) throws Exception {
 
-    SimpleCacheKey key = new SimpleCacheKey("screen", userName);
+    SimpleCacheKey key = new SimpleCacheKey(SCREEN_NAME_KEY, userName);
 
     return (String) miscDataFuture.get(
         new ServiceContext<SimpleCacheData>() {
@@ -1151,7 +1152,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
-    miscData.remove(new SimpleCacheKey("screen", userProfile.getUserId()));
+    miscData.remove(new SimpleCacheKey(SCREEN_NAME_KEY, userProfile.getUserId()));
   }
 
   public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {
@@ -1557,15 +1558,30 @@ public class CachedDataStorage implements DataStorage, Startable {
   public boolean deleteUserProfile(String userId) throws Exception {
     return storage.deleteUserProfile(userId);
   }
+  
+  private void clearAllForumCache() {
+    postData.clearCache();
+    postList.clearCache();
+    topicData.clearCache();
+    forumData.clearCache();
+    forumList.clearCache();
+    categoryData.clearCache();
+    categoryList.clearCache();
+    //
+    miscData.clearCache();
+  }
 
   public void calculateDeletedUser(String userName) throws Exception {
     storage.calculateDeletedUser(userName);
+    //
+    clearAllForumCache();
   }
 
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     storage.calculateDeletedGroup(groupId, groupName);
     topicData.select(new ScopeCacheSelector<TopicKey, TopicData>());
     topicList.select(new ScopeCacheSelector<TopicListKey, ListTopicData>());
+    topicData.clearCache();
     forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
     forumList.select(new ScopeCacheSelector<ForumListKey, ListForumData>());
     categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());
