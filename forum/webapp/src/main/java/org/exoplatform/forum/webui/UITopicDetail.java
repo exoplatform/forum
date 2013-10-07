@@ -1768,4 +1768,40 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return renderHelper.renderPost(post);
   }
 
+  protected String getLastEditedBy(String userId, String editDate) throws Exception {
+    UserProfile userEditByInfo = getUserInfo(userId) ;
+    String editByScreeName = userEditByInfo.getScreenName() ;
+    
+    StringBuilder builder = new StringBuilder("<div class=\"dropdown uiUserInfo\">");
+    builder.append("<a href=\"javascript:void(0);\" class=\"txtEditBy\">").append(editByScreeName).append("</a>")
+           .append(getMenuUser(userEditByInfo))
+           .append("</div>");
+
+    String editByLabel = WebUIUtils.getLabel(getId(), "LastEditedBy");
+    return editByLabel.replace("{0}", builder.toString()).replace("{1}", editDate);
+  }
+  
+  protected String getMenuUser(UserProfile userInfo) throws Exception {
+    String editByScreeName = userInfo.getScreenName();
+    StringBuilder builder = new StringBuilder("<ul class=\"dropdown-menu uiUserMenuInfo dropdownArrowTop\">");
+
+    String[] menuViewInfos = new String[] { "ViewPublicUserInfo", "PrivateMessage", "ViewPostedByUser", "ViewThreadByUser" };
+    for (int i = 0; i < menuViewInfos.length; i++) {
+      String viewAction = menuViewInfos[i];
+      if ((getUserProfile().getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) {
+        continue;
+      }
+      String itemLabelView = WebUIUtils.getLabel(null, "UITopicDetail.action." + viewAction);
+      if (!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+        itemLabelView = itemLabelView + " " + editByScreeName;
+      }
+
+      builder.append("<li onclick=\"").append(event(viewAction, userInfo.getUserId())).append("\">")
+             .append("  <a href=\"javaScript:void(0)\">").append(itemLabelView).append("</a>")
+             .append("</li>");
+    }
+    builder.append("</ul>");
+    return builder.toString();
+  }
+
 }
