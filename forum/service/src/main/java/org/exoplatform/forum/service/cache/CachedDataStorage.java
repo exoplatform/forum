@@ -1382,17 +1382,23 @@ public class CachedDataStorage implements DataStorage, Startable {
   public boolean deleteUserProfile(String userId) throws Exception {
     return storage.deleteUserProfile(userId);
   }
+  
+  private void clearAllForumCache() {
+    postData.clearCache();
+    postList.clearCache();
+    topicData.clearCache();
+    forumData.clearCache();
+    forumList.clearCache();
+    categoryData.clearCache();
+    categoryList.clearCache();
+    //
+    miscData.clearCache();
+  }
 
   public void calculateDeletedUser(String userName) throws Exception {
     storage.calculateDeletedUser(userName);
-    clearPostListCache();
-    topicData.clearCache();
-    forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
-    clearForumListCache();
-    categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());
-    categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     //
-    miscData.remove(new SimpleCacheKey(SCREEN_NAME_KEY, userName));
+    clearAllForumCache();
   }
 
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {

@@ -19,20 +19,20 @@ package org.exoplatform.forum.common.image;
 import java.io.InputStream;
 
 /**
- * APIs for resize images operations. Images can be resized by specific input width and height. 
+ * Resizes the dimension of images. Images can be resized by a specific width or height or both. 
  *
  */
 public interface ResizeImageService {
 
   /**
-   * Resizes the given image input stream to the specified dimensions.
+   * Resizes an image to given dimensions.
    * 
-   * @param imageName is the name of image to be resized
-   * @param is is the input stream of image
-   * @param requestWidth the new image width
-   * @param requestHeight the new image height
-   * @param keepAspectRatio keep the aspect ratio or not
-   * @return the resized input stream
+   * @param imageName Name of the resized image.
+   * @param is The input image.
+   * @param requestWidth New width of the image.
+   * @param requestHeight New height of the image.
+   * @param keepAspectRatio The image's aspect ratio is kept or not.
+   * @return The resized image.
    * @LevelAPI Platform
    */
   public InputStream resizeImage(String imageName,
@@ -42,24 +42,22 @@ public interface ResizeImageService {
                                  boolean keepAspectRatio) throws FileNotSupportedException;
 
   /**
-   * Resizes the given image input stream to the adapt requested width and keep
-   * the aspect ratio.
+   * Resizes an image to a given width.
    * 
-   * @param imageName is the name of image to be resized
-   * @param is is the input stream of image
-   * @param requestWidth the new image width
+   * @param imageName Name of the image to be resized.
+   * @param is The input image.
+   * @param requestWidth New width of the image.
    * @LevelAPI Platform
    */
   public InputStream resizeImageByWidth(String imageName, InputStream is, int requestWidth) throws FileNotSupportedException;
 
   /**
-   * Resizes the given image input stream to the adapt requested height and keep
-   * the aspect ratio.
+   * Resizes an image to a given height.
    * 
-   * @param imageName is the name of image to be resized
-   * @param is is the input stream of image
-   * @param requestHeight the new image height
-   * @return the resized input stream
+   * @param imageName Name of the image to be resized.
+   * @param is The input image.
+   * @param requestHeight New height of the image.
+   * @return The resized image.
    * @LevelAPI Platform
    */
   public InputStream resizeImageByHeight(String imageName, InputStream is, int requestHeight) throws FileNotSupportedException;

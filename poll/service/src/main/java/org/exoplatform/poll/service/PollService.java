@@ -21,122 +21,120 @@ import java.util.List;
 import org.exoplatform.container.component.ComponentPlugin;
 
 /**
- * Main Facade for all Poll information operations.
+ * Main Facade for all Poll operations.
  * 
  */
 public interface PollService {
   /**
-   * Adds the plugin.
+   * Adds a plugin which initalizes the default data at first runtime.
    * 
-   * @param plugin the plugin
+   * @param plugin The plugin to be added.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Gets the poll by id.
+   * Gets a poll by its Id.
    * 
-   * @param pollId
-   * @return the poll
+   * @param pollId Id of the poll.
+   * @return The poll.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   Poll getPoll(String pollId) throws Exception;
 
   /**
-   * Saves poll.
+   * Saves a poll.
    * 
-   * @param poll the poll
-   * @param isNew is the new
-   * @param isVote is the vote
+   * @param poll The poll to be saved.
+   * @param isNew If "true", the new poll is added. If "false", the poll is updated.
+   * @param isVote If "true", the poll can be voted. If "false", the poll is updated.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception;
 
   /**
-   * Removes the poll.
+   * Removes a poll.
    * 
-   * @param pollId
-   * @return the poll
+   * @param pollId Id of the poll which is removed.
+   * @return The poll
    * @LevelAPI Platform
    */
   Poll removePoll(String pollId);
 
   /**
-   * Sets the poll to closed.
+   * Sets a poll to "closed".
    * 
-   * @param poll
+   * @param poll The poll which is set to "closed".
    * @LevelAPI Platform
    */
   void setClosedPoll(Poll poll);
 
   /**
-   * Gets list of polls.
+   * Gets a list of polls.
    * 
-   * @return the list of polls
+   * @return Polls.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public List<Poll> getPagePoll() throws Exception;
   
   /**
-   * Checks has permission of user viewer the poll in the forum.
+   * Checks if a user has permission on a poll or not.
    * 
-   * @param pollPath the path of the poll.
-   * @param allInfoOfUser user, group and membership of the user.
-   * @return boolean
+   * @param pollPath Path to the poll.
+   * @param allInfoOfUser Information about user, group and membership of the user.
+   * @return The returned value is "true" if the checked user has permission on the poll.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception;
 
   /**
-   * Gets the poll summary.
+   * Gets summary of a poll.
    * 
-   * @param groupOfUser group
-   * @return the poll summary
+   * @param groupOfUser All groups of the current user.
+   * @return The poll summary.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception;
 
   /**
-   * Defines Mixin type exo:activityInfo for node that means to add exo:activityId property 
-   * into Node what is owner created activity via patch
-   * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @param activityId - the Id's activity created.
+   * Saves information of a poll activity that is used for processing the activity streams.
+   *
+   * @param ownerPath Path to the poll activity.
+   * @param activityId Id of the poll activity.
    * @LevelAPI Platform 
    * @since 4.0
    */
   public void saveActivityIdForOwner(String ownerPath, String activityId);
 
   /**
-   * Gets value of exo:activityId property in specified node via path. 
-   * If property is not existing then return null.
+   * Gets information of a poll activity that is used for processing the activity streams.
    * 
-   * @param ownerPath - the Path's Node what is owner created activity
-   * @return String - the Id's activity created. 
+   * @param ownerPath Path to the poll activity.
+   * @return Id of the poll activity.
    * @LevelAPI Platform
    * @since 4.0
    */
   public String getActivityIdForOwner(String ownerPath);
   
   /**
-   * Adds poll event listener.
+   * Adds a listener plugin.
    * 
-   * @param listener
+   * @param listener The listener plugin to be added.
    * @throws Exception
    * @LevelAPI Platform
    */
   public void addListenerPlugin(PollEventListener listener) throws Exception;
   
   /**
-   * Removes poll event listener.
+   * Removes a listener plugin.
    * 
-   * @param listener
+   * @param listener The listener plugin to be removed.
    * @throws Exception
    * @LevelAPI Platform
    */
