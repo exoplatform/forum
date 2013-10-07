@@ -262,20 +262,19 @@
 				if(!ForumUtils.isEmpty(editBy)) {
 					UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
 					String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
-			        String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
+			    String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 				  %>
 				<div class="footPost clearfix">
 					<div class="txtLastEdit">
-						  <%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="textTitleProfile">$editByScreeName</span>
-						  <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
-						  <%
+						<%
+							editByScreeName = "<span class=\"textTitleProfile\">" + editByScreeName + "</span>";
+						  String editByText = _ctx.appRes("UITopicDetail.label.LastEditedBy");
+						  print("<div>" + editByText.replace("{0}", editByScreeName).replace("{1}", editDate) + "</div>");
 							String reason = post.getEditReason() ;
 							if(!ForumUtils.isEmpty(reason)) { 
-							  reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
-						  %>
-						  <br/>
-						  $reason
-						  <% } %>
+							  print("<div>" + _ctx.appRes("UIPostForm.label.editReason") + ": " +reason + "</div>") ;
+						  } 
+						%>
 					</div>
 				</div>
 				<% } %>
