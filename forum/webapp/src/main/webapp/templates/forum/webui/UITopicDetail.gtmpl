@@ -389,7 +389,7 @@
 					}
 					}
 					UserProfile userInfo = uicomponent.getUserInfo(owner) ;
-					screenName = userInfo.getScreenName() ;
+					screenName = userInfo.getScreenName();
 					String viewScreenName = uicomponent.getShortScreenName(screenName);
 					String namePost = post.getName() ;
 					String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);

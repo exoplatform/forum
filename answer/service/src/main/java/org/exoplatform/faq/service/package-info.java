@@ -1,9 +1,8 @@
 /**
- * Provides the classes necessary to manage FAQ; including create, get, update, delete, move...
- * questions and answers.
+ * Provides the classes necessary to manage FAQ, including creating, getting, updating, deleting or moving questions and answers.
  * <p>
- * The FAQ service involves services for manipulating FAQ and other things relate to FAQ such as:
- * Categories, Questions and Answers. Additional event life-cycle, comment and watching are also handled. 
+ * The FAQ service involves services for manipulating FAQ and other things related to FAQ, such as:
+ * Categories, Questions and Answers. Also, event lifecycles, comments and watches are handled. 
  * 
  */
 package org.exoplatform.faq.service;

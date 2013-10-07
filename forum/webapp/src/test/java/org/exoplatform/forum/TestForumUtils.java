@@ -40,12 +40,17 @@ public class TestForumUtils extends TestCase {
     // basic case
     String actual = ForumUtils.buildLink("http://hostname/portal/classic/", "portal", "forum", ForumUtils.TOPIC, "1234", false);
     assertEquals("http://hostname/portal/classic/forum/topic/1234", actual);
+
+    actual = ForumUtils.buildLink("/portal/classic/", "portal", "forum", ForumUtils.TOPIC, "1234", false);
+    assertEquals("/portal/classic/forum/topic/1234", actual);
     
     // case where url is private
     actual = ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.TOPIC, "1234", true);
     assertEquals("http://hostname/portal/login?&initialURI=/portal/classic/forum/topic/1234", actual);
     actual = ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", null, null, true) ;
     assertEquals("http://hostname/portal/login?&initialURI=/portal/classic/forum/", actual);
+    actual = ForumUtils.buildLink("/portal/classic/","portal", "forum", null, null, true) ;
+    assertEquals("/portal/login?&initialURI=/portal/classic/forum/", actual);
 
     // case where url does not current nav
     assertEquals("http://hostname/portal/classic/forum/topic/1234", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.TOPIC, "1234", false));

@@ -2,7 +2,7 @@
 <% uiform.begin() %>
 	<div class="VoteFormContainer">
 		<div class="RatingInfoContainer">
-			<div class="OptionsContainer ClearFix">
+			<div class="OptionsContainer clearfix">
 				<div onmouseout="eXo.answer.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQStarVote')">
 				<%	
 				String action = "Vote";

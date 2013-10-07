@@ -8,7 +8,7 @@
 	<div class="uiTabPane">
 		<div class="workingArea">			
 		 	<div class="actionButtonGroup center">			 		
-				<div class="btn-group ">
+				<div class="btn-group btn-without-icon">
 			<%
 				String selTabId = uicomponent.getSelectedTab() ;
 				if(uicomponent.isResetMail){
@@ -43,7 +43,7 @@
 							<div id="${formInput.getId()}">
 							<!-- Child-actionButtonGroup -->
 								<div class="actionButtonGroup center">			 		
-									<div class="btn-group ">
+									<div class="btn-group btn-without-icon">
 								<%
 									count = 0;
 									for(childInputSet in formInput.getChildren()) {
