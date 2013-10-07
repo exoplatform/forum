@@ -441,23 +441,7 @@
 							<a href="javascript:void(0)" class="textTitleProfile">
 								<i class="$userSmile"></i>$viewScreenName
 							</a>
-							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-								<%
-									String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
-									for(viewAction in menuViewInfos) {
-										if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-										String linkView = uicomponent.event(viewAction, owner) ;
-										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
-								%>
-									<li onclick="$linkView">
-										<a href="javaScript:void(0)">$itemLabelView</a>
-									</li>
-								<%
-									}
-								%>
-							</ul>
-						
+							<%=uicomponent.getMenuUser(userInfo) %>
 						</div>
 						<div class="rank"><%=userInfo.getUserTitle();%></div>
 						<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
@@ -467,22 +451,7 @@
 							<a href="javascript:void(0)">
 								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 							</a>
-							
-							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-								<%
-									for(viewAction in menuViewInfos) {
-									if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-									String linkView = uicomponent.event(viewAction, owner) ;
-									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
-								%>
-									<li onclick="$linkView">
-										<a href="javaScript:void(0)">$itemLabelView</a>
-									</li>
-								<%
-									}
-								%>
-							</ul>
+							<%=uicomponent.getMenuUser(userInfo) %>
 						</div>
 						<% } %>
 						
@@ -685,35 +654,13 @@
 										String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 								%>
 								<div class="txtLastEdit">
-										<%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> 
-										<div class="dropdown uiUserInfo">
-											<a href="javascript:void(0);" class="txtEditBy">$editByScreeName</a> 
-											
-											<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
-												<%
-												for(viewAction in menuViewInfos) {
-													if((userProfile.getUserRole() >= 3 || userEditByInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-													String linkView = uicomponent.event(viewAction, editBy) ;
-													String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-													if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + editByScreeName ;
-												%>
-													<li onclick="$linkView">
-														<a href="javaScript:void(0)">$itemLabelView</a>
-													</li>
-												<%
-												}
-												%>
-											</ul>
-										</div>
-										<%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
-										<%
+										<div><%=uicomponent.getLastEditedBy(editBy, editDate) %></div>
+									<%
 										String reason = post.getEditReason() ;
 										if(!ForumUtils.isEmpty(reason)) { 
-											reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
-										%>
-										<br/>
-										$reason
-										<% } %>
+										  print("<div>" + _ctx.appRes("UIPostForm.label.editReason") + ": " +reason + "</div>") ;
+										}
+									%>
 								</div>
 							<% } %>
 								<div class="btnDetailTopic">

@@ -16,9 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -50,7 +51,7 @@ public class UIPostRules extends UIContainer {
       try {
         this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
       } catch (Exception e) {
-        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        ForumService forumService = CommonsUtils.getService(ForumService.class);
         userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), ForumUtils.EMPTY_STR);
       }
     }
@@ -73,4 +74,40 @@ public class UIPostRules extends UIContainer {
   public void setCanCreateNewThread(boolean canCreatThread) {
     this.canCreateNewThread = canCreatThread;
   }
+  
+  protected String ruleBuilder() throws Exception {
+    boolean canCreatThread = true, canPost = true;
+    if (getUserProfile().getIsBanned() || getUserProfile().getUserRole() == UserProfile.GUEST) {
+      canCreatThread = false;
+      canPost = false;
+    } else {
+      if (isCanCreateNewThread() == false) {
+        canCreatThread = false;
+      }
+      if (isCanAddPost() == false) {
+        canPost = false;
+      }
+    }
+    StringBuilder builder = new StringBuilder("<ul>");
+    if (canCreatThread) {
+      builder.append("<li>").append(getLabel("YouCanCreateTopics")).append("</li>");
+    } else {
+      builder.append("<li>").append(getLabel("YouCanNotCreateTopics")).append("</li>");
+    }
+    String[] labels = new String[] { "PostReplies", "PostAttachments", "EditYourPosts" };
+    for (int i = 0; i < labels.length; i++) {
+      if (canPost) {
+        builder.append("<li>").append(getLabel("YouCan" + labels[i])).append("</li>");
+      } else {
+        builder.append("<li>").append(getLabel("YouCanNot" + labels[i])).append("</li>");
+      }
+    }
+    builder.append("</ul>");
+    return builder.toString();
+  }
+
+  private String getLabel(String label) {
+    return WebUIUtils.getLabel(getId(), label).replace("{0}", "<strong>").replace("{1}", "</strong>");
+  }
+  
 }
