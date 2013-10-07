@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div><span></span></div>
-		<div class="ClearFix">
+		<div class="clearfix">
 			<% if(uicomponent.totalPage > 1){
 					uicomponent.renderChild(UIForumPageIterator.class) ; 
 			%>

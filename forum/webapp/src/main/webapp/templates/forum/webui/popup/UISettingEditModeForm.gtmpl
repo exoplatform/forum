@@ -7,7 +7,7 @@
 	<% uiform.begin() %>
 	
 		<div class="center">
-			<div class="btn-group">
+			<div class="btn-group btn-without-icon">
 				<%
 					String classCss = "SelectedTab" ; 
 					int i = 0;

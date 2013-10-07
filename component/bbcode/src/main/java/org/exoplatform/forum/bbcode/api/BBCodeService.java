@@ -21,7 +21,7 @@ import java.util.List;
 import org.exoplatform.forum.bbcode.spi.BBCodePlugin;
 
 /**
- * Main Facade for all BBCode related operations
+ * Main Facade for all BBCode related operations.
  * @version $Revision$
  */
 public interface BBCodeService {
@@ -29,7 +29,7 @@ public interface BBCodeService {
   /**
    * Registers a new BBCode plugin.
    * 
-   * @param plugin
+   * @param plugin The plugin to be registered.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -38,7 +38,7 @@ public interface BBCodeService {
   /**
    * Saves a list of BBCodes.
    * 
-   * @param bbcodes List of BBCodes to save
+   * @param bbcodes BBCodes to be saved.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -47,32 +47,33 @@ public interface BBCodeService {
   /**
    * Retrieves all BBCodes.
    * 
-   * @return List of all registered BBCodes
+   * @return BBCodes.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<BBCode> getAll() throws Exception;
 
   /**
-   * Retrieves BBCode IDs that are active.
+   * Retrieves BBCode Ids that are active.
    * 
-   * @return List of BBCOde IDs
+   * @return BBCode Ids.
    * @throws Exception
    * @LevelAPI Platform
    */
   public List<String> getActive() throws Exception;
   
   /**
-   * @return
+   * Gets all active BBCodes.
+   * @return BBCodes.
    * @throws Exception
    */
   List<BBCode> getBBCodeActive() throws Exception;
 
   /**
-   * Loads a specific BBCode.
+   * Loads a BBCode by its given Id.
    * 
-   * @param bbcodeId ID of the BBCode
-   * @return BBCode object of provided id.
+   * @param bbcodeId Id of the loaded BBCode.
+   * @return The BBCode.
    * @throws Exception
    * @LevelAPI Platform
    */
@@ -81,7 +82,7 @@ public interface BBCodeService {
   /**
    * Deletes an existing BBCode.
    * 
-   * @param bbcodeId the id of BBCode to be deleted
+   * @param bbcodeId Id of the deleted BBCode.
    * @throws Exception
    * @LevelAPI Platform
    */

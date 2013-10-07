@@ -634,8 +634,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return temp;
   }
 
-  @SuppressWarnings("unchecked")
-  public List<Post> getPostPageList() throws Exception {
+  protected List<Post> getPostPageList() throws Exception {
     Post[] posts = null;
     
     int pageSize = (int)this.userProfile.getMaxPostInPage();
@@ -750,14 +749,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       postRules.setCanAddPost(!isNull);
     }
   }
-
+  
   public UserProfile getUserInfo(String userName) throws Exception {
     if (!mapUserProfile.containsKey(userName)) {
+      UserProfile profile;
       try {
-        mapUserProfile.put(userName, getForumService().getQuickProfile(userName));
+        profile = getForumService().getQuickProfile(userName);
       } catch (Exception e) {
-        log.warn("Failed load user info: " + e.getMessage(), e);
+        profile = ForumUtils.getDeletedUserProfile(getForumService(), userName);
       }
+      mapUserProfile.put(userName, profile);
     }
     return mapUserProfile.get(userName);
   }
@@ -1452,12 +1453,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class ViewPublicUserInfoActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String userId) throws Exception {
       UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, 670, 400);
+      UserProfile selectProfile = topicDetail.getUserInfo(userId);
       try {
-        UserProfile selectProfile = topicDetail.getForumService().getUserInformations(topicDetail.mapUserProfile.get(userId));
-        viewUserProfile.setUserProfileViewer(selectProfile);
-      } catch (Exception e) {
-        topicDetail.log.warn("Failed to get User info: " + e.getMessage(), e);
-      }
+        selectProfile = topicDetail.getForumService().getUserInformations(selectProfile);
+      } catch (Exception e) {}
+      viewUserProfile.setUserProfileViewer(selectProfile);
     }
   }
 
