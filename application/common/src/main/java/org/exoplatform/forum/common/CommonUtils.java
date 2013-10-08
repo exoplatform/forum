@@ -349,18 +349,9 @@ public class CommonUtils {
     StringBuffer searchConditionBuffer = new StringBuffer();
     //process the special characters
     searchCondition = removeSpecialCharacterForSearch(searchCondition);
+    searchCondition = searchCondition.replace(ASTERISK_STR, PERCENT_STR);
+    searchConditionBuffer.append(PERCENT_STR).append(searchCondition).append(PERCENT_STR);
     
-    if (!searchCondition.contains(ASTERISK_STR) && !searchCondition.contains(PERCENT_STR)) {
-      if (searchCondition.startsWith(ASTERISK_STR) == false) {
-        searchConditionBuffer.append(ASTERISK_STR).append(searchCondition);
-      }
-      if (searchCondition.endsWith(ASTERISK_STR) == false) {
-        searchConditionBuffer.append(ASTERISK_STR);
-      }
-    } else {
-      searchCondition = searchCondition.replace(ASTERISK_STR, PERCENT_STR);
-      searchConditionBuffer.append(PERCENT_STR).append(searchCondition).append(PERCENT_STR);
-    }
     return searchConditionBuffer.toString();
   }
   

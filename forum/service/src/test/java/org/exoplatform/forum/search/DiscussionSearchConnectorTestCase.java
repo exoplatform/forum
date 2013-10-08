@@ -262,7 +262,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals(2, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 2, "relevancy", "ASC").size());
     
     //load more
-    assertEquals(4, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 2, 5, "relevancy", "ASC").size());
+    assertEquals(5, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 2, 5, "relevancy", "ASC").size());
     
     //test Unified Search with special characters
     assertEquals(5, discussionSearchConnector.search(context, " top~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
