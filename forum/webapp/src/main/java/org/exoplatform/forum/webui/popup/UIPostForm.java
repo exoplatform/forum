@@ -53,7 +53,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
@@ -119,14 +119,15 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
     editReason.setRendered(false);
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    formWYSIWYGInput.setToolBarName("Basic");
-    formWYSIWYGInput.setWidth("92%");
-    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
+    
+    
+    UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
+    richtext.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.setIsPasteAsPlainText(true);
+    
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);
-    threadContent.addChild(formWYSIWYGInput);
+    threadContent.addChild(richtext);
     threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null));
     threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList());
     threadContent.setActionIdAddItem(FIELD_ATTACHMENTS);
@@ -221,7 +222,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
         
         String value = "[QUOTE=" + getForumService().getScreenName(post.getOwner()) + "]" + message + "[/QUOTE]";
-        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
+        threadContent.getChild(UIFormRichtextInput.class).setValue(value);
       } else if (isPP) {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       } else {// edit
@@ -232,7 +233,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           this.attachments_.addAll(post.getAttachments());
           this.refreshUploadFileList();
         }
-        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
+        threadContent.getChild(UIFormRichtextInput.class).setValue(message);
       }
     } else {
       if (!isQuote) {// reply
@@ -263,7 +264,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       int t = 0, k = 1;
       String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
       String userName = UserHelper.getCurrentUser();
-      String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+      String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
       String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
@@ -330,7 +331,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               return;
             }
           }
-          String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+          String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
           String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();

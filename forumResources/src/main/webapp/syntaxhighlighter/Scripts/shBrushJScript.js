@@ -1,41 +1,36 @@
-/**
- * Code Syntax Highlighter.
- * Version 1.5.2
- * Copyright (C) 2004-2008 Alex Gorbatchev
- * http://www.dreamprojections.com/syntaxhighlighter/
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, version 3 of the License.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-window.eXo.dp.sh.Brushes.JScript = function()
+;(function()
 {
-	var keywords =	'abstract boolean break byte case catch char class const continue debugger ' +
-					'default delete do double else enum export extends false final finally float ' +
-					'for function goto if implements import in instanceof int interface long native ' +
-					'new null package private protected public return short static super switch ' +
-					'synchronized this throw throws transient true try typeof var void volatile while with';
+	// CommonJS
+	SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined'? require('shCore').SyntaxHighlighter : null);
 
-	this.regexList = [
-		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },			// one line comments
-		{ regex: window.eXo.dp.sh.RegexLib.MultiLineCComments,					css: 'comment' },			// multiline comments
-		{ regex: window.eXo.dp.sh.RegexLib.DoubleQuotedString,					css: 'string' },			// double quoted strings
-		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// single quoted strings
-		{ regex: new RegExp('^\\s*#.*', 'gm'),						css: 'preprocessor' },		// preprocessor tags like #region and #endregion
-		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }			// keywords
-		];
+	function Brush()
+	{
+		var keywords =	'break case catch class continue ' +
+				'default delete do else enum export extends false  ' +
+				'for function if implements import in instanceof ' +
+				'interface let new null package private protected ' +
+				'static return super switch ' +
+				'this throw true try typeof var while with yield';
 
-	this.CssClass = 'dp-c';
-};
+		var r = SyntaxHighlighter.regexLib;
+		
+		this.regexList = [
+			{ regex: r.multiLineDoubleQuotedString,					css: 'string' },			// double quoted strings
+			{ regex: r.multiLineSingleQuotedString,					css: 'string' },			// single quoted strings
+			{ regex: r.singleLineCComments,							css: 'comments' },			// one line comments
+			{ regex: r.multiLineCComments,							css: 'comments' },			// multiline comments
+			{ regex: /\s*#.*/gm,									css: 'preprocessor' },		// preprocessor tags like #region and #endregion
+			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),	css: 'keyword' }			// keywords
+			];
+	
+		this.forHtmlScript(r.scriptScriptTags);
+	};
 
-window.eXo.dp.sh.Brushes.JScript.prototype	= new window.eXo.dp.sh.Highlighter();
-window.eXo.dp.sh.Brushes.JScript.Aliases	= ['js', 'jscript', 'javascript'];
+	Brush.prototype	= new SyntaxHighlighter.Highlighter();
+	Brush.aliases	= ['js', 'jscript', 'javascript', 'json'];
+
+	SyntaxHighlighter.brushes.JScript = Brush;
+
+	// CommonJS
+	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
+})();

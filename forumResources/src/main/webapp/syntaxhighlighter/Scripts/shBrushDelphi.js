@@ -1,53 +1,39 @@
-/**
- * Code Syntax Highlighter.
- * Version 1.5.2
- * Copyright (C) 2004-2008 Alex Gorbatchev
- * http://www.dreamprojections.com/syntaxhighlighter/
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, version 3 of the License.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/* Delphi brush is contributed by Eddie Shipman */
-window.eXo.dp.sh.Brushes.Delphi = function()
+;(function()
 {
-	var keywords =	'abs addr and ansichar ansistring array as asm begin boolean byte cardinal ' +
-					'case char class comp const constructor currency destructor div do double ' +
-					'downto else end except exports extended false file finalization finally ' +
-					'for function goto if implementation in inherited int64 initialization ' +
-					'integer interface is label library longint longword mod nil not object ' +
-					'of on or packed pansichar pansistring pchar pcurrency pdatetime pextended ' + 
-					'pint64 pointer private procedure program property pshortstring pstring ' + 
-					'pvariant pwidechar pwidestring protected public published raise real real48 ' +
-					'record repeat set shl shortint shortstring shr single smallint string then ' +
-					'threadvar to true try type unit until uses val var varirnt while widechar ' +
-					'widestring with word write writeln xor';
+	// CommonJS
+	SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined'? require('shCore').SyntaxHighlighter : null);
 
-	this.regexList = [
-		{ regex: new RegExp('\\(\\*[\\s\\S]*?\\*\\)', 'gm'),		css: 'comment' },  			// multiline comments (* *)
-		{ regex: new RegExp('{(?!\\$)[\\s\\S]*?}', 'gm'),			css: 'comment' },  			// multiline comments { }
-		{ regex: window.eXo.dp.sh.RegexLib.SingleLineCComments,				css: 'comment' },  			// one line
-		{ regex: window.eXo.dp.sh.RegexLib.SingleQuotedString,					css: 'string' },			// strings
-		{ regex: new RegExp('\\{\\$[a-zA-Z]+ .+\\}', 'g'),			css: 'directive' },			// Compiler Directives and Region tags
-		{ regex: new RegExp('\\b[\\d\\.]+\\b', 'g'),				css: 'number' },			// numbers 12345
-		{ regex: new RegExp('\\$[a-zA-Z0-9]+\\b', 'g'),				css: 'number' },			// numbers $F5D3
-		{ regex: new RegExp(this.GetKeywords(keywords), 'gm'),		css: 'keyword' }			// keyword
-		];
+	function Brush()
+	{
+		var keywords =	'abs addr and ansichar ansistring array as asm begin boolean byte cardinal ' +
+						'case char class comp const constructor currency destructor div do double ' +
+						'downto else end except exports extended false file finalization finally ' +
+						'for function goto if implementation in inherited int64 initialization ' +
+						'integer interface is label library longint longword mod nil not object ' +
+						'of on or packed pansichar pansistring pchar pcurrency pdatetime pextended ' +
+						'pint64 pointer private procedure program property pshortstring pstring ' +
+						'pvariant pwidechar pwidestring protected public published raise real real48 ' +
+						'record repeat set shl shortint shortstring shr single smallint string then ' +
+						'threadvar to true try type unit until uses val var varirnt while widechar ' +
+						'widestring with word write writeln xor';
 
-	this.CssClass = 'dp-delphi';
-	this.Style =	'.dp-delphi .number { color: blue; }' +
-					'.dp-delphi .directive { color: #008284; }' +
-					'.dp-delphi .vars { color: #000; }';
-};
+		this.regexList = [
+			{ regex: /\(\*[\s\S]*?\*\)/gm,								css: 'comments' },  	// multiline comments (* *)
+			{ regex: /{(?!\$)[\s\S]*?}/gm,								css: 'comments' },  	// multiline comments { }
+			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	css: 'comments' },  	// one line
+			{ regex: SyntaxHighlighter.regexLib.singleQuotedString,		css: 'string' },		// strings
+			{ regex: /\{\$[a-zA-Z]+ .+\}/g,								css: 'color1' },		// compiler Directives and Region tags
+			{ regex: /\b[\d\.]+\b/g,									css: 'value' },			// numbers 12345
+			{ regex: /\$[a-zA-Z0-9]+\b/g,								css: 'value' },			// numbers $F5D3
+			{ regex: new RegExp(this.getKeywords(keywords), 'gmi'),		css: 'keyword' }		// keyword
+			];
+	};
 
-window.eXo.dp.sh.Brushes.Delphi.prototype	= new window.eXo.dp.sh.Highlighter();
-window.eXo.dp.sh.Brushes.Delphi.Aliases	= ['delphi', 'pascal'];
+	Brush.prototype	= new SyntaxHighlighter.Highlighter();
+	Brush.aliases	= ['delphi', 'pascal', 'pas'];
+
+	SyntaxHighlighter.brushes.Delphi = Brush;
+
+	// CommonJS
+	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
+})();

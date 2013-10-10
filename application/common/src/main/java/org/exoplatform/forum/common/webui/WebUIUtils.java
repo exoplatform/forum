@@ -30,7 +30,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.RequireJS;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
-import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 
 public class WebUIUtils {
   private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
@@ -44,13 +43,7 @@ public class WebUIUtils {
       LOG.error("Can not get remote IP", e);
     }
     return remoteAddr;
-  }
-  
-  public static FCKEditorConfig getFCKConfig(){
-    FCKEditorConfig fckconfig = new FCKEditorConfig();
-    fckconfig.put("CustomConfigurationsPath", "/forumResources/fckconfig/fckconfig.js");
-    return fckconfig;
-  }
+  } 
   
   public String getLabel(String key) throws Exception {
     return getLabel(null, key);

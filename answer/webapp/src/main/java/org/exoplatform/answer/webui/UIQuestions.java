@@ -794,7 +794,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = questionId;
       uiQuestions.updateLanguageMap();
-      context.addUIComponentToUpdateByAjax(uiQuestions);
+      context.addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersPortlet.class));
     }
   }
 
