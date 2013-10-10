@@ -14,7 +14,6 @@
             "eXo.forum.UIForumPortlet.ReloadImage();"
             ];
   ForumUtils.addScripts(null, null, scripts);
-  ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 
 	uicomponent.initPage() ;
 	Topic topic = uicomponent.getTopic();
@@ -23,7 +22,10 @@
 	boolean isModeratePost = topic.getIsModeratePost() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
-
+<script type="text/javascript">
+	require(['/forumResources/syntaxhighlighter/Scripts/shCore.js']);
+	require(['/forumResources/syntaxhighlighter/Scripts/shAutoloader.js']);
+</script>
 <div class="uiTopicDetail resizable">
 <% uiform.begin() %>
 

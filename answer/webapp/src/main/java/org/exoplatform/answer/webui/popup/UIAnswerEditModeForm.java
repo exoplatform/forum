@@ -28,7 +28,6 @@ import org.exoplatform.answer.webui.ValidatorDataInput;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -43,7 +42,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 
 @ComponentConfig(
    lifecycle = UIFormLifecycle.class, 
@@ -133,9 +132,9 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
     displayMainTab.addUIFormInput(new UICheckBoxInput(ENABLE_VIEW_AVATAR, ENABLE_VIEW_AVATAR, false));
     displayMainTab.addUIFormInput(new UICheckBoxInput(POST_QUESTION_IN_ROOT_CATEGORY, POST_QUESTION_IN_ROOT_CATEGORY, true));
 
-    emailAddNewQuestionSubTab.addUIFormInput(addNewUIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION));
-    emailEditQuestionSubTab.addUIFormInput(addNewUIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION));
-    emailMoveQuestionSubTab.addUIFormInput(addNewUIFormWYSIWYGInput(EMAIL_MOVE_QUESTION));
+    emailAddNewQuestionSubTab.addUIFormInput(addNewUIFormRichtextInput(EMAIL_DEFAULT_ADD_QUESTION));
+    emailEditQuestionSubTab.addUIFormInput(addNewUIFormRichtextInput(EMAIL_DEFAULT_EDIT_QUESTION));
+    emailMoveQuestionSubTab.addUIFormInput(addNewUIFormRichtextInput(EMAIL_MOVE_QUESTION));
 
     emailMainTab.addChild(emailAddNewQuestionSubTab);
     emailMainTab.addChild(emailEditQuestionSubTab);
@@ -165,11 +164,10 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
     setAddColonInLabel(true);
   }
 
-  private UIFormWYSIWYGInput addNewUIFormWYSIWYGInput(String id) {
-    UIFormWYSIWYGInput wysiwygInput = new UIFormWYSIWYGInput(id, id, "");
-    wysiwygInput.setFCKConfig(WebUIUtils.getFCKConfig());
-    wysiwygInput.setToolBarName("Basic");
-    wysiwygInput.setHeight("220px");
+  private UIFormRichtextInput addNewUIFormRichtextInput(String id) {
+	  UIFormRichtextInput wysiwygInput = new UIFormRichtextInput(id, id, "");
+    wysiwygInput.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    wysiwygInput.setIsPasteAsPlainText(true);
     return wysiwygInput;
   }
 
@@ -239,13 +237,13 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
   private void setValueEmailContent(String tabId, String editorId, String value) {
     UIFormInputWithActions emailTab = getChildById(SET_DEFAULT_EMAIL_TAB);
     UIFormInputWithActions inputWithActions = emailTab.getChildById(tabId);
-    ((UIFormWYSIWYGInput) inputWithActions.getChildById(editorId)).setValue(value);
+    ((UIFormRichtextInput) inputWithActions.getChildById(editorId)).setValue(value);
   }
 
   private String getValueEmailContent(String tabId, String editorId) {
     UIFormInputWithActions emailTab = getChildById(SET_DEFAULT_EMAIL_TAB);
     UIFormInputWithActions inputWithActions = emailTab.getChildById(tabId);
-    return ((UIFormWYSIWYGInput) inputWithActions.getChildById(editorId)).getValue();
+    return ((UIFormRichtextInput) inputWithActions.getChildById(editorId)).getValue();
   }
 
   public void setPathCatygory(List<String> idForumName) {

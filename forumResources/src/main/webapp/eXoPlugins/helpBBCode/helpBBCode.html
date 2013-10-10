@@ -1,7 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!--
- insertPortalLink.html -------../filemanager/portal/default/browser.html.--------frmresourceslish.html
--->
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><title>Help BB Code</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -26,16 +24,12 @@
 <iframe id="language" src=""></iframe>
 </body>
 
-<script type="text/javascript">
-	var oEditor = window.parent.InnerDialogLoaded();
-	var FCK = oEditor.FCK;
-	var FCKConfig = oEditor.FCKConfig;
-	var eXoPlugin = FCK.eXoPlugin;
+<script type="text/javascript">	
   window.onload = function() {
+        var CKEDITOR = window.opener.CKEDITOR || {};
 	var iFrame = document.getElementById("language");
-	if (eXoPlugin.userLanguage) src = eXoPlugin.userLanguage;
-	else src = "en";
-	//alert(eXoPlugin.userLanguage);
+        var src = "en";
+	if (CKEDITOR.config.language) src = eXoPlugin.userLanguage;
 	iFrame.src = "lang/" + src + ".html";
  }
 </script>

@@ -42,7 +42,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
+
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
@@ -75,10 +76,10 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UICommentForm() throws Exception {
     currentUser_ = FAQUtils.getCurrentUser();
-    UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
-    commentContent.setFCKConfig(WebUIUtils.getFCKConfig());
-    commentContent.setHeight("250px");
-    commentContent.setToolBarName("Basic");
+    UIFormRichtextInput commentContent = new UIFormRichtextInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
+    commentContent.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
+    commentContent.setHeight("'250px'");
+    commentContent.setIsPasteAsPlainText(true);
     this.addChild(commentContent);
     User user = FAQUtils.getCurrentUserObject();
     if(user != null) {
@@ -136,7 +137,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     FAQUtils.getEmailSetting(faqSetting_, false, false);
     if (commentId.indexOf("new") < 0) {
       comment = getFAQService().getCommentById(question.getPath(), commentId, language);
-      ((UIFormWYSIWYGInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
+      ((UIFormRichtextInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
     }
   }
 
@@ -150,7 +151,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   static public class SaveActionListener extends BaseEventListener<UICommentForm> {
     public void onEvent(Event<UICommentForm> event, UICommentForm commentForm, final String objectId) throws Exception {
-      String comment = ((UIFormWYSIWYGInput) commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
+      String comment = ((UIFormRichtextInput) commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
       if (CommonUtils.isEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)) {
         warning("UICommentForm.msg.comment-is-null");
         return;

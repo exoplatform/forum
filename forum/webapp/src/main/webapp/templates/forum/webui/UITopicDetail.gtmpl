@@ -85,9 +85,13 @@
 	];
 	
 	ForumUtils.addScripts("SearchTagName", "searchTagName", scripts);
-	ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 	}
 %>
+<script src="/forumResources/syntaxhighlighter/Scripts/shCore.js" type="text/javascript"></script>
+<script src="/forumResources/syntaxhighlighter/Scripts/shAutoloader.js" type="text/javascript"></script>
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shCore.css"></link>
+<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shThemeDefault.css"></link>
+
 <div class="uiTopicDetail">
 	<% uiform.begin() %>
 	<% if(!isNull) {%>
@@ -839,3 +843,4 @@
 		}
 	%>
 </div>
+<script type="text/javascript" src="/forumResources/syntaxhighlighter/load_syntaxhighlighter.js"></script>
