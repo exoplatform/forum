@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.exoplatform.commons.api.search.SearchServiceConnector;
 import org.exoplatform.commons.api.search.data.SearchContext;
 import org.exoplatform.commons.api.search.data.SearchResult;
@@ -115,7 +116,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
         UnifiedSearchResult result = new UnifiedSearchResult(
             url,
             searchResult.getName(),
-            searchResult.getExcerpt(),
+            StringEscapeUtils.unescapeHtml(searchResult.getExcerpt()),
             sb.toString(),
             FIX_ICON,
             searchResult.getCreatedDate().getTime(),
