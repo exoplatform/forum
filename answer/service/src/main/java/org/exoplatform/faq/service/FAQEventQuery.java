@@ -678,7 +678,7 @@ public class FAQEventQuery implements FAQNodeTypes {
       }
       //
       for (String field : jcrField) {
-        sb.append(" or " + jcrQuery + "(" + field + ",'" + asteriskConditionSearch + "')");
+        sb.append(" or " + jcrQuery + "(fn:upper-case(" + field + "),'" + asteriskConditionSearch + "')");
       }     
     }
     return sb;

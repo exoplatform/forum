@@ -123,11 +123,11 @@ public class FAQEventQueryTestCase extends TestCase {
     eventQuery.setLanguage("English");
     eventQuery.setResponse("response");
     eventQuery.setAsteriskConditionSearch("*condition*");
-    predicate += ") and (( exo:responseLanguage='English' and (jcr:contains(@exo:responses,'response') or jcr:contains(@exo:responses,'*condition*')))";
+    predicate += ") and (( exo:responseLanguage='English' and (jcr:contains(@exo:responses,'response') or jcr:contains(fn:upper-case(@exo:responses),'*condition*')))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setComment("comment");
-    predicate += " or ( exo:commentLanguage='English' and (jcr:contains(@exo:comments,'comment') or jcr:contains(@exo:comments,'*condition*')))";
+    predicate += " or ( exo:commentLanguage='English' and (jcr:contains(@exo:comments,'comment') or jcr:contains(fn:upper-case(@exo:comments),'*condition*')))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     /*

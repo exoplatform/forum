@@ -1193,7 +1193,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     int mostOnline = 0;
     String mostUsersOnline = stats.getMostUsersOnline();
     if (mostUsersOnline != null && mostUsersOnline.length() > 0) {
-      String[] array = mostUsersOnline.split(","); // OMG responsible of this should loose a finger!
+      String[] array = mostUsersOnline.split(",");
       try {
         mostOnline = Integer.parseInt(array[0].trim());
       } catch (NumberFormatException e) {
@@ -1201,11 +1201,11 @@ public class ForumServiceImpl implements ForumService, Startable {
       }
     }
     if (maxOnline > mostOnline) {
-      stats.setMostUsersOnline(maxOnline + ", at " + timestamp.getTimeInMillis());
+      stats.setMostUsersOnline(maxOnline + "," + timestamp.getTimeInMillis());
     } else if (mostOnline == 0) {
       // this case is expected to appear when the first user logins to system and the statistic is not activated before.
       // the maximum number of online users will jump from N/A to 1
-      stats.setMostUsersOnline("1, at " + timestamp.getTimeInMillis());
+      stats.setMostUsersOnline("1," + timestamp.getTimeInMillis());
     }
     storage.saveForumStatistic(stats);
 

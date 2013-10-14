@@ -5737,7 +5737,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String pathQuery = categoryHome.getPath();
 
       //process query for asterisk 
-      String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
+      String asteriskQuery = CommonUtils.processSearchCondition(textQuery).toUpperCase();
       textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
       boolean isAdmin = isAdminRole(userId);
@@ -5776,15 +5776,23 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if(textQuery.contains(CommonUtils.PERCENT_STR)){
             if(type.equals(Utils.POST)){
               queryString.append("((jcr:like(@exo:message, '").append(textQuery).append("'))");
-              queryString.append(" or (jcr:like(@exo:message, '").append(asteriskQuery).append("')))");
+              queryString.append(" or (jcr:like(fn:upper-case(@exo:message), '").append(asteriskQuery).append("')))");
             }else if (type.equals(Utils.TOPIC)){
               queryString.append("( jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
-              queryString.append(" or jcr:like(@exo:name, '").append(asteriskQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");;
+              queryString.append(" or jcr:like(fn:upper-case(@exo:name), '").append(asteriskQuery).append("')").append(" or jcr:like(fn:upper-case(@exo:description), '").append(textQuery).append("')");;
               queryString.append(")");
             }
           }else {
             queryString.append("((jcr:contains(., '").append(textQuery).append("'))");
             queryString.append(" or (jcr:contains(., '").append(asteriskQuery).append("')))");
+            if(type.equals(Utils.POST)){
+              queryString.append(" or ((jcr:like(@exo:message, '").append(textQuery).append("'))");
+              queryString.append(" or (jcr:like(fn:upper-case(@exo:message), '").append(asteriskQuery).append("')))");
+            }else if (type.equals(Utils.TOPIC)){
+              queryString.append(" or (jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
+              queryString.append(" or jcr:like(fn:upper-case(@exo:name), '").append(asteriskQuery).append("')").append(" or jcr:like(fn:upper-case(@exo:description), '").append(textQuery).append("')");;
+              queryString.append(")");
+            }
           }
           isAnd = true;
         }

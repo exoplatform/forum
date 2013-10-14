@@ -182,16 +182,16 @@ public class TestCommonUtils extends TestCase {
     assertEquals("", CommonUtils.processSearchCondition(input));
 
     input = "abc";
-    assertEquals("*abc*", CommonUtils.processSearchCondition(input));
+    assertEquals("%abc%", CommonUtils.processSearchCondition(input));
 
     input = " AB a X bcS 012 9 ";
-    assertEquals("*AB a X bcS 012 9*", CommonUtils.processSearchCondition(input));
+    assertEquals("%AB a X bcS 012 9%", CommonUtils.processSearchCondition(input));
 
     input = " *AB %a X bcS% 012* *a9* ";
     assertEquals("%%AB %a X bcS% 012% %a9%%", CommonUtils.processSearchCondition(input));
 
     input = "  &#<>[]/:\"=.,$()\\+@!^-}{;`~  ";
-    assertEquals("**", CommonUtils.processSearchCondition(input));
+    assertEquals("%%", CommonUtils.processSearchCondition(input));
 
     input = "  a&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_bc  ";
     assertEquals("%a ? % % % _bc%", CommonUtils.processSearchCondition(input));
