@@ -5775,23 +5775,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
           if(textQuery.contains(CommonUtils.PERCENT_STR)){
             if(type.equals(Utils.POST)){
-              queryString.append("((jcr:like(@exo:message, '").append(textQuery).append("'))");
-              queryString.append(" or (jcr:like(fn:upper-case(@exo:message), '").append(asteriskQuery).append("')))");
+              queryString.append("(").append(Utils.buildUnifiedSearchQuery("exo:message", textQuery, asteriskQuery)).append(")");
             }else if (type.equals(Utils.TOPIC)){
-              queryString.append("( jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
-              queryString.append(" or jcr:like(fn:upper-case(@exo:name), '").append(asteriskQuery).append("')").append(" or jcr:like(fn:upper-case(@exo:description), '").append(textQuery).append("')");;
-              queryString.append(")");
+              queryString.append("(").append(Utils.buildUnifiedSearchQuery("exo:name", textQuery, asteriskQuery))
+                         .append(" or ").append(Utils.buildUnifiedSearchQuery("exo:description", textQuery, asteriskQuery)).append(")");
             }
           }else {
-            queryString.append("((jcr:contains(., '").append(textQuery).append("'))");
-            queryString.append(" or (jcr:contains(., '").append(asteriskQuery).append("')))");
+            queryString.append("(jcr:contains(., '").append(textQuery).append("')");
+            queryString.append(" or jcr:contains(., '").append(asteriskQuery).append("')");
             if(type.equals(Utils.POST)){
-              queryString.append(" or ((jcr:like(@exo:message, '").append(textQuery).append("'))");
-              queryString.append(" or (jcr:like(fn:upper-case(@exo:message), '").append(asteriskQuery).append("')))");
+              queryString.append(" or ").append(Utils.buildUnifiedSearchQuery("exo:message", textQuery, asteriskQuery)).append(")");
             }else if (type.equals(Utils.TOPIC)){
-              queryString.append(" or (jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
-              queryString.append(" or jcr:like(fn:upper-case(@exo:name), '").append(asteriskQuery).append("')").append(" or jcr:like(fn:upper-case(@exo:description), '").append(textQuery).append("')");;
-              queryString.append(")");
+              queryString.append(" or ").append(Utils.buildUnifiedSearchQuery("exo:name", textQuery, asteriskQuery))
+                         .append(" or ").append(Utils.buildUnifiedSearchQuery("exo:description", textQuery, asteriskQuery)).append(")");
             }
           }
           isAnd = true;
@@ -5850,7 +5846,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if ("DESC".equalsIgnoreCase(order)) {
           queryString.append(DESCENDING);
         }
-
         QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.XPATH);
         //query.setCaseInsensitiveOrder(true);
         QueryResult result = query.execute();
