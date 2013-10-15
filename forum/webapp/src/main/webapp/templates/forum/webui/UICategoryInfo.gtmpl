@@ -13,8 +13,7 @@
 	String members = String.valueOf(forumStatistic.getMembersCount());
 	String newMember = forumStatistic.getNewMembers();
 	String viewNewMember = uicomponent.getScreenName(newMember);
-	String at = _ctx.appRes("UICategoryInfo.label.at");
-	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline(), at);
+	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline());
 	String userView;
 	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
@@ -31,7 +30,7 @@
 		<tbody class="uiExpandContainer">
 			<tr>
 				<td>
-					<div class="textInfo"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> $mostUserOnline</div>
+					<div class="textInfo">$mostUserOnline</div>
 					<div class="textInfo clearfix" >
 						<div class="pull-left"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%>:</div> 
 					<% int t = 0 ;

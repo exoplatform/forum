@@ -28,13 +28,16 @@
           List navPath = cateInfo.getPathName();
           navPath = uicomponent.arrangeList(navPath);
           if(navPath.size() > 1) {
-            print "<div id='UIWikiBreadCrumb' class='uiWikiBreadCrumb'>";
-  			    print "<ul class='breadcrumb'>";
+            print "<div id=\"UIWikiBreadCrumb\" class=\"uiWikiBreadCrumb\">";
+  			    print "<ul class=\"breadcrumb\">";
 
   			    String link = ids[0], viewName;
             String url;
             for(int i = 0; i < navPath.size(); i++) {
               pathName = navPath[i];
+              if(pathName.indexOf("<img") >= 0){
+                pathName = Utils.CATEGORY_HOME;
+              }
               if(pathName.equals(Utils.CATEGORY_HOME)){ 
                 pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
                 link = Utils.CATEGORY_HOME;
@@ -43,13 +46,9 @@
               if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
                 viewName = org.exoplatform.answer.webui.FAQUtils.getSubString(pathName, 40);
               }
-              if(pathName.indexOf("<img") >= 0){
-                pathName = "";
-              }
               if(i < ids.length && i > 0) {
                 link = link + "/" + ids[i];
               }
-              
               if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
                 if(uicomponent.isInSpace() && link.equals(Utils.CATEGORY_HOME)) {
                     url = "javaScript:void(0)";
@@ -57,16 +56,13 @@
                     url = uicomponent.url("ChangePath", link);
                   }
               }
-              
-              if(link == Utils.CATEGORY_HOME) {
-                  viewName = "FAQ home";
-              }
+
               tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + viewName + "\"";
               if(i == navPath.size() -1) {
-                print "<li class='active' "+tooltip+">" + viewName + "</li>";
+                print "<li class=\"active\" "+tooltip+">" + viewName + "</li>";
               } else {
-                print "<li " + tooltip + "><a class='ActionLink' href='" + url + "' actions='" + uicomponent.event("ChangePath", link) + "' title='" + pathName + "'>" + viewName + "</a>";
-                print "<span class='uiIconMiniArrowRight'>&nbsp;</span></li>";
+                print "<li " + tooltip + "><a class=\"ActionLink\" href=\"" + url + "\" actions=\"" + uicomponent.event("ChangePath", link) + "\">" + viewName + "</a>";
+                print "<span class=\"uiIconMiniArrowRight\">&nbsp;</span></li>";
               }
             }
             

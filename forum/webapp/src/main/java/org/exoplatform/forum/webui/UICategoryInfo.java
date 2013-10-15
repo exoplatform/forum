@@ -19,10 +19,11 @@ package org.exoplatform.forum.webui;
 import java.util.Calendar;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.UserProfile;
@@ -44,7 +45,7 @@ public class UICategoryInfo extends UIContainer {
   private UserProfile  userProfile;
 
   public UICategoryInfo() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    forumService = CommonsUtils.getService(ForumService.class);
   }
 
   protected List<String> getUserOnline() throws Exception {
@@ -56,8 +57,7 @@ public class UICategoryInfo extends UIContainer {
   }
 
   protected UserProfile getUserProfile() throws Exception {
-    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-    userProfile = forumPortlet.getUserProfile();
+    userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
     return userProfile;
   }
 
@@ -65,23 +65,23 @@ public class UICategoryInfo extends UIContainer {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
-  protected String getMostUsersOnline(String s, String at) throws Exception {
-    if (ForumUtils.isEmpty(s))
-      return ForumUtils.EMPTY_STR;
+  protected String getMostUsersOnline(String s) throws Exception {
+    String label = WebUIUtils.getLabel(null, "UICategoryInfo.label.MostUsers");
+    if (ForumUtils.isEmpty(s)){
+      return label.replace("{0}", "0").replace("{1}", "0");
+    }
+    String[] strs = s.split(ForumUtils.COMMA);
     try {
-      String[] strs = s.split(ForumUtils.COMMA);
       long l = Long.parseLong(strs[1].replace("at", ForumUtils.EMPTY_STR).trim());
       Calendar calendar = CommonUtils.getGreenwichMeanTime();
       double timeZone = userProfile.getTimeZone();
-      if (userProfile.getUserId().equals(UserProfile.USER_GUEST))
+      if (userProfile.getUserId().equals(UserProfile.USER_GUEST)){
         timeZone = 0;
+      }
       long zone = (long) (timeZone * 3600000);
       calendar.setTimeInMillis(l - zone);
       StringBuilder builder = new StringBuilder();
 
-      if (ForumUtils.isEmpty(at))
-        at = "at";
-      builder.append(strs[0]).append(" ").append(at).append(" ");
       builder.append(TimeConvertUtils.getFormatDate("EEE, MMM dd, yyyy, hh:mm a", calendar.getTime()));
       if (userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
         if (timeZone >= 0)
@@ -89,11 +89,11 @@ public class UICategoryInfo extends UIContainer {
         else
           builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));
       }
-      s = builder.toString();
+      //
+      return label.replace("{0}", strs[0]).replace("{1}", builder.toString());
     } catch (Exception e) {
-      s = s.replace("at", at);
+      return label.replace("{0}", strs[0]).replace("{1}", strs[1]);
     }
-    return s;
   }
 
   public ForumStatistic getForumStatistic() throws Exception {
