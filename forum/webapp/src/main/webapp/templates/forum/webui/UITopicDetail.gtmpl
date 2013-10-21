@@ -73,22 +73,21 @@
 	if(!isNull) {
 		// add JavaScript
 		String []scripts = [
-			"eXo.forum.UIForumPortlet.controlWorkSpace();",
-			"eXo.forum.UIForumPortlet.loadMoreItem('" + uicomponent.id + "', '" + moreTagLabel + "');",
-			"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
-			"eXo.forum.UIForumPortlet.ReloadImage();",
-			"eXo.forum.UIForumPortlet.initShowUserInfo('" + uicomponent.id + "');",
-			"eXo.forum.UIForumPortlet.disableOnClickMenu('SearchForm');",
-			"eXo.forum.UIForumPortlet.disableOnClickMenu('AddTag');",
-			"eXo.forum.UIForumPortlet.controlLeftNavigation();",
-			"searchTagName.init('" + uicomponent.id + "');"
+			"forumPortlet.controlWorkSpace();",
+			"forumPortlet.loadMoreItem('" + uicomponent.id + "', '" + moreTagLabel + "');",
+			"forumPortlet.submitOnKey('searchAdvance');",
+			"forumPortlet.ReloadImage();",
+			"forumPortlet.initShowUserInfo('" + uicomponent.id + "');",
+			"forumPortlet.disableOnClickMenu('SearchForm');",
+			"forumPortlet.disableOnClickMenu('AddTag');",
+			"forumPortlet.controlLeftNavigation();"
 		];
 		
-		ForumUtils.addScripts("SearchTagName", "searchTagName", scripts);
-		ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
-
+		ForumUtils.addScripts("UIForumPortlet", "forumPortlet", scripts);
+		ForumUtils.addScripts("SearchTagName", "searchTagName", "searchTagName.init('" + uicomponent.id + "');");
 	}
 %>
+
 <script src="/forumResources/syntaxhighlighter/Scripts/shCore.js" type="text/javascript"></script>
 <script src="/forumResources/syntaxhighlighter/Scripts/shAutoloader.js" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shCore.css"></link>
@@ -709,7 +708,7 @@
 					<div class="divCell"><span class="line"></span></div>
 				</div>
 				<%	}//end for
-						ForumUtils.addScripts(null, null, "setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
+						ForumUtils.addScripts(null, null, "setTimeout('forumPortlet.goLastPost(\""+idLastPost+"\")', 300);");
 					} else {
 						uicomponent.renderPoll();
 						if(canEdit) {

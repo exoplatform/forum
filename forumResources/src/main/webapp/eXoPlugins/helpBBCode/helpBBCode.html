@@ -26,11 +26,12 @@
 
 <script type="text/javascript">	
   window.onload = function() {
-        var CKEDITOR = window.opener.CKEDITOR || {};
-	var iFrame = document.getElementById("language");
-        var src = "en";
-	if (CKEDITOR.config.language) src = eXoPlugin.userLanguage;
-	iFrame.src = "lang/" + src + ".html";
- }
+    var CKEDITOR = window.opener.CKEDITOR || {};
+    var iFrame = document.getElementById("language");
+    var src = "en";
+    if (CKEDITOR.config.language)
+      src = eXoPlugin.userLanguage;
+    iFrame.src = "lang/" + src + ".html";
+  }
 </script>
 </html>
