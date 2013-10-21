@@ -447,6 +447,14 @@ public class Utils implements ForumNodeTypes {
     } 
     return strBuilder.toString();
   }
+  
+  public static String buildUnifiedSearchQuery(String property, String valueOrigin, String valueUpperCase) {
+    StringBuilder strBuilder = new StringBuilder();
+    String jcrQuery = "jcr:like";
+    strBuilder.append(jcrQuery).append("(@").append(property).append(", '").append(valueOrigin).append("')");
+    strBuilder.append(" or ").append(jcrQuery).append("(fn:upper-case(@").append(property).append("), '").append(valueUpperCase).append("')");
+    return strBuilder.toString();
+  }
 
   /**
    * get Xpath query when get list post. 

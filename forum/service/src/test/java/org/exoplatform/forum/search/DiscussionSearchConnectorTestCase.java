@@ -262,7 +262,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals(2, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 2, "relevancy", "ASC").size());
     
     //load more
-    assertEquals(5, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 2, 5, "relevancy", "ASC").size());
+    assertEquals(4, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 2, 5, "relevancy", "ASC").size());
     
     //test Unified Search with special characters
     assertEquals(5, discussionSearchConnector.search(context, " top~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
@@ -330,6 +330,26 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     List<SearchResult> rDateDesc = (List<SearchResult>) discussionSearchConnector.search(context, "Reply~", Collections.<String> emptyList(), 0, 10, "date", "DESC");
     assertEquals("Reply B", rDateDesc.get(0).getTitle());
     assertEquals("Reply ABCDEF", rDateDesc.get(1).getTitle());
+  }
+  
+  public void testJapaneseData() throws Exception {
+    String cateId = getId(Utils.CATEGORY);
+    Category cat = createCategory(cateId);
+    cat.setCategoryName("cat1");
+    forumService_.saveCategory(cat, true);
+    
+    Forum forum = createdForum();
+    forum.setForumName("forum1");
+    forumService_.saveForum(cateId, forum, true);
+
+    Topic topic1 = createdTopic(USER_ROOT);
+    topic1.setTopicName("広いニーズ");
+    topic1.setDescription("広いニーズに応えます。");
+    forumService_.saveTopic(cateId, forum.getId(), topic1, true, false, new MessageBuilder());
+    
+    assertEquals(1, discussionSearchConnector.search(context, "広いニーズ", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    
+    forumService_.removeCategory(cateId);
   }
 
 }
