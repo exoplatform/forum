@@ -67,6 +67,7 @@ import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
@@ -112,6 +113,7 @@ import org.exoplatform.forum.service.TopicListAccess;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -201,12 +203,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private static final Pattern         HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
   
   private final int EXCERPT_MAX_LENGTH = 430;
+  private DataStorage cachedStorage;
   
   public JCRDataStorage() {
   }
 
   public JCRDataStorage(KSDataLocation dataLocator) {
     setDataLocator(dataLocator);
+  }
+  
+  public DataStorage getCachedDataStorage()  {
+    if (cachedStorage == null) {
+      cachedStorage = (DataStorage) PortalContainer.getInstance().getComponentInstanceOfType(DataStorage.class);
+    }
+    
+    return cachedStorage;
   }
 
   @Managed
@@ -3091,8 +3102,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   @Override
   public List<Post> getPosts(PostFilter filter, int offset, int limit) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Session session = getForumHomeNode(sProvider).getSession();
     try {
-      QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
+      
+      QueryManager qm = session.getWorkspace().getQueryManager();
       QueryImpl query = (QueryImpl) qm.createQuery(makePostsQuery(filter), Query.XPATH);
       query.setOffset(offset);
       query.setLimit(limit);
@@ -3104,12 +3117,47 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         currentNode = iter.nextNode();
         posts.add(getPost(currentNode));
       }
+      //update last read post here
+      if (posts.size() > 0) {
+        Post last = posts.get(posts.size() - 1);
+        saveLastPostIdRead(session, filter, last);
+      }
       return posts;
      } catch(Exception e) {
       logDebug("Failed to get posts by filter of topic " + filter.getTopicId(), e);
       return new ArrayList<Post>();
     }
     
+  }
+  /**
+   * Updating the last post for UserProfile
+   * @param session
+   * @param filter
+   * @param last
+   * @throws Exception
+   */
+  private void saveLastPostIdRead(Session session, PostFilter filter, Post last) throws Exception {
+    DataStorage instance = getCachedDataStorage();
+    
+    UserProfile profile = instance.getQuickProfile(filter.getUserLogin());
+    StringBuffer sb = new StringBuffer();
+    sb.append(filter.getTopicId()).append("/").append(last.getId());
+    //
+    profile.addLastPostIdReadOfForum(filter.getForumId(), sb.toString());
+    profile.addLastPostIdReadOfTopic(filter.getTopicId(), last.getId());
+    
+    if (instance instanceof CachedDataStorage) {
+      ((CachedDataStorage) instance).refreshUserProfile(profile);
+    }
+    
+    Node profileNode = session.getNodeByUUID(profile.getId());
+    try {
+      profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, profile.getLastReadPostOfForum());
+      profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, profile.getLastReadPostOfTopic());
+      session.save();
+    } catch (Exception e) {
+      log.error("Failed to save last post id read.", e);
+    }
   }
 
   public int getPostsCount(PostFilter filter) throws Exception {
@@ -4632,15 +4680,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (userName == null || userName.length() <= 0)
       return userProfile;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Session session = sessionManager.getSession(sProvider);
     try {
-      Node profileNode = getUserProfileHome(sProvider).getNode(userName);
+       userProfile = getCachedDataStorage().getQuickProfile(userName);
+      
+      Node profileNode = session.getNodeByUUID(userProfile.getId());
       PropertyReader reader = new PropertyReader(profileNode);
-      userProfile.setUserId(userName);
-      userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-      userProfile.setScreenName(getScreenName(userName, profileNode));
+      //some information of profile has been loaded by getQuickProfile, don't loading anymore.
+      //userProfile.setUserId(userName);
+      //userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
+      //userProfile.setScreenName(getScreenName(userName, profileNode));
       userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
       userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, true));
-      userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, true));
+      //userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, true));
       userProfile.setIsAutoWatchMyTopics(reader.bool(EXO_IS_AUTO_WATCH_MY_TOPICS));
       userProfile.setIsAutoWatchTopicIPost(reader.bool(EXO_IS_AUTO_WATCH_TOPIC_I_POST));
       userProfile.setUserRole(reader.l(EXO_USER_ROLE));
@@ -4705,16 +4757,30 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    Node profileHome = getUserProfileHome(sProvider);
+    UserProfile profile = getCachedDataStorage().getQuickProfile(userId);
+    Session session = sessionManager.getSession(sProvider);
+    Node profileNode = session.getNodeByUUID(profile.getId());
     try {
-      Node profileNode = profileHome.getNode(userId);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
-      profileHome.save();
+      session.save();
     } catch (Exception e) {
       log.error("Failed to save last post id read.", e);
     }
   }
+  
+//  public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
+//    SessionProvider sProvider = CommonUtils.createSystemProvider();
+//    Node profileHome = getUserProfileHome(sProvider);
+//    try {
+//      Node profileNode = profileHome.getNode(userId);
+//      profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
+//      profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
+//      profileHome.save();
+//    } catch (Exception e) {
+//      log.error("Failed to save last post id read.", e);
+//    }
+//  }
 
   public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
@@ -4825,6 +4891,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile = new UserProfile();
         userProfileNode = getUserProfileNode(userProfileHome, userName);
         reader = new PropertyReader(userProfileNode);
+        addMixinReferenceableType(userProfileNode);
+        userProfile.setId(userProfileNode.getUUID());
         userProfile.setUserId(userName);
         userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
         userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
@@ -4846,6 +4914,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return profiles;
   }
+  
+  private void addMixinReferenceableType(Node node) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    if (node.isNodeType(MIXIN_REFERENCEABLE_TYPE) == false) {
+      node.addMixin(MIXIN_REFERENCEABLE_TYPE);
+      sessionManager.getSession(sProvider).save();
+    }
+  }
 
   public UserProfile getQuickProfile(String userName) throws Exception {
     UserProfile userProfile;
@@ -4854,6 +4930,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile = new UserProfile();
     Node userProfileNode = getUserProfileNode(userProfileHome, userName);
     PropertyReader reader = new PropertyReader(userProfileNode);
+    addMixinReferenceableType(userProfileNode);
+    userProfile.setId(userProfileNode.getUUID());
     userProfile.setUserId(userName);
     userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
     userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
@@ -4876,6 +4954,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node userProfileHome = getUserProfileHome(sProvider);
     Node profileNode = getUserProfileNode(userProfileHome, userProfile.getUserId());
     PropertyReader reader = new PropertyReader(profileNode);
+    userProfile.setId(profileNode.getUUID());
     userProfile.setFirstName(reader.string(EXO_FIRST_NAME, ""));
     userProfile.setLastName(reader.string(EXO_LAST_NAME, ""));
     userProfile.setFullName(reader.string(EXO_FULL_NAME, ""));

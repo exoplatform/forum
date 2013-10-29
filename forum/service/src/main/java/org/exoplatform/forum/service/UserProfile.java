@@ -36,6 +36,8 @@ public class UserProfile {
 
   public static final String  USER_REMOVED           = "User deleted";
 
+  private String              id;
+  
   private String              userId;
 
   private String              screenName;
@@ -147,6 +149,15 @@ public class UserProfile {
     shortDateformat = "MM/dd/yyyy";
     longDateformat = "EEE, MMM dd, yyyy";
     timeFormat = "hh:mm a";
+  }
+  
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public void setUserId(String userId) {
