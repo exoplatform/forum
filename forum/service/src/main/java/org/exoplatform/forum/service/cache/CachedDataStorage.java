@@ -87,6 +87,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private static final Log LOG = ExoLogger.getLogger(CachedDataStorage.class);
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
+  private static final String PROFILE_KEY = "profile";
 
   private DataStorage storage;
   private CacheService service;
@@ -228,6 +229,21 @@ public class CachedDataStorage implements DataStorage, Startable {
   
   private void clearObjectCache(String categoryId, String forumId, boolean isPutNewKey) throws Exception {
     clearObjectCache(getForum(categoryId, forumId), isPutNewKey);
+  }
+  
+  private void clearUserProfile(String userName) throws Exception {
+    SimpleCacheKey key = new SimpleCacheKey(PROFILE_KEY, userName);
+    miscData.remove(key);
+  }
+  
+  /**
+   * Refresh user profile caching
+   * @param profile
+   * @throws Exception
+   */
+  public void refreshUserProfile(UserProfile profile) throws Exception {
+    SimpleCacheKey key = new SimpleCacheKey(PROFILE_KEY, profile.getUserId());
+    miscData.put(key, new SimpleCacheData<UserProfile>(profile));
   }
   
   private void clearWatchingItemCache(String watchingItemPath) throws Exception {
@@ -959,6 +975,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception {
+    clearUserProfile(userProfile.getUserId());
     return storage.updateUserProfileSetting(userProfile);
   }
 
@@ -1015,8 +1032,25 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getQuickProfiles(userList);
   }
 
-  public UserProfile getQuickProfile(String userName) throws Exception {
-    return storage.getQuickProfile(userName);
+  public UserProfile getQuickProfile(final String userName) throws Exception {
+    
+    SimpleCacheKey key = new SimpleCacheKey(PROFILE_KEY, userName);
+
+    return (UserProfile) miscDataFuture.get(
+        new ServiceContext<SimpleCacheData>() {
+          public SimpleCacheData<UserProfile> execute() {
+            try {
+              UserProfile got = storage.getQuickProfile(userName);
+              return new SimpleCacheData<UserProfile>(got);
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+        },
+        key
+    ).build();
+    
+    //return storage.getQuickProfile(userName);
   }
 
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
@@ -1024,6 +1058,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void saveUserProfile(UserProfile newUserProfile, boolean isOption, boolean isBan) throws Exception {
+    clearUserProfile(newUserProfile.getUserId());
     storage.saveUserProfile(newUserProfile, isOption, isBan);
   }
 
@@ -1454,6 +1489,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void updateUserProfileInfo(String name) throws Exception {
+    clearUserProfile(name);
     storage.updateUserProfileInfo(name);
   }
 
