@@ -3290,191 +3290,112 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return attachments;
   }
+//TODO
+  public void updateProfileAddPost(String owner) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node profileHomeNode = getUserProfileHome(sProvider);
+      if (profileHomeNode.hasNode(owner)) {
+        Node profileNode = profileHomeNode.getNode(owner);
+        long totalPostByUser = 0;
+        totalPostByUser = profileNode.getProperty(EXO_TOTAL_POST).getLong();
+        profileNode.setProperty(EXO_TOTAL_POST, totalPostByUser + 1);
+        profileNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
+      } else {
+        Node profileNode = profileHomeNode.addNode(owner, Utils.USER_PROFILES_TYPE);
+        profileNode.setProperty(EXO_USER_ID, owner);
+        profileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(owner)) {
+          profileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        profileNode.setProperty(EXO_TOTAL_POST, 1);
+        profileNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
+      }
+      profileHomeNode.getSession().save();
+    } catch (Exception e) {
+      log.warn("Failed to save user profile of user: " + owner);
+    }
+  }
+  
+  private void postSaveProperties(Node postNode, Post post) throws Exception {
+    if (post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
+      postNode.setProperty(EXO_MODIFIED_BY, post.getModifiedBy());
+      postNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+      postNode.setProperty(EXO_EDIT_REASON, post.getEditReason());
+    }
+    postNode.setProperty(EXO_NAME, post.getName());
+    postNode.setProperty(EXO_MESSAGE, post.getMessage());
+    postNode.setProperty(EXO_REMOTE_ADDR, post.getRemoteAddr());
+    postNode.setProperty(EXO_ICON, post.getIcon());
+    postNode.setProperty(EXO_IS_APPROVED, post.getIsApproved());
+    postNode.setProperty(EXO_IS_HIDDEN, post.getIsHidden());
+    postNode.setProperty(EXO_IS_WAITING, post.getIsWaiting());
+    postNode.setProperty(EXO_NUMBER_ATTACH, post.getNumberAttach());
+  }
+  
+  private List<String> postAttachment(Node postNode, Post post) {
+    List<String> listFileName = new ArrayList<String>();
+    List<ForumAttachment> attachments = post.getAttachments();
+    if (attachments != null) {
+      Iterator<ForumAttachment> it = attachments.iterator();
+      for (ForumAttachment attachment : attachments) {
+        BufferAttachment file = null;
+        listFileName.add(attachment.getId());
+        try {
+          file = (BufferAttachment) it.next();
+          Node nodeFile = null;
+          if (!postNode.hasNode(file.getId()))
+            nodeFile = postNode.addNode(file.getId(), EXO_FORUM_ATTACHMENT);
+          else
+            nodeFile = postNode.getNode(file.getId());
+          // Fix permission node
+          ForumServiceUtils.reparePermissions(nodeFile, "any");
+          Node nodeContent = null;
+          if (!nodeFile.hasNode(JCR_CONTENT)) {
+            nodeContent = nodeFile.addNode(JCR_CONTENT, EXO_FORUM_RESOURCE);
+            nodeContent.setProperty(JCR_MIME_TYPE, file.getMimeType());
+            nodeContent.setProperty(JCR_DATA, file.getInputStream());
+            nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
+            nodeContent.setProperty(EXO_FILE_NAME, file.getName());
+          }
+        } catch (Exception e) {
+          log.error("Failed to save attachment", e);
+        }
+      }
+    }
+    return listFileName;
+  }
 
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
-      Node forumNode = CategoryNode.getNode(forumId);
+      Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
+      Node forumNode = categoryNode.getNode(forumId);
       Node topicNode = forumNode.getNode(topicId);
       Node postNode;
-      Calendar calendar = getGreenwichMeanTime();
       if (isNew) {
-        postNode = topicNode.addNode(post.getId(), EXO_POST);
-        postNode.setProperty(EXO_ID, post.getId());
-        postNode.setProperty(EXO_PATH, forumId);
-        postNode.setProperty(EXO_OWNER, post.getOwner());
-        post.setCreatedDate(calendar.getTime());
-        postNode.setProperty(EXO_CREATED_DATE, calendar);
-        postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
-        postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, true);
-        postNode.setProperty(EXO_LINK, post.getLink());
-        if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-          postNode.setProperty(EXO_IS_FIRST_POST, true);
-        } else {
-          postNode.setProperty(EXO_IS_FIRST_POST, false);
-        }
-        // TODO: Thinking for update forum and user profile by node observation?
-
-        Node userProfileNode = getUserProfileHome(sProvider);
-        Node newProfileNode;
-        try {
-          newProfileNode = userProfileNode.getNode(post.getOwner());
-          long totalPostByUser = 0;
-          totalPostByUser = newProfileNode.getProperty(EXO_TOTAL_POST).getLong();
-          newProfileNode.setProperty(EXO_TOTAL_POST, totalPostByUser + 1);
-        } catch (PathNotFoundException e) {
-          newProfileNode = userProfileNode.addNode(post.getOwner(), Utils.USER_PROFILES_TYPE);
-          newProfileNode.setProperty(EXO_USER_ID, post.getOwner());
-          newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-          if (isAdminRole(post.getOwner())) {
-            newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
-          }
-          newProfileNode.setProperty(EXO_TOTAL_POST, 1);
-        }
-        newProfileNode.setProperty(EXO_LAST_POST_DATE, calendar);
-        if (userProfileNode.isNew()) {
-          userProfileNode.getSession().save();
-        } else {
-          userProfileNode.save();
-        }
-
+        postNode = addPost(sProvider, categoryNode, forumNode, topicNode, post);
       } else {
-        postNode = topicNode.getNode(post.getId());
+        postNode = updatePost(sProvider, topicNode, post);
       }
-      if (post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
-        postNode.setProperty(EXO_MODIFIED_BY, post.getModifiedBy());
-        postNode.setProperty(EXO_MODIFIED_DATE, calendar);
-        postNode.setProperty(EXO_EDIT_REASON, post.getEditReason());
-      }
-      postNode.setProperty(EXO_NAME, post.getName());
-      postNode.setProperty(EXO_MESSAGE, post.getMessage());
-      postNode.setProperty(EXO_REMOTE_ADDR, post.getRemoteAddr());
-      postNode.setProperty(EXO_ICON, post.getIcon());
-      postNode.setProperty(EXO_IS_APPROVED, post.getIsApproved());
-      postNode.setProperty(EXO_IS_HIDDEN, post.getIsHidden());
-      postNode.setProperty(EXO_IS_WAITING, post.getIsWaiting());
-      long numberAttach = 0;
-      List<String> listFileName = new ArrayList<String>();
-      List<ForumAttachment> attachments = post.getAttachments();
-      if (attachments != null) {
-        Iterator<ForumAttachment> it = attachments.iterator();
-        for (ForumAttachment attachment : attachments) {
-          ++numberAttach;
-          BufferAttachment file = null;
-          listFileName.add(attachment.getId());
-          try {
-            file = (BufferAttachment) it.next();
-            Node nodeFile = null;
-            if (!postNode.hasNode(file.getId()))
-              nodeFile = postNode.addNode(file.getId(), EXO_FORUM_ATTACHMENT);
-            else
-              nodeFile = postNode.getNode(file.getId());
-            // Fix permission node
-            ForumServiceUtils.reparePermissions(nodeFile, "any");
-            Node nodeContent = null;
-            if (!nodeFile.hasNode(JCR_CONTENT)) {
-              nodeContent = nodeFile.addNode(JCR_CONTENT, EXO_FORUM_RESOURCE);
-              nodeContent.setProperty(JCR_MIME_TYPE, file.getMimeType());
-              nodeContent.setProperty(JCR_DATA, file.getInputStream());
-              nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
-              nodeContent.setProperty(EXO_FILE_NAME, file.getName());
-            }
-          } catch (Exception e) {
-            log.error("Failed to save attachment", e);
-          }
-        }
-      }
-      NodeIterator postAttachments = postNode.getNodes();
-      Node postAttachmentNode = null;
-      while (postAttachments.hasNext()) {
-        postAttachmentNode = postAttachments.nextNode();
-        if (listFileName.contains(postAttachmentNode.getName()))
-          continue;
-        postAttachmentNode.remove();
-      }
-      boolean sendAlertJob = false;
-      boolean isFistPost = false;
-      if (isNew) {
-        long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
-        long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + numberAttach;
-        if (topicPostCount == 0) {
-          topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-        }
-        // set InfoPost for Forum
-        long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() + 1;
 
-        boolean isSetLastPost = true;
-        if (topicNode.getProperty(EXO_IS_CLOSED).getBoolean()) {
-          postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
-        } else {
-          if (isSetLastPost && topicNode.getProperty(EXO_IS_WAITING).getBoolean()) {
-            isSetLastPost = false;
-          }
-          if (isSetLastPost) {
-            isSetLastPost = topicNode.getProperty(EXO_IS_ACTIVE).getBoolean();
-          }
-          boolean canView = true;
-          Node categoryNode = forumNode.getParent();
-          if ((hasProperty(categoryNode, EXO_VIEWER)) || (hasProperty(forumNode, EXO_VIEWER)) || (hasProperty(topicNode, EXO_CAN_VIEW)))
-            canView = false;
-          if (isSetLastPost) {
-            if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {// first post
-              isFistPost = true;
-              // set InfoPost for Forum
-              if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
-                forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-              }
-              // set InfoPost for Topic
-              if (!post.getIsHidden()) {
-                topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-                topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
-                topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
-                topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
-              }
-            } else if (canView && post.getIsApproved() && !post.getIsHidden()
-                                && post.getUserPrivate().length != 2) {
-              forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-              topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
-              topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-              topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
-              topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
-            } else {
-              // update post count
-              forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-              topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-            }
-            if ((!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()) && post.getUserPrivate().length != 2)
-              sendAlertJob = true;
-          } else {
-            postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
-            sendAlertJob = true;
-          }
-        }
-        if (isNew && messageBuilder.getLink().equals("link")) {
-          sendAlertJob = false; // initDefaulDate
-        }
-      } else {
-        if ((!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()) && post.getUserPrivate().length != 2)
-          sendAlertJob = true;
-        long temp = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
-        topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, (temp + numberAttach));
+      boolean sendAlertJob = messageBuilder.getLink().equals("link");
+      if(sendAlertJob == false) {
+        sendAlertJob = (!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()) 
+                         && (post.getUserPrivate().length != 2);
       }
-      postNode.setProperty(EXO_NUMBER_ATTACH, numberAttach);
-      
+
       //
+      forumNode.getSession().save();
       if (isNew) {
-        forumNode.getSession().save();
         queryLastTopic(sProvider, forumNode.getPath());
-      } else {
-        forumNode.save();
       }
-      
+
       //
       post.setPath(postNode.getPath());
-      
+
       //
-      if (!isFistPost && isNew) {
+      if (topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId()) == false && isNew) {
         sendNotification(topicNode, null, post, messageBuilder, true);
       }
       if (sendAlertJob) {
@@ -3496,11 +3417,91 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  private Node addPost(SessionProvider sProvider, Node categoryNode, Node forumNode, Node topicNode, Post post) throws Exception {
+    Calendar calendar = getGreenwichMeanTime();
+    Node postNode = topicNode.addNode(post.getId(), EXO_POST);
+    postNode.setProperty(EXO_ID, post.getId());
+    postNode.setProperty(EXO_PATH, forumNode.getName());
+    postNode.setProperty(EXO_OWNER, post.getOwner());
+    post.setCreatedDate(calendar.getTime());
+    postNode.setProperty(EXO_CREATED_DATE, calendar);
+    postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
+    postNode.setProperty(EXO_LINK, post.getLink());
+
+    boolean isFistPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId());
+    postNode.setProperty(EXO_IS_FIRST_POST, isFistPost);
+
+    //
+    updateProfileAddPost(post.getOwner());
+    //
+    postSaveProperties(postNode, post);
+    //
+    postAttachment(postNode, post);
+
+    //
+    long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
+    long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + post.getNumberAttach();
+    if (topicPostCount == 0) {
+      topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
+    }
+    // set InfoPost for Forum
+    long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() + 1;
+
+    Topic topic = getTopicNodeSummary(topicNode);
+    boolean topicActive = (topic.getIsClosed() == false && topic.getIsWaiting() == false && 
+                            topic.getIsApproved() && topic.getIsActive() && topic.getIsActiveByForum());
+
+    boolean postActive =  (post.getIsApproved() && post.getIsHidden() == false && 
+                            post.getIsWaiting() == false && post.getUserPrivate().length != 2);
+    boolean isPublic = (hasProperty(categoryNode, EXO_VIEWER) == false && hasProperty(forumNode, EXO_VIEWER) == false && 
+                          hasProperty(topicNode, EXO_CAN_VIEW) == false);
+    // set active by topic
+    postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, (topicActive || isFistPost));
+
+    // update forum
+    if (isFistPost && forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean() == false
+         || isFistPost == false && topicActive) {
+      forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
+    }
+
+    // update topic
+    if (postActive && isPublic) {
+      topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
+      topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
+      topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
+      topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+    }
+    return postNode;
+  }
+  
+  private Node updatePost(SessionProvider sProvider, Node topicNode, Post post) throws Exception {
+    Node postNode = topicNode.getNode(post.getId());
+    long oldNumberAttachments = postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+    //
+    postSaveProperties(postNode, post);
+
+    //
+    List<String> listFileName = postAttachment(postNode, post);
+    // remove old attachments
+    NodeIterator postAttachments = postNode.getNodes();
+    Node postAttachmentNode = null;
+    while (postAttachments.hasNext()) {
+      postAttachmentNode = postAttachments.nextNode();
+      if (listFileName.contains(postAttachmentNode.getName())) {
+        continue;
+      }
+      postAttachmentNode.remove();
+    }
+
+    long temp = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() - oldNumberAttachments;
+    topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, (temp + post.getNumberAttach()));
+    //
+    return postNode;
+  }
+
   private boolean hasProperty(Node node, String property) throws Exception {
-    if (node.hasProperty(property) && node.getProperty(property).getValues().length > 0 && !Utils.isEmpty(node.getProperty(property).getValues()[0].getString()))
-      return true;
-    else
-      return false;
+    String[] strs = new PropertyReader(node).strings(property, new String[] {});
+    return strs.length > 0;
   }
 
   private void sendNotification(Node node, Topic topic, Post post, MessageBuilder messageBuilder, boolean isApprovePost) throws Exception {
