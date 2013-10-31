@@ -123,6 +123,7 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.search.DiscussionSearchResult;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
@@ -2135,6 +2136,97 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     String pathQuery = stringBuffer.toString();
     return pathQuery;
+  }
+  
+  
+  
+  public List<Topic> getTopics(TopicFilter filter, int offset, int limit) throws Exception {
+    NodeIterator iter = getTopicIterator(filter, offset, limit);
+    List<Topic> topicList = new ArrayList<Topic>();
+    if (iter != null && iter.getSize() > 0) {
+      while (iter.hasNext()) {
+        topicList.add(getTopicNode(iter.nextNode()));
+      }
+    }
+    return topicList;
+  }
+
+  public NodeIterator getTopicIterator(TopicFilter filter, int offset, int limit) throws Exception{
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node categoryNode = getCategoryHome(sProvider).getNode(filter.categoryId());
+      Node forumNode = categoryNode.getNode(filter.forumId());
+      String topicQuery = buildTopicQuery(sProvider, filter, forumNode);
+      
+      QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
+      QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
+      if(limit > 0) {
+        query.setOffset(offset);
+        query.setLimit(limit);
+      }
+      QueryResult result = query.execute();
+      return result.getNodes();
+    } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to retrieve topic list for forum " + filter.forumId(), e);
+      }
+      return null;
+    }
+  }
+  
+  private String buildTopicQuery(SessionProvider sProvider, TopicFilter filter, Node forumNode) throws Exception {
+    SortSettings sortSettings = getTopicSortSettings();
+    SortField orderBy = sortSettings.getField();
+    Direction orderType = sortSettings.getDirection();
+
+    StringBuffer stringBuffer = new StringBuffer();
+
+    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("//element(*,").append(EXO_TOPIC).append(")");
+    if (filter.isAdmin() == false) {
+      StringBuffer strQuery = new StringBuffer();
+      strQuery.append("@").append(EXO_IS_WAITING).append("='false' and @")
+              .append(EXO_IS_ACTIVE).append("='true' and @")
+              .append(EXO_IS_CLOSED).append("='false' and (")
+              .append(Utils.buildXpathHasProperty(EXO_CAN_VIEW)).append(" or ")
+              .append(Utils.buildXpathByUserInfo(EXO_CAN_VIEW, UserHelper.getAllGroupAndMembershipOfUser(null))).append(")");
+      
+      if (filter.isApproved()) {
+        strQuery.append(" and (@").append(Utils.EXO_IS_APPROVED).append("='true')");
+      }
+      
+      if(Utils.isEmpty(filter.viewers()) == false && 
+          !ForumServiceUtils.hasPermission(filter.viewers(), filter.userLogin())) {
+        strQuery.append(" and (@").append(Utils.EXO_OWNER).append("='").append(filter.userLogin())
+                .append("' or (").append(buildXpath(sProvider, forumNode)).append("))");
+        
+      }
+      
+      stringBuffer.append("[").append(strQuery).append("]");
+    }
+
+    stringBuffer.append(" order by @").append(EXO_IS_STICKY).append(DESCENDING);
+    String strOrderBy = filter.orderBy();
+    if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
+      if (orderBy != null) {
+        stringBuffer.append(", @exo:").append(orderBy.toString()).append(" ").append(orderType);
+        if (!orderBy.equals(SortField.LASTPOST)) {
+          stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+        }
+      } else {
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+      }
+    } else {
+      stringBuffer.append(", @exo:").append(strOrderBy);
+      if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+      }
+    }
+    return stringBuffer.toString();
+  }
+
+  public int getTopicsCount(TopicFilter filter) throws Exception {
+    NodeIterator iter = getTopicIterator(filter, 0, 0);
+    return (int) ((iter != null) ? iter.getSize() : 0);
   }
 
   public List<Topic> getTopics(String categoryId, String forumId) throws Exception {

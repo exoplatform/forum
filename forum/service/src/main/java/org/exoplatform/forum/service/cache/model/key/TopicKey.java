@@ -17,6 +17,10 @@ public class TopicKey extends ScopeCacheKey {
     this.topicPath = topic.getPath();
     this.isLastPost = false;
   }
+  
+  public String getTopicPath() {
+    return topicPath;
+  }
 
   @Override
   public boolean equals(Object o) {
