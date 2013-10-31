@@ -28,6 +28,7 @@ import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -333,9 +334,21 @@ public interface ForumService extends ForumServiceLegacy {
    * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated use {@link #getTopics(TopicFilter);
    */
+  
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
-
+  
+  /**
+   * Gets posts which are returned as ListAccess.
+   * @param filter The condition to get posts.
+   * @return The posts.
+   * @throws Exception
+   * @since 2.2.11
+   */
+  ListAccess<Topic> getTopics(TopicFilter filter) throws Exception;
+  
   /**
    * Counts the number of topic viewers.
    * 

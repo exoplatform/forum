@@ -30,6 +30,7 @@ import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
@@ -125,6 +126,26 @@ public interface DataStorage {
   JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 
   LazyPageList<Topic> getTopicList(String categoryId, String forumId, String xpathConditions, String strOrderBy, int pageSize) throws Exception;
+  
+  /**
+   * Gets a topic list by given TopicFilter with offset and limit
+   * @param filter: specified TopicFilter
+   * @param offset
+   * @param limit
+   * @return List of Topics
+   * @throws Exception
+   * @since 4.0.3
+   */
+  List<Topic> getTopics(TopicFilter filter, int offset, int limit) throws Exception;
+
+  /**
+   * Gets count of topic by given TopicFilter
+   * @param filter: specified TopicFilter
+   * @return
+   * @throws Exception
+   * @since 4.0.3
+   */
+  int getTopicsCount(TopicFilter filter) throws Exception;
 
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
@@ -180,6 +201,10 @@ public interface DataStorage {
    */
   int getPostsCount(PostFilter filter) throws Exception;
 
+  /**
+   * 
+   * @deprecated use {@link #getPostsCount(PostFilter);
+   */
   long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
   JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
@@ -403,4 +428,5 @@ public interface DataStorage {
   public String getActivityIdForOwner(String ownerId, String type);
 
   public String getActivityIdForOwner(String ownerPath);
+
 }
