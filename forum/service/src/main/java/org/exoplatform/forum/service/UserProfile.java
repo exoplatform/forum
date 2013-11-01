@@ -36,7 +36,7 @@ public class UserProfile {
 
   public static final String  USER_REMOVED           = "User deleted";
 
-  private String              id;
+  private String              path;
   
   private String              userId;
 
@@ -152,12 +152,12 @@ public class UserProfile {
   }
   
 
-  public String getId() {
-    return id;
+  public String getPath() {
+    return path;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setPath(String path) {
+    this.path = path;
   }
 
   public void setUserId(String userId) {

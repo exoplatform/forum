@@ -3242,7 +3242,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       ((CachedDataStorage) instance).refreshUserProfile(profile);
     }
     
-    Node profileNode = session.getNodeByUUID(profile.getId());
+    Node profileNode = session.getRootNode().getNode(profile.getPath() + "/" + profile.getUserId());
     try {
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, profile.getLastReadPostOfForum());
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, profile.getLastReadPostOfTopic());
@@ -4774,14 +4774,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Session session = sessionManager.getSession(sProvider);
     try {
-       userProfile = getCachedDataStorage().getQuickProfile(userName);
-      
-      Node profileNode = session.getNodeByUUID(userProfile.getId());
+      userProfile = getCachedDataStorage().getQuickProfile(userName);
+      Node profileNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation() + "/" + userProfile.getPath());
       PropertyReader reader = new PropertyReader(profileNode);
       //some information of profile has been loaded by getQuickProfile, don't loading anymore.
       //userProfile.setUserId(userName);
       //userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-      //userProfile.setScreenName(getScreenName(userName, profileNode));
+      userProfile.setScreenName(getScreenName(userName, profileNode));
       userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
       userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, true));
       //userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, true));
@@ -4851,7 +4850,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     UserProfile profile = getCachedDataStorage().getQuickProfile(userId);
     Session session = sessionManager.getSession(sProvider);
-    Node profileNode = session.getNodeByUUID(profile.getId());
+    Node profileNode = session.getRootNode().getNode(profile.getPath() + "/" + profile.getUserId());
     try {
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
@@ -4983,8 +4982,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile = new UserProfile();
         userProfileNode = getUserProfileNode(userProfileHome, userName);
         reader = new PropertyReader(userProfileNode);
-        addMixinReferenceableType(userProfileNode);
-        userProfile.setId(userProfileNode.getUUID());
+        userProfile.setPath(dataLocator.getUserProfilesLocation());
         userProfile.setUserId(userName);
         userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
         userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
@@ -5007,13 +5005,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return profiles;
   }
   
-  private void addMixinReferenceableType(Node node) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    if (node.isNodeType(MIXIN_REFERENCEABLE_TYPE) == false) {
-      node.addMixin(MIXIN_REFERENCEABLE_TYPE);
-      sessionManager.getSession(sProvider).save();
-    }
-  }
 
   public UserProfile getQuickProfile(String userName) throws Exception {
     UserProfile userProfile;
@@ -5022,9 +5013,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile = new UserProfile();
     Node userProfileNode = getUserProfileNode(userProfileHome, userName);
     PropertyReader reader = new PropertyReader(userProfileNode);
-    addMixinReferenceableType(userProfileNode);
-    userProfile.setId(userProfileNode.getUUID());
     userProfile.setUserId(userName);
+    userProfile.setPath(dataLocator.getUserProfilesLocation());
     userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
     userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
     userProfile.setScreenName(getScreenName(userName, userProfileNode));
@@ -5046,7 +5036,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node userProfileHome = getUserProfileHome(sProvider);
     Node profileNode = getUserProfileNode(userProfileHome, userProfile.getUserId());
     PropertyReader reader = new PropertyReader(profileNode);
-    userProfile.setId(profileNode.getUUID());
     userProfile.setFirstName(reader.string(EXO_FIRST_NAME, ""));
     userProfile.setLastName(reader.string(EXO_LAST_NAME, ""));
     userProfile.setFullName(reader.string(EXO_FULL_NAME, ""));
