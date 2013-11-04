@@ -456,6 +456,17 @@ public class Utils implements ForumNodeTypes {
     return strBuilder.toString();
   }
 
+  public static String getSQLQueryByProperty(String typeAdd, String property, String value) {
+    StringBuilder strBuilder = new StringBuilder();
+    if (!isEmpty(value) && !isEmpty(property)) {
+      if (!isEmpty(typeAdd)) {
+        strBuilder.append(SPACE).append(typeAdd).append(SPACE);
+      }
+      strBuilder.append("(").append(property).append("='").append(value).append("')");
+    } 
+    return strBuilder.toString();
+  }
+
   /**
    * get Xpath query when get list post. 
    * @param String isApproved
@@ -494,6 +505,35 @@ public class Utils implements ForumNodeTypes {
       return new StringBuilder("[").append(strBuilder).append("]");
     }
     return new StringBuilder();
+  }
+
+  public static StringBuilder getSQLQuery(String isApproved, String isHidden, String isWaiting, String userLogin) throws Exception {
+    StringBuilder strBuilder = new StringBuilder();
+    String typeAdd = null;
+    String str = getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, userLogin);
+    if (!isEmpty(str)) {
+      strBuilder.append("(").append(str);
+      typeAdd = "or";
+    }
+    if ("or".equals(typeAdd)) {
+      strBuilder.append(getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, EXO_USER_PRI)).append(")");
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_APPROVED, isApproved);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_HIDDEN, isHidden);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_WAITING, isWaiting);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+    }
+    return strBuilder;
   }
   
   /**
