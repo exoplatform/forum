@@ -321,6 +321,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @return A lis of topics.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated use {@link #getTopics(TopicFilter);
    */
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
@@ -334,10 +336,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return The topic.
    * @throws Exception the exception
    * @LevelAPI Platform
-   * 
-   * @deprecated use {@link #getTopics(TopicFilter);
    */
-  
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
   
   /**
