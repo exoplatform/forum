@@ -204,15 +204,15 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearTopicCache(String topicPath) throws Exception {
-    String key = Utils.getSubPath(topicPath);
-    topicData.remove(new TopicKey(key, false));
-    topicData.remove(new TopicKey(key.toUpperCase(), true));
-    topicData.remove(new TopicKey(key.toUpperCase(), false));
+    topicPath = Utils.getSubPath(topicPath);
+    topicData.remove(new TopicKey(topicPath, false));
+    topicData.remove(new TopicKey(topicPath.toUpperCase(), true));
+    topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
   }
 
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
-    Topic topic = getTopic(categoryId, forumId, topicId, null);
-    clearTopicCache(topic);
+    String topicPath = new StringBuffer(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
+    clearTopicCache(getTopicByPath(topicPath, false));
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
@@ -804,15 +804,11 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Topic getTopicSummary(final String topicPath) {
-    String key = Utils.getSubPath(topicPath);
-    TopicKey topicKey = new TopicKey(key.toUpperCase(), false);
-    TopicData data = topicData.get(topicKey);
-    Topic got = (data != null) ? data.build() : null;
-    if(got == null) {
-      got = topicDataFuture.get(
+
+    Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
-            try {
+            try {System.out.println(Utils.getSubPath(topicPath));
               Topic got = storage.getTopicSummary(topicPath);
               if (got != null) {
                 return new TopicData(got);
@@ -823,13 +819,11 @@ public class CachedDataStorage implements DataStorage, Startable {
               throw new RuntimeException(e);
             }
           }
-        }, topicKey
-      ).build();
-    }
+        },
+        new TopicKey(Utils.getSubPath(topicPath), false)
+    ).build();
     //
-    if (got != null) {
-      got.setIsPoll(topicHasPoll(got.getPath()));
-    }
+    got.setIsPoll(topicHasPoll(got.getPath()));
     
     return got;
   }
@@ -842,9 +836,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Topic getTopicByPath(final String topicPath, final boolean isLastPost) throws Exception {
-    String key = Utils.getSubPath(topicPath);
-    key = (isLastPost == true) ? Utils.getForumPath(key) : key.toUpperCase();
-
     Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
@@ -852,22 +843,18 @@ public class CachedDataStorage implements DataStorage, Startable {
               Topic got = storage.getTopicByPath(topicPath, isLastPost);
               if (got != null) {
                 return new TopicData(got);
-              }
-              else {
+              } else {
                 return TopicData.NULL;
               }
             } catch (Exception e) {
-              LOG.error("Can not get topic: " + topicPath);
               throw new RuntimeException(e);
             }
           }
         },
-        new TopicKey(key, isLastPost)
+        new TopicKey(Utils.getSubPath(topicPath.toUpperCase()), isLastPost)
     ).build();
     //
-    if (got != null) {
-      got.setIsPoll(topicHasPoll(got.getPath()));
-    }
+    got.setIsPoll(topicHasPoll(got.getPath()));
     
     return got;
   }
@@ -1552,7 +1539,8 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     storage.calculateDeletedGroup(groupId, groupName);
-    topicData.clearCache();
+    topicData.select(new ScopeCacheSelector<TopicKey, TopicData>());
+    topicList.select(new ScopeCacheSelector<TopicListKey, ListTopicData>());
     forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
     forumList.select(new ScopeCacheSelector<ForumListKey, ListForumData>());
     categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());
