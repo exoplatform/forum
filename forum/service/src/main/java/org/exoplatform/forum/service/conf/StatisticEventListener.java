@@ -68,7 +68,8 @@ public class StatisticEventListener implements EventListener {
         if (ev.getType() == Event.NODE_ADDED) {
           String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
           if (id.indexOf(Utils.POST) > 0) {
-            postCount = postCount + 1;
+            //postCount = postCount + 1;
+            return;
           } else if (id.indexOf(Utils.TOPIC) > 0) {
             topicCount = topicCount + 1;
           }
