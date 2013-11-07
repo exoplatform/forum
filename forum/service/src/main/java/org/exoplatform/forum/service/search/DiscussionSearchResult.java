@@ -34,7 +34,7 @@ public class DiscussionSearchResult implements Collection<ForumSearchResult> {
 
   private final long offset;
   private final long limit;
-  private final long totalSize;
+  private long totalSize;
   private long skip;
   private String[] ids;
   private String[] idsSkip;
@@ -56,7 +56,13 @@ public class DiscussionSearchResult implements Collection<ForumSearchResult> {
     skip = 0;
   }
   
+ public void setTotalSize(long totalSize) {
+   this.totalSize = totalSize;
+ }
  
+ public long getTotalSize() {
+   return totalSize;
+ }
 
   @Override
   public int size() {

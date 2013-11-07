@@ -6145,16 +6145,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public List<ForumSearchResult> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception {
-    List<ForumSearchResult> listSearchResult = new ArrayList<ForumSearchResult>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    DiscussionSearchResult searchResult;
+    DiscussionSearchResult searchResult = new DiscussionSearchResult(offset, limit, 0);
     try {
       
       
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 
-      String pathQuery = categoryHome.getPath();
+      String rootPath = categoryHome.getPath();
 
       //process query for asterisk 
       String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
@@ -6177,8 +6176,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         listForumIds = mapList.get(Utils.FORUM);
       }
       for (String type : types) {
-        StringBuffer queryString = new StringBuffer();
-        queryString.append(JCR_ROOT).append(pathQuery).append("//element(*,exo:").append(type).append(")");
+        StringBuilder queryString = buildSQLQueryUnifiedSearch(rootPath, listForumIds, asteriskQuery, textQuery, type, isAdmin, sort, order, userId, listOfUser);
+        
+        
+        /*queryString.append(JCR_ROOT).append(pathQuery).append("//element(*,exo:").append(type).append(")");
         queryString.append("[");
 
         // if search in category and list category that user can view not null
@@ -6261,33 +6262,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
         if ("DESC".equalsIgnoreCase(order)) {
           queryString.append(DESCENDING);
-        }
+        }*/
 
-        QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.XPATH);
+        QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.SQL);
         //query.setCaseInsensitiveOrder(true);
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
         RowIterator rowIterator = result.getRows();
+        
+        //Update the total size
+        searchResult.setTotalSize(searchResult.getTotalSize() + iter.getSize());
+        
         while (iter.hasNext()) {
           Node nodeObj = iter.nextNode();
+          Row row = rowIterator.nextRow();
           if(type.equals(Utils.POST) && hasPermssionViewerPost(nodeObj, listOfUser) == false) {
             continue;
           }
-          Row row = rowIterator.nextRow();
-          listSearchResult.add(setPropertyUnifiedSearch(row, nodeObj, type, textQuery));
-        }
-      }
-
-      //
-      Iterator<ForumSearchResult> iter = listSearchResult.iterator();
-      searchResult = new DiscussionSearchResult(offset, limit, listSearchResult.size());
-      
-      //
-      while (iter.hasNext()) {
-        searchResult.add(iter.next());
-        //
-        if (searchResult.addMore() == false) {
-          break;
+          //
+          if (searchResult.addMore() == false) {
+            break;
+          }
+          //
+          searchResult.add(setPropertyUnifiedSearch(row, nodeObj, type, textQuery));
         }
       }
 
@@ -6297,6 +6294,67 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     
     //
     return UnifiedSearchOrder.processOrder(searchResult.result(), sort, order);
+  }
+  
+  private StringBuilder buildSQLQueryUnifiedSearch(String rootPath, List<String> listForumIds, String asteriskQuery,
+                                                   String textQuery, String type, boolean isAdmin,
+                                                   String sort, String order, String userId, List<String> listOfUser) {
+    
+    StringBuilder queryString = new StringBuilder();
+    
+    queryString.append("SELECT exo:name, exo:description, exo:message, rep:excerpt() FROM exo:").append(type).append(" WHERE ");
+    
+    if (listForumIds != null && listForumIds.size() > 0) {
+      queryString.append("(");
+      for (int i = 0; i < listForumIds.size(); i++) {
+        queryString.append(EXO_PATH).append("='").append(listForumIds.get(i)).append("'");
+        if (i < listForumIds.size() - 1)
+          queryString.append(" or ");
+      }
+      queryString.append(") and ");
+    }
+    if(type.equals(Utils.POST)){
+      queryString.append("(CONTAINS (exo:message, '").append(asteriskQuery).append("')")
+                 .append(" or CONTAINS (exo:message, '").append(textQuery).append("'))");
+    } else {
+      queryString.append("(CONTAINS (exo:name, '").append(asteriskQuery).append("')").append(" or CONTAINS (exo:description, '").append(asteriskQuery).append("')")
+                 .append(" or CONTAINS (exo:name, '").append(textQuery).append("')").append(" or CONTAINS (exo:description, '").append(textQuery).append("'))");
+    }
+    
+    // if user isn't admin
+    if (!isAdmin) {
+      queryString.append(" and ");
+      if (type.equals(Utils.TOPIC)) {
+        queryString.append("(exo:isClosed='false' and exo:isWaiting='false' and exo:isApproved='true' and exo:isActive='true' and exo:isActiveByForum='true')");
+        String str = Utils.buildSQLByUserInfo(EXO_CAN_VIEW, listOfUser);
+        if (!Utils.isEmpty(str)) {
+          queryString.append(" and ");
+          queryString.append("(").append(Utils.EXO_OWNER).append("='").append(userId).append("' or ")
+                     .append(Utils.buildSQLHasProperty(EXO_CAN_VIEW)).append(" or ").append(str)
+                     .append(")");
+        }
+      } else if (type.equals(Utils.POST)) {
+        queryString.append("(exo:isApproved='true' and exo:isHidden='false' and exo:isActiveByTopic='true')");
+        queryString.append(" and (exo:userPrivate='exoUserPri'").append(" or exo:userPrivate='").append(userId).append("') and exo:isFirstPost='false'");
+      }
+    } else {
+      if (type.equals(Utils.POST)) {
+        queryString.append(" and ");
+        queryString.append("(exo:userPrivate='exoUserPri'").append(" or exo:userPrivate='").append(userId).append("') and exo:isFirstPost='false'");
+      }
+    }
+
+    if ("date".equalsIgnoreCase(sort)) {
+      queryString.append(" order by ").append(EXO_CREATED_DATE);
+    } else if ("title".equalsIgnoreCase(sort) || Utils.isEmpty(sort)) {
+      queryString.append(" order by ").append(EXO_NAME);
+    } if("relevancy".equalsIgnoreCase(sort)) {
+      queryString.append(" order by ").append(JCR_SCORE);
+    }
+
+    queryString.append(" ").append(order);
+    
+    return queryString;
   }
   
   private boolean hasPermssionViewerPost(Node postNode, List<String> listOfUser) throws Exception {

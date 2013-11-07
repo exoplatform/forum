@@ -542,6 +542,16 @@ public class Utils implements ForumNodeTypes {
     }
     return builder.toString();
   }
+  
+  public static String buildSQLHasProperty(String property) {
+    StringBuilder builder = new StringBuilder();
+    if (!isEmpty(property)) {
+      builder.append(property).append("='' or ")
+             .append(property).append("=' ' or ")
+             .append(property).append(" IS NULL");
+    }
+    return builder.toString();
+  }
 
   /**
    * Build Xpath query for case comparator with all properties of user and other property.
@@ -562,6 +572,23 @@ public class Utils implements ForumNodeTypes {
       } else if (ForumServiceUtils.isMembershipExpression(str)) {
         str = str.substring(str.indexOf(":") + 1);
         query.append(" or @").append(property).append(" = '*:").append(str).append("'");
+      }
+    }
+    return query.toString();
+  }
+  
+  public static String buildSQLByUserInfo(String property, List<String> groupAndMembershipInfos) {
+    StringBuilder query = new StringBuilder();
+    for (String str : groupAndMembershipInfos) {
+      if (query.length() > 0) {
+        query.append(" or ");
+      }
+      query.append("").append(property).append(" = '").append(str).append("'");
+      if (ForumServiceUtils.isGroupExpression(str)) {
+        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
+      } else if (ForumServiceUtils.isMembershipExpression(str)) {
+        str = str.substring(str.indexOf(":") + 1);
+        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
       }
     }
     return query.toString();
