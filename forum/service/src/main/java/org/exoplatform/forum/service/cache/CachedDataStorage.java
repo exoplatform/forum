@@ -1719,4 +1719,14 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.topicHasPoll(topicPath);
   }
 
+  @Override
+  public List<ForumSearchResult> getUnifiedSearch(String textQuery,
+                                                  String userId,
+                                                  Integer offset,
+                                                  Integer limit,
+                                                  String sort,
+                                                  String order) throws Exception {
+    return storage.getUnifiedSearch(textQuery, userId, offset, limit, sort, order);
+  }
+
 }
