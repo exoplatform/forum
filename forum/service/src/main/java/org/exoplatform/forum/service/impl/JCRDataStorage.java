@@ -1363,7 +1363,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // get public forums
     qrCanCreateTopic = new StringBuilder(JCR_ROOT);
     qrCanCreateTopic.append(categoryHome.getPath())
-                    .append("//element(*,")
+                    .append("/element(*,")
                     .append(EXO_FORUM).append(")");
 
     qrCanCreateTopic.append("[")
@@ -2085,7 +2085,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private String buildXpath(SessionProvider sProvider, Node forumNode) throws Exception {
     QueryManager qm = getCategoryHome(sProvider).getSession().getWorkspace().getQueryManager();
     StringBuilder qrBuilder = new StringBuilder(JCR_ROOT);
-    qrBuilder.append(forumNode.getPath()).append("//element(*,").append(EXO_TOPIC).append(")[@").append(EXO_IS_WAITING).append("='false' and @")
+    qrBuilder.append(forumNode.getPath()).append("/element(*,").append(EXO_TOPIC).append(")[@").append(EXO_IS_WAITING).append("='false' and @")
            .append(EXO_IS_ACTIVE).append("='true' and @").append(EXO_IS_CLOSED).append("='false' and (not(@").append(EXO_CAN_VIEW).append(") or @")
            .append(EXO_CAN_VIEW).append("='' or @").append(EXO_CAN_VIEW).append("=' ')]");
     Query query = qm.createQuery(qrBuilder.toString(), Query.XPATH);
@@ -2110,7 +2110,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
     StringBuffer stringBuffer = new StringBuffer();
 
-    stringBuffer.append(JCR_ROOT).append(forumPath).append("//element(*,").append(EXO_TOPIC).append(")");
+    stringBuffer.append(JCR_ROOT).append(forumPath).append("/element(*,").append(EXO_TOPIC).append(")");
     if (strQuery != null && strQuery.length() > 0) {
       // @exo:isClosed,
       // @exo:isWaiting ,
@@ -2181,7 +2181,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
     StringBuffer stringBuffer = new StringBuffer();
 
-    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("//element(*,").append(EXO_TOPIC).append(")");
+    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("/element(*,").append(EXO_TOPIC).append(")");
     if (filter.isAdmin() == false) {
       StringBuffer strQuery = new StringBuffer();
       strQuery.append("@").append(EXO_IS_WAITING).append("='false' and @")
@@ -2360,7 +2360,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
       QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-      String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
+      String queryString = JCR_ROOT + forumPath + "/element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
       Query query = qm.createQuery(queryString, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -2512,11 +2512,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private String getStringQueryResultTopicsOld(Node categoryHome, long date, String forumPatch) throws Exception {
     Calendar newDate = getGreenwichMeanTime();
-    if (forumPatch == null || forumPatch.length() <= 0)
+    String element = "/element";
+    if (forumPatch == null || forumPatch.length() <= 0) {
       forumPatch = categoryHome.getPath();
+      element = "//element";
+    }
+    //TODO why??
     newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
     StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(JCR_ROOT).append(forumPatch).append("//element(*,").append(EXO_TOPIC).append(")[@").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @").append(EXO_CREATED_DATE).append(ASCENDING);
+    stringBuffer.append(JCR_ROOT).append(forumPatch).append(element).append("(*,").append(EXO_TOPIC).append(")[@").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @").append(EXO_CREATED_DATE).append(ASCENDING);
     return stringBuffer.toString();
   }
 
@@ -3134,7 +3138,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node topicNode = getCategoryHome(sProvider).getNode(topicPath);
       StringBuffer stringBuffer = new StringBuffer(JCR_ROOT)
-      .append(topicNode.getPath()).append("//element(*,").append(EXO_POST).append(")[")
+      .append(topicNode.getPath()).append("/element(*,").append(EXO_POST).append(")[")
       .append(Utils.getQueryByProperty("", EXO_USER_PRIVATE, EXO_USER_PRI))
       .append(Utils.getQueryByProperty("and", EXO_IS_FIRST_POST, "false"))
       .append("] order by @exo:createdDate ascending");
@@ -3181,7 +3185,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
 
     StringBuilder strBuilder = new StringBuilder(JCR_ROOT)
-    .append(topicPath).append("//element(*,").append(EXO_POST).append(")")
+    .append(topicPath).append("/element(*,").append(EXO_POST).append(")")
     .append(Utils.getPathQuery(filter.getIsApproved(), filter.getIsHidden(), filter.getIsWaiting(), filter.getUserLogin()))
     .append(" order by @exo:createdDate ascending");
    
@@ -3196,11 +3200,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       .append(filter.getForumId()).append("/").append(filter.getTopicId()).toString();
     }
     StringBuilder strBuilder = new StringBuilder("SELECT * FROM ").append(EXO_POST);
-    strBuilder.append(" WHERE (jcr:path LIKE '").append(topicPath).append("/%') AND (");
+    strBuilder.append(" WHERE (jcr:path LIKE '").append(topicPath).append("/%' AND NOT jcr:path LIKE '")
+              .append(topicPath).append("/%/%') AND (");
     strBuilder.append(Utils.getSQLQuery(filter.getIsApproved(), filter.getIsHidden(), filter.getIsWaiting(), filter.getUserLogin())).append(")");
     strBuilder.append(" ORDER BY ").append(EXO_CREATED_DATE).append(" ASC");
-    
-    System.out.println("\n\n ========> " + strBuilder.toString());
+
     return strBuilder.toString();
   }
   
@@ -3989,7 +3993,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private Node getLastDatePost(Node forumHomeNode, Node node, Node postNode_) throws Exception {
     QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
     StringBuffer pathQuery = new StringBuffer();
-    pathQuery.append(JCR_ROOT).append(node.getPath()).append("//element(*,exo:post)[@exo:isHidden='false' and @exo:isApproved='true'] order by @exo:createdDate descending");
+    pathQuery.append(JCR_ROOT).append(node.getPath()).append("/element(*,exo:post)[@exo:isHidden='false' and @exo:isApproved='true'] order by @exo:createdDate descending");
     Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
@@ -4511,7 +4515,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node tagHome = getTagHome(sProvider);
       QueryManager qm = tagHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer(JCR_ROOT + tagHome.getPath() + "//element(*,exo:forumTag)");
+      StringBuffer queryString = new StringBuffer(JCR_ROOT + tagHome.getPath() + "/element(*,exo:forumTag)");
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -5347,7 +5351,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node profileNode = userProfileNode.getNode(userName);
       QueryManager qm = profileNode.getSession().getWorkspace().getQueryManager();
-      String pathQuery = JCR_ROOT + profileNode.getPath() + "//element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
+      String pathQuery = JCR_ROOT + profileNode.getPath() + "/element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
       Query query = qm.createQuery(pathQuery, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -5676,7 +5680,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     StringBuffer queryString = new StringBuffer();
     queryString.append(JCR_ROOT)
                .append(categoryHome.getPath())
-               .append("//element(*,exo:forumCategory)")
+               .append("/element(*,exo:forumCategory)")
                .append(strQueryCate)
                .append(" order by @exo:categoryOrder ascending, @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -5695,7 +5699,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         queryString = new StringBuffer();
         queryString.append(JCR_ROOT)
                    .append(cateNode.getPath())
-                   .append("//element(*,exo:forum)")
+                   .append("/element(*,exo:forum)")
                    .append(strQueryForum)
                    .append(" order by @exo:forumOrder ascending,@exo:createdDate ascending");
         query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -6316,7 +6320,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuilder queryString = new StringBuilder();
 
-    queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_FORUM_CATEGORY).append(")[")
+    queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("/element(*,").append(EXO_FORUM_CATEGORY).append(")[")
                
                .append("(").append(Utils.buildXpathHasProperty(property))
                .append(" or ").append(Utils.buildXpathByUserInfo(property, listOfUser)).append(")")
