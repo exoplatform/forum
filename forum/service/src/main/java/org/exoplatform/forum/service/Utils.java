@@ -32,6 +32,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
@@ -800,6 +801,22 @@ public class Utils implements ForumNodeTypes {
       return path.substring(0, path.lastIndexOf(TOPIC) + getTopicId(path).length());
     }
     return null;
+  }
+  
+  /**
+   * Get sub path.
+   * 
+   * @param path
+   * @return
+   * @since 4.1
+   */
+  public static String getSubPath(String path) {
+    String forumHome = KSDataLocation.Locations.FORUM_CATEGORIES_HOME;
+    if (isEmpty(path) == false && path.indexOf(forumHome) >= 0) {
+      int index = path.indexOf(forumHome) + forumHome.length() + 1;
+      return path.substring(index);
+    }
+    return path;
   }
   
 }

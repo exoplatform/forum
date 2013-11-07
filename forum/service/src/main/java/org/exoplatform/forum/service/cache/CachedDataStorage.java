@@ -204,14 +204,15 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearTopicCache(String topicPath) throws Exception {
+    topicPath = Utils.getSubPath(topicPath);
     topicData.remove(new TopicKey(topicPath, false));
     topicData.remove(new TopicKey(topicPath.toUpperCase(), true));
     topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
   }
 
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
-    Topic topic = getTopic(categoryId, forumId, topicId, null);
-    clearTopicCache(topic);
+    String topicPath = new StringBuffer(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
+    clearTopicCache(getTopicByPath(topicPath, false));
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
@@ -811,7 +812,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
-            try {
+            try {System.out.println(Utils.getSubPath(topicPath));
               Topic got = storage.getTopicSummary(topicPath);
               if (got != null) {
                 return new TopicData(got);
@@ -823,7 +824,7 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(topicPath, false)
+        new TopicKey(Utils.getSubPath(topicPath), false)
     ).build();
     //
     got.setIsPoll(topicHasPoll(got.getPath()));
@@ -846,8 +847,7 @@ public class CachedDataStorage implements DataStorage, Startable {
               Topic got = storage.getTopicByPath(topicPath, isLastPost);
               if (got != null) {
                 return new TopicData(got);
-              }
-              else {
+              } else {
                 return TopicData.NULL;
               }
             } catch (Exception e) {
@@ -855,7 +855,7 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(topicPath.toUpperCase(), isLastPost)
+        new TopicKey(Utils.getSubPath(topicPath.toUpperCase()), isLastPost)
     ).build();
     //
     got.setIsPoll(topicHasPoll(got.getPath()));
@@ -1514,6 +1514,8 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
     storage.calculateDeletedGroup(groupId, groupName);
+    topicData.select(new ScopeCacheSelector<TopicKey, TopicData>());
+    topicList.select(new ScopeCacheSelector<TopicListKey, ListTopicData>());
     forumData.select(new ScopeCacheSelector<ForumKey, ForumData>());
     forumList.select(new ScopeCacheSelector<ForumListKey, ListForumData>());
     categoryData.select(new ScopeCacheSelector<CategoryKey, CategoryData>());
