@@ -25,4 +25,7 @@ public class PostId {
     return Utils.getCategoryId(path);
   }
 
+  public String getTopicPath() {
+    return Utils.getTopicPath(path);
+  }
 }

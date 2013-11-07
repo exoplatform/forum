@@ -75,6 +75,7 @@ import org.exoplatform.forum.service.cache.model.key.TopicListCountKey;
 import org.exoplatform.forum.service.cache.model.key.TopicListKey;
 import org.exoplatform.forum.service.cache.model.selector.CategoryIdSelector;
 import org.exoplatform.forum.service.cache.model.selector.ForumPathSelector;
+import org.exoplatform.forum.service.cache.model.selector.MiscDataSelector;
 import org.exoplatform.forum.service.cache.model.selector.PostListCountSelector;
 import org.exoplatform.forum.service.cache.model.selector.TopicListCountSelector;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
@@ -95,6 +96,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private static final Log LOG = ExoLogger.getLogger(CachedDataStorage.class);
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
+  private static final String FORUM_CAN_VIEW_KEY = "userCanView";
   private static final String PROFILE_KEY = "profile";
 
   private DataStorage storage;
@@ -199,6 +201,10 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private void clearLinkListCache() throws Exception {
     linkListData.select(new ScopeCacheSelector<LinkListKey, ListLinkData>());
+  }
+
+  private void clearMiscDataCache(String type) throws Exception {
+    miscData.select(new MiscDataSelector(type));
   }
   
   private void clearTopicsCache(List<Topic> topics) throws Exception {
@@ -692,6 +698,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearForumCache(forum, true);
     clearForumListCache();
     clearObjectCache(forum, true);
+    //
+    clearMiscDataCache(FORUM_CAN_VIEW_KEY);
   }
 
   public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
@@ -700,6 +708,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearForumListCache();
     clearLinkListCache();
     clearObjectCache(forum, true);
+    //
+    clearMiscDataCache(FORUM_CAN_VIEW_KEY);
   }
 
   public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
@@ -709,6 +719,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     for (String forumPath : forumPaths) {
       clearObjectCache(Utils.getCategoryId(forumPath), Utils.getForumId(forumPath), true);
     }
+    //
+    clearMiscDataCache(FORUM_CAN_VIEW_KEY);
   }
 
   public Forum removeForum(String categoryId, String forumId) throws Exception {
@@ -716,6 +728,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearForumListCache();
     clearLinkListCache();
     clearObjectCache(categoryId, forumId, false);
+    //
+    clearMiscDataCache(FORUM_CAN_VIEW_KEY);
     return storage.removeForum(categoryId, forumId);
   }
 
@@ -726,6 +740,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
     clearForumListCache();
     clearLinkListCache();
+    //
+    clearMiscDataCache(FORUM_CAN_VIEW_KEY);
     storage.moveForum(forums, destCategoryPath);
   }
 
@@ -1708,6 +1724,42 @@ public class CachedDataStorage implements DataStorage, Startable {
   @Override
   public boolean topicHasPoll(String topicPath) {
     return storage.topicHasPoll(topicPath);
+  }
+
+  @Override
+  public List<ForumSearchResult> getUnifiedSearch(String textQuery,
+                                                  String userId,
+                                                  Integer offset,
+                                                  Integer limit,
+                                                  String sort,
+                                                  String order) throws Exception {
+    return storage.getUnifiedSearch(textQuery, userId, offset, limit, sort, order);
+  }
+
+  @Override
+  public List<String> getForumUserCanView(final List<String> listOfUser, final List<String> listForumIds) throws Exception {
+    String key = UserProfile.USER_GUEST;
+    if (listOfUser != null && listOfUser.isEmpty() == false) {
+      key = listOfUser.toString();
+    }
+    if (listForumIds != null && listForumIds.isEmpty() == false) {
+      key += listForumIds.toString();
+    }
+    SimpleCacheKey canViewKey = new SimpleCacheKey(FORUM_CAN_VIEW_KEY, key);
+
+    return (List<String>)miscDataFuture.get(
+        new ServiceContext<SimpleCacheData>() {
+          public SimpleCacheData<List<String>> execute() {
+            try {
+              List<String> got = storage.getForumUserCanView(listOfUser, listForumIds);
+              return new SimpleCacheData<List<String>>(got);
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+        },
+        canViewKey
+    ).build();
   }
 
 }
