@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,7 +133,6 @@ public class UserProfile {
 
   private long                totalMessage           = 0;
 
-  @SuppressWarnings("deprecation")
   public UserProfile() {
     userId = USER_GUEST;
     userTitle = "Guest";
@@ -144,13 +144,16 @@ public class UserProfile {
     collapCategories = new String[] {};
     lastReadPostOfTopic = new String[] { "" };
     lastReadPostOfForum = new String[] { "" };
-    Date dateHost = new Date();
-    timeZone = (double) dateHost.getTimezoneOffset() / 60;
+    timeZone = getDefaultTimeZone();
     shortDateformat = "MM/dd/yyyy";
     longDateformat = "EEE, MMM dd, yyyy";
     timeFormat = "hh:mm a";
   }
   
+  private double getDefaultTimeZone() {
+    Calendar cal = Calendar.getInstance();
+    return ((cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET)) / (3600 * 1000));
+  }
 
   public String getPath() {
     return path;
@@ -160,8 +163,9 @@ public class UserProfile {
     this.path = path;
   }
 
-  public void setUserId(String userId) {
+  public UserProfile setUserId(String userId) {
     this.userId = userId;
+    return this;
   }
 
   public String getUserId() {

@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.jcr.NodeIterator;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.cache.ServiceContext;
 import org.exoplatform.forum.common.cache.model.CacheType;
@@ -19,6 +21,7 @@ import org.exoplatform.forum.common.cache.model.key.SimpleCacheKey;
 import org.exoplatform.forum.common.cache.model.selector.ScopeCacheSelector;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
@@ -97,6 +100,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private DataStorage storage;
   private CacheService service;
+  private LifeCycleCompletionService completionService;
 
   //
   private ExoCache<CategoryKey, CategoryData> categoryData;
@@ -143,7 +147,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     
     this.storage = storage;
     this.service = service;
-    
+    this.completionService = CommonsUtils.getService(LifeCycleCompletionService.class);
   }
 
   private void clearCategoryCache(String id) throws Exception {
@@ -808,7 +812,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
-            try {System.out.println(Utils.getSubPath(topicPath));
+            try {
               Topic got = storage.getTopicSummary(topicPath);
               if (got != null) {
                 return new TopicData(got);
@@ -1125,9 +1129,29 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
-    storage.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
+    //
+    completionService.addTask(new SaveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic));
+    //
+    refreshUserProfile(new UserProfile().setUserId(userId));
   }
 
+  class SaveLastPostIdRead implements Callable<Boolean> {
+    private String userId;
+    private String[] lastReadPostOfForum, lastReadPostOfTopic;
+
+    public SaveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) {
+      this.userId = userId;
+      this.lastReadPostOfTopic = lastReadPostOfTopic;
+      this.lastReadPostOfForum = lastReadPostOfForum;
+    }
+
+    @Override
+    public Boolean call() throws Exception {
+      storage.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
+      return true;
+    }
+  }
+  
   public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
     return storage.getUserModerator(userName, isModeCate);
   }
