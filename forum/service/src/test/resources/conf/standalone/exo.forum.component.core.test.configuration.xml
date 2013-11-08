@@ -72,7 +72,21 @@
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>
   
- 
+  <component>
+    <key>org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService</key>
+    <type>org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService</type>
+    <init-params>
+      <value-param>
+        <name>thread-number</name>
+        <value>5</value>
+      </value-param>
+      <value-param>
+        <name>async-execution</name>
+        <value>false</value>
+      </value-param>
+    </init-params>
+  </component>
+
   <component>
     <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
     <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
