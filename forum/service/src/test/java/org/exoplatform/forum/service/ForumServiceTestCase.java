@@ -374,6 +374,19 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(USER_ROOT, ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
     assertEquals(USER_ROOT, ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
     assertEquals(USER_ROOT, ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+    
+  //update forum moderator
+    profile = createdUserProfile("mary");
+    profile.setUserRole(UserProfile.USER);
+    profile.setUserTitle("User");
+    profile.setModerateForums(new String[] { "" });
+    profile.setModerateCategory(new String[] { "" });
+    forumService_.saveUserProfile(profile, false, false);
+    
+    groupUser = new String[] {"mary"};
+    forum.setModerators(groupUser);
+    forumService_.saveForum(category.getId(), forum, false);
+    assertEquals(UserProfile.MODERATOR, forumService_.getUserInfo("mary").getUserRole());
   }
 
   public void testImportXML() throws Exception {

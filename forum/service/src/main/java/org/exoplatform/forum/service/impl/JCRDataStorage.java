@@ -51,7 +51,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.observation.Event;
-import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -114,7 +113,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.CategoryData;
-import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
 import org.exoplatform.forum.service.conf.PostData;
@@ -134,7 +132,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
@@ -190,7 +187,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private Map<String, List<String>>    updatingRead         = new ConcurrentHashMap<String, List<String>>();
 
-  private Map<String, EventListener>   listeners            = new HashMap<String, EventListener>();
+  //private Map<String, EventListener>   listeners            = new HashMap<String, EventListener>();
 
   private SessionManager               sessionManager;
 
@@ -266,42 +263,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  @Deprecated
   public void addCalculateModeratorEventListener() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
-    Node categoryHome = getCategoryHome(sProvider);
-    try {
-      NodeIterator iter = categoryHome.getNodes();
-      NodeIterator iter1;
-      while (iter.hasNext()) {
-        Node catNode = iter.nextNode();
-        if (catNode.isNodeType(EXO_FORUM_CATEGORY)) {
-          addModeratorCalculateListener(catNode);
-          iter1 = catNode.getNodes();
-          while (iter1.hasNext()) {
-            Node forumNode = iter1.nextNode();
-            if (forumNode.isNodeType(EXO_FORUM)) {
-              addModeratorCalculateListener(forumNode);
-            }
-          }
-        }
-      }
-    } catch (Exception e) {
-      log.error("Failed to add calculate moderator event listener", e);
-    } finally {
-      sProvider.close();
-    }
-  }
-
-  protected void addModeratorCalculateListener(Node node) throws Exception {
-    try {
-      String path = node.getPath();
-      ObservationManager observation = node.getSession().getWorkspace().getObservationManager();
-      CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
-      moderatorListener.setPath(path);
-      observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, path, false, null, null, false);
-    } catch (Exception e) {
-      log.error(String.format("Failed to add listener for node %s", node.getName()), e);
-    }
+//    SessionProvider sProvider = SessionProvider.createSystemProvider();
+//    ObservationManager observation = sessionManager.getSession(sProvider).getWorkspace().getObservationManager();
+//    CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
+//    observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_FORUM_CATEGORY, EXO_FORUM}, false);
   }
 
   public void addDeletedUserCalculateListener() {
@@ -331,33 +298,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void initCategoryListener() {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
-    listeners.clear();
     try {
-      Node categoryHome = getCategoryHome(sProvider);
-      ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager();
-      String wsName = categoryHome.getSession().getWorkspace().getName();
-      String repoName = ((RepositoryImpl) categoryHome.getSession().getRepository()).getName();
-      if (!listeners.containsKey(categoryHome.getPath())) {
-        CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName);
-        observation.addEventListener(categoryListener, Event.NODE_ADDED | Event.NODE_REMOVED, categoryHome.getPath(), false, null, null, false);
-        listeners.put(categoryHome.getPath(), categoryListener);
-      }
-      // register StatisticEventListener for old category.
-      NodeIterator iter = categoryHome.getNodes();
-      while (iter.hasNext()) {
-        Node catNode = iter.nextNode();
-        if (!listeners.containsKey(catNode.getPath())) {
-          StatisticEventListener sListener = new StatisticEventListener(wsName, repoName);
-          observation.addEventListener(sListener, Event.NODE_ADDED | Event.NODE_REMOVED, catNode.getPath(), true, null, null, false);
-          listeners.put(catNode.getPath(), sListener);
-        }
-      }
-
+      SessionProvider sProvider = SessionProvider.createSystemProvider();
+      ObservationManager observation = sessionManager.getSession(sProvider).getWorkspace().getObservationManager();
+      CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
+      observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_FORUM_CATEGORY, EXO_FORUM}, false);
+      
+      //statistic listener
+      StatisticEventListener sListener = new StatisticEventListener();
+      observation.addEventListener(sListener, Event.NODE_ADDED | Event.NODE_REMOVED, "/", true, null, new String[] {EXO_FORUM, EXO_TOPIC}, false);
     } catch (Exception e) {
       log.error("Failed to init category listenner", e);
-    } finally {
-      sProvider.close();
     }
   }
 
@@ -940,7 +891,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
         }
         categoryHome.getSession().save();
-        addModeratorCalculateListener(catNode);
+        //addModeratorCalculateListener(catNode);
       } else {
         catNode = categoryHome.getNode(category.getId());
         String[] oldcategoryMod = new PropertyReader(catNode).strings(EXO_MODERATORS, new String[] {""});
@@ -1028,6 +979,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Session session = manager.createSession();
       try {
         Node node = (Node) session.getItem(nodePath);
+        
+        if (node.isNodeType(EXO_FORUM) == false && node.isNodeType(EXO_FORUM_CATEGORY) == false) {
+          return;
+        }
+        
         PropertyReader reader = new PropertyReader(node);
         String[] modTemp = reader.strings(EXO_TEMP_MODERATORS, new String[] {});
         
@@ -1039,7 +995,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             updateModeratorInForums(node, category.getModerators());
             updateUserProfileModInCategory(session, node, modTemp, category, isNew);
           }
-        } else {
+        } else  if (node.isNodeType(EXO_FORUM)) {
           Forum forum = new Forum();
           forum.setId(node.getName());
           forum.setForumName(reader.string(EXO_NAME, ""));
@@ -1199,40 +1155,43 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  @Deprecated
   public void registerListenerForCategory(String path) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node categoryHome = getCategoryHome(sProvider);
-      String id = path.substring(path.lastIndexOf("/") + 1);
-      Node catNode = categoryHome.getNode(id);
-      if (!listeners.containsKey(catNode.getPath())) {
-        String wsName = catNode.getSession().getWorkspace().getName();
-        RepositoryImpl repo = (RepositoryImpl) catNode.getSession().getRepository();
-        ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager();
-        StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName());
-        observation.addEventListener(statisticEventListener, Event.NODE_ADDED | Event.NODE_REMOVED, catNode.getPath(), true, null, null, false);
-        listeners.put(catNode.getPath(), statisticEventListener);
-      }
-    } catch (Exception e) {
-      log.error("Failed to register listener for category " + path, e);
-    }
+//    SessionProvider sProvider = CommonUtils.createSystemProvider();
+//    try {
+//      Node categoryHome = getCategoryHome(sProvider);
+//      String id = path.substring(path.lastIndexOf("/") + 1);
+//      Node catNode = categoryHome.getNode(id);
+//      if (!listeners.containsKey(catNode.getPath())) {
+//        String wsName = catNode.getSession().getWorkspace().getName();
+//        RepositoryImpl repo = (RepositoryImpl) catNode.getSession().getRepository();
+//        ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager();
+//        StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName());
+//        observation.addEventListener(statisticEventListener, Event.NODE_ADDED | Event.NODE_REMOVED, catNode.getPath(), true, null, null, false);
+//        listeners.put(catNode.getPath(), statisticEventListener);
+//      }
+//    } catch (Exception e) {
+//      log.error("Failed to register listener for category " + path, e);
+//    }
   }
 
+  @Deprecated
   public void unRegisterListenerForCategory(String path) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      unRegisterListenerForCategory(sProvider, path);
-    } catch (Exception e) {
-      log.error("Failed to unregister listener for category " + path, e);
-    }
+//    SessionProvider sProvider = CommonUtils.createSystemProvider();
+//    try {
+//      unRegisterListenerForCategory(sProvider, path);
+//    } catch (Exception e) {
+//      log.error("Failed to unregister listener for category " + path, e);
+//    }
   }
 
+  @Deprecated
   public void unRegisterListenerForCategory(SessionProvider sProvider, String path) throws Exception {
-    if (listeners.containsKey(path)) {
-      ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
-      obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
-      listeners.remove(path);
-    }
+//    if (listeners.containsKey(path)) {
+//      ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
+//      obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
+//      listeners.remove(path);
+//    }
   }
 
   public Category removeCategory(String categoryId) throws Exception {
@@ -1585,13 +1544,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (catNode.hasProperty(EXO_FORUM_COUNT))
           forumCount = catNode.getProperty(EXO_FORUM_COUNT).getLong() + 1;
         catNode.setProperty(EXO_FORUM_COUNT, forumCount);
+        forumNode.setProperty(EXO_MODERATORS, strModerators);
         // Save Node
-        catNode.getSession().save();
+       // catNode.getSession().save();
         // edit profile for moderator in this forum
-        addModeratorCalculateListener(forumNode);
+        //addModeratorCalculateListener(forumNode);
       } else {
         forumNode = catNode.getNode(forum.getId());
         oldMod = Utils.valuesToArray(forumNode.getProperty(EXO_MODERATORS).getValues());
+        forumNode.setProperty(EXO_MODERATORS, strModerators);
         forumNode.setProperty(EXO_TEMP_MODERATORS, oldMod);
 
         if (forumNode.hasProperty(EXO_IS_MODERATE_TOPIC))
@@ -1638,7 +1599,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       forumNode.setProperty(EXO_VIEWER, convertArray(forum.getViewer()));
-      catNode.save();
+      catNode.getSession().save();
 
       PropertyReader reader = new PropertyReader(forumNode);
       forum.setPath(forumNode.getPath());
@@ -1646,16 +1607,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forum.setPostCount(reader.l(EXO_POST_COUNT));
       forum.setLastTopicPath(getLastTopicPath(reader, forum));
       forum.setModerators(strModerators);
-
-      try {
-        forumNode.setProperty(EXO_MODERATORS, strModerators);
-        forumNode.save();
-      } catch (Exception e) {
-        if (log.isDebugEnabled()){
-          log.debug(String.format("Failed to set moderators for forum %s", forumNode.getName()), e);
-        }
-      }
-
+      
       StringBuilder id = new StringBuilder();
       id.append(catNode.getProperty(EXO_CATEGORY_ORDER).getString());
       id.append(catNode.getProperty(EXO_CREATED_DATE).getDate().getTimeInMillis());
@@ -1723,13 +1675,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               list.add(string2);
             }
           }
+          
+          if (userProfileNode.getProperty(EXO_USER_ROLE).getLong() >= 2) {
+            userProfileNode.setProperty(EXO_USER_ROLE, 1);
+            userProfileNode.setProperty(EXO_USER_TITLE, Utils.MODERATOR);
+          }
+          
           if (!hasMod) {
             list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
             userProfileNode.setProperty(EXO_MODERATE_FORUMS, Utils.getStringsInList(list));
-            if (userProfileNode.getProperty(EXO_USER_ROLE).getLong() >= 2) {
-              userProfileNode.setProperty(EXO_USER_ROLE, 1);
-              userProfileNode.setProperty(EXO_USER_TITLE, Utils.MODERATOR);
-            }
+            
             getTotalJobWaitingForModerator(session, string);
           }
         } catch (PathNotFoundException e) {
