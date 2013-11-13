@@ -37,6 +37,11 @@ public class CategoryEventListener implements EventListener {
     workspace_ = ws;
     repository_ = repo;
   }
+  
+  public CategoryEventListener() throws Exception {
+    workspace_ = "";
+    repository_ = "";
+  }
 
   public String getSrcWorkspace() {
     return workspace_;

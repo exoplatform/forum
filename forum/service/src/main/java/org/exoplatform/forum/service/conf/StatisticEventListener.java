@@ -38,6 +38,11 @@ public class StatisticEventListener implements EventListener {
     workspace_ = ws;
     repository_ = repo;
   }
+  
+  public StatisticEventListener() throws Exception {
+    workspace_ = "";
+    repository_ = "";
+  }
 
   public String getSrcWorkspace() {
     return workspace_;

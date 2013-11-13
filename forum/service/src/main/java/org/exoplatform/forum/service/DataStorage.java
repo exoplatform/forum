@@ -61,6 +61,12 @@ public interface DataStorage {
 
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
+  /**
+   * Plug in CalculateModerator listener to JCR OservationManager
+   * 
+   * @throws Exception
+   * @deprecated will be removed 4.0.5 and 4.1.x. Only use initCategoryListener enough.
+   */
   void addCalculateModeratorEventListener() throws Exception;
 
   void addDeletedUserCalculateListener() throws Exception;
@@ -99,8 +105,20 @@ public interface DataStorage {
 
   void calculateModerator(String nodePath, boolean isNew) throws Exception;
 
+  /**
+   * Register listener for Category and Forum also
+   * @param path
+   * @throws Exception
+   * @deprecated it will be removed 4.1.x and 4.0.x. Makes slower in JCR saveItems.
+   */
   void registerListenerForCategory(String path) throws Exception;
 
+  /**
+   * UnRegister the statistic listener for Category and Forum
+   * @param path
+   * @throws Exception
+   * @deprecated it will be removed 4.1.x and 4.0.x.
+   */
   void unRegisterListenerForCategory(String path) throws Exception;
 
   Category removeCategory(String categoryId) throws Exception;
