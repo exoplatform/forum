@@ -349,7 +349,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public boolean isAdminRole(String userName) throws Exception {
-    if (Utils.isEmpty(userName)){
+    if (Utils.isEmpty(userName) || UserProfile.USER_GUEST.equals(userName)){
       return false;
     }
     if (isAdminRoleConfig(userName)) {
@@ -5734,7 +5734,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         List<String> forumCanView = new ArrayList<String>();
         Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, new ArrayList<String>(), EXO_VIEWER);
         categoryCanView = mapList.get(Utils.CATEGORY);
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
+        forumCanView.addAll(getCachedDataStorage().getForumUserCanView(listOfUser, listForumIds));
         if (categoryCanView.size() > 0 || forumCanView.size() > 0)
           listSearchEvent = removeItemInList(listSearchEvent, forumCanView, categoryCanView);
       }
@@ -5747,15 +5747,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public List<ForumSearchResult> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    DiscussionSearchResult searchResult = new DiscussionSearchResult(offset, limit, 0);
     List<ForumSearchResult> list = new ArrayList<ForumSearchResult>();
     try {
-      
-      
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 
-      String rootPath = categoryHome.getPath();
+      //String rootPath = categoryHome.getPath();
 
       //process query for asterisk 
       String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
@@ -5764,36 +5761,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean isAdmin = isAdminRole(userId);
 
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
-      List<String> listCateIds = new ArrayList<String>();
-      List<String> listForumIds = getForumUserCanView(categoryHome, listOfUser, new ArrayList<String>());
+      List<String> listForumIds = getCachedDataStorage().getForumUserCanView(listOfUser, new ArrayList<String>());
 
-      // If user isn't admin , get all membership of user
-      if (!isAdmin) {
-        // Get all category & forum that user can view
-        Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds, EXO_USER_PRIVATE);
-        listCateIds = mapList.get(Utils.CATEGORY);
-        listForumIds = mapList.get(Utils.FORUM);
-      }
       //for (String type : types) {
-        StringBuilder queryString = buildSQLQueryUnifiedSearch(rootPath, listForumIds, asteriskQuery, textQuery, isAdmin, sort, order, userId, listOfUser);
+        StringBuilder queryString = buildSQLQueryUnifiedSearch(listForumIds, asteriskQuery, textQuery, isAdmin, sort, order, userId, listOfUser);
+        //System.out.println("\n" + queryString.toString() + "\n");
         QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.SQL);
         query.setLimit(30);
         query.setOffset(offset);
         //query.setCaseInsensitiveOrder(true);
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
-        RowIterator rowIterator = result.getRows();
-        
-        //Update the total size
-        searchResult.setTotalSize(searchResult.getTotalSize() + iter.getSize());
+        //RowIterator rowIterator = result.getRows();
         
         while (iter.hasNext() && limit > 0) {
           Node nodeObj = iter.nextNode();
-          Row row = rowIterator.nextRow();
+          //Row row = rowIterator.nextRow();
           if(hasPermssionViewerPost(nodeObj, listOfUser) == false) {
             continue;
           }
-          list.add(setPropertyUnifiedSearch(row, nodeObj, textQuery));
+          list.add(setPropertyUnifiedSearch(nodeObj, textQuery));
           limit--;
         }
 
@@ -5805,15 +5792,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return UnifiedSearchOrder.processOrder(list, sort, order);
   }
   
-  private StringBuilder buildSQLQueryUnifiedSearch(String rootPath, List<String> listForumIds, String asteriskQuery,
+  private StringBuilder buildSQLQueryUnifiedSearch(List<String> listForumIds, String asteriskQuery,
                                                    String textQuery, boolean isAdmin, String sort, String order,
                                                    String userId, List<String> listOfUser) {
     
     StringBuilder queryString = new StringBuilder();
     
     queryString.append("select exo:name, exo:description, exo:message, rep:excerpt() from exo:post where ");
-    queryString.append("(jcr:path like '").append(rootPath).append("/%/%/%/%'");
-    queryString.append(") and ");
     
     if (listForumIds != null && listForumIds.size() > 0) {
       queryString.append("(");
@@ -5825,10 +5810,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       queryString.append(") and ");
     }
     queryString.append("((CONTAINS (exo:message, '").append(asteriskQuery).append("')")
-               .append(" or CONTAINS (exo:message, '").append(textQuery).append("'))")
+               .append(" or CONTAINS (exo:message, '").append(textQuery).append("0.8").append("'))")
                .append(" or (exo:isFirstPost='true' and ")
                .append("(CONTAINS (exo:name, '").append(asteriskQuery).append("')")
-               .append(" or CONTAINS (exo:name, '").append(textQuery).append("'))))");
+               .append(" or CONTAINS (exo:name, '").append(textQuery).append("0.8").append("'))))");
     
     // if user isn't admin
     if (!isAdmin) {
@@ -5857,10 +5842,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node topicNode = postNode.getParent();
     PropertyReader reader = new PropertyReader(topicNode);
     List<String> listOfCanviewrs = reader.list(EXO_CAN_VIEW, new ArrayList<String>());
+    if (listOfUser != null && listOfUser.size() > 0 && reader.string(EXO_OWNER, "").equals(listOfUser.get(0))) {
+      return true;
+    }
     return listOfCanviewrs.isEmpty() || Utils.hasPermission(listOfCanviewrs, listOfUser);
   }
 
-  private ForumSearchResult setPropertyUnifiedSearch(Row row, Node nodeObj, String originQuery) throws Exception {
+  private ForumSearchResult setPropertyUnifiedSearch(Node nodeObj, String originQuery) throws Exception {
     ForumSearchResult forumSearch = setPropertyForForumSearch(nodeObj, Utils.POST);
     //forumSearch.setExcerpt(originQuery);
     //forumSearch.setRelevancy(1);
@@ -5907,8 +5895,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return tempListSearchEvent;
   }
 
-  private List<String> getForumUserCanView(Node categoryHome, List<String> listOfUser, List<String> listForumIds) throws Exception {
+  public List<String> getForumUserCanView(List<String> listOfUser, List<String> listForumIds) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<String> listForum = new ArrayList<String>();
+    Node categoryHome = getCategoryHome(sProvider);
     QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuilder queryString = new StringBuilder();
     if(listOfUser == null || listOfUser.isEmpty()) {
@@ -5916,12 +5906,18 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       listOfUser.add(UserProfile.USER_GUEST);
     }
     // select all forum
-    queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_FORUM).append(")[")
-               .append("(").append(Utils.buildXpathHasProperty(EXO_VIEWER))
-               .append(" or ").append(Utils.buildXpathByUserInfo(EXO_VIEWER, listOfUser)).append(")")
-               .append(" or (").append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser)).append(")")
-               .append("]");
-    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+//    queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_FORUM).append(")[")
+//               .append("(").append(Utils.buildXpathHasProperty(EXO_VIEWER))
+//               .append(" or ").append(Utils.buildXpathByUserInfo(EXO_VIEWER, listOfUser)).append(")")
+//               .append(" or (").append(Utils.buildXpathByUserInfo(EXO_MODERATORS, listOfUser)).append(")")
+//               .append("]");
+//    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    
+    queryString.append("SELECT * FROM ").append(EXO_FORUM).append(" WHERE (")
+        .append(Utils.buildSQLHasProperty(EXO_VIEWER))
+        .append(" OR ").append(Utils.buildSQLByUserInfo(EXO_VIEWER, listOfUser)).append(")")
+        .append(" OR (").append(Utils.buildSQLByUserInfo(EXO_MODERATORS, listOfUser)).append(")");
+    Query query = qm.createQuery(queryString.toString(), Query.SQL);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
     Node forumNode = null;
@@ -5937,6 +5933,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         listForum.add(forumId);
       }
     }
+    
+    // If user isn't admin , get all membership of user
+    if (!isAdminRole(listOfUser.get(0))) {
+      // Get all category & forum that user can view
+      Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), listForum, EXO_USER_PRIVATE);
+      listForum = mapList.get(Utils.FORUM);
+    }
+    
     return listForum;
   }
 
@@ -5984,7 +5988,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds, "@exo:viewer");
         categoryCanView = mapList.get(Utils.CATEGORY);
         forumCanView.addAll(mapList.get(Utils.FORUM));
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
+        forumCanView.addAll(getCachedDataStorage().getForumUserCanView(listOfUser, listForumIds));
         if (categoryCanView.size() > 0 || forumCanView.size() > 0)
           listSearchEvent = removeItemInList(listSearchEvent, forumCanView, categoryCanView);
       }
@@ -7888,7 +7892,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (categoryCanView == null){
           return list;
         }
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, new ArrayList<String>()));
+        forumCanView.addAll(getCachedDataStorage().getForumUserCanView(listOfUser, new ArrayList<String>()));
       }
     }
 
