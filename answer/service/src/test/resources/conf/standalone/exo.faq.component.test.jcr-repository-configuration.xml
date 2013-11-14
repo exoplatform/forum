@@ -60,6 +60,7 @@
             <properties>
               <property name="jbosscache-configuration"
                         value="conf/exo.portal.component.test.jcr-jbosscache-config.xml"/>
+              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
@@ -72,6 +73,7 @@
               <property name="time-out" value="15m"/>
               <property name="jbosscache-configuration"
                         value="conf/exo.portal.component.test.jcr-jbosscache-lock-config.xml"/>
+              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </lock-manager>
         </workspace>
@@ -108,6 +110,7 @@
           <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
             <properties>
               <property name="jbosscache-configuration" value="jar:/conf/exo.portal.component.test.jcr-jbosscache-config.xml"/>
+              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
@@ -121,6 +124,7 @@
             <properties>
               <property name="time-out" value="15m"/>
               <property name="jbosscache-configuration" value="jar:/conf/exo.portal.component.test.jcr-jbosscache-lock-config.xml"/>
+              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </lock-manager>
         </workspace>
