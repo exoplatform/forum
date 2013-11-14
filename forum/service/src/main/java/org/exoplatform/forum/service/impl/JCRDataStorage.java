@@ -1412,9 +1412,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               categoryFilters.put(categoryId, categoryFilter);
             }
             forumName = node.getProperty(EXO_NAME).getString();
-            categoryFilter.setForumFilter(forumId, forumName);
+            if(categoryFilter.setForumFilter(forumId, forumName)){
           
-            gotItemNumber++;
+              gotItemNumber++;
+            }
             if (gotItemNumber == totalSize){
               break;
             }
