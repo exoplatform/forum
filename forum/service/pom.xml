@@ -195,12 +195,15 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
+<<<<<<< HEAD
         <exclusions>
             <exclusion>
                 <artifactId>jdom</artifactId>
                 <groupId>jdom</groupId>
             </exclusion>
         </exclusions>
+=======
+>>>>>>> FORUM-654 | Update version of kernel | core | jcr | ws to be compliant with gatein 3.7.x
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
