@@ -94,16 +94,16 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     forumService_.saveTopic(spCatId, forum.getId(), topic, true, false, new MessageBuilder());
     
     Topic topicA = createdTopic(USER_ROOT);
-    topic.setTopicName("Topic A");
+    topicA.setTopicName("Topic A");
     forumService_.saveTopic(spCatId, forum.getId(), topicA, true, false, new MessageBuilder());
     
     Topic topicB = createdTopic(USER_ROOT);
-    topic.setTopicName("Topic B");
+    topicB.setTopicName("Topic B");
     forumService_.saveTopic(spCatId, forum.getId(), topicB, true, false, new MessageBuilder());
     
     //
     Topic topicC = createdTopic(USER_ROOT);
-    topic.setTopicName("With Clone word");
+    topicC.setTopicName("With Clone word");
     forumService_.saveTopic(spCatId, forum.getId(), topicC, true, false, new MessageBuilder());
     
     postG = createdPost();
@@ -240,7 +240,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
   public void testPrivateTopic() throws Exception {
     loginUser(USER_ROOT);
     
-    assertEquals(1, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 1, "relevancy", "ASC").size());
+    assertEquals(5, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 10, "relevancy", "ASC").size());
     
     String spCatId = Utils.CATEGORY + Utils.CATEGORY_SPACE + "spaces";
     String forumId = Utils.FORUM + "space_test";
@@ -255,7 +255,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     topic.setCanPost(new String[] {USER_DEMO});
     forumService_.saveTopic(spCatId, forumId, topic, true, false, new MessageBuilder());
     
-    assertEquals(1, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 1, "relevancy", "ASC").size());
+    assertEquals(7, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 10, "relevancy", "ASC").size());
     
     loginUser(USER_DEMO);
     assertEquals(2, discussionSearchConnector.search(context, "Topic~", Collections.<String> emptyList(), 0, 2, "relevancy", "ASC").size());
@@ -265,12 +265,11 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     
     //test Unified Search with special characters
     assertEquals(5, discussionSearchConnector.search(context, " top~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
-    assertEquals(1, discussionSearchConnector.search(context, " clo~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, " clo~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
     
   }
   
   public void testFilterOrder() throws Exception {
-    System.out.println("==============="+postA.getPath());
     Collection<SearchResult> results =  discussionSearchConnector.search(context, "Reply~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC");
     assertEquals(4, results.size());
     
