@@ -98,6 +98,8 @@ public class CommonUtils {
 
   private static final String        SPECIAL_CHARACTOR_FORSERACH_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\?\\*%0-9]";
   
+  private static final String        SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]0-9]";
+  
   private static final String        SPECIAL_CHARACTOR_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\ %0-9]";
 
   private static List<String>        tokens     = new ArrayList<String>();
@@ -323,6 +325,15 @@ public class CommonUtils {
     String result = input.replaceAll(SPECIAL_CHARACTOR_FORSERACH_REGEX, " ");
     result = result.replaceAll("\\s+", " ");
     return result.trim();
+  }
+  
+  public static String removeSpecialCharacterForUnifiedSearch(String input) {
+    if (isEmpty(input)) {
+      return input;
+    }
+    String result = input.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, " ");
+    result = result.replaceAll("\\s+", " ");
+    return result.trim().replaceAll(" ", "~ ") + "~";
   }
 
   /**

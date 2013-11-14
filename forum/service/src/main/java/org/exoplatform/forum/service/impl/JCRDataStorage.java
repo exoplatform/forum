@@ -6059,6 +6059,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       //process query for asterisk 
       String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
+      textQuery = CommonUtils.removeSpecialCharacterForUnifiedSearch(textQuery);
       textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
       boolean isAdmin = isAdminRole(userId);
@@ -6112,11 +6113,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       queryString.append(") and ");
     }
-    queryString.append("((CONTAINS (exo:message, '").append(asteriskQuery).append("')")
-               .append(" or CONTAINS (exo:message, '").append(textQuery).append("0.8").append("'))")
+    queryString.append("(")
+               .append("CONTAINS (exo:message, '").append(textQuery).append("0.3").append("')")
                .append(" or (exo:isFirstPost='true' and ")
-               .append("(CONTAINS (exo:name, '").append(asteriskQuery).append("')")
-               .append(" or CONTAINS (exo:name, '").append(textQuery).append("0.8").append("'))))");
+               .append("CONTAINS (exo:name, '").append(textQuery).append("0.3").append("')))");
     
     // if user isn't admin
     if (!isAdmin) {
