@@ -36,10 +36,6 @@
           <groupId>log4j</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
-        <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
         </exclusion>

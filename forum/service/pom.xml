@@ -195,12 +195,6 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
-      <exclusions>
-      	<exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -229,11 +223,11 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Chromattic -->
     <dependency>
       <groupId>org.chromattic</groupId>
       <artifactId>chromattic.api</artifactId>
     </dependency>
-    <!-- Chromattic -->
     <dependency>
       <groupId>org.chromattic</groupId>
       <artifactId>chromattic.apt</artifactId>
