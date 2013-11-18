@@ -32,6 +32,10 @@ public class SimpleCacheKey extends ScopeCacheKey {
     this.key = key;
   }
 
+  public String getType() {
+    return this.type;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

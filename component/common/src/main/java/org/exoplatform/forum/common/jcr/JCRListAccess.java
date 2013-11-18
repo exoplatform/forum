@@ -19,6 +19,9 @@ package org.exoplatform.forum.common.jcr;
 import javax.jcr.Session;
 
 import org.exoplatform.commons.utils.ListAccess;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Basis for JCR-based list access. 
@@ -56,5 +59,11 @@ public abstract class JCRListAccess<E> implements ListAccess<E> {
   protected abstract E[] load(Session session, int index, int length) throws Exception, IllegalArgumentException;
 
   protected abstract int getSize(Session session) throws Exception;
+  
+  private static SessionProvider getUserSessionProvider() {
+    SessionProviderService sessionProviderService = (SessionProviderService)PortalContainer.getInstance().getComponentInstanceOfType(SessionProviderService.class);
+    SessionProvider sessionProvider = sessionProviderService.getSessionProvider(null);
+    return sessionProvider;
+  }
 
 }

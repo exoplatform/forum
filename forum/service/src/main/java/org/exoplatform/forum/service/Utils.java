@@ -32,6 +32,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
@@ -447,6 +448,17 @@ public class Utils implements ForumNodeTypes {
     return strBuilder.toString();
   }
 
+  public static String getSQLQueryByProperty(String typeAdd, String property, String value) {
+    StringBuilder strBuilder = new StringBuilder();
+    if (!isEmpty(value) && !isEmpty(property)) {
+      if (!isEmpty(typeAdd)) {
+        strBuilder.append(SPACE).append(typeAdd).append(SPACE);
+      }
+      strBuilder.append("(").append(property).append("='").append(value).append("')");
+    } 
+    return strBuilder.toString();
+  }
+
   /**
    * get Xpath query when get list post. 
    * @param String isApproved
@@ -486,6 +498,35 @@ public class Utils implements ForumNodeTypes {
     }
     return new StringBuilder();
   }
+
+  public static StringBuilder getSQLQuery(String isApproved, String isHidden, String isWaiting, String userLogin) throws Exception {
+    StringBuilder strBuilder = new StringBuilder();
+    String typeAdd = null;
+    String str = getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, userLogin);
+    if (!isEmpty(str)) {
+      strBuilder.append("(").append(str);
+      typeAdd = "or";
+    }
+    if ("or".equals(typeAdd)) {
+      strBuilder.append(getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, EXO_USER_PRI)).append(")");
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_APPROVED, isApproved);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_HIDDEN, isHidden);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+      typeAdd = "and";
+    }
+    str = getSQLQueryByProperty(typeAdd, EXO_IS_WAITING, isWaiting);
+    if (!isEmpty(str)) {
+      strBuilder.append(str);
+    }
+    return strBuilder;
+  }
   
   /**
    * Build Xpath query for check has property existing.
@@ -499,6 +540,16 @@ public class Utils implements ForumNodeTypes {
       builder.append("(not(@").append(property).append(") or @")
              .append(property).append("='' or @")
              .append(property).append("=' ')");
+    }
+    return builder.toString();
+  }
+  
+  public static String buildSQLHasProperty(String property) {
+    StringBuilder builder = new StringBuilder();
+    if (!isEmpty(property)) {
+      builder.append(property).append("='' or ")
+             .append(property).append("=' ' or ")
+             .append(property).append(" IS NULL");
     }
     return builder.toString();
   }
@@ -522,6 +573,23 @@ public class Utils implements ForumNodeTypes {
       } else if (ForumServiceUtils.isMembershipExpression(str)) {
         str = str.substring(str.indexOf(":") + 1);
         query.append(" or @").append(property).append(" = '*:").append(str).append("'");
+      }
+    }
+    return query.toString();
+  }
+  
+  public static String buildSQLByUserInfo(String property, List<String> groupAndMembershipInfos) {
+    StringBuilder query = new StringBuilder();
+    for (String str : groupAndMembershipInfos) {
+      if (query.length() > 0) {
+        query.append(" or ");
+      }
+      query.append("").append(property).append(" = '").append(str).append("'");
+      if (ForumServiceUtils.isGroupExpression(str)) {
+        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
+      } else if (ForumServiceUtils.isMembershipExpression(str)) {
+        str = str.substring(str.indexOf(":") + 1);
+        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
       }
     }
     return query.toString();
@@ -733,6 +801,22 @@ public class Utils implements ForumNodeTypes {
       return path.substring(0, path.lastIndexOf(TOPIC) + getTopicId(path).length());
     }
     return null;
+  }
+  
+  /**
+   * Get sub path.
+   * 
+   * @param path
+   * @return
+   * @since 4.1
+   */
+  public static String getSubPath(String path) {
+    String forumHome = KSDataLocation.Locations.FORUM_CATEGORIES_HOME;
+    if (isEmpty(path) == false && path.indexOf(forumHome) >= 0) {
+      int index = path.indexOf(forumHome) + forumHome.length() + 1;
+      return path.substring(index);
+    }
+    return path;
   }
   
 }

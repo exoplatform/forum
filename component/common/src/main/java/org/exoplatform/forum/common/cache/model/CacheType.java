@@ -16,6 +16,8 @@ public enum CacheType {
   FORUM_LIST("forum.ForumList"),
   TOPIC_DATA("forum.TopicData"),
   TOPIC_LIST("forum.TopicList"),
+  TOPIC_LIST_COUNT("forum.TopicListCount"),
+  
   POST_DATA("forum.PostData"),
   POST_LIST("forum.PostList"),
   POST_LIST_COUNT("forum.PostListCount"),
