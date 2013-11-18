@@ -209,8 +209,8 @@ public class CachedDataStorage implements DataStorage, Startable {
   
   private void clearTopicCache(String topicPath) throws Exception {
     topicPath = Utils.getSubPath(topicPath);
+    topicData.remove(new TopicKey(topicPath, true));
     topicData.remove(new TopicKey(topicPath, false));
-    topicData.remove(new TopicKey(topicPath.toUpperCase(), true));
     topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
   }
 
@@ -377,8 +377,11 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   private ListPostData buildPostInput(List<Post> posts) {
     List<PostKey> data = new ArrayList<PostKey>();
+    PostKey key;
     for (Post p : posts) {
-      data.add(new PostKey(p));
+      key = new PostKey(p);
+      data.add(key);
+      postData.put(key, new PostData(p));
     }
     return new ListPostData(data);
   }
@@ -751,8 +754,11 @@ public class CachedDataStorage implements DataStorage, Startable {
   
   private ListTopicData buildTopicInput(List<Topic> topics) {
     List<TopicKey> data = new ArrayList<TopicKey>();
+    TopicKey key;
     for (Topic p : topics) {
-      data.add(new TopicKey(p));
+      key = new TopicKey(p);
+      data.add(key);
+      topicData.put(key, new TopicData(p));
     }
     return new ListTopicData(data);
   }
@@ -808,7 +814,11 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Topic getTopicSummary(final String topicPath) {
-
+    TopicData data = topicData.get(new TopicKey(topicPath, false));
+    if (data != null) {
+      return data.build();
+    }
+    //
     Topic got = topicDataFuture.get(
         new ServiceContext<TopicData>() {
           public TopicData execute() {
@@ -824,7 +834,7 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(Utils.getSubPath(topicPath), false)
+        new TopicKey(Utils.getSubPath(topicPath.toUpperCase()), false)
     ).build();
     //
     got.setIsPoll(topicHasPoll(got.getPath()));
@@ -855,7 +865,7 @@ public class CachedDataStorage implements DataStorage, Startable {
             }
           }
         },
-        new TopicKey(Utils.getSubPath(topicPath.toUpperCase()), isLastPost)
+        new TopicKey(topicPath, isLastPost)
     ).build();
     //
     got.setIsPoll(topicHasPoll(got.getPath()));
