@@ -240,7 +240,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
   public void testPrivateTopic() throws Exception {
     loginUser(USER_ROOT);
     
-    assertEquals(5, discussionSearchConnector.search(context, "Topic", Collections.<String> emptyList(), 0, 10, "relevancy", "ASC").size());
+    assertEquals(5, discussionSearchConnector.search(context, "Topic\\~", Collections.<String> emptyList(), 0, 10, "relevancy", "ASC").size());
     
     String spCatId = Utils.CATEGORY + Utils.CATEGORY_SPACE + "spaces";
     String forumId = Utils.FORUM + "space_test";

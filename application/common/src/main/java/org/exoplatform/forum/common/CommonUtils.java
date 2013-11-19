@@ -331,7 +331,7 @@ public class CommonUtils {
   }
   
   public static String removeSpecialCharacterForUnifiedSearch(String input) {
-    if (isEmpty(input) || input.indexOf("~") < 0) {
+    if (isEmpty(input)) {
       return input;
     }
     StringBuilder builder = new StringBuilder();
@@ -346,7 +346,7 @@ public class CommonUtils {
   }
   
   public static String processUnifiedSearchSearchCondition(String input) {
-    if (isEmpty(input) || input.indexOf("~") < 0) {
+    if (isEmpty(input) || input.indexOf("~") < 0 || input.indexOf("\\~") > 0) {
       return input;
     }
     StringBuilder builder = new StringBuilder();
