@@ -306,7 +306,7 @@
 							</td>
 							<% } %>
 							<td class="center">
-								<a class="actionIconSmall" href="<%=uicomponent.event("OpenTopic", (topicId+"," + max_page + ",true"))%>" data-placement="bottom" data-toggle="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GotoLastPost");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
+								<a class="actionIconSmall" href="<%=uicomponent.event("OpenTopic", (topicId+"," + max_page + ",true"))%>" data-placement="bottom" data-toggle="tooltip" rel="tooltip" title="<%=_ctx.appRes("UIForumPortlet.label.GotoLastPost");%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i></a>
 							</td>
 						</tr>
 						<% 
