@@ -331,7 +331,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals("Reply B1", rDateDesc.get(1).getTitle());
   }
   
-  public void testJapaneseData() throws Exception {
+  public void TestJapaneseData() throws Exception {
     String cateId = getId(Utils.CATEGORY);
     Category cat = createCategory(cateId);
     cat.setCategoryName("cat1");

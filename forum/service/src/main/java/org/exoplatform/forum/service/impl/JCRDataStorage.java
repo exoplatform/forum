@@ -5799,7 +5799,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     
     StringBuilder queryString = new StringBuilder();
     
-    queryString.append("select exo:name, exo:description, exo:message, rep:excerpt() from exo:post where ");
+    queryString.append("select exo:name, exo:message, rep:excerpt() from exo:post where ");
     
     if (listForumIds != null && listForumIds.size() > 0) {
       queryString.append("(");
@@ -5811,8 +5811,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       queryString.append(") and ");
     }
     queryString.append("(")
+//               .append(" (exo:message LIKE '%").append(textQuery).append("%')")
                .append("CONTAINS (exo:message, '").append(textQuery).append("0.3").append("')")
                .append(" or (exo:isFirstPost='true' and ")
+//               .append(" (exo:name LIKE '%").append(textQuery).append("%')))");
                .append("CONTAINS (exo:name, '").append(textQuery).append("0.3").append("')))");
     
     // if user isn't admin
@@ -5834,7 +5836,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
 
     queryString.append(" ").append(order);
-    
     return queryString;
   }
   
