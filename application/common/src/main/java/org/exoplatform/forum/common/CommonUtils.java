@@ -24,12 +24,15 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -328,12 +331,34 @@ public class CommonUtils {
   }
   
   public static String removeSpecialCharacterForUnifiedSearch(String input) {
-    if (isEmpty(input)) {
+    if (isEmpty(input) || input.indexOf("~") < 0) {
       return input;
     }
-    String result = input.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, " ");
-    result = result.replaceAll("\\s+", " ");
-    return result.trim().replaceAll(" ", "~ ") + "~";
+    StringBuilder builder = new StringBuilder();
+    String[] tab = input.split(" ");
+    for (String s : tab){
+      if (isEmpty(s)) continue;
+      String searchTerm = s.split("~")[0];
+      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+      builder.append(searchTerm).append(" ");
+    }
+    return builder.toString().trim();
+  }
+  
+  public static String processUnifiedSearchSearchCondition(String input) {
+    if (isEmpty(input) || input.indexOf("~") < 0) {
+      return input;
+    }
+    StringBuilder builder = new StringBuilder();
+    String[] tab = input.split(" ");
+    for (String s : tab){
+      if (isEmpty(s)) continue;
+      String searchTerm = s.split("~")[0];
+      String similarity = s.split("~")[1];
+      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+      builder.append(searchTerm).append("~").append(similarity).append(" ");
+    }
+    return builder.toString().trim();
   }
 
   /**
@@ -567,5 +592,5 @@ public class CommonUtils {
     SessionProviderService sessionProviderService = getComponent(SessionProviderService.class);
     return sessionProviderService.getSystemSessionProvider(null);
   }
-
+  
 }
