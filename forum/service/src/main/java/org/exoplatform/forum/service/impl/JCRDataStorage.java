@@ -6059,8 +6059,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       //process query for asterisk 
       String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
-      textQuery = CommonUtils.removeSpecialCharacterForUnifiedSearch(textQuery);
-      textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
+      textQuery = CommonUtils.processUnifiedSearchSearchCondition(textQuery);
+      //textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
       boolean isAdmin = isAdminRole(userId);
 
@@ -6114,9 +6114,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       queryString.append(") and ");
     }
     queryString.append("(")
-               .append("CONTAINS (exo:message, '").append(textQuery).append("0.3").append("')")
+               .append("CONTAINS (exo:message, '").append(textQuery).append("')")
                .append(" or (exo:isFirstPost='true' and ")
-               .append("CONTAINS (exo:name, '").append(textQuery).append("0.3").append("')))");
+               .append("CONTAINS (exo:name, '").append(textQuery).append("')))");
     
     // if user isn't admin
     if (!isAdmin) {
@@ -6158,7 +6158,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       //
       forumSearch.setRelevancy(1);
-      originQuery = CommonUtils.removeSpecialCharacterForSearch(originQuery);
+      originQuery = CommonUtils.removeSpecialCharacterForUnifiedSearch(originQuery);
 
       //
       String excerpt = highlightText(nodeObj.getProperty(EXO_MESSAGE).getString(), originQuery);
@@ -6176,7 +6176,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
   
   private String highlightText(String message, String termToHighlight) {
-    return message.replace(termToHighlight, "<strong>" + termToHighlight + "</strong>");
+    for (String term : termToHighlight.split(" ")) {
+      message = message.replace(term, "<strong>" + term + "</strong>");
+    }
+    return message;
   }
   
   private List<ForumSearchResult> removeItemInList(List<ForumSearchResult> listSearchEvent, List<String> forumCanView, List<String> categoryCanView) {
