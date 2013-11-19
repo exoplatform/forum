@@ -30,7 +30,7 @@ public class JCRAPIAspectConfig
    /**
     * The logger
     */
-   private static final Log LOG = ExoLogger.getLogger(JCRAPIAspectConfig.class);
+   private static final Log LOG = ExoLogger.getLogger("exo.jcr.component.statistics.JCRAPIAspectConfig");
 
    /**
     * The list of interfaces that we want to monitor
@@ -48,22 +48,23 @@ public class JCRAPIAspectConfig
    /**
     * @return the list of interfaces to monitor
     */
-  private Class<?>[] loadTargetInterfaces(ValuesParam params) {
-    List<String> values = params.getValues();
-    List<Class<?>> lTargetInterfaces = new ArrayList<Class<?>>();
-    if (values != null) {
-      for (String className : values) {
-        try {
-          lTargetInterfaces.add(Class.forName(className));
-        } catch (Exception e) {
-          LOG.warn("Cannot find the target interface " + className, e);
-        }
+   private Class<?>[] loadTargetInterfaces(ValuesParam params) {
+       ArrayList<?> values = params.getValues();
+       List<Class<?>> lTargetInterfaces = new ArrayList<Class<?>>();
+       if (values != null) {
+           for (Object o : params.getValues()) {
+               String className = null;
+               try {
+                   className = (String)o;
+                   lTargetInterfaces.add(Class.forName(className));
+               } catch (Exception e) {
+                   LOG.warn("Cannot find the target interface " + className, e);
+               }
+           }
       }
-    }
-    Class<?>[] targetInterfaces = new Class<?>[lTargetInterfaces.size()];
-    return (Class<?>[]) lTargetInterfaces.toArray(targetInterfaces);
-  }
-   
+      Class<?>[] targetInterfaces = new Class<?>[lTargetInterfaces.size()];
+      return (Class<?>[])lTargetInterfaces.toArray(targetInterfaces);
+   }
    /**
     * @return the list of target interfaces
     */

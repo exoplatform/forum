@@ -659,7 +659,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       this.pageSelect = postListAccess.getCurrentPage();
 
       maxPage = postListAccess.getTotalPages();
-      
+      //update last post view in user profile in load method
+      //more detail in JCRDataStorage#getPosts() method
       posts = postListAccess.load(pageSelect);
       this.pageSelect = postListAccess.getCurrentPage();
       
@@ -679,6 +680,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         }
         this.IdLastPost = post.getId();
       }
+      
       if (!lastPoistIdSave.equals(IdLastPost)) {
         lastPoistIdSave = IdLastPost;
         userProfile.addLastPostIdReadOfForum(forumId, topicId + ForumUtils.SLASH + IdLastPost);

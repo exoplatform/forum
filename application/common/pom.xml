@@ -145,6 +145,10 @@
       		<groupId>commons-logging</groupId>
       		<artifactId>commons-logging</artifactId>
       	</exclusion>
+          <exclusion>
+              <artifactId>jdom</artifactId>
+              <groupId>jdom</groupId>
+          </exclusion>
         <exclusion>
           <groupId>xml-apis</groupId>
           <artifactId>xml-apis</artifactId>
@@ -187,6 +191,10 @@
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
         </exclusion>
+          <exclusion>
+              <artifactId>jdom</artifactId>
+              <groupId>jdom</groupId>
+          </exclusion>
       	<exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
@@ -227,6 +235,12 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
+        <exclusions>
+            <exclusion>
+                <artifactId>jdom</artifactId>
+                <groupId>jdom</groupId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

@@ -200,6 +200,9 @@ public class Post {
 
   public void setAttachments(List<ForumAttachment> attachments) {
     this.attachments = attachments;
+    if (attachments != null && this.numberAttach == 0) {
+      this.numberAttach = attachments.size();
+    }
   }
 
   public boolean getIsHidden() {

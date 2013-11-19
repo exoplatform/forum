@@ -195,6 +195,12 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
+        <exclusions>
+            <exclusion>
+                <artifactId>jdom</artifactId>
+                <groupId>jdom</groupId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -321,7 +327,6 @@
             <includes>
               <include>**/NoContainerTestSuite.java</include>
               <include>**/BaseForumTestSuite.java</include>
-              <include>**/DiscussionSearchConnectorTestCase.java</include>
             </includes>
           </configuration>
         </plugin>
