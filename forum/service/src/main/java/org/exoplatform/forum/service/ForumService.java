@@ -1436,24 +1436,6 @@ public interface ForumService extends ForumServiceLegacy {
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
 
   /**
-   * Registers a listener for a category.
-   * 
-   * @param categoryId Id of the category.
-   * @throws Exception the exception
-   * @LevelAPI Platform
-   */
-  void registerListenerForCategory(String categoryId) throws Exception;
-
-  /**
-   * Removes a listener from a category.
-   * 
-   * @param path Path to the category.
-   * @throws Exception the exception
-   * @LevelAPI Platform
-   */
-  void unRegisterListenerForCategory(String path) throws Exception;
-
-  /**
    * Gets an avatar by a given username.
    * 
    * @param userName Id of the user.

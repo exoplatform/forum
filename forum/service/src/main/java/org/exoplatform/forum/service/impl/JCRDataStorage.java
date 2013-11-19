@@ -187,8 +187,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private Map<String, List<String>>    updatingRead         = new ConcurrentHashMap<String, List<String>>();
 
-  //private Map<String, EventListener>   listeners            = new HashMap<String, EventListener>();
-
   private SessionManager               sessionManager;
 
   private KSDataLocation               dataLocator;
@@ -261,14 +259,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (plugin instanceof ForumInitialDataPlugin) {
       dataPlugins.add((ForumInitialDataPlugin) plugin);
     }
-  }
-
-  @Deprecated
-  public void addCalculateModeratorEventListener() throws Exception {
-//    SessionProvider sProvider = SessionProvider.createSystemProvider();
-//    ObservationManager observation = sessionManager.getSession(sProvider).getWorkspace().getObservationManager();
-//    CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
-//    observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_FORUM_CATEGORY, EXO_FORUM}, false);
   }
 
   public void addDeletedUserCalculateListener() {
@@ -1155,45 +1145,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  @Deprecated
-  public void registerListenerForCategory(String path) throws Exception {
-//    SessionProvider sProvider = CommonUtils.createSystemProvider();
-//    try {
-//      Node categoryHome = getCategoryHome(sProvider);
-//      String id = path.substring(path.lastIndexOf("/") + 1);
-//      Node catNode = categoryHome.getNode(id);
-//      if (!listeners.containsKey(catNode.getPath())) {
-//        String wsName = catNode.getSession().getWorkspace().getName();
-//        RepositoryImpl repo = (RepositoryImpl) catNode.getSession().getRepository();
-//        ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager();
-//        StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName());
-//        observation.addEventListener(statisticEventListener, Event.NODE_ADDED | Event.NODE_REMOVED, catNode.getPath(), true, null, null, false);
-//        listeners.put(catNode.getPath(), statisticEventListener);
-//      }
-//    } catch (Exception e) {
-//      log.error("Failed to register listener for category " + path, e);
-//    }
-  }
-
-  @Deprecated
-  public void unRegisterListenerForCategory(String path) throws Exception {
-//    SessionProvider sProvider = CommonUtils.createSystemProvider();
-//    try {
-//      unRegisterListenerForCategory(sProvider, path);
-//    } catch (Exception e) {
-//      log.error("Failed to unregister listener for category " + path, e);
-//    }
-  }
-
-  @Deprecated
-  public void unRegisterListenerForCategory(SessionProvider sProvider, String path) throws Exception {
-//    if (listeners.containsKey(path)) {
-//      ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
-//      obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
-//      listeners.remove(path);
-//    }
-  }
-
   public Category removeCategory(String categoryId) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
@@ -1228,7 +1179,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       categoryNode.remove();
       categoryHome.save();
       addUpdateUserProfileJob(userPostMap);
-      unRegisterListenerForCategory(sProvider, path);
       getTotalJobWatting(sProvider, users);
       return category;
     } catch (Exception e) {
@@ -5807,7 +5757,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String rootPath = categoryHome.getPath();
 
       //process query for asterisk 
-      String asteriskQuery = CommonUtils.processSearchCondition(textQuery).toUpperCase();
+      String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
       textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
       boolean isAdmin = isAdminRole(userId);
@@ -5847,20 +5797,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
           if(textQuery.contains(CommonUtils.PERCENT_STR)){
             if(type.equals(Utils.POST)){
-              queryString.append("(").append(Utils.buildUnifiedSearchQuery("exo:message", textQuery, asteriskQuery)).append(")");
+              queryString.append("((jcr:like(@exo:message, '").append(textQuery).append("'))");
+              queryString.append(" or (jcr:like(@exo:message, '").append(asteriskQuery).append("')))");
             }else if (type.equals(Utils.TOPIC)){
-              queryString.append("(").append(Utils.buildUnifiedSearchQuery("exo:name", textQuery, asteriskQuery))
-                         .append(" or ").append(Utils.buildUnifiedSearchQuery("exo:description", textQuery, asteriskQuery)).append(")");
+              queryString.append("( jcr:like(@exo:name, '").append(textQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");
+              queryString.append(" or jcr:like(@exo:name, '").append(asteriskQuery).append("')").append(" or jcr:like(@exo:description, '").append(textQuery).append("')");;
+              queryString.append(")");
             }
           }else {
-            queryString.append("(jcr:contains(., '").append(textQuery).append("')");
-            queryString.append(" or jcr:contains(., '").append(asteriskQuery).append("')");
-            if(type.equals(Utils.POST)){
-              queryString.append(" or ").append(Utils.buildUnifiedSearchQuery("exo:message", textQuery, asteriskQuery)).append(")");
-            }else if (type.equals(Utils.TOPIC)){
-              queryString.append(" or ").append(Utils.buildUnifiedSearchQuery("exo:name", textQuery, asteriskQuery))
-                         .append(" or ").append(Utils.buildUnifiedSearchQuery("exo:description", textQuery, asteriskQuery)).append(")");
-            }
+            queryString.append("((jcr:contains(., '").append(textQuery).append("'))");
+            queryString.append(" or (jcr:contains(., '").append(asteriskQuery).append("')))");
           }
           isAnd = true;
         }
@@ -6038,7 +5984,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if(!HIGHLIHT_PATTERN.matcher(excerpt).find() && excerpt.toLowerCase().indexOf(originQuery) < 0) {
         excerpt = row.getValue(String.format(REP_EXCERPT_PATTERN, EXO_NAME)).getString();
       }
-      forumSearch.setExcerpt(CommonUtils.getExcerpt(excerpt, originQuery, EXCERPT_MAX_LENGTH));
+      forumSearch.setExcerpt(excerpt);
     }catch (Exception e){
       e.printStackTrace();
     }

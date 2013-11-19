@@ -162,14 +162,6 @@ public class ForumServiceImpl implements ForumService, Startable {
       log.error("Error while calculating active users: " + e.getMessage());
     }
 
-    // init Calculate Moderators listeners
-    try {
-      log.info("initializing Calculate Moderators listeners...");
-      storage.addCalculateModeratorEventListener();
-    } catch (Exception e) {
-      log.error("Error while initializing Moderators listeners: " + e.getMessage());
-    }
-
     // initialize auto prune schedules
     try {
       log.info("initializing prune schedulers...");
@@ -1504,20 +1496,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public void registerListenerForCategory(String categoryId) throws Exception {
-    storage.registerListenerForCategory(categoryId);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void unRegisterListenerForCategory(String path) throws Exception {
-    storage.unRegisterListenerForCategory(path);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public ForumAttachment getUserAvatar(String userName) throws Exception {
     return storage.getUserAvatar(userName);
   }
@@ -1681,5 +1659,4 @@ public class ForumServiceImpl implements ForumService, Startable {
   public String getCommentIdForOwnerPath(String ownerPath) {
     return storage.getActivityIdForOwner(ownerPath);
   }
-
 }

@@ -486,10 +486,6 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.addInitialDefaultDataPlugin(plugin);
   }
 
-  public void addCalculateModeratorEventListener() throws Exception {
-    storage.addCalculateModeratorEventListener();
-  }
-
   public void addDeletedUserCalculateListener() throws Exception {
     storage.addDeletedUserCalculateListener();
   }
@@ -605,14 +601,6 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.calculateModerator(nodePath, isNew);
     clearForumCache(Utils.getCategoryId(nodePath), Utils.getForumId(nodePath), false);
     clearForumListCache();
-  }
-
-  public void registerListenerForCategory(String path) throws Exception {
-    storage.registerListenerForCategory(path);
-  }
-
-  public void unRegisterListenerForCategory(String path) throws Exception {
-    storage.unRegisterListenerForCategory(path);
   }
 
   public Category removeCategory(String categoryId) throws Exception {
