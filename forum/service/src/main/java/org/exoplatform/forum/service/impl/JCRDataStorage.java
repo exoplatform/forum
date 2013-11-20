@@ -55,18 +55,16 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.query.Row;
-import javax.jcr.query.RowIterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
@@ -79,10 +77,8 @@ import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.forum.common.jcr.PropertyReader;
 import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.forum.service.BufferAttachment;
-import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
-import org.exoplatform.forum.service.DeletedUserCalculateEventListener;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -116,12 +112,14 @@ import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
 import org.exoplatform.forum.service.conf.PostData;
-import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.forum.service.conf.UpdateUserProfileJob;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
-import org.exoplatform.forum.service.search.DiscussionSearchResult;
+import org.exoplatform.forum.service.jcr.listener.CalculateModeratorEventListener;
+import org.exoplatform.forum.service.jcr.listener.DeletedUserCalculateEventListener;
+import org.exoplatform.forum.service.jcr.listener.StatisticEventListener;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
@@ -169,7 +167,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 @SuppressWarnings("unchecked")
 public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
-  private static final Log             log                  = ExoLogger.getLogger(JCRDataStorage.class);
+  private static final Log             LOG                  = ExoLogger.getLogger(JCRDataStorage.class);
 
   private Map<String, String>          serverConfig         = new HashMap<String, String>();
 
@@ -197,7 +195,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   
   private static final Pattern       HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
   
-  private final int EXCERPT_MAX_LENGTH = 430;
   private DataStorage cachedStorage;
   
   public JCRDataStorage() {
@@ -207,11 +204,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     setDataLocator(dataLocator);
   }
   
-  public DataStorage getCachedDataStorage()  {
+  public DataStorage getCachedDataStorage() {
     if (cachedStorage == null) {
-      cachedStorage = (DataStorage) PortalContainer.getInstance().getComponentInstanceOfType(DataStorage.class);
+      cachedStorage = CommonsUtils.getService(DataStorage.class);
     }
-    
     return cachedStorage;
   }
 
@@ -239,7 +235,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         serverConfig = ((EmailNotifyPlugin) plugin).getServerConfiguration();
       }
     } catch (Exception e) {
-      log.error("Failed to add plugin", e);
+      LOG.error("Failed to add plugin", e);
     }
   }
 
@@ -269,7 +265,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         deletedUserCalculateListener(profileHome.getNode(Utils.USER_PROFILE_DELETED));
       }
     } catch (Exception e) {
-      log.error("Can not add caculation listerner for deleted user", e);
+      LOG.error("Can not add caculation listerner for deleted user", e);
     } finally {
       sProvider.close();
     }
@@ -277,28 +273,30 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   protected void deletedUserCalculateListener(Node node) throws Exception {
     try {
-      String path = node.getPath();
       ObservationManager observation = node.getSession().getWorkspace().getObservationManager();
       DeletedUserCalculateEventListener deleteUserListener = new DeletedUserCalculateEventListener();
-      deleteUserListener.setPath(path);
-      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, path, false, null, null, false);
+      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, node.getPath(), false, new String[] { EXO_FORUM_USER_PROFILE }, null, false);
     } catch (Exception e) {
-      log.error("Can not add listener for node " + node.getName(), e);
+      LOG.error("Can not add listener for node " + node.getName(), e);
     }
   }
 
   public void initCategoryListener() {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      SessionProvider sProvider = SessionProvider.createSystemProvider();
       ObservationManager observation = sessionManager.getSession(sProvider).getWorkspace().getObservationManager();
+      //
       CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
-      observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_FORUM_CATEGORY, EXO_FORUM}, false);
+      observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_CATEGORY_HOME, EXO_FORUM_CATEGORY, EXO_FORUM}, false);
       
       //statistic listener
       StatisticEventListener sListener = new StatisticEventListener();
       observation.addEventListener(sListener, Event.NODE_ADDED | Event.NODE_REMOVED, "/", true, null, new String[] {EXO_FORUM, EXO_TOPIC}, false);
+
     } catch (Exception e) {
-      log.error("Failed to init category listenner", e);
+      LOG.error("Failed to init category listenner", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -329,33 +327,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             addOrRemoveSchedule(getPruneSetting(iter.nextNode()));
           }
         } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Could not perform pruning!", e);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Could not perform pruning!", e);
           }
         } finally {
           sProvider.close();
         }
       }
     } catch (Exception e) {
-      log.error("Repository is error!", e);
+      LOG.error("Repository is error!", e);
     }
     if (currentRepo != null) {
       try {
         repositoryService.setCurrentRepositoryName(currentRepo);
       } catch (RepositoryConfigurationException e) {
-        log.error("Could not reset current repository's name", e);
+        LOG.error("Could not reset current repository's name", e);
       }
     }
   }
 
   public boolean isAdminRole(String userName) throws Exception {
+    return isAdminRole(CommonUtils.createSystemProvider(), userName);
+  }
+
+  private boolean isAdminRole(SessionProvider sProvider, String userName) throws Exception {
     if (Utils.isEmpty(userName) || UserProfile.USER_GUEST.equals(userName)){
       return false;
     }
     if (isAdminRoleConfig(userName)) {
       return true;
     } else {
-      Node userHome = getUserProfileHome(CommonUtils.createSystemProvider());
+      Node userHome = getUserProfileHome(sProvider);
       if (userHome.hasNode(userName)) {
         return (new PropertyReader(userHome.getNode(userName)).l(EXO_USER_ROLE, 2) == UserProfile.ADMIN);
       }
@@ -471,8 +473,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
    */
   public void setDefaultAvatar(String userName) {
     Boolean wasReset = sessionManager.executeAndSave(new ResetAvatarTask(userName));
-    if (log.isDebugEnabled()) {
-      log.debug("Avatar for user " + userName + " was " + (wasReset ? "" : "not") + " reset");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Avatar for user " + userName + " was " + (wasReset ? "" : "not") + " reset");
     }
   }
 
@@ -549,8 +551,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
    */
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception {
     Boolean wasNew = sessionManager.executeAndSave(new SaveAvatarTask(userId, fileAttachment));
-    if (log.isDebugEnabled()) {
-      log.error("avatar was " + ((wasNew) ? "added" : "updated") + " for user " + userId + ": " + fileAttachment);
+    if (LOG.isDebugEnabled()) {
+      LOG.error("avatar was " + ((wasNew) ? "added" : "updated") + " for user " + userId + ": " + fileAttachment);
     }
   }
 
@@ -632,7 +634,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumAdminNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to save forum administration.", e);
+      LOG.error("Failed to save forum administration.", e);
     }
   }
 
@@ -761,7 +763,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumStatisticNode.setProperty(EXO_MEMBERS_COUNT, (reader.l(EXO_MEMBERS_COUNT) + set.size()));
       forumStatisticNode.save();
     } catch (Exception e) {
-      log.error("Init default data is failed!!", e);
+      LOG.error("Init default data is failed!!", e);
     } finally {
       sProvider.close();
     }
@@ -794,15 +796,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           categories.add(getCategory(cateNode));
         } catch (RepositoryException e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Failed to achieve category" + cateNode.getName(), e);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Failed to achieve category" + cateNode.getName(), e);
           }
         }
       }
       return categories;
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Can not get all categories.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Can not get all categories.", e);
       }
       return categories;
     }
@@ -813,8 +815,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return getCategory(getCategoryHome(sProvider).getNode(categoryId));
     } catch (Exception e) {
-      if (log.isDebugEnabled()){
-        log.debug("Failed to get category, categoryId: " + categoryId, e);
+      if (LOG.isDebugEnabled()){
+        LOG.debug("Failed to get category, categoryId: " + categoryId, e);
       }
       return null;
     }
@@ -834,7 +836,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node cateNode = getCategoryHome(sProvider).getNode(categoryId);
       canCreated = new PropertyReader(cateNode).strings(type, new String[] {""});
     } catch (Exception e) {
-      log.error("Failed to get permission topic by category", e);
+      LOG.error("Failed to get permission topic by category", e);
     }
     return canCreated;
   }
@@ -906,10 +908,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           catNode.save();
         }
       } catch (Exception e) {
-        log.debug("Failed to save category moderators ", e);
+        LOG.debug("Failed to save category moderators ", e);
       }
     } catch (Exception e) {
-      log.error("Failed to save category", e);
+      LOG.error("Failed to save category", e);
       throw e;
     }
   }
@@ -954,12 +956,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             }
           }
         } catch (Exception e) {
-          log.debug("Failed to save moderater of categoryId: " + cateId, e);
+          LOG.debug("Failed to save moderater of categoryId: " + cateId, e);
         }
       }
       cateHome.save();
     } catch (Exception e) {
-      log.error("Failed to save moderator of category", e);
+      LOG.error("Failed to save moderator of category", e);
     }
   }
 
@@ -1001,8 +1003,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         session.logout();
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("PathNotFoundException  category node or forum node not found");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("PathNotFoundException  category node or forum node not found");
       }
     }
   }
@@ -1045,8 +1047,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           try {
             moderateCategory = Utils.valuesToList(userProfileNode.getProperty(EXO_MODERATE_CATEGORY).getValues());
           } catch (Exception e) {
-            if (log.isDebugEnabled()){
-              log.debug("Failed to get list of moderated Category", e);
+            if (LOG.isDebugEnabled()){
+              LOG.debug("Failed to get list of moderated Category", e);
             }
           }
           for (String string2 : moderateCategory) {
@@ -1060,8 +1062,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             userProfileNode.setProperty(EXO_MODERATE_CATEGORY, Utils.getStringsInList(moderateCategory));
           }
         } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Failed to get user profile ", e);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Failed to get user profile ", e);
           }
         }
       }
@@ -1086,8 +1088,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           try {
             moderateList = Utils.valuesToList(userProfileNode.getProperty(EXO_MODERATE_CATEGORY).getValues());
           } catch (Exception e) {
-            if (log.isDebugEnabled()){
-              log.debug("Failed to get list of moderated Category", e);
+            if (LOG.isDebugEnabled()){
+              LOG.debug("Failed to get list of moderated Category", e);
             }
           }
           for (String string2 : moderateList) {
@@ -1150,7 +1152,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       Node categoryNode = categoryHome.getNode(categoryId);
-      String path = categoryNode.getPath();
       Map<String, Long> userPostMap = getDeletePostByUser(categoryNode);
       Category category = getCategory(categoryNode);
       Set<String> users = new HashSet<String>();
@@ -1172,8 +1173,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
         categoryNode.save();
       } catch (Exception e) {
-        if (log.isDebugEnabled()){
-          log.debug("Failed to get list of moderators", e);
+        if (LOG.isDebugEnabled()){
+          LOG.debug("Failed to get list of moderators", e);
         }
       }
       categoryNode.remove();
@@ -1182,7 +1183,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       getTotalJobWatting(sProvider, users);
       return category;
     } catch (Exception e) {
-      log.error("failed to remove category " + categoryId);
+      LOG.error("failed to remove category " + categoryId);
       return null;
     }
   }
@@ -1237,13 +1238,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             forums.add(getForumSummary(forumNode));
           }
         } catch (Exception e) {
-          log.debug("Failed to load forum node " + forumNode.getPath(), e);
+          LOG.debug("Failed to load forum node " + forumNode.getPath(), e);
         }
       }
       return forums;
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to retrieving forums for category " + categoryId, e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to retrieving forums for category " + categoryId, e);
       }
       return new ArrayList<Forum>();
     }
@@ -1376,8 +1377,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       
       return new ArrayList<CategoryFilter>(categoryFilters.values());
     } catch (Exception e) {
-      if(log.isDebugEnabled()) {
-        log.debug("\nCould not filter forum by name: " + forumNameFilter + e.getCause());
+      if(LOG.isDebugEnabled()) {
+        LOG.debug("\nCould not filter forum by name: " + forumNameFilter + e.getCause());
       }
     }
     return new ArrayList<CategoryFilter>();
@@ -1411,8 +1412,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
       return getForum(forumNode);
     } catch (Exception e) {
-      if(log.isDebugEnabled()) {
-        log.debug("\nCould not get " + forumId + " in " + categoryId + " fail: " + e.getCause());
+      if(LOG.isDebugEnabled()) {
+        LOG.debug("\nCould not get " + forumId + " in " + categoryId + " fail: " + e.getCause());
       }
       return null;
     }
@@ -1443,7 +1444,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.save();
       }
     } catch (RepositoryException e) {
-      log.error("Failed to modify forum " + forum.getForumName(), e);
+      LOG.error("Failed to modify forum " + forum.getForumName(), e);
     }
   }
 
@@ -1579,7 +1580,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         pruneSetting.save();
       }
     } catch (Exception e) {
-      log.error("Failed to save forum " + forum.getForumName(), e);
+      LOG.error("Failed to save forum " + forum.getForumName(), e);
     }
   }
   
@@ -1638,7 +1639,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             getTotalJobWaitingForModerator(session, string);
           }
         } catch (PathNotFoundException e) {
-          userProfileNode = userProfileHomeNode.addNode(string, Utils.USER_PROFILES_TYPE);
+          userProfileNode = userProfileHomeNode.addNode(string, EXO_FORUM_USER_PROFILE);
           String[] strings = new String[] { (forum.getForumName() + "(" + categoryId + "/" + forum.getId()) };
           userProfileNode.setProperty(EXO_MODERATE_FORUMS, strings);
           userProfileNode.setProperty(EXO_USER_ROLE, 1);
@@ -1754,7 +1755,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           }
         }
       } catch (Exception e) {
-        log.error("Failed to save moderate of forums", e);
+        LOG.error("Failed to save moderate of forums", e);
       }
     }
     if (categoryHomeNode.isNew()) {
@@ -1902,7 +1903,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumHomeNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to move forum", e);
+      LOG.error("Failed to move forum", e);
     }
   }
 
@@ -1983,8 +1984,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to retrieve topic list for forum " + forumId, e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to retrieve topic list for forum " + forumId, e);
       }
       return null;
     }
@@ -2076,8 +2077,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryResult result = query.execute();
       return result.getNodes();
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to retrieve topic list for forum " + filter.forumId(), e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to retrieve topic list for forum " + filter.forumId(), e);
       }
       return null;
     }
@@ -2150,8 +2151,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (topicNode.isNodeType(EXO_TOPIC))
             topics.add(getTopicNode(topicNode));
         } catch (Exception e) {
-          if (log.isDebugEnabled()){
-            log.debug("Can not get topic", e);
+          if (LOG.isDebugEnabled()){
+            LOG.debug("Can not get topic", e);
           }
         }
       }     
@@ -2191,8 +2192,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           topicNode.save();
         }
       } catch (Exception e) {
-        if (log.isDebugEnabled()) {
-          log.debug(String.format("Failed to set view number for topic with path %s", entry.getKey()), e);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(String.format("Failed to set view number for topic with path %s", entry.getKey()), e);
         }
       }
     }
@@ -2205,8 +2206,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node topicNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId + "/" + topicId);
       return getTopicNode(topicNode);
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Getting Topic fail: " + e.getMessage() + "\n" + e.getCause());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Getting Topic fail: " + e.getMessage() + "\n" + e.getCause());
       }
       return null;
     }
@@ -2297,8 +2298,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.save();
       }
     } catch (PathNotFoundException e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to query last topic", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to query last topic", e);
       }
       return null;
     }
@@ -2367,8 +2368,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topic.setAttachments(getAttachmentsByNode(FirstPostNode));
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to set attachments in topic.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to set attachments in topic.", e);
       }
     }
     return topic;
@@ -2381,8 +2382,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node topicNode = (Node) forumHomeNode.getSession().getItem(topic.getPath());
       return getTopicUpdate(topicNode, topic, isSummary);
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get topic", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get topic", e);
       }
     }
     return topic;
@@ -2449,8 +2450,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topics.add(topic);
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get all topic old", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get all topic old", e);
       }
     }
     return topics;
@@ -2504,8 +2505,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong();
         postCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
       } catch (PathNotFoundException e) {
-        if (log.isDebugEnabled()){
-          log.debug("Failed to get node by path", e);
+        if (LOG.isDebugEnabled()){
+          LOG.debug("Failed to get node by path", e);
         }
       }
       Set<String> userIdsp = new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>()));
@@ -2556,8 +2557,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               Node nodeFirstPost = topicNode.getNode(topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST));
               nodeFirstPost.setProperty(EXO_NAME, topic.getTopicName());
             } catch (PathNotFoundException e) {
-              if (log.isDebugEnabled()){
-                log.debug("Failed to get node by path", e);
+              if (LOG.isDebugEnabled()){
+                LOG.debug("Failed to get node by path", e);
               }
             }
             break;
@@ -2582,8 +2583,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             queryLastTopic(sProvider, forumNode.getPath());
           }
         } catch (PathNotFoundException e) {
-          if (log.isDebugEnabled()){
-            log.debug("Failed to get node by path", e);
+          if (LOG.isDebugEnabled()){
+            LOG.debug("Failed to get node by path", e);
           }
         }
       }
@@ -2597,7 +2598,44 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to modify topic.", e);
+      LOG.error("Failed to modify topic.", e);
+    }
+  }
+  
+  public void updateProfileAddTopic(String owner) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node userProfileNode = getUserProfileHome(sProvider);
+      Node newProfileNode;
+      try {
+        newProfileNode = userProfileNode.getNode(owner);
+        long totalTopicByUser = newProfileNode.getProperty(EXO_TOTAL_TOPIC).getLong();
+        newProfileNode.setProperty(EXO_TOTAL_TOPIC, totalTopicByUser + 1);
+      } catch (PathNotFoundException e) {
+        newProfileNode = userProfileNode.addNode(owner, EXO_FORUM_USER_PROFILE);
+        newProfileNode.setProperty(EXO_USER_ID, owner);
+        newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(sProvider, owner)) {
+          newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        newProfileNode.setProperty(EXO_TOTAL_TOPIC, 1);
+      }
+      //
+      userProfileNode.getSession().save();
+    } finally {
+      sProvider.close();
+    }
+  }
+  
+  public String getOwner(String path) {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node node = getNodeAt(sProvider, path);
+      return new PropertyReader(node).string(EXO_OWNER, "");
+    } catch (Exception e) {
+      return null;
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -2626,31 +2664,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicNode.setProperty(EXO_IS_POLL, topic.getIsPoll());
         topicNode.setProperty(EXO_LINK, topic.getLink());
         topicNode.setProperty(EXO_PATH, forumId);
-        // TODO: Thinking for update forum and user profile by node observation?
-        // setTopicCount for Forum and userProfile
+
         if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean() && !topic.getIsWaiting()) {
           long newTopicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong() + 1;
           forumNode.setProperty(EXO_TOPIC_COUNT, newTopicCount);
         }
-        Node userProfileNode = getUserProfileHome(sProvider);
-        Node newProfileNode;
-        try {
-          newProfileNode = userProfileNode.getNode(topic.getOwner());
-          long totalTopicByUser = newProfileNode.getProperty(EXO_TOTAL_TOPIC).getLong();
-          newProfileNode.setProperty(EXO_TOTAL_TOPIC, totalTopicByUser + 1);
-        } catch (PathNotFoundException e) {
-          newProfileNode = userProfileNode.addNode(topic.getOwner(), Utils.USER_PROFILES_TYPE);
-          newProfileNode.setProperty(EXO_USER_ID, topic.getOwner());
-          newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-          if (isAdminRole(topic.getOwner())) {
-            newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
-          }
-          newProfileNode.setProperty(EXO_TOTAL_TOPIC, 1);
-        }
-        if (userProfileNode.isNew())
-          userProfileNode.getSession().save();
-        else
-          userProfileNode.save();
+        //
+        //updateProfileAddTopic(topic.getOwner());
+        
         sendNotification(forumNode, topic, null, messageBuilder, true);
       } else {
         topicNode = forumNode.getNode(topic.getId());
@@ -2726,7 +2747,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to save topic", e);
+      LOG.error("Failed to save topic", e);
     }
   }
 
@@ -2745,10 +2766,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       post = iter.nextNode();
       try {
         owner = post.getProperty(EXO_OWNER).getString();
-        userPostMap.put(owner, userPostMap.get(owner) + 1);
-      } catch (Exception e) {
-        userPostMap.put(owner, Long.parseLong("1"));
-      }
+        userPostMap.put(owner, (userPostMap.get(owner) != null ? userPostMap.get(owner) : 0) + 1);
+      } catch (Exception e) {}
     }
     return userPostMap;
   }
@@ -2767,13 +2786,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           userNode.setProperty(EXO_TOTAL_POST, totalPost - userPostMap.get(user));
           userNode.save();
         } catch (PathNotFoundException e) {
-          log.debug("UserProfile of user: " + user + " not existing.");
+          LOG.debug("UserProfile of user: " + user + " not existing.");
         }
       }
       infoMap.remove(name);
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to update user profile info", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to update user profile info", e);
       }
     }
   }
@@ -2783,19 +2802,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Calendar cal = new GregorianCalendar();
       PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
       String name = String.valueOf(cal.getTime().getTime());
-      Class clazz = Class.forName("org.exoplatform.forum.service.conf.UpdateUserProfileJob");
-      JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
-      ExoContainer container = ExoContainerContext.getCurrentContainer();
-      JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-      String repoName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, UpdateUserProfileJob.class);
+      JobSchedulerService schedulerService = CommonsUtils.getService(JobSchedulerService.class);
+      String repoName = CommonsUtils.getRepository().getConfiguration().getName();
       JobDataMap jdatamap = new JobDataMap();
       jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       infoMap.put(name, userPostMap);
       schedulerService.addPeriodJob(info, periodInfo, jdatamap);
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to add job for update user profile ", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to add job for update user profile ", e);
       }
     }
   }
@@ -2824,14 +2840,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       try {
         calculateLastRead(sProvider, null, forumId, topicId);
       } catch (Exception e) {
-        if (log.isDebugEnabled()) {
-          log.debug("Failed to update last read topic", e);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to update last read topic", e);
         }
       }
       addUpdateUserProfileJob(userPostMap);
       return topic;
     } catch (Exception e) {
-      log.error("Failed to remove topic", e);
+      LOG.error("Failed to remove topic", e);
       return null;
     }
   }
@@ -2914,8 +2930,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       try {
         calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
       } catch (Exception e) {
-        if (log.isDebugEnabled()) {
-          log.debug("Failed to calculate last read", e);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to calculate last read", e);
         }
       }
     }
@@ -2941,7 +2957,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node profileHome = getUserProfileHome(sProvider);
     QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
     StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(JCR_ROOT).append(profileHome.getPath()).append("/element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append("*" + topicId + "*").append("'))]");
+    stringBuffer.append(JCR_ROOT).append(profileHome.getPath()).append("/element(*,").append(EXO_FORUM_USER_PROFILE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append("*" + topicId + "*").append("'))]");
     Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
@@ -2987,7 +3003,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               }
             }
           } catch (Exception e) {
-            log.warn("Can not calculate last read of user: " + profileNode.getName());
+            LOG.warn("Can not calculate last read of user: " + profileNode.getName());
           }
         }
         if (string.indexOf(srcForumId) >= 0) {// remove last read src forum if last read this forum is this topic.
@@ -3035,8 +3051,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         return size;
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()){
-        log.debug("Exception occurs when get last read index",e);
+      if (LOG.isDebugEnabled()){
+        LOG.debug("Exception occurs when get last read index",e);
       }
     }
     return 0;
@@ -3058,8 +3074,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
       return pagelist;
     } catch (PathNotFoundException e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get post for split topic.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get post for split topic.", e);
       }
     }
     return null;
@@ -3306,9 +3322,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return attachments;
   }
-//TODO
+
   public void updateProfileAddPost(String owner) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node profileHomeNode = getUserProfileHome(sProvider);
       if (profileHomeNode.hasNode(owner)) {
@@ -3318,10 +3334,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         profileNode.setProperty(EXO_TOTAL_POST, totalPostByUser + 1);
         profileNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
       } else {
-        Node profileNode = profileHomeNode.addNode(owner, Utils.USER_PROFILES_TYPE);
+        Node profileNode = profileHomeNode.addNode(owner, EXO_FORUM_USER_PROFILE);
         profileNode.setProperty(EXO_USER_ID, owner);
         profileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-        if (isAdminRole(owner)) {
+        if (isAdminRole(sProvider, owner)) {
           profileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
         }
         profileNode.setProperty(EXO_TOTAL_POST, 1);
@@ -3329,7 +3345,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       profileHomeNode.getSession().save();
     } catch (Exception e) {
-      log.warn("Failed to save user profile of user: " + owner);
+      LOG.warn("Failed to save user profile of user: " + owner);
+    } finally {
+      sProvider.close();
     }
   }
   
@@ -3375,7 +3393,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             nodeContent.setProperty(EXO_FILE_NAME, file.getName());
           }
         } catch (Exception e) {
-          log.error("Failed to save attachment", e);
+          LOG.error("Failed to save attachment", e);
         }
       }
     }
@@ -3429,7 +3447,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         sendNotificationMessage(message);
       }
     } catch (Exception e) {
-      log.error("Failed to save post" + post.getName(), e);
+      LOG.error("Failed to save post" + post.getName(), e);
     }
   }
 
@@ -3447,8 +3465,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     boolean isFistPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId());
     postNode.setProperty(EXO_IS_FIRST_POST, isFistPost);
 
-    //
-    updateProfileAddPost(post.getOwner());
     //
     postSaveProperties(postNode, post);
     //
@@ -3758,7 +3774,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to send notification.", e);
+      LOG.error("Failed to send notification.", e);
     }
   }
 
@@ -3768,7 +3784,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumHomeNode = getForumHomeNode(sProvider);
       for (Post post : posts) {
         try {
-          boolean isGetLastPost = false;
           String postPath = post.getPath();
           String topicPath = postPath.substring(0, postPath.lastIndexOf("/"));
           String forumPath = postPath.substring(0, topicPath.lastIndexOf("/"));
@@ -3794,7 +3809,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               if (postLastNode != null) {
                 topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
                 topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
-                isGetLastPost = true;
               }
               newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
               if (newNumberAttach < 0)
@@ -3815,7 +3829,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               if (postLastNode != null) {
                 topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
                 topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
-                isGetLastPost = true;
               }
               newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
               if (newNumberAttach < 0)
@@ -3836,7 +3849,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             if (postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
               topicNode.setProperty(EXO_LAST_POST_DATE, postDate);
               topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
-              isGetLastPost = true;
             }
             newNumberAttach = newNumberAttach + postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
             topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -3848,17 +3860,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           } else {
             forumNode.save();
           }
-//          if (isGetLastPost) {
-//            queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
-//          }
+          //
           getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
         } catch (PathNotFoundException e) {
-          log.error("Failed to modify post" + post.getName(), e);
+          LOG.error("Failed to modify post" + post.getName(), e);
         }
       }
       
     } catch (Exception e) {
-      log.error("Failed to modify posts", e);
+      LOG.error("Failed to modify posts", e);
     }
   }
 
@@ -3898,7 +3908,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         newProfileNode.setProperty(EXO_TOTAL_POST, newProfileNode.getProperty(EXO_TOTAL_POST).getLong() - 1);
         newProfileNode.save();
       } catch (PathNotFoundException e) {
-        log.debug("Failed to save category moderators ", e);
+        LOG.debug("Failed to save category moderators ", e);
       }
       postNode.remove();
       // update information: setPostCount, lastpost for Topic
@@ -3936,7 +3946,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return post;
     } catch (Exception e) {
-      log.error("Failed to remove post in topic.");
+      LOG.error("Failed to remove post in topic.");
       return null;
     }
   }
@@ -4179,7 +4189,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
     } catch (Exception e) {
-      log.error("Failed to add tags", e);
+      LOG.error("Failed to add tags", e);
     }
   }
 
@@ -4232,7 +4242,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         tagNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to untag.", e);
+      LOG.error("Failed to untag.", e);
     }
   }
 
@@ -4419,8 +4429,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           tags.add(getTagNode(tagHome.getNode(id)));
         } catch (Exception e) {
-          if (log.isDebugEnabled()){
-            log.debug(String.format("Failed to get tag node with id %s", id), e);
+          if (LOG.isDebugEnabled()){
+            LOG.debug(String.format("Failed to get tag node with id %s", id), e);
           }
         }
       }
@@ -4496,7 +4506,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         tagHome.save();
       }
     } catch (Exception e) {
-      log.error("Failed to save tag.", e);
+      LOG.error("Failed to save tag.", e);
     }
   }
 
@@ -4518,7 +4528,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node userProfileHome = getUserProfileHome(sProvider);
       QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
       StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(userProfileHome.getPath()).append("/element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
+      stringBuffer.append(JCR_ROOT).append(userProfileHome.getPath()).append("/element(*,").append(EXO_FORUM_USER_PROFILE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
       Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -4588,8 +4598,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile.setIsBanned(isBanIp(ip));
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get default userprofile of user: " + userName, e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get default userprofile of user: " + userName, e);
       }
     }
     return userProfile;
@@ -4702,7 +4712,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profileNode.setProperty(EXO_IS_AUTO_WATCH_TOPIC_I_POST, userProfile.getIsAutoWatchTopicIPost());
       profileNode.save();
     } catch (Exception e) {
-      log.error("Failed to save setting profile.", e);
+      LOG.error("Failed to save setting profile.", e);
     }
   }
 
@@ -4729,7 +4739,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
       profileNode.getSession().save();
     } catch (Exception e) {
-      log.error("Failed to save last post id read.", e);
+      LOG.error("Failed to save last post id read.", e);
     }
   }
 
@@ -4743,15 +4753,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           list.addAll(Utils.valuesToList(profileNode.getProperty(EXO_MODERATE_CATEGORY).getValues()));
         } catch (Exception e) {
-          if (log.isDebugEnabled()){
-            log.debug("Failed to get moderators of categories", e);
+          if (LOG.isDebugEnabled()){
+            LOG.debug("Failed to get moderators of categories", e);
           }
         }
       else
         list.addAll(Utils.valuesToList(profileNode.getProperty(EXO_MODERATE_FORUMS).getValues()));
     } catch (Exception e) {
-      if (log.isDebugEnabled()){
-        log.debug("Failed to get moderators of forums", e);
+      if (LOG.isDebugEnabled()){
+        LOG.debug("Failed to get moderators of forums", e);
       }
     }
     return list;
@@ -4768,7 +4778,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         profileNode.setProperty(EXO_MODERATE_FORUMS, Utils.getStringsInList(ids));
       profileNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to set %s as moderator", userName));
+      LOG.error(String.format("Failed to set %s as moderator", userName));
     }
   }
 
@@ -4860,7 +4870,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         profiles.add(userProfile);
       }
     } catch (Exception e) {
-      log.trace("\nUser Name must exist: " + e.getMessage() + "\n" + e.getCause());
+      LOG.trace("\nUser Name must exist: " + e.getMessage() + "\n" + e.getCause());
     }
     return profiles;
   }
@@ -4917,7 +4927,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         role = new PropertyReader(newProfileNode).l(EXO_USER_ROLE);
       }
     } catch (PathNotFoundException e) {
-      newProfileNode = userProfileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+      newProfileNode = userProfileHome.addNode(userName, EXO_FORUM_USER_PROFILE);
       newProfileNode.setProperty(EXO_USER_ID, userName);
       newProfileNode.setProperty(EXO_TOTAL_POST, 0);
       newProfileNode.setProperty(EXO_TOTAL_TOPIC, 0);
@@ -5089,7 +5099,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           }
         }
       } catch (PathNotFoundException e) {
-        newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
+        newProfileNode = userProfileNode.addNode(userName, EXO_FORUM_USER_PROFILE);
         newProfileNode.setProperty(EXO_USER_ID, userName);
         newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
         if (isAdminRole(userName)) {
@@ -5104,7 +5114,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to save UserBookmark.", e);
+      LOG.error("Failed to save UserBookmark.", e);
     }
   }
 
@@ -5144,7 +5154,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (PathNotFoundException e) {
-      newProfileNode = userProfileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+      newProfileNode = userProfileHome.addNode(userName, EXO_FORUM_USER_PROFILE);
       newProfileNode.setProperty(EXO_USER_ID, userName);
       newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
       if (isAdminRole(userName)) {
@@ -5158,8 +5168,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         newProfileNode.save();
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to save collapsed categories.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to save collapsed categories.", e);
       }
     }
   }
@@ -5180,7 +5190,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           messageNode.setProperty(EXO_IS_UNREAD, false);
         }
       } catch (PathNotFoundException e) {
-        log.error("Failed to save read massage", e);
+        LOG.error("Failed to save read massage", e);
       }
       if (type.equals(Utils.RECEIVE_MESSAGE) && isNew) {
         if (profileNode.hasProperty(EXO_NEW_MESSAGE)) {
@@ -5198,7 +5208,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to save read message.");
+      LOG.error("Failed to save read message.");
     }
   }
 
@@ -5298,7 +5308,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private Node addNodeUserProfile(SessionProvider sProvider, String userName) throws Exception {
     Node userProfileHome = getUserProfileHome(sProvider);
-    Node profileNode = userProfileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+    Node profileNode = userProfileHome.addNode(userName, EXO_FORUM_USER_PROFILE);
     profileNode.setProperty(EXO_USER_ID, userName);
     profileNode.setProperty(EXO_USER_TITLE, Utils.USER);
     if (isAdminRole(userName)) {
@@ -5333,7 +5343,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       messageNode.remove();
       profileNode.save();
     } catch (PathNotFoundException e) {
-      log.error("Failed to remove private message", e);
+      LOG.error("Failed to remove private message", e);
     }
   }
 
@@ -5347,8 +5357,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumSubscription.setForumIds(reader.strings(EXO_FORUM_IDS, new String[] {}));
         forumSubscription.setTopicIds(reader.strings(EXO_TOPIC_IDS, new String[] {}));
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug(String.format("Failed to get forum subscription for user %s", userId), e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(String.format("Failed to get forum subscription for user %s", userId), e);
       }
     }
     return forumSubscription;
@@ -5374,7 +5384,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         profileNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to save forum subscription.", e);
+      LOG.error("Failed to save forum subscription.", e);
     }
   }
 
@@ -5403,8 +5413,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumStatistic.setNewMembers(reader.string(EXO_NEW_MEMBERS, ""));
       forumStatistic.setMostUsersOnline(reader.string(EXO_MOST_USERS_ONLINE, ""));
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to load forum statistics", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to load forum statistics", e);
       }
     } finally {
       sProvider.close();
@@ -5430,7 +5440,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumStatisticNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to save forum statistics", e);
+      LOG.error("Failed to save forum statistics", e);
     } finally {
       sProvider.close();
     }
@@ -5502,8 +5512,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         object = post;
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Can not get " + type + " by Id: " + id, e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Can not get " + type + " by Id: " + id, e);
       }
     }
     return object;
@@ -5522,8 +5532,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = result.getNodes();
       if (iter.getSize() > 0) return iter.nextNode();
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Can not get Node by Id: " + id, e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Can not get Node by Id: " + id, e);
       }
     }
     return null;
@@ -5994,8 +6004,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           listSearchEvent = removeItemInList(listSearchEvent, forumCanView, categoryCanView);
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()){
-        log.debug("Failed to do advanced search", e);
+      if (LOG.isDebugEnabled()){
+        LOG.debug("Failed to do advanced search", e);
       }
       
     }
@@ -6075,7 +6085,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Search by attachment has failed", e);
+      LOG.error("Search by attachment has failed", e);
     }
     return listSearchEvent;
   }
@@ -6258,7 +6268,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       // if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
     } catch (Exception e) {
-      log.error("Can not add Watch for user: " + currentUser, e);
+      LOG.error("Can not add Watch for user: " + currentUser, e);
     }
   }
 
@@ -6307,7 +6317,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to remove watch.", e);
+      LOG.error("Failed to remove watch.", e);
     }
   }
 
@@ -6349,7 +6359,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         watchingNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to update email watch.", e);
+      LOG.error("Failed to update email watch.", e);
     }
   }
 
@@ -6504,7 +6514,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (profileHome.hasNode(userId)) {
             profile = profileHome.getNode(userId);
           } else {
-            profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE);
+            profile = profileHome.addNode(userId, EXO_FORUM_USER_PROFILE);
             profile.setProperty(EXO_USER_ID, userId);
             profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
             profile.setProperty(EXO_JOINED_DATE, cal);
@@ -6529,7 +6539,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (profileHome.hasNode(userId)) {
             profile = profileHome.getNode(userId);
           } else {
-            profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE);
+            profile = profileHome.addNode(userId, EXO_FORUM_USER_PROFILE);
             profile.setProperty(EXO_USER_ID, userId);
             profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
             profile.setProperty(EXO_JOINED_DATE, cal);
@@ -6548,7 +6558,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumStatisticNode.setProperty(EXO_MEMBERS_COUNT, profileHome.getNodes().getSize() - t);
       forumStatisticNode.save();
     } catch (Exception e) {
-      log.error("Failed to update forum", e);
+      LOG.error("Failed to update forum", e);
     }
   }
 
@@ -6627,7 +6637,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         list.add(forumSearch);
       }
     } catch (Exception e) {
-      log.error("Failed to get waiting jobs for moderator", e);
+      LOG.error("Failed to get waiting jobs for moderator", e);
     }
     return list;
   }
@@ -6702,7 +6712,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         newProfileNode.save();
       }
     } catch (Exception e) {
-      log.error("Failed to get total job watting for moderator", e);
+      LOG.error("Failed to get total job watting for moderator", e);
     }
     return totalJob;
   }
@@ -6726,7 +6736,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to get total job waiting for moderator", e);
+      LOG.error("Failed to get total job waiting for moderator", e);
     }
   }
 
@@ -6748,7 +6758,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to send notification message:" +  e.getMessage());
+      LOG.error("Failed to send notification message:" +  e.getMessage());
     }
   }
 
@@ -6760,7 +6770,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryResult result = query.execute();
       return result.getNodes();
     } catch (Exception e) {
-      log.error("Failed to search", e);
+      LOG.error("Failed to search", e);
     }
     return null;
   }
@@ -6773,7 +6783,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (strQuery == null || strQuery.length() == 0) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(calendar.getTimeInMillis() - 864000000);
-        stringBuilder.append(JCR_ROOT).append(path).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[").append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]");
+        stringBuilder.append(JCR_ROOT).append(path).append("//element(*,").append(EXO_FORUM_USER_PROFILE).append(")[").append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]");
       } else {
         stringBuilder.append(JCR_ROOT).append(path).append(strQuery);
       }
@@ -6792,7 +6802,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         saveForumStatistic(forumStatistic);
       }
     } catch (Exception e) {
-      log.error("Failed to evaluate active users", e);
+      LOG.error("Failed to evaluate active users", e);
     } finally {
       sProvider.close();
     }
@@ -7083,8 +7093,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           session.getWorkspace().copy(importTemp.getPath(), path);
         } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug(path + " or " + importTemp.getPath() + " does not exist: " + e.getMessage() + "\n" + e.getCause());
+          if (LOG.isDebugEnabled()) {
+            LOG.debug(path + " or " + importTemp.getPath() + " does not exist: " + e.getMessage() + "\n" + e.getCause());
           }
         }
       }
@@ -7170,7 +7180,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profile.save();
 
     } catch (Exception e) {
-      log.warn(String.format("Failed to update user %s acess for forum %s", userId, forumId));
+      LOG.warn(String.format("Failed to update user %s acess for forum %s", userId, forumId));
     }
   }
 
@@ -7190,8 +7200,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (banNode.hasProperty(EXO_IPS))
         return Utils.valuesToList(banNode.getProperty(EXO_IPS).getValues());
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get ban list", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get ban list", e);
       }
     }
     return new ArrayList<String>();
@@ -7213,7 +7223,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return true;
     } catch (Exception e) {
-      log.error("Failed to add ban ip: " + ip, e);
+      LOG.error("Failed to add ban ip: " + ip, e);
     }
     return false;
   }
@@ -7228,7 +7238,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         banNode.setProperty(EXO_IPS, Utils.getStringsInList(ips));
         banNode.save();
       } catch (Exception e) {
-        log.error("Failed to remove ban, ip: " + ip, e);
+        LOG.error("Failed to remove ban, ip: " + ip, e);
       }
     }
   }
@@ -7243,8 +7253,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (forumNode.hasProperty(EXO_BAN_I_PS))
         list.addAll(Utils.valuesToList(forumNode.getProperty(EXO_BAN_I_PS).getValues()));
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get forum ban list.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get forum ban list.", e);
       }
     }
     return list;
@@ -7268,7 +7278,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return true;
     } catch (Exception e) {
-      log.error("Failed to add ban ip forum.", e);
+      LOG.error("Failed to add ban ip forum.", e);
     }
     return false;
   }
@@ -7291,14 +7301,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
     } catch (Exception e) {
-      log.error("Failed to remove ban IP from forum", e);
+      LOG.error("Failed to remove ban IP from forum", e);
     }
   }
 
   private List<String> getAllAdministrator(SessionProvider sProvider) throws Exception {
     QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
     StringBuilder pathQuery = new StringBuilder();
-    pathQuery.append(JCR_ROOT).append(getUserProfileHome(sProvider).getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[@exo:userRole=0]");
+    pathQuery.append(JCR_ROOT).append(getUserProfileHome(sProvider).getPath()).append("//element(*,").append(EXO_FORUM_USER_PROFILE).append(")[@exo:userRole=0]");
     Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
@@ -7311,32 +7321,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      JCRSessionManager manager = new JCRSessionManager(workspace);
-      Session session = manager.createSession();
-      try {
-        Node forumStatisticNode = session.getRootNode().getNode(dataLocator.getForumStatisticsLocation());
-        PropertyReader reader = new PropertyReader(forumStatisticNode);
-        if (topicCount != 0) {
-          long count = reader.l(EXO_TOPIC_COUNT);
-          if (count < 0)
-            count = 0;
-          forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount);
-        }
-        if (postCount != 0) {
-          long count = reader.l(EXO_POST_COUNT);
-          if (count < 0)
-            count = 0;
-          forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount);
-        }
-        forumStatisticNode.save();
-      } finally {
-        session.logout();
+      Node forumStatisticNode = getForumStatisticsNode(sProvider);
+      PropertyReader reader = new PropertyReader(forumStatisticNode);
+      if (topicCount != 0) {
+        long count = reader.l(EXO_TOPIC_COUNT);
+        if (count < 0)
+          count = 0;
+        forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount);
       }
+      if (postCount != 0) {
+        long count = reader.l(EXO_POST_COUNT);
+        if (count < 0)
+          count = 0;
+        forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount);
+      }
+      forumStatisticNode.save();
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to update statistic counts", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to update statistic counts", e);
       }
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -7361,8 +7368,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
       pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get Prune Settings: " + e.getMessage() + "\n" + e.getCause());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get Prune Settings: " + e.getMessage() + "\n" + e.getCause());
       }
     }
     return pruneSetting;
@@ -7406,12 +7413,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       try {
         addOrRemoveSchedule(pruneSetting);
       } catch (Exception e) {
-        if (log.isDebugEnabled()) {
-          log.debug("Failed to add or remove prune jobs", e);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to add or remove prune jobs", e);
         }
       }
     } catch (Exception e) {
-      log.error("Failed to save prune setting.", e);
+      LOG.error("Failed to save prune setting.", e);
     }
   }
 
@@ -7430,8 +7437,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JobDataMap jdatamap = new JobDataMap();
       jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       schedulerService.addPeriodJob(info, periodInfo, jdatamap);
-      if (log.isInfoEnabled()) {
-        log.info("\n\nActivated " + info.getJobName());
+      if (LOG.isInfoEnabled()) {
+        LOG.info("\n\nActivated " + info.getJobName());
       }
     }
   }
@@ -7455,7 +7462,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             queryLastTopic(sProvider, forumN.getPath());
           }
         } catch (Exception e) {
-          log.warn("Failed to save new value last post date in forum", e); 
+          LOG.warn("Failed to save new value last post date in forum", e); 
         }
       }
       // update last run for prune setting
@@ -7463,7 +7470,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       setting.setProperty(EXO_LAST_RUN_DATE, getGreenwichMeanTime());
       forumNode.save();
     } catch (Exception e) {
-      log.error("Failed to run prune", e);
+      LOG.error("Failed to run prune", e);
     }
   }
 
@@ -7485,8 +7492,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return getIteratorPrune(sProvider, pSetting).getSize();
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to check prune", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to check prune", e);
       }
     }
     return 0;
@@ -7519,8 +7526,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       s = StringUtils.replace(s, "END]]", "]]>");
       return new ByteArrayInputStream(s.getBytes());
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to create forum rss", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to create forum rss", e);
       }
     }
     return null;
@@ -7550,8 +7557,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         entries.addAll(topicUpdated(iter.nextNode()));
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to update syndEntry by forum.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to update syndEntry by forum.", e);
       }
     }
     return entries;
@@ -7566,8 +7573,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean forumHasRestrictedAudience = (hasProperty(forumNode, EXO_VIEWER));
       String topicName = topicNode.getName();
       if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
-        if (log.isDebugEnabled()) {
-          log.debug("Post" + topicName + " was not added to feed because category or forum has restricted audience");
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Post" + topicName + " was not added to feed because category or forum has restricted audience");
         }
         return null;
       }
@@ -7586,15 +7593,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           entries.add(postUpdated(postNode));
         } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Failed to generate feed for post " + postNode.getPath(), e);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Failed to generate feed for post " + postNode.getPath(), e);
           }
         }
       }
 
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to update sundEntry by topic.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to update sundEntry by topic.", e);
       }
     }
     return entries;
@@ -7700,7 +7707,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (PathNotFoundException e) {
-      log.info(String.format("User %s doesn't subscribe anything.", userId));
+      LOG.info(String.format("User %s doesn't subscribe anything.", userId));
     } catch (RepositoryException e) {
       logDebug("Can not create feed data for user: " + userId, e);
     }
@@ -7723,7 +7730,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       s = StringUtils.replace(s, "END]]", "]]>");
       return new ByteArrayInputStream(s.getBytes());
     } catch (FeedException e) {
-      log.error("Can not create RSS for user: " + userId, e);
+      LOG.error("Can not create RSS for user: " + userId, e);
       return new ByteArrayInputStream(("Can not create RSS for user: " + userId + "<br/>" + e).getBytes());
     }
   }
@@ -7741,12 +7748,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       final String userName = user.getUserName();
       if (profileHome.hasNode(userName)) {
         if (isNew) {
-          log.warn("Request to add user " + userName + " was ignored because it already exists.");
+          LOG.warn("Request to add user " + userName + " was ignored because it already exists.");
         }
         profile = profileHome.getNode(userName);
         added = false;
       } else {
-        profile = profileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+        profile = profileHome.addNode(userName, EXO_FORUM_USER_PROFILE);
         added = true;
       }
 
@@ -7754,7 +7761,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profile.setProperty(EXO_USER_ID, userName);
       profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
       profile.setProperty(EXO_EMAIL, user.getEmail());
-      profile.setProperty(EXO_FULL_NAME, user.getFullName());
+      profile.setProperty(EXO_FULL_NAME, user.getDisplayName());
       cal.setTime(user.getCreatedDate());
       profile.setProperty(EXO_JOINED_DATE, cal);
       if (isAdminRole(userName)) {
@@ -7779,7 +7786,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return added;
     } catch (Exception e) {
-      log.error("Error while populating user profile: " + e.getMessage());
+      LOG.error("Error while populating user profile: " + e.getMessage());
       throw e;
     } finally {
       sessionManager.closeSession(true);
@@ -7803,8 +7810,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get latest user login.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get latest user login.", e);
       }
     }
     return "";
@@ -7956,8 +7963,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         list = getPostByQuery(categoryHome, (QueryImpl)query, number, userName, isAdmin);
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get new post.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get new post.", e);
       }
     }
     return list;
@@ -7981,8 +7988,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         list = getPostByQuery(categoryHome, (QueryImpl)query, number, "", false);
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get new post.", e);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Failed to get new post.", e);
       }
     }
     return list;
@@ -8019,7 +8026,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           avatarHome.getNode(userId).remove();
         }
       } catch (Exception e) {
-        log.info("User deleted has not avatar !!!");
+        LOG.info("User deleted has not avatar !!!");
       }
       session.save();
     } catch (PathNotFoundException e) {
@@ -8071,7 +8078,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                     list2.remove(t);
                     node.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
                   } catch (Exception e) {
-                    log.debug("Failed to get email watching by user deleted.", e);
+                    LOG.debug("Failed to get email watching by user deleted.", e);
                   }
                 }
                 list.remove(userName);
@@ -8087,7 +8094,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         categoryHome.save();
       }
     } catch (Exception e) {
-      log.error("Failed to calculate deleting user.", e);
+      LOG.error("Failed to calculate deleting user.", e);
     }
   }
 
@@ -8096,7 +8103,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // remove forum in space
       Node forumSpaceNode = getNodeById(CommonUtils.createSystemProvider(), Utils.FORUM_SPACE_ID_PREFIX + groupName, Utils.FORUM);
       if (forumSpaceNode != null) {
-        log.info("\nINFO: Delete forum in space: " + forumSpaceNode.getName());
+        LOG.info("\nINFO: Delete forum in space: " + forumSpaceNode.getName());
         removeForum(forumSpaceNode.getParent().getName(), forumSpaceNode.getName());
       }
       // remove group storage in categories/forums/topics
@@ -8184,15 +8191,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     sessionManager = dataLocator.getSessionManager();
     repository = dataLocator.getRepository();
     workspace = dataLocator.getWorkspace();
-    log.info("JCR Data Storage for forum initialized to " + dataLocator);
+    LOG.info("JCR Data Storage for forum initialized to " + dataLocator);
   }
   
   private static void logDebug(String message, Throwable e) {
-    if(log.isDebugEnabled()) {
+    if(LOG.isDebugEnabled()) {
       if(e != null) {
-        log.debug(message, e);
+        LOG.debug(message, e);
       } else {
-        log.debug(message);
+        LOG.debug(message);
       }
     }
   }
@@ -8213,7 +8220,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
+      LOG.error(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
     }
   }
 
@@ -8225,7 +8232,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
+      LOG.error(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
     }
   }
 
@@ -8236,7 +8243,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node ownerNode = getNodeById(sProvider, ownerId, type);
       return ActivityTypeUtils.getActivityId(ownerNode);
     } catch (Exception e) {
-      log.error(String.format("Failed to get attach activityId for %s: %s ", type, ownerId), e);
+      LOG.error(String.format("Failed to get attach activityId for %s: %s ", type, ownerId), e);
     }
     return null;
   }
@@ -8248,7 +8255,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node ownerNode = getNodeAt(sProvider, ownerPath);
       return ActivityTypeUtils.getActivityId(ownerNode);
     } catch (Exception e) {
-      log.error(String.format("Failed to get attach activityId for %s ", ownerPath), e);
+      LOG.error(String.format("Failed to get attach activityId for %s ", ownerPath), e);
     }
     return null;
   }
