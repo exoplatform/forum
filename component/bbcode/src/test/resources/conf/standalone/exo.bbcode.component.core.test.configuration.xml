@@ -22,7 +22,7 @@
    xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
    xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
-   <component>
+  <component>
      <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
    </component>
    

@@ -48,35 +48,27 @@ public class JCRAPIAspectConfig
    /**
     * @return the list of interfaces to monitor
     */
-   private Class<?>[] loadTargetInterfaces(ValuesParam params)
-   {
-      ArrayList<?> values = params.getValues();
-      List<Class<?>> lTargetInterfaces = new ArrayList<Class<?>>();
-      if (values != null)
-      {
-         for (Object o : params.getValues())
-         {
-            String className = null;
-            try
-            {
-               className = (String)o;
-               lTargetInterfaces.add(Class.forName(className));
-            }
-            catch (Exception e)
-            {
-               LOG.warn("Cannot find the target interface " + className, e);
-            }
-         }
+   private Class<?>[] loadTargetInterfaces(ValuesParam params) {
+       ArrayList<?> values = params.getValues();
+       List<Class<?>> lTargetInterfaces = new ArrayList<Class<?>>();
+       if (values != null) {
+           for (Object o : params.getValues()) {
+               String className = null;
+               try {
+                   className = (String)o;
+                   lTargetInterfaces.add(Class.forName(className));
+               } catch (Exception e) {
+                   LOG.warn("Cannot find the target interface " + className, e);
+               }
+           }
       }
       Class<?>[] targetInterfaces = new Class<?>[lTargetInterfaces.size()];
       return (Class<?>[])lTargetInterfaces.toArray(targetInterfaces);
    }
-   
    /**
     * @return the list of target interfaces
     */
-   public Class<?>[] getTargetInterfaces()
-   {
-      return targetInterfaces;
-   }
+  public Class<?>[] getTargetInterfaces() {
+    return targetInterfaces;
+  }
 }

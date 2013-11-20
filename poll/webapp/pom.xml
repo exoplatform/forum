@@ -124,10 +124,10 @@
       		<groupId>commons-logging</groupId>
       		<artifactId>commons-logging</artifactId>
       	</exclusion>
-      	<exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
+          <exclusion>
+              <artifactId>jdom</artifactId>
+              <groupId>jdom</groupId>
+          </exclusion>
         <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>

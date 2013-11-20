@@ -77,7 +77,6 @@ public abstract class BaseBBcodeTestCase extends BaseExoTestCase {
     end();
   }
   
-  @SuppressWarnings("unchecked")
   public <T> T getService(Class<T> clazz) {
     return (T) getContainer().getComponentInstanceOfType(clazz);
   }

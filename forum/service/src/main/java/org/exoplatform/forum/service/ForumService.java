@@ -28,6 +28,7 @@ import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
+import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -320,6 +321,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @return A lis of topics.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated use {@link #getTopics(TopicFilter);
    */
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
@@ -335,7 +338,16 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
-
+  
+  /**
+   * Gets posts which are returned as ListAccess.
+   * @param filter The condition to get posts.
+   * @return The posts.
+   * @throws Exception
+   * @since 2.2.11
+   */
+  ListAccess<Topic> getTopics(TopicFilter filter) throws Exception;
+  
   /**
    * Counts the number of topic viewers.
    * 
@@ -1422,24 +1434,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
-
-  /**
-   * Registers a listener for a category.
-   * 
-   * @param categoryId Id of the category.
-   * @throws Exception the exception
-   * @LevelAPI Platform
-   */
-  void registerListenerForCategory(String categoryId) throws Exception;
-
-  /**
-   * Removes a listener from a category.
-   * 
-   * @param path Path to the category.
-   * @throws Exception the exception
-   * @LevelAPI Platform
-   */
-  void unRegisterListenerForCategory(String path) throws Exception;
 
   /**
    * Gets an avatar by a given username.

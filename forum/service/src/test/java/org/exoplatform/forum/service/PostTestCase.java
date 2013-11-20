@@ -95,7 +95,6 @@ public class PostTestCase extends BaseForumServiceTestCase {
     }
     // getPost
     assertNotNull(forumService_.getPost(categoryId, forumId, topicId, posts.get(0).getId()));
-    assertEquals(25, forumService_.getTopic(categoryId, forumId, topicId, "").getPostCount());
 
     // get ListPost
     PostListAccess listAccess = (PostListAccess) forumService_.getPosts(new PostFilter(categoryId, forumId, topicId, "", "", "", "root"));

@@ -3,6 +3,7 @@ package org.exoplatform.forum.service.search;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -15,11 +16,11 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
@@ -39,7 +40,7 @@ import org.exoplatform.services.security.ConversationState;
 public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
 
-  private JCRDataStorage storage;
+  private DataStorage storage;
                               //"/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
   private String FIX_ICON = "/eXoResources/skin/images/Icons/AppIcons/uiIconAppGray.png";
   
@@ -54,14 +55,13 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
 
-  public DiscussionSearchConnector(InitParams initParams, JCRDataStorage storage) {
+  public DiscussionSearchConnector(InitParams initParams, DataStorage storage) {
     super(initParams);
     this.storage = storage;
   }
   
   @Override
   public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
-    
     ExoContainerContext eXoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer()
         .getComponentInstanceOfType(ExoContainerContext.class);
     String portalName = eXoContext.getPortalContainerName();
@@ -73,7 +73,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
       for (ForumSearchResult searchResult : searchResults) {
         PostId id = new PostId(searchResult.getPath());
         Forum forum = storage.getForum(id.getCategoryId(), id.getForumId());
-        Topic topic = storage.getTopic(id.getCategoryId(), id.getForumId(), id.getTopicId(), currentUser);
+        Topic topic = storage.getTopicByPath(id.getTopicPath(), false);
         StringBuilder sb = new StringBuilder();
         sb.append(forum.getForumName());
         sb.append(" - " + topic.getPostCount() + " replies");
@@ -93,7 +93,6 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
             topic.getVoteRating());
         results.add(result);
       }
-
     } catch (Exception e) {
       e.printStackTrace();
       LOG.error(e);
