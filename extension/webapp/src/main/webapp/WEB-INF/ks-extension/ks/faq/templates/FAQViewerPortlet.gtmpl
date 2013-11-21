@@ -151,7 +151,25 @@
             <%for(answer in answers_){ 
               answer = uicomponent.render(answer);
             %>
-              <div class="answers">$answer</div>
+              <div class="answers">$answer
+				<div class="clearfix footerData">
+					<div class="pull-right">		
+						<a class="avatarMini" href="#" data-placement="bottom" rel="tooltip" class="avatarMini" data-original-title="View Profile">
+							<img alt="Avatar"  width="16px" height="auto" src="/social-resources/skin/images/ShareImages/UserAvtDefault.png">&nbsp;
+							<span class="userName">root</span>
+						</a>
+					</div>
+					<div class="voteAnswerContainer">
+						<span class="date">Wed, Nov 20, 2013</span>&nbsp;<span>
+							<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
+						</span>				
+						<span>
+							<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
+						</span>
+						<span class="textVoteAnswer">0</span>				
+					</div>
+				</div>
+             </div>
             <%} %>
           </div>
         <% } %>	
@@ -184,7 +202,25 @@
             <%for(answer in answers){ 
             answer = uicomponent.render(answer);
             %>
-             <div class="answers">$answer</div>
+             <div class="answers">$answer
+				<div class="clearfix footerData">
+					<div class="pull-right">		
+						<a class="avatarMini" href="#" data-placement="bottom" rel="tooltip" class="avatarMini" data-original-title="View Profile">
+							<img alt="Avatar"  width="16px" height="auto" src="/social-resources/skin/images/ShareImages/UserAvtDefault.png">&nbsp;
+							<span class="userName">root</span>
+						</a>
+					</div>
+					<div class="voteAnswerContainer">
+						<span class="date">Wed, Nov 20, 2013</span>&nbsp;<span>
+							<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
+						</span>				
+						<span>
+							<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
+						</span>
+						<span class="textVoteAnswer">0</span>				
+					</div>
+				</div>
+             </div>
             <%} %>                  
           </div>
         <% } %>

@@ -26,8 +26,12 @@
 	padding: 10px 20px;
 	.answersBlock {
 		margin-top: 15px;
+		.date{
+				color: @grayLight;
+				font-size: 12px;
+			}
 	}
-	.answersBlock [class^="uiIcon"] {
+	.answersBlock .uiIconMiniArrowDown  {
 		padding-left: 7px;
 	}
 }
@@ -43,10 +47,7 @@
 }
 
 .viewerQuestion, .viewerAnswer {
-	padding: 5px 25px;
-	> div {
-		margin-bottom: 20px;
-	}
+	padding: 5px 25px;	
 	
 	> p {
 		padding-left: 22px;
@@ -100,7 +101,23 @@
 	
 	.answers {
 		word-wrap: break-word;
-		padding-left: 22px;
+		margin-left: 22px;
+		padding-bottom: 15px;
+		& + .answers {
+			padding: 15px 0 10px 0;
+			border-top: 1px solid #dadada;
+		}
+		.footerData {
+			.avatarMini img {
+				max-width: 16px;
+				max-height: 16px;
+				.border-radius(@borderRadiusSmall);
+				vertical-align: -4px;
+			}
+			.userName {
+				color: @linkColor;
+			}
+		}
 	}
 }
 
