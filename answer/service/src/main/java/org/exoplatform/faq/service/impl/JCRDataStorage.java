@@ -3748,10 +3748,21 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           questionInfo.setDetail(question.getProperty(EXO_NAME).getString());
           questionInfo.setId(question.getName());
           if (question.hasNode(Utils.ANSWER_HOME)) {
-            List<String> answers = new ArrayList<String>();
+            List<Answer> answers = new ArrayList<Answer>();
             NodeIterator ansIter = getNodeIteratorAnswerAccess(question.getNode(Utils.ANSWER_HOME));
+            Answer answer;
+            Node node;
+            PropertyReader reader;
             while (ansIter.hasNext()) {
-              answers.add(ansIter.nextNode().getProperty(EXO_RESPONSES).getString());
+              node = ansIter.nextNode();
+              reader = new PropertyReader(node);
+              answer = new Answer();
+              answer.setId(node.getName());
+              answer.setDateResponse(reader.date(EXO_DATE_RESPONSE));
+              answer.setResponseBy(reader.string(EXO_RESPONSE_BY));
+              answer.setResponses(reader.string(EXO_RESPONSES));
+              answer.setMarkVotes(reader.l(EXO_MARK_VOTES));
+              answers.add(answer);
             }
             questionInfo.setAnswers(answers);
           }

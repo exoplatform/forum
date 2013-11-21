@@ -248,7 +248,6 @@ public abstract class FAQServiceBaseTestCase extends BaseExoTestCase {
     answer.setActivateAnswers(true);
     answer.setApprovedAnswers(true);
     answer.setDateResponse(new Date());
-    answer.setMarksVoteAnswer(0);
     answer.setMarkVotes(0);
     answer.setNew(true);
     answer.setPostId(null);

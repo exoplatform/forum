@@ -6,12 +6,12 @@
   def requireJS = _ctx.getRequestContext()
       .getJavascriptManager().require("SHARED/FaqPortlet", "faq");
   requireJS.addScripts("faq.focusQuestion();")
-  .addScripts("faq.createLink('$uicomponent.id', '$uicomponent.useAjax');")
-  .addScripts("faq.backtotop();");
+		  .addScripts("faq.createLink('$uicomponent.id', '$uicomponent.useAjax');")
+		  .addScripts("faq.backtotop();");
   requireJS.require("SHARED/jquery", "jq").require("SHARED/bts_tooltip", null)
-  .addScripts("(function(gj) { gj('*[rel=tooltip]').tooltip();}) (jq);");
+  		.addScripts("(function(gj) { gj('*[rel=tooltip]').tooltip();}) (jq);");
 %>
-<div class="roundCornerBoxWithTitle">
+<div class="roundCornerBoxWithTitle" id="$uicomponent.id">
 	<h5 class="titleBox"><%= uicomponent.getDisplaySpaceName(); %></h5>
 	<div class="faqCont">
     <%
@@ -44,7 +44,7 @@
               }
               viewName = pathName;
               if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
-                viewName = org.exoplatform.answer.webui.FAQUtils.getSubString(pathName, 40);
+                viewName = FAQUtils.getSubString(pathName, 40);
               }
               if(i < ids.length && i > 0) {
                 link = link + "/" + ids[i];
@@ -53,7 +53,7 @@
                 if(uicomponent.isInSpace() && link.equals(Utils.CATEGORY_HOME)) {
                     url = "javaScript:void(0)";
                   } else {
-                    url = uicomponent.url("ChangePath", link);
+                    url = uicomponent.getURL(link);
                   }
               }
 
@@ -61,7 +61,8 @@
               if(i == navPath.size() -1) {
                 print "<li class=\"active\" "+tooltip+">" + viewName + "</li>";
               } else {
-                print "<li " + tooltip + "><a class=\"ActionLink\" href=\"" + url + "\" actions=\"" + uicomponent.event("ChangePath", link) + "\">" + viewName + "</a>";
+                print "<li " + tooltip + "><a class=\"actions-link\" href=\"" + url + "\" data-actions=\"" + 
+              								 uicomponent.event("ChangePath", link) + "\">" + viewName + "</a>";
                 print "<span class=\"uiIconMiniArrowRight\">&nbsp;</span></li>";
               }
             }
@@ -72,7 +73,7 @@
 		
     <!--  Questions -->
 		<div class="questionBlock">
-			<h4>Question</h4>
+			<h4><%=_ctx.appRes("UIViewer.label.Question")%></h4>
       <%for(questionCate in questionCates) { 
         String question_ =  questionCate.getQuestion();
         question_ = question_.replaceAll("<br/>", " ");
@@ -93,17 +94,19 @@
       %>    
 			<div class="questionList">
         <h5>
-          <a href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>" <%=tooltip%>>$categoryName</a>
+          <a href="<%=uicomponent.getURL(categoryInfo.getPath());%>" 
+          		class="actions-link" data-actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" <%=tooltip%>>$categoryName</a>
           <%if (!subCategories.isEmpty()) {%>
             <span>&#91;</span>
-          <%} 
+          <%}
             int j = 0;
             for(subCategory in subCategories) { 
               String subCateName = FAQUtils.getSubString(subCategory.getName(), 20);
               tooltip = "rel=\"tooltip\" data-placement=\"bottom\" title=\"" + subCategory.getName() + "\"";
               String subPath = subCategory.getPath();
           %>
-          <a class="childItem" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>" <%=tooltip%>>$subCateName</a>
+          <a class="childItem actions-link" href="<%=uicomponent.getURL(subPath)%>" 
+          		data-actions="<%=uicomponent.event("ChangePath", subPath)%>" <%=tooltip%>>$subCateName</a>
           <%
              if(j != (subCategories.size-1)) {
                  print "<span> | </span>";
@@ -131,7 +134,7 @@
     
     <!-- Answers -->
 		<div class="answersBlock">
-			<h4>Answers</h4>
+			<h4><%=_ctx.appRes("UIViewer.label.Answers")%></h4>
       
       <!-- Questions in current category -->
 			<div class="viewerAnswer">
@@ -145,30 +148,32 @@
           <div>
             <h5 class="titleWithBorder" name="$id_"><i class="uiIconMiniArrowDown uiIconLightGray"></i>$question_</h5>
             <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) {
-                print "<div class='description'>" + questionDetail_ + "</div>";
-            }
+                 print "<div class='description'>" + questionDetail_ + "</div>";
+            	 }
             %>
             <%for(answer in answers_){ 
-              answer = uicomponent.render(answer);
+               String answerValue = uicomponent.render(answer.getResponses());
+               String viewProfile = _ctx.appRes("UIViewer.label.ViewProfile");
+               String markVote = ((answer.getMarkVotes() > 0) ? "+" : "") + String.valueOf(answer.getMarkVotes());
             %>
-              <div class="answers">$answer
-				<div class="clearfix footerData">
-					<div class="pull-right">		
-						<a class="avatarMini" href="#" data-placement="bottom" rel="tooltip" class="avatarMini" data-original-title="View Profile">
-							<img alt="Avatar"  width="16px" height="auto" src="/social-resources/skin/images/ShareImages/UserAvtDefault.png">&nbsp;
-							<span class="userName">root</span>
-						</a>
-					</div>
-					<div class="voteAnswerContainer">
-						<span class="date">Wed, Nov 20, 2013</span>&nbsp;<span>
-							<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
-						</span>				
-						<span>
-							<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
-						</span>
-						<span class="textVoteAnswer">0</span>				
-					</div>
-				</div>
+              <div class="answers"><span>$answerValue</span>
+								<div class="clearfix footerData">
+									<div class="pull-right">		
+										<a class="avatarMini" href="<%=uicomponent.event("ViewProfile", answer.getResponseBy())%>" data-placement="bottom" rel="tooltip" data-original-title="$viewProfile">
+											<img alt="Avatar" width="16px" src="<%=FAQUtils.getUserAvatar(answer.getResponseBy())%>" alt="<%=_ctx.appRes("UIViewer.label.Avatar")%>"/>&nbsp;
+											<span class="userName"><%=FAQUtils.getFullName(answer.getResponseBy())%></span>
+										</a>
+									</div>
+									<div class="voteAnswerContainer">
+										<span class="date"><%=uicomponent.convertXTimeAgo(answer.getDateResponse())%></span>&nbsp;<span>
+											<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
+										</span>				
+										<span>
+											<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
+										</span>
+										<span class="textVoteAnswer"><%=markVote%></span>				
+									</div>
+								</div>
              </div>
             <%} %>
           </div>
@@ -200,26 +205,28 @@
             }
             %>
             <%for(answer in answers){ 
-            answer = uicomponent.render(answer);
+              String answerValue = uicomponent.render(answer.getResponses());
+              String viewProfile = _ctx.appRes("UIViewer.label.ViewProfile");
+              String markVote = ((answer.getMarkVotes() > 0) ? "+" : "") + String.valueOf(answer.getMarkVotes());
             %>
-             <div class="answers">$answer
-				<div class="clearfix footerData">
-					<div class="pull-right">		
-						<a class="avatarMini" href="#" data-placement="bottom" rel="tooltip" class="avatarMini" data-original-title="View Profile">
-							<img alt="Avatar"  width="16px" height="auto" src="/social-resources/skin/images/ShareImages/UserAvtDefault.png">&nbsp;
-							<span class="userName">root</span>
-						</a>
-					</div>
-					<div class="voteAnswerContainer">
-						<span class="date">Wed, Nov 20, 2013</span>&nbsp;<span>
-							<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
-						</span>				
-						<span>
-							<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
-						</span>
-						<span class="textVoteAnswer">0</span>				
-					</div>
-				</div>
+             <div class="answers"><span>$answerValue</span>
+							<div class="clearfix footerData">
+								<div class="pull-right">		
+									<a class="avatarMini" href="<%=uicomponent.event("ViewProfile", answer.getResponseBy())%>" data-placement="bottom" rel="tooltip" data-original-title="$viewProfile">
+										<img alt="Avatar" width="16px" src="<%=FAQUtils.getUserAvatar(answer.getResponseBy())%>" alt="<%=_ctx.appRes("UIViewer.label.Avatar")%>"/>&nbsp;
+										<span class="userName"><%=FAQUtils.getFullName(answer.getResponseBy())%></span>
+									</a>
+								</div>
+								<div class="voteAnswerContainer">
+									<span class="date"><%=uicomponent.convertXTimeAgo(answer.getDateResponse())%></span>&nbsp;<span>
+										<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
+									</span>				
+									<span>
+										<i class="uiIconAnsThumbDownMini uiIconAnsLightGray"></i>
+									</span>
+									<span class="textVoteAnswer">$markVote</span>				
+								</div>
+							</div>
              </div>
             <%} %>                  
           </div>

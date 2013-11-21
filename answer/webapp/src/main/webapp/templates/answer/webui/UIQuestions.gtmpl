@@ -286,7 +286,7 @@
 											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										</a>
 									<% if (uicomponent.viewAuthorInfor) {%>
-											<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", author)%>"><%= FAQUtils.getFullName(question.getAuthor());%></a>
+											<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", author)%>"><%=FAQUtils.getFullName(question.getAuthor())%></a>
 									<% } %>
 									</div>
 							<% } %>
