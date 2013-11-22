@@ -21,11 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
@@ -87,12 +87,11 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   private ForumServiceManaged        managementView;                                                  // will be automatically set at @ManagedBy processing
 
-  private Map<String, List<String>>  onlineUserMap   = new HashMap<String, List<String>>();
+  private Set<String>  onlines   = new HashSet<String>();
 
   final Queue<UserLoginLogEntry>     queue           = new ConcurrentLinkedQueue<UserLoginLogEntry>();
 
-//  private String                     lastLogin_      = "";
-  private Map<String, String>        lastLoginMap      = new HashMap<String, String>();
+  private String                     lastLogin_      = "";
 
   private ForumStatisticsService     forumStatisticsService;
 
@@ -1186,12 +1185,10 @@ public class ForumServiceImpl implements ForumService, Startable {
     int maxOnline = 1;
     Calendar timestamp = loginEntry.loginTime;
     while (loginEntry != null) {
-      if(Utils.getCurrentTenantName().equals(loginEntry.tenantName)) {
-        storage.updateLastLoginDate(loginEntry.userName);
-        if (loginEntry.totalOnline > maxOnline) {
-          maxOnline = loginEntry.totalOnline;
-          timestamp = loginEntry.loginTime;
-        }
+      storage.updateLastLoginDate(loginEntry.userName);
+      if (loginEntry.totalOnline > maxOnline) {
+        maxOnline = loginEntry.totalOnline;
+        timestamp = loginEntry.loginTime;
       }
       loginEntry = queue.poll();
     }
@@ -1222,15 +1219,10 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void userLogin(String userId) throws Exception {
-    // Note: login and onlineUserlist shoudl be anaged by forumStatisticsService.memberIn();
-    String currentTenant = Utils.getCurrentTenantName();
-    lastLoginMap.put(currentTenant, userId);
-    List<String> onlinUsers = Utils.getOnlineUserByTenantName(onlineUserMap);
-    if (!onlinUsers.contains(userId)) {
-      onlinUsers.add(userId);
-      onlineUserMap.put(currentTenant, onlinUsers);
-    }
-    UserLoginLogEntry loginEntry = new UserLoginLogEntry(currentTenant, userId, onlinUsers.size(), 
+    // Note: login and onlineUserlist should be managed by forumStatisticsService.memberIn();
+    lastLogin_ = userId;
+    onlines.add(userId);
+    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlines.size(), 
                                                          CommonUtils.getGreenwichMeanTime());
     queue.add(loginEntry);
     CacheUserProfile.storeInCache(userId, storage.getDefaultUserProfile(userId, null));
@@ -1240,11 +1232,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void userLogout(String userId) throws Exception {
-    List<String> onlinUsers = Utils.getOnlineUserByTenantName(onlineUserMap);
-    if (onlinUsers.contains(userId)) {
-      onlinUsers.remove(userId);
-      onlineUserMap.put(Utils.getCurrentTenantName(), onlinUsers);
-    }
+    onlines.remove(userId);
     removeCacheUserProfile(userId);
   }
 
@@ -1252,21 +1240,21 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public boolean isOnline(String userId) throws Exception {
-    return Utils.getOnlineUserByTenantName(onlineUserMap).contains(userId);
+    return onlines.contains(userId);
   }
 
   /**
    * {@inheritDoc}
    */
   public List<String> getOnlineUsers() throws Exception {
-    return Utils.getOnlineUserByTenantName(onlineUserMap);
+    return new ArrayList<String>(onlines);
   }
 
   /**
    * {@inheritDoc}
    */
   public String getLastLogin() throws Exception {
-    return lastLoginMap.get(Utils.getCurrentTenantName());
+    return lastLogin_;
   }
 
   /**
