@@ -26,6 +26,7 @@ import java.util.Random;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
 
 import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
@@ -42,6 +43,7 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -113,12 +115,15 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
   }
 
   public void removeAllData() throws Exception {
-    List<Category> cats = forumService_.getCategories();
+    List<Category> cats = getService(JCRDataStorage.class).getCategories();
     if (cats.size() > 0) {
       for (Category category : cats) {
         forumService_.removeCategory(category.getId());
       }
     }
+  }
+  
+  protected void resetAllUserProfile() throws Exception {
     // reset all user profile
     Node node = dataLocation.getSessionManager().openSession().getRootNode();
     NodeIterator iterator = node.getNode(dataLocation.getUserProfilesLocation()).getNodes();

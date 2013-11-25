@@ -351,6 +351,8 @@ public interface ForumNodeTypes {
 
   public static final String JCR_SCORE                      = "jcr:score";
 
+  public static final String JCR_PATH                       = "jcr:path";
+
   public static final String REP_EXCERPT                    = "rep:excerpt()";
   
   public static final String REP_EXCERPT_PATTERN            = "rep:excerpt(%s)";
@@ -362,5 +364,9 @@ public interface ForumNodeTypes {
   public static final String ASCENDING                      = " ascending";
 
   public static final String DESCENDING                     = " descending";
+
+  public static final String ASC                            = " ASC";
+
+  public static final String DESC                           = " DESC";
 
 }

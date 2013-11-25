@@ -58,6 +58,9 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
 
   public void testForumStatic() throws Exception {
+    //
+    resetAllUserProfile();
+    
     ForumStatistic forumStatistic = forumService_.getForumStatistic();
     assertNotNull(forumStatistic);
     assertEquals(8, forumStatistic.getMembersCount());

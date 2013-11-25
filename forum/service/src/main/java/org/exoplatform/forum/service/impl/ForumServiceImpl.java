@@ -324,7 +324,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     List<Forum> listForums = getForums(categoryId, null);
     for (Forum forum : listForums) {
       String forumId = forum.getId();
-      List<Topic> listTopics = getTopics(categoryId, forumId);
+      List<Topic> listTopics = storage.getTopics(categoryId, forumId);
       for (Topic topic : listTopics) {
         String topicId = topic.getId();
         String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
@@ -356,7 +356,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void modifyForum(Forum forum, int type) throws Exception {
     storage.modifyForum(forum, type);
-    List<Topic> topics = getTopics(forum.getCategoryId(), forum.getId());
+    List<Topic> topics = storage.getTopics(forum.getCategoryId(), forum.getId());
     for (ForumEventLifeCycle f : listeners_) {
       try {
         f.updateTopics(topics, forum.getIsLock());
