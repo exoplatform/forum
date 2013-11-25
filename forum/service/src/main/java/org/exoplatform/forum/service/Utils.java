@@ -555,8 +555,8 @@ public class Utils implements ForumNodeTypes {
   public static String buildSQLHasProperty(String property) {
     StringBuilder builder = new StringBuilder();
     if (!isEmpty(property)) {
-      builder.append(property).append("='' or ")
-             .append(property).append("=' ' or ")
+      builder.append(property).append("='' OR ")
+             .append(property).append("=' ' OR ")
              .append(property).append(" IS NULL");
     }
     return builder.toString();
@@ -590,14 +590,14 @@ public class Utils implements ForumNodeTypes {
     StringBuilder query = new StringBuilder();
     for (String str : groupAndMembershipInfos) {
       if (query.length() > 0) {
-        query.append(" or ");
+        query.append(" OR ");
       }
-      query.append("").append(property).append(" = '").append(str).append("'");
+      query.append(property).append("='").append(str).append("'");
       if (ForumServiceUtils.isGroupExpression(str)) {
-        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
+        query.append(" OR ").append(property).append("='*:").append(str).append("'");
       } else if (ForumServiceUtils.isMembershipExpression(str)) {
         str = str.substring(str.indexOf(":") + 1);
-        query.append(" or ").append(property).append(" = '*:").append(str).append("'");
+        query.append(" OR ").append(property).append("='*:").append(str).append("'");
       }
     }
     return query.toString();
