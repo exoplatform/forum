@@ -61,11 +61,13 @@ public class CategoryFilter {
     this.forumFilters = forumFilters;
   }
 
-  public void setForumFilter(String forumId, String forumName) {
+  public boolean setForumFilter(String forumId, String forumName) {
     ForumFilter forumFilter = new ForumFilter(forumId, forumName);
-    if(this.forumFilters.contains(forumFilter) == false) {
+    if (this.forumFilters.contains(forumFilter) == false) {
       this.forumFilters.add(forumFilter);
+      return true;
     }
+    return false;
   }
 
   public void setForumFilter(ForumFilter forumFilter) {
