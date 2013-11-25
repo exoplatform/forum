@@ -516,10 +516,10 @@ public class CommonUtils {
       return s;
     }
     for (String token : tokens) {
-      if (lIgnore.contains(token)){
+      if (token == null || lIgnore.contains(token)){
         continue;
       }
-      while (token != null && s.indexOf(token) >= 0) {
+      if (s.indexOf(token) >= 0) {
         s = StringUtils.replace(s, token, charcodes.get(token));
       }
     }
