@@ -6058,7 +6058,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //String rootPath = categoryHome.getPath();
 
       //process query for asterisk 
-      String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
+      String asteriskQuery = CommonUtils.processLikeCondition(textQuery).toUpperCase();
       textQuery = CommonUtils.processUnifiedSearchSearchCondition(textQuery);
       //textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
@@ -6114,9 +6114,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       queryString.append(") and ");
     }
     queryString.append("(")
-               .append("CONTAINS (exo:message, '").append(textQuery).append("')")
+               //.append("(CONTAINS (exo:message, '").append(textQuery).append("')")
+               .append("UPPER(exo:message) LIKE '").append(asteriskQuery).append("'")
                .append(" or (exo:isFirstPost='true' and ")
-               .append("CONTAINS (exo:name, '").append(textQuery).append("')))");
+               //.append("(CONTAINS (exo:name, '").append(textQuery).append("')")
+               .append("UPPER(exo:name) LIKE '").append(asteriskQuery).append("'))");
     
     // if user isn't admin
     if (!isAdmin) {

@@ -360,6 +360,18 @@ public class CommonUtils {
     }
     return builder.toString().trim();
   }
+  
+  public static String processLikeCondition(String input) {
+    StringBuilder builder = new StringBuilder();
+    String[] tab = input.split(" ");
+    for (String s : tab){
+      if (isEmpty(s)) continue;
+      String searchTerm = s.split("~")[0];
+      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+      builder.append(PERCENT_STR).append(searchTerm).append(PERCENT_STR).append(" ");
+    }
+    return builder.toString().trim();
+  }
 
   /**
    * To check the input content has special characters or not.

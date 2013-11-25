@@ -264,8 +264,8 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals(4, discussionSearchConnector.search(context, "Topic~0.5", Collections.<String> emptyList(), 2, 5, "relevancy", "ASC").size());
     
     //test Unified Search with special characters
-    //assertEquals(5, discussionSearchConnector.search(context, " top~0.5", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
-    //assertEquals(2, discussionSearchConnector.search(context, " clo~0.5", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(5, discussionSearchConnector.search(context, " top~0.5", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, " clo~0.5", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
     
   }
   
@@ -330,4 +330,29 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals("Reply B1", rDateDesc.get(1).getTitle());
   }
   
+  public void testJapaneseData() throws Exception {
+    String cateId = getId(Utils.CATEGORY);
+    Category cat = createCategory(cateId);
+    cat.setCategoryName("cat1");
+    forumService_.saveCategory(cat, true);
+    
+    Forum forum = createdForum();
+    forum.setForumName("forum1");
+    forumService_.saveForum(cateId, forum, true);
+
+    Topic topic1 = createdTopic(USER_ROOT);
+    topic1.setTopicName("広いニーズ");
+    topic1.setDescription("広いニーズに応えます。");
+    forumService_.saveTopic(cateId, forum.getId(), topic1, true, false, new MessageBuilder());
+    
+    Post post = createdPost();
+    post.setName("Reply A1");
+    post.setMessage("広いニーズ");
+    forumService_.savePost(cateId, forum.getId(), topic1.getId(), post, true, new MessageBuilder());
+    assertEquals(2, discussionSearchConnector.search(context, "広いニーズ", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "広いニーズ\\~", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "広いニーズ~0.5", Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    
+    forumService_.removeCategory(cateId);
+  }
 }
