@@ -24,15 +24,12 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -530,19 +527,18 @@ public class CommonUtils {
     if (isEmpty(s)){
       return s;
     }
-    getValueTokens();
     for (String token : tokens) {
-      if (lIgnore.contains(token)){
+      if (token == null || lIgnore.contains(token)){
         continue;
       }
-      while (s.indexOf(token) >= 0) {
+      if (s.indexOf(token) >= 0) {
         s = StringUtils.replace(s, token, charcodes.get(token));
       }
     }
     return s;
   }
-  
-  private static void getValueTokens() {
+
+  static {
     if(tokens.size() <= 0) {
       String token;
       // Tokens by HTML(Decimal) code.
