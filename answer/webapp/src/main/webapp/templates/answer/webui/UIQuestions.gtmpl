@@ -682,6 +682,7 @@
 											String answerId = answer.getId();
 									%>
 									<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
+									<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
 										<div class="moreAction">
 											<div class="pull-right uiDropdownWithIcon dropdown">
 												<button href="javascript:void(0);" data-toggle="dropdown" class="btn" type="button">
@@ -691,7 +692,7 @@
 												</button>
 												<!--	Begin answers popup menu	-->
 												<ul class="dropdown-menu">
-												<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
+												
 													<li>
 														<a href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
 															<i class="uiIconLightGray uiIconEdit"	></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>
