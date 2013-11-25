@@ -1,7 +1,7 @@
 (function($, utils) {
   var FaqPortlet = {
     executeLink : function(evt) {
-      var onclickAction = String(this.getAttribute('actions'));
+      var onclickAction = String(this.getAttribute('data-actions'));
       $.globalEval(onclickAction);
       utils.cancelEvent(evt);
       return false;
@@ -12,7 +12,7 @@
         return;
       var comp = $.fn.findId(cpId);
       if (comp.exists()) {
-        comp.find('a.ActionLink').on('click', this.executeLink);
+        comp.find('a.actions-link').on('click', this.executeLink);
       }
     },
 

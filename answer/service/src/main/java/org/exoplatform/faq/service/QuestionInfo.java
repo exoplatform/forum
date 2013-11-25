@@ -26,7 +26,7 @@ public class QuestionInfo {
 
   private String       detail;
 
-  private List<String> answers = new ArrayList<String>();
+  private List<Answer> answers = new ArrayList<Answer>();
 
   public QuestionInfo() {
   }
@@ -47,11 +47,11 @@ public class QuestionInfo {
     this.question = question;
   }
 
-  public List<String> getAnswers() {
+  public List<Answer> getAnswers() {
     return answers;
   }
 
-  public void setAnswers(List<String> answers) {
+  public void setAnswers(List<Answer> answers) {
     this.answers = answers;
   }
 

@@ -445,7 +445,7 @@ public class UIQuestions extends UIContainer {
     return languageMap.keySet().toArray(new String[] {});
   }
 
-  protected String getAvatarUrl(String userId) throws Exception {
+  protected String getAvatarUrl(String userId) {
     return FAQUtils.getUserAvatar(userId);
   }
 
@@ -1023,7 +1023,6 @@ public class UIQuestions extends UIContainer {
           answer.setResponseBy(comment.getCommentBy());
           answer.setFullName(comment.getFullName());
           answer.setDateResponse(comment.getDateComment());
-          answer.setMarksVoteAnswer(0);
           answer.setUsersVoteAnswer(null);
           answer.setActivateAnswers(true);
           answer.setApprovedAnswers(true);

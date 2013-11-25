@@ -56,9 +56,6 @@ public class Answer {
   /** The users vote answer. */
   private long     markVotes    = 0;
 
-  /** The marks vote answer. */
-  private double   marksVoteAnswer;
-
   private String   postId;
 
   /** answer detail */
@@ -89,7 +86,6 @@ public class Answer {
     this.approvedAnswers = isApprovetedAnswer;
     this.activateAnswers = true;
     this.dateResponse = new java.util.Date();
-    this.marksVoteAnswer = 0;
     pcs = new PropertyChangeSupport(this);
   }
   
@@ -275,18 +271,21 @@ public class Answer {
    * Gets the marks vote answer.
    * 
    * @return the marks vote answer
+   * 
+   * @deprecated Not used on 4.0 and more
    */
   public double getMarksVoteAnswer() {
-    return marksVoteAnswer;
+    return 0.0;
   }
 
   /**
    * Sets the marks vote answer.
    * 
    * @param marksVoteAnswer the new marks vote answer
+   * 
+   * @deprecated Not used on 4.0 and more
    */
   public void setMarksVoteAnswer(double marksVoteAnswer) {
-    this.marksVoteAnswer = marksVoteAnswer;
   }
 
   /**

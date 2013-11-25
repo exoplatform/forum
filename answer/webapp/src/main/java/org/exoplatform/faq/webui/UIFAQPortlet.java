@@ -18,11 +18,11 @@ package org.exoplatform.faq.webui;
 
 import javax.portlet.PortletMode;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
@@ -34,6 +34,7 @@ import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
@@ -42,16 +43,22 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
     template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
 )
 public class UIFAQPortlet extends UIPortletApplication {
-  private final static String SLASH     = "/".intern();
-  
+  private final static String SLASH             = "/".intern();
+
   private final static String SPACE_PRETTY_NAME = "spacePrettyName";
 
-  private boolean             isInSpace         = false;
+  private final static String CATEGORY_ID       = "categoryId";
 
-  private String              pathOfCateSpace   = null;
+  private boolean isInSpace = false;
+
+  private String   pathOfCateSpace = null;
+
 
   public UIFAQPortlet() throws Exception {
     addChild(UIViewer.class, null, null);
+    UIPopupAction uiPopup = addChild(UIPopupAction.class, null, null);
+    uiPopup.setId("UIFAQPopupAction");
+    uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
@@ -62,10 +69,9 @@ public class UIFAQPortlet extends UIPortletApplication {
       if (uiViewer == null) {
         uiViewer = addChild(UIViewer.class, null, null).setRendered(true);
       }
-      if (FAQUtils.isFieldEmpty(context.getRequestParameter(OBJECTID)) && 
-                       !context.getParentAppRequestContext().useAjax() && StringUtils.EMPTY.equals(uiViewer.getPath())) {
-        uiViewer.setPath(getPathOfCateSpace());
-      }
+      //
+      renderPortletByURL(uiViewer);
+
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       removeChild(UIViewer.class);
       if (getChild(UIFAQSettingForm.class) == null) {
@@ -74,6 +80,25 @@ public class UIFAQPortlet extends UIPortletApplication {
       }
     }
     super.processRender(app, context);
+  }
+  
+  public void renderPortletByURL(UIViewer uiViewer) throws Exception {
+    try {
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String categoryId = portalContext.getRequestParameter(CATEGORY_ID);
+      if (FAQUtils.isFieldEmpty(portalContext.getRequestParameter(OBJECTID)) && 
+            FAQUtils.isFieldEmpty(categoryId) && portalContext.useAjax() == false &&
+                FAQUtils.isFieldEmpty(uiViewer.getPath())) {
+        //
+        uiViewer.setPath(getPathOfCateSpace());
+      } else if (FAQUtils.isFieldEmpty(categoryId) == false) {
+        uiViewer.setCategoryId(categoryId);
+      } else if (FAQUtils.isFieldEmpty(uiViewer.getPath())) {
+        uiViewer.setPath(Utils.CATEGORY_HOME);
+      }
+    } catch (Exception e) {
+      log.error("can not render the selected category", e);
+    }
   }
   
   private Space getSpace() {
