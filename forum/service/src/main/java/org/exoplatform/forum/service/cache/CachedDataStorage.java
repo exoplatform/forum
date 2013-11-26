@@ -810,11 +810,24 @@ public class CachedDataStorage implements DataStorage, Startable {
     return data.build();
   }
 
-  public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
+  public List<Topic> getTopics(final String categoryId, final String forumId) throws Exception {
     TopicFilter filter = new TopicFilter(categoryId, forumId);
-    filter.isAdmin(true).isApproved(false);
+    filter.isAdmin(true);
     //
-    return getTopics(filter, 0, getTopicsCount(filter));
+    TopicListKey key = new TopicListKey(filter, 0, 0);
+
+    ListTopicData data = topicListFuture.get(new ServiceContext<ListTopicData>() {
+      @Override
+      public ListTopicData execute() {
+        try {
+          return buildTopicInput(storage.getTopics(categoryId, forumId));
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, key);
+
+    return buildTopicOutput(data);
   }
 
   public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
@@ -885,6 +898,11 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
     return storage.getTopicUpdate(topic, isSummary);
+  }
+
+  @Override
+  public List<Topic> getTopicsByDate(long date, String forumPath, int offset, int limit) throws Exception {
+    return storage.getTopicsByDate(date, forumPath, offset, limit);
   }
 
   public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
@@ -1772,7 +1790,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
     SimpleCacheKey canViewKey = new SimpleCacheKey(FORUM_CAN_VIEW_KEY, key);
 
-    return (List<String>)miscDataFuture.get(
+    return (List<String>) miscDataFuture.get(
         new ServiceContext<SimpleCacheData>() {
           public SimpleCacheData<List<String>> execute() {
             try {

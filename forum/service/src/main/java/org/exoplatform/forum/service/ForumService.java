@@ -31,6 +31,8 @@ import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.services.organization.User;
 
+import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
+
 /**
  * Manages Forums and all its related objects (categories, topics and posts).
  *
@@ -288,8 +290,21 @@ public interface ForumService extends ForumServiceLegacy {
    * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated used {@link #getTopicsByDate(long, String)}
    */
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
+  
+  /**
+   * Gets a list access of topics which were created before a given date.
+   * 
+   * @param date The given date.
+   * @param forumPatch Path to the forum which contains topics.
+   * @return Topics.
+   * @throws Exception the exception
+   * @LevelAPI Platform
+   */
+  ListAccess<Topic> getTopicsByDate(long date, String forumPath) throws Exception;
 
   /**
    * Gets a list of topics which were created before a given date.
@@ -322,7 +337,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    * @LevelAPI Platform
    * 
-   * @deprecated use {@link #getTopics(TopicFilter);
    */
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
@@ -1739,5 +1753,5 @@ public interface ForumService extends ForumServiceLegacy {
    * @since 4.0
    */
   public String getCommentIdForOwnerPath(String ownerPath);
-  
+
 }

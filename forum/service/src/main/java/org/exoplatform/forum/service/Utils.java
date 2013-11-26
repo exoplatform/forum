@@ -26,15 +26,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Value;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
@@ -562,6 +570,16 @@ public class Utils implements ForumNodeTypes {
     return builder.toString();
   }
 
+  public static String buildSQLHasNotProperty(String property) {
+    StringBuilder builder = new StringBuilder();
+    if (!isEmpty(property)) {
+      builder.append(property).append("<>'' AND ")
+      .append(property).append("<>' ' AND ")
+      .append(property).append(" IS NOT NULL");
+    }
+    return builder.toString();
+  }
+
   /**
    * Build Xpath query for case comparator with all properties of user and other property.
    * @param String property is the property of node
@@ -602,7 +620,40 @@ public class Utils implements ForumNodeTypes {
     }
     return query.toString();
   }
-  
+
+  public static String buildTopicQuery(SortSettings sortSettings, String strQuery, String strOrderBy, String forumPath) throws Exception {
+    SortField orderBy = sortSettings.getField();
+    Direction orderType = sortSettings.getDirection();
+
+    StringBuffer stringBuffer = new StringBuffer();
+
+    stringBuffer.append(JCR_ROOT).append(forumPath).append("/element(*,").append(EXO_TOPIC).append(")");
+    if (strQuery != null && strQuery.length() > 0) {
+      // @exo:isClosed,
+      // @exo:isWaiting ,
+      // @exo:isApprove
+      // @exo:isActive
+      stringBuffer.append("[").append(strQuery).append("]");
+    }
+    stringBuffer.append(" order by @").append(EXO_IS_STICKY).append(DESCENDING);
+    if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
+      if (orderBy != null) {
+        stringBuffer.append(", @exo:").append(orderBy.toString()).append(" ").append(orderType);
+        if (!orderBy.equals(SortField.LASTPOST)) {
+          stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+        }
+      } else {
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+      }
+    } else {
+      stringBuffer.append(", @exo:").append(strOrderBy);
+      if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+      }
+    }
+    String pathQuery = stringBuffer.toString();
+    return pathQuery;
+  }
   
   /**
    * @param userId

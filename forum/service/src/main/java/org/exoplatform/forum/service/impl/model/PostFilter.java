@@ -27,6 +27,9 @@ public class PostFilter {
   private String userLogin = null;
   
   private String topicPath = null;
+  
+  private String ip = null;
+  private String orderBy = null;
 
   public PostFilter(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String isWaiting, String userLogin) {
     this.categoryId = categoryId;
@@ -41,12 +44,15 @@ public class PostFilter {
   public PostFilter(String topicPath) {
     this.topicPath = topicPath;
   }
-  
+
+  public PostFilter(String ip, String orderBy) {
+    this.ip = ip;
+    this.orderBy = orderBy;
+  }
   
   public String getTopicPath() {
     return topicPath;
   }
-
   
   public String getCategoryId() {
     return categoryId;
@@ -69,7 +75,20 @@ public class PostFilter {
   public String getUserLogin() {
     return userLogin;
   }
+
+  public String getIP() {
+    return ip;
+  }
   
+  public String orderBy() {
+    return orderBy;
+  }
+
+  public PostFilter orderBy(String orderBy) {
+    this.orderBy = orderBy;
+    return this;
+  }
+
   @Override
   public String toString() {
     return new StringBuilder("PostFilter{")

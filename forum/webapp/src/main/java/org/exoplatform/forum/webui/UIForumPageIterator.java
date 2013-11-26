@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.webui.popup.UIListTopicOld;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -44,17 +43,7 @@ public class UIForumPageIterator extends UIContainer {
 
   private int         beginTabPage         = 0;
 
-  private boolean     isUpdateListTopicOld = false;
-
   public UIForumPageIterator() throws Exception {
-  }
-
-  public void setUpdateListTopicOld(boolean updateTwoTime) {
-    this.isUpdateListTopicOld = updateTwoTime;
-  }
-
-  public boolean getUpdateListTopicOld() {
-    return isUpdateListTopicOld;
   }
 
   public void updatePageList(JCRPageList pageList) {
@@ -128,50 +117,26 @@ public class UIForumPageIterator extends UIContainer {
       if (stateClick.equalsIgnoreCase("next")) {
         if (presentPage < maxPage) {
           forumPageIterator.page = presentPage + 1;
-          if (forumPageIterator.getUpdateListTopicOld()) {
-            UIListTopicOld listTopicOld = forumPageIterator.getParent();
-            listTopicOld.setIsUpdate(true);
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
         }
       } else if (stateClick.equalsIgnoreCase("previous")) {
         if (presentPage > 1) {
           forumPageIterator.page = presentPage - 1;
-          if (forumPageIterator.getUpdateListTopicOld()) {
-            UIListTopicOld listTopicOld = forumPageIterator.getParent();
-            listTopicOld.setIsUpdate(true);
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
         }
       } else if (stateClick.equalsIgnoreCase("last")) {
         if (presentPage != maxPage) {
           forumPageIterator.page = maxPage;
-          if (forumPageIterator.getUpdateListTopicOld()) {
-            UIListTopicOld listTopicOld = forumPageIterator.getParent();
-            listTopicOld.setIsUpdate(true);
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
         }
       } else if (stateClick.equalsIgnoreCase("first")) {
         if (presentPage != 1) {
           forumPageIterator.page = 1;
-          if (forumPageIterator.getUpdateListTopicOld()) {
-            UIListTopicOld listTopicOld = forumPageIterator.getParent();
-            listTopicOld.setIsUpdate(true);
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
         }
       } else {
         int temp = Integer.parseInt(stateClick);
         if (temp > 0 && temp <= maxPage && temp != presentPage) {
           forumPageIterator.page = temp;
-          if (forumPageIterator.getUpdateListTopicOld()) {
-            UIListTopicOld listTopicOld = forumPageIterator.getParent();
-            listTopicOld.setIsUpdate(true);
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
         }
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent());
     }
   }
 }

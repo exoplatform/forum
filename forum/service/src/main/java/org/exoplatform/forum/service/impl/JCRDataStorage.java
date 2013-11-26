@@ -1944,13 +1944,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  /**
+   * 
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)
+   */
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
       Node forumNode = categoryNode.getNode(forumId);
       String forumPath = forumNode.getPath();
-      String pathQuery = buildTopicQuery(strQuery, strOrderBy, forumPath);
+      String pathQuery = Utils.buildTopicQuery(getForumSortSettings(), strQuery, strOrderBy, forumPath);
       QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(pathQuery, Query.XPATH);
       QueryResult result = query.execute();
@@ -1962,7 +1966,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  @Override
+  /**
+   * 
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)
+   */
   public LazyPageList<Topic> getTopicList(String categoryId, String forumId, String xpathConditions, String strOrderBy, int pageSize) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
@@ -1975,7 +1982,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           xpathConditions = StringUtils.replace(xpathConditions, "topicPermission", "(" + str + "))");
         }
       }
-      String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
+      String topicQuery = Utils.buildTopicQuery(getForumSortSettings(), xpathConditions, strOrderBy, forumPath);
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
@@ -1985,7 +1992,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       return null;
     }
   }
-
   //
   private String buildXpath(SessionProvider sProvider, Node forumNode) throws Exception {
     QueryManager qm = getCategoryHome(sProvider).getSession().getWorkspace().getQueryManager();
@@ -2008,45 +2014,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return builder.toString();
   }
 
-  private String buildTopicQuery(String strQuery, String strOrderBy, String forumPath) throws Exception {
-    SortSettings sortSettings = getTopicSortSettings();
-    SortField orderBy = sortSettings.getField();
-    Direction orderType = sortSettings.getDirection();
-
-    StringBuffer stringBuffer = new StringBuffer();
-
-    stringBuffer.append(JCR_ROOT).append(forumPath).append("/element(*,").append(EXO_TOPIC).append(")");
-    if (strQuery != null && strQuery.length() > 0) {
-      // @exo:isClosed,
-      // @exo:isWaiting ,
-      // @exo:isApprove
-      // @exo:isActive
-      stringBuffer.append("[").append(strQuery).append("]");
-    }
-    stringBuffer.append(" order by @").append(EXO_IS_STICKY).append(DESCENDING);
-    if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
-      if (orderBy != null) {
-        stringBuffer.append(", @exo:").append(orderBy.toString()).append(" ").append(orderType);
-        if (!orderBy.equals(SortField.LASTPOST)) {
-          stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
-        }
-      } else {
-        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
-      }
-    } else {
-      stringBuffer.append(", @exo:").append(strOrderBy);
-      if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
-        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
-      }
-    }
-    String pathQuery = stringBuffer.toString();
-    return pathQuery;
-  }
-  
-  
-  
   public List<Topic> getTopics(TopicFilter filter, int offset, int limit) throws Exception {
-    NodeIterator iter = getTopicIterator(filter, offset, limit);
+    NodeIterator iter = getTopicIterator(filter, offset, limit, true);
     List<Topic> topicList = new ArrayList<Topic>();
     if (iter != null && iter.getSize() > 0) {
       while (iter.hasNext()) {
@@ -2056,15 +2025,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return topicList;
   }
 
-  public NodeIterator getTopicIterator(TopicFilter filter, int offset, int limit) throws Exception{
+  public NodeIterator getTopicIterator(TopicFilter filter, int offset, int limit, boolean hasOrder) throws Exception{
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryNode = getCategoryHome(sProvider).getNode(filter.categoryId());
       Node forumNode = categoryNode.getNode(filter.forumId());
-      String topicQuery = buildTopicQuery(sProvider, filter, forumNode);
+      String topicQuery = buildTopicQuery(sProvider, filter, forumNode, hasOrder);
       
       QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
-      QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
+      QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.SQL);
       if(limit > 0) {
         query.setOffset(offset);
         query.setLimit(limit);
@@ -2079,58 +2048,67 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
   
-  private String buildTopicQuery(SessionProvider sProvider, TopicFilter filter, Node forumNode) throws Exception {
+  private String buildTopicQuery(SessionProvider sProvider, TopicFilter filter, Node forumNode, boolean hasOrder) throws Exception {
     SortSettings sortSettings = getTopicSortSettings();
     SortField orderBy = sortSettings.getField();
     Direction orderType = sortSettings.getDirection();
 
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ").append(EXO_TOPIC);
+    
+    sqlBuilder.append(" WHERE ").append(JCR_PATH).append(" LIKE '").append(forumNode.getPath()).append("/%' AND NOT ")
+              .append(JCR_PATH).append(" LIKE '").append(forumNode.getPath()).append("/%/%'");
+    
 
-    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("/element(*,").append(EXO_TOPIC).append(")");
     if (filter.isAdmin() == false) {
-      StringBuffer strQuery = new StringBuffer();
-      strQuery.append("@").append(EXO_IS_WAITING).append("='false' and @")
-              .append(EXO_IS_ACTIVE).append("='true' and @")
-              .append(EXO_IS_CLOSED).append("='false' and (")
-              .append(Utils.buildXpathHasProperty(EXO_CAN_VIEW)).append(" or ")
-              .append(Utils.buildXpathByUserInfo(EXO_CAN_VIEW, UserHelper.getAllGroupAndMembershipOfUser(null))).append(")");
+      StringBuilder strQuery = new StringBuilder();
+      strQuery.append(" AND ").append(EXO_IS_WAITING).append("='false' AND ")
+              .append(EXO_IS_ACTIVE).append("='true' AND ")
+              .append(EXO_IS_CLOSED).append("='false'");
       
       if (filter.isApproved()) {
-        strQuery.append(" and (@").append(Utils.EXO_IS_APPROVED).append("='true')");
+        strQuery.append(" AND (").append(EXO_IS_APPROVED).append("='true')");
       }
       
-      if(Utils.isEmpty(filter.viewers()) == false && 
-          !ForumServiceUtils.hasPermission(filter.viewers(), filter.userLogin())) {
-        strQuery.append(" and (@").append(Utils.EXO_OWNER).append("='").append(filter.userLogin())
-                .append("' or (").append(buildXpath(sProvider, forumNode)).append("))");
-        
+      if(Utils.isEmpty(filter.viewers()) == true) {
+        // public from parent ==> user is owner or user in can view or can view is empty 
+        strQuery.append(" AND (").append(Utils.EXO_OWNER).append("='").append(filter.userLogin()).append("' OR ")
+                .append(Utils.buildSQLByUserInfo(EXO_CAN_VIEW, UserHelper.getAllGroupAndMembershipOfUser(null)))
+                .append(" OR ").append(Utils.buildSQLHasProperty(EXO_CAN_VIEW)).append(")");
+      } else if(ForumServiceUtils.hasPermission(filter.viewers(), filter.userLogin()) == false) {
+        // has not permission from parent ==> user is owner or user in can view
+        strQuery.append(" AND (").append(Utils.EXO_OWNER).append("='").append(filter.userLogin()).append("' OR ")
+                .append(Utils.buildSQLByUserInfo(EXO_CAN_VIEW, UserHelper.getAllGroupAndMembershipOfUser(null))).append(")");
+      } else {
+        // has permission from parent ==> empty
       }
-      
-      stringBuffer.append("[").append(strQuery).append("]");
+
+      sqlBuilder.append(strQuery);
     }
 
-    stringBuffer.append(" order by @").append(EXO_IS_STICKY).append(DESCENDING);
-    String strOrderBy = filter.orderBy();
-    if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
-      if (orderBy != null) {
-        stringBuffer.append(", @exo:").append(orderBy.toString()).append(" ").append(orderType);
-        if (!orderBy.equals(SortField.LASTPOST)) {
-          stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+    if (hasOrder == true) {
+      sqlBuilder.append(" ORDER BY ").append(EXO_IS_STICKY).append(DESC);
+      String strOrderBy = filter.orderBy();
+      if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
+        if (orderBy != null) {
+          sqlBuilder.append(", exo:").append(orderBy.toString()).append(" ").append(orderType);
+          if (!orderBy.equals(SortField.LASTPOST)) {
+            sqlBuilder.append(", ").append(EXO_LAST_POST_DATE).append(DESC);
+          }
+        } else {
+          sqlBuilder.append(", ").append(EXO_LAST_POST_DATE).append(DESC);
         }
       } else {
-        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
-      }
-    } else {
-      stringBuffer.append(", @exo:").append(strOrderBy);
-      if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
-        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
+        sqlBuilder.append(", exo:").append(strOrderBy);
+        if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
+          sqlBuilder.append(", ").append(EXO_LAST_POST_DATE).append(DESC);
+        }
       }
     }
-    return stringBuffer.toString();
+    return sqlBuilder.toString();
   }
 
   public int getTopicsCount(TopicFilter filter) throws Exception {
-    NodeIterator iter = getTopicIterator(filter, 0, 0);
+    NodeIterator iter = getTopicIterator(filter, 0, 0, false);
     return (int) ((iter != null) ? iter.getSize() : 0);
   }
 
@@ -2260,45 +2238,42 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
-    Node forumHomeNode = getForumHomeNode(sProvider);
-    Node topicNode = null;
     try {
+      Node forumHomeNode = getForumHomeNode(sProvider);
       Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
       QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-      String queryString = JCR_ROOT + forumPath + "/element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
-      Query query = qm.createQuery(queryString, Query.XPATH);
+
+      StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ").append(EXO_TOPIC);
+      
+      sqlBuilder.append(" WHERE (").append(JCR_PATH).append(" LIKE '").append(forumPath).append("/%' AND NOT ")
+                .append(JCR_PATH).append(" LIKE '").append(forumPath).append("/%/%') AND ")
+                .append(EXO_IS_WAITING).append("='false' AND ").append(EXO_IS_ACTIVE).append("='true' AND ")
+                .append(EXO_IS_CLOSED).append("='false'");
+      sqlBuilder.append(" ORDER BY ").append(EXO_LAST_POST_DATE).append(DESC);
+      
+      Query query = qm.createQuery(sqlBuilder.toString(), Query.SQL);
+
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
-      boolean isSavePath = false;
+      String lastTopicPath = StringUtils.EMPTY;
+      boolean isModerateTopic = new PropertyReader(forumNode).bool(EXO_IS_MODERATE_TOPIC);
+      Node topicNode = null;
       while (iter.hasNext()) {
         topicNode = iter.nextNode();
-        if (!forumNode.hasProperty(EXO_IS_MODERATE_TOPIC) && !forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
-          forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-          isSavePath = true;
+        if (isModerateTopic == false || topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
+          lastTopicPath = topicNode.getName();
           break;
-        } else {
-          if (topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
-            forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-            isSavePath = true;
-            break;
-          }
         }
       }
-      if (!isSavePath) {
-        forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
-      }
-      if (forumNode.isNew()) {
-        forumNode.getSession().save();
-      } else {
-        forumNode.save();
-      }
+      forumNode.setProperty(EXO_LAST_TOPIC_PATH, lastTopicPath);
+      forumNode.getSession().save();
+      return topicNode;
     } catch (PathNotFoundException e) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Failed to query last topic", e);
       }
       return null;
     }
-    return topicNode;
   }
 
   private Topic getTopicNodeSummary(Node topicNode) throws RepositoryException {
@@ -2391,13 +2366,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return getTopicUpdate(topicNode, topic, true);
   }
 
+  /**
+   * 
+   * @deprecated
+   */
   public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      String strQuery = getStringQueryResultTopicsOld(categoryHome, date, forumPatch);
-      Query query = qm.createQuery(strQuery, Query.XPATH);
+      String strQuery = buildSQLQueryGetTopicByDate(categoryHome, date, forumPatch);
+      Query query = qm.createQuery(strQuery, Query.SQL);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       JCRPageList pagelist = new ForumPageList(iter, 10, strQuery, true);
@@ -2406,34 +2385,58 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       return null;
     }
   }
+  
+  public List<Topic> getTopicsByDate(long date, String forumPath, int offset, int limit) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      List<Topic> topics = new ArrayList<Topic>();
+      NodeIterator iter = getTopicsByDate(sProvider, date, forumPath, offset, limit);
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        topics.add(getTopicNode(node));
+      }
+      return topics;
+    } catch (Exception e) {
+      return null;
+    }
+  }
 
-  private NodeIterator getNodeIteratorTopicsOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
+  private NodeIterator getTopicsByDate(SessionProvider sProvider, long date, String forumPath, int offset, int limit) throws Exception {
     Node categoryHome = getCategoryHome(sProvider);
     QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    Query query = qm.createQuery(getStringQueryResultTopicsOld(categoryHome, date, forumPatch), Query.XPATH);
+    QueryImpl query = (QueryImpl) qm.createQuery(buildSQLQueryGetTopicByDate(categoryHome, date, forumPath), Query.SQL);
+    if (limit > 0) {
+      query.setLimit(limit);
+      query.setOffset(offset);
+    }
     QueryResult result = query.execute();
     return result.getNodes();
   }
 
-  private String getStringQueryResultTopicsOld(Node categoryHome, long date, String forumPatch) throws Exception {
-    Calendar newDate = getGreenwichMeanTime();
-    String element = "/element";
-    if (forumPatch == null || forumPatch.length() <= 0) {
-      forumPatch = categoryHome.getPath();
-      element = "//element";
+  private String buildSQLQueryGetTopicByDate(Node categoryHome, long date, String forumPath) throws Exception {
+    StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ").append(EXO_TOPIC);
+    sqlBuilder.append(" WHERE ").append(JCR_PATH).append(" LIKE '");
+    if(Utils.isEmpty(forumPath) == false) {
+      sqlBuilder.append(forumPath).append("/%' AND NOT ").append(JCR_PATH).append(" LIKE '")
+                .append(forumPath).append("/%/%'");
+      
+    } else {
+      sqlBuilder.append(categoryHome.getPath()).append("/%'");
     }
-    //TODO why??
+    Calendar newDate = getGreenwichMeanTime();
     newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
-    StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(JCR_ROOT).append(forumPatch).append(element).append("(*,").append(EXO_TOPIC).append(")[@").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @").append(EXO_CREATED_DATE).append(ASCENDING);
-    return stringBuffer.toString();
+    
+    sqlBuilder.append(" AND (").append(EXO_LAST_POST_DATE).append(" <= TIMESTAMP '").append(ISO8601.format(newDate)).append("') ORDER BY ")
+              .append(EXO_CREATED_DATE).append(ASC);
+
+    return sqlBuilder.toString();
   }
 
   public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Topic> topics = new ArrayList<Topic>();
     try {
-      NodeIterator iter = getNodeIteratorTopicsOld(sProvider, date, forumPatch);
+      NodeIterator iter = getTopicsByDate(sProvider, date, forumPatch, 0, 0);
       Topic topic;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
@@ -2455,7 +2458,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public long getTotalTopicOld(long date, String forumPatch) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      NodeIterator iter = getNodeIteratorTopicsOld(sProvider, date, forumPatch);
+      NodeIterator iter = getTopicsByDate(sProvider, date, forumPatch, 0, 0);
       return iter.getSize();
     } catch (Exception e) {
       return 0;
@@ -3246,6 +3249,57 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = result.getNodes();
       JCRPageList pagelist = new ForumPageList(iter, 5, pathQuery, true);
       return pagelist;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
+  public List<Post> getPostsByIP(PostFilter filter, int limit, int offset) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      
+      StringBuilder sqlQuery = new StringBuilder("SELECT ").append(EXO_REMOTE_ADDR).append(" FROM ").append(EXO_POST);
+      
+      sqlQuery.append(" WHERE ").append(EXO_REMOTE_ADDR).append("='").append(filter.getIP()).append("'");
+      
+      if (Utils.isEmpty(filter.orderBy())) {
+        sqlQuery.append("  ORDER BY ").append(EXO_LAST_POST_DATE).append(DESC);
+      } else {
+        sqlQuery.append(" ORDER BY exo:").append(filter.orderBy());
+        if (EXO_LAST_POST_DATE.indexOf(filter.orderBy()) < 0) {
+          sqlQuery.append(", ").append(EXO_LAST_POST_DATE).append(DESC);
+        }
+      }
+      
+//      
+//      
+//      StringBuilder builder = new StringBuilder();
+//      builder.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:post)[@exo:remoteAddr='").append(ip).append("']");
+//      if (Utils.isEmpty(strOrderBy)) {
+//        builder.append(" order by @exo:lastPostDate descending");
+//      } else {
+//        builder.append(" order by @exo:").append(strOrderBy);
+//        if (strOrderBy.indexOf("lastPostDate") < 0) {
+//          builder.append(", @exo:lastPostDate descending");
+//        }
+//      }
+//      String pathQuery = builder.toString();
+//      Query query = qm.createQuery(pathQuery, Query.XPATH);
+      
+      QueryImpl query = (QueryImpl) qm.createQuery(sqlQuery.toString(), Query.SQL);
+      query.setLimit(limit);
+      query.setOffset(offset);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      List<Post> posts = new ArrayList<Post>((int)iter.getSize());
+      Node currentNode;
+      while (iter.hasNext()) {
+        currentNode = iter.nextNode();
+        posts.add(getPost(currentNode));
+      }
+      return posts;
     } catch (Exception e) {
       return null;
     }

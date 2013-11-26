@@ -17,19 +17,27 @@
 package org.exoplatform.forum.service.impl.model;
 
 public class TopicFilter {
-  private String   categoryId;
-  private String   forumId;
-  private String   userLogin;
+  private String   categoryId = null;
+  private String   forumId = null;
+  private String   userLogin = null;
 
-  private String   orderBy;
+  private String   orderBy = null;
 
   private String[] viewers;
   private boolean isApproved = false;
   private boolean isAdmin = false;
+  
+  private long date = 0l;
+  private String forumPath = null;
 
   public TopicFilter(String categoryId, String forumId) {
     this.categoryId = categoryId;
     this.forumId = forumId;
+  }
+
+  public TopicFilter(long date, String forumPath) {
+    this.forumPath = forumPath;
+    this.date = date;
   }
 
   public String categoryId() {
@@ -47,6 +55,15 @@ public class TopicFilter {
 
   public TopicFilter forumId(String forumId) {
     this.forumId = forumId;
+    return this;
+  }
+
+  public String forumPath() {
+    return forumPath;
+  }
+  
+  public TopicFilter forumPath(String forumPath) {
+    this.forumPath = forumPath;
     return this;
   }
 
@@ -74,6 +91,15 @@ public class TopicFilter {
 
   public TopicFilter orderBy(String orderBy) {
     this.orderBy = orderBy;
+    return this;
+  }
+
+  public long date() {
+    return date;
+  }
+  
+  public TopicFilter date(long date) {
+    this.date = date;
     return this;
   }
 
@@ -113,6 +139,8 @@ public class TopicFilter {
     TopicFilter f = (TopicFilter) o;
     if(isAdmin != f.isAdmin || 
         isApproved != f.isApproved ||
+        date != f.date ||
+        !equals(forumPath, f.forumPath)||
         !equals(forumId, f.forumId) ||
         !equals(userLogin, f.userLogin) ||
         !equals(orderBy, f.orderBy)
@@ -131,6 +159,8 @@ public class TopicFilter {
         .append(", isAdmin='").append(isAdmin).append("'")
         .append(", isApproved='").append(isApproved).append("'")
         .append(", userLogin='").append(userLogin).append("'")
+        .append(", date='").append(date).append("'")
+        .append(", forumPath='").append(forumPath).append("'")
         .append('}').toString();
   }
 }
