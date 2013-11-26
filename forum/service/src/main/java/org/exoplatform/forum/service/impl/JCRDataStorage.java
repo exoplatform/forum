@@ -3165,8 +3165,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     StringBuilder strBuilder = new StringBuilder("SELECT * FROM ").append(EXO_POST);
     strBuilder.append(" WHERE (jcr:path LIKE '").append(topicPath).append("/%' AND NOT jcr:path LIKE '")
-              .append(topicPath).append("/%/%') AND (");
-    strBuilder.append(Utils.getSQLQuery(filter.getIsApproved(), filter.getIsHidden(), filter.getIsWaiting(), filter.getUserLogin())).append(")");
+              .append(topicPath).append("/%/%')");
+    String sqlQuery = Utils.getSQLQuery(filter.getIsApproved(), filter.getIsHidden(), filter.getIsWaiting(), filter.getUserLogin()).toString();
+    if (sqlQuery.isEmpty() == false) {
+      strBuilder.append(" AND (").append(sqlQuery).append(")");
+    }
     strBuilder.append(" ORDER BY ").append(EXO_CREATED_DATE).append(" ASC");
 
     return strBuilder.toString();
