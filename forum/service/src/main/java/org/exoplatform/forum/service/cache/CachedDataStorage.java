@@ -1645,6 +1645,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearPostListCountCache(Utils.getTopicId(destTopicPath));
     clearTopicCache(destTopicPath);
     clearForumCache(Utils.getCategoryId(destTopicPath), Utils.getForumId(destTopicPath), false);
+    clearTopicListCache();
+    clearTopicListCountCache(Utils.getForumId(destTopicPath));
   }
 
   public void splitTopic(Topic newTopic, Post fistPost, List<String> postPathMove, String mailContent, String link) throws Exception {
@@ -1654,6 +1656,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearPostListCountCache(Utils.getTopicId(oldTopicPath));
     clearTopicCache(oldTopicPath);
     clearForumCache(Utils.getCategoryId(oldTopicPath), Utils.getForumId(oldTopicPath), false);
+    clearTopicListCache();
+    clearTopicListCountCache(Utils.getForumId(oldTopicPath));
   }
 
   public void updateUserProfileInfo(String name) throws Exception {
