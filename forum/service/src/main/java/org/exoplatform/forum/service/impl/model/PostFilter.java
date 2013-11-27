@@ -30,6 +30,9 @@ public class PostFilter {
   
   private String ip = null;
   private String orderBy = null;
+  
+  private String userName = null;
+  private boolean isAdmin = false;
 
   public PostFilter(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String isWaiting, String userLogin) {
     this.categoryId = categoryId;
@@ -43,6 +46,13 @@ public class PostFilter {
   
   public PostFilter(String topicPath) {
     this.topicPath = topicPath;
+  }
+
+  public PostFilter(String userName, String userLogin, boolean isAdmin, String orderBy) {
+    this.userName = userName;
+    this.userLogin = userLogin;
+    this.isAdmin = isAdmin;
+    this.orderBy = orderBy;
   }
 
   public PostFilter(String ip, String orderBy) {
@@ -88,19 +98,76 @@ public class PostFilter {
     this.orderBy = orderBy;
     return this;
   }
+  
+  public String userName() {
+    return userName;
+  }
 
+  public PostFilter userName(String userName) {
+    this.userName = userName;
+    return this;
+  }
+
+  public boolean isAdmin() {
+    return isAdmin;
+  }
+
+  public PostFilter isAdmin(boolean isAdmin) {
+    this.isAdmin = isAdmin;
+    return this;
+  }
+  private static boolean equals(String s1, String s2) {
+    if (s1 == null) {
+      return (s2 == null) ? true : false;
+    }
+    return s1.equals(s2);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (super.equals(o)) {
+      return true;
+    }
+    if ((o instanceof PostFilter) == false) {
+      return false;
+    }
+    PostFilter f = (PostFilter) o;
+    if(isAdmin != f.isAdmin || 
+        !equals(categoryId, f.categoryId) ||
+        !equals(forumId, f.forumId) ||
+        !equals(topicId, f.topicId) ||
+        !equals(topicPath, f.topicPath) ||
+        !equals(isApproved, f.isApproved) ||
+        !equals(isWaiting, f.isWaiting) ||
+        !equals(isHidden, f.isHidden) ||
+        !equals(isApproved, f.isApproved) ||
+        !equals(userLogin, f.userLogin) ||
+        !equals(ip, f.ip) ||
+        !equals(userName, f.userName) ||
+        !equals(orderBy, f.orderBy)
+        ) {
+      return false;
+    }
+
+    return true;
+  }
   @Override
   public String toString() {
     return new StringBuilder("PostFilter{")
         .append("categoryId='").append(categoryId).append("'")
         .append(", forumId='").append(forumId).append("'")
         .append(", topicId='").append(topicId).append("'")
+        .append(", isAdmin='").append(isAdmin).append("'")
         .append(", isApproved='").append(isApproved).append("'")
         .append(", isWaiting='").append(isWaiting).append("'")
         .append(", isHidden='").append(isHidden).append("'")
         .append(", userLogin='").append(userLogin).append("'")
         .append(", topicPath='").append(topicPath ).append("'")
+        .append(", ip='").append(ip).append("'")
+        .append(", userName='").append(userName).append("'")
+        .append(", orderBy='").append(orderBy).append("'")
         .append('}').toString();
   }
+
   
 }

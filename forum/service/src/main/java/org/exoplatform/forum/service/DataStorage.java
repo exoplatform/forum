@@ -177,9 +177,11 @@ public interface DataStorage {
 
   /**
    * 
-   * @deprecated use {@link #getTopics(TopicFilter, int, int);
+   * @deprecated use {@link #getTopicsByUser(TopicFilter, int, int)}
    */
   JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
+
+  public  List<Topic> getTopicsByUser(TopicFilter filter, int offset, int limit) throws Exception;
 
   void modifyTopic(List<Topic> topics, int type);
 

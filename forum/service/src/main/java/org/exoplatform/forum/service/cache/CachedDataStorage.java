@@ -920,6 +920,24 @@ public class CachedDataStorage implements DataStorage, Startable {
   public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
     return storage.getPageTopicByUser(userName, isMod, strOrderBy);
   }
+  
+  public  List<Topic> getTopicsByUser(final TopicFilter filter, final int offset, final int limit) throws Exception {
+    
+    TopicListKey key = new TopicListKey(filter, 0, 0);
+
+    ListTopicData data = topicListFuture.get(new ServiceContext<ListTopicData>() {
+      @Override
+      public ListTopicData execute() {
+        try {
+          return buildTopicInput(storage.getTopicsByUser(filter, offset, limit));
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, key);
+
+    return buildTopicOutput(data);
+  }
 
   public void modifyTopic(List<Topic> topics, int type) {
     storage.modifyTopic(topics, type);

@@ -26,12 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.Value;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
@@ -42,7 +37,6 @@ import org.exoplatform.forum.service.SortSettings.Direction;
 import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
@@ -455,14 +449,6 @@ public class Utils implements ForumNodeTypes {
     } 
     return strBuilder.toString();
   }
-  
-  public static String buildUnifiedSearchQuery(String property, String valueOrigin, String valueUpperCase) {
-    StringBuilder strBuilder = new StringBuilder();
-    String jcrQuery = "jcr:like";
-    strBuilder.append(jcrQuery).append("(@").append(property).append(", '").append(valueOrigin).append("')");
-    strBuilder.append(" or ").append(jcrQuery).append("(fn:upper-case(@").append(property).append("), '").append(valueUpperCase).append("')");
-    return strBuilder.toString();
-  }
 
   public static String getSQLQueryByProperty(String typeAdd, String property, String value) {
     StringBuilder strBuilder = new StringBuilder();
@@ -516,34 +502,34 @@ public class Utils implements ForumNodeTypes {
   }
 
   public static StringBuilder getSQLQuery(String isApproved, String isHidden, String isWaiting, String userLogin) throws Exception {
-    StringBuilder strBuilder = new StringBuilder();
+    StringBuilder sqlQuery = new StringBuilder();
     String typeAdd = null;
     String str = getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, userLogin);
     if (!isEmpty(str)) {
-      strBuilder.append("(").append(str);
-      typeAdd = "or";
+      sqlQuery.append("(").append(str);
+      typeAdd = "OR";
     }
-    if ("or".equals(typeAdd)) {
-      strBuilder.append(getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, EXO_USER_PRI)).append(")");
-      typeAdd = "and";
+    if ("OR".equals(typeAdd)) {
+      sqlQuery.append(getSQLQueryByProperty(typeAdd, EXO_USER_PRIVATE, EXO_USER_PRI)).append(")");
+      typeAdd = "AND";
     }
     str = getSQLQueryByProperty(typeAdd, EXO_IS_APPROVED, isApproved);
     if (!isEmpty(str)) {
-      strBuilder.append(str);
-      typeAdd = "and";
+      sqlQuery.append(str);
+      typeAdd = "AND";
     }
     str = getSQLQueryByProperty(typeAdd, EXO_IS_HIDDEN, isHidden);
     if (!isEmpty(str)) {
-      strBuilder.append(str);
-      typeAdd = "and";
+      sqlQuery.append(str);
+      typeAdd = "AND";
     }
     str = getSQLQueryByProperty(typeAdd, EXO_IS_WAITING, isWaiting);
     if (!isEmpty(str)) {
-      strBuilder.append(str);
+      sqlQuery.append(str);
     }
-    return strBuilder;
+    return sqlQuery;
   }
-  
+
   /**
    * Build Xpath query for check has property existing.
    * @param String property is the property of node

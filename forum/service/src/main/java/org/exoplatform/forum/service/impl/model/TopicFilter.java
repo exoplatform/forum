@@ -29,6 +29,8 @@ public class TopicFilter {
   
   private long date = 0l;
   private String forumPath = null;
+  
+  private String userName = null;
 
   public TopicFilter(String categoryId, String forumId) {
     this.categoryId = categoryId;
@@ -38,6 +40,12 @@ public class TopicFilter {
   public TopicFilter(long date, String forumPath) {
     this.forumPath = forumPath;
     this.date = date;
+  }
+
+  public TopicFilter(String userName, boolean isAdmin, String orderBy) {
+    this.userName = userName;
+    this.orderBy = orderBy;
+    this.isAdmin = isAdmin;
   }
 
   public String categoryId() {
@@ -67,10 +75,19 @@ public class TopicFilter {
     return this;
   }
 
+  public String userName() {
+    return userName;
+  }
+
+  public TopicFilter userName(String userName) {
+    this.userName = userName;
+    return this;
+  }
+
   public String userLogin() {
     return userLogin;
   }
-
+  
   public TopicFilter userLogin(String userLogin) {
     this.userLogin = userLogin;
     return this;
@@ -140,7 +157,8 @@ public class TopicFilter {
     if(isAdmin != f.isAdmin || 
         isApproved != f.isApproved ||
         date != f.date ||
-        !equals(forumPath, f.forumPath)||
+        !equals(forumPath, f.forumPath) ||
+        !equals(userName, f.userName) ||
         !equals(forumId, f.forumId) ||
         !equals(userLogin, f.userLogin) ||
         !equals(orderBy, f.orderBy)
@@ -159,6 +177,7 @@ public class TopicFilter {
         .append(", isAdmin='").append(isAdmin).append("'")
         .append(", isApproved='").append(isApproved).append("'")
         .append(", userLogin='").append(userLogin).append("'")
+        .append(", userName='").append(userName).append("'")
         .append(", date='").append(date).append("'")
         .append(", forumPath='").append(forumPath).append("'")
         .append('}').toString();

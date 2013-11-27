@@ -1065,10 +1065,19 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   /**
-   * {@inheritDoc}
+   * 
+   * @deprecated use {@link #getTopicsByUser(TopicFilter, int, int)}
    */
   public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
     return storage.getPageTopicByUser(userName, isMod, strOrderBy);
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ListAccess<Topic> getPageTopicByUser(TopicFilter filter) throws Exception {
+    return new TopicListAccess(TopicListAccess.Type.TOPICS, storage, filter);
   }
 
   /**

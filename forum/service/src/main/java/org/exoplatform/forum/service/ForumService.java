@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.commons.utils.ListAccess;
@@ -30,8 +31,6 @@ import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.services.organization.User;
-
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
 /**
  * Manages Forums and all its related objects (categories, topics and posts).
@@ -279,8 +278,21 @@ public interface ForumService extends ForumServiceLegacy {
    * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated used {@link #getPageTopicByUser(TopicFilter)}
    */
   JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
+  
+  /**
+   * Gets a list access of topics by a given userName returned as ListAccess.
+   * 
+   * @param userName Name of the user.
+   * @param filter The condition to get posts.
+   * @return The topics.
+   * @throws Exception the exception
+   * @LevelAPI Platform
+   */
+  public ListAccess<Topic> getPageTopicByUser(TopicFilter filter) throws Exception;
 
   /**
    * Gets a list of topics which were created before a given date.
