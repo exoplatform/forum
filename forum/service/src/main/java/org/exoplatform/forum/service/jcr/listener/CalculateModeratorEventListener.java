@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service;
+package org.exoplatform.forum.service.jcr.listener;
 
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -22,6 +22,7 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

@@ -17,26 +17,36 @@
 package org.exoplatform.faq.webui;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.answer.rendering.RenderHelper;
 import org.exoplatform.answer.webui.FAQUtils;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.answer.webui.popup.UIViewUserProfile;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.resolver.ResourceResolver;
+import org.exoplatform.services.organization.User;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.utils.TimeConvertUtils;
 
 @ComponentConfig(
     events = { 
+        @EventConfig(listeners = UIViewer.ViewProfileActionListener.class),
         @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
     }
 )
@@ -47,17 +57,16 @@ public class UIViewer extends UIContainer {
 
   protected boolean    useAjax      = false;
 
+  private Map<String, String> dataLinks = new HashMap<String, String>();
+
   private RenderHelper renderHelper = new RenderHelper();
+  
+  private static String PORTLET_URL = null;
 
   public UIViewer() {
-    fAqService = (FAQService) PortalContainer.getComponent(FAQService.class);
+    fAqService = CommonUtils.getComponent(FAQService.class);
   }
 
-  public void processDecode(WebuiRequestContext context) throws Exception {
-    super.processDecode(context);
-    setPath(StringUtils.EMPTY);
-  }
-  
   public String getPath() {
     return path;
   }
@@ -102,14 +111,36 @@ public class UIViewer extends UIContainer {
     return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
   }
   
-  String getDisplaySpaceName() {
+  protected String getDisplaySpaceName() {
     return getAncestorOfType(UIFAQPortlet.class).getDisplaySpaceName();
   }
-
+  
   protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
     return renderHelper.renderQuestion(question);
+  }
+
+  protected String getURL(String path) {
+    String id = path.substring(path.lastIndexOf("/") + 1);
+    dataLinks.put(id, path);
+    if(PORTLET_URL == null) {
+      PORTLET_URL = FAQUtils.getPortletURI();
+    }
+    return new StringBuffer(PORTLET_URL).append("/?categoryId=").append(id).toString();
+  }
+  
+  public void setCategoryId(String categoryId) throws Exception {
+    String path = dataLinks.get(categoryId);
+    if (FAQUtils.isFieldEmpty(path)) {
+      this.path = fAqService.getCategoryById(categoryId).getPath();
+    } else {
+      this.path = path;
+    }
+  }
+  
+  protected String convertXTimeAgo(Date date) {
+    return TimeConvertUtils.convertXTimeAgo(date, "EEE, MMM dd, yyyy", TimeConvertUtils.DAY);
   }
 
   static public class ChangePathActionListener extends EventListener<UIViewer> {
@@ -120,4 +151,29 @@ public class UIViewer extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }
   }
+
+  static public class ViewProfileActionListener extends EventListener<UIViewer> {
+    public void execute(Event<UIViewer> event) throws Exception {
+      UIViewer viewer = event.getSource();
+      String userId = event.getRequestContext().getRequestParameter(OBJECTID);
+      userId = CommonUtils.decodeSpecialCharToHTMLnumber(userId);
+      User user = UserHelper.getUserByUserId(userId);
+      UIFAQPortlet portlet = viewer.getParent();
+      if (user != null) {
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null);
+        popupContainer.setId("ViewUserProfile");
+        viewUserProfile.setUser(user);
+        popupAction.activate(popupContainer, 680, 350);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        portlet.addMessage(new ApplicationMessage("UIViewer.msg.user-is-not-exist",
+                            new String[] { (userId.contains(Utils.DELETED)) ? userId.substring(0, userId.indexOf(Utils.DELETED)) : userId },
+                            ApplicationMessage.WARNING));
+        return;
+      }
+    }
+  }
+
 }

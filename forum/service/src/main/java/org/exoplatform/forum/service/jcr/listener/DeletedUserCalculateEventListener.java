@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service;
+package org.exoplatform.forum.service.jcr.listener;
 
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -22,17 +22,16 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 public class DeletedUserCalculateEventListener implements EventListener {
-  private String path_;
+  private Log    LOG = ExoLogger.getLogger(DeletedUserCalculateEventListener.class);
 
   private String workspace_;
 
   private String repository_;
-
-  private Log    log = ExoLogger.getLogger(DeletedUserCalculateEventListener.class);
 
   public DeletedUserCalculateEventListener() throws Exception {
   }
@@ -43,14 +42,6 @@ public class DeletedUserCalculateEventListener implements EventListener {
 
   public String getRepository() {
     return repository_;
-  }
-
-  public String getPath() {
-    return path_;
-  }
-
-  public void setPath(String path) {
-    path_ = path;
   }
 
   public void onEvent(EventIterator evIter) {
@@ -66,7 +57,7 @@ public class DeletedUserCalculateEventListener implements EventListener {
         }
       }
     } catch (Exception e) {
-      log.error("Add event for calculateDeletedUser is fall", e);
+      LOG.error("Add event for calculateDeletedUser is fall", e);
     }
   }
 }

@@ -225,6 +225,8 @@ public interface ForumNodeTypes {
 
   public static final String EXO_FORUM                      = "exo:forum";
 
+  public final static String EXO_FORUM_USER_PROFILE         = "exo:forumUserProfile";
+  
   public static final String EXO_FORUM_CATEGORY             = "exo:forumCategory";
 
   public static final String EXO_IS_AUTO_WATCH_MY_TOPICS    = "exo:isAutoWatchMyTopics";

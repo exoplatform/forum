@@ -5,6 +5,9 @@
 %>
 
 <div id="$uicomponent.id" class="uiFAQPortlet">
+  <div class="ParentMaskLayer">
+    <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
+  </div>
 	<%
 		List children = uicomponent.getChildren() ;
 		for(component in children) {
