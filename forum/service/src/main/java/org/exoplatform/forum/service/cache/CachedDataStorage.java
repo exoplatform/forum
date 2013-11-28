@@ -213,7 +213,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
   }
   
-  private void clearTopicCache(String topicPath) throws Exception {
+  private void clearTopicCache(String topicPath) {
     topicPath = Utils.getSubPath(topicPath);
     topicData.remove(new TopicKey(topicPath, true));
     topicData.remove(new TopicKey(topicPath, false));
@@ -1082,10 +1082,12 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
     storage.addTag(tags, userName, topicPath);
+    clearTopicCache(topicPath);
   }
 
   public void unTag(String tagId, String userName, String topicPath) {
     storage.unTag(tagId, userName, topicPath);
+    clearTopicCache(topicPath);
   }
 
   public Tag getTag(String tagId) throws Exception {
