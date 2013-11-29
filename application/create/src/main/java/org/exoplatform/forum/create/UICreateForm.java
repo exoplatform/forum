@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
@@ -113,7 +114,9 @@ public class UICreateForm extends BaseUIForm {
     if(categoryIncludedSpace != null) {
       List<String> groupAndMembershipInfos = UserHelper.getAllGroupAndMembershipOfUser(null);
       this.categoryIdOfSpaces = categoryIncludedSpace.getId();
-      List<Forum> forums = forumService.getForumsOfCategoryByUser(categoryIdOfSpaces, currentUser, true);
+      ForumFilter filter = new ForumFilter(categoryIdOfSpaces, true);
+      filter.userId(currentUser);
+      List<Forum> forums = forumService.getForums(filter);
 
       SpaceService spaceService = getApplicationComponent(SpaceService.class);
       List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
