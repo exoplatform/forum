@@ -246,10 +246,11 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     }
   }
 
-  public Tag createTag(String name) {
+  protected Tag createTag(String name, String user) {
     Tag tag = new Tag();
     tag.setName(name);
-    tag.setUserTag(new String[] { "root" });
+    tag.setId(Utils.TAG + name);
+    tag.setUserTag(new String[] { user });
     return tag;
   }
 

@@ -269,32 +269,57 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(bookMarks.size(), 2);
   }
 
+  private List<Tag> getTagsByTopic(Topic topic, String userName) throws Exception {
+    List<String> listTagId = new ArrayList<String>();
+    String[] tagIds = topic.getTagId();
+    String[] temp;
+    for (int i = 0; i < tagIds.length; i++) {
+      temp = tagIds[i].split(":");
+      if (temp[0].equals(userName)) {
+        listTagId.add(temp[1]);
+      }
+    }
+
+    return forumService_.getMyTagInTopic(listTagId.toArray(new String[listTagId.size()]));
+  }
+
   public void testTag() throws Exception {
     // set Data
     initDefaultData();
-    Tag tag = createTag("Tag1");
-    Tag tag2 = createTag("Tag2");
-    Tag tag3 = createTag("Tag3");
-
-    // add tag
     List<Tag> tags = new ArrayList<Tag>();
-    tags.add(tag);
-    tags.add(tag2);
-    tags.add(tag3);
+    int size = 5;
+    for (int i = 0; i < size; i++) {
+      Tag tag = createTag("tag" + i, USER_ROOT);
+      tags.add(tag);
+    }
+
     Topic topic = forumService_.getTopic(categoryId, forumId, topicId, "");
     forumService_.addTag(tags, USER_ROOT, topic.getPath());
-    // get Tags name in topic by root.
-    // List<String> list =
-    // forumService_.getTagNameInTopic(USER_ROOT+","+topicId);
+    
+    // get tags in topic by user root
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(size, topic.getTagId().length);
+
+    List<Tag> tags_ = getTagsByTopic(topic, USER_ROOT);
+    assertEquals(size, tags_.size());
+    
+    //test get other tags on topic
+    for (int i = 10; i < 16; i++) {
+      Tag tag = createTag("tag" + i, USER_ROOT);
+      tags.add(tag);
+    }
+    forumService_.addTag(tags, USER_DEMO, topic.getPath());
+    //
+    List<String> list = forumService_.getTagNameInTopic(USER_ROOT+","+topicId);
+    
+    assertEquals(5, list.size());
 
     // Test get tag
-    String id = Utils.TAG + tag.getName();
-    tag = forumService_.getTag(id);
-    assertNotNull(tag);
+    String id = Utils.TAG + tags.get(0).getName();
+    assertNotNull(forumService_.getTag(id));
 
     // Get all tag
-    // assertEquals("All tags size is not 3", 3,
-    // forumService_.getAllTags().size());
+     assertEquals(11, forumService_.getAllTags().size());
 
   }
 
