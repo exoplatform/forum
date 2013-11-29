@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.SettingPortletPreference;
 import org.exoplatform.forum.service.Category;
@@ -185,17 +186,7 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
   }
 
   protected List<Forum> getForumList(String categoryId) throws Exception {
-    List<Forum> forumList = null;
-    StringBuilder strQuery = new StringBuilder();
-    if (getUserProfile().getUserRole() > 0)
-      strQuery.append("(@").append(Utils.EXO_IS_CLOSED).append("='false') or (@")
-              .append(Utils.EXO_MODERATORS).append("='").append(userProfile.getUserId()).append("')");
-    try {
-      forumList = getForumService().getForums(categoryId, strQuery.toString());
-    } catch (Exception e) {
-      forumList = new ArrayList<Forum>();
-    }
-      
+    List<Forum> forumList = ForumSessionUtils.getForumsOfCategory(categoryId, getUserProfile());
     for (Forum forum : forumList) {
       String forumId = forum.getId();
       boolean isCheck = isForumChecked(forumId);

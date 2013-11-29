@@ -66,6 +66,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.PostListAccess;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
@@ -321,7 +322,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Category removeCategory(String categoryId) throws Exception {
-    List<Forum> listForums = getForums(categoryId, null);
+    List<Forum> listForums = storage.getForums(new ForumFilter(categoryId, true));
     for (Forum forum : listForums) {
       String forumId = forum.getId();
       List<Topic> listTopics = storage.getTopics(categoryId, forumId);
@@ -406,6 +407,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   /**
    * {@inheritDoc}
+   * @deprecated {@link #getForums(ForumFilter)}
    */
   public List<Forum> getForums(String categoryId, String strQuery) throws Exception {
     return storage.getForums(categoryId, strQuery);
@@ -413,9 +415,17 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   /**
    * {@inheritDoc}
+   * @deprecated {@link #getForums(ForumFilter)}
    */
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
     return storage.getForumSummaries(categoryId, strQuery);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public List<Forum> getForums(final ForumFilter filter) {
+    return storage.getForums(filter);
   }
 
   /**

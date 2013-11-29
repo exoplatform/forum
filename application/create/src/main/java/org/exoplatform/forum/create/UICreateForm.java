@@ -17,6 +17,7 @@
 package org.exoplatform.forum.create;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.forum.common.CommonUtils;
@@ -110,29 +111,15 @@ public class UICreateForm extends BaseUIForm {
     
     Category categoryIncludedSpace = forumService.getCategoryIncludedSpace();
     if(categoryIncludedSpace != null) {
-      
-      this.categoryIdOfSpaces = categoryIncludedSpace.getId();
-      // check permission
       List<String> groupAndMembershipInfos = UserHelper.getAllGroupAndMembershipOfUser(null);
-      
-      StringBuilder strQuery = new StringBuilder();
-      if(!forumService.isAdminRole(groupAndMembershipInfos.get(0))){
-        strQuery.append("(")
-                .append(Utils.buildXpathByUserInfo(Utils.EXO_CREATE_TOPIC_ROLE, groupAndMembershipInfos))
-                .append(" or ").append(Utils.buildXpathByUserInfo(Utils.EXO_MODERATORS, groupAndMembershipInfos));
-        strQuery.append(") and ");
-      }
-      
-      strQuery.append(Utils.getQueryByProperty("", Utils.EXO_IS_CLOSED, "false"));
-      
-      List<Forum> forums = forumService.getForumSummaries(categoryIdOfSpaces, strQuery.toString());
-      
+      this.categoryIdOfSpaces = categoryIncludedSpace.getId();
+      List<Forum> forums = forumService.getForumsOfCategoryByUser(categoryIdOfSpaces, currentUser, true);
+
       SpaceService spaceService = getApplicationComponent(SpaceService.class);
-      
       List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
       Forum forum;
       for (Space space : spaces) {
-        forum = getForum(forums, space.getPrettyName());
+        forum = getForum(forums, space.getPrettyName(), groupAndMembershipInfos);
         if (forum != null) {
           list.add(new SelectItemOption<String>(space.getDisplayName(), forum.getId()));
         }
@@ -154,9 +141,13 @@ public class UICreateForm extends BaseUIForm {
     }
   }
   
-  private Forum getForum(List<Forum> forums, String spacePrettyName) {
+  private Forum getForum(List<Forum> forums, String spacePrettyName, List<String> listOfCanviewrs) {
     for (Forum forum : forums) {
       if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spacePrettyName)) {
+        if(forum.getIsLock() || 
+            (forum.getCreateTopicRole() != null && Utils.hasPermission(listOfCanviewrs, Arrays.asList(forum.getCreateTopicRole())) == false)) {
+          return null;
+        }
         return forum;
       }
     }

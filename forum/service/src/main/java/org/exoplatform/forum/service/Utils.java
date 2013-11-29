@@ -438,7 +438,8 @@ public class Utils implements ForumNodeTypes {
    * @param String property
    * @param String value
    * @return String
-   */  
+   */
+  @Deprecated
   public static String getQueryByProperty(String typeAdd, String property, String value) {
     StringBuilder strBuilder = new StringBuilder();
     if (!isEmpty(value) && !isEmpty(property)) {
@@ -469,6 +470,7 @@ public class Utils implements ForumNodeTypes {
    * @param String userLogin
    * @return StringBuilder
    */
+  @Deprecated
   public static StringBuilder getPathQuery(String isApproved, String isHidden, String isWaiting, String userLogin) throws Exception {
     StringBuilder strBuilder = new StringBuilder();
     String typeAdd = null;
@@ -536,6 +538,7 @@ public class Utils implements ForumNodeTypes {
    * @return String
    * @since 2.2.10
    */
+  @Deprecated
   public static String buildXpathHasProperty(String property) {
     StringBuilder builder = new StringBuilder();
     if (!isEmpty(property)) {
@@ -573,6 +576,7 @@ public class Utils implements ForumNodeTypes {
    * @return String
    * @since 2.2.10
    */
+  @Deprecated
   public static String buildXpathByUserInfo(String property, List<String> groupAndMembershipInfos) {
     StringBuilder query = new StringBuilder();
     for (String str : groupAndMembershipInfos) {
@@ -606,7 +610,8 @@ public class Utils implements ForumNodeTypes {
     }
     return query.toString();
   }
-
+  
+  @Deprecated
   public static String buildTopicQuery(SortSettings sortSettings, String strQuery, String strOrderBy, String forumPath) throws Exception {
     SortField orderBy = sortSettings.getField();
     Direction orderType = sortSettings.getDirection();
@@ -665,6 +670,8 @@ public class Utils implements ForumNodeTypes {
    * Build Xpath query to get all forums in spaces of user.
    * @param userId
    * @return String
+   * 
+   * @deprecated
    */
   public static String buildQueryForumInSpaceOfUser(String userId, List<String> groupIds) {
     if (isEmpty(userId) == false) {
@@ -679,6 +686,22 @@ public class Utils implements ForumNodeTypes {
         queryForum.append(")");
         return queryForum.toString();
       }
+    }
+    return CommonUtils.EMPTY_STR;
+  }
+
+  public static String buildSQLQueryForumInSpaceOfUser(String userId) {
+    List<String> groupIds = getGroupSpaceOfUser(userId);
+    if (groupIds.size() > 0) {
+      StringBuilder queryForum = new StringBuilder("(");
+      for (String groupId : groupIds) {
+        if (queryForum.length() > 10) {
+          queryForum.append(" OR ");
+        }
+        queryForum.append("(").append(Utils.EXO_ID).append("='").append(Utils.FORUM_SPACE_ID_PREFIX).append(groupId).append("')");
+      }
+      queryForum.append(")");
+      return queryForum.toString();
     }
     return CommonUtils.EMPTY_STR;
   }

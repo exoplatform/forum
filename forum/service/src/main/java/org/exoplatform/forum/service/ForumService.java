@@ -28,6 +28,7 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.services.organization.User;
@@ -169,11 +170,37 @@ public interface ForumService extends ForumServiceLegacy {
    * @return Forums.
    * @throws Exception the exception
    * @LevelAPI Platform
+   *
+   * @deprecated use {@link #getForums(ForumFilter)}
    */
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
   /**
-   * Gets a list of category filters by a forum name and username.
+   * Gets summaries of Forums.
+   * 
+   * @param categoryId Id of the category.
+   * @param strQuery The statement to query forums.
+   * @return The list of forums.
+   * @throws Exception the exception
+   * @LevelAPI Platform
+   * 
+   * @deprecated use {@link #getForums(ForumFilter)}
+   */
+  List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
+
+  /**
+   * Gets a list forums by filter.
+   * 
+   * @param userName Name of the user.
+   * @param filter The condition to get forums.
+   * @return The forums.
+   * @throws Exception the exception
+   * @LevelAPI Platform
+   */
+  List<Forum> getForums(ForumFilter filter);
+
+  /**
+   * Gets a list of category filters by a forum name and userName.
    * 
    * @param filterKey The key to search for a forum.
    * @param userName Name of the user.
@@ -1579,17 +1606,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   LazyPageList<Topic> getTopicList(String categoryId, String forumId, String string, String strOrderBy, int pageSize) throws Exception;
-
-  /**
-   * Gets summaries of Forums.
-   * 
-   * @param categoryId Id of the category.
-   * @param strOrderBy The returned forums are shown by the ascending or descending order.
-   * @return The list of forums.
-   * @throws Exception the exception
-   * @LevelAPI Platform
-   */
-  List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
 
   /**
    * Updates the user profile information.

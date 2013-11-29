@@ -64,6 +64,8 @@ public class TopicListKey extends ScopeCacheKey {
     result = getHashCode(result, filter.isApproved());
     result = getHashCode(result, filter.isAdmin());
     result = getHashCode(result, filter.orderBy());
+    result = 31 * result + offset;
+    result = 31 * result + limit;
     return result;
   }
 }

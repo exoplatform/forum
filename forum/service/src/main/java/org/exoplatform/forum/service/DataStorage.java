@@ -29,6 +29,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.management.annotations.Managed;
@@ -79,7 +80,7 @@ public interface DataStorage {
 
   ForumAdministration getForumAdministration() throws Exception;
 
-  SortSettings getForumSortSettings() throws Exception;
+  SortSettings getForumSortSettings() ;
 
   SortSettings getTopicSortSettings() throws Exception;
 
@@ -98,11 +99,18 @@ public interface DataStorage {
   void calculateModerator(String nodePath, boolean isNew) throws Exception;
 
   Category removeCategory(String categoryId) throws Exception;
-
+  /**
+   * @deprecated use {@link #getForums(ForumFilter)}
+   */
   List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 
+  /**
+   * @deprecated use {@link #getForums(ForumFilter)}
+   */
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
   
+  List<Forum> getForums(ForumFilter filter) ;
+
   List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception;
 
   Forum getForum(String categoryId, String forumId);

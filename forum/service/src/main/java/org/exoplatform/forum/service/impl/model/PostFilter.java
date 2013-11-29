@@ -33,6 +33,7 @@ public class PostFilter {
   
   private String userName = null;
   private boolean isAdmin = false;
+  private boolean isSplit = false;
 
   public PostFilter(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String isWaiting, String userLogin) {
     this.categoryId = categoryId;
@@ -46,6 +47,11 @@ public class PostFilter {
   
   public PostFilter(String topicPath) {
     this.topicPath = topicPath;
+  }
+
+  public PostFilter(String topicPath, boolean isSplit) {
+    this.topicPath = topicPath;
+    this.isSplit = isSplit;
   }
 
   public PostFilter(String userName, String userLogin, boolean isAdmin, String orderBy) {
@@ -108,14 +114,24 @@ public class PostFilter {
     return this;
   }
 
+  public boolean isSplit() {
+    return isSplit;
+  }
+
+  public PostFilter isSplit(boolean isSplit) {
+    this.isSplit = isSplit;
+    return this;
+  }
+
   public boolean isAdmin() {
     return isAdmin;
   }
-
+  
   public PostFilter isAdmin(boolean isAdmin) {
     this.isAdmin = isAdmin;
     return this;
   }
+
   private static boolean equals(String s1, String s2) {
     if (s1 == null) {
       return (s2 == null) ? true : false;
@@ -133,6 +149,7 @@ public class PostFilter {
     }
     PostFilter f = (PostFilter) o;
     if(isAdmin != f.isAdmin || 
+        isSplit != f.isSplit ||
         !equals(categoryId, f.categoryId) ||
         !equals(forumId, f.forumId) ||
         !equals(topicId, f.topicId) ||
@@ -158,6 +175,7 @@ public class PostFilter {
         .append(", forumId='").append(forumId).append("'")
         .append(", topicId='").append(topicId).append("'")
         .append(", isAdmin='").append(isAdmin).append("'")
+        .append(", isSplit='").append(isSplit).append("'")
         .append(", isApproved='").append(isApproved).append("'")
         .append(", isWaiting='").append(isWaiting).append("'")
         .append(", isHidden='").append(isHidden).append("'")

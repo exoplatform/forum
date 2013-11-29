@@ -79,6 +79,7 @@ import org.exoplatform.forum.service.cache.model.selector.MiscDataSelector;
 import org.exoplatform.forum.service.cache.model.selector.PostListCountSelector;
 import org.exoplatform.forum.service.cache.model.selector.TopicListCountSelector;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
@@ -528,7 +529,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getForumAdministration();
   }
 
-  public SortSettings getForumSortSettings() throws Exception {
+  public SortSettings getForumSortSettings() {
     return storage.getForumSortSettings();
   }
 
@@ -536,18 +537,17 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.getTopicSortSettings();
   }
 
-  // TODO : need range
   public List<Category> getCategories() {
 
     return buildCategoryOutput(
-        categoryListFuture.get(
-            new ServiceContext<ListCategoryData>() {
-              public ListCategoryData execute() {
-                return buildCategoryInput(storage.getCategories());
-              }
-            },
-            new CategoryListKey(null)
-        )
+      categoryListFuture.get(
+        new ServiceContext<ListCategoryData>() {
+          public ListCategoryData execute() {
+            return buildCategoryInput(storage.getCategories());
+          }
+        },
+        new CategoryListKey(null)
+      )
     );
     
   }
@@ -617,41 +617,36 @@ public class CachedDataStorage implements DataStorage, Startable {
     return storage.removeCategory(categoryId);  
   }
 
+  @Deprecated
   public List<Forum> getForums(final String categoryId, final String strQuery) throws Exception {
-    return getForums(categoryId, strQuery, false);
+    return getForums(new ForumFilter(categoryId, false).strQuery(strQuery));
   }
 
+  @Deprecated
   public List<Forum> getForumSummaries(final String categoryId, final String strQuery) throws Exception {
-    return getForums(categoryId, strQuery, true);
+    return getForums(new ForumFilter(categoryId, true).strQuery(strQuery));
   }
 
-  // TODO : need range
-  private List<Forum> getForums(final String categoryId, final String strQuery, final boolean isSummary) throws Exception {
-    
+  public List<Forum> getForums(final ForumFilter filter) {
     SortSettings sort = storage.getForumSortSettings();
     SortField orderBy = sort.getField();
     Direction orderType = sort.getDirection();
 
     return buildForumOutput(
-        forumListFuture.get(
-            new ServiceContext<ListForumData>() {
-              public ListForumData execute() {
-                try {
-                  if(isSummary) {
-                    return buildForumInput(storage.getForumSummaries(categoryId, strQuery));
-                  }
-                  return buildForumInput(storage.getForums(categoryId, strQuery));
-                } catch (Exception e) {
-                  throw new RuntimeException(e);
-                }
-              }
-            },
-            new ForumListKey(categoryId, strQuery, orderBy, orderType)
-        )
+      forumListFuture.get(
+        new ServiceContext<ListForumData>() {
+          public ListForumData execute() {
+            try {
+              return buildForumInput(storage.getForums(filter));
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+        },
+        new ForumListKey(filter, orderBy, orderType)
+      )
     );
-    
   }
-
 
   public List<CategoryFilter> filterForumByName(String filterKey, String userName, int maxSize) throws Exception {
     return storage.filterForumByName(filterKey, userName, maxSize);
