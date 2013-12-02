@@ -133,7 +133,7 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     for (int i = 0; i < 9; i++) {
       topic = createdTopic(USER_ROOT);
       topic.setTopicType("Topic_test_" + i);
-      topic.setCanView(new String[] { USER_ROOT, "*:/foo/zed" });
+      topic.setCanView(new String[] { USER_JOHN, "*:/foo/zed" });
       cacheDataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
     }
 
@@ -180,6 +180,37 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     gotList = cacheDataStorage.getTopics(filter, 5, 10);
     got_ = gotList.get(0);
     assertEquals(update.getTopicName(), got_.getTopicName());
+    
+    // test permission
+    for (int i = 0; i < 9; i++) {
+      topic = createdTopic(USER_JOHN);
+      topic.setTopicType("Topic_test_" + USER_JOHN + i);
+      topic.setCanView(new String[] { USER_DEMO, "ghost", "*:/foo/zed" });
+      cacheDataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    }
+    for (int i = 0; i < 9; i++) {
+      topic = createdTopic(USER_ROOT);
+      topic.setTopicType("Topic_test_" + USER_ROOT + i);
+      cacheDataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    }
+    filter = new TopicFilter(categoryId, forumId);
+    filter.isAdmin(false);
+    filter.userLogin(USER_DEMO);
+    loginUser(USER_DEMO);
+    // parent public
+    assertEquals(19, cacheDataStorage.getTopicsCount(filter));
+    // has not permission from parent
+    filter.viewers(new String[]{"mary"});
+    filter.userLogin("ghost");
+    loginUser("ghost");
+    assertEquals(9, cacheDataStorage.getTopicsCount(filter));
+    // has permission from parent
+    filter.userLogin("mary");
+    loginUser("mary");
+    assertEquals(28, cacheDataStorage.getTopicsCount(filter));
+    filter.userLogin("raul");
+    loginUser("raul");
+    assertEquals(0, cacheDataStorage.getTopicsCount(filter));
 
   }
   

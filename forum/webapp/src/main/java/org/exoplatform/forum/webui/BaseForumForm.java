@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
@@ -53,7 +53,7 @@ public class BaseForumForm extends BaseUIForm {
    */
   protected ForumService getForumService() {
     if (forumService == null) {
-      forumService = ForumSessionUtils.getComponentInstanceOfType(ForumService.class);
+      forumService = CommonsUtils.getService(ForumService.class);
     }
     return forumService;
   }

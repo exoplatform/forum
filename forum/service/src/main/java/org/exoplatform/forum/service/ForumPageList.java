@@ -208,7 +208,11 @@ public class ForumPageList extends JCRPageList {
     }
     if (isQuery) {
       QueryManager qm = session.getWorkspace().getQueryManager();
-      Query query = qm.createQuery(value, Query.XPATH);
+      String queryType = Query.XPATH;
+      if (value.indexOf("SELECT") >= 0) {
+        queryType = Query.SQL;
+      }
+      Query query = qm.createQuery(value, queryType);
       QueryResult result = query.execute();
       iter = result.getNodes();
     } else {

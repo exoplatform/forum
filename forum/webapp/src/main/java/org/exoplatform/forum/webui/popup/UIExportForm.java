@@ -15,6 +15,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
@@ -98,7 +99,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
             formInputWithActions.addChild(checkBoxInput);
           }
         } else {
-          for (Forum forum : getForumService().getForums(cat.getId(), null)) {
+          for (Forum forum : getForumService().getForums(new ForumFilter(cat.getId(), true))) {
             mapObject.put(forum.getId(), forum.getForumName());
             checkBoxInput = new UICheckBoxInput(forum.getId(), forum.getId(), true);
             checkBoxInput.setChecked(true);
