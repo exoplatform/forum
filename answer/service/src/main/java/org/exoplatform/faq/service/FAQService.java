@@ -1068,6 +1068,7 @@ public interface FAQService extends FAQServiceLegacy {
    * @param absPathOfItem Path to the question.
    * @throws Exception
    * @LevelAPI Platform
+   * @deprecated : not public anymore 
    */
   public void reCalculateLastActivityOfQuestion(String absPathOfItem) throws Exception;
 
