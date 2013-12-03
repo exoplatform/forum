@@ -28,7 +28,7 @@ public class PostListAccess extends AbstractListAccess<Post> {
   private Type type;
   
   public enum Type {
-    POSTS
+    POSTS, BY_IP, BY_USER
   }
   
   public PostListAccess(Type type, DataStorage  storage, PostFilter filter) {
@@ -44,7 +44,9 @@ public class PostListAccess extends AbstractListAccess<Post> {
     switch(type) {
       case POSTS :
         got = storage.getPosts(filter, offset, limit);
-        break;     
+        break;
+    default:
+      break;     
     }
     //
     reCalculate(offset, limit);

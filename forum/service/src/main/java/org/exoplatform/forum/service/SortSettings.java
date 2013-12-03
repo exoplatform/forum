@@ -52,11 +52,11 @@ public class SortSettings {
   }
 
   private Direction toDirection(String direction) {
-    return (Direction.DESC.toString().equalsIgnoreCase(direction)) ? Direction.DESC : Direction.ASC;
+    return (Direction.DESCENDING.toString().indexOf(direction.toLowerCase()) == 0) ? Direction.DESC : Direction.ASC;
   }
 
   public enum Direction {
-    ASC("ascending"), DESC("descending");
+    ASC("ASC"), ASCENDING("ascending"), DESC("DESC"), DESCENDING("descending");
     private final String name;
 
     Direction(String name) {

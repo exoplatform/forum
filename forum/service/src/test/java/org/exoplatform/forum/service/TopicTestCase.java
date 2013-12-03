@@ -123,7 +123,7 @@ public class TopicTestCase extends BaseForumServiceTestCase {
     updateLastPostDateOfTopic(listTopic, 2);
     // get topics by last post days. Example with 1 day.
     listTopic = forumService_.getAllTopicsOld(1, forum.getPath());
-    assertEquals("Failed to run auto prune. List topic has size not equals 5.", listTopic.size(), 5);
+    assertEquals("Failed to run auto prune. List topic has size not equals 5.", 5, listTopic.size());
     
     // run autoPrune
     PruneSetting pSetting = forumService_.getPruneSetting(forum.getPath());

@@ -19,15 +19,15 @@ package org.exoplatform.answer.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -48,23 +48,15 @@ import org.exoplatform.webui.form.UIForm;
 public class UISelectCategoryForumForm extends UIForm implements UIPopupComponent {
   private ForumService   forumService;
 
-  private Log            log      = ExoLogger.getLogger(UISelectCategoryForumForm.class);
-
   public UISelectCategoryForumForm() {
-    forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+    forumService = CommonsUtils.getService(ForumService.class);
   }
 
   protected List<Forum> getForums(String categoryId) {
-    List<Forum> listForum = new ArrayList<Forum>();
-    if (categoryId != null && categoryId.trim().length() > 0) {
-      try {
-        String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
-        listForum = forumService.getForums(categoryId, strQuery);
-      } catch (Exception e) {
-        log.error("Fail to get forums: ", e);
-      }
+    if (FAQUtils.isFieldEmpty(categoryId) == false) {
+      return forumService.getForums(new ForumFilter(categoryId, true).isPublic(true));
     }
-    return listForum;
+    return new ArrayList<Forum>();
   }
 
   protected List<Category> getCategories() throws Exception {

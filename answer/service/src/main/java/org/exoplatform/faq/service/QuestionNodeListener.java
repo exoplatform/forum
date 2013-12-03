@@ -8,6 +8,7 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -21,7 +22,7 @@ public class QuestionNodeListener implements EventListener {
   @Override
   public void onEvent(EventIterator events) {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
-    FAQService service = (FAQService) container.getComponentInstanceOfType(FAQService.class);
+    JCRDataStorage storage = (JCRDataStorage) container.getComponentInstanceOfType(JCRDataStorage.class);
     try {
       // this map is used to watch an answer node is checked activated and approved properties or not yet.
       HashSet<String> checkedAnswerNodes = new HashSet<String>();
@@ -32,12 +33,12 @@ public class QuestionNodeListener implements EventListener {
         if (pathString.substring(0, pathString.length() - 1).indexOf(Utils.COMMENT_HOME) > 0) {
           // if there is a change in comment home node...
           if ((event.getType() == Event.NODE_ADDED || event.getType() == Event.NODE_REMOVED))
-            service.reCalculateLastActivityOfQuestion(pathString);
+            storage.reCalculateInfoOfQuestion(pathString);
         }
 
         if (pathString.substring(0, pathString.length() - 3).indexOf(Utils.ANSWER_HOME) > 0) {
           if (event.getType() == Event.NODE_REMOVED) {
-            service.reCalculateLastActivityOfQuestion(pathString);
+            storage.reCalculateInfoOfQuestion(pathString);
             continue;
           }
           // if there is a change in answer home node...
@@ -50,7 +51,7 @@ public class QuestionNodeListener implements EventListener {
               String answerNodePath = pathString.substring(0, lastSlash);
               if (!checkedAnswerNodes.contains(answerNodePath)) {
                 checkedAnswerNodes.add(answerNodePath);
-                service.reCalculateLastActivityOfQuestion(pathString);
+                storage.reCalculateInfoOfQuestion(pathString);
               }
             }
           }

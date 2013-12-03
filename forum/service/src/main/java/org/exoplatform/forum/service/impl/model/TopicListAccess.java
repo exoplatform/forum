@@ -25,15 +25,33 @@ public class TopicListAccess extends AbstractListAccess<Topic> {
   
   private TopicFilter filter;
   private DataStorage  storage;
+  private Type type;
+  
+  public enum Type {
+    TOPICS, BY_DATE, BY_USER
+  }
 
-  public TopicListAccess(DataStorage  storage, TopicFilter filter) {
+  public TopicListAccess(Type type, DataStorage  storage, TopicFilter filter) {
     this.filter = filter;
     this.storage = storage;
+    this.type = type;
   }
 
   @Override
   public Topic[] load(int index, int length) throws Exception, IllegalArgumentException {
-    List<Topic> got = storage.getTopics(filter, index, length);
+    List<Topic> got = null;
+
+    switch (type) {
+      case TOPICS:
+        got = storage.getTopics(filter, index, length);
+        break;
+      case BY_DATE:
+        got = storage.getTopicsByDate(filter.date(), filter.forumPath(), length, index);
+        break;
+      default:
+        break;
+    }
+
     //
     reCalculate(index, length);
     if (got == null) {
@@ -44,7 +62,17 @@ public class TopicListAccess extends AbstractListAccess<Topic> {
 
   @Override
   public int getSize() throws Exception {
-    size = storage.getTopicsCount(filter);
+
+    switch (type) {
+      case TOPICS:
+        size = storage.getTopicsCount(filter);
+        break;
+      case BY_DATE:
+        size = (int) storage.getTotalTopicOld(filter.date(), filter.forumPath());
+        break;
+      default:
+        break;
+    }
     return size;
   }
 

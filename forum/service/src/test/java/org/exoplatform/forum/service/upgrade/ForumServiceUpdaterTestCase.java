@@ -75,7 +75,7 @@ public class ForumServiceUpdaterTestCase extends BaseForumServiceTestCase {
 
     // get by DataStorage#getCategoryIncludedSpace
     Category cateSpace2 = dataStorage.getCategoryIncludedSpace();
-    assertNull(cateSpace2);
+    assertNotNull(cateSpace2);
 
     // check with new normal category
     Category category = dataStorage.getCategory(Utils.CATEGORY + "0");
