@@ -184,12 +184,9 @@ public class UICategory extends BaseForumForm {
     return category;
   }
 
-  private boolean isShowForum(String id) {
-    if (this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty())
-      return true;
-    List<String> list = new ArrayList<String>();
-    list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
-    return (list.contains(id)) ? true : false;
+  private boolean isShowForum(String forumId) {
+    List<String> list = getAncestorOfType(UIForumPortlet.class).getInvisibleForums();
+    return (list.isEmpty() || (list.contains(forumId)));
   }
 
   protected List<Forum> getForumList() throws Exception {

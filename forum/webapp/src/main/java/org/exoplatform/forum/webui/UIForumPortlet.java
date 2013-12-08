@@ -617,6 +617,17 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
+    // check category scoping
+    if(invisibleCategories != null && invisibleCategories.isEmpty() == false 
+        && invisibleCategories.contains(cate.getId()) == false) {
+      return false;
+    }
+    // check forum scoping
+    if(forum != null && invisibleForums != null && invisibleForums.isEmpty() == false 
+        && invisibleForums.contains(forum.getId()) == false) {
+      return false;
+    }
+    //
     if (getUserProfile().getUserRole() == 0)
       return true;
     List<String> userBound = UserHelper.getAllGroupAndMembershipOfUser(null);
