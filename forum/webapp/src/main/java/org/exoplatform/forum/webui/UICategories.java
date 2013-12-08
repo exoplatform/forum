@@ -178,22 +178,15 @@ public class UICategories extends UIContainer {
     }
     return list;
   }
-
-  protected boolean isShowCategory(String id) {
-    List<String> list = new ArrayList<String>();
-    list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories());
-    if (list.isEmpty())
-      return true;
-    else
-      return (list.contains(id)) ? true : false;
+  
+  protected boolean isShowCategory(String categoryId) {
+    List<String> list = getAncestorOfType(UIForumPortlet.class).getInvisibleCategories();
+    return (list.isEmpty() || (list.contains(categoryId)));
   }
 
-  private boolean isShowForum(String id) {
-    if (this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty())
-      return true;
-    List<String> list = new ArrayList<String>();
-    list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
-    return (list.contains(id)) ? true : false;
+  private boolean isShowForum(String forumId) {
+    List<String> list = getAncestorOfType(UIForumPortlet.class).getInvisibleForums();
+    return (list.isEmpty() || (list.contains(forumId)));
   }
 
   private List<Category> getCategoryList() throws Exception {
