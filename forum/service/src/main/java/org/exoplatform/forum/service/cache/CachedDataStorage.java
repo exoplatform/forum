@@ -677,7 +677,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public Forum getForum(final String categoryId, final String forumId) {
 
-    return forumDataFuture.get(
+    ForumData data = forumDataFuture.get(
         new ServiceContext<ForumData>() {
           public ForumData execute() {
             Forum got = storage.getForum(categoryId, forumId);
@@ -685,13 +685,14 @@ public class CachedDataStorage implements DataStorage, Startable {
               return new ForumData(got);
             }
             else {
-              return ForumData.NULL;
+              return null;
             }
           }
         },
         new ForumKey(categoryId, forumId)
-    ).build();
-
+    );
+    
+    return data != null ? data.build() : null;
   }
 
   public void modifyForum(Forum forum, int type) throws Exception {
