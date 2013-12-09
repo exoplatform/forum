@@ -16,10 +16,12 @@
  */
 package org.exoplatform.forum.service.filter.model;
 
+import java.io.Serializable;
+
 import org.exoplatform.forum.service.Utils;
 
-public class ForumFilter {
-
+public class ForumFilter implements Serializable {
+  private static final long serialVersionUID = 1L;
   private String categoryId;
   private String forumId;
   private String userId;
