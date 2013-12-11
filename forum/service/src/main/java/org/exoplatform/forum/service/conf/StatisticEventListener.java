@@ -20,10 +20,12 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -64,31 +66,36 @@ public class StatisticEventListener implements EventListener {
 
   public void onEvent(EventIterator evIter) {
     try {
-      ExoContainer container = ExoContainerContext.getCurrentContainer();
-      ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+      JCRDataStorage dataStorage = CommonsUtils.getService(JCRDataStorage.class);
       long topicCount = 0;
       long postCount = 0;
       while (evIter.hasNext()) {
         Event ev = evIter.nextEvent();
-        if (ev.getType() == Event.NODE_ADDED) {
-          String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
-          if (id.indexOf(Utils.POST) > 0) {
-            //postCount = postCount + 1;
-            return;
-          } else if (id.indexOf(Utils.TOPIC) > 0) {
-            topicCount = topicCount + 1;
+        String path = ev.getPath();
+        if (path.indexOf(Utils.TOPIC) > 0) {
+          String owner = dataStorage.getOwner(path);
+          if (owner == null) {
+            continue;
           }
-        } else if (ev.getType() == Event.NODE_REMOVED) {
-          String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
-          if (id.indexOf(Utils.POST) > 0) {
-            postCount = postCount - 1;
-          } else if (id.indexOf(Utils.TOPIC) > 0) {
-            topicCount = topicCount - 1;
+          if (ev.getType() == Event.NODE_ADDED) {
+            if (path.indexOf(Utils.POST) > 0) {
+              postCount = postCount + 1;
+              dataStorage.updateProfileAddPost(owner, path);
+            } else if (path.indexOf(Utils.TOPIC) > 0) {
+              topicCount = topicCount + 1;
+              dataStorage.updateProfileAddTopic(owner);
+            }
+          } else if (ev.getType() == Event.NODE_REMOVED) {
+            if (path.indexOf(Utils.POST) > 0) {
+              postCount = postCount - 1;
+            } else if (path.indexOf(Utils.TOPIC) > 0) {
+              topicCount = topicCount - 1;
+            }
           }
         }
       }
       if (topicCount != 0 || postCount != 0) {
-        forumService.updateStatisticCounts(topicCount, postCount);
+        dataStorage.updateStatisticCounts(topicCount, postCount);
       }
     } catch (Exception e) {
       log.error("\nThe StatisEvent could not listen: ", e);
