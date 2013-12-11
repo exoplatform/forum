@@ -560,8 +560,10 @@ public class ForumUtils {
     List<String> invisibleCategories = sPreference.getInvisibleCategories();
 
     if (!invisibleCategories.isEmpty()) {
-      listForumId = invisibleForums.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
       listCategoryId = invisibleCategories.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
+    }
+    if(!invisibleForums.isEmpty()){
+    	listForumId = invisibleForums.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
     }
 
     portletPref.setValue("isShowIconsLegend", sPreference.isShowIconsLegend() + EMPTY_STR);

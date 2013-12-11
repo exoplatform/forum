@@ -16,8 +16,10 @@
  */
 package org.exoplatform.forum.service.impl.model;
 
-public class PostFilter {
+import java.io.Serializable;
 
+public class PostFilter implements Serializable {
+  private static final long serialVersionUID = 1L;
   private String categoryId = null;
   private String forumId = null;
   private String topicId = null; 
