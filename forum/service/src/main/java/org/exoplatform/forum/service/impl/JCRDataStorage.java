@@ -55,14 +55,13 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.query.Row;
-import javax.jcr.query.RowIterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -118,10 +117,10 @@ import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.forum.service.conf.UpdateUserProfileJob;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
-import org.exoplatform.forum.service.search.DiscussionSearchResult;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
@@ -287,28 +286,30 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   protected void deletedUserCalculateListener(Node node) throws Exception {
     try {
-      String path = node.getPath();
       ObservationManager observation = node.getSession().getWorkspace().getObservationManager();
       DeletedUserCalculateEventListener deleteUserListener = new DeletedUserCalculateEventListener();
-      deleteUserListener.setPath(path);
-      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, path, false, null, null, false);
+      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, node.getPath(), false, new String[] { Utils.USER_PROFILES_TYPE }, null, false);
     } catch (Exception e) {
       log.error("Can not add listener for node " + node.getName(), e);
     }
   }
 
   public void initCategoryListener() {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      SessionProvider sProvider = SessionProvider.createSystemProvider();
       ObservationManager observation = sessionManager.getSession(sProvider).getWorkspace().getObservationManager();
+      //
       CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener();
-      observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_FORUM_CATEGORY, EXO_FORUM}, false);
+      observation.addEventListener(moderatorListener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, "/", true, null, new String[] {EXO_CATEGORY_HOME, EXO_FORUM_CATEGORY, EXO_FORUM}, false);
       
       //statistic listener
       StatisticEventListener sListener = new StatisticEventListener();
       observation.addEventListener(sListener, Event.NODE_ADDED | Event.NODE_REMOVED, "/", true, null, new String[] {EXO_FORUM, EXO_TOPIC}, false);
+
     } catch (Exception e) {
       log.error("Failed to init category listenner", e);
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -2651,6 +2652,55 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       log.error("Failed to modify topic.", e);
     }
   }
+  
+  /**
+   * This method is call by StatisticEventListener to update user's profile when new topic is added
+   * 
+   * @param owner user's name of an user that create the topic
+   * @throws Exception
+   */
+  public void updateProfileAddTopic(String owner) {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node userProfileNode = getUserProfileHome(sProvider);
+      if (userProfileNode.hasNode(owner)) {
+        Node newProfileNode = userProfileNode.getNode(owner);
+        long totalTopicByUser = newProfileNode.getProperty(EXO_TOTAL_TOPIC).getLong();
+        newProfileNode.setProperty(EXO_TOTAL_TOPIC, totalTopicByUser + 1);
+      } else {
+        Node newProfileNode = userProfileNode.addNode(owner, Utils.USER_PROFILES_TYPE);
+        newProfileNode.setProperty(EXO_USER_ID, owner);
+        newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(owner)) {
+          newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        newProfileNode.setProperty(EXO_TOTAL_TOPIC, 1);
+      }
+      userProfileNode.getSession().save();
+    } catch (Exception e) {
+      log.warn("Failed to save user profile of user: " + owner);
+    } finally {
+      sProvider.close();
+    }
+  }
+  
+  /**
+   * Get the owner of created post or topic by path
+   * 
+   * @param path the post or topic node path
+   * @return user's name
+   */
+  public String getOwner(String path) {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node node = getNodeAt(sProvider, path);
+      return new PropertyReader(node).string(EXO_OWNER, "");
+    } catch (Exception e) {
+      return null;
+    } finally {
+      sProvider.close();
+    }
+  }
 
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
@@ -2683,7 +2733,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           long newTopicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong() + 1;
           forumNode.setProperty(EXO_TOPIC_COUNT, newTopicCount);
         }
-        Node userProfileNode = getUserProfileHome(sProvider);
+        
+        /*Node userProfileNode = getUserProfileHome(sProvider);
         Node newProfileNode;
         try {
           newProfileNode = userProfileNode.getNode(topic.getOwner());
@@ -2701,7 +2752,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (userProfileNode.isNew())
           userProfileNode.getSession().save();
         else
-          userProfileNode.save();
+          userProfileNode.save();*/
+        
         sendNotification(forumNode, topic, null, messageBuilder, true);
       } else {
         topicNode = forumNode.getNode(topic.getId());
@@ -2834,12 +2886,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Calendar cal = new GregorianCalendar();
       PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
       String name = String.valueOf(cal.getTime().getTime());
-      Class clazz = Class.forName("org.exoplatform.forum.service.conf.UpdateUserProfileJob");
-      JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
-      ExoContainer container = ExoContainerContext.getCurrentContainer();
-      JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-      String repoName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, UpdateUserProfileJob.class);
+      JobSchedulerService schedulerService = CommonsUtils.getService(JobSchedulerService.class);
+      String repoName = CommonsUtils.getRepository().getConfiguration().getName();
       JobDataMap jdatamap = new JobDataMap();
       jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       infoMap.put(name, userPostMap);
@@ -3574,7 +3623,46 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 //    }
 //  }
   
-  
+  /**
+   * This method is call by StatisticEventListener to update user's profile when new post is added
+   * 
+   * @param owner user's name of an user that create the post
+   * @param postPath node's path of the last post
+   * @throws Exception
+   */
+  public void updateProfileAddPost(String owner, String postPath) {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node profileHomeNode = getUserProfileHome(sProvider);
+      //
+      Calendar lastPost = getGreenwichMeanTime();
+      Node postNode = (Node) profileHomeNode.getSession().getItem(postPath);
+      PropertyReader reader = new PropertyReader(postNode);
+      lastPost.setTime(reader.date(EXO_CREATED_DATE, lastPost.getTime()));
+      //
+      if (profileHomeNode.hasNode(owner)) {
+        Node profileNode = profileHomeNode.getNode(owner);
+        long totalPostByUser = 0;
+        totalPostByUser = profileNode.getProperty(EXO_TOTAL_POST).getLong();
+        profileNode.setProperty(EXO_TOTAL_POST, totalPostByUser + 1);
+        profileNode.setProperty(EXO_LAST_POST_DATE, lastPost);
+      } else {
+        Node profileNode = profileHomeNode.addNode(owner, Utils.USER_PROFILES_TYPE);
+        profileNode.setProperty(EXO_USER_ID, owner);
+        profileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(owner)) {
+          profileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        profileNode.setProperty(EXO_TOTAL_POST, 1);
+        profileNode.setProperty(EXO_LAST_POST_DATE, lastPost);
+      }
+      profileHomeNode.getSession().save();
+    } catch (Exception e) {
+      log.warn("Failed to save user profile of user: " + owner);
+    } finally {
+      sProvider.close();
+    }
+  }
   
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     //long startTime = System.currentTimeMillis();
@@ -7625,32 +7713,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      JCRSessionManager manager = new JCRSessionManager(workspace);
-      Session session = manager.createSession();
-      try {
-        Node forumStatisticNode = session.getRootNode().getNode(dataLocator.getForumStatisticsLocation());
-        PropertyReader reader = new PropertyReader(forumStatisticNode);
-        if (topicCount != 0) {
-          long count = reader.l(EXO_TOPIC_COUNT);
-          if (count < 0)
-            count = 0;
-          forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount);
-        }
-        if (postCount != 0) {
-          long count = reader.l(EXO_POST_COUNT);
-          if (count < 0)
-            count = 0;
-          forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount);
-        }
-        forumStatisticNode.save();
-      } finally {
-        session.logout();
+      Node forumStatisticNode = getForumStatisticsNode(sProvider);
+      PropertyReader reader = new PropertyReader(forumStatisticNode);
+      if (topicCount != 0) {
+        long count = reader.l(EXO_TOPIC_COUNT);
+        if (count < 0)
+          count = 0;
+        forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount);
       }
+      if (postCount != 0) {
+        long count = reader.l(EXO_POST_COUNT);
+        if (count < 0)
+          count = 0;
+        forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount);
+      }
+      forumStatisticNode.save();
     } catch (Exception e) {
       if (log.isDebugEnabled()) {
         log.debug("Failed to update statistic counts", e);
       }
+    } finally {
+      sProvider.close();
     }
   }
 
@@ -8068,7 +8153,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profile.setProperty(EXO_USER_ID, userName);
       profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
       profile.setProperty(EXO_EMAIL, user.getEmail());
-      profile.setProperty(EXO_FULL_NAME, user.getFullName());
+      profile.setProperty(EXO_FULL_NAME, user.getDisplayName());
       cal.setTime(user.getCreatedDate());
       profile.setProperty(EXO_JOINED_DATE, cal);
       if (isAdminRole(userName)) {
