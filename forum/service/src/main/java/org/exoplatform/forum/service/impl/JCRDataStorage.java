@@ -39,6 +39,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -197,6 +198,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private String                       workspace;
 
   private static final Pattern         HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
+  
+  private final ReentrantLock lock = new ReentrantLock();
 
   private DataStorage                  cachedStorage;
 
@@ -3565,40 +3568,69 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     //
     postAttachment(postNode, post);
 
-    //
-    long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
-    long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + post.getNumberAttach();
-    if (topicPostCount == 0) {
-      topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-    }
-    // set InfoPost for Forum
-    long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() + 1;
-
-    Topic topic = getTopicNodeSummary(topicNode);
-    boolean topicActive = (topic.getIsClosed() == false && topic.getIsWaiting() == false && 
-                            topic.getIsApproved() && topic.getIsActive() && topic.getIsActiveByForum());
-
-    boolean postActive =  (post.getIsApproved() && post.getIsHidden() == false && 
-                            post.getIsWaiting() == false && post.getUserPrivate().length != 2);
-    boolean isPublic = (hasProperty(categoryNode, EXO_VIEWER) == false && hasProperty(forumNode, EXO_VIEWER) == false && 
-                          hasProperty(topicNode, EXO_CAN_VIEW) == false);
-    // set active by topic
-    postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, (topicActive || isFistPost));
-
-    // update forum
-    if (isFistPost && forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean() == false
-         || isFistPost == false && topicActive) {
-      forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
-    }
-
-    // update topic
-    if (postActive && isPublic) {
-      topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
-      topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
-      topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
-      topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
-    }
     return postNode;
+  }
+  
+  
+  /**
+   * Update the number of post and also the information about the last post of topic when a new post is added
+   * 
+   * @param postPath the jcr's path of the new post
+   * @param owner the owner of the new post
+   * @throws Exception
+   */
+  public void updatePostCount(String postPath, String owner) throws Exception {
+    final ReentrantLock localLock = lock;
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      localLock.lock();
+      Session session = sessionManager.getSession(sProvider); 
+      Node postNode = (Node) session.getItem(postPath);
+      Node topicNode = postNode.getParent();
+      Node forumNode = topicNode.getParent();
+      Node categoryNode = forumNode.getParent();
+      //
+      boolean isFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(postNode.getName());
+      PropertyReader postRead = new PropertyReader(postNode);
+      PropertyReader topicRead = new PropertyReader(topicNode);
+      PropertyReader forumRead = new PropertyReader(topicNode);
+      //
+      long topicPostCount = topicRead.l(EXO_POST_COUNT) + 1;
+      long newNumberAttach = topicRead.l(EXO_NUMBER_ATTACHMENTS) + postRead.l(EXO_NUMBER_ATTACH);
+
+      boolean topicActive = (!topicRead.bool(EXO_IS_CLOSED) && !topicRead.bool(EXO_IS_WAITING) && 
+                              topicRead.bool(EXO_IS_APPROVED) && topicRead.bool(EXO_IS_ACTIVE) &&
+                              topicRead.bool(EXO_IS_ACTIVE_BY_FORUM));
+
+      boolean postActive =  (postRead.bool(EXO_IS_APPROVED) && postRead.bool(EXO_IS_HIDDEN) == false && 
+                              postRead.bool(EXO_IS_WAITING) == false && postRead.list(EXO_USER_PRIVATE).size() != 2);
+
+      boolean isPublic = (hasProperty(categoryNode, EXO_VIEWER) == false && hasProperty(forumNode, EXO_VIEWER) == false && 
+                            hasProperty(topicNode, EXO_CAN_VIEW) == false);
+      // set active by topic
+      postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, (topicActive || isFirstPost));
+
+      // update forum
+      if ((isFirstPost && !forumRead.bool(EXO_IS_MODERATE_TOPIC)) || (!isFirstPost && topicActive)) {
+        long forumPostCount = forumRead.l(EXO_POST_COUNT) + 1;
+        forumNode.setProperty(EXO_POST_COUNT, Math.max(forumPostCount, 1));
+      }
+
+      // update topic
+      if (postActive && isPublic) {
+        topicNode.setProperty(EXO_POST_COUNT, Math.max(topicPostCount, 1));
+        topicNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
+        topicNode.setProperty(EXO_LAST_POST_BY, owner);
+        topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+      }
+      //
+      session.save();
+    } catch (Exception e) {
+      LOG.warn("Failed to update forum post count when save post");
+    } finally {
+      sProvider.close();
+      localLock.unlock();
+    }
   }
 
   private Node updatePost(SessionProvider sProvider, Node topicNode, Post post) throws Exception {
@@ -4857,13 +4889,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    final ReentrantLock localLock = lock;
     try {
+      localLock.lock(); // block until condition holds
       Node profileNode = getUserProfileNode(sProvider, userId);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
       profileNode.getSession().save();
     } catch (Exception e) {
-      LOG.error("Failed to save last post id read.", e);
+      logDebug("Failed to save last post id read.", e);
+    } finally {
+      localLock.unlock();
     }
   }
 
@@ -8262,24 +8298,32 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   @Override
   public void saveActivityIdForOwner(String ownerId, String type, String activityId) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    final ReentrantLock localLock = lock;
     try {
+      localLock.lock();
       Node ownerNode = getNodeById(sProvider, ownerId, type);
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      LOG.error(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
+      logDebug(String.format("Failed to attach activityId %s for node %s ", activityId, ownerId), e);
+    } finally {
+      localLock.unlock();
     }
   }
 
   @Override
   public void saveActivityIdForOwner(String ownerPath, String activityId) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    final ReentrantLock localLock = lock;
     try {
+      localLock.lock();
       Node ownerNode = getNodeAt(sProvider, ownerPath);
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      LOG.error(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
+      logDebug(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
+    } finally {
+      localLock.unlock();
     }
   }
 
