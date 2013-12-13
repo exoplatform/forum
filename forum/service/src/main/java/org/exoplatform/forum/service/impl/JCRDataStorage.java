@@ -39,6 +39,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -197,6 +198,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private String                       workspace;
   
   private static final Pattern       HIGHLIHT_PATTERN     = Pattern.compile("(.*)<strong>(.*)</strong>(.*)");
+  
+  private final ReentrantLock lock = new ReentrantLock();
   
   private DataStorage cachedStorage;
   
@@ -5117,14 +5120,18 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
+    final ReentrantLock localLock = lock;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      localLock.lock(); // block until condition holds
       Node profileNode = getUserProfileNode(sProvider, userId);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
       profileNode.getSession().save();
     } catch (Exception e) {
       log.error("Failed to save last post id read.", e);
+    } finally {
+      localLock.unlock();
     }
   }
 
