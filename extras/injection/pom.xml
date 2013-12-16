@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-extras</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.x-forum-weemo-addon-SNAPSHOT</version>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras-injection</artifactId>
