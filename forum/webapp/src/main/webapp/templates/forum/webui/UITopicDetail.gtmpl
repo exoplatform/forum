@@ -649,12 +649,9 @@
 							<div class="footPost clearfix">
 								<%	
 									if(!ForumUtils.isEmpty(editBy)) {
-										UserProfile userEditByInfo = uicomponent.getUserInfo(editBy) ;
-										String editByScreeName = (userEditByInfo != null ? userEditByInfo.getScreenName() : editBy) ;
-										String editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 								%>
 								<div class="txtLastEdit">
-										<div><%=uicomponent.getLastEditedBy(editBy, editDate) %></div>
+										<div><%=uicomponent.getLastEditedBy(editBy, post.getModifiedDate())%></div>
 									<%
 										String reason = post.getEditReason() ;
 										if(!ForumUtils.isEmpty(reason)) { 
