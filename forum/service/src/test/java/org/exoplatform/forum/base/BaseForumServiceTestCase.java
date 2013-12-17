@@ -179,6 +179,13 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     topicNew.setCanPost(new String[] {});
     return topicNew;
   }
+  
+  public Topic createTopic(String owner, int index) {
+    Topic topic = createdTopic(owner);
+    topic.setTopicName("TestTopic " + index);
+    return topic;
+
+  }
 
   public Forum createdForum() {
     Forum forum = new Forum();

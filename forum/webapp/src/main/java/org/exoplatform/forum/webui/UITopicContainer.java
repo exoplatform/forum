@@ -313,6 +313,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (isModerator == false) {
       filter.viewers(ForumUtils.arraysMerge(forum.getViewer(), getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER)));
     }
+    
+    filter.orderBy(strOrderBy);
     //
     this.topicListAccess = (TopicListAccess) getForumService().getTopics(filter);
 
