@@ -18,13 +18,13 @@
     uicomponent.renderChild("UIPermissionInput");
   %>
 	<span style="vertical-align: top">
-		<a class="actionIcon" href="<%= uicomponent.event("OpenUserPopup")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIUserSelector");%>">
+		<a class="actionIcon" href="javascript:void(0);" onclick="<%= uicomponent.event("OpenUserPopup")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIUserSelector");%>">
 			<i class="uiIconUser uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIMemberShipSelector");%>">
+		<a class="actionIcon" href="javascript:void(0);" onclick="<%= uicomponent.event("OpenRoleAndGroupPopup", "1")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIMemberShipSelector");%>">
 			<i class="uiIconMembership uiIconLightGray"></i>
 		</a>
-		<a class="actionIcon" href="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector");%>">
+		<a class="actionIcon" href="javascript:void(0);" onclick="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector");%>">
 			<i class="uiIconGroup uiIconLightGray"></i>
 		</a>
 		<button class="btn" onclick="<%= uicomponent.event("AddPermission")%>" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add");%></button>
