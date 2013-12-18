@@ -21,9 +21,6 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
 import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.services.log.ExoLogger;
@@ -81,6 +78,7 @@ public class StatisticEventListener implements EventListener {
             if (path.indexOf(Utils.POST) > 0) {
               postCount = postCount + 1;
               dataStorage.updateProfileAddPost(owner, path);
+              dataStorage.updatePostCount(path, owner);
             } else if (path.indexOf(Utils.TOPIC) > 0) {
               topicCount = topicCount + 1;
               dataStorage.updateProfileAddTopic(owner);
