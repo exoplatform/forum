@@ -652,7 +652,7 @@ public class UIForumPortlet extends UIPortletApplication {
     ResourceBundle res = context.getApplicationResourceBundle();
     if (path.equals(Utils.FORUM_SERVICE)) {
       renderForumHome();
-    } else if (path.indexOf(ForumUtils.FIELD_SEARCHFORUM_LABEL) >= 0) {
+    } else if (path.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
       updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       UISearchForm searchForm = getChild(UISearchForm.class);
       searchForm.setUserProfile(getUserProfile());
@@ -660,10 +660,10 @@ public class UIForumPortlet extends UIPortletApplication {
       searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
       searchForm.setSearchOptionsObjectType(ForumUtils.EMPTY_STR);
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
-    } else if (path.lastIndexOf(Utils.TAG) >= 0) {
+    } else if (path.indexOf(Utils.TAG) == 0) {
       updateIsRendered(ForumUtils.TAG);
       getChild(UITopicsTag.class).setIdTag(path);
-    } else if (path.lastIndexOf(Utils.TOPIC) >= 0) {
+    } else if (path.indexOf(Utils.TOPIC) == 0) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
