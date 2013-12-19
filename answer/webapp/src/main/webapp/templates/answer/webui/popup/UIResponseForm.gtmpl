@@ -1,8 +1,5 @@
 <% 
 	import org.exoplatform.answer.webui.FAQUtils;
-
-  def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
-  requireJS.addScripts("eXo.answer.UIAnswersPortlet.setSelectboxOnchange('"+ uicomponent.id +"');");
 %>
 <div class="uiResponseForm">
 	<% uiform.begin() %>
