@@ -24,6 +24,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+
 import org.exoplatform.commons.testing.BaseExoTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
@@ -117,6 +120,22 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
         forumService_.removeCategory(category.getId());
       }
     }
+  }
+  
+  protected void resetAllUserProfile() throws Exception {
+    // reset all user profile
+    Node node = dataLocation.getSessionManager().openSession().getRootNode();
+    NodeIterator iterator = node.getNode(dataLocation.getUserProfilesLocation()).getNodes();
+    while (iterator.hasNext()) {
+      Node n = iterator.nextNode();
+      if (n.isNodeType(Utils.USER_PROFILES_TYPE)) {
+        n.setProperty(Utils.EXO_TOTAL_POST, 0);
+        n.setProperty(Utils.EXO_TOTAL_TOPIC, 0);
+        n.setProperty(Utils.EXO_MODERATE_CATEGORY, new String[] {});
+        n.setProperty(Utils.EXO_MODERATE_FORUMS, new String[] {});
+      }
+    }
+    node.getSession().save();
   }
 
   public String ArrayToString(String[] strs) {
