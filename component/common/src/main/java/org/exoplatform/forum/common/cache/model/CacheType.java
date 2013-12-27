@@ -1,13 +1,12 @@
 package org.exoplatform.forum.common.cache.model;
 
-import java.io.Serializable;
-
 import org.exoplatform.forum.common.cache.CacheLoader;
 import org.exoplatform.forum.common.cache.ServiceContext;
-import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.future.FutureExoCache;
+
+import java.io.Serializable;
 
 public enum CacheType {
   CATEGORY_DATA("forum.CategoryData"),
@@ -33,7 +32,7 @@ public enum CacheType {
   POLL_SUMMARY_DATA("poll.PollSummaryData"),
   
   BBCODE_DATA("forum.BBCodeData"),
-  LIST_BBCODE_DATA("forum.ListBBCodeData");
+  LIST_BBCODE_DATA("forum.BBCodeListData");
   
   private final String name;
 
