@@ -2627,6 +2627,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  /**
+  * This method is call by StatisticEventListener to update user's profile when new topic is added
+  *
+  * @param owner user's name of an user that create the topic
+  * @throws Exception
+  */
   public void updateProfileAddTopic(String owner) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
@@ -2653,6 +2659,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  /**
+  * Get the owner of created post or topic by path
+  *
+  * @param path the post or topic node path
+  * @return user's name
+  */
   public String getOwner(String path) {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
@@ -3401,17 +3413,28 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return attachments;
   }
-
-  public void updateProfileAddPost(String owner) throws Exception {
+  /**
+  * This method is call by StatisticEventListener to update user's profile when new post is added
+  *
+  * @param owner user's name of an user that create the post
+  * @param postPath node's path of the last post
+  * @throws Exception
+  */
+  public void updateProfileAddPost(String owner, String postPath) {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node profileHomeNode = getUserProfileHome(sProvider);
+      Calendar lastPost = getGreenwichMeanTime();
+      Node postNode = (Node) profileHomeNode.getSession().getItem(postPath);
+      PropertyReader reader = new PropertyReader(postNode);
+      lastPost.setTime(reader.date(EXO_CREATED_DATE, lastPost.getTime()));
+      //
       if (profileHomeNode.hasNode(owner)) {
         Node profileNode = profileHomeNode.getNode(owner);
         long totalPostByUser = 0;
         totalPostByUser = profileNode.getProperty(EXO_TOTAL_POST).getLong();
         profileNode.setProperty(EXO_TOTAL_POST, totalPostByUser + 1);
-        profileNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
+        profileNode.setProperty(EXO_LAST_POST_DATE, lastPost);
       } else if (Utils.isEmpty(owner) == false) {
         Node profileNode = profileHomeNode.addNode(owner, EXO_FORUM_USER_PROFILE);
         profileNode.setProperty(EXO_USER_ID, owner);
@@ -3420,7 +3443,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           profileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
         }
         profileNode.setProperty(EXO_TOTAL_POST, 1);
-        profileNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
+        profileNode.setProperty(EXO_LAST_POST_DATE, lastPost);
       }
       profileHomeNode.getSession().save();
     } catch (Exception e) {
