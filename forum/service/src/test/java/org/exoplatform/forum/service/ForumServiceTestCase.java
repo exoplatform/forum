@@ -533,4 +533,45 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // list has size is 5 (2 categories and 2 normal forums and 1 forum in category space)
     assertEquals("The size of list forumLinks not equals 5.", forumLinks.size(), 5);
   }
+  
+  public void testMoveForum() throws Exception {
+    Category cat1 = createCategory(new Category().getId());
+    forumService_.saveCategory(cat1, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat1.getId(), forum, true);
+    Category cat2 = createCategory(new Category().getId());
+    forumService_.saveCategory(cat2, true);
+    
+    String forumId = forum.getId();
+    cat1 = forumService_.getCategory(cat1.getId());
+    assertNotNull(cat1);
+    cat2 = forumService_.getCategory(cat2.getId());
+    assertNotNull(cat2);
+    
+    List<Forum> forums = new ArrayList<Forum>();
+    forums.add(forum);
+    
+    forumService_.moveForum(forums, cat2.getPath());
+    
+    //make sure forum is moved out of cat1
+    forum = forumService_.getForum(cat1.getId(), forumId);
+    assertNull(forum);
+    
+    //make sure forum is moved to cat2
+    forum = forumService_.getForum(cat2.getId(), forumId);
+    assertNotNull(forum);
+    
+    forums = new ArrayList<Forum>();
+    forums.add(forum);
+    forumService_.moveForum(forums, cat1.getPath());
+    
+    //make sure forum is moved out of cat2
+    forum = forumService_.getForum(cat2.getId(), forumId);
+    assertNull(forum);
+    
+    //make sure forum is moved to cat1
+    forum = forumService_.getForum(cat1.getId(), forumId);
+    assertNotNull(forum);
+    
+  }
 }

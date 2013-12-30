@@ -23,6 +23,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIAutoPruneForm;
@@ -121,7 +122,8 @@ public class UIForumActionBar extends UIContainer {
   
   protected void initJavaScripts() {
     List<String> scripts = new ArrayList<String>();
-    scripts.add("forumPortlet.loadScroll();");
+    String moreLabel = WebUIUtils.getLabel(getId(), "More");
+    scripts.add("forumPortlet.loadMoreForumActionBar('" + getId() + "', '" + moreLabel + "');");
     if(getUserProfile().getUserRole() <=1) {
       scripts.add("forumPortlet.visibleAction('"+getId()+"');");
       StringBuilder init = new StringBuilder("forumJob.init('");

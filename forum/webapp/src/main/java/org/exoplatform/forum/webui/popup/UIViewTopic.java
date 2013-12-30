@@ -17,16 +17,19 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -184,6 +187,23 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
     return url;
   }
 
+  protected String getLastEditedBy(String userId, Date modifiedDate) throws Exception {
+    UserProfile userEditByInfo = getUserInfo(userId);
+    String editByScreeName = userEditByInfo.getScreenName();
+    editByScreeName = "<span class=\"textTitleProfile\">" + editByScreeName + "</span>";
+    //
+    if (TimeConvertUtils.getGreenwichMeanTime().getTimeInMillis() - modifiedDate.getTime() > 60000) {
+      String longDateFormat = getUserProfile().getLongDateFormat() + ", " + userProfile.getTimeFormat();
+      long setTime = (long) (userProfile.getTimeZone() * 3600000);
+      String editDate = TimeConvertUtils.convertXTimeAgo(modifiedDate, longDateFormat, setTime);
+      String editByLabel = WebUIUtils.getLabel(null, "UITopicDetail.label.LastEditedOnDate");
+      return editByLabel.replace("{0}", editByScreeName).replace("{1}", editDate);
+    }
+    //
+    String editByLabel = WebUIUtils.getLabel(null, "UITopicDetail.label.LastEditedJustNow");
+    return editByLabel.replace("{0}", editByScreeName);
+  }
+  
   protected String getFileSource(ForumAttachment attachment) throws Exception {
     return ForumUtils.getFileSource(attachment);
   }

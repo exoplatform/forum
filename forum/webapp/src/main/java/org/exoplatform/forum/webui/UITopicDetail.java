@@ -33,6 +33,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
@@ -1749,17 +1750,25 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return renderHelper.renderPost(post);
   }
 
-  protected String getLastEditedBy(String userId, String editDate) throws Exception {
-    UserProfile userEditByInfo = getUserInfo(userId) ;
-    String editByScreeName = userEditByInfo.getScreenName() ;
-    
+  protected String getLastEditedBy(String userId, Date modifiedDate) throws Exception {
+    UserProfile userEditByInfo = getUserInfo(userId);
+    String editByScreeName = userEditByInfo.getScreenName();
+    //
     StringBuilder builder = new StringBuilder("<div class=\"dropdown uiUserInfo\">");
     builder.append("<a href=\"javascript:void(0);\" class=\"txtEditBy\">").append(editByScreeName).append("</a>")
            .append(getMenuUser(userEditByInfo))
            .append("</div>");
-
-    String editByLabel = WebUIUtils.getLabel(getId(), "LastEditedBy");
-    return editByLabel.replace("{0}", builder.toString()).replace("{1}", editDate);
+    
+    if (TimeConvertUtils.getGreenwichMeanTime().getTimeInMillis() - modifiedDate.getTime() > 60000) {
+      String longDateFormat = getUserProfile().getLongDateFormat() + ", " + userProfile.getTimeFormat();
+      long setTime = (long) (userProfile.getTimeZone() * 3600000);
+      String editDate = TimeConvertUtils.convertXTimeAgo(modifiedDate, longDateFormat, setTime);
+      String editByLabel = WebUIUtils.getLabel(getId(), "LastEditedOnDate");
+      return editByLabel.replace("{0}", builder.toString()).replace("{1}", editDate);
+    }
+    //
+    String editByLabel = WebUIUtils.getLabel(getId(), "LastEditedJustNow");
+    return editByLabel.replace("{0}", builder.toString());
   }
   
   protected String getMenuUser(UserProfile userInfo) throws Exception {
