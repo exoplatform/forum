@@ -766,18 +766,20 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     List<String> postPaths = new ArrayList<String>();
+    List<String> srcPostActivityIds = new ArrayList<String>();
     for (Post p : posts) {
       postPaths.add(p.getPath());
+      srcPostActivityIds.add(storage.getActivityIdForOwner(p.getPath()));
     }
-    movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-    storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+    storage.movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
     CacheUserProfile.clearCache();
+    for (ForumEventLifeCycle f : listeners_) {
+    	try {
+    		f.movePost(posts,srcPostActivityIds,destTopicPath);
+    		} catch (Exception e) {
+    			log.debug("Failed to run function movePost in the class ForumEventLifeCycle. ", e);
+        }
+    }
   }
 
   /**

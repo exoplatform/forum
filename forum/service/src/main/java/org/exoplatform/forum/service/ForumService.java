@@ -643,15 +643,14 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Moves a list of posts to a given topic.
    * 
-   * @param postPaths Paths to the moved posts.
-   * @param destTopicPath Path to the destination topic.
-   * @param isCreatNewTopic If "true", the new topic is created. If "false", the topic is updated.
-   * @param mailContent Content of the email notification.
-   * @param link Link to the topic.
-   * @throws Exception the exception
-   * @LevelAPI Platform
+   * @param posts
+   * @param destTopicPath
+   * @param isCreatNewTopic
+   * @param mailContent
+   * @param link
+   * @throws Exception
    */
-  void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
+  void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
 
   /**
    * Gets the object name by its path.
