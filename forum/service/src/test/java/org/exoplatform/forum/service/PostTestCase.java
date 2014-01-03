@@ -72,13 +72,13 @@ public class PostTestCase extends BaseForumServiceTestCase {
     forumService_.saveTopic(categoryId, forumId, topicnew, true, false, new MessageBuilder());
     topicnew = forumService_.getTopic(categoryId, forumId, topicnew.getId(), "root");
 
-    forumService_.movePost(new String[] { newPost.getPath() }, topicnew.getPath(), false, "test mail content", "");
+    forumService_.movePost(posts, topicnew.getPath(), false, "test mail content", "");
     assertNotNull(forumService_.getPost(categoryId, forumId, topicnew.getId(), newPost.getId()));
 
     // test remove Post return post
     assertNotNull(forumService_.removePost(categoryId, forumId, topicnew.getId(), newPost.getId()));
     assertNull(forumService_.getPost(categoryId, forumId, topicnew.getId(), newPost.getId()));
-    assertEquals(24, forumService_.getTopic(categoryId, forumId, topicId, "").getPostCount());
+    assertEquals(0, forumService_.getTopic(categoryId, forumId, topicId, "").getPostCount());
 
     // getViewPost
   }
