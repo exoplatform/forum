@@ -246,16 +246,22 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     String newName = "Topic Rename";
     topic.setTopicName(newName);
     cacheDataStorage.saveTopic(categoryId, forumId, topic, false, false, new MessageBuilder());
-    saveHasPoll(topic.getPath());
+    saveHasPoll(topic.getPath(), true);
 
     //
     topicByPath = cacheDataStorage.getTopicByPath(topic.getPath(), false);
     assertTrue(topicByPath.getIsPoll());
-//    assertEquals(newName, topicByPath.getTopicName());
+    assertEquals(newName, topicByPath.getTopicName());
 
     //
     topicSummary = cacheDataStorage.getTopicSummary(topic.getPath());
     assertTrue(topicSummary.getIsPoll());
+
+    // Remove has poll
+    saveHasPoll(topic.getPath(), false);
+    assertFalse(cacheDataStorage.getTopicByPath(topic.getPath(), false).getIsPoll());
+    
+    cacheDataStorage.removeTopic(categoryId, forumId, topic.getId());
   }
   
   public void testClearWatchedCategory() throws Exception {
@@ -344,11 +350,11 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     assertEquals(watchedList.size(), 0);
   }
   
-  private void saveHasPoll(String topicPath) throws Exception {
+  private void saveHasPoll(String topicPath, boolean status) throws Exception {
     KSDataLocation dataLocation = getService(KSDataLocation.class);
     Session session = dataLocation.getSessionManager().createSession();
     Node node = (Node) session.getItem(topicPath);
-    node.setProperty(ForumNodeTypes.EXO_IS_POLL, true);
+    node.setProperty(ForumNodeTypes.EXO_IS_POLL, status);
     session.save();
     session.logout();
   }

@@ -20,6 +20,9 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 
 public abstract class ForumEventListener extends BaseComponentPlugin implements ForumEventLifeCycle {
 
+  public ForumEventListener() {
+  }
+
   public abstract void saveCategory(Category category);
 
   public abstract void saveForum(Forum forum);
