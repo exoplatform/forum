@@ -737,15 +737,13 @@
 															<i class="uiIconLightGray uiIconTrash"></i>&nbsp;<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>
 														</a>
 													</li>
-
-												<% } %>
 												</ul>
 												<!--	end answers popup menu	-->
 											</div>
 										</div><!-- end moreAction of answers -->
-
+										<% } %>
 										<div class="responseItem">
-								 		<!-- View user who answered quesetion	-->
+								 		<!-- View user who answered question	-->
 								 			<div class="avatarXSmall pull-left">
 									 <% if(uicomponent.faqSetting_.isEnableViewAvatar()) {%>
 												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" >
