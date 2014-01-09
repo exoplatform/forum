@@ -29,6 +29,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -823,8 +824,21 @@ public interface ForumService extends ForumServiceLegacy {
    * @return A list of user profiles.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * 
+   * @deprecated Use {@link #searchUserProfileByFilter(UserProfileFilter)} instead of.
    */
   JCRPageList searchUserProfile(String userSearch) throws Exception;
+  
+  /**
+   * Searches for user profiles return as ListAccess.
+   * 
+   * @param userProfileFilter The filter object
+   * @return A ListAccess of user profiles.
+   * @throws Exception the exception
+   * @LevelAPI Platform
+   * @since 4.0.5
+   */
+  ListAccess<UserProfile> searchUserProfileByFilter(UserProfileFilter userProfileFilter) throws Exception;
 
   /**
    * Gets information about a user.
@@ -886,6 +900,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @return A list of user profiles.
    * @throws Exception the exception.
    * @LevelAPI Platform
+   * 
+   * @deprecated Use {@link #searchUserProfileByFilter(UserProfileFilter)} instead of.
    */
   JCRPageList getPageListUserProfile() throws Exception;
 

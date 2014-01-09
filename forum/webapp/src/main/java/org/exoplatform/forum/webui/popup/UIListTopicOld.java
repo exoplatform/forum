@@ -92,7 +92,8 @@ public class UIListTopicOld extends UIContainer {
       if (pageList != null) {
         pageList.setPageSize(10);
         UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
-        pageIterator.updatePageList(pageList);
+        pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                              pageList.getAvailable(), pageList.getAvailablePage());
         int page = pageIterator.getPageSelected();
         List<Topic> topics = pageList.getPage(page);
         pageIterator.setSelectPage(pageList.getCurrentPage());

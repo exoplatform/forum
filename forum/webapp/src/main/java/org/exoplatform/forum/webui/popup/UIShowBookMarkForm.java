@@ -78,7 +78,8 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
     pageList = new ForumPageList(6, bookMarks.size());
     pageList.setPageSize(6);
     pageIterator = this.getChild(UIForumPageIterator.class);
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     List<String> list = new ArrayList<String>();
     list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks));
     pageIterator.setSelectPage(pageList.getCurrentPage());

@@ -104,7 +104,8 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
       if (this.userProfile.getUserRole() < 2)
         isMod = true;
       JCRPageList pageList = getForumService().getListPostsByIP(ip_, strOrderBy);
-      forumPageIterator.updatePageList(pageList);
+      forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                                 pageList.getAvailable(), pageList.getAvailablePage());
       if (pageList != null)
         pageList.setPageSize(6);
       posts = pageList.getPage(forumPageIterator.getPageSelected());

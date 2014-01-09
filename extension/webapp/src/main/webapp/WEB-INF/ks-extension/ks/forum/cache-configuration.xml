@@ -34,15 +34,46 @@
 
         <!-- UserProfiles -->
         <object-param>
-          <name>forum.UserProfiles</name>
+          <name>forum.LoginUserProfile</name>
           <description></description>
           <object type="org.exoplatform.services.cache.ExoCacheConfig">
-            <field name="name"><string>forum.UserProfiles</string></field>
-            <field name="maxSize"><int>${cache.exo.forum.UserProfiles.Capacity:500}</int></field>
-            <field name="liveTime"><long>${cache.exo.forum.UserProfiles.TimeToLive:-1}</long></field>
+            <field name="name"><string>forum.LoginUserProfile</string></field>
+            <field name="maxSize"><int>${cache.exo.forum.LoginUserProfile.Capacity:500}</int></field>
+            <field name="liveTime"><long>${cache.exo.forum.LoginUserProfile.TimeToLive:-1}</long></field>
             <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
           </object>
         </object-param>
+        <object-param>
+          <name>forum.UserProfile</name>
+          <description></description>
+          <object type="org.exoplatform.services.cache.ExoCacheConfig">
+            <field name="name"><string>forum.UserProfile</string></field>
+            <field name="maxSize"><int>${cache.exo.forum.UserProfile.Capacity:800}</int></field>
+            <field name="liveTime"><long>${cache.exo.forum.UserProfile.TimeToLive:14400}</long></field>
+            <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
+          </object>
+        </object-param>          
+        <object-param>
+          <name>forum.UserProfileList</name>
+          <description></description>
+          <object type="org.exoplatform.services.cache.ExoCacheConfig">
+            <field name="name"><string>forum.UserProfileList</string></field>
+            <field name="maxSize"><int>${cache.exo.forum.UserProfileList.Capacity:300}</int></field>
+            <field name="liveTime"><long>${cache.exo.forum.UserProfileList.TimeToLive:1800}</long></field>
+            <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.UserProfileListCount</name>
+          <description></description>
+          <object type="org.exoplatform.services.cache.ExoCacheConfig">
+            <field name="name"><string>forum.UserProfileListCount</string></field>
+            <field name="maxSize"><int>${cache.exo.forum.UserProfileListCount.Capacity:300}</int></field>
+            <field name="liveTime"><long>${cache.exo.forum.UserProfileListCount.TimeToLive:1800}</long></field>
+            <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string>
+            </field>
+          </object>
+        </object-param>        
 
         <!-- Categories -->
         <object-param>
@@ -152,7 +183,7 @@
               </field>
             </object>
           </object-param>
-
+          
         <!-- Watches -->
         <object-param>
           <name>forum.WatchListData</name>
