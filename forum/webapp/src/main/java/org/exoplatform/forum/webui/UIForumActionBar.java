@@ -256,9 +256,9 @@ public class UIForumActionBar extends UIContainer {
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIModeratorManagementForm managementForm = popupContainer.addChild(UIModeratorManagementForm.class, null, null);
-      managementForm.setPageListUserProfile();
       popupContainer.setId("UIModeratorManagement");
       popupAction.activate(popupContainer, 760, 350);
+//      managementForm.initialForm();
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

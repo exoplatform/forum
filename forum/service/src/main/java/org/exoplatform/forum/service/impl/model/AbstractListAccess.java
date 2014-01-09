@@ -31,6 +31,13 @@ public abstract class AbstractListAccess<E> implements ListAccess<E> {
 
   protected int         size        = -1;
   
+  /**
+   * Load objects base on the page number is selected
+   * @param pageSelect the page number is selected
+   * @return Arrays of objects
+   * @throws Exception
+   * @throws IllegalArgumentException
+   */
   public abstract E[] load(int pageSelect) throws Exception, IllegalArgumentException;
 
   public void reCalculate(int offset, int limit) {
@@ -41,6 +48,12 @@ public abstract class AbstractListAccess<E> implements ListAccess<E> {
     }
   }
 
+  /**
+   * Initial ListAccess by page size and page number is selected
+   * @param pageSize the page size
+   * @param pageSelect the page number is selected
+   * @throws Exception
+   */
   public void initialize(int pageSize, int pageSelect) throws Exception {
     this.setPageSize(pageSize);
     this.getTotalPages();   

@@ -44,7 +44,7 @@
         <tbody>
         <% 
           String classRowTable = "EvenRow";
-          List listUser = uiform.getListProFileUser() ; 
+          List listUser = uiform.getListProfileUser() ; 
           String userRole = "" ;
           String userTitle = "";
           if (listUser.size() == 0) { %>

@@ -30,7 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
-
+  
   @Override
   public void setUp() throws Exception {
     super.setUp();
@@ -400,7 +400,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(USER_ROOT, ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
     assertEquals(USER_ROOT, ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
     
-  //update forum moderator
+    //update forum moderator
     profile = createdUserProfile("mary");
     profile.setUserRole(UserProfile.USER);
     profile.setUserTitle("User");
@@ -446,21 +446,20 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
   
   public void testGetScreenName() throws Exception {
-    String userName = "demo";
-    UserProfile userProfile = createdUserProfile(userName);
+    UserProfile userProfile = createdUserProfile(USER_DEMO);
     userProfile.setScreenName("Jack Miller");
 
     // save UserProfile
     forumService_.saveUserProfile(userProfile, true, true);
 
     // getUserInfo
-    userProfile = forumService_.getUserInfo(userName);
+    userProfile = forumService_.getUserInfo(USER_DEMO);
     assertEquals("Jack Miller",forumService_.getScreenName("demo"));
     
     // change screenName
     userProfile.setScreenName("John Smith");
     forumService_.saveUserSettingProfile(userProfile);
-    userProfile = forumService_.getUserInfo(userName);
+    userProfile = forumService_.getUserInfo(USER_DEMO);
     assertEquals("John Smith",forumService_.getScreenName("demo"));
   }
   

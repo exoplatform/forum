@@ -37,8 +37,6 @@ public class UserProfile {
 
   public static final String  USER_REMOVED           = "User deleted";
 
-  private String              path;
-  
   private String              userId;
 
   private String              screenName;
@@ -153,14 +151,6 @@ public class UserProfile {
   private double getDefaultTimeZone() {
     Calendar cal = Calendar.getInstance();
     return ((cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET)) / (3600 * 1000));
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
   }
 
   public UserProfile setUserId(String userId) {
