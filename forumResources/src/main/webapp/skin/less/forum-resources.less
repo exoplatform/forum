@@ -1,4 +1,4 @@
-@import url('/forumResources/syntaxhighlighter/Styles/SyntaxHighlighter.css');
+@import url('../syntaxhighlighter/Styles/SyntaxHighlighter.css');
 
 .ParentMaskLayer {
     position: relative;
@@ -10,6 +10,10 @@
 	    position: absolute;
 	    visibility: visible;
 	    background: url('../images/Point1x1.png') no-repeat top center;
-	    .user-select(none);
+	    -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+       -o-user-select: none;
+          user-select: none;
 	}
 }
