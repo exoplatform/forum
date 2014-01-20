@@ -4935,7 +4935,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
       profileNode.getSession().save();
     } catch (Exception e) {
-      log.error("Failed to save last post id read.", e);
+      logDebug("Failed to save last post id read.", e);
     } finally {
       localLock.unlock();
     }
@@ -8437,12 +8437,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   @Override
   public void saveActivityIdForOwner(String ownerPath, String activityId) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    final ReentrantLock localLock = lock;
     try {
+      localLock.lock();
       Node ownerNode = getNodeAt(sProvider, ownerPath);
       ActivityTypeUtils.attachActivityId(ownerNode, activityId);
       ownerNode.save();
     } catch (Exception e) {
-      log.error(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
+      logDebug(String.format("Failed to attach activityId %s for node %s ", activityId, ownerPath), e);
+    } finally {
+      localLock.unlock();
     }
   }
 
