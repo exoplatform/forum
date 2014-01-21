@@ -23,7 +23,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.PortletPreferences;
 
@@ -67,6 +69,8 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -441,8 +445,17 @@ public class UIQuestions extends UIContainer {
     return this.viewingQuestionId_;
   }
 
-  protected String[] getQuestionLangauges(String questionPath) {
-    return languageMap.keySet().toArray(new String[] {});
+  protected Map<String, String> getQuestionLanguages() {
+  	LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class);
+  	Set<String> langs = languageMap.keySet();
+  	Map<String, String> datas = new HashMap<String, String>();
+  	Locale current = WebuiRequestContext.getCurrentInstance().getLocale();
+  	for(LocaleConfig local : configService.getLocalConfigs()) {
+  		if(langs.contains(local.getLocale().getDisplayLanguage())) {
+  			datas.put(local.getLocale().getDisplayLanguage(), local.getLocale().getDisplayLanguage(current));
+  		}
+  	}
+    return datas;
   }
 
   protected String getAvatarUrl(String userId) throws Exception {
