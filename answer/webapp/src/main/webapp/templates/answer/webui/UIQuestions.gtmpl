@@ -262,7 +262,7 @@
 				<!--	View Question which is selected	-->
 
 				<% } else {
-						String[] listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
+						def dataLangs = uicomponent.getQuestionLanguages();
 						questionContent = uicomponent.getQuestionContent();
 						String responseBy = "..." ;
 						String date = "..." ;
@@ -397,7 +397,7 @@
 											<!-- action translation question -->
 											<div class="languageContainer pull-right">
 											<%
-
+												def  listQuestLanguage = dataLangs.keySet();
 												for(String quesLanguage in listQuestLanguage) {
 													String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
 													String color = "#914ab6";
@@ -405,10 +405,11 @@
 													if(quesLanguage.equals(uicomponent.language_)){
 														ischeck = "checked";
 													}
+													String displayName = dataLangs.get(quesLanguage);
 											%>
 											<span class="uiRadio">
 												<input type="radio" name="language" $ischeck onclick="$linkView"/>
-												<span>$quesLanguage</span>
+												<span>$displayName</span>
 										 	</span>
 
 											<%} %>
@@ -572,7 +573,7 @@
 						<!--	View attachment files	-->
 							<%if(!question.getAttachMent().isEmpty()) {%>
 							<div class="attachmentContainer">
-								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i>Attachments:</div>
+								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.label.Attachments")%>:</div>
 								<% List attachments = question.getAttachMent(); %>
 								<div class="attachmentContentImage" >
 								<%
@@ -591,11 +592,11 @@
 										</a>
 										<div class="actionAttachImg">
 											<p>
-												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> View</a>
+												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.view")%></a>
 											</p>
 											<p>
 												<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-													<i class="uiIconDownload uiIconWhite"></i> Download
+													<i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.download")%>
 												</a>
 											</p>
 										</div>
