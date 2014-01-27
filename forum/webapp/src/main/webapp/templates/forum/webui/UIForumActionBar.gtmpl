@@ -26,7 +26,7 @@
 		  if(!isAdm){
 		%>
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
-			<a href="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
+			<a href="javascript:void(0);" onclick="<%=uicomponent.event(action)%>" style="display:block;" class="actionIcon">
 				<i class="$icon"></i>
 				<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 			</a>
@@ -46,7 +46,7 @@
 				  ++j;
 				%>
 				  <li>
-					<a onclick="javascript:void(0)" href="<%=uicomponent.event(ac)%>">
+					<a href="javascript:void(0);" onclick="<%=uicomponent.event(ac)%>">
 						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 					</a>
 				   </li>
@@ -83,12 +83,12 @@
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
 			<div class="pull-right forumSeparatorLine">
-				<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
 			<div class="pull-right privateMessage">
-				<a href="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
+				<a href="javascript:void(0);" onclick="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
 					<i class="uiIconMail uiIconLightGray"></i>$newMessage &nbsp;<%=_ctx.appRes("UIBreadcumbs.label.PrivateMessages");%>
 				</a>
 			</div>
@@ -97,6 +97,6 @@
   <% 
   org.exoplatform.forum.ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.calculateWidthOfActionBar('uiRightActionBar');");
   } %>
-	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
-	<a id="Reload" href="<%=uicomponent.event("Reload");%>" style="display:none">a</a>
+	<a id="privateMessageLink" href="javascript:void(0);" onclick="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
+	<a id="Reload" href="javascript:void(0);" onclick="<%=uicomponent.event("Reload");%>" style="display:none">a</a>
 </div>
