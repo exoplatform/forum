@@ -153,13 +153,10 @@
       		<groupId>commons-logging</groupId>
       		<artifactId>commons-logging</artifactId>
       	</exclusion>
-<<<<<<< HEAD
           <exclusion>
               <artifactId>jdom</artifactId>
               <groupId>jdom</groupId>
           </exclusion>
-=======
->>>>>>> FORUM-654 | Update version of kernel | core | jcr | ws to be compliant with gatein 3.7.x
         <exclusion>
           <groupId>xml-apis</groupId>
           <artifactId>xml-apis</artifactId>

@@ -933,14 +933,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node catNode = null;
     try {
       Node categoryHome = getCategoryHome(sProvider);
+      Session session = categoryHome.getSession();
       if (isNew) {
         catNode = categoryHome.addNode(category.getId(), EXO_FORUM_CATEGORY);
         catNode.setProperty(EXO_ID, category.getId());
         catNode.setProperty(EXO_OWNER, category.getOwner());
         catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         boolean isIncludedSpace = category.isIncludedSpace() || category.getId().equals(Utils.CATEGORY_SPACE_ID_PREFIX);
-        catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
-        categoryHome.getSession().save();
+        try {
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        } catch (Exception e) {
+          catNode.addMixin("mix:forumCategory");
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        }
+        session.save();
       } else {
         catNode = categoryHome.getNode(category.getId());
         String[] oldcategoryMod = new PropertyReader(catNode).strings(EXO_MODERATORS, new String[] { "" });
@@ -958,11 +964,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       catNode.setProperty(EXO_VIEWER, convertArray(category.getViewer()));
       category.setPath(catNode.getPath());
-      catNode.save();
+      session.save();
       try {
         if ((isNew && category.getModerators().length > 0) || !isNew) {
           catNode.setProperty(EXO_MODERATORS, category.getModerators());
-          catNode.save();
+          session.save();
         }
       } catch (Exception e) {
         LOG.debug("Failed to save category moderators ", e);
@@ -970,6 +976,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     } catch (Exception e) {
       LOG.error("Failed to save category", e);
       throw e;
+    }
+  }
+
+  @Override
+  public void saveUserPrivateOfCategory(String categoryId, String priInfo) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node cateHome = getCategoryHome(sProvider);
+      Node cateNode = cateHome.getNode(categoryId);
+      Set<String> privates = new HashSet<String>(new PropertyReader(cateNode).list(EXO_USER_PRIVATE, new ArrayList<String>()));
+      privates.add(priInfo);
+      cateNode.setProperty(EXO_USER_PRIVATE, privates.toArray(new String[privates.size()]));
+      cateHome.getSession().save();
+    } catch (Exception e) {
+        LOG.error("Failed to save user private of category", e);
     }
   }
 

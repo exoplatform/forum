@@ -16,14 +16,10 @@
  */
 package org.exoplatform.forum.common.cache.model;
 
-
 import java.io.Serializable;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
 
 public class ScopeCacheKey implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -64,20 +60,10 @@ public class ScopeCacheKey implements Serializable {
   }
 
   public static String getCurrentRepositoryName() {
-
-    ExoContainer container = PortalContainer.getInstance();
-    RepositoryService repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
-    if (repositoryService == null) {
-      container = RootContainer.getInstance()
-                               .getPortalContainer(PortalContainer.getCurrentPortalContainerName());
-      repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
-    }
     try {
-      ManageableRepository manageableRepository = repositoryService.getCurrentRepository();
-      return manageableRepository == null ? null : manageableRepository.getConfiguration().getName();
+      return CommonsUtils.getService(RepositoryService.class).getCurrentRepository().getConfiguration().getName();
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      return "repository";
     }
   }
-
 }

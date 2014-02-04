@@ -497,6 +497,8 @@ public interface DataStorage {
   public String getActivityIdForOwner(String ownerId, String type);
 
   public String getActivityIdForOwner(String ownerPath);
+
+  void saveUserPrivateOfCategory(String categoryId, String priInfo);
   
   public List<ForumSearchResult> getUnifiedSearch(String textQuery, String userId, Integer offset, Integer limit, String sort, String order) throws Exception;
   

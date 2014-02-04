@@ -92,6 +92,16 @@
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
     </dependency>
+     <!-- remove it after migration to jcr 1.16.x-->
+     <dependency>
+        <groupId>org.exoplatform.kernel</groupId>
+        <artifactId>exo.kernel.component.ext.cache.impl.infinispan.v5</artifactId>
+     </dependency>
+     <dependency>
+        <groupId>org.exoplatform.jcr</groupId>
+        <artifactId>exo.jcr.component.core.impl.infinispan.v5</artifactId>
+     </dependency>
+     <!-- End remove-->
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
@@ -195,15 +205,12 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
-<<<<<<< HEAD
         <exclusions>
             <exclusion>
                 <artifactId>jdom</artifactId>
                 <groupId>jdom</groupId>
             </exclusion>
         </exclusions>
-=======
->>>>>>> FORUM-654 | Update version of kernel | core | jcr | ws to be compliant with gatein 3.7.x
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

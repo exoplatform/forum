@@ -56,11 +56,11 @@
             </properties>
           </initializer>
           <cache enabled="true"
-                 class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+                 class="org.exoplatform.services.jcr.impl.dataflow.persistent.infinispan.ISPNCacheWorkspaceStorageCache">
             <properties>
-              <property name="jbosscache-configuration"
-                        value="conf/exo.portal.component.test.jcr-jbosscache-config.xml"/>
-              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
+              <property name="infinispan-configuration"
+                        value="conf/standalone/infinispan/cache-config.xml"/>
+              <property name="infinispan-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
@@ -68,12 +68,12 @@
               <property name="index-dir" value="${gatein.test.tmp.dir}/jcr/jcrlucenedb/system"/>
             </properties>
           </query-handler>
-          <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.CacheableLockManagerImpl">
+          <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.infinispan.ISPNCacheableLockManagerImpl">
             <properties>
               <property name="time-out" value="15m"/>
-              <property name="jbosscache-configuration"
-                        value="conf/exo.portal.component.test.jcr-jbosscache-lock-config.xml"/>
-              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
+              <property name="infinispan-configuration"
+                        value="conf/standalone/infinispan/lock-config.xml"/>
+              <property name="infinispan-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </lock-manager>
         </workspace>
@@ -107,10 +107,10 @@
                         value="*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove"/>
             </properties>
           </initializer>
-          <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+          <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.infinispan.ISPNCacheWorkspaceStorageCache">
             <properties>
-              <property name="jbosscache-configuration" value="jar:/conf/exo.portal.component.test.jcr-jbosscache-config.xml"/>
-              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
+              <property name="infinispan-configuration" value="conf/standalone/infinispan/cache-config.xml"/>
+              <property name="infinispan-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
@@ -120,11 +120,11 @@
               <property name="excerptprovider-class" value="org.exoplatform.services.jcr.impl.core.query.lucene.WeightedHTMLExcerpt"/>
             </properties>
           </query-handler>
-          <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.CacheableLockManagerImpl">
+          <lock-manager class="org.exoplatform.services.jcr.impl.core.lock.infinispan.ISPNCacheableLockManagerImpl">
             <properties>
               <property name="time-out" value="15m"/>
-              <property name="jbosscache-configuration" value="jar:/conf/exo.portal.component.test.jcr-jbosscache-lock-config.xml"/>
-              <property name="jbosscache-cl-cache.jdbc.datasource" value="jdbcexo"/>
+              <property name="infinispan-configuration" value="conf/standalone/infinispan/lock-config.xml"/>
+              <property name="infinispan-cl-cache.jdbc.datasource" value="jdbcexo"/>
             </properties>
           </lock-manager>
         </workspace>

@@ -2058,4 +2058,9 @@ public class CachedDataStorage implements DataStorage, Startable {
   public void removeCacheUserProfile(String userName) {
     clearUserProfile(userName);
   }
+
+  @Override
+  public void saveUserPrivateOfCategory(String categoryId, String priInfo) {
+    storage.saveUserPrivateOfCategory(categoryId, priInfo);
+  }
 }
