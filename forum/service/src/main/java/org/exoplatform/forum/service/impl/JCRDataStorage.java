@@ -3690,7 +3690,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       message.setType("PrivatePost");
       message.setName(post.getName());
       message.setMessage(post.getMessage());
-      message.setId(post.getLink() + "/" + post.getId());
+      message.setId(topicId + "/" + post.getId());
       sendNotificationMessage(message);
     }
         
