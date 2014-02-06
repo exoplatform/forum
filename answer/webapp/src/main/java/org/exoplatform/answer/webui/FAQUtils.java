@@ -19,9 +19,13 @@ package org.exoplatform.answer.webui;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
@@ -29,6 +33,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -569,5 +574,17 @@ public class FAQUtils {
     }
     return true;
   }
+  
+	public static Map<String, String> getQuestionLanguages(Collection<String> langOfQuestion) {
+		LocaleConfigService configService = CommonsUtils.getService(LocaleConfigService.class);
+		Map<String, String> datas = new HashMap<String, String>();
+		Locale current = WebuiRequestContext.getCurrentInstance().getLocale();
+		for (LocaleConfig local : configService.getLocalConfigs()) {
+			if (langOfQuestion.contains(local.getLocale().getDisplayLanguage())) {
+				datas.put(local.getLocale().getDisplayLanguage(), local.getLocale().getDisplayLanguage(current));
+			}
+		}
+		return datas;
+	}
   
 }
