@@ -17,8 +17,11 @@
 package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.exoplatform.answer.webui.BaseUIFAQForm;
 import org.exoplatform.answer.webui.FAQUtils;
@@ -118,6 +121,15 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     selectCategory.setOnChange("ChangeCategory");
     this.addUIFormInput(selectCategory);
     setListQuestion();
+  }
+  
+  protected Map<String, String> getQuestionLanguages(Question question){
+  	Set<String> langOfQuestion = new HashSet<String>();
+  	String [] langOfQuestionList = question.getLanguagesNotYetAnswered().split(",");
+  	for(int i =0; i<langOfQuestionList.length;i++){
+  		langOfQuestion.add(langOfQuestionList[i]);
+  	}
+  	return FAQUtils.getQuestionLanguages(langOfQuestion);
   }
 
   protected boolean hasInGroup(List<String> listGroup, String[] listPermission) {
