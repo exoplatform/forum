@@ -6,7 +6,7 @@
   <portal-skin>
     <skin-name>Default</skin-name>
     <skin-module>forumResources</skin-module>
-    <css-path>/skin/Stylesheet.css</css-path>
+    <css-path>/skin/css/forum-resources.css</css-path>
   </portal-skin>
 
   <module>

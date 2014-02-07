@@ -46,7 +46,7 @@
 								} 
 				  %>
 						<li>
-							<a href="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
+							<a href="javascript:void(0);" onclick="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
 						</li>
 				  <%}
 				  } else if (uicomponent.isSelectGroup()){
@@ -54,7 +54,7 @@
 						  key = "/" + user ;   
 				  %>
 						<li>
-							<a href="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
+							<a href="javascript:void(0);" onclick="<%=uicomponent.event('SelectMembership',key)%>"><i class="uiIconMiniArrowRight uiIconLightGray"></i> $user</a>
 						</li>
 				  <%}
 
