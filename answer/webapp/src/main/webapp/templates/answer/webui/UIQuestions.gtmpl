@@ -396,17 +396,17 @@
 
 											<!-- action translation question -->
 										<%
-											if(listQuestLanguage.length > 1) {
+											def listQuestLanguage = dataLangs.keySet();
+											if(listQuestLanguage.size() > 1) {
 										%>
 											<div class="languageContainer pull-right uiDropdownWithIcon dropdown">
 												<button data-toggle="dropdown" class="btn" type="button">
-													<span><%=uicomponent.language_%>&nbsp;</span>
+													<span><%=dataLangs.get(uicomponent.language_)%>&nbsp;</span>
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 												</button>
 												<!--	Begin popup menu	-->
 												<ul class="dropdown-menu">
 											<%
-												def  listQuestLanguage = dataLangs.keySet();
 												for(String quesLanguage in listQuestLanguage) {
 													if(quesLanguage.equals(uicomponent.language_)){
 														continue;

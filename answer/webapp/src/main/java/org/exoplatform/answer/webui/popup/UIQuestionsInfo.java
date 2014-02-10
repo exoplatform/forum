@@ -29,6 +29,7 @@ import org.exoplatform.answer.webui.UIAnswersPageIterator;
 import org.exoplatform.answer.webui.UIAnswersPortlet;
 import org.exoplatform.answer.webui.UIQuestions;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -123,13 +124,13 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     setListQuestion();
   }
   
-  protected Map<String, String> getQuestionLanguages(Question question){
-  	Set<String> langOfQuestion = new HashSet<String>();
-  	String [] langOfQuestionList = question.getLanguagesNotYetAnswered().split(",");
-  	for(int i =0; i<langOfQuestionList.length;i++){
-  		langOfQuestion.add(langOfQuestionList[i]);
-  	}
-  	return FAQUtils.getQuestionLanguages(langOfQuestion);
+  protected Map<String, String> getQuestionLanguages(Question question) {
+    Set<String> langOfQuestion = new HashSet<String>();
+    String[] langOfQuestionList = question.getLanguagesNotYetAnswered().split(",");
+    for (int i = 0; i < langOfQuestionList.length; i++) {
+      langOfQuestion.add(langOfQuestionList[i]);
+    }
+    return FAQUtils.getQuestionLanguages(langOfQuestion);
   }
 
   protected boolean hasInGroup(List<String> listGroup, String[] listPermission) {
@@ -344,7 +345,20 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         responseForm.updateChildOfQuestionManager(true);
         responseForm.setModertator(true);
 
-        responseForm.setQuestionId(question, language, isModerateAnswer);
+        boolean isEdit = false;
+        Answer answers[] = question.getAnswers();
+        if (answers != null) {
+          for (Answer answer : answers) {
+            if (language.equals(answer.getLanguage())) {
+              responseForm.setAnswerInfor(question, answer, language);
+              isEdit = true;
+              break;
+            }
+          }
+        }
+        if (!isEdit) {
+          responseForm.setQuestionId(question, language, isModerateAnswer);
+        }
         questionManagerForm.isViewEditQuestion = false;
         questionManagerForm.isViewResponseQuestion = true;
         questionManagerForm.isResponseQuestion = true;

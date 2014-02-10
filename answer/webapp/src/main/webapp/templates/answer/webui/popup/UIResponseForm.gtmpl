@@ -1,5 +1,6 @@
 <% 
 	import org.exoplatform.answer.webui.FAQUtils;
+	uiform.setLanguages();
 %>
 <div class="uiResponseForm">
 	<% uiform.begin() %>
