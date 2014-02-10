@@ -11,7 +11,7 @@
           briefContent : "Brief content",
           goDirectly : "Go directly to the {0}",
           clickHere : "Click here.",
-          title : "Title",
+          title : "Title"
       },
       portletId : "UIForumPortlet",
       currentUser : "",
