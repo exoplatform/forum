@@ -575,16 +575,16 @@ public class FAQUtils {
     return true;
   }
   
-  public static Map<String, String> getQuestionLanguages(Set<String> langOfQuestion){
-  	LocaleConfigService configService = CommonsUtils.getService(LocaleConfigService.class);
-  	Map<String, String> datas = new HashMap<String, String>();
-  	Locale current = WebuiRequestContext.getCurrentInstance().getLocale();
-  	for (LocaleConfig local : configService.getLocalConfigs()) {
-  		Locale getLocal = local.getLocale();
-  		if (langOfQuestion.contains(getLocal.getDisplayLanguage())) {
-  			datas.put(getLocal.getDisplayLanguage(), getLocal.getDisplayLanguage(current));
-  		}
-  	}
-  	return datas;
+  public static Map<String, String> getQuestionLanguages(Set<String> langOfQuestion) {
+    LocaleConfigService configService = CommonsUtils.getService(LocaleConfigService.class);
+    Map<String, String> datas = new HashMap<String, String>();
+    Locale current = WebuiRequestContext.getCurrentInstance().getLocale();
+    for (LocaleConfig local : configService.getLocalConfigs()) {
+      Locale getLocal = local.getLocale();
+      if (langOfQuestion.contains(getLocal.getDisplayLanguage())) {
+        datas.put(getLocal.getDisplayLanguage(),getLocal.getDisplayLanguage(current));
+      }
+    }
+    return datas;
   }
 }

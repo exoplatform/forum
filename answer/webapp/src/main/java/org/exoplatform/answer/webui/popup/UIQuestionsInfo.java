@@ -123,13 +123,13 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     setListQuestion();
   }
   
-  protected Map<String, String> getQuestionLanguages(Question question){
-  	Set<String> langOfQuestion = new HashSet<String>();
-  	String [] langOfQuestionList = question.getLanguagesNotYetAnswered().split(",");
-  	for(int i =0; i<langOfQuestionList.length;i++){
-  		langOfQuestion.add(langOfQuestionList[i]);
-  	}
-  	return FAQUtils.getQuestionLanguages(langOfQuestion);
+  protected Map<String, String> getQuestionLanguages(Question question) {
+    Set<String> langOfQuestion = new HashSet<String>();
+    String[] langOfQuestionList = question.getLanguagesNotYetAnswered().split(",");
+    for (int i = 0; i < langOfQuestionList.length; i++) {
+      langOfQuestion.add(langOfQuestionList[i]);
+    }
+    return FAQUtils.getQuestionLanguages(langOfQuestion);
   }
 
   protected boolean hasInGroup(List<String> listGroup, String[] listPermission) {
