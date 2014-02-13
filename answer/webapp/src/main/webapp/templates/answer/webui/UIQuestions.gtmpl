@@ -917,7 +917,7 @@
 															</a>
 														</li>
 														<li>
-															<a class="ItemIcon Delete confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+															<a class="confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 																<i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 															</a>
 														</li>
