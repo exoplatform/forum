@@ -596,7 +596,46 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumSpace = forumService_.getForum(cat1.getId(), forumSpace.getId());
     assertNotNull(forumSpace);
   }
-  
+
+  public void testSplitTopic() throws Exception {
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat.getId(), forum, true);
+    forum = forumService_.getForum(cat.getId(), forum.getId());
+    Topic topic = createdTopic(USER_ROOT);
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    List<String> postPath = new ArrayList<String>();
+    String firstPostId = "";
+    for (int i = 0; i < 5; ++i) {
+      Post post = createdPost();
+      if (i == 2) {
+        firstPostId = post.getId();
+      }
+      if (i > 1) {
+        postPath.add(topic.getPath() + "/" + post.getId());
+      }
+      forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+    }
+
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    assertEquals(5, topic.getPostCount());
+
+    Post firstPost = forumService_.getPost(cat.getId(), forum.getId(), topic.getId(), firstPostId);
+    Topic newTopic = createdTopic(USER_ROOT);
+    newTopic.setPath(forum.getPath() + "/" + newTopic.getId());
+    forumService_.splitTopic(newTopic, firstPost, postPath, "", "");
+
+    newTopic = forumService_.getTopic(cat.getId(), forum.getId(), newTopic.getId(), "");
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+
+    assertEquals(2, topic.getPostCount());
+    assertEquals(2, newTopic.getPostCount());
+
+    // Clean all data
+    forumService_.removeCategory(cat.getId());
+  }
   public void testGetForumByFilter() throws Exception {
     initDefaultData();
     

@@ -3620,7 +3620,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       // update topic
       if (postActive && isPublic) {
-        topicNode.setProperty(EXO_POST_COUNT, Math.max(topicPostCount, 1));
+        topicNode.setProperty(EXO_POST_COUNT, Math.max(topicPostCount, 0));
         topicNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
         topicNode.setProperty(EXO_LAST_POST_BY, owner);
         topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -4147,9 +4147,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
 
     // set destTopicNode
-    destTopicNode.setProperty(EXO_POST_COUNT, destTopicNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
     destTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, destTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + totalAtt);
-    destForumNode.setProperty(EXO_POST_COUNT, destForumNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
     // update last post for destTopicNode
     destTopicNode.setProperty(EXO_LAST_POST_BY, postNode.getProperty(EXO_OWNER).getValue().getString());
     destTopicNode.setProperty(EXO_LAST_POST_DATE, postNode.getProperty(EXO_CREATED_DATE).getValue().getDate());
