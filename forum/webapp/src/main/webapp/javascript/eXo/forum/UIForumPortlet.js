@@ -479,14 +479,20 @@
           var body = $('body')[0];
           if (body.scrollTop > 250) {
             script: scroll(0, 0);
-            var viewPage = $('#KSMaskLayer');
-            if (viewPage.exists())
-              viewPage[0].scrollIntoView(true);
+            setTimeout(function() {
+              var viewPage = $('#KSMaskLayer');
+              if (viewPage.exists()) {
+                viewPage[0].scrollIntoView(true);
+              }
+            }, 1000);
           }
         } else {
-          var obj = document.getElementById(idLastPost);
-          if (obj)
-            obj.scrollIntoView(true);
+          setTimeout(function() {
+            var obj = document.getElementById(idLastPost);
+            if (obj) {
+              obj.scrollIntoView(true);
+            }
+          }, 1000);
         }
       }
     },

@@ -61,6 +61,17 @@ sh.autoloader = function()
 		addBrush(aliases, url);
 	}
 	
+	if(elements.length == 0) {
+		elements = [];
+		var es = document.getElementsByTagName('pre');
+		for (i = 0; i < es.length; i++) {
+			var item = {
+				target: es[i],
+				params: dp.SyntaxHighlighter.parseParams(es[i].getAttribute('class'))
+			};
+			elements.push(item)
+		}
+	}
 	// dynamically add <script /> tags to the document body
 	for (i = 0; i < elements.length; i++)
 	{
