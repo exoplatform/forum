@@ -663,7 +663,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } else if (path.indexOf(Utils.TAG) == 0) {
       updateIsRendered(ForumUtils.TAG);
       getChild(UITopicsTag.class).setIdTag(path);
-    } else if (path.indexOf(Utils.TOPIC) == 0) {
+    } else if (path.lastIndexOf(Utils.TOPIC) >= 0 ) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
