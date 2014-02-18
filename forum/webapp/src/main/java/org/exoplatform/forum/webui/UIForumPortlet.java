@@ -663,7 +663,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } else if (path.indexOf(Utils.TAG) == 0) {
       updateIsRendered(ForumUtils.TAG);
       getChild(UITopicsTag.class).setIdTag(path);
-    } else if (path.indexOf(Utils.TOPIC) == 0) {
+    } else if (isRenderedTopic(path)) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
@@ -911,6 +911,27 @@ public class UIForumPortlet extends UIPortletApplication {
       path = Utils.FORUM_SERVICE;
     }
     getChild(UIBreadcumbs.class).setUpdataPath(path);
+  }
+  
+  /* Check if path is rendered topic. There are 2 syntax indicating a topic to render
+   * Case 1: topic(\w)*
+   * Case 2: CategorySpace(\w)* /ForumSpace(w)* /topic(w)*
+   * @param path the path to check
+   * @return isRendered Topic or not
+   */
+  static private boolean isRenderedTopic (String path) {
+    if (path == null || path.isEmpty() ) {
+      return false;
+    }
+    // Check case 1
+    if (path.startsWith(Utils.TOPIC)) {
+      return true;
+    }
+    // Check case 2
+    if (path.lastIndexOf("/"+Utils.TOPIC) >= 0) {
+      return true;
+    }
+    return false;
   }
 
   static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {
