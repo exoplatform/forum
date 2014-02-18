@@ -71,6 +71,11 @@
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>
+
+  <component>
+    <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
+    <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+  </component>
   
   <component>
     <key>org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService</key>
@@ -82,15 +87,24 @@
       </value-param>
       <value-param>
         <name>async-execution</name>
-        <value>false</value>
+        <value>true</value>
       </value-param>
     </init-params>
   </component>
 
   <component>
-    <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
-    <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+    <key>org.exoplatform.forum.mock.ResultTestForumListener</key>
+    <type>org.exoplatform.forum.mock.ResultTestForumListener</type>
   </component>
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>ForumEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.forum.mock.MockForumEventListener</type>
+    </component-plugin>
+  </external-component-plugins>
 
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
