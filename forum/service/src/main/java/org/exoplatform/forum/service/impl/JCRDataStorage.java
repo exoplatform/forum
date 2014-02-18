@@ -4195,7 +4195,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       // set destTopicNode
-      //destTopicNode.setProperty(EXO_POST_COUNT, destTopicNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
       destTopicNode.setProperty(EXO_NUMBER_ATTACHMENTS, destTopicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() + totalAtt);
       destForumNode.setProperty(EXO_POST_COUNT, destForumNode.getProperty(EXO_POST_COUNT).getLong() + totalpost);
       // update last post for destTopicNode
@@ -8401,12 +8400,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
   
   private static void logDebug(String message, Throwable e) {
-    if(log.isDebugEnabled()) {
-      if(e != null) {
-        log.debug(message, e);
-      } else {
-        log.debug(message);
-      }
+    log.warn(message);
+    if (log.isDebugEnabled() && e != null) {
+      log.debug(e.getMessage(), e);
     }
   }
 
