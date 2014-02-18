@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
 
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -94,7 +93,6 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   final Queue<UserLoginLogEntry>     queue           = new ConcurrentLinkedQueue<UserLoginLogEntry>();
 
-//  private String                     lastLogin_      = "";
   private Map<String, String>        lastLoginMap      = new HashMap<String, String>();
 
   private ForumStatisticsService     forumStatisticsService;
@@ -105,11 +103,12 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   protected List<ForumEventListener> listeners_      = new ArrayList<ForumEventListener>(3);
   
-  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService forumStatisticsService, JobSchedulerService jobSchedulerService) {
+  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage,
+                          ForumStatisticsService staticsService, JobSchedulerService jobService, LifeCycleCompletionService completionService) {
     this.storage = dataStorage;
-    this.forumStatisticsService = forumStatisticsService;
-    this.jobSchedulerService = jobSchedulerService;
-    this.completionService = CommonsUtils.getService(LifeCycleCompletionService.class);
+    this.forumStatisticsService = staticsService;
+    this.jobSchedulerService = jobService;
+    this.completionService = completionService;
   }
 
   /**
@@ -555,20 +554,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     //
     Callable<Boolean> callAble = new ForumEventCompletion.ProcessTopic(((isNew) ? topic : edited), isNew).setListeners(listeners_);
     completionService.addTask(callAble);
-    
-    /*for (ForumEventLifeCycle f : listeners_) {
-      try {
-        if (isNew) {
-          f.addTopic(topic);
-        } else {
-          if (edited != null) {
-            f.updateTopic(edited);
-          }
-        }
-      } catch (Exception e) {
-        log.debug("Failed to run function addTopic/updateTopic in the class ForumEventLifeCycle. ", e);
-      }
-    }*/
   }
 
   /**
@@ -745,17 +730,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     //
     Callable<Boolean> callAble = new ForumEventCompletion.ProcessPost(post, isNew).setListeners(listeners_);
     completionService.addTask(callAble);
-    
-    /*for (ForumEventLifeCycle f : listeners_) {
-      try {
-        if (isNew)
-          f.addPost(post);
-        else
-          f.updatePost(post);
-      } catch (Exception e) {
-        log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
-      }
-    }*/
   }
 
   /**

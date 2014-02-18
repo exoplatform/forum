@@ -42,6 +42,7 @@ import org.junit.runners.Suite.SuiteClasses;
   TestCacheDataStrorage.class,
   ForumServiceUpdaterTestCase.class,
   ForumWebserviceTestCase.class,
+  ForumListenerTestCase.class,
   DiscussionSearchConnectorTestCase.class
 })
 @ConfigTestCase(BaseForumServiceTestCase.class)
