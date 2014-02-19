@@ -58,9 +58,42 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
 
   public void testForumStatic() throws Exception {
-    ForumStatistic forumStatistic = new ForumStatistic();
+    //
+    resetAllUserProfile();
+    
+    ForumStatistic forumStatistic = forumService_.getForumStatistic();
+    assertNotNull(forumStatistic);
+    assertEquals(8, forumStatistic.getMembersCount());
+    
+    forumStatistic.setPostCount(20);
+    forumStatistic.setTopicCount(10);
     forumService_.saveForumStatistic(forumStatistic);
-    assertNotNull(forumService_.getForumStatistic());
+
+    forumStatistic = forumService_.getForumStatistic();
+    assertEquals(10, forumStatistic.getTopicCount());
+    assertEquals(20, forumStatistic.getPostCount());
+    // reset
+    forumService_.saveForumStatistic(new ForumStatistic());
+    // make one topic
+    initDefaultData();
+    // create 10 topics and 10 posts for each topic. On each topic contain one post is first post.
+    for (int i = 0; i < 10; i++) {
+      forumService_.saveTopic(categoryId, forumId, createdTopic(USER_DEMO), true, false, new MessageBuilder());
+      forumService_.savePost(categoryId, forumId, topicId, createdPost(), true, new MessageBuilder());
+    }
+    forumStatistic = forumService_.getForumStatistic();
+    // we have 11 topics and 21 posts.
+    assertEquals(11, forumStatistic.getTopicCount());
+    assertEquals(21, forumStatistic.getPostCount());
+    
+    UserProfile profile = forumService_.getUserInfo(USER_ROOT);
+    
+    assertEquals(1, profile.getTotalTopic());
+    assertEquals(11, profile.getTotalPost());
+    
+    profile = forumService_.getUserInfo(USER_DEMO);
+    assertEquals(10, profile.getTotalTopic());
+    assertEquals(10, profile.getTotalPost());
   }
 
   public void testForumAdministration() throws Exception {
