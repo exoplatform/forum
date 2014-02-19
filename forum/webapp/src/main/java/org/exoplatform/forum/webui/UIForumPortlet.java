@@ -919,12 +919,12 @@ public class UIForumPortlet extends UIPortletApplication {
    * @param path the path to check
    * @return isRendered Topic or not
    */
-  private boolean isRenderedTopic (String path) {
+  static private boolean isRenderedTopic (String path) {
     if (path == null || path.isEmpty() ) {
       return false;
     }
     // Check case 1
-    if (path.indexOf(Utils.TOPIC) == 0) {
+    if (path.startsWith(Utils.TOPIC)) {
       return true;
     }
     // Check case 2
