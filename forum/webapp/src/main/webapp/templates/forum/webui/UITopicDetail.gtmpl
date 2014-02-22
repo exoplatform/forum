@@ -262,6 +262,7 @@
 							} else {
 								isView = true;
 							}
+							confirm = "";
 							if(action.equals("SetDeleteTopic")) {
 								confirm = " class=\"confirm\"";
 							}
