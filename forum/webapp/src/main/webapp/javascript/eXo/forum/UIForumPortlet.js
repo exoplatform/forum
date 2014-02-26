@@ -479,22 +479,31 @@
           var body = $('body')[0];
           if (body.scrollTop > 250) {
             script: scroll(0, 0);
-            setTimeout(function() {
-              var viewPage = $('#KSMaskLayer');
-              if (viewPage.exists()) {
-                viewPage[0].scrollIntoView(true);
-              }
-            }, 1000);
+            UIForumPortlet.scrollIntoView('KSMaskLayer');
           }
         } else {
-          setTimeout(function() {
-            var obj = document.getElementById(idLastPost);
-            if (obj) {
-              obj.scrollIntoView(true);
-            }
-          }, 1000);
+          UIForumPortlet.scrollIntoView(idLastPost);
         }
       }
+    },
+
+    scrollIntoView : function(id) {
+      var timer = setTimeout(function() {
+        var obj = document.getElementById(id);
+        if (obj) {
+          if (eXo.core.Browser.isIE()) {
+            var correctOffset = 0;
+            while(obj.offsetParent) {
+              correctOffset += obj.offsetTop;
+              obj = obj.offsetParent;
+            }
+            $("html, body").scrollTop(correctOffset);
+          } else {
+            obj.scrollIntoView(true);
+          }
+        }
+        clearTimeout(timer);
+      }, 1000);
     },
 
     setEnableInput : function() {
