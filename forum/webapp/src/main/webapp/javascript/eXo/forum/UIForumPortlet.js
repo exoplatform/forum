@@ -439,8 +439,18 @@
           }
         } else {
           var obj = document.getElementById(idLastPost);
-          if (obj)
-            obj.scrollIntoView(true);
+          if (eXo.core.Browser.isIE()) {
+            var correctOffset = 0;
+            if (obj.offsetParent) {
+              do {
+                correctOffset += obj.offsetTop;
+              } while (obj = obj.offsetParent);
+            }
+            $("html, body").scrollTop(correctOffset);
+          } else {
+            if (obj)
+              obj.scrollIntoView(true);
+          }
         }
       }
     },
