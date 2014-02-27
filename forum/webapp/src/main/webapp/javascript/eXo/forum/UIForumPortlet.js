@@ -441,10 +441,9 @@
           var obj = document.getElementById(idLastPost);
           if (eXo.core.Browser.isIE()) {
             var correctOffset = 0;
-            if (obj.offsetParent) {
-              do {
-                correctOffset += obj.offsetTop;
-              } while (obj = obj.offsetParent);
+            while(obj.offsetParent) {
+              correctOffset += obj.offsetTop;
+              obj = obj.offsetParent;
             }
             $("html, body").scrollTop(correctOffset);
           } else {
