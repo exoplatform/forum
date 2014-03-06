@@ -436,6 +436,10 @@ public class FAQServiceImpl implements FAQService, Startable {
   }
 
   public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
+    String catId = destCategoryId.substring(destCategoryId.lastIndexOf("/") + 1);  
+    for (AnswerEventListener ae : listeners_) {
+      ae.moveQuestions(questions, catId);
+    }	  
     jcrData_.moveQuestions(questions, destCategoryId, questionLink, faqSetting);
   }
 
