@@ -17,13 +17,12 @@
 package org.exoplatform.faq.service.impl;
 
 import java.util.List;
-
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.faq.service.ExtendedAnswerEventLifeCycle;
 
 public abstract class AnswerEventListener extends BaseComponentPlugin implements ExtendedAnswerEventLifeCycle {
 	
-	@Override
-	public void moveQuestions(List<String> questions, String catId) {
-	}
+  @Override
+  public void moveQuestions(List<String> questions, String catId) {
+  }
 }
