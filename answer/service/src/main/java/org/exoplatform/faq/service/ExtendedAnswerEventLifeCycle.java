@@ -18,7 +18,7 @@ package org.exoplatform.faq.service;
 
 import java.util.List;
 
-public interface ExtendedAnswerEventLifeCycle extends AnswerEventLifeCycle{
+public interface ExtendedAnswerEventLifeCycle extends AnswerEventLifeCycle {
 	
   public void moveQuestions(List<String> questions, String catId);	
 
