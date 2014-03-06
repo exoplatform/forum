@@ -14,16 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service.impl;
+package org.exoplatform.faq.service;
 
 import java.util.List;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
-import org.exoplatform.faq.service.ExtendedAnswerEventLifeCycle;
-
-public abstract class AnswerEventListener extends BaseComponentPlugin implements ExtendedAnswerEventLifeCycle {
+public interface ExtendedAnswerEventLifeCycle extends AnswerEventLifeCycle{
 	
-	@Override
-	public void moveQuestions(List<String> questions, String catId) {
-	}
+  public void moveQuestions(List<String> questions, String catId);	
+
 }

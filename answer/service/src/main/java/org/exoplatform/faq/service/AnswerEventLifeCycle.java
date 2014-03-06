@@ -16,12 +16,8 @@
  */
 package org.exoplatform.faq.service;
 
-import java.util.List;
-
 public interface AnswerEventLifeCycle {
 	
-  public void moveQuestions(List<String> questions, String catId);	
-
   public void saveQuestion(Question question, boolean isNew);
 
   public void saveAnswer(String questionId, Answer answer, boolean isNew);
