@@ -919,16 +919,8 @@ public class UIForumPortlet extends UIPortletApplication {
         return;
       }
       String userId = event.getRequestContext().getRequestParameter(OBJECTID);
-      int t = userId.indexOf(Utils.DELETED);
-      if (t < 0) {
-        try {
-          forumPortlet.forumService.getQuickProfile(userId.trim());
-        } catch (Exception e) {
-          t = 1;
-        }
-      }
-      if (t > 0) {
-        showWarningMessage(event.getRequestContext(), "UITopicDetail.msg.userIsDeleted", userId.substring(0, t) );
+      if (userId.indexOf(Utils.DELETED) > 0 && ForumServiceUtils.isDisableUser(userId.trim())) {
+        showWarningMessage(event.getRequestContext(), "UITopicDetail.msg.userIsDeleted", userId.replace(Utils.DELETED, ""));
         return;
       }
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);

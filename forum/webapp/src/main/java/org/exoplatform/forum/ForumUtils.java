@@ -49,6 +49,7 @@ import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
@@ -670,6 +671,22 @@ public class ForumUtils {
       profile.setScreenName("<s>" + userName + "</s>");
       profile.setUserTitle(UserProfile.USER_REMOVED);
     }
+    profile.setDisabled(true);
     return profile;
   }
+  
+  /**
+   * Get list actions that current user login can active on owner user
+   * 
+   * @param currentUserRole The user role of current user
+   * @param ownerUserId The user id of owner user.
+   * @return
+   */
+  public static String[] getUserActionsMenu(long currentUserRole, String ownerUserId) {
+    if (currentUserRole >= 3 || ForumServiceUtils.isDisableUser(ownerUserId)) {
+      return new String[] { "ViewPublicUserInfo", "ViewPostedByUser", "ViewThreadByUser" };
+    }
+    return new String[] { "ViewPublicUserInfo", "PrivateMessage", "ViewPostedByUser", "ViewThreadByUser" };
+  }
+  
 }

@@ -30,7 +30,6 @@
   boolean canEdit = false;
   boolean isShowMenu = false;
   if(userProfile.getUserRole() < 3) isShowMenu = true;
-  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div class="uiTopicContainer uiTopicsTag">
   <div class="clearfix">
@@ -250,13 +249,10 @@
 									<a href="javaScript:void(0)">$viewTopicBy</a>
 									<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 										<%
+										String[] menuViewInfos = ForumUtils.getUserActionsMenu(userProfile.getUserRole(), topicBy);
 										for(viewAction in menuViewInfos) {
-											if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 											String linkView = uicomponent.getActionViewInfoUser(viewAction, topicBy) ;
-											String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-											if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-												itemLabelView = itemLabelView + " " + viewTopicBy ;
-											}
+											String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction).replace("{0}", viewTopicBy);
 										%>
 											<li onclick="$linkView">
 												<a href="javaScript:void(0)">$itemLabelView</a>

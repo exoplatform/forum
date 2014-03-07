@@ -1,8 +1,8 @@
 <%
+	import org.exoplatform.forum.ForumUtils;
   List moderators = uicomponent.getModeratorsForum() ;
   int total = moderators.size();
   int i = 0;
-  String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div class="uiForumModerator uiBox uiCollapExpand" id="uicomponent.id">
   <h5 class="title">
@@ -21,13 +21,10 @@
         <a href="javaScript:void(0)">&nbsp;${userView}</a>
         <ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
       <%
+      String[] menuViewInfos = ForumUtils.getUserActionsMenu(uicomponent.getUserRole(), moderator);
       for(viewAction in menuViewInfos) {
-        if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
         String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
-        String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-        if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-          itemLabelView = itemLabelView + " " + userView ;
-        }
+        String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction).replace("{0}", userView);
       %>
           <li onclick="$linkView">
             <a href="javaScript:void(0)">$itemLabelView</a>

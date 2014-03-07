@@ -611,7 +611,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       Forum forum = uiTopicContainer.getForum();
       String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
       UIForumForm forumForm = uiTopicContainer.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
-      if (uiTopicContainer.userProfile.getUserRole() == 1){
+      if (uiTopicContainer.userProfile.getUserRole() == UserProfile.MODERATOR){
         forumForm.setMode(true);
       }
       if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiTopicContainer.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {

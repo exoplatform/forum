@@ -111,7 +111,7 @@ public class UserHelper {
             else errorUser.append(", ").append(str);
           }
         } else {// user
-          if ((getUserHandler().findUserByName(str) == null)) {
+          if ((getUserHandler().findUserByName(str, UserStatus.ENABLED) == null)) {
             if (errorUser.length() == 0) errorUser.append(str);
             else errorUser.append(", ").append(str);
           }

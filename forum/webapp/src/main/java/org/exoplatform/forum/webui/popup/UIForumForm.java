@@ -500,6 +500,9 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     if (! boxInput.isChecked()) {
       return;
     }
+    if (isMode()) {
+      moderators = ForumUtils.unSplitForForum(forum.getModerators());
+    }
     Set<String> listModerator = new HashSet<String>();
     if (!ForumUtils.isEmpty(moderators)) {
       String[] moderators_ = ForumUtils.splitForForum(moderators);
@@ -523,7 +526,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumForm forumForm = event.getSource();
       forumForm.id = Integer.parseInt(id);
-      if (forumForm.id == 1) {
+      if (forumForm.id == 1 && !forumForm.isMode) {
         UIFormInputWithActions moderationOptions = forumForm.getChildById(FIELD_MODERATOROPTION_FORM);
         UIPermissionPanel permissionTab = forumForm.getChildById(PERMISSION_TAB);
         String moderators = permissionTab.getOwnersByPermission(MODERATOR);

@@ -15,7 +15,6 @@
 	String viewNewMember = uicomponent.getScreenName(newMember);
 	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline());
 	String userView;
-	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div id="$uicomponent.id" class="uiCategoryInfo">
 	<table id="UIListUsers" class="uiGrid table no-border-cell rounded-corners-bottom table-striped uiCollapExpand">
@@ -43,13 +42,10 @@
 							<a href="javaScript:void(0)">${userView}</a>
 							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 								<%
+								String[] menuViewInfos = ForumUtils.getUserActionsMenu(userProfile.getUserRole(), user);
 								for(viewAction in menuViewInfos) {
-									if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 									String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
-									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-									if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-										itemLabelView = itemLabelView + " " + userView ;
-									}
+									String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction).replace("{0}", userView);
 								%>
 									<li onclick="$linkView">
 										<a href="javaScript:void(0)">$itemLabelView</a>
@@ -80,13 +76,10 @@
 							<a href="javaScript:void(0)" class="UserMenuInfo">$viewNewMember</a>
 							<ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
 								<%
+									String[] menuViewInfos = ForumUtils.getUserActionsMenu(userProfile.getUserRole(), newMember);
 									for(viewAction in menuViewInfos) {
-										if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 										String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
-										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-										if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-											itemLabelView = itemLabelView + " " + viewNewMember ;
-										}
+										String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction).replace("{0}", viewNewMember);
 								%>
 									<li onclick="$linkView">
 										<a href="javaScript:void(0)">$itemLabelView</a>

@@ -126,11 +126,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
       @EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
       
-      @EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
-      @EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
-      @EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
       @EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
-      @EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
       @EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
       @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
       @EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
@@ -542,6 +538,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     } catch (Exception e) {
       log.debug("Failed to init topic page: " + e.getMessage(), e);
     }
+  }
+
+  protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) {
+    List<String> actions = new ArrayList<String>();
+    if(userProfile.getUserRole() < 3 ) {
+      if(!userProfile.getUserId().equals(owner.getUserId())) {
+        actions.add("Quote");
+        if(!owner.isDisabled()){
+          actions.add("PrivatePost");
+        }
+      }
+      if (!isFirstPost && (actions.isEmpty() || isModerator())) {
+        actions.add("Delete");
+        actions.add("Edit");
+      }
+    }
+    //
+    return actions;
   }
 
   protected boolean getIsModeratePost() {
@@ -1440,6 +1454,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       topicCreatedByUser.setUserId(userId);
     }
   }
+
   private String getTitle(String title, WebuiRequestContext context) {
     String strRe = context.getApplicationResourceBundle().getString("UIPostForm.label.ReUser")+": ";
     while (title.indexOf(strRe.trim()) == 0) {
@@ -1717,21 +1732,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
   
   protected String getMenuUser(UserProfile userInfo) throws Exception {
-    String editByScreeName = userInfo.getScreenName();
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     StringBuilder builder = new StringBuilder("<ul class=\"dropdown-menu uiUserMenuInfo dropdownArrowTop\">");
-
-    String[] menuViewInfos = new String[] { "ViewPublicUserInfo", "PrivateMessage", "ViewPostedByUser", "ViewThreadByUser" };
+    //
+    String[] menuViewInfos = ForumUtils.getUserActionsMenu(getUserProfile().getUserRole(), userInfo.getUserId());
+    //
     for (int i = 0; i < menuViewInfos.length; i++) {
       String viewAction = menuViewInfos[i];
-      if ((getUserProfile().getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) {
-        continue;
-      }
-      String itemLabelView = WebUIUtils.getLabel(null, "UITopicDetail.action." + viewAction);
-      if (!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-        itemLabelView = itemLabelView + " " + editByScreeName;
-      }
+      String action = forumPortlet.getPortletLink(viewAction, userInfo.getUserId());
+      String itemLabelView = WebUIUtils.getLabel(null, "UITopicDetail.action." + viewAction).replace("{0}", userInfo.getScreenName());
 
-      builder.append("<li onclick=\"").append(event(viewAction, userInfo.getUserId())).append("\">")
+      builder.append("<li onclick=\"").append(action).append("\">")
              .append("  <a href=\"javaScript:void(0)\">").append(itemLabelView).append("</a>")
              .append("</li>");
     }
