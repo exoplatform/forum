@@ -17,7 +17,7 @@
 package org.exoplatform.faq.service;
 
 public interface AnswerEventLifeCycle {
-	
+
   public void saveQuestion(Question question, boolean isNew);
 
   public void saveAnswer(String questionId, Answer answer, boolean isNew);
