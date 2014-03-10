@@ -22,7 +22,6 @@ import org.exoplatform.faq.service.ExtendedAnswerEventLifeCycle;
 
 public abstract class AnswerEventListener extends BaseComponentPlugin implements ExtendedAnswerEventLifeCycle {
 	
-  @Override
   public void moveQuestions(List<String> questions, String catId) {
   }
 }
