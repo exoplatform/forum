@@ -50,6 +50,37 @@ public class UIPollRadioBoxInput extends UIFormRadioBoxInput {
     }
 
     int index = 0;
+      SelectItemOption<String> si1 = options.get(index);
+      w.write("<tr>\n");
+      w.write("  <td>\n");
+      w.write("    <label class=\"uiRadio\" for=\"" + getName() + "\">\n");
+      w.write("      <input class='radio' checked type='radio'");
+      if (readonly_){
+        w.write(" readonly ");
+      }
+      if (isDisabled()){
+        w.write(" disabled ");
+      }
+      w.write(" name='");
+      w.write(getName());
+      w.write("'");
+      w.write(" value='");
+      w.write(si1.getValue());
+      w.write("'/>\n");
+
+      w.write("     <span>");
+      String label1 = si1.getLabel();
+      try {
+        label1 = res.getString(getId() + ".label." + si1.getLabel());
+      } catch (MissingResourceException e) {}
+      w.write(label1);
+      w.write("      </span>\n");
+      w.write("    </label>\n");
+
+      w.write("  </td>\n");
+      w.write("</tr>\n");
+      index++ ;
+      
     for (int i = index; i < options.size(); i++) {
       SelectItemOption<String> si = options.get(i);
       String checked = "";
