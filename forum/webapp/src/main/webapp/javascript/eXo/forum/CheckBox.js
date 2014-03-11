@@ -35,7 +35,7 @@
     },
     checkAll : function(e) {
       eXo.forum.UIForumPortlet.checkAll(this);
-      var rows = $(this).parents('table').find('tbody:first').find('tr');
+      var rows = $(this).parents('table:first').find('tbody:first').find('tr');
       if (this.checked) {
         rows.addClass('selectedItem');
       } else {
