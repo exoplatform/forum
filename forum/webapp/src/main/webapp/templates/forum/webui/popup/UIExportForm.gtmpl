@@ -2,6 +2,10 @@
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.ForumUtils;
+
+uicomponent.initJavaScripts();
+
 %>
 <div class="uiFormForum $uicomponent.id uiExportForm">
 	<% uiform.begin() %>

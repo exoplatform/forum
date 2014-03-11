@@ -180,7 +180,7 @@
     },
 
     checkAll : function(obj) {
-      var table = $(obj).parents('table');
+      var table = $(obj).parents('table:first');
       var tbody = table.find('tbody');
       var checkboxes = tbody.find('input:checkbox');
       var len = checkboxes.length;
