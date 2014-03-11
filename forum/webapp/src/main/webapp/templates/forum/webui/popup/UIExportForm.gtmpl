@@ -2,6 +2,14 @@
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.ForumUtils;
+
+//add script
+String [] scripts = [
+           "eXo.forum.CheckBox.init('"+uicomponent.id+"');",
+           ];
+ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
+
 %>
 <div class="uiFormForum $uicomponent.id uiExportForm">
 	<% uiform.begin() %>
