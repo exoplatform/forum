@@ -271,8 +271,6 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
   }
   
   protected void initJavaScripts() {
-    List<String> scripts = new ArrayList<String>();
-    scripts.add("eXo.forum.CheckBox.init('"+getId()+"');");
-    ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts.toArray(new String[]{}));
+    ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", new String[]{"eXo.forum.CheckBox.init('"+getId()+"');"});
   }
 }
