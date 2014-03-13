@@ -269,4 +269,10 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       portlet.cancelAction();
     }
   }
+  
+  protected void initJavaScripts() {
+    List<String> scripts = new ArrayList<String>();
+    scripts.add("eXo.forum.CheckBox.init('"+getId()+"');");
+    ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts.toArray(new String[]{}));
+  }
 }
