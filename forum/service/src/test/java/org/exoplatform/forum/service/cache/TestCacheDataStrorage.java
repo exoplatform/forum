@@ -215,6 +215,8 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     //
     topicSummary = cacheDataStorage.getTopicSummary(topic.getPath());
     assertTrue(topicSummary.getIsPoll());
+    //
+    cacheDataStorage.removeCategory(categoryId);
   }
   
   private void saveHasPoll(String topicPath) throws Exception {
