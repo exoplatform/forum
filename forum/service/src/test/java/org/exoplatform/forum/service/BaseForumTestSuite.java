@@ -22,6 +22,7 @@ import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.search.DiscussionSearchConnectorTestCase;
 import org.exoplatform.forum.service.cache.TestCacheDataStrorage;
 import org.exoplatform.forum.service.impl.JCRDataStorageTestCase;
+import org.exoplatform.forum.service.impl.TestForumEventListener;
 import org.exoplatform.forum.service.upgrade.ForumServiceUpdaterTestCase;
 import org.exoplatform.forum.service.ws.test.ForumWebserviceTestCase;
 import org.junit.AfterClass;
@@ -42,6 +43,7 @@ import org.junit.runners.Suite.SuiteClasses;
   TestCacheDataStrorage.class,
   ForumServiceUpdaterTestCase.class,
   ForumWebserviceTestCase.class,
+  TestForumEventListener.class,
   DiscussionSearchConnectorTestCase.class
 })
 @ConfigTestCase(BaseForumServiceTestCase.class)
