@@ -762,24 +762,42 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   /**
-   * {@inheritDoc}
+   * @deprecated use {@link #movePost(String[], String, boolean, String, String)}
+   * Will remove on version 4.0.6
    */
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     List<String> postPaths = new ArrayList<String>();
-    List<String> srcPostActivityIds = new ArrayList<String>();
     for (Post p : posts) {
       postPaths.add(p.getPath());
+    }
+    movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
+    List<Post> posts = new ArrayList<Post>();
+    List<String> srcPostActivityIds = new ArrayList<String>();
+    for (int i = 0; i < postPaths.length; i++) {
+      Post p = storage.getPost(Utils.getCategoryId(postPaths[i]), Utils.getForumId(postPaths[i]),
+                               Utils.getTopicId(postPaths[i]), Utils.getPostId(postPaths[i]));
+      posts.add(p);
       srcPostActivityIds.add(storage.getActivityIdForOwner(p.getPath()));
     }
-    storage.movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, isCreatNewTopic, mailContent, link);
-    CacheUserProfile.clearCache();
+    //
+    storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+    //
     for (ForumEventLifeCycle f : listeners_) {
-    	try {
-    		f.movePost(posts,srcPostActivityIds,destTopicPath);
-    		} catch (Exception e) {
-    			log.debug("Failed to run function movePost in the class ForumEventLifeCycle. ", e);
-        }
+      try {
+        f.movePost(posts, srcPostActivityIds, destTopicPath);
+      } catch (Exception e) {
+        log.warn("Failed to run function movePost in the class ForumEventLifeCycle. ");
+        log.debug(e.getMessage(), e);
+      }
     }
+
+    CacheUserProfile.clearCache();
   }
 
   /**
