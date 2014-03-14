@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum</artifactId>
-  <version>4.0.5</version>
+  <version>4.0.x-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Forum</name>
   <description>eXo Forum manages forum, answer and poll.</description>
@@ -27,7 +27,7 @@
   <scm>
     <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
     <developerConnection>scm:git:git@github.com:exoplatform/forum.git</developerConnection>
-    <tag>4.0.5</tag>
+    <tag>HEAD</tag>
     <url>http://fisheye.exoplatform.org/browse/forum</url>
   </scm>
   <properties>
