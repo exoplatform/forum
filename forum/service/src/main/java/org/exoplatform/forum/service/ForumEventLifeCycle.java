@@ -67,15 +67,6 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void moveTopic(Topic topic, String toCategoryName, String toForumName);
-  
-  /**
-   * This will be call after moving posts to other topic
-   * 	+ Add new comment of activity's post for new destination topic
-   * 	+ Remove comment of activity's post for source topic
-   * @param post
-   * @param desTopicPath
-   */
-  public void movePost(List <Post> posts, List<String> srcPostActivityIds, String desTopicPath);
 
   /**
    * This will be call after merge two topics into new topic.
