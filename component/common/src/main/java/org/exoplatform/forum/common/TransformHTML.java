@@ -86,6 +86,7 @@ public class TransformHTML {
     if (s.length() > 500)
       s = s.substring(0, 500);
     s = s.replaceAll("&nbsp;", SPACE).replaceAll("<br/>", SPACE).replaceAll("( \\s*)", SPACE);
+    s = s.replace("'", "&#39;").replace("\"", "&#34;");
     s = cleanHtmlCode(s, bbcs);
     s = removeCharterStrange(s);
     return s.trim();
@@ -139,26 +140,28 @@ public class TransformHTML {
   }
 
   public static String enCodeHTMLContent(String message) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder builder = new StringBuilder();
     for (int j = 0; j < message.length(); j++) {
       char c = message.charAt(j);
       if ((int) c == 9) {
-        buffer.append("&nbsp; &nbsp; ");
+        builder.append("&nbsp; &nbsp; ");
       } else if ((int) c == 10) {
-        buffer.append("<br/>");
+        builder.append("<br/>");
       } else if ((int) c == 60) {
-        buffer.append("&lt;");
+        builder.append("&lt;");
       } else if ((int) c == 62) {
-        buffer.append("&gt;");
+        builder.append("&gt;");
       } else if (c == 39) {
-        buffer.append("&#39;");
+        builder.append("&#39;");
       } else if (c == '&') {
-        buffer.append("&amp;");
+        builder.append("&amp;");
+      } else if (c == '"') {
+        builder.append("&quot;");
       } else {
-        buffer.append(c);
+        builder.append(c);
       }
     }
-    return buffer.toString();
+    return builder.toString();
   }
 
   public static String enCodeViewSignature(String s) {

@@ -143,13 +143,7 @@ public class BBCodeRenderer implements Renderer {
         clsIndex = markup.indexOf(end, tagIndex);
         str = markup.substring(tagIndex + start.length(), clsIndex);
         option = str.substring(0, str.indexOf("]"));
-        if (option.indexOf("\"") == 0)
-          option = option.replaceAll("\"", "");
-        if (option.indexOf("'") == 0)
-          option = option.replaceAll("'", "");
-        if (option.indexOf("&quot;") == 0)
-          option = option.replaceAll("&quot;", "");
-        option = option.trim();
+        option = option.replaceAll("\"", "").replaceAll("'", "").replaceAll("&quot;", "").trim();
         param = str.substring(str.indexOf("]") + 1);
         while (bbc.equals("CODE") && (param.indexOf("<br") >= 0)) {
           param = param.replaceAll("<br\\s*\\/?>", "\n");
