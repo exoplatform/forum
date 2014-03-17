@@ -694,6 +694,7 @@
 											String answerId = answer.getId();
 									%>
 									<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
+									<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
 										<div class="moreAction">
 											<div class="pull-right uiDropdownWithIcon dropdown">
 												<button data-toggle="dropdown" class="btn" type="button">
@@ -702,8 +703,6 @@
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 												</button>
 												<!--	Begin answers popup menu	-->
-
-												<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
 												<ul class="dropdown-menu">
 													<li>
 														<a href="javascript:void(0);" onclick="<%=uicomponent.event("EditAnswer", answer.getId())%>">
@@ -749,13 +748,12 @@
 														</a>
 													</li>
 												</ul>
-												<% } %>
 												<!--	end answers popup menu	-->
 											</div>
 										</div><!-- end moreAction of answers -->
-
+										<% } %>
 										<div class="responseItem">
-								 		<!-- View user who answered quesetion	-->
+								 		<!-- View user who answered question	-->
 								 			<div class="avatarXSmall pull-left">
 									 <% if(uicomponent.faqSetting_.isEnableViewAvatar()) {%>
 												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>" >
@@ -896,7 +894,7 @@
 													</a>
 												</li>
 												<li>
-													<a class="ItemIcon Delete confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+													<a class="confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 														 <i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 													</a>
 												</li>
