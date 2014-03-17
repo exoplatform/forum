@@ -1767,6 +1767,12 @@ public class CachedDataStorage implements DataStorage, Startable {
     miscData.clearCache();
   }
 
+  public void processEnabledUser(String userName, String email, boolean isEnabled) {
+    storage.processEnabledUser(userName, email, isEnabled);
+    //
+    clearAllForumCache();
+  }
+
   public void calculateDeletedUser(String userName) throws Exception {
     storage.calculateDeletedUser(userName);
     //

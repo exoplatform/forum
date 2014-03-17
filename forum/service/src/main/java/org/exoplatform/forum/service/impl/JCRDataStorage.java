@@ -4717,10 +4717,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public JCRPageList getPageListUserProfile() throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node userProfileNode = getUserProfileHome(sProvider);
-      NodeIterator iterator = userProfileNode.getNodes();
-      JCRPageList pageList = new ForumPageList(iterator, 10, userProfileNode.getPath(), false);
-      return pageList;
+      Node userProfileHome = getUserProfileHome(sProvider);
+      QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
+      StringBuilder strQuery = jcrPathLikeAndNotLike(EXO_FORUM_USER_PROFILE, userProfileHome.getPath());
+      strQuery.append(" AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ").append(EXO_IS_DISABLED).append("<>'true')");
+      
+      Query query = qm.createQuery(strQuery.toString(), Query.SQL);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      return new ForumPageList(iter, 10, strQuery.toString(), true);
     } catch (Exception e) {
       return null;
     }
@@ -4731,13 +4736,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node userProfileHome = getUserProfileHome(sProvider);
       QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(userProfileHome.getPath()).append("/element(*,").append(EXO_FORUM_USER_PROFILE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
-      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      StringBuilder strQuery = jcrPathLikeAndNotLike(EXO_FORUM_USER_PROFILE, userProfileHome.getPath());
+      strQuery.append(" AND (").append(EXO_USER_ID).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_FIRST_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_LAST_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_FULL_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_EMAIL).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_USER_TITLE).append(" LIKE '%").append(userSearch).append("%'")
+              .append(") AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ").append(EXO_IS_DISABLED).append("<>'true')");
+
+      Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
-      JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
-      return pagelist;
+      return new ForumPageList(iter, 10, strQuery.toString(), true);
     } catch (Exception e) {
       return null;
     }
@@ -5008,8 +5019,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return profileHome.getNode(userName);
     } catch (PathNotFoundException e) {
-      return profileHome.getNode(Utils.USER_PROFILE_DELETED).getNode(userName);
-    } catch (Exception e) {
+      if (profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
+        Node deletedHome = profileHome.getNode(Utils.USER_PROFILE_DELETED);
+        return deletedHome.getNode(userName);
+      }
       throw e;
     }
   }
@@ -5047,6 +5060,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
       userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE));
       userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
+      userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
 
     } catch (PathNotFoundException e) {
       userProfile.setUserId(userName);
@@ -5091,6 +5105,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setLastName(reader.string(EXO_LAST_NAME, ""));
     userProfile.setFullName(reader.string(EXO_FULL_NAME, ""));
     userProfile.setEmail(reader.string(EXO_EMAIL, ""));
+    userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
     return userProfile;
   }
 
@@ -5189,6 +5204,25 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setScreenName(getScreenName(userName, userProfileNode));
     userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
     userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
+    userProfile.setNewMessage(reader.l(EXO_NEW_MESSAGE));
+    userProfile.setTimeZone(reader.d(EXO_TIME_ZONE));
+    userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT, ""));
+    userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT, ""));
+    userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, ""));
+    userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST));
+    userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC));
+    userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
+    userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
+    if (userProfile.getIsBanned()) {
+      if (userProfileNode.hasProperty(EXO_BAN_UNTIL)) {
+        userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
+        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+          userProfileNode.setProperty(EXO_IS_BANNED, false);
+          userProfileNode.save();
+          userProfile.setIsBanned(false);
+        }
+      }
+    }
     userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
     if (userProfile.getTotalPost() > 0) {
       userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
@@ -5197,7 +5231,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
     if (userProfile.getIsDisplaySignature())
       userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
-    userProfile.setIsBanned(reader.bool(ForumNodeTypes.EXO_IS_BANNED));
     
     return userProfile;
   }
@@ -8196,6 +8229,36 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       return false;
     }
     return true;
+  }
+
+  /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.DataStorage#processEnabledUser(java.lang.String, java.lang.String, boolean)
+   */
+  @Override
+  public void processEnabledUser(String userName, String email, boolean isEnabled) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    //
+    if (!CommonUtils.isEmpty(userName)) {
+      processUserProfile(sProvider, userName, isEnabled);
+    }
+  }
+  
+  private void processUserProfile(SessionProvider sProvider, String userName, boolean isEnabled) {
+    try {
+      Node profileHome = getUserProfileHome(sProvider);
+      Node profileNode = profileHome.getNode(userName);
+      if (!isEnabled) {
+        if(profileNode.canAddMixin(EXO_DISABLED)) {
+          profileNode.addMixin(EXO_DISABLED);
+          profileNode.setProperty(EXO_IS_DISABLED, true);
+        }
+      } else {
+        profileNode.removeMixin(EXO_DISABLED);
+      }
+      profileHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Process to to update status disabled/enabled of used %s is unsuccessfully.", userName), e);
+    }
   }
 
   public void calculateDeletedUser(String userName) throws Exception {

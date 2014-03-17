@@ -440,6 +440,16 @@ public interface DataStorage {
 
   public boolean deleteUserProfile(String userId) throws Exception;
 
+  /**
+   * Removes the watches for specified user or mail when user or owner's mail has been updated the status as Disabled or Enabled status.
+   * 
+   * @param userName The userName of user.
+   * @param email The email of user.
+   * @param isEnabled The status of user
+   * @since 4.1.x
+   */
+  public void processEnabledUser(String userName, String email, boolean isEnabled);
+
   public void calculateDeletedUser(String userName) throws Exception;
   
   public void calculateDeletedGroup(String groupId, String groupName) throws Exception;

@@ -508,7 +508,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       List<String> list = ForumServiceUtils.getUserPermission(moderators_);
       for (String string : list) {
         user = UserHelper.getUserByUserId(string);
-        if (user != null) {
+        if (user != null && user.isEnabled()) {
           email = user.getEmail();
           listModerator.add(email);
         }

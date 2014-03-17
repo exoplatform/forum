@@ -34,6 +34,7 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
+import org.exoplatform.services.organization.UserStatus;
 import org.exoplatform.services.organization.impl.GroupImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -173,7 +174,22 @@ public class UserHelper {
   public static User getUserByUserId(String userId) throws Exception {
     return getUserHandler().findUserByName(userId) ;
   }
-
+  
+  /**
+   * Check user disable on system or not.
+   *  
+   * @param userName The user name 
+   * @return
+   */
+  public static boolean isDisabledUser(String userName) {
+    try {
+      User user = getUserByUserId(userName);
+      return (user == null || !user.isEnabled());
+    } catch (Exception e) {
+      return true;
+    }
+  }
+  
   public static String[] getUserGroups() throws Exception {
     ConversationState state = ConversationState.getCurrent();
     Set<String> groups = state.getIdentity().getGroups();
@@ -258,6 +274,42 @@ public class UserHelper {
     } catch (Exception e) {
       return null;
     }
+  }
+  
+  /**
+   * Get the display name of user or group or membership
+   * 
+   * @param owner The id of user or group or membership
+   * @return The String value
+   * @throws Exception
+   */
+  public static String getDisplayNameOfOwner(String owner) throws Exception {
+    if (CommonUtils.isEmpty(owner) == true) {
+      return CommonUtils.EMPTY_STR;
+    }
+
+    if (hasGroupIdAndMembershipId(owner)) {
+      if (owner.contains(CommonUtils.COLON)) {
+        String membership = owner.substring(0, owner.indexOf(CommonUtils.COLON));
+        String groupId = owner.substring(membership.length() + 1);
+        Group group = getGroupHandler().findGroupById(groupId);
+        if (group != null) {
+          return membership + " in " + group.getGroupName();
+        }
+      }
+      Group group = getGroupHandler().findGroupById(owner);
+      return (group != null) ? group.getGroupName() : CommonUtils.EMPTY_STR;
+    } else {
+      User user = getUserHandler().findUserByName(owner, UserStatus.BOTH);
+      if (user != null) {
+        String displayName = user.getDisplayName();
+        if (CommonUtils.isEmpty(displayName) || owner.equals(displayName)) {
+          displayName = user.getFirstName() + CommonUtils.SPACE + user.getLastName();
+        }
+        return displayName;
+      }
+    }
+    return CommonUtils.EMPTY_STR;
   }
 
   /**

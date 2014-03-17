@@ -25,6 +25,7 @@ import java.util.Set;
 
 import javax.jcr.Node;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
@@ -209,17 +210,39 @@ public class ForumServiceUtils {
                                                                                        .getComponentInstanceOfType(OrganizationService.class);
     Set<String> users = new HashSet<String>();
     for (int j = 0; j < userGroupMembership.length; j++) {
-      String str = userGroupMembership[j].trim();
-      if (isMembershipExpression(str)) {
-        users.addAll(getUserByMembershipType(organizationService, str));
-      } else if (isGroupExpression(str)) {
-        users.addAll(getUserByGroupId(organizationService.getUserHandler(), str));
-      } else {
-        users.add(str);
+      String inputValue = userGroupMembership[j].trim();
+      if (isMembershipExpression(inputValue)) {
+        users.addAll(getUserByMembershipType(organizationService, inputValue));
+      } else if (isGroupExpression(inputValue)) {
+        users.addAll(getUserByGroupId(organizationService.getUserHandler(), inputValue));
+      } else if (!isDisableUser(inputValue)) {
+        users.add(inputValue);
       }
     }
     storeInCache(userGroupMembership, new ArrayList<String>(users));
     return new ArrayList<String>(users);
+  }
+
+  /**
+   * Check user disable on forum or not.
+   * 
+   * @param useId The user id of user
+   * @return
+   */
+  public static boolean isDisableUser(String useId) {
+    try {
+      UserProfile profile = CommonsUtils.getService(ForumService.class).getQuickProfile(useId);
+      return profile == null || profile.isDisabled();
+    } catch (Exception e) {
+      return true;
+    }
+  }
+  
+  /**
+   * Clear the ForumPermissionsUsers cache
+   */
+  public static void clearCache() {
+    getCache().clearCache();
   }
 
   /**
