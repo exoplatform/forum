@@ -64,6 +64,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.commons.utils.XPathUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -5348,13 +5349,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node profileNode = userProfileNode.getNode(userName);
       QueryManager qm = profileNode.getSession().getWorkspace().getQueryManager();
-      String pathQuery = JCR_ROOT + profileNode.getPath() + "/element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
+      String pathQuery = JCR_ROOT + XPathUtils.escapeIllegalXPathName(profileNode.getPath()) + "/element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
       Query query = qm.createQuery(pathQuery, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
       return pagelist;
     } catch (Exception e) {
+      LOG.error("Fail to get private message.", e);
       return null;
     }
   }
