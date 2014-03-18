@@ -140,28 +140,28 @@ public class TransformHTML {
   }
 
   public static String enCodeHTMLContent(String message) {
-    StringBuilder builder = new StringBuilder();
+    StringBuilder buffer = new StringBuilder();
     for (int j = 0; j < message.length(); j++) {
       char c = message.charAt(j);
       if ((int) c == 9) {
-        builder.append("&nbsp; &nbsp; ");
+        buffer.append("&nbsp; &nbsp; ");
       } else if ((int) c == 10) {
-        builder.append("<br/>");
+        buffer.append("<br/>");
       } else if ((int) c == 60) {
-        builder.append("&lt;");
+        buffer.append("&lt;");
       } else if ((int) c == 62) {
-        builder.append("&gt;");
+        buffer.append("&gt;");
       } else if (c == 39) {
-        builder.append("&#39;");
+        buffer.append("&#39;");
       } else if (c == '&') {
-        builder.append("&amp;");
+        buffer.append("&amp;");
       } else if (c == '"') {
-        builder.append("&quot;");
+        buffer.append("&quot;");
       } else {
-        builder.append(c);
+        buffer.append(c);
       }
     }
-    return builder.toString();
+    return buffer.toString();
   }
 
   public static String enCodeViewSignature(String s) {
