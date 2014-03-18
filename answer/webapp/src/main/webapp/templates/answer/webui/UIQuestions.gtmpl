@@ -372,7 +372,7 @@
 													}
 												%>
 														<li>
-															<a	href="$link">
+															<a	href="javascript:void(0);" onclick="$link">
 																<i class="$SendToFriend uiIconAnsLightGray" ></i><%=_ctx.appRes("UIQuestions.action.SendQuestion")%>
 															</a>
 														</li>
@@ -415,7 +415,7 @@
 											<%} %>
 											</div><!-- end languageContainer -->
 											<h6>
-												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
+												<a class="theContent questionName" href="javascript:void(0);" onclick="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h6>
 
 										</div><!-- end actionBar -->
@@ -526,7 +526,7 @@
 											<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
 												<!-- action Sort answer by vote -->
 												<p class="sortAnswer">
-													<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+													<a	href="javascript:void(0);" onclick="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
 														<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote");%>	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 												</p>
@@ -545,7 +545,7 @@
 												<% if(uicomponent.currentUser_ != null) { %>
 													<div class="questionAction">
 													<% if(question.isApproved() || uicomponent.canEditQuestion){ %>
-														<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+														<a href="javascript:void(0);" onclick="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
 													<% }
 														 if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())) {
 													%>
