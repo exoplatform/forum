@@ -802,6 +802,13 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getForumId(String path) {
+    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.FORUM) != -1) {
+      String categoryId = getCategoryId(path);
+      if (!isEmpty(categoryId)) {
+        path = path.substring(path.lastIndexOf(categoryId) + categoryId.length());
+        return getForumId(path);
+      }
+    }
     return getIdByType(path, FORUM);
   }
 

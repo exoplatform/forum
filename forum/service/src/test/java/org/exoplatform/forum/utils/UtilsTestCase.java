@@ -500,6 +500,8 @@ public class UtilsTestCase extends TestCase {
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00"));
     assertEquals("foruma77c1be27f000101712b773a1be93fc9",
                  Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
+    assertEquals(null, Utils.getForumId("forumCategorya77c1bd07f0001013c4096e6275324ea"));
+    assertEquals(null, Utils.getForumId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea"));
   }
 
   public void testGetForumPath() {

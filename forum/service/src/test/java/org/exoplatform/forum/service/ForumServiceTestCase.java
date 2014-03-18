@@ -338,6 +338,12 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.removeWatch(1, topicPath, "/" + values.get(0));
     watchs = forumService_.getWatchByUser("root");
     assertEquals(watchs.size(), 0);
+    // add watch for category
+    forumService_.addWatch(1, categoryId, values, USER_DEMO);
+    assertEquals(1, forumService_.getCategory(categoryId).getEmailNotification().length);
+    // remove watch
+    forumService_.removeWatch(1, categoryId, "/" + values.get(0 ));
+    assertEquals(0, forumService_.getCategory(categoryId).getEmailNotification().length);
   }
 
   public void testIpBan() throws Exception {

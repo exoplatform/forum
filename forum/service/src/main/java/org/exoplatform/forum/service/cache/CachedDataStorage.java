@@ -320,18 +320,16 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearWatchingItemCache(String watchingItemPath) throws Exception {
-    String categoryId = watchingItemPath.contains("/") ? watchingItemPath.substring(0, watchingItemPath.indexOf("/")) : watchingItemPath;
-    String forumId = watchingItemPath.contains("/" + Utils.FORUM) ? watchingItemPath.substring(watchingItemPath.indexOf("/" + Utils.FORUM) + 1) : null;
-    forumId = (!Utils.isEmpty(forumId) && forumId.contains("/")) ? forumId.substring(0, forumId.indexOf("/")) : forumId;
-    String topicId = watchingItemPath.contains(Utils.TOPIC) ? watchingItemPath.substring(watchingItemPath.indexOf(Utils.TOPIC)) : null;
-    
+    String categoryId = Utils.getCategoryId(watchingItemPath);
+    String forumId = Utils.getForumId(watchingItemPath);
+    String topicPath = Utils.getTopicPath(watchingItemPath);
     // Clear watching item data
-    if (!Utils.isEmpty(topicId)) {
-      clearTopicCache(categoryId + "/" + forumId + "/" + topicId);
+    if (!Utils.isEmpty(topicPath)) {
+      clearTopicCache(topicPath);
     } else if (!Utils.isEmpty(forumId)) {
-      forumData.remove(new ForumKey(categoryId, forumId));
+      clearForumCache(categoryId, forumId, false);
     } else {
-      categoryData.remove(new CategoryKey(categoryId));
+      clearCategoryCache(categoryId);
     }
   }
 
