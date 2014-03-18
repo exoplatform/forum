@@ -58,7 +58,7 @@
   
   ForumSendNotification.buildLink = function(type, alink) {
     var link = ForumSendNotification.i18n.goDirectly.replace('{0}', type);
-    link = link + ': <a style="color:#204AA0" href="' + alink + '">' + ForumSendNotification.i18n.clickHere + '</a>';
+    link = link + ': <a style="color:#204AA0" href="javascript:void(0);" onclick="' + alink + '">' + ForumSendNotification.i18n.clickHere + '</a>';
     return link;
   };
 
@@ -80,7 +80,7 @@
         msgBox.find('.nameMessage:first').html('<strong>' + i18n.privateMessage + '</strong>');
         var alink = $('#privateMessageLink');
         if (alink.exists()) {
-          msgBox.find('.link:first').html(component.buildLink(i18n.message, alink.attr('href')));
+          msgBox.find('.link:first').html(component.buildLink(i18n.message, alink.attr('onclick')));
         }
       }
       //

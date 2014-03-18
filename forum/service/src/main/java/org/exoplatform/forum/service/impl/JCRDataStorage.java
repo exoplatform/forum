@@ -1237,8 +1237,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       boolean isAdmin = getCachedDataStorage().isAdminRole(filter.userId());
-      if (isAdmin == false) {
-        sqlQuery.append(Utils.isEmpty(sqlQuery.toString()) ? "(" : " AND (")
+      if (!isAdmin) {
+        sqlQuery.append((sqlQuery.length() == 0) ? "(" : " AND (")
                 .append(Utils.getSQLQueryByProperty("", EXO_IS_CLOSED, "false"))
                 .append(" OR (")
                 .append(Utils.buildSQLByUserInfo(EXO_MODERATORS, UserHelper.getAllGroupAndMembershipOfUser(filter.userId())))
