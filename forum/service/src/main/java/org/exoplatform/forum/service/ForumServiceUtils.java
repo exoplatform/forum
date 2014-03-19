@@ -27,8 +27,8 @@ import javax.jcr.Node;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;
@@ -38,9 +38,8 @@ import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.MembershipHandler;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.UserHandler;
+import org.exoplatform.services.organization.UserStatus;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
 import org.exoplatform.services.security.MembershipEntry;
@@ -54,14 +53,13 @@ public class ForumServiceUtils {
   private static final String SLASH = "/".intern();
   
   /**
-   * 
    * Verify if a user match user, group, membership expressions
-   * @param userGroupMembership ist that may contain usernames or group names or membership expressions in the form MEMBERSHIPTYPE:GROUP
-   * @param userId username to match against the expressions
+   * 
+   * @param userGroupMembership is that may contain userNames or group names or membership expressions in the form MEMBERSHIPTYPE:GROUP
+   * @param userId userName to match against the expressions
    * @return true if the user match at least one of the expressions
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
   public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
     if (CommonUtils.isEmpty(userGroupMembership)) {
       return false;
@@ -69,8 +67,7 @@ public class ForumServiceUtils {
     IdentityRegistry identityRegistry = CommonUtils.getComponent(IdentityRegistry.class);
     Identity identity = identityRegistry.getIdentity(userId);
     if (identity == null) {
-      OrganizationService oService = CommonUtils.getComponent(OrganizationService.class);
-      Collection<Membership> memberships = oService.getMembershipHandler().findMembershipsByUser(userId);
+      Collection<Membership> memberships = UserHelper.findMembershipsByUser(userId);
       //
       List<MembershipEntry> entries = new ArrayList<MembershipEntry>();
       if (memberships != null) {
@@ -126,9 +123,9 @@ public class ForumServiceUtils {
     return ((expr.indexOf(SLASH) >= 0) && (expr.indexOf(COLON) >= 0));
   }
 
-  private static ListAccess<User> getUserByGroup(UserHandler userHandler, String group){
+  private static ListAccess<User> getUserByGroup(String group){
     try {
-      return userHandler.findUsersByGroupId(group);
+      return UserHelper.getUserHandler().findUsersByGroupId(group, UserStatus.ENABLED);
     } catch (Exception e) {
       return null;
     }
@@ -142,17 +139,16 @@ public class ForumServiceUtils {
    * @throws Exception
    */
   
-  private static List<String> getUserByMembershipType(OrganizationService organizationService, String memberShip) throws Exception {
+  private static List<String> getUserByMembershipType(String memberShip) throws Exception {
     List<String> users = getFromCache(new String[] { memberShip });
     if (users != null) {
       return users;
     }
     users = new ArrayList<String>();
     String[] array = memberShip.trim().split(COLON);
-    UserHandler userHandler = organizationService.getUserHandler();
     if (array[0].length() > 1) {
-      List<String> usersOfGroup = getUserByGroupId(userHandler, array[1]);
-      MembershipHandler membershipHandler = organizationService.getMembershipHandler();
+      List<String> usersOfGroup = getUserByGroupId(array[1]);
+      MembershipHandler membershipHandler = UserHelper.getMembershipHandler();
       for (String userName : usersOfGroup) {
         if (membershipHandler.findMembershipByUserGroupAndType(userName, array[1], array[0]) != null) {
           users.add(userName);
@@ -160,7 +156,7 @@ public class ForumServiceUtils {
       }
     } else {
       if (ANY.equals(array[0])) {
-        users.addAll(getUserByGroupId(userHandler, array[1]));
+        users.addAll(getUserByGroupId(array[1]));
       }
     }
     storeInCache(new String[] { memberShip }, users);
@@ -174,13 +170,13 @@ public class ForumServiceUtils {
    * @return list of users that mach at least one of the group id
    * @throws Exception
    */
-  private static List<String> getUserByGroupId(UserHandler userHandler, String groupId) throws Exception {
+  private static List<String> getUserByGroupId(String groupId) throws Exception {
     List<String> users = getFromCache(new String[]{groupId});
     if (users != null) {
       return users;
     }
     users = new ArrayList<String>();
-    ListAccess<User> pageList = getUserByGroup(userHandler, groupId);
+    ListAccess<User> pageList = getUserByGroup(groupId);
     if (pageList == null){
       return users;
     }
@@ -206,15 +202,13 @@ public class ForumServiceUtils {
     if (list != null) {
       return list;
     }
-    OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
-                                                                                       .getComponentInstanceOfType(OrganizationService.class);
     Set<String> users = new HashSet<String>();
     for (int j = 0; j < userGroupMembership.length; j++) {
       String inputValue = userGroupMembership[j].trim();
       if (isMembershipExpression(inputValue)) {
-        users.addAll(getUserByMembershipType(organizationService, inputValue));
+        users.addAll(getUserByMembershipType(inputValue));
       } else if (isGroupExpression(inputValue)) {
-        users.addAll(getUserByGroupId(organizationService.getUserHandler(), inputValue));
+        users.addAll(getUserByGroupId(inputValue));
       } else if (!isDisableUser(inputValue)) {
         users.add(inputValue);
       }
@@ -237,7 +231,7 @@ public class ForumServiceUtils {
       return true;
     }
   }
-  
+
   /**
    * Clear the ForumPermissionsUsers cache
    */
@@ -278,7 +272,7 @@ public class ForumServiceUtils {
   }
 
   private static ExoCache<Serializable, List<String>> getCache(){
-    CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
+    CacheService cacheService = CommonsUtils.getService(CacheService.class);
     return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
   }
 
@@ -295,7 +289,7 @@ public class ForumServiceUtils {
   }
 
   public static SessionManager getSessionManager() {
-    KSDataLocation location = (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
+    KSDataLocation location = CommonsUtils.getService(KSDataLocation.class);
     return location.getSessionManager();
   }
 }

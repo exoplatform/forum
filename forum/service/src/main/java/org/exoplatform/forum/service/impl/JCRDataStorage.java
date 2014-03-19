@@ -60,6 +60,7 @@ import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
@@ -8237,6 +8238,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   @Override
   public void processEnabledUser(String userName, String email, boolean isEnabled) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    if (!isEnabled && !CommonUtils.isEmpty(userName)) {
+      processWatched(sProvider, userName);
+    }
+    //
+    if (!isEnabled && !CommonUtils.isEmpty(email)) {
+      processForumNotifyEmail(sProvider, email);
+    }
     //
     if (!CommonUtils.isEmpty(userName)) {
       processUserProfile(sProvider, userName, isEnabled);
@@ -8258,6 +8266,108 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profileHome.getSession().save();
     } catch (Exception e) {
       logDebug(String.format("Process to to update status disabled/enabled of used %s is unsuccessfully.", userName), e);
+    }
+  }
+
+  /**
+   * Process remove userName and email, that watched by disabled user
+   * @param sProvider
+   * @param userName The userName of disabled user
+   */
+  private void processWatched(SessionProvider sProvider, String userName) {
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_FORUM_WATCHING);
+      sqlQuery.append(" WHERE ").append(EXO_USER_WATCHING).append("='").append(userName).append("'");
+      Query query = qm.createQuery(sqlQuery.toString(), Query.SQL);
+      NodeIterator iter = query.execute().getNodes();
+      while (iter.hasNext()) {
+        Node watchedNode = iter.nextNode();
+        updateWatchedProperty(watchedNode, userName);
+      }
+      categoryHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Removes UserName %s is unsuccessfully.", userName), e);
+    }
+  }
+
+  /**
+   * Process remove email on forum notify.
+   * 
+   * @param sProvider
+   * @param email The email of disabled user
+   */
+  private void processForumNotifyEmail(SessionProvider sProvider, String email) {
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      //
+      StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_FORUM);
+      sqlQuery.append(" WHERE (").append(EXO_NOTIFY_WHEN_ADD_TOPIC).append("='").append(email).append("' OR ")
+              .append(EXO_NOTIFY_WHEN_ADD_POST).append("='").append(email).append("')");
+      Query query = qm.createQuery(sqlQuery.toString(), Query.SQL);
+      NodeIterator iter = query.execute().getNodes();
+      //
+      while (iter.hasNext()) {
+        Node forumNode = iter.nextNode();
+        updateForumNotifyEmail(forumNode, email);
+      }
+
+      categoryHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Removes email %s is unsuccessfully.", email), e);
+    }
+  }
+
+  /**
+   * Update two properties of Forum, that contain email of disabled user 
+   * 
+   * @param forumNode
+   * @param email
+   */
+  private void updateForumNotifyEmail(Node forumNode, String email) {
+    try {
+      removeValueProperty(forumNode, EXO_NOTIFY_WHEN_ADD_TOPIC, email);
+      removeValueProperty(forumNode, EXO_NOTIFY_WHEN_ADD_POST, email);
+    } catch (Exception e) {
+      logDebug(String.format("Updated forum notify of email %s is unsuccessfully.", email), e);
+    }
+  }
+
+  /**
+   * Remove value of property
+   * 
+   * @param node The node want to update
+   * @param property The property change
+   * @param removeValue The value will remove
+   * @return
+   * @throws Exception
+   */
+  private int removeValueProperty(Node node, String property, String removeValue) throws Exception {
+    String[] values = new PropertyReader(node).strings(property, new String[] {});
+    int index = ArrayUtils.indexOf(values, removeValue);
+    if (index >= 0) {
+      node.setProperty(property, (String[]) ArrayUtils.remove(values, index));
+    }
+    return index;
+  }
+
+  /**
+   * Update watched properties of categories/forums/topics, that disabled user watched.
+   * 
+   * @param watchedNode
+   * @param userName
+   */
+  private void updateWatchedProperty(Node watchedNode, String userName) {
+    try {
+      int index = removeValueProperty(watchedNode, EXO_USER_WATCHING, userName);
+      if (index >= 0) {
+        String[] emails = new PropertyReader(watchedNode).strings(EXO_EMAIL_WATCHING, new String[] {});
+        watchedNode.setProperty(EXO_EMAIL_WATCHING, (String[]) ArrayUtils.remove(emails, index));
+      }
+    } catch (Exception e) {
+      logDebug(String.format("Updated watched user %s is unsuccessfully.", userName), e);
     }
   }
 
@@ -8284,7 +8394,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
 
-      List<String> list;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
         if (node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM) || node.isNodeType(EXO_TOPIC) || node.isNodeType(EXO_POST)) {
@@ -8294,21 +8403,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                 node.setProperty(strs[i], tempUserName);
               }
             } else {
-              PropertyReader reader = new PropertyReader(node);
-              list = reader.list(strs[i], new ArrayList<String>());
-              if (list.contains(userName)) {
-                if (strs[i].equals(EXO_USER_WATCHING)) {
-                  try {
-                    int t = list.indexOf(userName);
-                    List<String> list2 = reader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
-                    list2.remove(t);
-                    node.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
-                  } catch (Exception e) {
-                    LOG.debug("Failed to get email watching by user deleted.", e);
-                  }
-                }
-                list.remove(userName);
-                node.setProperty(strs[i], list.toArray(new String[list.size()]));
+              if (strs[i].equals(EXO_USER_WATCHING)) {
+                updateWatchedProperty(node, userName);
+              } else {
+                removeValueProperty(node, strs[i], userName);
               }
             }
           }
