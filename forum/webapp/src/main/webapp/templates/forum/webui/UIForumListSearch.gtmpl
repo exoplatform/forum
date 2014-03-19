@@ -20,7 +20,7 @@
 					<button class="btn btn-primary" type="button" onclick="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></button>
 				</div>
 				<span class="txtTitleResult"><strong><%=txtTitleResult%></strong></span>
-				<div class="pull-left">Items per page: <%uicomponent.renderChild(uicomponent.FIELD_DISPLAY_ITEM_SELECTBOX)%></div>
+				<div class="pull-left"><%=_ctx.appRes("UIForumListSearch.label.ItemsPerPage");%> <%uicomponent.renderChild(uicomponent.FIELD_DISPLAY_ITEM_SELECTBOX)%></div>
 			</caption>
 			<thead>
 				<tr>

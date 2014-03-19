@@ -602,20 +602,6 @@
     contextMenu.showMenu(elm, event);
   };
   
-  UIAnswersPortlet.setSelectboxOnchange = function (id) {
-    if (!$.browser.mozilla) return;
-    var select = $.fn.findId(id).find('select.selectbox:first');
-    if (select.exists()) {
-      select.attr('onchange', 
-          select.attr('onchange')
-                .replace('javascript:', 'javascript:eXo.answer.UIAnswersPortlet.setDisableSelectbox(this);'));
-    }
-  };
-  
-  UIAnswersPortlet.setDisableSelectbox = function (selectbox) {
-    selectbox.disabled = true;
-  };
-  
   UIAnswersPortlet.voteAnswerUpDown = function (imageId, isVote) {
     var obj = $.fn.findId(imageId);
     if (isVote) obj.css({'filter':' alpha(opacity: 100)', 'MozOpacity':1});
