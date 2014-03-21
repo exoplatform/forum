@@ -380,18 +380,25 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   private boolean isCanPostReply() throws Exception {
-    if (getUserProfile().getUserRole() == 3)
+    //
+    boolean isCanReply = (forum != null && !forum.getIsClosed() && !forum.getIsLock() &&
+                           topic != null && !topic.getIsClosed() && !topic.getIsLock() &&
+                           getUserProfile().getUserRole() != UserProfile.GUEST && !userProfile.isDisabled());
+    if(!isCanReply) {
       return false;
-    if (forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock())
-      return false;
-    if (getUserProfile().getIsBanned())
-      return false;
-    if (isMod)
+    }
+    //
+    if(isMod) {
       return true;
-    if (isIPBaned(getRemoteIP()))
+    }
+    //
+    isCanReply = (!userProfile.getIsBanned() && !isIPBaned(getRemoteIP()) &&
+                  !topic.getIsActive() && !topic.getIsActiveByForum() && topic.getIsWaiting()) ||
+                  (forum.getIsModerateTopic() && !topic.getIsApproved());
+    //
+    if(!isCanReply) {
       return false;
-    if (!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting())
-      return false;
+    }
     try {
       List<String> listUser = new ArrayList<String>();
       listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
@@ -402,7 +409,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
       }
     } catch (Exception e) {
-      log.error("Check can reply is fall, exception: ", e);
+      log.warn("Check can reply topic is unsuccessfully.");
+      log.debug(e.getMessage(), e);
     }
     return true;
   }
@@ -542,7 +550,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) {
     List<String> actions = new ArrayList<String>();
-    if(userProfile.getUserRole() < 3 ) {
+    if(getUserProfile().getUserRole() < 3 ) {
       if(!userProfile.getUserId().equals(owner.getUserId())) {
         actions.add("Quote");
         if(!owner.isDisabled()){
