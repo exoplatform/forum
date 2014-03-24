@@ -139,3 +139,5 @@ dp.SyntaxHighlighter = {
 		}
 	}
 };
+
+dp.SyntaxHighlighter.HighlightAll('code');
