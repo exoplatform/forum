@@ -33,6 +33,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
 public class WebUIUtils {
   private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
+  private static final String SCRIPT = "<script src=\"/forumResources/syntaxhighlighter/Scripts/SCRIPT_NAME\" type=\"text/javascript\"></script>";
 
   public static String getRemoteIP() {
     String remoteAddr = "";
@@ -92,6 +93,19 @@ public class WebUIUtils {
       }
     }
     return requireJS;
+  }
+  
+  static public String addScriptSyntaxhighlighter() {
+    StringBuilder scripts = new StringBuilder();
+    //
+    scripts.append(SCRIPT.replace("SCRIPT_NAME", "shCore.js"))
+           .append(SCRIPT.replace("SCRIPT_NAME", "shAutoloader.js"))
+           .append(SCRIPT.replace("SCRIPT_NAME", "shLegacy.js"))
+           .append(SCRIPT.replace("SCRIPT_NAME", "load_syntaxhighlighter.js"));
+    //
+    addScripts(new String[] { "SyntaxHighlighter.initLoader()", "SyntaxHighlighter.all()", "dp.SyntaxHighlighter.HighlightAll('code')" });
+    //
+    return scripts.toString();
   }
   
 }

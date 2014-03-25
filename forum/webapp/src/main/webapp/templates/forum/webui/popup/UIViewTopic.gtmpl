@@ -21,10 +21,7 @@
 	boolean isModeratePost = topic.getIsModeratePost() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
-<script type="text/javascript">
-	require(['/forumResources/syntaxhighlighter/Scripts/shCore.js']);
-	require(['/forumResources/syntaxhighlighter/Scripts/shAutoloader.js']);
-</script>
+
 <div class="uiTopicDetail resizable">
 <% uiform.begin() %>
 
@@ -37,7 +34,7 @@
 
   <div class="uiBox containerTopicDetail">
     <div style="padding: 10px; position:relative;">
-		<div class="divTable">
+			<div class="divTable">
 <!-- Start ContentContainer -->
     <%
     
@@ -103,9 +100,9 @@
         else alert = " " ;
     %>
     
-		<div class="contentTopicDetail clearfix divRow" id="$postId">
-  <!-- Start MemberContainer -->
-			<div class="memberContainer divCell">
+			<div class="contentTopicDetail clearfix divRow" id="$postId">
+	  <!-- Start MemberContainer -->
+				<div class="memberContainer divCell">
 			  
 			<%  String userSmile = "uiIconForumColorOffline";
 				String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner) ;
@@ -114,34 +111,33 @@
 				   titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
 				}
 			%>
-				
-				<span class="textTitleProfile">
-					<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
-				</span>
-				<div class="rank"><%=userInfo.getUserTitle();%></div>
+					<span class="textTitleProfile">
+						<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
+					</span>
+					<div class="rank"><%=userInfo.getUserTitle();%></div>
 				<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar(); 
 				  if(isDisplayAvatar) {
 				%>
-				<div class="avatarXLarge">
-					<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-				</div>
+					<div class="avatarXLarge">
+						<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+					</div>
 				<% } %>
 				
-				<div class="infoMember">
-					<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
+					<div class="infoMember">
+						<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
 				  <% long totalPost = userInfo.getTotalPost();
 					if(totalPost > 0) {
 					   Date lastPostOfUser = userInfo.getLastPostDate() ;
 					   String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
 				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
-					<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
+						<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+						<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
 				  <% } else {%>
-					<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+						<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 				  <% } 
 				   if(!ForumUtils.isEmpty(location)) {
 				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
+						<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
 				  <%} 
 					Date lastLogin = userInfo.getLastLoginDate();
 					String lastLoginUser = "" ;
@@ -149,10 +145,10 @@
 					  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
 					}
 				  %>
-					<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
+						<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
+					</div>
 				</div>
-			</div>
-  <!-- End MemberContainer -->
+  	<!-- End MemberContainer -->
   <!-- Start PostViewContainer -->
 			<div class="postViewContainer divCell">
 			  
@@ -163,22 +159,22 @@
 					</div>
 				</div>
 			  
-			<div class="postContentContainer">
+				<div class="postContentContainer">
 			<% 
-			boolean hasAttachment = false ;
-			if(attachments != null && attachments.size() > 0) hasAttachment = true;
-			if(isDisplayAvatar && !hasAttachment) { 
-			%>  
-			  <div class="postContent">
-			<% } else { %>
-			  <div class="postContentNote">
-			<% } %>
-				<div id="$idMessage" class="containerQuote">$message</div>
+				boolean hasAttachment = false ;
+				if(attachments != null && attachments.size() > 0) hasAttachment = true;
+				String clazz = "postContentNote";
+				if(isDisplayAvatar && !hasAttachment) { 
+				  	clazz="postContent";
+				}
+			%>
+		  	<div class="$clazz">
+					<div id="$idMessage" class="containerQuote">$message</div>
 			  </div>
 			
 			<!--- Start Attachment   -->
 			  
-			 <% if(hasAttachment) {%>
+			<% if(hasAttachment) {%>
 			<div class="attachmentContainer">
 				<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
 				
@@ -248,7 +244,6 @@
 			</div>
 			<% } %>
 			
-			
 			<!--- End Attachment   -->
 			  
 			  <%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
@@ -305,8 +300,8 @@
 	
 <%uiform.end()%>
 
-
 </div>
+<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>
 
 <div class="uiAction uiActionBorder">
 
