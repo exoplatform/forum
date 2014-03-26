@@ -206,7 +206,7 @@ public class UICategories extends BaseUIFAQForm {
     faqSetting.setIsAdmin(String.valueOf(isAdmin));
     List<Category> list = getFAQService().getSubCategories(categoryId, faqSetting, true, null);
     for (Category category : list) {
-      if (isAdmin) {
+      if (FAQUtils.hasPermission(category)) {
         listCate.add(category);
         categoryIds.put(category.getId(), category.getPath());
       }

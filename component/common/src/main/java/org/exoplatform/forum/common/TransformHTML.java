@@ -85,7 +85,7 @@ public class TransformHTML {
       return EMPTY_STR;
     if (s.length() > 500)
       s = s.substring(0, 500);
-    s = s.replaceAll("&nbsp;", SPACE).replaceAll("<br/>", SPACE).replaceAll("( \\s*)", SPACE);
+    s = s.replace("&nbsp;", SPACE).replace("<br/>", SPACE).replaceAll("( \\s*)", SPACE);
     s = s.replace("'", "&#39;").replace("\"", "&#34;");
     s = cleanHtmlCode(s, bbcs);
     s = removeCharterStrange(s);
