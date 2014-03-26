@@ -47,17 +47,27 @@ public class FAQEventQueryTestCase extends TestCase {
     assertEquals(selector + "[ jcr:contains(., 'bar')]", queryObject.getQuery());
 
     queryObject.setAdmin(false);
-    String predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' )";
+    String predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' )  and ( @exo:userPrivate='' )";
     assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
+    //
+    queryObject.setAdmin(true);
+    assertEquals(selector + "[ jcr:contains(., 'bar')]", queryObject.getQuery());
 
+    queryObject.setAdmin(false);
     queryObject.setUserId("zed");
-    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )";
+    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and ( @exo:userPrivate='' )";
     assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
+    //
+    queryObject.setAdmin(true);
+    assertEquals(selector + "[ jcr:contains(., 'bar')]", queryObject.getQuery());
 
     queryObject.setViewingCategories(Arrays.asList("cat1"));
-
-    predicate += "  and (@exo:categoryId='cat1' or @exo:id='cat1' and ( @exo:userPrivate='' ) )";
-    assertEquals(selector + "[ " + predicate + "]", queryObject.getQuery());
+    queryObject.setAdmin(false);
+    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and (@exo:categoryId='cat1' or @exo:id='cat1') and ( @exo:userPrivate='' )";
+    assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
+    //
+    queryObject.setAdmin(true);
+    assertEquals(selector + "[ jcr:contains(., 'bar') and (@exo:categoryId='cat1' or @exo:id='cat1')]", queryObject.getQuery());
 
   }
 
