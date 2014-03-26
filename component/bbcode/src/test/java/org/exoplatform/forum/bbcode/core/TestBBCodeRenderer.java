@@ -159,6 +159,16 @@ public class TestBBCodeRenderer extends TestCase {
     assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=2]param[/SIZE]"));
     assertEquals("<font size=\"+2\">param</font>", renderer.render("[SIZE=+2]param[/SIZE]"));
     assertEquals("<font size=\"-2\">param</font>", renderer.render("[SIZE=-2]param[/SIZE]"));
+ // Special case FORUM-751
+    String input = "[color=red \"onmouseover=\"(function(){document.write('I\'m evil');}).call(this)\"]hello world[/color]";
+    String expected = "<font color=\"red onmouseover=(function(){document.write(Im evil);}).call(this)\">hello world</font>";
+    assertEquals(expected, renderer.render(input));
+    input = "[size=15\"onmouseover=\"(function(){document.write('I'm evil');}).call(this)\"]hello world[/size]";
+    expected = "<font size=\"15onmouseover=(function(){document.write(Im evil);}).call(this)\">hello world</font>";
+    assertEquals(expected, renderer.render(input));
+    input = "[url=http://example.com&quot;onmouseover=&quot;(function(){document.write(&#39;I&#39;m evil&#39;);}).call(this)&quot;]Example[/url]";
+    expected = "<a target=\"_blank\" href=\"http://example.comonmouseover=(function(){document.write(&#39;I&#39;m evil&#39;);}).call(this)\">Example</a>";
+    assertEquals(expected, renderer.render(input));
   }
 
   public void testCleanHTMLTagInTagList() {
