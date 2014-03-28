@@ -73,9 +73,9 @@
       msgBox.find('.closePopup:first').on('click', component.closeBox);
       //
       if(message.type === 'PrivatePost') {
-        var link = component.postLink.replace('topicID', String(message.id));
+        var openLink = "window.open('" + component.postLink.replace('topicID', String(message.id)) + "', '_self');";
         msgBox.find('.nameMessage:first').html('<strong>' + i18n.privatePost + '</strong>');
-        msgBox.find('.link:first').html(component.buildLink(i18n.post, link));
+        msgBox.find('.link:first').html(component.buildLink(i18n.post, openLink));
       } else {
         msgBox.find('.nameMessage:first').html('<strong>' + i18n.privateMessage + '</strong>');
         var alink = $('#privateMessageLink');
