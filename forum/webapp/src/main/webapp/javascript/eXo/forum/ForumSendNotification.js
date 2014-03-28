@@ -80,10 +80,10 @@
       msgBox.find('.closePopup:first').on('click', component.closeBox);
       //
       if(message.type === 'PrivatePost') {
-        var link = component.postLink.replace('topicID', String(message.id));
+        var openLink = "window.open('" + component.postLink.replace('topicID', String(message.id)) + "', '_self');";
         var titeName = component.titeName.replace('{0}', component.postLabel);
         msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
-        msgBox.find('.link:first').html(component.buildLink(component.postLabel, link));
+        msgBox.find('.link:first').html(component.buildLink(component.postLabel, openLink));
       } else {
         var titeName = component.titeName.replace('{0}', component.messageLabel);
         msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
