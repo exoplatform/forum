@@ -1,6 +1,7 @@
 <%
 	import java.util.Map;
 	import java.util.HashMap;
+	import java.util.Arrays;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.answer.webui.FAQUtils;	
 %>
@@ -143,7 +144,7 @@
 					<thead>
 						<tr>
 							<th><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></th>
-							<th>Category</th>
+							<th><%=_ctx.appRes("UIQuestionsInfo.label.Category")%></th>
 							<th><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></th>
 							<th class="center"><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></th>
 						</tr>
@@ -169,10 +170,14 @@
 							<td>
 							<%
 								String linkResponseByLanguage = "";
-								for(String language :question.getLanguagesNotYetAnswered().split(",")){
+								def dataLangs = uicomponent.getQuestionLanguages(question);
+								def listQuestLanguage = dataLangs.keySet();
+								String displayName = "";
+								for(String language : listQuestLanguage ){
 									linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getPath() + "/" + language ) ;
+									displayName = dataLangs.get(language);
 							%>
-								<a onclick="$linkResponseByLanguage" href="javascript:void(0)" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">-&nbsp;$language &nbsp;</a>
+								<a onclick="$linkResponseByLanguage" href="javascript:void(0)" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">-&nbsp;$displayName &nbsp;</a>
 							<%}%>
 							</td>
 							<td class="center actionContainer">

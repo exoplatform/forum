@@ -262,7 +262,7 @@
 				<!--	View Question which is selected	-->
 
 				<% } else {
-						String[] listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
+						def dataLangs = uicomponent.getQuestionLanguages();
 						questionContent = uicomponent.getQuestionContent();
 						String responseBy = "..." ;
 						String date = "..." ;
@@ -372,7 +372,7 @@
 													}
 												%>
 														<li>
-															<a	href="$link">
+															<a	href="javascript:void(0);" onclick="$link">
 																<i class="$SendToFriend uiIconAnsLightGray" ></i><%=_ctx.appRes("UIQuestions.action.SendQuestion")%>
 															</a>
 														</li>
@@ -397,7 +397,7 @@
 											<!-- action translation question -->
 											<div class="languageContainer pull-right">
 											<%
-
+												def  listQuestLanguage = dataLangs.keySet();
 												for(String quesLanguage in listQuestLanguage) {
 													String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
 													String color = "#914ab6";
@@ -405,16 +405,17 @@
 													if(quesLanguage.equals(uicomponent.language_)){
 														ischeck = "checked";
 													}
+													String displayName = dataLangs.get(quesLanguage);
 											%>
 											<span class="uiRadio">
 												<input type="radio" name="language" $ischeck onclick="$linkView"/>
-												<span>$quesLanguage</span>
+												<span>$displayName</span>
 										 	</span>
 
 											<%} %>
 											</div><!-- end languageContainer -->
 											<h6>
-												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
+												<a class="theContent questionName" href="javascript:void(0);" onclick="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h6>
 
 										</div><!-- end actionBar -->
@@ -525,7 +526,7 @@
 											<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
 												<!-- action Sort answer by vote -->
 												<p class="sortAnswer">
-													<a	href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+													<a	href="javascript:void(0);" onclick="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
 														<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote");%>	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 												</p>
@@ -544,7 +545,7 @@
 												<% if(uicomponent.currentUser_ != null) { %>
 													<div class="questionAction">
 													<% if(question.isApproved() || uicomponent.canEditQuestion){ %>
-														<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+														<a href="javascript:void(0);" onclick="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
 													<% }
 														 if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())) {
 													%>
@@ -572,7 +573,7 @@
 						<!--	View attachment files	-->
 							<%if(!question.getAttachMent().isEmpty()) {%>
 							<div class="attachmentContainer">
-								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i>Attachments:</div>
+								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.label.Attachments")%>:</div>
 								<% List attachments = question.getAttachMent(); %>
 								<div class="attachmentContentImage" >
 								<%
@@ -591,11 +592,11 @@
 										</a>
 										<div class="actionAttachImg">
 											<p>
-												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> View</a>
+												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.view")%></a>
 											</p>
 											<p>
 												<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-													<i class="uiIconDownload uiIconWhite"></i> Download
+													<i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.download")%>
 												</a>
 											</p>
 										</div>
