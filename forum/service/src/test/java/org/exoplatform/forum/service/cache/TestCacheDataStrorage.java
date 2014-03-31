@@ -94,7 +94,7 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     //isApproved = true
     assertEquals(26, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "true", "false", "false", "root")));
     
-  //isApproved = false
+    //isApproved = false
     assertEquals(0, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "false", "false", "false", "root")));
     
     //isHidden = true
@@ -113,14 +113,21 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
       //isApproved = true
       assertEquals(51, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "true", "false", "false", "root")));
       
-    //isApproved = false
+      //isApproved = false
       assertEquals(0, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "false", "false", "false", "root")));
       
       //isHidden = true
       assertEquals(0, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "false", "true", "false", "root")));
       //isWaiting = true
       assertEquals(0, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "false", "false", "true", "root")));
-    
+
+    }
+
+    //check whether postsCount is decremented after post removal
+    {
+      int oldPostListCount = cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "true", "false", "false", "root"));
+      cacheDataStorage.removePost(this.categoryId,this.forumId,this.topicId,posts.get(0).getId());
+      assertEquals( --oldPostListCount, cacheDataStorage.getPostsCount(new PostFilter(this.categoryId, this.forumId, topicId, "true", "false", "false", "root")));
     }
   }
   
