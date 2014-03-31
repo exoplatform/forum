@@ -89,14 +89,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     eventQuery.setUserId(getCurrentUserName());
     eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
     eventQuery.setLanguageLevelSearch(false);
-    
-    String language = "English";
-    if (localeConfigService != null) {
-      language = localeConfigService.getDefaultLocaleConfig().getLocale().getDisplayLanguage();
-    }
-    eventQuery.setLanguage(language);
     eventQuery.setSearchOnDefaultLanguage(true);
-
     eventQuery.setOffset(offset);
     eventQuery.setLimit(limit);
     eventQuery.setSort(sort);
