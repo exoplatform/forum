@@ -1,39 +1,31 @@
 (function(Cometd, $, document, window) {
   
   var ForumSendNotification = {
+      i18n : {
+          notification : "Notification",
+          message : "message",
+          post : "post",
+          privatePost : "You have received a new private post",
+          privateMessage : "You have received a new private message",
+          from : "From",
+          briefContent : "Brief content",
+          goDirectly : "Go directly to the {0}",
+          clickHere : "Click here.",
+          title : "Title"
+      },
       portletId : "UIForumPortlet",
-      notification : "Notification",
-      message : "message",
-      post : "post",
-      titeName : "You have received a new private {0}",
-      from : "From",
-      briefContent : "Brief content",
-      GoDirectly : "Go directly to the {0}",
-      ClickHere : "Click here.",
-      title : "Title",
       currentUser : "",
       postLink :"/portal/intranet/forum/topic/topicID"
   };
 
-  ForumSendNotification.initParam = function(notification, message, post, titeName, from, briefContent, GoDirectly, ClickHere, Title) {
-    ForumSendNotification.notification = notification || ForumSendNotification.notification;
-    ForumSendNotification.messageLabel = message || ForumSendNotification.messageLabel;
-    ForumSendNotification.postLabel = post || ForumSendNotification.postLabel;
-    ForumSendNotification.titeName = titeName || ForumSendNotification.titeName;
-    ForumSendNotification.from = from || ForumSendNotification.from;
-    ForumSendNotification.briefContent = briefContent || ForumSendNotification.briefContent;
-    ForumSendNotification.GoDirectly = GoDirectly || ForumSendNotification.GoDirectly;
-    ForumSendNotification.ClickHere = ClickHere || ForumSendNotification.ClickHere;
-    ForumSendNotification.title = Title || ForumSendNotification.title;
+  ForumSendNotification.initParam = function(portletId, postLink, i18n) {
+    ForumSendNotification.i18n = $.extend(true, {}, ForumSendNotification.i18n, i18n);
+    ForumSendNotification.portletId = portletId || ForumSendNotification.portletId;
+    ForumSendNotification.postLink = postLink || ForumSendNotification.postLink;
     ForumSendNotification.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
   };
-  
-  ForumSendNotification.setPostLink = function(link) {
-    ForumSendNotification.postLink = link;
-  };
 
-  ForumSendNotification.init = function(portId, eXoUser, eXoToken, contextName) {
-    ForumSendNotification.portletId = portId;
+  ForumSendNotification.initCometd = function(eXoUser, eXoToken, contextName) {
     if (String(eXoToken) != '') {
       if (Cometd.isConnected() === false) {
         if (ForumSendNotification.currentUser !== eXoUser || ForumSendNotification.currentUser === '') {
@@ -65,39 +57,38 @@
   };
   
   ForumSendNotification.buildLink = function(type, alink) {
-    var link = ForumSendNotification.GoDirectly.replace('{0}', type);
-    link = link + ': <a style="color:#204AA0" href="javascript:void(0);" onclick="' + alink + '">' + ForumSendNotification.ClickHere + '</a>';
+    var link = ForumSendNotification.i18n.goDirectly.replace('{0}', type);
+    link = link + ': <a style="color:#204AA0" href="javascript:void(0);" onclick="' + alink + '">' + ForumSendNotification.i18n.clickHere + '</a>';
     return link;
   };
 
   ForumSendNotification.createMessage = function(message) {
     var component = ForumSendNotification;
+    var i18n = component.i18n;
     var jPortlet = $.fn.findId(component.portletId);
     var msgBox = jPortlet.find('.uiNotification:first').clone();
     if(msgBox.exists()) {
       var name = msgBox.find('.name:first');
-      name.html(name.html().replace('Message', component.notification));
+      name.html(name.html().replace('Message', i18n.notification));
       msgBox.find('.closePopup:first').on('click', component.closeBox);
       //
       if(message.type === 'PrivatePost') {
         var openLink = "window.open('" + component.postLink.replace('topicID', String(message.id)) + "', '_self');";
-        var titeName = component.titeName.replace('{0}', component.postLabel);
-        msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
-        msgBox.find('.link:first').html(component.buildLink(component.postLabel, openLink));
+        msgBox.find('.nameMessage:first').html('<strong>' + i18n.privatePost + '</strong>');
+        msgBox.find('.link:first').html(component.buildLink(i18n.post, openLink));
       } else {
-        var titeName = component.titeName.replace('{0}', component.messageLabel);
-        msgBox.find('.nameMessage:first').html('<strong>' + titeName + '</strong>');
+        msgBox.find('.nameMessage:first').html('<strong>' + i18n.privateMessage + '</strong>');
         var alink = $('#privateMessageLink');
         if (alink.exists()) {
-          msgBox.find('.link:first').html(component.buildLink(component.messageLabel, alink.attr('onclick')));
+          msgBox.find('.link:first').html(component.buildLink(i18n.message, alink.attr('onclick')));
         }
       }
       //
-      msgBox.find('.from:first').html('<strong>' + component.from + ':</strong> ' + message.from);
-      msgBox.find('.title:first').html('<strong>' + component.title + ':</strong> ' + component.getPlainText(message.name).replace(/Reply:/g, ''));
+      msgBox.find('.from:first').html('<strong>' + i18n.from + ':</strong> ' + message.from);
+      msgBox.find('.title:first').html('<strong>' + i18n.title + ':</strong> ' + component.getPlainText(message.name).replace(/Reply:/g, ''));
       //
       var cont = component.getPlainText(message.message);
-      msgBox.find('.content:first').html('<strong>' + component.briefContent + ':</strong> ' + cont);
+      msgBox.find('.content:first').html('<strong>' + i18n.briefContent + ':</strong> ' + cont);
       msgBox.find('.link:first').find('a').on('mouseup', component.closeBox);
       //
       var info = component.getInfo();
@@ -158,6 +149,6 @@
       });
     }
   };
+  
   return ForumSendNotification;
-
 })(cometd, gj, document, window);
