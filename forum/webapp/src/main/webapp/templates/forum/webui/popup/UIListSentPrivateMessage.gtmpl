@@ -49,10 +49,10 @@
 				<td>$strFromDate</td>
 				<td class="center">				
 					<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("ForwardMessage", mailId)%>">
-						<i class="uiIconForumForward uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="Forward Message"></i>							
+						<i class="uiIconForumForward uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPrivateMessageForm.label.Forward");%> <%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%>"></i>							
 					</a>
 					<a class="actionIcon confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteMessage", mailId)%>">
-						<i class="uiIconDelete uiIconLightGray" rel="tooltip" data-placement="bottom" title="Delete Message"></i>							
+						<i class="uiIconDelete uiIconLightGray" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPrivateMessageForm.label.Delete");%> <%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%>"></i>							
 					</a>
 				</td>
 			</tr>
