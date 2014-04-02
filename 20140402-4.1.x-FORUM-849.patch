@@ -1,0 +1,89 @@
+diff --git a/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java b/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+index 050728a..e9e8d1d 100644
+--- a/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
++++ b/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+@@ -147,6 +147,7 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
+ import org.quartz.JobDataMap;
+ import org.w3c.dom.Document;
+ 
++import com.google.common.base.Preconditions;
+ import com.sun.syndication.feed.synd.SyndContent;
+ import com.sun.syndication.feed.synd.SyndContentImpl;
+ import com.sun.syndication.feed.synd.SyndEntry;
+@@ -3227,6 +3228,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
+   }
+ 
+   public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
++    Preconditions.checkNotNull(userName, "userName");
++    Preconditions.checkNotNull(userId, "userLogin");
++    
+     SessionProvider sProvider = CommonUtils.createSystemProvider();
+     try {
+       String query = queryPostsByUser(new PostFilter(userName, userId, isMod, strOrderBy), true);
+@@ -3241,7 +3245,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
+     StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_POST);
+     sqlQuery.append(" WHERE ")
+             .append(Utils.getSQLQueryByProperty("", EXO_IS_FIRST_POST, "false"))
+-            .append(Utils.getSQLQueryByProperty("", EXO_OWNER, filter.userName()));
++            .append(Utils.getSQLQueryByProperty("AND", EXO_OWNER, filter.userName()));
+ 
+     if (filter.isAdmin() == false) {
+       sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_IS_APPROVED, "true"))
+diff --git a/forum/service/src/test/java/org/exoplatform/forum/service/PostTestCase.java b/forum/service/src/test/java/org/exoplatform/forum/service/PostTestCase.java
+index d9a1c12..53447c1 100644
+--- a/forum/service/src/test/java/org/exoplatform/forum/service/PostTestCase.java
++++ b/forum/service/src/test/java/org/exoplatform/forum/service/PostTestCase.java
+@@ -113,4 +113,53 @@ public class PostTestCase extends BaseForumServiceTestCase {
+     got = Arrays.asList(listAccess.load(3));
+     assertEquals(got.size(), 6);
+   }
++  
++  public void testGetPostByUser() throws Exception {
++    // set Data
++    initDefaultData();
++    
++    List<Post> posts = new ArrayList<Post>();
++    for (int i = 0; i < 25; ++i) {
++      Post post = createdPost();
++      posts.add(post);
++      forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
++    }
++    // getPost
++    assertNotNull(forumService_.getPost(categoryId, forumId, topicId, posts.get(0).getId()));
++
++    JCRPageList pageList = forumService_.getPagePostByUser("root", "root", true, "exo:createdDate");
++    pageList.setPageSize(10);
++    List<Post> got = pageList.getPage(0);
++    assertEquals(10, got.size());
++    //
++    got = pageList.getPage(1);
++    assertEquals(10, got.size());
++  }
++  
++  public void testGetPostByUserAbnormal() throws Exception {
++   
++    // get ListPost
++    JCRPageList pageList;
++    try {
++      pageList = forumService_.getPagePostByUser(null, "root", true, "exo:createdDate");
++      fail("userName");
++    } catch (Exception e) {
++    }
++    
++    try {
++      pageList = forumService_.getPagePostByUser("root", null, true, "exo:createdDate");
++      fail("userLogin");
++    } catch (Exception e) {
++    }
++    
++    try {
++      pageList = forumService_.getPagePostByUser(null, null, true, "exo:createdDate");
++      fail();
++    } catch (Exception e) {
++    }
++    
++   
++  }
++  
++  
+ }
