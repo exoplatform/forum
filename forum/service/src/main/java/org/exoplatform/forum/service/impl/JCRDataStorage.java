@@ -147,6 +147,7 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
+import com.google.common.base.Preconditions;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -3227,6 +3228,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
+    if (Utils.isEmpty(userName)) {
+      throw new NullPointerException("userName");
+    }
+
+    if (Utils.isEmpty(userId)) {
+      throw new NullPointerException("userLogin");
+    }
+    
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       String query = queryPostsByUser(new PostFilter(userName, userId, isMod, strOrderBy), true);
@@ -3241,7 +3250,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_POST);
     sqlQuery.append(" WHERE ")
             .append(Utils.getSQLQueryByProperty("", EXO_IS_FIRST_POST, "false"))
-            .append(Utils.getSQLQueryByProperty("", EXO_OWNER, filter.userName()));
+            .append(Utils.getSQLQueryByProperty("AND", EXO_OWNER, filter.userName()));
 
     if (filter.isAdmin() == false) {
       sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_IS_APPROVED, "true"))
