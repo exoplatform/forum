@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-extras</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.1.x-forum-stabilization-SNAPSHOT</version>
+    <version>4.1.x-forum-translation-SNAPSHOT</version>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras-injection</artifactId>
