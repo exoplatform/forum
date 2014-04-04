@@ -1217,7 +1217,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private List<Forum> getForumsPublic(ForumFilter filter) {
     StringBuilder sqlQuery = new StringBuilder();
     sqlQuery.append(Utils.getSQLQueryByProperty("", EXO_IS_CLOSED, "false"))
-            .append(Utils.getSQLQueryByProperty("", EXO_IS_LOCK, "false"));
+            .append(Utils.getSQLQueryByProperty("AND", EXO_IS_LOCK, "false"));
     return getForums(filter, sqlQuery.toString());
   }
 
