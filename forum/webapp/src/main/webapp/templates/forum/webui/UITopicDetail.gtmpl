@@ -301,7 +301,7 @@
 				
 				<% if(isShowMenu && canEdit) { %>
 				<li class="defaultStyle forumSeparatorLine">
-					<div class="dropdown uiDropdownWithIcon actionIcon pull-right">
+					<div class="dropdown uiDropdownWithIcon actionIcon">
 						<div data-toggle="dropdown">
 							<i class="uiIconForumModerator uiIconForumLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.Moderation");%>
