@@ -230,6 +230,9 @@
 								
 								int idIcon = 0;
 								for(action in menuTopicActions) {
+								  // In some cases, the value of "confirm" will be "class = \"confirm\"" but not for all items of the menu.
+								  // So this must be reset to the default value and set to new value if necessary
+								  confirm="";
 									classIcon = menuTopicIcons[idIcon];
 									idIcon++;
 									boolean isView = false;
