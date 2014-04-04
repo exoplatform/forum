@@ -2057,7 +2057,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Failed to retrieve topic list for forum " + filter.forumId(), e);
       }
-      return null;
+      return new ArrayList<Topic>();
     }
   }
 

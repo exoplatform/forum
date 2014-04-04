@@ -227,7 +227,7 @@ public class UIPageListPostByUser extends UIContainer {
     public void execute(Event<UIPageListPostByUser> event) throws Exception {
       UIPageListPostByUser uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      uiContainer.strOrderBy = ForumUtils.getOrderBy(uiContainer.strOrderBy, path);
+      uiContainer.strOrderBy = ForumUtils.getSQLOrderBy(uiContainer.strOrderBy, path);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
   }
