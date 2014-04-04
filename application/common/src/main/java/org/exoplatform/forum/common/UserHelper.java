@@ -300,7 +300,7 @@ public class UserHelper {
       Group group = getGroupHandler().findGroupById(owner);
       return (group != null) ? group.getGroupName() : CommonUtils.EMPTY_STR;
     } else {
-      User user = getUserHandler().findUserByName(owner, UserStatus.BOTH);
+      User user = getUserHandler().findUserByName(owner, UserStatus.ANY);
       if (user != null) {
         String displayName = user.getDisplayName();
         if (CommonUtils.isEmpty(displayName) || owner.equals(displayName)) {
