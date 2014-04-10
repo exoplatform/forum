@@ -703,28 +703,30 @@ public class FAQEventQuery implements FAQNodeTypes {
     }
 
     // search on viewing categories
-    if (viewingCategories.size() > 0) {
-      queryString.append(" and (");
-      int i = 0;
-      for (String catId : viewingCategories) {
-        if (i > 0)
-          queryString.append(" or ");
-        // on questions
-        queryString.append("@exo:categoryId='").append(catId).append("'");
-        // on categories
-        queryString.append(" or @exo:id='").append(catId).append("'");
-        queryString.append(" and (");
-        queryString.append(" @exo:userPrivate=''");
-        // search restricted audience in category
-        if (userMembers != null && userMembers.size() > 0) {
-          for (String id : userMembers) {
-            queryString.append(" or @exo:userPrivate='").append(id).append("'");
-          }
-        }
-        queryString.append(" ) ");
-        i++;
+    StringBuilder queryViewing = new StringBuilder();
+    for (String catId : viewingCategories) {
+      if (queryViewing.length() > 0){
+        queryViewing.append(" or ");
       }
-      queryString.append(")");
+      // on questions
+      queryViewing.append("@exo:categoryId='").append(catId).append("'");
+      // on categories
+      queryViewing.append(" or @exo:id='").append(catId).append("'");
+    }
+    //
+    if (queryViewing.length() > 0) {
+      queryString.append(" and (").append(queryViewing).append(")");
+    }
+    // search restricted audience in category
+    if(!isAdmin) {
+      queryString.append(" and (");
+      queryString.append(" @exo:userPrivate=''");
+      if (userMembers != null && userMembers.size() > 0) {
+        for (String id : userMembers) {
+          queryString.append(" or @exo:userPrivate='").append(id).append("'");
+        }
+      }
+      queryString.append(" ) ");
     }
 
     // search restricted audience
