@@ -369,6 +369,49 @@
       }
     },
 
+      showTree: function(node) {
+      var jnode = $(node);
+      var pNode = jnode.parent('.node:first');
+      var groupNode = pNode.find(' > .nodeGroup');
+      if(groupNode.css('display') === 'none') {
+        var pNodeGroup = pNode.parent('.nodeGroup:first');
+        pNodeGroup.find('.nodeGroup').hide();
+        var nodes = pNodeGroup.find('.uiIconNode');
+        $.each(nodes, function(i, elm) {
+          var elm = $(this);
+          if (elm.parent('.node').find('.nodeGroup').exists()) {
+            elm.attr('class', 'uiIconNode collapseIcon');
+          } else {
+            elm.attr('class', 'uiIconNode uiIconEmpty');
+          }
+        });
+        
+        //
+        groupNode.show();
+        jnode.attr('class', 'uiIconNode expandIcon');
+      } else {
+        groupNode.hide();
+        jnode.attr('class', 'uiIconNode collapseIcon');
+      }
+      
+    },
+
+    initTreeNode : function(formId) {
+      var container = $.fn.findId(formId);
+      var treeContainer = container.find('div.treeContainer:first');
+      var groupFirst = treeContainer.find('.nodeGroup:first');
+      var listNode = groupFirst.find('.uiIconNode');
+      listNode.on('click',  function(e) {
+        if($(this).parent('.node').find('.nodeGroup').exists()) {
+          UIForumPortlet.showTree(this)
+        }
+      });
+      groupFirst.find('.nodeGroup').hide();
+      
+      groupFirst.find('.nodeGroup:first').parent('.node:first')
+                .find('.uiIconNode:first').click();
+    },
+
     initVote : function(voteId, rate) {
       var vote = $.fn.findId(voteId);
       rate = parseInt(rate);
