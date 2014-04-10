@@ -1352,24 +1352,28 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
+      //removes all of group what contains "spaces" group 
+      List<String> userListWithoutSpace = new ArrayList<String>();
+      for(String group : listOfUser) {
+        if (group != null && group.indexOf(Utils.CATEGORY_SPACE) == -1) {
+          userListWithoutSpace.add(group);
+        }
+      }
       // get can create topic
       List<String> categoriesCanCreateTopics = getCategoriesCanCreateTopics(sProvider, listOfUser, true);
 
-      Category cate = getCachedDataStorage().getCategoryIncludedSpace();
       // query forum by input-key
-
       StringBuffer strQuery = new StringBuffer("SELECT * FROM ");
 
       strQuery.append(EXO_FORUM).append(" WHERE ").append(JCR_PATH).append(" LIKE '").append(categoryHome.getPath()).append("/%' AND ");
-      if (cate != null) {
-        strQuery.append(" NOT ").append(JCR_PATH).append(" LIKE '").append(cate.getPath()).append("/%' AND ");
-      }
       strQuery.append("( UPPER(").append(EXO_NAME).append(") LIKE '").append(forumNameFilter.toUpperCase())
               .append("%' OR UPPER(").append(EXO_NAME).append(") LIKE '% ").append(forumNameFilter.toUpperCase()).append("%')")
               .append(Utils.getSQLQueryByProperty("AND", EXO_IS_CLOSED, "false"))
               .append(Utils.getSQLQueryByProperty("AND", EXO_IS_LOCK, "false"))
-              .append(" AND ").append(getCanCreateTopicQuery(listOfUser, false))
+              .append(" AND ").append(getCanCreateTopicQuery(userListWithoutSpace, false))
               .append(" ORDER BY ").append(EXO_NAME);
+      
+      LOG.debug("SQL statement: " + strQuery.toString());
 
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
@@ -1401,6 +1405,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         while (iter.hasNext()) {
           Node node = iter.nextNode();
           categoryId = node.getParent().getName();
+          
+          if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
+            continue;
+          }
+          
           forumId = node.getName();
 
           // can create topic in category/forum
@@ -1426,13 +1435,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         nextOffset += totalSize;
       }
 
-      return new ArrayList<CategoryFilter>(categoryFilters.values());
+      return Collections.unmodifiableList(new ArrayList<CategoryFilter>(categoryFilters.values()));
     } catch (Exception e) {
+      LOG.warn("\nCould not filter forum by name: " + forumNameFilter + "::"+ e.getMessage());
       if (LOG.isDebugEnabled()) {
         LOG.debug("\nCould not filter forum by name: " + forumNameFilter + e.getCause());
       }
     }
-    return new ArrayList<CategoryFilter>();
+    return Collections.emptyList();
   }
 
   public Forum getForum(String categoryId, String forumId) {
