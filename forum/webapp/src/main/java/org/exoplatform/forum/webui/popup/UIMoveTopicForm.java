@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -134,5 +135,8 @@ public class UIMoveTopicForm extends BaseDataForm implements UIPopupComponent {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.cancelAction();
     }
+  }
+  protected void initJavaScripts() {
+    ForumUtils.addScripts("UIForumPortlet", "forumPortlet", new String[]{"eXo.forum.UIForumPortlet.initTreeNode('" +getId() + "');"});
   }
 }
