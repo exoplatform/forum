@@ -96,6 +96,22 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
 
     faqService_.saveComment(question.getPath(), comment, true);
     
+    // Create new category to test search with difference languages.
+    Category category = createCategory("Category B", 1);
+    faqService_.saveCategory(Utils.CATEGORY_HOME, category, true);
+    //Create new question in Category B
+    Question questionTestLanguage1 = createQuestion(Utils.CATEGORY_HOME + "/" + category.getId());
+    questionTestLanguage1.setQuestion("QuestionLanguage 1");
+    questionTestLanguage1.setDetail("Default question's language in French");
+    questionTestLanguage1.setLanguage("French");
+    faqService_.saveQuestion(questionTestLanguage1, true, new FAQSetting());
+    
+    Question questionTestLanguage2 = createQuestion(Utils.CATEGORY_HOME + "/" + category.getId());
+    questionTestLanguage2.setQuestion("QuestionLanguage 2");
+    questionTestLanguage2.setDetail("Default question's language in English");
+    questionTestLanguage2.setLanguage("English");
+    faqService_.saveQuestion(questionTestLanguage2, true, new FAQSetting());
+    
     DataStorage dataStorage = (DataStorage) getService(DataStorage.class);
     
     //
@@ -129,7 +145,7 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     
     //test for special characters in Unified Search
     assertEquals(2, answerSearchConnector.search(context, " repon~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
-    assertEquals(4, answerSearchConnector.search(context, " ques~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(6, answerSearchConnector.search(context, " ques~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
     assertEquals(1, answerSearchConnector.search(context, " clo~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
     assertEquals(1, answerSearchConnector.search(context, " clo*~", Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
 
@@ -182,6 +198,10 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     List<SearchResult> rDateDesc = (List<SearchResult>) answerSearchConnector.search(context, " Questiontest~", Collections.EMPTY_LIST, 0, 10, "date", "DESC");
     assertEquals("Questiontest C", rDateDesc.get(0).getTitle());
     assertEquals("Questiontest B", rDateDesc.get(1).getTitle());
+  }
+  public void testResultSearchDifferentLanguages() throws Exception {
+    List<SearchResult> listResults = (List<SearchResult>) answerSearchConnector.search(context, " QuestionLanguage~", Collections.EMPTY_LIST, 0, 10, "title", "DESC");
+    assertEquals(2, listResults.size());
   }
   
   private void loadController() throws Exception {

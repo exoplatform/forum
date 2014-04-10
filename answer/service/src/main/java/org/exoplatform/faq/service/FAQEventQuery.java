@@ -594,7 +594,6 @@ public class FAQEventQuery implements FAQNodeTypes {
     if (text != null && text.length() > 0) {
       textSearch.append("("); // open block.
       textSearch.append("jcr:contains(., '").append(text).append("')");
-      textSearch.append(" and ( ").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
       textSearch.append(")"); // close block.
       isLanguageLevelSearch = false;
       isAnswerCommentLevelSearch = false;
@@ -617,10 +616,6 @@ public class FAQEventQuery implements FAQNodeTypes {
         queryString.append(" and ");
       }
       queryString.append(quesAnsComClause.toString());
-    }
-
-    if (!isAnd && !isAdd) { // if all of fields is empty of null, the search will be by language.
-      queryString.append("(").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
     }
 
     /*
