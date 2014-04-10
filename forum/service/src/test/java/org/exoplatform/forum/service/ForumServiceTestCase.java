@@ -22,12 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
@@ -583,4 +585,12 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     
     assertEquals(1, forums.size());
   }
+  
+  public void testFilterForumByName() throws Exception {
+    // set Data
+    initDefaultData();
+    List<CategoryFilter> result = forumService_.filterForumByName("_", "root", 2); 
+    assertEquals(1, result.size());
+  }
+  
 }
