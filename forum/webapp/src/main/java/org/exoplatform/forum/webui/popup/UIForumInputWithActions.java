@@ -149,7 +149,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
               String type = ForumUtils.EMPTY_STR;
               int dot = actionLabel.lastIndexOf(".");
               if (dot > 0) {
-                type = actionLabel.substring(dot - 1);
+                type = actionLabel.substring(dot);
                 actionLabel = actionLabel.substring(0, dot);
               }
 
