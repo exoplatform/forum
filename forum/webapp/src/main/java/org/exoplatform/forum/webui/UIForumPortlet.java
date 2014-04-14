@@ -525,21 +525,26 @@ public class UIForumPortlet extends UIPortletApplication {
   protected void initSendNotification() throws Exception {
     if(getUserProfile().getUserRole() <=2 ) {
       String postLink = ForumUtils.createdSubForumLink(Utils.TOPIC, "topicID", false);
-      StringBuilder init = new StringBuilder("forumNotify.init('");
-      init.append(getId()).append("', '")
-          .append(userProfile.getUserId()).append("', '")
+      StringBuilder init = new StringBuilder("forumNotify.initCometd('");
+      init.append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
-          .append(getCometdContextName()).append("'); forumNotify.setPostLink('").append(postLink).append("');");
-      StringBuilder initParam = new StringBuilder("forumNotify.initParam('");
-      initParam.append(WebUIUtils.getLabel(getId(), "Notification")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "message")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "post")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "titeName")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "from")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "briefContent")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "ClickHere")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "Title")).append("');");
+          .append(getCometdContextName()).append("');");
+
+      StringBuilder initParam = new StringBuilder();
+      initParam.append("forumNotify.initParam(\"").append(getId()).append("\", \"").append(postLink).append("\", ")
+               .append("{")
+               .append("notification : \"").append(WebUIUtils.getLabel(getId(), "Notification")).append("\", ")
+               .append("message : \"").append(WebUIUtils.getLabel(getId(), "message")).append("\", ")
+               .append("post : \"").append(WebUIUtils.getLabel(getId(), "post")).append("\",")
+               .append("privatePost : \"").append(WebUIUtils.getLabel(getId(), "NewPrivatePost")).append("\", ")
+               .append("privateMessage : \"").append(WebUIUtils.getLabel(getId(), "NewPrivateMessage")).append("\", ")
+               .append("from : \"").append(WebUIUtils.getLabel(getId(), "from")).append("\", ")
+               .append("briefContent : \"").append(WebUIUtils.getLabel(getId(), "briefContent")).append("\", ")
+               .append("goDirectly : \"").append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("\", ")
+               .append("clickHere : \"").append(WebUIUtils.getLabel(getId(), "ClickHere")).append("\", ")
+               .append("title : \"").append(WebUIUtils.getLabel(getId(), "Title")).append("\"")
+               .append("});");
+      //
       ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
     }
   }
