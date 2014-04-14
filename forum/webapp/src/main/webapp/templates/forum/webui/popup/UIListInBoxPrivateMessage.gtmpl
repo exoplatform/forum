@@ -41,11 +41,11 @@
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
-				<td><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
+				<td><a href="javascript:void(0);" onclick="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
 				<td>$fromUser</td>
 				<td>$strFromDate</td>
 				<td class="center">
-					<a class="actionIcon" href="<%=uicomponent.event("ReplyMessage", mailId)%>">
+					<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("ReplyMessage", mailId)%>">
 						<i class="uiIconReply uiIconLightGray" rel="tooltip" data-placement="bottom" title="Reply Message"></i>							
 					</a>
 					<a class="actionIcon confirm" href="<%=uicomponent.event("DeleteMessage", mailId)%>">

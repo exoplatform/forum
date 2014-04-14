@@ -31,11 +31,6 @@
 	String currentUser = FAQUtils.getCurrentUser() ;
 	String viewProfileLabel = _ctx.appRes("UIQuestionsInfo.title.ViewUserProfile");
 %>
-<script src="/forumResources/syntaxhighlighter/Scripts/shCore.js" type="text/javascript"></script>
-<script src="/forumResources/syntaxhighlighter/Scripts/shAutoloader.js" type="text/javascript"></script>
-
-<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shCore.css"></link>
-<link type="text/css" rel="stylesheet" media="all" href="/forumResources/syntaxhighlighter/Styles/shThemeDefault.css"></link>
 
 <div class="uiQuestions uiBox" id="$uicomponent.id">
 	<div class="answerToolbar title">
@@ -47,7 +42,7 @@
 			</li>
 		<%}
 			if(uicomponent.faqSetting_.isEnableAutomaticRSS()) {
-					String linkRss = uicomponent.getRSSLink() ;
+				String linkRss = uicomponent.getRSSLink() ;
 		%>
 			<li>
 				<a class="uiActionWithLabel" href="$linkRss" target="_blank"><i class="uiIconRss uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
@@ -168,26 +163,26 @@
 								<ul class="dropdown-menu dropdownArrowTop" id="$contextMenuId">
 
 							<%
-								 String iconView = "" ;
-								 for(viewAction in questionActions) {
-									 if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) {
-										 continue ;
-									 }
-									 String linkView = "";
-									 iconView = uicomponent.getIconActionQuestion(viewAction);
+								String iconView = "" ;
+								for(viewAction in questionActions) {
+									if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) {
+										continue ;
+									}
+									String linkView = "";
+									iconView = uicomponent.getIconActionQuestion(viewAction);
 
-									 String lockFunction = "" ;
-									 if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-										 if(canEditQuestion){
-											 linkView = uicomponent.event(viewAction, questionPath+"/true");
-										 } else {
-											 linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
-											 lockFunction = "disable" ;
-										 }
-									 } else {
-										 linkView = uicomponent.event(viewAction, questionPath);
-									 }
-									 String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
+									String lockFunction = "" ;
+									if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+										if(canEditQuestion){
+											linkView = uicomponent.event(viewAction, questionPath+"/true");
+										} else {
+											linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
+											lockFunction = "disable" ;
+										}
+									} else {
+										linkView = uicomponent.event(viewAction, questionPath);
+									}
+									String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
 							%>
 									<li class="$lockFunction">
 										<a href="$linkView"><i class="$iconView uiIconLightGray"></i>$itemLabelView</a>
@@ -217,24 +212,23 @@
 										 }
 									 }
 								 }
-								 if(uicomponent.isDiscussForum()) {
-									 String topicIdDiscuss = question.getTopicIdDiscuss();
-									 if(topicIdDiscuss != null && topicIdDiscuss.length() > 0) {
-										 String link = FAQUtils.getLinkDiscuss(topicIdDiscuss);
-										 if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
-											 if(topicIdDiscuss.equals(uicomponent.discussId)) {
-												 requireJS.addScripts("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
-												 uicomponent.discussId = "";
-											 }
-										 }
-							 %>
+								if(uicomponent.isDiscussForum()) {
+									String topicIdDiscuss = question.getTopicIdDiscuss();
+									if(topicIdDiscuss != null && topicIdDiscuss.length() > 0) {
+										String link = FAQUtils.getLinkDiscuss(topicIdDiscuss);
+										if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
+											if(topicIdDiscuss.equals(uicomponent.discussId)) {
+												requireJS.addScripts("eXo.answer.UIAnswersPortlet.openDiscussLink('"+link+"');");
+												uicomponent.discussId = "";
+											}
+										}
+							%>
 									<li>
 										<a onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" style="display:block"><i class="uiIconAnsDiscuss uiIconLightGray"></i><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 									</li>
-							 <%	 }
-								 }
-							 %>
-
+							<%	}
+								}
+							%>
 								</ul>
 
 							</div><!-- end dropdown -->
@@ -304,17 +298,18 @@
 													</button>
 													<!--	Begin popup menu	-->
 													<ul class="dropdown-menu">
-													 <!-- action print question -->
+														<!-- action print question -->
 														<li>
-															 <a class="actionIcon" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>"><i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%></a>
+															<a href="javascript:void(0);" onclick="<%=uicomponent.event("PrintAllQuestion", questionId)%>">
+																<i class="uiIconPrint uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>
+															</a>
 														</li>
-
 													<%
 														if(uicomponent.currentUser_ != null) {
 															if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
 													%>
 														<li>
-															<a	href="javascript:void(0);" onclick="<%=uicomponent.event("EditQuestion", questionPath);%>">
+															<a href="javascript:void(0);" onclick="<%=uicomponent.event("EditQuestion", questionPath);%>">
 																<i class="uiIconEdit uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.EditQuestion")%>
 															</a>
 														</li>
@@ -388,9 +383,9 @@
 														String link = uicomponent.event("ViewQuestion",backPath);
 												%>
 														<li>
-															 <a href="javascript:void(0);" onclick="$link">
-																	<i class="uiIconAnsBackPageFAq uiIconAnsLightGray" ></i><%=_ctx.appRes("UIQuestions.action.Back")%>
-															 </a>
+															<a href="javascript:void(0);" onclick="$link">
+																<i class="uiIconAnsBackPageFAq uiIconAnsLightGray" ></i><%=_ctx.appRes("UIQuestions.action.Back")%>
+															</a>
 														</li>
 												<%}%>
 													</ul><!--	End popup menu	-->
@@ -694,6 +689,7 @@
 											String answerId = answer.getId();
 									%>
 									<div class="responseItemContainer <%=((i==0) ? " itemFirst" : "")%>" id="$answerId">
+									<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
 										<div class="moreAction">
 											<div class="pull-right uiDropdownWithIcon dropdown">
 												<button data-toggle="dropdown" class="btn" type="button">
@@ -702,8 +698,6 @@
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 												</button>
 												<!--	Begin answers popup menu	-->
-
-												<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)) {%>
 												<ul class="dropdown-menu">
 													<li>
 														<a href="javascript:void(0);" onclick="<%=uicomponent.event("EditAnswer", answer.getId())%>">
@@ -749,13 +743,12 @@
 														</a>
 													</li>
 												</ul>
-												<% } %>
 												<!--	end answers popup menu	-->
 											</div>
 										</div><!-- end moreAction of answers -->
-
+										<% } %>
 										<div class="responseItem">
-								 		<!-- View user who answered quesetion	-->
+								 		<!-- View user who answered question	-->
 								 			<div class="avatarXSmall pull-left">
 									 <% if(uicomponent.faqSetting_.isEnableViewAvatar()) {%>
 												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>" >
@@ -797,11 +790,11 @@
 														}
 														String idVote = "FAQVoteAnswerUp" + i;
 														String markVote = "";
-															if (answer.getMarkVotes() > 0) {
-																markVote = "+" + answer.getMarkVotes();
-															} else {
-																markVote = "" + answer.getMarkVotes();
-															}
+														if (answer.getMarkVotes() > 0) {
+															markVote = "+" + answer.getMarkVotes();
+														} else {
+															markVote = "" + answer.getMarkVotes();
+														}
 											%>
 													<a	href="javascript:void(0);" onclick="$userVoteUpAnswer" rel="tooltip" data-placement="bottom" title="+1" id="$idVote" onmouseover="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.answer.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
 														<i class="uiIconAnsThumbUpMini uiIconAnsLightGray"></i>
@@ -835,31 +828,35 @@
 
 								</div><!-- end response -->
 								<!--// finish View all answer for this question -->
-								<!--	View question's commnets	-->
+						<!--	View question's commnets	-->
 							<%
-								if(uicomponent.faqSetting_.isEnanbleVotesAndComments()) {
-									boolean canEditComment = false;
-									Comment[] comments = uicomponent.getPageListComment(question.getPath());
-									String classComment = "";
-									if(comments.length > 0) {
-										classComment = "commentExternal";
-							%>
+						if(uicomponent.faqSetting_.isEnanbleVotesAndComments()) {
+							Comment[] comments = uicomponent.getPageListComment(question.getPath());
+							String classComment = "";
+							if(comments.length > 0) {
+								classComment = "commentExternal";
+						%>
 								<div class="response responseComment $classComment">
 									<h5 class="titleResponseContent">
 										<%=_ctx.appRes("UIQuestions.label.Comments")%>
 									</h5>
 								</div>
-								<%} %>
-
+							<%} %>
+							<%
+								boolean isOwner = false;
+								int commentCount = 0;
+								boolean isModerator = uicomponent.faqSetting_.isCanEdit();
+								for(Comment comment in comments) {
+									String commentId = comment.getId();
+									String owner = comment.getCommentBy();
+									isOwner = uicomponent.currentUser_.equals(comment.getCommentBy());
+									//
+									++commentCount;
+							%>
+								<div class="responseItemContainer<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
 								<%
-									int commentCount = 0;
-									for(Comment comment in comments) {
-										String owner = comment.getCommentBy();
-										canEditComment = uicomponent.currentUser_.equals(comment.getCommentBy()) ? true : false;
-										String commentId = comment.getId();
-										++commentCount;
+									if(isModerator || isOwner) {
 								%>
-								<div class="responseItemContainer	<%=((commentCount==1) ? " itemFirst" : "")%>" id="$commentId">
 									<div class="moreAction ">
 										<div class="pull-right uiDropdownWithIcon dropdown">
 											<button data-toggle="dropdown" class="btn" type="button">
@@ -869,6 +866,13 @@
 											 </button>
 											<!--	Begin popup menu	-->
 											<ul class="dropdown-menu">
+											<% if(isModerator) { %>
+												 <li>
+													<a href="javascript:void(0);" onclick="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
+														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
+													</a>
+												</li>
+											<% } %>
 												<li>
 													<a href="javascript:void(0);" onclick="<%=uicomponent.event("CommentQuestion", question.getPath() + "/" + comment.getId())%>">
 														<i class="uiIconEdit uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.EditComment")%>
@@ -879,39 +883,17 @@
 														<i class="uiIconTrash uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
 													</a>
 												</li>
-
-												<%
-												if(canEditComment) {
-													if (uicomponent.faqSetting_.isCanEdit()){%>
-												 <li>
-													<a	href="javascript:void(0);" onclick="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
-														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
-													</a>
-												</li>
-												<%}
-												} else if (uicomponent.faqSetting_.isCanEdit()) { %>
-												<li>
-													<a href="javascript:void(0);" onclick="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
-														 <i class="uiIconAnsPromte uiIconAnsLightGray"></i><%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>
-													</a>
-												</li>
-												<li>
-													<a class="ItemIcon Delete confirm" href="javascript:void(0);" onclick="<%=uicomponent.event("DeleteComment", comment.getId())%>">
-														 <i class="uiIconDelete uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.action.DeleteComment")%>
-													</a>
-												</li>
-											<%} %>
 											</ul>
 										</div><!-- end dropdown menu comments -->
 									</div>
-
+									<%} %>
 									<div class="responseItem">
 										<div class="avatarXSmall pull-left">
 										<!--	View user who comment for quesetion	-->
 										<%
 											if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 										%>
-											<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>">
+											<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>">
 												<img	src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 											</a>
 										<%}%>
@@ -919,10 +901,8 @@
 									<% String commentDetail = uicomponent.render(comment); %>
 										<div class="responseItemContainerRight">
 											<div class="commentContent">
-												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>">
-													<span class="userName">
-														<%= FAQUtils.getFullName(owner);%>
-													</span>
+												<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", owner)%>">
+													<span class="userName"><%= FAQUtils.getFullName(owner);%></span>
 												</a>
 												<div class="theContent">$commentDetail</div>
 												<div class="date"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
@@ -930,12 +910,11 @@
 										</div>
 									</div><!-- end responseItem comments -->
 								</div><!-- end responseItemContainer of comments -->
-								<%} %> <!-- end for comments -->
+							<%} %> <!-- end for comments -->
 
-								<%if(uicomponent.getChildById(uicomponent.COMMENT_ITER + question.getId())!= null) { %>
-									<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
-								<%} %>
-
+							<%if(uicomponent.getChildById(uicomponent.COMMENT_ITER + question.getId())!= null) { %>
+								<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
+							<%} %>
 						<% } %>
 
 							</div><!-- end responseContainer -->
@@ -964,5 +943,4 @@
 		<%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR);%>
 	</div>
 </div>
-<script type="text/javascript" src="/forumResources/syntaxhighlighter/load_syntaxhighlighter.js"></script>
-
+<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>

@@ -374,10 +374,6 @@ public class UIForumPortlet extends UIPortletApplication {
     return list;
   }
 
-  public String[] getImportJSTagCode() {
-    return new String[] { "shCore", "shBrushBash", "shBrushCpp", "shBrushCSharp", "shBrushCss", "shBrushDelphi", "shBrushGroovy", "shBrushJava", "shBrushJScript", "shBrushPhp", "shBrushPython", "shBrushRuby", "shBrushScala", "shBrushSql", "shBrushVb", "shBrushXml" };
-  }
-
   public List<String> getInvisibleForums() {
     return invisibleForums;
   }
@@ -668,17 +664,17 @@ public class UIForumPortlet extends UIPortletApplication {
     ResourceBundle res = context.getApplicationResourceBundle();
     if (path.equals(Utils.FORUM_SERVICE)) {
       renderForumHome();
-    } else if (path.indexOf(ForumUtils.FIELD_SEARCHFORUM_LABEL) >= 0) {
+    } else if (path.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
       updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       UISearchForm searchForm = getChild(UISearchForm.class);
       searchForm.setPath(ForumUtils.EMPTY_STR);
       searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
       searchForm.setSearchOptionsObjectType(ForumUtils.EMPTY_STR);
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
-    } else if (path.lastIndexOf(Utils.TAG) >= 0) {
+    } else if (path.indexOf(Utils.TAG) == 0) {
       updateIsRendered(ForumUtils.TAG);
       getChild(UITopicsTag.class).setIdTag(path);
-    } else if (path.lastIndexOf(Utils.TOPIC) >= 0) {
+    } else if (isRenderedTopic(path)) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
@@ -929,6 +925,27 @@ public class UIForumPortlet extends UIPortletApplication {
       path = Utils.FORUM_SERVICE;
     }
     getChild(UIBreadcumbs.class).setUpdataPath(path);
+  }
+  
+  /* Check if path is rendered topic. There are 2 syntax indicating a topic to render
+   * Case 1: topic(\w)*
+   * Case 2: CategorySpace(\w)* /ForumSpace(w)* /topic(w)*
+   * @param path the path to check
+   * @return isRendered Topic or not
+   */
+  private boolean isRenderedTopic(String path) {
+    if (CommonUtils.isEmpty(path)) {
+      return false;
+    }
+    // Check case 1
+    if (path.startsWith(Utils.TOPIC)) {
+      return true;
+    }
+    // Check case 2
+    if (path.lastIndexOf("/" + Utils.TOPIC) >= 0) {
+      return true;
+    }
+    return false;
   }
 
   static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {

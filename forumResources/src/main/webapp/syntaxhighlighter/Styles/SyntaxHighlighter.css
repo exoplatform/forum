@@ -1,4 +1,7 @@
-﻿.dp-highlighter
+@import url('/forumResources/syntaxhighlighter/Styles/shCore.css');
+@import url('/forumResources/syntaxhighlighter/Styles/shThemeDefault.css');
+
+.dp-highlighter
 {
 	font-family: "Consolas", "Courier New", Courier, mono, serif;
 	font-size: 12px;

@@ -277,6 +277,25 @@ public class ForumUtils {
     }
     return strOrderBy;
   }
+
+  /**
+   * Get orderBy of SQL query by input parameter
+   * 
+   * @param strOrderBy The existing orderBy.
+   * @param param The property parameter
+   * @return The new oderBy
+   */
+  public static String getSQLOrderBy(String strOrderBy, String param) {
+    if (isEmpty(param)) {
+      return strOrderBy;
+    }
+    //
+    if (isEmpty(strOrderBy) || strOrderBy.indexOf(param) < 0) {
+      return param + Utils.ASC;
+    }
+    // Reverse sort of a property: ASC to DESC or DESC to ASC
+    return param + ((strOrderBy.indexOf(Utils.DESC) > 0) ? Utils.ASC : Utils.DESC);
+  }
   
   public static String updateMultiValues(String value, String values) {
     if (!isEmpty(values)) {
