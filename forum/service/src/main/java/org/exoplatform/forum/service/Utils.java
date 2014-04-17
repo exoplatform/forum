@@ -751,6 +751,11 @@ public class Utils implements ForumNodeTypes {
    */
   public static String getForumId(String path) {
     if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.FORUM) != -1) {
+      String categoryId = getCategoryId(path);
+      if (!isEmpty(categoryId)) {
+        path = path.substring(path.lastIndexOf(categoryId) + categoryId.length());
+        return getForumId(path);
+      }
       String forumId = path.substring(path.lastIndexOf(Utils.FORUM));
       if (forumId.indexOf("/") != -1) {
         forumId = forumId.substring(0, forumId.indexOf("/"));
