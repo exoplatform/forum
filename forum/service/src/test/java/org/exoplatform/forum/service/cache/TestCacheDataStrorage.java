@@ -24,11 +24,14 @@ import javax.jcr.Session;
 
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.impl.model.TopicListAccess;
@@ -222,6 +225,37 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     //
     topicSummary = cacheDataStorage.getTopicSummary(topic.getPath());
     assertTrue(topicSummary.getIsPoll());
+  }
+  
+  public void testClearWatchedCategory() throws Exception {
+    // set Data
+    initDefaultData();
+    //Add watch for category
+    Category category = cacheDataStorage.getCategory(categoryId);
+    String categoryPath= category.getPath();
+    List<String> values = new ArrayList<String>();
+    values.add("huongnt@exoplatform.com");
+    cacheDataStorage.addWatch(1, categoryPath, values, "root");
+    //Check watch's list for category
+    List<Watch> categoryWatchList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(categoryWatchList.get(0).getEmail(), values.get(0));
+    //Delete email in watch's list
+    cacheDataStorage.removeWatch(1, categoryPath, "/" + values.get(0));
+    //Check watch's list after deleting
+    categoryWatchList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(categoryWatchList.size(), 0);
+    //Add watch for forum
+    Forum forum = cacheDataStorage.getForum(categoryId, forumId);
+    String forumPath = forum.getPath();
+    cacheDataStorage.addWatch(1, forumPath, values, "root");
+    //Check watch's list for forum
+    List<Watch> forumWatchList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(forumWatchList.get(0).getEmail(), values.get(0));
+    //Delete email in watch's list
+    cacheDataStorage.removeWatch(1, forumPath, "/" + values.get(0));
+    //Check watch's list after deleting
+    forumWatchList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(forumWatchList.size(), 0);
   }
   
   private void saveHasPoll(String topicPath) throws Exception {
