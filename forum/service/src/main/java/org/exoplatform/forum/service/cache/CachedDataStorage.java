@@ -861,9 +861,7 @@ public class CachedDataStorage implements DataStorage, Startable {
         new TopicKey(Utils.getSubPath(topicPath.toUpperCase()), false)
     ).build();
     //
-    got.setIsPoll(topicHasPoll(got.getPath()));
-    
-    return got;
+    return getTopicPoll(got);
   }
 
   public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
@@ -892,9 +890,7 @@ public class CachedDataStorage implements DataStorage, Startable {
         new TopicKey(topicPath, isLastPost)
     ).build();
     //
-    got.setIsPoll(topicHasPoll(got.getPath()));
-    
-    return got;
+    return getTopicPoll(got);
   }
 
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
@@ -1347,6 +1343,9 @@ public class CachedDataStorage implements DataStorage, Startable {
       if (path.indexOf(sPath) < 0) {
         return null;
       }
+      if (got instanceof Topic) {
+        return getTopicPoll((Topic) got);
+      }
       return got;
     }
   }
@@ -1392,9 +1391,20 @@ public class CachedDataStorage implements DataStorage, Startable {
       Object got = storage.getObjectNameById(id, type);
       return getObjectNameByKey(got, key);
     } else {
-      return data.build();
+      Object object = data.build();
+      if (object instanceof Topic) {
+        return getTopicPoll((Topic) object);
+      }
+      return object;
     }
 
+  }
+  
+  private Topic getTopicPoll(Topic topic) {
+    if(topic != null) {
+      topic.setIsPoll(topicHasPoll(topic.getPath()));
+    }
+    return topic;
   }
 
   // TODO : need range

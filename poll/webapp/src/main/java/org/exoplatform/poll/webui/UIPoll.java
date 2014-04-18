@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.portlet.PortletPreferences;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
@@ -34,6 +35,8 @@ import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollNodeTypes;
 import org.exoplatform.poll.webui.popup.UIPollForm;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -84,6 +87,17 @@ public class UIPoll extends BasePollForm {
     UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
     isAdmin = pollPortlet.isAdmin();
     userId = pollPortlet.getUserId();
+
+    //By default, admin chose what poll to display but when access poll by url,
+    //we check if it's a correct poll's id then display this poll
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String url = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
+    String id = url.substring(url.lastIndexOf("/") + 1);
+    Poll poll = getPollService().getPoll(id);
+    if (poll != null) {
+      updatePollById(id);
+      return;
+    }
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     pollId = portletPref.getValue(Utils.POLL_ID_SHOW, StringUtils.EMPTY);
