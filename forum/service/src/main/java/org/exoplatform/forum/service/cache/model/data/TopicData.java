@@ -2,6 +2,7 @@ package org.exoplatform.forum.service.cache.model.data;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.ArrayList;
 
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -131,7 +132,7 @@ public class TopicData implements CachedData<Topic> {
     topic.setEmailNotification(this.emailNotification);
     topic.setVoteRating(this.voteRating);
     if (this.attachments != null) {
-      topic.setAttachments(Arrays.asList(this.attachments));
+      topic.setAttachments(new ArrayList<ForumAttachment>(Arrays.asList(this.attachments)));
     }
     return topic;
 
