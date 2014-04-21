@@ -230,32 +230,87 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
   public void testClearWatchedCategory() throws Exception {
     // set Data
     initDefaultData();
-    //Add watch for category
-    Category category = cacheDataStorage.getCategory(categoryId);
-    String categoryPath= category.getPath();
     List<String> values = new ArrayList<String>();
     values.add("huongnt@exoplatform.com");
-    cacheDataStorage.addWatch(1, categoryPath, values, "root");
-    //Check watch's list for category
-    List<Watch> categoryWatchList = cacheDataStorage.getWatchByUser("root");
-    assertEquals(categoryWatchList.get(0).getEmail(), values.get(0));
-    //Delete email in watch's list
-    cacheDataStorage.removeWatch(1, categoryPath, "/" + values.get(0));
-    //Check watch's list after deleting
-    categoryWatchList = cacheDataStorage.getWatchByUser("root");
-    assertEquals(categoryWatchList.size(), 0);
-    //Add watch for forum
+
+    // Add watch for category with pullPath
+    Category category = cacheDataStorage.getCategory(categoryId);
+    cacheDataStorage.addWatch(1, category.getPath(), values, "root");
+    // Check watch's list for category
+    List<Watch> watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.get(0).getEmail(), values.get(0));
+
+    // Delete email in watch's list
+    cacheDataStorage.removeWatch(1, category.getPath(), "/" + values.get(0));
+    // Check watch's list after deleting
+    watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.size(), 0);
+
+    // Add watch for forum with forumPath
     Forum forum = cacheDataStorage.getForum(categoryId, forumId);
-    String forumPath = forum.getPath();
-    cacheDataStorage.addWatch(1, forumPath, values, "root");
-    //Check watch's list for forum
-    List<Watch> forumWatchList = cacheDataStorage.getWatchByUser("root");
-    assertEquals(forumWatchList.get(0).getEmail(), values.get(0));
-    //Delete email in watch's list
-    cacheDataStorage.removeWatch(1, forumPath, "/" + values.get(0));
-    //Check watch's list after deleting
-    forumWatchList = cacheDataStorage.getWatchByUser("root");
-    assertEquals(forumWatchList.size(), 0);
+    cacheDataStorage.addWatch(1, forum.getPath(), values, "root");
+    // Check watch's list for forum
+    watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.get(0).getEmail(), values.get(0));
+
+    // Delete email in watch's list
+    cacheDataStorage.removeWatch(1, forum.getPath(), "/" + values.get(0));
+    // Check watch's list after deleting
+    watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.size(), 0);
+
+    // Add watch for topic with fullPath
+    Topic topic = cacheDataStorage.getTopic(categoryId, forumId, topicId, null);
+    cacheDataStorage.addWatch(1, topic.getPath(), values, "root");
+    // Check watch's list for topic
+    watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.get(0).getEmail(), values.get(0));
+
+    // Delete email in watch's list
+    cacheDataStorage.removeWatch(1, topic.getPath(), "/" + values.get(0));
+    // Check watch's list after deleting
+    watchedList = cacheDataStorage.getWatchByUser("root");
+    assertEquals(watchedList.size(), 0);
+  }
+
+  public void testClearWatchedCategoryWithSubPath() throws Exception {
+    // set Data
+    initDefaultData();
+    List<String> values = new ArrayList<String>();
+    values.add("john@exoplatform.com");
+
+    // Add watch for category with subpath
+    cacheDataStorage.addWatch(1, categoryId, values, "john");
+    List<Watch> watchedList = cacheDataStorage.getWatchByUser("john");
+    // Check category watch's list
+    assertEquals(watchedList.size(), 1);
+
+    cacheDataStorage.removeWatch(1, categoryId, "/" + values.get(0));
+    watchedList = cacheDataStorage.getWatchByUser("john");
+    // Check category watch's list after deleting
+    assertEquals(watchedList.size(), 0);
+
+    // Add watch for forum with subpath
+    cacheDataStorage.addWatch(1, categoryId + "/" + forumId, values, "john");
+    watchedList = cacheDataStorage.getWatchByUser("john");
+    // Check forum watch's list
+    assertEquals(watchedList.size(), 1);
+
+    cacheDataStorage.removeWatch(1, categoryId + "/" + forumId, "/" + values.get(0));
+    watchedList = cacheDataStorage.getWatchByUser("john");
+    // Check forum watch's list after deleting
+    assertEquals(watchedList.size(), 0);
+
+    // Add watch for topic with subpath
+    cacheDataStorage.addWatch(1, categoryId + "/" + forumId + "/" + topicId, values, "john");
+    watchedList = cacheDataStorage.getWatchByUser("john");
+    // Check topic watch's list
+    assertEquals(watchedList.size(), 1);
+
+    cacheDataStorage.removeWatch(1, categoryId + "/" + forumId + "/" + topicId, "/" + values.get(0));
+    // Check topic watch's list after deleting
+    watchedList = cacheDataStorage.getWatchByUser("john");
+    assertEquals(watchedList.size(), 0);
   }
   
   private void saveHasPoll(String topicPath) throws Exception {
