@@ -391,10 +391,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     if(isMod) {
       return true;
     }
-    //
+    //1. topic is Active -> can reply
+    //2. forum is Active -> can reply
+    //3. topic is Waiting -> can not reply
+    //4. forum is moderate topic AND topic is Approved -> can reply
+    //5. forum is moderate topic AND topic is UnApproved -> can not reply
+    //6. user's IP is not banned -> can reply
+    //7. user is not banned -> can reply
     isCanReply = (!userProfile.getIsBanned() && !isIPBaned(getRemoteIP()) &&
-                  !topic.getIsActive() && !topic.getIsActiveByForum() && topic.getIsWaiting()) ||
-                  (forum.getIsModerateTopic() && !topic.getIsApproved());
+                  topic.getIsActive() && topic.getIsActiveByForum() && !topic.getIsWaiting());
+    //Forum moderating option a topic is active AND topic is approved) 
+    //OR (Forum moderating option a topic is deactivate)  -> CAN POST
+    isCanReply &= ((forum.getIsModerateTopic() && topic.getIsApproved()) || !forum.getIsModerateTopic());
     //
     if(!isCanReply) {
       return false;
