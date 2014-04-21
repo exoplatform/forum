@@ -2,6 +2,7 @@ package org.exoplatform.forum.service.cache.model.data;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.ArrayList;
 
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -84,7 +85,7 @@ public class PostData  implements CachedData<Post> {
     post.setUserPrivate(this.userPrivate);
     post.setNumberAttach(this.numberAttach);
     if (this.attachments != null) {
-      post.setAttachments(Arrays.asList(this.attachments));
+      post.setAttachments(new ArrayList<ForumAttachment>(Arrays.asList(this.attachments)));
     }
 
     return post;
