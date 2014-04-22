@@ -302,7 +302,7 @@ public class UITopicForm extends BaseForumForm {
       String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST);
       Post post = getForumService().getPost(this.categoryId, this.forumId, this.topicId, postId);
       if (post != null && post.getAttachments() != null && post.getAttachments().size() > 0) {
-        this.attachments_.addAll((post.getAttachments());
+        this.attachments_.addAll(post.getAttachments());
         this.refreshUploadFileList();
       }
     }
