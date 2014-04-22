@@ -220,7 +220,7 @@ public class UITopicForm extends BaseForumForm {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
       fileUpload.setActionType(ActionData.TYPE_ATT);
-      String fileName = attachdata.getName();;
+      String fileName = attachdata.getName();
       fileUpload.setActionName(fileName + "(" + ForumUtils.getSizeFile(attachdata.getSize()) + ")");
       fileUpload.setShowLabel(true);
       fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileNameAndFileType(fileName, attachdata.getMimeType(), null));
@@ -302,7 +302,7 @@ public class UITopicForm extends BaseForumForm {
       String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST);
       Post post = getForumService().getPost(this.categoryId, this.forumId, this.topicId, postId);
       if (post != null && post.getAttachments() != null && post.getAttachments().size() > 0) {
-        this.attachments_ = post.getAttachments();
+        this.attachments_.addAll(post.getAttachments());
         this.refreshUploadFileList();
       }
     }
@@ -589,7 +589,6 @@ public class UITopicForm extends BaseForumForm {
       for (ForumAttachment att : uiTopicForm.attachments_) {
         if (att.getId().equals(attFileId)) {
           uiTopicForm.removeFromUploadFileList(att);
-          uiTopicForm.attachments_.remove(att);
           break;
         }
       }
