@@ -3131,7 +3131,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     StringBuilder sqlQuery = jcrPathLikeAndNotLike(EXO_POST, topicPath.toString());
 
-    sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_USER_PRIVATE, EXO_USER_PRIVATE))
+    sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_USER_PRIVATE, EXO_USER_PRI))
             .append(Utils.getSQLQueryByProperty("AND", EXO_IS_FIRST_POST, "false"));
     if (hasOrder) {
       sqlQuery.append(" ORDER BY ").append(EXO_CREATED_DATE).append(" ASC");
