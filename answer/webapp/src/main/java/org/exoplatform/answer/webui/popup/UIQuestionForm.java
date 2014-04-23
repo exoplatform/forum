@@ -154,6 +154,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   protected boolean                      isRenderSelectLang   = false;
 
+  private boolean                        isReadOnlyAuthor     = true;
+
   private FAQSetting                     faqSetting_;
   
   public void activate() {
@@ -231,12 +233,13 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  public void initPage(boolean isEdit) throws Exception {
+  public void initPage() throws Exception {
     setLanguages();
+    isReadOnlyAuthor = isReadOnlyAuthor();
     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_);
-    if (author_.trim().length() > 0)
-      inputAuthor.setReadOnly(true);
+    inputAuthor.setDisabled(isReadOnlyAuthor);
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_);
+    inputEmailAddress.setDisabled(isReadOnlyAuthor);
     inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);
     if (!FAQUtils.isFieldEmpty(getEditLanguage())) {
@@ -289,13 +292,21 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       }
     }
     addUIFormInput(inputAttachcment);
-    if (question_ != null && !isEdit) {
+    if (question_ != null) {
       this.setListFileAttach(question_.getAttachMent());
       try {
         refreshUploadFileList();
       } catch (Exception e) {
         log.error("Refresh upload InputActachcment is fall, exception: " + e.getMessage());
       }
+    }
+  }
+  
+  private boolean isReadOnlyAuthor() {
+    try {
+      return !CommonUtils.isEmpty(getAuthor()) && UserHelper.getUserByUserId(getAuthor()) != null;
+    } catch (Exception e) {
+      return false;
     }
   }
 
@@ -339,11 +350,10 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       }
       isApproved_ = question_.isApproved();
       isActivated_ = question_.isActivated();
-      initPage(false);
-      UIFormStringInput authorQ = this.getChildById(AUTHOR);
-      authorQ.setValue(question_.getAuthor());
-      UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
-      emailQ.setValue(question_.getEmail());
+      
+      setEmail(question_.getEmail());
+      setAuthor(question_.getAuthor());
+      initPage();
       
       if(mapLanguage.containsKey(this.editLanguage)){
         inputQuestionDetail.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(mapLanguage.get(editLanguage).getDetail()));
@@ -354,7 +364,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       }
     } catch (Exception e) {
       log.error("Set question is fall, exception: " + e.getMessage());
-      initPage(false);
+      initPage();
     }
   }
 
@@ -403,7 +413,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     questionId_ = null;
     defaultLanguage_ = FAQUtils.getDefaultLanguage();
     lastLanguage_ = defaultLanguage_;
-    initPage(false);
+    initPage();
   }
 
   protected UIForm getParentForm() {
@@ -506,21 +516,21 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         boolean isNew = true;
         String author = questionForm.inputAuthor.getValue();
         String emailAddress = questionForm.inputEmailAddress.getValue();
+        if (!questionForm.isReadOnlyAuthor) {
+          if (CommonUtils.isEmpty(author)) {
+            warning("UIQuestionForm.msg.author-is-null");
+            return;
+          }
+          if (CommonUtils.isEmpty(emailAddress) || !FAQUtils.isValidEmailAddresses(emailAddress)) {
+            warning("UIQuestionForm.msg.email-address-invalid");
+            return;
+          }
+        }
+        
         String questionContent = questionForm.inputQuestionContent.getValue();
-        if (author == null || author.trim().length() < 1) {
-          warning("UIQuestionForm.msg.author-is-null");
-          return;
-        } else if (FAQUtils.getCurrentUser() == null && UserHelper.getUserByUserId(author) != null) {
-          warning("UIQuestionForm.msg.author-is-duplicate");
-          return;
-        }
-        if (emailAddress == null || emailAddress.trim().length() < 1 || !FAQUtils.isValidEmailAddresses(emailAddress)) {
-          warning("UIQuestionForm.msg.email-address-invalid");
-          return;
-        }
         String language = questionForm.selectLanguage.getValue();
         language = FAQUtils.isFieldEmpty(language) ? questionForm.defaultLanguage_ : language;
-        // Duy Tu: Check require question content not empty.
+        // Check the question content is not empty.
         if (FAQUtils.isFieldEmpty(questionContent)) {
           if (language.equals(questionForm.defaultLanguage_)) {
             warning("UIQuestionForm.msg.default-question-null");
