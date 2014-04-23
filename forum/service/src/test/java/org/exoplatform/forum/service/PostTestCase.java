@@ -161,5 +161,18 @@ public class PostTestCase extends BaseForumServiceTestCase {
    
   }
   
+  public void testGetPostForSplitTopic() throws Exception {
+    initDefaultData();
+    
+    List<Post> posts = new ArrayList<Post>();
+    for (int i = 0; i < 5; ++i) {
+      Post post = createdPost();
+      posts.add(post);
+      forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    }
+    String topicPath = categoryId + "/" + forumId + "/" + topicId;
+    JCRPageList pageList = forumService_.getPostForSplitTopic(topicPath);
+    assertEquals(5, pageList.getAvailable());
+  }
   
 }
