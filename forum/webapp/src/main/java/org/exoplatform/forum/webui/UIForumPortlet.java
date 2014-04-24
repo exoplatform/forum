@@ -531,15 +531,15 @@ public class UIForumPortlet extends UIPortletApplication {
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("'); forumNotify.setPostLink('").append(postLink).append("');");
       StringBuilder initParam = new StringBuilder("forumNotify.initParam('");
-      initParam.append(WebUIUtils.getLabel(getId(), "Notification")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "message")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "post")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "titeName")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "from")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "briefContent")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "GoDirectly")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "ClickHere")).append("', '")
-               .append(WebUIUtils.getLabel(getId(), "Title")).append("');");
+      initParam.append(WebUIUtils.getLabelEscapedJavaScript(getId(), "Notification")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "message")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "post")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "titeName")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "from")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "briefContent")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "GoDirectly")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "ClickHere")).append("', '")
+               .append(WebUIUtils.getLabelEscapedJavaScript(getId(), "Title")).append("');");
       ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
     }
   }
