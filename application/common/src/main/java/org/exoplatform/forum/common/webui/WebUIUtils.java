@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -67,6 +68,10 @@ public class WebUIUtils {
     } catch (MissingResourceException e) {
       return label;
     }
+  }
+
+  public static String getLabelEscapedJavaScript(String componentId, String label) {
+    return StringEscapeUtils.escapeJavaScript(getLabel(componentId, label));
   }
   
   static public RequireJS addScripts(String module, String alias) {
