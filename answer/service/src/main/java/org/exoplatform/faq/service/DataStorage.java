@@ -112,6 +112,8 @@ public interface DataStorage {
   long getMaxindexCategory(String parentId) throws Exception;
 
   void saveCategory(String parentId, Category cat, boolean isAddNew);
+  
+  void saveCategory(String parentId, Category cat, boolean isAddNew, boolean isResetIndex);
 
   List<Cate> listingCategoryTree() throws Exception;
   
