@@ -840,7 +840,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   public Topic getTopicSummary(final String topicPath) {
     TopicData data = topicData.get(new TopicKey(topicPath, false));
     if (data != null) {
-      return data.build();
+      return getTopicPoll(data.build());
     }
     //
     Topic got = topicDataFuture.get(
