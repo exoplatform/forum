@@ -45,6 +45,9 @@ public abstract class ForumEventCompletion implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
+      if (post == null) {
+        return false;
+      }
       for (ForumEventLifeCycle f : listeners_) {
         try {
           if (isNew)
@@ -71,6 +74,9 @@ public abstract class ForumEventCompletion implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
+      if (topic == null) {
+        return false;
+      }
       for (ForumEventLifeCycle f : listeners_) {
         try {
           if (isNew) {
