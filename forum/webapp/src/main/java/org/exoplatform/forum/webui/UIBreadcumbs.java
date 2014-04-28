@@ -192,7 +192,11 @@ public class UIBreadcumbs extends UIContainer {
   }
 
   protected String getPath(int index) {
-    return this.path_.get(index);
+    try {
+      return this.path_.get(index);
+    } catch (IndexOutOfBoundsException e) {
+      return ForumUtils.FIELD_EXOFORUM_LABEL;
+    }
   }
 
   protected int getMaxPath() {

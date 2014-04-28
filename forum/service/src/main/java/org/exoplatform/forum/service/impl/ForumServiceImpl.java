@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.jcr.NodeIterator;
 
@@ -226,6 +225,9 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void stop() {
+    if (completionService != null) {
+      completionService.shutdownNow();
+    }
   }
 
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
@@ -548,8 +550,17 @@ public class ForumServiceImpl implements ForumService, Startable {
     }
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     //
-    Callable<Boolean> callAble = new ForumEventCompletion.ProcessTopic(((isNew) ? topic : edited), isNew).setListeners(listeners_);
-    completionService.addTask(callAble);
+    for (ForumEventLifeCycle f : listeners_) {
+      try {
+        if (isNew && topic != null) {
+          f.addTopic(topic);
+        } else if (edited != null) {
+          f.updateTopic(edited);
+        }
+      } catch (Exception e) {
+        log.debug("Failed to run function addTopic/updateTopic in the class ForumEventLifeCycle. ", e);
+      }
+    }
   }
 
   /**
@@ -718,12 +729,21 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
-    if (post.getUserPrivate().length > 1){
+    if (post.getUserPrivate().length > 1)
       return;
-    }
     //
-    Callable<Boolean> callAble = new ForumEventCompletion.ProcessPost(post, isNew).setListeners(listeners_);
-    completionService.addTask(callAble);
+    if (post != null) {
+      for (ForumEventLifeCycle f : listeners_) {
+        try {
+          if (isNew)
+            f.addPost(post);
+          else
+            f.updatePost(post);
+        } catch (Exception e) {
+          log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+        }
+      }
+    }
   }
 
   /**

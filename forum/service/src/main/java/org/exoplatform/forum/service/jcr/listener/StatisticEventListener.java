@@ -69,9 +69,13 @@ public class StatisticEventListener implements EventListener {
       while (evIter.hasNext()) {
         Event ev = evIter.nextEvent();
         String path = ev.getPath();
+        
         if (path.indexOf(Utils.TOPIC) > 0) {
           if (ev.getType() == Event.NODE_ADDED) {
             String owner = dataStorage.getOwner(path);
+            if (Utils.isEmpty(owner)) {
+              continue;
+            }
             if (path.indexOf(Utils.POST) > 0) {
               postCount = postCount + 1;
               dataStorage.updateProfileAddPost(owner, path);

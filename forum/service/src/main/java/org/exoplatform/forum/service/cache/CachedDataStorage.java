@@ -107,6 +107,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
   private static final String SCREEN_NAME_KEY = "screenName";
   private static final String FORUM_CAN_VIEW_KEY = "userCanView";
+  private static final String USER_AVATAR_KEY = "userAvatarKey";
 
   private DataStorage storage;
   private CacheService service;
@@ -561,14 +562,27 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void setDefaultAvatar(String userName) {
     storage.setDefaultAvatar(userName);
+    miscData.remove(new SimpleCacheKey(USER_AVATAR_KEY, userName));
   }
 
-  public ForumAttachment getUserAvatar(String userName) throws Exception {
-    return storage.getUserAvatar(userName);
+  public ForumAttachment getUserAvatar(final String userName) throws Exception {
+    SimpleCacheKey key = new SimpleCacheKey(USER_AVATAR_KEY, userName);
+    //
+    return (ForumAttachment) miscDataFuture.get(new ServiceContext<SimpleCacheData>() {
+      public SimpleCacheData<ForumAttachment> execute() {
+        try {
+          ForumAttachment got = storage.getUserAvatar(userName);
+          return new SimpleCacheData<ForumAttachment>(got);
+        } catch (Exception e) {
+          return new SimpleCacheData<ForumAttachment>(null);
+        }
+      }
+    }, key).build();
   }
 
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception {
     storage.saveUserAvatar(userId, fileAttachment);
+    miscData.remove(new SimpleCacheKey(USER_AVATAR_KEY, userId));
   }
 
   public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception {
