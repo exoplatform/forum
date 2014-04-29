@@ -82,12 +82,11 @@ public class Utils {
 
     // calculating...
     int[] votes = new int[poll.getOption().length];
-    int total = 0;
+    int total = userVote.size();
     for (String uv : userVote) {
       String[] uvArr = uv.split(COLON);
       for (int i = 1; i < uvArr.length; i++) {
         votes[Integer.parseInt(uvArr[i].trim())]++;
-        total++;
       }
     }
 
