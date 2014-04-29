@@ -128,26 +128,26 @@ public class UtilsTestCase extends TestCase {
     
     Poll pFirstVote = Utils.calculateVote(p2, "root", "0:2");
     String[] sVotes = pFirstVote.getVote();
-    assertEquals(sVotes[0],"50.0");
+    assertEquals(sVotes[0],"100.0");
     assertEquals(sVotes[1],"0.0");
-    assertEquals(sVotes[2],"50.0");
+    assertEquals(sVotes[2],"100.0");
     assertEquals(sVotes[3],"0.0");
     
     //Test the second vote that is the update vote
     Poll pSecondUpdate = Utils.calculateVote(p2, "root", "1:3");
     sVotes=pSecondUpdate.getVote();
     assertEquals(sVotes[0],"0.0");
-    assertEquals(sVotes[1],"50.0");
+    assertEquals(sVotes[1],"100.0");
     assertEquals(sVotes[2],"0.0");
-    assertEquals(sVotes[3],"50.0");
+    assertEquals(sVotes[3],"100.0");
     
     //Test the second vote that is the new vote
     Poll pSecondNew = Utils.calculateVote(p2, "john", "0:2");
     sVotes=pSecondNew.getVote();
-    assertEquals(sVotes[0],"25.0");
-    assertEquals(sVotes[1],"25.0");
-    assertEquals(sVotes[2],"25.0");
-    assertEquals(sVotes[3],"25.0");
+    assertEquals(sVotes[0],"50.0");
+    assertEquals(sVotes[1],"50.0");
+    assertEquals(sVotes[2],"50.0");
+    assertEquals(sVotes[3],"50.0");
     
     
     
@@ -160,18 +160,18 @@ public class UtilsTestCase extends TestCase {
     //Test update vote
     Poll pUpdate = Utils.calculateVote(p, "root", "1:2");
     sVotes=pUpdate.getVote();
-    assertEquals(sVotes[0],"12.5");
-    assertEquals(sVotes[1],"25.0");
-    assertEquals(sVotes[2],"50.0");
-    assertEquals(sVotes[3],"12.5");
+    assertEquals(sVotes[0],"25.0");
+    assertEquals(sVotes[1],"50.0");
+    assertEquals(sVotes[2],"100.0");
+    assertEquals(sVotes[3],"25.0");
     
     //Test new vote
     Poll pnew = Utils.calculateVote(p, "binh", "2:3");
     sVotes = pnew.getVote();
-    assertEquals(sVotes[0],"10.0");
-    assertEquals(sVotes[1],"20.0");
-    assertEquals(sVotes[2],"50.0");
-    assertEquals(sVotes[3],"20.0");
+    assertEquals(sVotes[0],"20.0");
+    assertEquals(sVotes[1],"40.0");
+    assertEquals(sVotes[2],"100.0");
+    assertEquals(sVotes[3],"40.0");
   }
   
 }
