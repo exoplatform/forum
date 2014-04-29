@@ -147,6 +147,7 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
+import com.google.common.base.Preconditions;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -1216,7 +1217,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private List<Forum> getForumsPublic(ForumFilter filter) {
     StringBuilder sqlQuery = new StringBuilder();
     sqlQuery.append(Utils.getSQLQueryByProperty("", EXO_IS_CLOSED, "false"))
-            .append(Utils.getSQLQueryByProperty("", EXO_IS_LOCK, "false"));
+            .append(Utils.getSQLQueryByProperty("AND", EXO_IS_LOCK, "false"));
     return getForums(filter, sqlQuery.toString());
   }
 
@@ -1351,24 +1352,28 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
+      //removes all of group what contains "spaces" group 
+      List<String> userListWithoutSpace = new ArrayList<String>();
+      for(String group : listOfUser) {
+        if (group != null && group.indexOf(Utils.CATEGORY_SPACE) == -1) {
+          userListWithoutSpace.add(group);
+        }
+      }
       // get can create topic
       List<String> categoriesCanCreateTopics = getCategoriesCanCreateTopics(sProvider, listOfUser, true);
 
-      Category cate = getCachedDataStorage().getCategoryIncludedSpace();
       // query forum by input-key
-
       StringBuffer strQuery = new StringBuffer("SELECT * FROM ");
 
       strQuery.append(EXO_FORUM).append(" WHERE ").append(JCR_PATH).append(" LIKE '").append(categoryHome.getPath()).append("/%' AND ");
-      if (cate != null) {
-        strQuery.append(" NOT ").append(JCR_PATH).append(" LIKE '").append(cate.getPath()).append("/%' AND ");
-      }
       strQuery.append("( UPPER(").append(EXO_NAME).append(") LIKE '").append(forumNameFilter.toUpperCase())
               .append("%' OR UPPER(").append(EXO_NAME).append(") LIKE '% ").append(forumNameFilter.toUpperCase()).append("%')")
               .append(Utils.getSQLQueryByProperty("AND", EXO_IS_CLOSED, "false"))
               .append(Utils.getSQLQueryByProperty("AND", EXO_IS_LOCK, "false"))
-              .append(" AND ").append(getCanCreateTopicQuery(listOfUser, false))
+              .append(" AND ").append(getCanCreateTopicQuery(userListWithoutSpace, false))
               .append(" ORDER BY ").append(EXO_NAME);
+      
+      LOG.debug("SQL statement: " + strQuery.toString());
 
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
@@ -1400,6 +1405,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         while (iter.hasNext()) {
           Node node = iter.nextNode();
           categoryId = node.getParent().getName();
+          
+          if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
+            continue;
+          }
+          
           forumId = node.getName();
 
           // can create topic in category/forum
@@ -1425,13 +1435,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         nextOffset += totalSize;
       }
 
-      return new ArrayList<CategoryFilter>(categoryFilters.values());
+      return Collections.unmodifiableList(new ArrayList<CategoryFilter>(categoryFilters.values()));
     } catch (Exception e) {
+      LOG.warn("\nCould not filter forum by name: " + forumNameFilter + "::"+ e.getMessage());
       if (LOG.isDebugEnabled()) {
         LOG.debug("\nCould not filter forum by name: " + forumNameFilter + e.getCause());
       }
     }
-    return new ArrayList<CategoryFilter>();
+    return Collections.emptyList();
   }
 
   public Forum getForum(String categoryId, String forumId) {
@@ -2056,7 +2067,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Failed to retrieve topic list for forum " + filter.forumId(), e);
       }
-      return null;
+      return new ArrayList<Topic>();
     }
   }
 
@@ -3120,7 +3131,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     StringBuilder sqlQuery = jcrPathLikeAndNotLike(EXO_POST, topicPath.toString());
 
-    sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_USER_PRIVATE, EXO_USER_PRIVATE))
+    sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_USER_PRIVATE, EXO_USER_PRI))
             .append(Utils.getSQLQueryByProperty("AND", EXO_IS_FIRST_POST, "false"));
     if (hasOrder) {
       sqlQuery.append(" ORDER BY ").append(EXO_CREATED_DATE).append(" ASC");
@@ -3227,6 +3238,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
+    if (Utils.isEmpty(userName)) {
+      throw new NullPointerException("userName");
+    }
+
+    if (Utils.isEmpty(userId)) {
+      throw new NullPointerException("userLogin");
+    }
+    
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       String query = queryPostsByUser(new PostFilter(userName, userId, isMod, strOrderBy), true);
@@ -3241,7 +3260,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_POST);
     sqlQuery.append(" WHERE ")
             .append(Utils.getSQLQueryByProperty("", EXO_IS_FIRST_POST, "false"))
-            .append(Utils.getSQLQueryByProperty("", EXO_OWNER, filter.userName()));
+            .append(Utils.getSQLQueryByProperty("AND", EXO_OWNER, filter.userName()));
 
     if (filter.isAdmin() == false) {
       sqlQuery.append(Utils.getSQLQueryByProperty("AND", EXO_IS_APPROVED, "true"))

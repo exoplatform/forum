@@ -1,6 +1,6 @@
 <%
-import org.exoplatform.forum.ForumUtils;
-	ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initShowBBcodeHelp('"+uiform.id+"') ;");
+	import org.exoplatform.forum.common.webui.WebUIUtils;
+	WebUIUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.initShowBBcodeHelp('"+uiform.id+"') ;");
 %>
 
 <div class="uiAddBBCodeForm">
@@ -94,7 +94,6 @@ import org.exoplatform.forum.ForumUtils;
 				</div>
 			</div>
 			<% } else {
-			   org.exoplatform.forum.ForumUtils.addScripts("Syntaxhighlighter", null, "eXo.dp.SyntaxHighlighter.HighlightAll('code');");
 				 String actionPriview = uicomponent.event("Preview","back");
 			%>
 			<div class="control-group">
@@ -116,6 +115,7 @@ import org.exoplatform.forum.ForumUtils;
 					<button type="button" onclick="$actionPriview" class="btn"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
 				</div>
 			</div>
+			<%=WebUIUtils.addScriptSyntaxhighlighter()%>
 			<% } %>
 						
 			<% 

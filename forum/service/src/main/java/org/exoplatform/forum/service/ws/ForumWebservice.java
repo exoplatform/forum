@@ -313,7 +313,7 @@ public class ForumWebservice implements ResourceContainer {
             maxSize_ = 0;
           }
         }
-        categoryFilters = forumService.filterForumByName(forumName, userName, maxSize_);
+        categoryFilters.addAll(forumService.filterForumByName(forumName, userName, maxSize_));
         Collections.sort(categoryFilters, new Utils.CategoryNameComparator());
       }
       return Response.ok(categoryFilters, JSON_CONTENT_TYPE).cacheControl(cc).build();

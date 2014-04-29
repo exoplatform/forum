@@ -61,7 +61,7 @@ public class UIPageListPostByUser extends UIContainer {
 
   private String       userName           = ForumUtils.EMPTY_STR;
 
-  private String       strOrderBy         = Utils.EXO_CREATED_DATE.concat(Utils.DESCENDING);
+  private String       strOrderBy         = Utils.EXO_CREATED_DATE.concat(Utils.DESC);
 
   private boolean      hasEnableIPLogging = true;
 
@@ -87,7 +87,7 @@ public class UIPageListPostByUser extends UIContainer {
 
   public void setUserName(String userId) {
     this.userName = userId;
-    strOrderBy = Utils.EXO_CREATED_DATE.concat(Utils.DESCENDING);
+    strOrderBy = Utils.EXO_CREATED_DATE.concat(Utils.DESC);
   }
 
   @SuppressWarnings("unchecked")
@@ -227,7 +227,7 @@ public class UIPageListPostByUser extends UIContainer {
     public void execute(Event<UIPageListPostByUser> event) throws Exception {
       UIPageListPostByUser uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      uiContainer.strOrderBy = ForumUtils.getOrderBy(uiContainer.strOrderBy, path);
+      uiContainer.strOrderBy = ForumUtils.getSQLOrderBy(uiContainer.strOrderBy, path);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
   }
