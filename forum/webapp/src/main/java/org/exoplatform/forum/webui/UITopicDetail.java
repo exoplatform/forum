@@ -797,10 +797,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class AddTagTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      try {
-        UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
-        String tagIds = stringInput.getValue();
-        if (!ForumUtils.isEmpty(tagIds)) {
+      UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
+      String tagIds = stringInput.getValue();
+      if (!ForumUtils.isEmpty(tagIds)) {
+        try {
           String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=*':}{\"";
           for (int i = 0; i < special.length(); i++) {
             char c = special.charAt(i);
@@ -832,16 +832,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           } catch (Exception e) {
             topicDetail.log.error("Failed to add tag : ", e);
           }
-        } else {
-          warning("UITopicDetail.msg.empty-field");
-          return;
+          stringInput.setValue(ForumUtils.EMPTY_STR);
+          topicDetail.isEditTopic = true;
+          refresh();
+        } catch (Exception e) {
+          warning("UIForumPortlet.msg.topicEmpty", false);
+          topicDetail.refreshPortlet();
         }
-        stringInput.setValue(ForumUtils.EMPTY_STR);
-        topicDetail.isEditTopic = true;
-        refresh();
-      } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty", false);
-        topicDetail.refreshPortlet();
+      } else {
+        throwWarning("UITopicDetail.msg.empty-field");
       }
     }
   }
