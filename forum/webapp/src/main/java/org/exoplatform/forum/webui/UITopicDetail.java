@@ -83,6 +83,7 @@ import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.jfree.util.Log;
 
 
 @ComponentConfig(
@@ -1446,7 +1447,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       UserProfile selectProfile = topicDetail.getUserInfo(userId);
       try {
         selectProfile = topicDetail.getForumService().getUserInformations(selectProfile);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        Log.warn("Failed in getting user informations.", e);
+      }
       viewUserProfile.setUserProfileViewer(selectProfile);
     }
   }
