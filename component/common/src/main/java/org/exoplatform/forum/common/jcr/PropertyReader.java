@@ -3,6 +3,7 @@ package org.exoplatform.forum.common.jcr;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +65,18 @@ public class PropertyReader {
   public Date date(String name, Date defaultValue) {
     try {
       return node.getProperty(name).getDate().getTime();
+    } catch (Exception e) {
+      return defaultValue;
+    }
+  }
+  
+  public Calendar calendar(String name) {
+    return calendar(name, null);
+  }
+
+  public Calendar calendar(String name, Calendar defaultValue) {
+    try {
+      return node.getProperty(name).getDate();
     } catch (Exception e) {
       return defaultValue;
     }

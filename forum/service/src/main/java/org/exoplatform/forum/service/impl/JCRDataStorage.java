@@ -3165,7 +3165,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       PostFilter filter = new PostFilter(categoryId, forumId, topicId, isApproved, isHidden, isWaiting, userLogin);
 
       if (!Utils.isEmpty(strQuery)) {
-        throw new NotSupportedException("The method not support add more query.");
+        LOG.warn("This method doesn't support to add more query.");
       }
 
       return new ForumPageList(null, 10, makePostsSQLQuery(filter, true), true);
@@ -3909,10 +3909,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           String topicPath = postPath.substring(0, postPath.lastIndexOf("/"));
           String forumPath = postPath.substring(0, topicPath.lastIndexOf("/"));
           Node postNode = (Node) forumHomeNode.getSession().getItem(postPath);
+          PropertyReader postReader = new PropertyReader(postNode);
           Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
           Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
           Calendar lastPostDate = topicNode.getProperty(EXO_LAST_POST_DATE).getDate();
-          Calendar postDate = postNode.getProperty(EXO_CREATED_DATE).getDate();
+          Calendar postDate = postReader.calendar(EXO_CREATED_DATE);
           long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong();
           long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
           long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
@@ -3927,11 +3928,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             if (post.getIsWaiting()) {
               postNode.setProperty(EXO_IS_WAITING, true);
               Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
+              PropertyReader postLastNodeReader = new PropertyReader(postLastNode);
               if (postLastNode != null) {
-                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
-                topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
+                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNodeReader.calendar(EXO_CREATED_DATE));
+                topicNode.setProperty(EXO_LAST_POST_BY, postLastNodeReader.string(EXO_OWNER));
               }
-              newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+              newNumberAttach = newNumberAttach - postReader.l(EXO_NUMBER_ATTACH);
               if (newNumberAttach < 0)
                 newNumberAttach = 0;
               topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -3939,6 +3941,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               forumNode.setProperty(EXO_POST_COUNT, forumPostCount - 1);
             } else {
               postNode.setProperty(EXO_IS_WAITING, false);
+              topicNode.setProperty(EXO_LAST_POST_DATE, postReader.calendar(EXO_CREATED_DATE));
+              topicNode.setProperty(EXO_LAST_POST_BY, postReader.string(EXO_OWNER));
+              newNumberAttach = newNumberAttach + postReader.l(EXO_NUMBER_ATTACH);
+              topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+              topicNode.setProperty(EXO_POST_COUNT, topicPostCount + 1);
               sendNotification(topicNode, null, post, new MessageBuilder(), false);
             }
             break;
@@ -3947,11 +3954,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             if (post.getIsHidden()) {
               postNode.setProperty(EXO_IS_HIDDEN, true);
               Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
+              PropertyReader postLastNodeReader = new PropertyReader(postLastNode);
               if (postLastNode != null) {
-                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
-                topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
+                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNodeReader.calendar(EXO_CREATED_DATE));
+                topicNode.setProperty(EXO_LAST_POST_BY, postLastNodeReader.string(EXO_OWNER));
               }
-              newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+              newNumberAttach = newNumberAttach - postReader.l(EXO_NUMBER_ATTACH);
               if (newNumberAttach < 0)
                 newNumberAttach = 0;
               topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -3971,7 +3979,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               topicNode.setProperty(EXO_LAST_POST_DATE, postDate);
               topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
             }
-            newNumberAttach = newNumberAttach + postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+            newNumberAttach = newNumberAttach + postReader.l(EXO_NUMBER_ATTACH);
             topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
             topicNode.setProperty(EXO_POST_COUNT, topicPostCount + 1);
             forumNode.setProperty(EXO_POST_COUNT, forumPostCount + 1);
