@@ -2813,6 +2813,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         owner = post.getProperty(EXO_OWNER).getString();
         userPostMap.put(owner, (userPostMap.get(owner) != null ? userPostMap.get(owner) : 0) + 1);
       } catch (Exception e) {
+        LOG.error("Failed to get deleted post by user.", e);
       }
     }
     return userPostMap;
@@ -5999,7 +6000,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       forumSearch.setExcerpt(excerpt);
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.error("Failed to set property for unified search.", e);
     }
     return forumSearch;
   }

@@ -94,8 +94,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         results.add(result);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      LOG.error(e);
+      LOG.error("Failed in searching.", e);
     }
 
     return results;
