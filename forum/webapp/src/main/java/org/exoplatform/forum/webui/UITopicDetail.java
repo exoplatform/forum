@@ -966,7 +966,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       } catch (Exception e) {
         topicDetail.log.warn("Failed to delete topic: " + e.getMessage(), e);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent());
+      refresh();
     }
   }
 

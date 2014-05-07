@@ -12,6 +12,7 @@ import java.util.Map;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Utils;
@@ -269,5 +270,9 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class);
       portlet.cancelAction();
     }
+  }
+  
+  protected void initJavaScripts() {
+    WebUIUtils.addScripts("ForumCheckBox", "forumCheckBox", "forumCheckBox.init('"+getId()+"');");
   }
 }

@@ -1098,6 +1098,7 @@ public class CachedDataStorage implements DataStorage, Startable {
       clearTopicCache(categoryId, forumId, topicId);
       clearPostCache(categoryId, forumId, topicId, postId);
       clearPostListCache();
+      clearPostListCountCache(topicId);
       statistic = null;
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
