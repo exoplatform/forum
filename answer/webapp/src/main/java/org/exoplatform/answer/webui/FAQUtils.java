@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
@@ -483,20 +482,53 @@ public class FAQUtils {
       String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
       return new StringBuilder(portalContext.getPortalURI()).append(selectedNode).toString();
     } catch (Exception e) {
-      return ((HttpServletRequest) Util.getPortalRequestContext().getRequest()).getRequestURL().toString();
+      return Util.getPortalRequestContext().getRequest().getRequestURL().toString();
+    }
+  }
+
+  /**
+   * Get the current portlet url
+   * 
+   * @return
+   */
+  public static String getPortletURL() {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    //
+    String fullUrl = Util.getPortalRequestContext().getRequest().getRequestURL().toString();
+    try {
+      String host = fullUrl.substring(0, fullUrl.indexOf("/", 8));
+      //
+      String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
+      return new StringBuilder(host).append(portalContext.getPortalURI()).append(selectedNode).toString();
+    } catch (Exception e) {
+      return fullUrl;
     }
   }
   
   /**
-   * Get question uri by question id of question relative path.
+   * Get question URI by question id of question relative path.
    * 
    * @param: param the question id or question relative path.
    * @param: isAnswer is display form answer question or not.
-   * @return: the link go to the question and show form answer or not.
+   * @return: the URI go to the question and show form answer or not.
    * @throws Exception
   */
   public static String getQuestionURI(String param, boolean isAnswer) throws Exception {
-    return  getPortletURI().concat(Utils.QUESTION_ID).concat(param).concat((isAnswer)?Utils.ANSWER_NOW.concat("true"):"");
+    return new StringBuilder(getPortletURI()).append(Utils.QUESTION_ID)
+        .append(param).append((isAnswer) ? Utils.ANSWER_NOW + "true" : "").toString();
+  }
+
+  /**
+   * Get question URL by question id of question relative path.
+   * 
+   * @param: param the question id or question relative path.
+   * @param: isAnswer is display form answer question or not.
+   * @return: the URL go to the question and show form answer or not.
+   * @throws Exception
+  */
+  public static String getQuestionURL(String param, boolean isAnswer) throws Exception {
+    return new StringBuilder(getPortletURL()).append(Utils.QUESTION_ID)
+               .append(param).append((isAnswer) ? Utils.ANSWER_NOW + "true" : "").toString();
   }
   
   public static String getLinkDiscuss(String topicId) throws Exception {

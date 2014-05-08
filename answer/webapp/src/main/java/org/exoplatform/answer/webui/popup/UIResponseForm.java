@@ -405,9 +405,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       // Link Question to send mail
-       if(FAQUtils.isFieldEmpty(question.getLink())) {
-         question.setLink(FAQUtils.getQuestionURI(question.getId(), false));
-       }
+      question.setLink(FAQUtils.getQuestionURL(question.getId(), false));
 
       // set answer to question for discuss forum function
       if (responseForm.mapAnswers.containsKey(question.getLanguage())) {

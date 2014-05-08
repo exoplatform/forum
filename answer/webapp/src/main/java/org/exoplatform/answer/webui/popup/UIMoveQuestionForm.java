@@ -100,7 +100,7 @@ public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponen
           }
           question.setCategoryId(cateId);
           question.setCategoryPath(category.getPath());
-          String link = FAQUtils.getQuestionURI(new StringBuffer(category.getPath()).append("/").
+          String link = FAQUtils.getQuestionURL(new StringBuffer(category.getPath()).append("/").
                                                 append(Utils.QUESTION_HOME).append("/").append(question.getId()).toString(), false);
           FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
           FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);

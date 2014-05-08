@@ -608,10 +608,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         question.setAttachMent(questionForm.listFileAttach_);
         UIAnswersPortlet portlet = questionForm.getAncestorOfType(UIAnswersPortlet.class);
         UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-        // Create link by Vu Duy Tu.
-        if (FAQUtils.isFieldEmpty(question.getLink())) {
-          question.setLink(FAQUtils.getQuestionURI(question.getId(), false));
-        }
+        //
+        question.setLink(FAQUtils.getQuestionURL(question.getId(), false));
 
         // For discuss in forum
         try {
