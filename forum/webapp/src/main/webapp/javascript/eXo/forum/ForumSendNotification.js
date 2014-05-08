@@ -3,13 +3,12 @@
   var ForumSendNotification = {
       i18n : {
           notification : "Notification",
-          message : "message",
-          post : "post",
           privatePost : "You have received a new private post",
           privateMessage : "You have received a new private message",
           from : "From",
           briefContent : "Brief content",
-          goDirectly : "Go directly to the {0}",
+          goDirectlyToPost : "Go directly to the post",
+          goDirectlyToMessage : "Go directly to the message",
           clickHere : "Click here.",
           title : "Title"
       },
@@ -56,10 +55,8 @@
     return $.trim($('<span></span>').html(str).text().replace(/</gi, '&lt;').replace(/>/gi, '&gt;'));
   };
   
-  ForumSendNotification.buildLink = function(type, alink) {
-    var link = ForumSendNotification.i18n.goDirectly.replace('{0}', type);
-    link = link + ': <a style="color:#204AA0" href="javascript:void(0);" onclick="' + alink + '">' + ForumSendNotification.i18n.clickHere + '</a>';
-    return link;
+  ForumSendNotification.buildLink = function(linktype, alink) {
+    return linktype + ': <a style="color:#204AA0" href="javascript:void(0);" onclick="' + alink + '">' + ForumSendNotification.i18n.clickHere + '</a>';
   };
 
   ForumSendNotification.createMessage = function(message) {
@@ -71,26 +68,26 @@
       var name = msgBox.find('.name:first');
       name.html(name.html().replace('Message', i18n.notification));
       msgBox.find('.closePopup:first').on('click', component.closeBox);
-      //
+      
       if(message.type === 'PrivatePost') {
         var openLink = "window.open('" + component.postLink.replace('topicID', String(message.id)) + "', '_self');";
         msgBox.find('.nameMessage:first').html('<strong>' + i18n.privatePost + '</strong>');
-        msgBox.find('.link:first').html(component.buildLink(i18n.post, openLink));
+        msgBox.find('.link:first').html(component.buildLink(i18n.goDirectlyToPost, openLink));
       } else {
         msgBox.find('.nameMessage:first').html('<strong>' + i18n.privateMessage + '</strong>');
         var alink = $('#privateMessageLink');
         if (alink.exists()) {
-          msgBox.find('.link:first').html(component.buildLink(i18n.message, alink.attr('onclick')));
+          msgBox.find('.link:first').html(component.buildLink(i18n.goDirectlyToMessage, alink.attr('onclick')));
         }
       }
-      //
+
       msgBox.find('.from:first').html('<strong>' + i18n.from + ':</strong> ' + message.from);
       msgBox.find('.title:first').html('<strong>' + i18n.title + ':</strong> ' + component.getPlainText(message.name).replace(/Reply:/g, ''));
-      //
+
       var cont = component.getPlainText(message.message);
       msgBox.find('.content:first').html('<strong>' + i18n.briefContent + ':</strong> ' + cont);
       msgBox.find('.link:first').find('a').on('mouseup', component.closeBox);
-      //
+      
       var info = component.getInfo();
       msgBox.css({'width': '300px', 'top': info.top + 'px', 'right' : ((info.left > 5) ? info.left : 10) + 'px', 'z-index' : 1000});
       var container = $('<div class="uiForumPortlet forumBoxNotification"></div>')
@@ -99,7 +96,7 @@
       container.append(msgBox);
       $(document.body).append(container);
       msgBox.show('linear');
-      //
+      
       setTimeout(component.closeTimeBox, 15001);
       var reloadLink = $('#Reload');
       eval(String(reloadLink.attr('href')).replace('javascript:', '')); 
