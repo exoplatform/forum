@@ -222,6 +222,7 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
       Topic topic = uiForm.topic;
       topic.setIsApproved(true);
       topic.setIsWaiting(false);
+      topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
       List<Topic> topics = new ArrayList<Topic>();
       topics.add(topic);
       try {
