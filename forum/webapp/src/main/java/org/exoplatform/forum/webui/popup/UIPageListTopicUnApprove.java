@@ -133,6 +133,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
     public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
       UIPageListTopicUnApprove uiConponent = event.getSource();
       List<Topic> listTopic = new ArrayList<Topic>();
+      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
       for (String topicId : uiConponent.getIdSelected()) {
         Topic topic = uiConponent.getTopic(topicId);
         if (topic != null) {
@@ -142,6 +143,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
             topic.setIsApproved(true);
           else
             topic.setIsActive(true);
+          topic.setLink(link.replace("topicId", topic.getId()));
           listTopic.add(topic);
         }
       }

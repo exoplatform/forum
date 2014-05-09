@@ -750,6 +750,14 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   // ----------------------------------MenuThread---------------------------------
   static private abstract class ModifyTopicsActionListener extends BaseTopicContainerActionListener {
     protected List<String> topicIdNotExist = new ArrayList<String>();
+    protected String link = null; 
+
+    protected String getLink(String topicId) {
+      if (link == null) {
+        link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
+      }
+      return link.replace("topicId", topicId);
+    }
 
     protected List<String> topicIdSelected() throws Exception {
       List<String> topicIds = new ArrayList<String>();
@@ -840,6 +848,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsApproved() == false) {
         topic.setIsApproved(true);
+        topic.setLink(getLink(topic.getId()));
         return true;
       }
       return false;
@@ -1118,6 +1127,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsWaiting() == true) {
         topic.setIsWaiting(false);
+        topic.setLink(getLink(topic.getId()));
         return true;
       }
       return false;

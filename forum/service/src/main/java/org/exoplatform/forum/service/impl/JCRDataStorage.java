@@ -55,7 +55,6 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.transaction.NotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -148,7 +147,6 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
-import com.google.common.base.Preconditions;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -2712,7 +2710,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicNode.setProperty(EXO_TAG_ID, topic.getTagId());
         topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, true);
         topicNode.setProperty(EXO_IS_POLL, topic.getIsPoll());
-        topicNode.setProperty(EXO_LINK, topic.getLink());
+        topicNode.setProperty(EXO_LINK, CommonUtils.getURI(topic.getLink()));
         topicNode.setProperty(EXO_PATH, forumId);
 
         if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean() && !topic.getIsWaiting()) {
@@ -3582,7 +3580,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     post.setCreatedDate(calendar.getTime());
     postNode.setProperty(EXO_CREATED_DATE, calendar);
     postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
-    postNode.setProperty(EXO_LINK, post.getLink());
+    postNode.setProperty(EXO_LINK, CommonUtils.getURI(post.getLink()));
 
     boolean isFistPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId());
     postNode.setProperty(EXO_IS_FIRST_POST, isFistPost);
@@ -3729,7 +3727,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             messageBuilder.setMessage(topic.getDescription());
             messageBuilder.setCreatedDate(topic.getCreatedDate());
             messageBuilder.setOwner(owner);
-            messageBuilder.setLink(topic.getLink());
+            if(Utils.isEmpty(messageBuilder.getLink())) {
+              messageBuilder.setLink(topic.getLink());
+            }
             sendEmailNotification(emailList, messageBuilder.getContentEmail());
           }
           if (node.isNodeType(EXO_FORUM) || count > 1)
@@ -3860,7 +3860,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           messageBuilder.setAddName(post.getName());
           messageBuilder.setMessage(post.getMessage());
           messageBuilder.setCreatedDate(post.getCreatedDate());
-          messageBuilder.setLink(post.getLink());
+          if(Utils.isEmpty(messageBuilder.getLink())) {
+            messageBuilder.setLink(post.getLink());
+          }
           // send email by category
           if (emailListCategory.size() > 0) {
             messageBuilder.setObjName(messageBuilder.getCatName());

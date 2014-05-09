@@ -1214,6 +1214,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.topic;
         topic.setIsApproved(true);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topic);
         topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE);
@@ -1231,6 +1232,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.topic;
         topic.setIsApproved(false);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topic);
         topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE);
@@ -1304,10 +1306,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostUnApprove", 500, 360);
         postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, true);
       } else {
+        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         int count = 0;
         while (count < posts.size()) {
           if (!posts.get(count).getIsApproved()) {
-            posts.get(count).setIsApproved(true);
+            Post p = posts.get(count);
+            p.setIsApproved(true);
+            p.setLink(link.replace("topicId", p.getTopicId()));
             count++;
           } else {
             posts.remove(count);
@@ -1337,9 +1342,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, false);
       } else {
         int count = 0;
+        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         while (count < posts.size()) {
           if (posts.get(count).getIsWaiting()) {
-            posts.get(count).setIsWaiting(false);
+            Post p = posts.get(count);
+            p.setIsWaiting(false);
+            p.setLink(link.replace("topicId", p.getTopicId()));
             count++;
           } else {
             posts.remove(count);
@@ -1365,10 +1373,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         throwWarning("UITopicDetail.msg.notCheckPost");
       }
       List<Post> posts = new ArrayList<Post>();
+      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
       for (String postId : postIds) {
         Post post = topicDetail.getPost(postId);
         if (post != null && !post.getIsHidden()) {
           post.setIsHidden(true);
+          post.setLink(link.replace("topicId", post.getTopicId()));
           posts.add(post);
         }
       }
@@ -1397,9 +1407,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId);
       } else {
         int count = 0;
+        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         while (count < posts.size()) {
           if (posts.get(count).getIsHidden()) {
-            posts.get(count).setIsHidden(false);
+            Post p = posts.get(count);
+            p.setIsHidden(false);
+            p.setLink(link.replace("topicId", p.getTopicId()));
             count++;
           } else {
             posts.remove(count);
@@ -1548,7 +1561,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             post.setIsApproved(!hasTopicMod);
             post.setLink(link);
             MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
-            messageBuilder.setLink(link + ForumUtils.SLASH + post.getId());
+            messageBuilder.setLink(link);
             try {
               topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, messageBuilder);
               long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1;

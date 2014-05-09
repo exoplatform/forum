@@ -403,6 +403,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             boolean isParentDelete = false;
             boolean isNew = false;
             try {
+              MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
+              messageBuilder.setLink(link);
               if (!ForumUtils.isEmpty(uiForm.postId)) {
                 if (uiForm.isQuote || uiForm.isMP) {
                   post.setRemoteAddr(WebUIUtils.getRemoteIP());
@@ -418,8 +420,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   post.setModifiedBy(userName);
                   post.setModifiedDate(new Date());
                   post.setEditReason(editReason);
-                  MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
-                  messageBuilder.setLink(link + ForumUtils.SLASH + post.getId());
                   try {
                     uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, messageBuilder);
                   } catch (PathNotFoundException e) {
@@ -430,7 +430,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               } else {
                 post.setRemoteAddr(WebUIUtils.getRemoteIP());
                 try {
-                  uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail());
+                  uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, messageBuilder);
                   isNew = true;
                 } catch (PathNotFoundException e) {
                   isParentDelete = true;

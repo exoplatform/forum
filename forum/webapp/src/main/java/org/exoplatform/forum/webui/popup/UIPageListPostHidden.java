@@ -120,11 +120,13 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
       Post post;
       List<Post> posts = new ArrayList<Post>();
       boolean haveCheck = false;
+      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
       for (String postId : postHidden.getIdSelected()) {
         haveCheck = true;
         post = postHidden.getPost(postId);
         if (post != null) {
           post.setIsHidden(false);
+          post.setLink(link.replace("topicId", post.getTopicId()));
           posts.add(post);
         }
       }
