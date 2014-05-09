@@ -1306,13 +1306,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostUnApprove", 500, 360);
         postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, true);
       } else {
-        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         int count = 0;
         while (count < posts.size()) {
           if (!posts.get(count).getIsApproved()) {
             Post p = posts.get(count);
             p.setIsApproved(true);
-            p.setLink(link.replace("topicId", p.getTopicId()));
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);
@@ -1342,12 +1341,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, false);
       } else {
         int count = 0;
-        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         while (count < posts.size()) {
           if (posts.get(count).getIsWaiting()) {
             Post p = posts.get(count);
             p.setIsWaiting(false);
-            p.setLink(link.replace("topicId", p.getTopicId()));
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);
@@ -1378,7 +1376,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         Post post = topicDetail.getPost(postId);
         if (post != null && !post.getIsHidden()) {
           post.setIsHidden(true);
-          post.setLink(link.replace("topicId", post.getTopicId()));
+          post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
           posts.add(post);
         }
       }
@@ -1407,12 +1405,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId);
       } else {
         int count = 0;
-        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
         while (count < posts.size()) {
           if (posts.get(count).getIsHidden()) {
             Post p = posts.get(count);
             p.setIsHidden(false);
-            p.setLink(link.replace("topicId", p.getTopicId()));
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);

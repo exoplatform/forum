@@ -130,7 +130,6 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
       Post post;
       boolean haveCheck = false;
       List<Post> posts = new ArrayList<Post>();
-      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
       for (String postId : postUnApprove.getIdSelected()) {
         haveCheck = true;
         post = postUnApprove.getPost(postId);
@@ -140,7 +139,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
           } else {
             post.setIsWaiting(false);
           }
-          post.setLink(link.replace("topicId", post.getTopicId()));
+          post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
           posts.add(post);
         }
       }

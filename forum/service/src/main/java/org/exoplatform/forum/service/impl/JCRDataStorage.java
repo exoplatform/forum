@@ -4120,6 +4120,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
       postNode.setProperty(EXO_PATH, destForumNode.getName());
       postNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
+      postNode.setProperty(EXO_LINK, CommonUtils.getURI(link.replace("pathId", destTopicNode.getName())));
+      //
       if (isCreatNewTopic && i == 0) {
         postNode.setProperty(EXO_IS_FIRST_POST, true);
       } else {
