@@ -142,6 +142,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
             topic.setIsApproved(true);
           else
             topic.setIsActive(true);
+          topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
           listTopic.add(topic);
         }
       }

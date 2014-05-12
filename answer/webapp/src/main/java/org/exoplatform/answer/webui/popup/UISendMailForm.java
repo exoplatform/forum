@@ -192,7 +192,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         if (!language.equals(languageIsResponsed)) {
           qsId = qsId.concat(UIQuestions.OBJECT_LANGUAGE).concat(language);
         }
-        stringBuffer.append(getLabel("Link").replaceFirst("<link>", CommonUtils.getDomainURL() + FAQUtils.getQuestionURI(qsId, false)));
+        stringBuffer.append(getLabel("Link").replaceFirst("<link>", FAQUtils.getQuestionURL(qsId, false)));
         break;
       }
     }
@@ -349,7 +349,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
             qsId = qsId.concat(UIQuestions.OBJECT_LANGUAGE).concat(language);
             sendMailForm.languageIsResponsed = language;
           }
-          strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", CommonUtils.getDomainURL() + FAQUtils.getQuestionURI(qsId, false)));
+          strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", FAQUtils.getQuestionURL(qsId, false)));
           body.setValue(strBuilder.toString());
           subject.setValue(contenQuestion.replaceAll("<br\\s*\\/?>", " "));
           break;

@@ -171,10 +171,8 @@ public class MessageBuilder implements FAQNodeTypes {
       body = StringUtils.replace(body, "&questionResponse_", questionResponse);
     }
     body = StringUtils.replace(body, "&questionContent_", questionContent);
-    if(!CommonUtils.isEmpty(questionLink)) {
-      if(questionLink.indexOf("http") == 0) {
-        questionLink = questionLink.substring(questionLink.indexOf("/", 8));
-      }
+    //
+    if (!CommonUtils.isEmpty(questionLink) && questionLink.indexOf("http") < 0) {
       questionLink = CommonUtils.getDomainURL() + questionLink;
     }
     body = StringUtils.replace(body, "&questionLink_", questionLink);

@@ -165,10 +165,8 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
       UIQuestions questions = answersContainer.getChild(UIQuestions.class);
       comment = CommonUtils.encodeSpecialCharInSearchTerm(comment);
       try {
-        // Create link by Vu Duy Tu.
-        if(FAQUtils.isFieldEmpty(commentForm.question_.getLink())) {
-          commentForm.question_.setLink(FAQUtils.getQuestionURI(commentForm.question_.getId(), false));
-        }
+        commentForm.question_.setLink(FAQUtils.getQuestionURL(commentForm.question_.getId(), false));
+        //
         if (commentForm.comment != null) {
           commentForm.comment.setNew(false);
         } else {

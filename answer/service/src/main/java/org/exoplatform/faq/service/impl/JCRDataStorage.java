@@ -877,7 +877,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     questionNode.setProperty(EXO_IS_APPROVED, question.isApproved());
     questionNode.setProperty(EXO_USERS_VOTE, question.getUsersVote());
     questionNode.setProperty(EXO_MARK_VOTE, question.getMarkVote());
-    questionNode.setProperty(EXO_LINK, question.getLink());
+    questionNode.setProperty(EXO_LINK, CommonUtils.getURI(question.getLink()));
     List<FileAttachment> listFileAtt = question.getAttachMent();
 
     List<String> listNodeNames = new ArrayList<String>();

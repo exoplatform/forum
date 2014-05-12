@@ -14,9 +14,9 @@
 							"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
 							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 							"eXo.forum.UIForumPortlet.goLastPost('top');",
-							"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
-							"eXo.forum.UIForumPortlet.controlLeftNavigation();"
-							];
+							"eXo.forum.UIForumPortlet.controlLeftNavigation();",
+							"forumCheckBox.init('"+uicomponent.id+"');"
+						];
   ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
 %>
 <% uiform.begin() %>

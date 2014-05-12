@@ -840,6 +840,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsApproved() == false) {
         topic.setIsApproved(true);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         return true;
       }
       return false;
@@ -1118,6 +1119,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsWaiting() == true) {
         topic.setIsWaiting(false);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         return true;
       }
       return false;

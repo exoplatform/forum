@@ -1072,11 +1072,20 @@ public class CachedDataStorage implements DataStorage, Startable {
     try {
       clearPostListCache();
       //
+      Post p = posts.get(0);
+      String categoryId = p.getCategoryId();
+      String forumId = p.getForumId();
+      String topicId = p.getTopicId();
       for (Post post : posts) {
-        String categoryId = Utils.getCategoryId(post.getPath());
-        clearPostCache(categoryId, post.getForumId(), post.getTopicId(), post.getId());
         clearPostListCountCache(post.getTopicId());
+        clearPostCache(categoryId, forumId, topicId, post.getId());
       }
+      //
+      clearTopicCache(Utils.getTopicPath(p.getPath()));
+      clearTopicListCache(forumId);
+      clearTopicListCountCache(forumId);
+      clearForumCache(categoryId, forumId, false);
+      clearForumListCache();
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
@@ -1089,6 +1098,7 @@ public class CachedDataStorage implements DataStorage, Startable {
       clearTopicCache(categoryId, forumId, topicId);
       clearPostCache(categoryId, forumId, topicId, postId);
       clearPostListCache();
+      clearPostListCountCache(topicId);
       statistic = null;
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
