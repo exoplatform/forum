@@ -20,7 +20,7 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.forum.common.UserHelper.FILTER_TYPE;
+import org.exoplatform.forum.common.UserHelper.FilterType;
 import org.exoplatform.forum.common.UserHelper.UserFilter;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
@@ -30,57 +30,57 @@ public class TestUserHelper extends TestCase {
 
   public void testQueryFilter() {
     assertEquals(true, true);
-    UserFilter filter = new UserFilter("", FILTER_TYPE.EMAIL);
+    UserFilter filter = new UserFilter("", FilterType.EMAIL);
     Query q = UserHelper.queryFilter(filter);
     assertEquals(true, q.isEmpty());
     //
-    filter = new UserFilter("email", FILTER_TYPE.FIRST_NAME);
+    filter = new UserFilter("email", FilterType.FIRST_NAME);
     q = UserHelper.queryFilter(filter);
     assertEquals("*email*", q.getEmail());
     //
-    filter = new UserFilter("*email", FILTER_TYPE.EMAIL);
+    filter = new UserFilter("*email", FilterType.EMAIL);
     q = UserHelper.queryFilter(filter);
     assertEquals("*email", q.getEmail());
     //
-    filter = new UserFilter("email*", FILTER_TYPE.EMAIL);
+    filter = new UserFilter("email*", FilterType.EMAIL);
     q = UserHelper.queryFilter(filter);
     assertEquals("email*", q.getEmail());
     //
-    filter = new UserFilter("*email*", FILTER_TYPE.EMAIL);
+    filter = new UserFilter("*email*", FilterType.EMAIL);
     q = UserHelper.queryFilter(filter);
     assertEquals("*email*", q.getEmail());
   }
   
   public void testMatchUser() {
     User user = null;
-    UserFilter userFilter = new UserFilter("abc", FILTER_TYPE.USER_NAME);
+    UserFilter userFilter = new UserFilter("abc", FilterType.USER_NAME);
     //
     assertFalse(UserHelper.matchUser(userFilter, user));
     //
     user = new MockUser("abc", "ABC", "xABcD", "fooAbCbar");
     assertTrue(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.FIRST_NAME);
+    userFilter = new UserFilter("abc", FilterType.FIRST_NAME);
     assertTrue(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.LAST_NAME);
+    userFilter = new UserFilter("abc", FilterType.LAST_NAME);
     assertTrue(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.EMAIL);
+    userFilter = new UserFilter("abc", FilterType.EMAIL);
     assertTrue(UserHelper.matchUser(userFilter, user));
     
     //
     user = new MockUser("foo", "bar", "xyz", "bool");
-    userFilter = new UserFilter("abc", FILTER_TYPE.USER_NAME);
+    userFilter = new UserFilter("abc", FilterType.USER_NAME);
     assertFalse(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.FIRST_NAME);
+    userFilter = new UserFilter("abc", FilterType.FIRST_NAME);
     assertFalse(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.LAST_NAME);
+    userFilter = new UserFilter("abc", FilterType.LAST_NAME);
     assertFalse(UserHelper.matchUser(userFilter, user));
     //
-    userFilter = new UserFilter("abc", FILTER_TYPE.EMAIL);
+    userFilter = new UserFilter("abc", FilterType.EMAIL);
     assertFalse(UserHelper.matchUser(userFilter, user));
   }
 

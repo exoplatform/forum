@@ -44,25 +44,30 @@ import org.exoplatform.services.security.MembershipEntry;
  */
 public class UserHelper {
 
-  public static int LIMIT_THRESHOLD = 200;
+  /**
+   *  The value to compile between tow logic to filter users by key and groupId.
+   *  + If all users of group less than @LIMIT_THRESHOLD we will get all users of group
+   *    and match this list users with filter key.
+   *  + Else we will get all users by filter key and match this list users with group filter.
+   */
+  private static final int LIMIT_THRESHOLD = 200;
   
-  public enum FILTER_TYPE {
+  public enum FilterType {
     USER_NAME("userName"), LAST_NAME("lastName"),
     FIRST_NAME("firstName"), EMAIL("email");
     
     String name;
-    FILTER_TYPE(String name) {
+    FilterType(String name) {
       this.name = name;
     }
 
-    @Override
-    public String toString() {
+    public String getName() {
       return name;
     }
 
-    public static FILTER_TYPE getType(String name) {
-      for (FILTER_TYPE type : values()) {
-        if (type.toString().equals(name)) {
+    public static FilterType getType(String name) {
+      for (FilterType type : values()) {
+        if (type.getName().equals(name)) {
           return type;
         }
       }
@@ -94,19 +99,19 @@ public class UserHelper {
     StringBuilder errorUser = new StringBuilder();
     if (values != null && values.trim().length() > 0) {
       String[] userIds = values.split(",");
-      for (String user : userIds) {
-        user = user.trim();
-        if (user.indexOf("$") >= 0) user = user.replace("$", "&#36");
+      for (String str : userIds) {
+        str = str.trim();
+        if (str.indexOf("$") >= 0) str = str.replace("$", "&#36");
 
-        if (user.indexOf("/") >= 0) {
-          if (!UserHelper.hasGroupIdAndMembershipId(user)) {
-            if (errorUser.length() == 0) errorUser.append(user);
-            else errorUser.append(", ").append(user);
+        if (str.indexOf("/") >= 0) {
+          if (!UserHelper.hasGroupIdAndMembershipId(str)) {
+            if (errorUser.length() == 0) errorUser.append(str);
+            else errorUser.append(", ").append(str);
           }
         } else {// user
-          if ((getUserHandler().findUserByName(user) == null)) {
-            if (errorUser.length() == 0) errorUser.append(user);
-            else errorUser.append(", ").append(user);
+          if ((getUserHandler().findUserByName(str) == null)) {
+            if (errorUser.length() == 0) errorUser.append(str);
+            else errorUser.append(", ").append(str);
           }
         }
       }
@@ -137,15 +142,29 @@ public class UserHelper {
     return true ;
   }
 
-  public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
-    ListAccess<User> listUsers = getUserPageListByGroupId(groupId);
-    for (User user : listUsers.load(0, listUsers.getSize())) {
-      if (user.getUserName().equals(userId))
-        return true;
+  /**
+   * Check user in group
+   * 
+   * @param groupId The group to check
+   * @param userId The user's id that to check
+   * @return
+   * @throws Exception
+   */
+  public static boolean hasUserInGroup(String groupId, String userId) {
+    try {
+      return matchGroup(getMembershipHandler(), groupId, userId);
+    } catch (Exception e) {
+      return false;
     }
-    return false;
   }
 
+  /**
+   * Get all users on group by groupId
+   * 
+   * @param groupId The group's id
+   * @return ListAccess of Users.
+   * @throws Exception
+   */
   public static ListAccess<User> getUserPageListByGroupId(String groupId) throws Exception {
     return getUserHandler().findUsersByGroupId(groupId) ;
   }
@@ -154,21 +173,6 @@ public class UserHelper {
     return getUserHandler().findUserByName(userId) ;
   }
 
-  /**
-   * Check user disable on system or not.
-   *  
-   * @param userName The user name 
-   * @return
-   */
-  public static boolean isDisableUser(String userName) {
-    try {
-      User user = getUserByUserId(userName);
-      return (user == null);
-    } catch (Exception e) {
-      return true;
-    }
-  }
-  
   public static String[] getUserGroups() throws Exception {
     Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();
     String[] groupIds = new String[objGroupIds.length];
@@ -198,6 +202,12 @@ public class UserHelper {
     return false;
   }
   
+  /**
+   * Get all memberships of user by userId
+   * 
+   * @param userId The user's id
+   * @return list of memberships
+   */
   public static Collection<Membership> findMembershipsByUser(String userId) {
     try {
       return getMembershipHandler().findMembershipsByUser(userId);
@@ -208,7 +218,7 @@ public class UserHelper {
 
   /**
    * 
-   * @param userId username
+   * @param userId userame
    * @return list of groups an user belong, and memberships of the user in each group. If userId is null, groups and memberships of the current
    * user will be returned.
    * @throws Exception
@@ -254,14 +264,14 @@ public class UserHelper {
   /**
    * Match user by group id
    *
-   * @param memberShipHandler
-   * @param groupId
-   * @param userName
+   * @param memberShipHandler The MemberShipHandler
+   * @param groupId The group's id
+   * @param userId The user's id
    * @return
    * @throws Exception
    */
-  public static boolean matchGroup(MembershipHandler memberShipHandler, String groupId, String userName) throws Exception {
-    return memberShipHandler.findMembershipsByUserAndGroup(userName, groupId).size() > 0;
+  private static boolean matchGroup(MembershipHandler memberShipHandler, String groupId, String userId) throws Exception {
+    return memberShipHandler.findMembershipsByUserAndGroup(userId, groupId).size() > 0;
   }
 
   /**
@@ -283,8 +293,8 @@ public class UserHelper {
   /**
    * Search user by query
    * 
-   * @param userFilter
-   * @return
+   * @param userFilter The UserFilter
+   * @return The result is ListAccess of Users
    * @throws Exception
    */
   public static ListAccess<User> searchUser(UserFilter userFilter) throws Exception {
@@ -349,19 +359,19 @@ public class UserHelper {
     if (user == null) {
       return false;
     }
-    if (FILTER_TYPE.USER_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.USER_NAME.equals(userFilter.getFilterType()) &&
         StringUtils.containsIgnoreCase(user.getUserName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FILTER_TYPE.LAST_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.LAST_NAME.equals(userFilter.getFilterType()) &&
         StringUtils.containsIgnoreCase(user.getLastName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FILTER_TYPE.FIRST_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.FIRST_NAME.equals(userFilter.getFilterType()) &&
         StringUtils.containsIgnoreCase(user.getFirstName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FILTER_TYPE.EMAIL.equals(userFilter.getFilterType()) &&
+    if (FilterType.EMAIL.equals(userFilter.getFilterType()) &&
         StringUtils.containsIgnoreCase(user.getEmail(), userFilter.getKeyword())) {
       return true;
     }
@@ -385,16 +395,16 @@ public class UserHelper {
           keyword += "*";
       }
       keyword = keyword.replace('?', '_');
-      if (FILTER_TYPE.USER_NAME.equals(userFilter.getFilterType())) {
+      if (FilterType.USER_NAME == userFilter.getFilterType()) {
         q.setUserName(keyword);
       }
-      if (FILTER_TYPE.LAST_NAME.equals(userFilter.getFilterType())) {
+      if (FilterType.LAST_NAME == userFilter.getFilterType()) {
         q.setLastName(keyword);
       }
-      if (FILTER_TYPE.FIRST_NAME.equals(userFilter.getFilterType())) {
+      if (FilterType.FIRST_NAME == userFilter.getFilterType()) {
         q.setFirstName(keyword);
       }
-      if (FILTER_TYPE.EMAIL.equals(userFilter.getFilterType())) {
+      if (FilterType.EMAIL == userFilter.getFilterType()) {
         q.setEmail(keyword);
       }
     }
@@ -403,10 +413,10 @@ public class UserHelper {
   
   public static class UserFilter {
     private String      keyword;
-    private FILTER_TYPE filterType;
+    private FilterType filterType;
     private String      groupId;
 
-    public UserFilter(String keyword, FILTER_TYPE filterType) {
+    public UserFilter(String keyword, FilterType filterType) {
       this.keyword = keyword;
       this.filterType = filterType;
     }
@@ -420,7 +430,7 @@ public class UserHelper {
       return keyword;
     }
 
-    public FILTER_TYPE getFilterType() {
+    public FilterType getFilterType() {
       return filterType;
     }
 

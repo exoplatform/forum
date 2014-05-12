@@ -25,7 +25,7 @@ import java.util.Set;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.UserHelper.FILTER_TYPE;
+import org.exoplatform.forum.common.UserHelper.FilterType;
 import org.exoplatform.forum.common.UserHelper.UserFilter;
 import org.exoplatform.forum.common.utils.UserListAccess;
 import org.exoplatform.services.organization.User;
@@ -68,10 +68,10 @@ public class UIUserSelect extends BaseUIForm implements UIPopupComponent  {
   public static final String   FIELD_KEYWORD     = "QuickSearch";
   public static final String   FIELD_FILTER      = "filter";
   public static final String   FIELD_GROUP       = "group";
-  public static final String   USER_NAME         = FILTER_TYPE.USER_NAME.toString();
-  public static final String   LAST_NAME         = FILTER_TYPE.LAST_NAME.toString();
-  public static final String   FIRST_NAME        = FILTER_TYPE.FIRST_NAME.toString();
-  public static final String   EMAIL             = FILTER_TYPE.EMAIL.toString();
+  public static final String   USER_NAME         = FilterType.USER_NAME.toString();
+  public static final String   LAST_NAME         = FilterType.LAST_NAME.toString();
+  public static final String   FIRST_NAME        = FilterType.FIRST_NAME.toString();
+  public static final String   EMAIL             = FilterType.EMAIL.toString();
 
   protected Map<String, User>  userData_          = new HashMap<String, User>();
 
@@ -335,7 +335,7 @@ public class UIUserSelect extends BaseUIForm implements UIPopupComponent  {
     public void execute(Event<UIUserSelect> event) throws Exception {
       UIUserSelect uiForm = event.getSource();
       String type = uiForm.getUIFormSelectBox(FIELD_FILTER).getValue();
-      FILTER_TYPE filterType = FILTER_TYPE.getType(type);
+      FilterType filterType = FilterType.getType(type);
       //
       if (filterType == null) {
         return;
