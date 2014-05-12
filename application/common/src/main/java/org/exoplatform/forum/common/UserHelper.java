@@ -359,19 +359,19 @@ public class UserHelper {
     if (user == null) {
       return false;
     }
-    if (FilterType.USER_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.USER_NAME == userFilter.getFilterType() &&
         StringUtils.containsIgnoreCase(user.getUserName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FilterType.LAST_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.LAST_NAME == userFilter.getFilterType() &&
         StringUtils.containsIgnoreCase(user.getLastName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FilterType.FIRST_NAME.equals(userFilter.getFilterType()) &&
+    if (FilterType.FIRST_NAME == userFilter.getFilterType() &&
         StringUtils.containsIgnoreCase(user.getFirstName(), userFilter.getKeyword())) {
       return true;
     }
-    if (FilterType.EMAIL.equals(userFilter.getFilterType()) &&
+    if (FilterType.EMAIL == userFilter.getFilterType() &&
         StringUtils.containsIgnoreCase(user.getEmail(), userFilter.getKeyword())) {
       return true;
     }

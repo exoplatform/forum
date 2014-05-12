@@ -34,7 +34,7 @@ public class TestUserHelper extends TestCase {
     Query q = UserHelper.queryFilter(filter);
     assertEquals(true, q.isEmpty());
     //
-    filter = new UserFilter("email", FilterType.FIRST_NAME);
+    filter = new UserFilter("email", FilterType.EMAIL);
     q = UserHelper.queryFilter(filter);
     assertEquals("*email*", q.getEmail());
     //
