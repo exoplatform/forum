@@ -35,6 +35,7 @@ import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -465,11 +466,14 @@ public class UITopicForm extends BaseForumForm {
             topicNew.setCanView(canViews);
             topicNew.setCanPost(canPosts);
             topicNew.setIsApproved(!hasForumMod);
+            //
+            MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
+            messageBuilder.setLink(link);
             if (!ForumUtils.isEmpty(uiForm.topicId)) {
               topicNew.setId(uiForm.topicId);
               topicNew.setEditReason(editReason);
               try {
-                uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
+                uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, messageBuilder);
                 if (uiForm.isDetail) {
                   forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + ForumUtils.SLASH + uiForm.forumId + ForumUtils.SLASH + uiForm.topicId));
                   UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
@@ -493,7 +497,7 @@ public class UITopicForm extends BaseForumForm {
                   remoteAddr = WebUIUtils.getRemoteIP();
                 }
                 topicNew.setRemoteAddr(remoteAddr);
-                uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+                uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, messageBuilder);
                 if (userProfile.getIsAutoWatchMyTopics()) {
                   List<String> values = new ArrayList<String>();
                   values.add(userProfile.getEmail());

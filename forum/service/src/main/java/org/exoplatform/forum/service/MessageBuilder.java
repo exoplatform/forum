@@ -230,17 +230,18 @@ public class MessageBuilder {
     types.put(Utils.POST, post);
   }
 
-  public void setPrivateLink() {
+  public void makePrivateLink() {
     try {
-      String host = CommonUtils.getDomainURL();
-      if(!CommonUtils.isEmpty(link)) {
-        if(link.indexOf("http") == 0) {
-          link = link.substring(link.indexOf(SLASH, 8));
+      if (!CommonUtils.isEmpty(link)) {
+        String host = CommonUtils.getDomainURL();
+        if (link.indexOf("http") == 0) {
+          host = link.substring(0, link.indexOf(SLASH, 8));
+        } else {
+          link = host + link;
         }
-        String link = this.link;
-        this.link = host + link;
-        String ptContainer = link.substring(1, link.indexOf(SLASH, 2));
-        privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?&initialURI=").append(link).append(SLASH).append(id).toString();
+        String subLink = CommonUtils.getURI(link);
+        String ptContainer = subLink.substring(1, subLink.indexOf(SLASH, 2));
+        privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?initialURI=").append(subLink).append(SLASH).append(id).toString();
       }
     } catch (Exception e) {
       privateLink = link;
@@ -248,7 +249,7 @@ public class MessageBuilder {
   }
 
   public Message getContentEmail() {
-    setPrivateLink();
+    makePrivateLink();
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
@@ -282,7 +283,7 @@ public class MessageBuilder {
   }
 
   public Message getContentEmailMoved() {
-    setPrivateLink();
+    makePrivateLink();
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);

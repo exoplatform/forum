@@ -24,15 +24,12 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -254,6 +251,19 @@ public class CommonUtils {
     Properties props = new Properties(System.getProperties());
     String domain = props.getProperty(DOMAIN_KEY);
     return isEmpty(domain) ? EMPTY_STR : domain;
+  }
+  
+  /**
+   * Get the URI of full URL
+   * 
+   * @param url The URL input
+   * @return
+   */
+  public static String getURI(String url) {
+    if (!isEmpty(url) && url.indexOf("http") == 0 && url.indexOf(SLASH, 8) > 0) {
+      return url.substring(url.indexOf(SLASH, 8));
+    }
+    return url;
   }
 
   /**

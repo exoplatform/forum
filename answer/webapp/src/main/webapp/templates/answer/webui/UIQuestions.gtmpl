@@ -262,7 +262,7 @@
 				<!--	View Question which is selected	-->
 
 				<% } else {
-						String[] listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
+				  		def dataLangs = uicomponent.getQuestionLanguages();
 						questionContent = uicomponent.getQuestionContent();
 						String responseBy = "..." ;
 						String date = "..." ;
@@ -277,10 +277,10 @@
 								%>
 									<div class="avatarLarge pull-left ">
 										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", author)%>" >
-											<img	src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
+											<img src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										</a>
 									<% if (uicomponent.viewAuthorInfor) {%>
-											<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="<%=uicomponent.event("ViewUserProfile", author)%>"><%=FAQUtils.getFullName(question.getAuthor())%></a>
+											<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", author)%>"><%=FAQUtils.getFullName(question.getAuthor())%></a>
 									<% } %>
 									</div>
 							<% } %>
@@ -396,11 +396,12 @@
 
 											<!-- action translation question -->
 										<%
-											if(listQuestLanguage.length > 1) {
+											def listQuestLanguage = dataLangs.keySet();
+											if(listQuestLanguage.size() > 1) {
 										%>
 											<div class="languageContainer pull-right uiDropdownWithIcon dropdown">
 												<button data-toggle="dropdown" class="btn" type="button">
-													<span><%=uicomponent.language_%>&nbsp;</span>
+													<span><%=dataLangs.get(uicomponent.language_)%>&nbsp;</span>
 													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 												</button>
 												<!--	Begin popup menu	-->
@@ -410,9 +411,10 @@
 													if(quesLanguage.equals(uicomponent.language_)){
 														continue;
 													}
+													String displayName = dataLangs.get(quesLanguage);
 											%>
 													<li>
-														 <a class="actionIcon" onclick="<%=uicomponent.event("ChangeLanguage", quesLanguage)%>"><%=quesLanguage%></a>
+														 <a class="actionIcon" onclick="<%=uicomponent.event("ChangeLanguage", quesLanguage)%>"><%=displayName%></a>
 													</li>
 											<%} %>
 												</ul>
@@ -421,7 +423,7 @@
 											}
 										%>
 											<h5>
-												<a class="theContent questionName" href="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
+												<a class="theContent questionName" href="javascript:void(0);" onclick="<%=uicomponent.event("CloseQuestion")%>"> $questionContent</a>
 											</h5>
 
 										</div><!-- end actionBar -->
@@ -532,7 +534,7 @@
 											<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
 												<!-- action Sort answer by vote -->
 												<p class="sortAnswer">
-													<a class="uiActionWithLabel" href="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+													<a class="uiActionWithLabel" href="javascript:void(0);" onclick="<%=uicomponent.event("SortAnswer")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
 														<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote");%>	<i class="uiIconMiniArrowDown uiIconLightGray"></i>
 													</a>
 												</p>
@@ -551,7 +553,7 @@
 												<% if(uicomponent.currentUser_ != null) { %>
 													<div class="questionAction">
 													<% if(question.isApproved() || uicomponent.canEditQuestion){ %>
-														<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+														<a href="javascript:void(0);" onclick="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
 													<% }
 														 if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())) {
 													%>
@@ -579,7 +581,7 @@
 						<!--	View attachment files	-->
 							<%if(!question.getAttachMent().isEmpty()) {%>
 							<div class="attachmentContainer">
-								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i>Attachments:</div>
+								<div class="attachmentTitle"><i class="uiIconAttach uiIconLightGray"></i><%=_ctx.appRes("UIQuestions.label.Attachments")%>:</div>
 								<% List attachments = question.getAttachMent(); %>
 								<div class="attachmentContentImage" >
 								<%
@@ -598,11 +600,11 @@
 										</a>
 										<div class="actionAttachImg">
 											<p>
-												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> View</a>
+												<a onclick="eXo.answer.UIAnswersPortlet.showPicture('$attLink');" href="javaScript:void(0);"> <i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.view")%></a>
 											</p>
 											<p>
 												<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-													<i class="uiIconDownload uiIconWhite"></i> Download
+													<i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes("UIPopupViewQuestion.label.download")%>
 												</a>
 											</p>
 										</div>

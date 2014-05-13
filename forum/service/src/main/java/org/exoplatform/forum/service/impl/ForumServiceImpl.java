@@ -750,6 +750,9 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void modifyPost(List<Post> posts, int type){
+    if (posts == null || posts.isEmpty()) {
+      return;
+    }
     storage.modifyPost(posts, type);
     for (ForumEventLifeCycle f : listeners_) {
       for(Post post : posts) {

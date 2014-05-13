@@ -441,8 +441,8 @@ public class UIQuestions extends UIContainer {
     return this.viewingQuestionId_;
   }
 
-  protected String[] getQuestionLangauges(String questionPath) {
-    return languageMap.keySet().toArray(new String[] {});
+  protected Map<String, String> getQuestionLanguages() {
+    return FAQUtils.getQuestionLanguages(languageMap.keySet());
   }
 
   protected String getAvatarUrl(String userId) {

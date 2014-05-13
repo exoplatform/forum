@@ -175,4 +175,33 @@ public class PostTestCase extends BaseForumServiceTestCase {
     assertEquals(5, pageList.getAvailable());
   }
   
+  public void testCensoredPost() throws Exception {
+    initDefaultData();
+    Topic topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    
+    //number of posts is 0
+    assertEquals(0, topic.getPostCount());
+    
+    //add new post
+    Post post = createdPost();
+    forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(1, topic.getPostCount());
+    
+    //add new pending post
+    post = createdPost();
+    post.setIsWaiting(true);
+    forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(1, topic.getPostCount());
+    
+    //approve the pending post
+    post.setIsWaiting(false);
+    List<Post> posts = new ArrayList<Post>();
+    posts.add(post);
+    forumService_.modifyPost(posts, 5);
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(2, topic.getPostCount());
+  }
+  
 }

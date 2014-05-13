@@ -18,8 +18,11 @@ package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jcr.PathNotFoundException;
 
@@ -43,6 +46,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -83,53 +87,37 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private boolean             isModerator       = true;
 
-  public void setModertator(boolean isMod) {
-    this.isModerator = isMod;
-  }
+  private UIFormSelectBox       questionLanguages_;
 
-  // form input :
-  private UIFormSelectBox                questionLanguages_;
+  private UIFormRichtextInput   inputResponseQuestion_;
 
-  private UIFormRichtextInput             inputResponseQuestion_;
+  private UICheckBoxInput       checkShowAnswer_;
 
-  private UICheckBoxInput   checkShowAnswer_;
+  private UICheckBoxInput       isApproved_;
 
-  private UICheckBoxInput   isApproved_;
+  public String                 questionId_           = "";
 
-  // question infor :
-  public String                          questionId_           = "";
+  private List<String>          listRelationQuestion  = new ArrayList<String>();
 
-  private List<String>                   listRelationQuestion  = new ArrayList<String>();
+  private List<String>          listQuestIdRela       = new ArrayList<String>();
 
-  private List<String>                   listQuestIdRela       = new ArrayList<String>();
+  Map<String, Answer>           mapAnswers            = new HashMap<String, Answer>();
 
-  // form variable:
-  Map<String, Answer>                    mapAnswers            = new HashMap<String, Answer>();
+  Map<String, QuestionLanguage> languageMap           = new HashMap<String, QuestionLanguage>();
 
-  Map<String, QuestionLanguage>          languageMap           = new HashMap<String, QuestionLanguage>();
+  private Set<String>          listLanguageToReponse = new HashSet<String>();
 
-  private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>();
+  private String                currentLanguage       = "";
 
-  private String                         currentLanguage       = "";
+  private boolean               isChildOfQuestionManager_;
 
-  private boolean                        isChildOfQuestionManager_;
+  private FAQSetting            faqSetting_;
 
-  private FAQSetting                     faqSetting_;
+  private boolean               isAnswerApproved      = true;
 
-  private boolean                        isAnswerApproved      = true;
-
-  public void activate() {
-  }
-
-  public void deActivate() {
-  }
-
-  private RenderHelper renderHelper = new RenderHelper();
-
-
-  public void setFAQSetting(FAQSetting faqSetting) {
-    this.faqSetting_ = faqSetting;
-  }
+  private RenderHelper          renderHelper          = new RenderHelper();
+  
+  private Locale                 currentLocale        = null;
 
   public UIResponseForm() throws Exception {
     isChildOfQuestionManager_ = false;
@@ -138,7 +126,22 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     inputResponseQuestion_.setIsPasteAsPlainText(true);
     checkShowAnswer_ = new UICheckBoxInput(SHOW_ANSWER, SHOW_ANSWER, false);
     isApproved_ = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
+    questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, null);
     this.setActions(new String[] { "Save", "Cancel" });
+  }
+
+  public void setModertator(boolean isMod) {
+    this.isModerator = isMod;
+  }
+
+  public void activate() {
+  }
+
+  public void deActivate() {
+  }
+
+  public void setFAQSetting(FAQSetting faqSetting) {
+    this.faqSetting_ = faqSetting;
   }
 
   public Question getQuestion() {
@@ -146,19 +149,43 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   public void setAnswerInfor(Question question, Answer answer, String language) {
+    //
     setQuestionId(question, language, answer.getApprovedAnswers());
     mapAnswers.clear();
     mapAnswers.put(answer.getLanguage(), answer);
     inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(answer.getResponses()));
-    listLanguageToReponse.clear();
-    listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
-    questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
+    
     questionLanguages_.setValue(answer.getLanguage());
     questionLanguages_.setSelectedValues(new String[] { answer.getLanguage() });
     getUICheckBoxInput(SHOW_ANSWER).setChecked(answer.getActivateAnswers());
     getUICheckBoxInput(IS_APPROVED).setChecked(answer.getApprovedAnswers());
   }
 
+  public void setLanguages() throws Exception {
+    Locale currentLocale = Util.getPortalRequestContext().getLocale();
+    if (this.currentLocale == null || !this.currentLocale.getLanguage().equals(currentLocale.getLanguage())) {
+      this.currentLocale = currentLocale;
+      displayLanguages();
+    }
+  }
+
+  private void displayLanguages() {
+    Map<String, String> mapLangauge = FAQUtils.getQuestionLanguages(listLanguageToReponse);
+    //
+    List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
+    String displayName;
+    for (String lang : listLanguageToReponse) {
+      displayName = mapLangauge.containsKey(lang) ? mapLangauge.get(lang) : lang;
+      if (lang.equals(question_.getLanguage())) {
+        displayName = new StringBuilder(displayName).append(" (")
+          .append(WebUIUtils.getLabel(null, "UIQuestionForm.label.default")).append(") ").toString();
+      }
+      options.add(new SelectItemOption<String>(displayName, lang));
+    }
+    //
+    questionLanguages_.setOptions(options);
+  }
+  
   public void setQuestionId(Question question, String languageViewed, boolean isAnswerApp) {
     this.isAnswerApproved = isAnswerApp;
     try {
@@ -177,9 +204,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       log.error("Can not set Question id, exception: " + e.getMessage());
     }
     this.questionId_ = question.getPath();
-
     listLanguageToReponse.clear();
-    listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage() + " (default) ", question.getLanguage()));
+    listLanguageToReponse.add(question_.getLanguage());
+
     QuestionLanguage defaultLanguage = new QuestionLanguage();
     defaultLanguage.setLanguage(question.getLanguage());
     defaultLanguage.setQuestion(question.getQuestion());
@@ -193,8 +220,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           questionContent = language.getQuestion();
         }
         languageMap.put(language.getLanguage(), language);
-        if (!language.getLanguage().equals(question.getLanguage()))
-          listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
+        listLanguageToReponse.add(language.getLanguage());
       }
     } catch (Exception e) {
       log.error("Can not set Question id, exception: " + e.getMessage());
@@ -204,12 +230,13 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     checkShowAnswer_.setRendered(isModerator);
     isApproved_.setChecked(isAnswerApproved);
     isApproved_.setRendered(isModerator);
-
-    questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
+    //
+    displayLanguages();
     questionLanguages_.setValue(currentLanguage);
     questionLanguages_.setSelectedValues(new String[] { currentLanguage });
     questionLanguages_.setOnChange("ChangeLanguage");
     questionLanguages_.setRendered((listLanguageToReponse.size() <= 1) ? false : true);
+    //
     addChild(inputResponseQuestion_);
     addChild(questionLanguages_);
     addChild(isApproved_);
@@ -378,9 +405,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       // Link Question to send mail
-       if(FAQUtils.isFieldEmpty(question.getLink())) {
-         question.setLink(FAQUtils.getQuestionURI(question.getId(), false));
-       }
+      question.setLink(FAQUtils.getQuestionURL(question.getId(), false));
 
       // set answer to question for discuss forum function
       if (responseForm.mapAnswers.containsKey(question.getLanguage())) {

@@ -55,7 +55,6 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.transaction.NotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -64,6 +63,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.commons.utils.XPathUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -147,7 +147,6 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
-import com.google.common.base.Preconditions;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -2711,7 +2710,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicNode.setProperty(EXO_TAG_ID, topic.getTagId());
         topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, true);
         topicNode.setProperty(EXO_IS_POLL, topic.getIsPoll());
-        topicNode.setProperty(EXO_LINK, topic.getLink());
+        topicNode.setProperty(EXO_LINK, CommonUtils.getURI(topic.getLink()));
         topicNode.setProperty(EXO_PATH, forumId);
 
         if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean() && !topic.getIsWaiting()) {
@@ -2813,6 +2812,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         owner = post.getProperty(EXO_OWNER).getString();
         userPostMap.put(owner, (userPostMap.get(owner) != null ? userPostMap.get(owner) : 0) + 1);
       } catch (Exception e) {
+        LOG.error("Failed to get deleted post by user.", e);
       }
     }
     return userPostMap;
@@ -3164,7 +3164,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       PostFilter filter = new PostFilter(categoryId, forumId, topicId, isApproved, isHidden, isWaiting, userLogin);
 
       if (!Utils.isEmpty(strQuery)) {
-        throw new NotSupportedException("The method not support add more query.");
+        LOG.warn("This method doesn't support to add more query.");
       }
 
       return new ForumPageList(null, 10, makePostsSQLQuery(filter, true), true);
@@ -3580,7 +3580,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     post.setCreatedDate(calendar.getTime());
     postNode.setProperty(EXO_CREATED_DATE, calendar);
     postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
-    postNode.setProperty(EXO_LINK, post.getLink());
+    postNode.setProperty(EXO_LINK, CommonUtils.getURI(post.getLink()));
 
     boolean isFistPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId());
     postNode.setProperty(EXO_IS_FIRST_POST, isFistPost);
@@ -3727,7 +3727,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             messageBuilder.setMessage(topic.getDescription());
             messageBuilder.setCreatedDate(topic.getCreatedDate());
             messageBuilder.setOwner(owner);
-            messageBuilder.setLink(topic.getLink());
+            if(Utils.isEmpty(messageBuilder.getLink())) {
+              messageBuilder.setLink(topic.getLink());
+            }
             sendEmailNotification(emailList, messageBuilder.getContentEmail());
           }
           if (node.isNodeType(EXO_FORUM) || count > 1)
@@ -3858,7 +3860,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           messageBuilder.setAddName(post.getName());
           messageBuilder.setMessage(post.getMessage());
           messageBuilder.setCreatedDate(post.getCreatedDate());
-          messageBuilder.setLink(post.getLink());
+          if(Utils.isEmpty(messageBuilder.getLink())) {
+            messageBuilder.setLink(post.getLink());
+          }
           // send email by category
           if (emailListCategory.size() > 0) {
             messageBuilder.setObjName(messageBuilder.getCatName());
@@ -3908,10 +3912,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           String topicPath = postPath.substring(0, postPath.lastIndexOf("/"));
           String forumPath = postPath.substring(0, topicPath.lastIndexOf("/"));
           Node postNode = (Node) forumHomeNode.getSession().getItem(postPath);
+          PropertyReader postReader = new PropertyReader(postNode);
           Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
           Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
           Calendar lastPostDate = topicNode.getProperty(EXO_LAST_POST_DATE).getDate();
-          Calendar postDate = postNode.getProperty(EXO_CREATED_DATE).getDate();
+          Calendar postDate = postReader.calendar(EXO_CREATED_DATE);
           long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong();
           long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
           long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
@@ -3926,11 +3931,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             if (post.getIsWaiting()) {
               postNode.setProperty(EXO_IS_WAITING, true);
               Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
+              PropertyReader postLastNodeReader = new PropertyReader(postLastNode);
               if (postLastNode != null) {
-                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
-                topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
+                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNodeReader.calendar(EXO_CREATED_DATE));
+                topicNode.setProperty(EXO_LAST_POST_BY, postLastNodeReader.string(EXO_OWNER));
               }
-              newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+              newNumberAttach = newNumberAttach - postReader.l(EXO_NUMBER_ATTACH);
               if (newNumberAttach < 0)
                 newNumberAttach = 0;
               topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -3938,6 +3944,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               forumNode.setProperty(EXO_POST_COUNT, forumPostCount - 1);
             } else {
               postNode.setProperty(EXO_IS_WAITING, false);
+              topicNode.setProperty(EXO_LAST_POST_DATE, postReader.calendar(EXO_CREATED_DATE));
+              topicNode.setProperty(EXO_LAST_POST_BY, postReader.string(EXO_OWNER));
+              newNumberAttach = newNumberAttach + postReader.l(EXO_NUMBER_ATTACH);
+              topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+              topicNode.setProperty(EXO_POST_COUNT, topicPostCount + 1);
               sendNotification(topicNode, null, post, new MessageBuilder(), false);
             }
             break;
@@ -3946,11 +3957,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             if (post.getIsHidden()) {
               postNode.setProperty(EXO_IS_HIDDEN, true);
               Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
+              PropertyReader postLastNodeReader = new PropertyReader(postLastNode);
               if (postLastNode != null) {
-                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
-                topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
+                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNodeReader.calendar(EXO_CREATED_DATE));
+                topicNode.setProperty(EXO_LAST_POST_BY, postLastNodeReader.string(EXO_OWNER));
               }
-              newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+              newNumberAttach = newNumberAttach - postReader.l(EXO_NUMBER_ATTACH);
               if (newNumberAttach < 0)
                 newNumberAttach = 0;
               topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
@@ -3970,7 +3982,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               topicNode.setProperty(EXO_LAST_POST_DATE, postDate);
               topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
             }
-            newNumberAttach = newNumberAttach + postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+            newNumberAttach = newNumberAttach + postReader.l(EXO_NUMBER_ATTACH);
             topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
             topicNode.setProperty(EXO_POST_COUNT, topicPostCount + 1);
             forumNode.setProperty(EXO_POST_COUNT, forumPostCount + 1);
@@ -4108,6 +4120,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
       postNode.setProperty(EXO_PATH, destForumNode.getName());
       postNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
+      postNode.setProperty(EXO_LINK, CommonUtils.getURI(link.replace("pathId", destTopicNode.getName())));
+      //
       if (isCreatNewTopic && i == 0) {
         postNode.setProperty(EXO_IS_FIRST_POST, true);
       } else {
@@ -5339,13 +5353,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node profileNode = userProfileNode.getNode(userName);
       QueryManager qm = profileNode.getSession().getWorkspace().getQueryManager();
-      String pathQuery = JCR_ROOT + profileNode.getPath() + "/element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
+      String pathQuery = JCR_ROOT + XPathUtils.escapeIllegalXPathName(profileNode.getPath()) + "/element(*,exo:privateMessage)[@exo:type='" + type + "'] order by @exo:receivedDate descending";
       Query query = qm.createQuery(pathQuery, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
       return pagelist;
     } catch (Exception e) {
+      LOG.error("Fail to get private message.", e);
       return null;
     }
   }
@@ -5999,7 +6014,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       forumSearch.setExcerpt(excerpt);
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.error("Failed to set property for unified search.", e);
     }
     return forumSearch;
   }

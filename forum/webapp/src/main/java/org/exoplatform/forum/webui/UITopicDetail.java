@@ -83,6 +83,7 @@ import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.jfree.util.Log;
 
 
 @ComponentConfig(
@@ -797,10 +798,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class AddTagTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      try {
-        UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
-        String tagIds = stringInput.getValue();
-        if (!ForumUtils.isEmpty(tagIds)) {
+      UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
+      String tagIds = stringInput.getValue();
+      if (!ForumUtils.isEmpty(tagIds)) {
+        try {
           String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=*':}{\"";
           for (int i = 0; i < special.length(); i++) {
             char c = special.charAt(i);
@@ -832,16 +833,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           } catch (Exception e) {
             topicDetail.log.error("Failed to add tag : ", e);
           }
-        } else {
-          warning("UITopicDetail.msg.empty-field");
-          return;
+          stringInput.setValue(ForumUtils.EMPTY_STR);
+          topicDetail.isEditTopic = true;
+          refresh();
+        } catch (Exception e) {
+          warning("UIForumPortlet.msg.topicEmpty", false);
+          topicDetail.refreshPortlet();
         }
-        stringInput.setValue(ForumUtils.EMPTY_STR);
-        topicDetail.isEditTopic = true;
-        refresh();
-      } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty", false);
-        topicDetail.refreshPortlet();
+      } else {
+        throwWarning("UITopicDetail.msg.empty-field");
       }
     }
   }
@@ -966,7 +966,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       } catch (Exception e) {
         topicDetail.log.warn("Failed to delete topic: " + e.getMessage(), e);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent());
+      refresh();
     }
   }
 
@@ -1214,6 +1214,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.topic;
         topic.setIsApproved(true);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topic);
         topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE);
@@ -1231,6 +1232,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         Topic topic = topicDetail.topic;
         topic.setIsApproved(false);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topic);
         topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE);
@@ -1307,7 +1309,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         int count = 0;
         while (count < posts.size()) {
           if (!posts.get(count).getIsApproved()) {
-            posts.get(count).setIsApproved(true);
+            Post p = posts.get(count);
+            p.setIsApproved(true);
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);
@@ -1339,7 +1343,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         int count = 0;
         while (count < posts.size()) {
           if (posts.get(count).getIsWaiting()) {
-            posts.get(count).setIsWaiting(false);
+            Post p = posts.get(count);
+            p.setIsWaiting(false);
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);
@@ -1365,10 +1371,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         throwWarning("UITopicDetail.msg.notCheckPost");
       }
       List<Post> posts = new ArrayList<Post>();
+      String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "topicId", false);
       for (String postId : postIds) {
         Post post = topicDetail.getPost(postId);
         if (post != null && !post.getIsHidden()) {
           post.setIsHidden(true);
+          post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
           posts.add(post);
         }
       }
@@ -1399,7 +1407,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         int count = 0;
         while (count < posts.size()) {
           if (posts.get(count).getIsHidden()) {
-            posts.get(count).setIsHidden(false);
+            Post p = posts.get(count);
+            p.setIsHidden(false);
+            p.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, p.getTopicId(), false));
             count++;
           } else {
             posts.remove(count);
@@ -1447,7 +1457,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       UserProfile selectProfile = topicDetail.getUserInfo(userId);
       try {
         selectProfile = topicDetail.getForumService().getUserInformations(selectProfile);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        Log.warn("Failed in getting user informations.", e);
+      }
       viewUserProfile.setUserProfileViewer(selectProfile);
     }
   }
@@ -1546,7 +1558,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             post.setIsApproved(!hasTopicMod);
             post.setLink(link);
             MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
-            messageBuilder.setLink(link + ForumUtils.SLASH + post.getId());
+            messageBuilder.setLink(link);
             try {
               topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, messageBuilder);
               long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1;

@@ -877,7 +877,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     questionNode.setProperty(EXO_IS_APPROVED, question.isApproved());
     questionNode.setProperty(EXO_USERS_VOTE, question.getUsersVote());
     questionNode.setProperty(EXO_MARK_VOTE, question.getMarkVote());
-    questionNode.setProperty(EXO_LINK, question.getLink());
+    questionNode.setProperty(EXO_LINK, CommonUtils.getURI(question.getLink()));
     List<FileAttachment> listFileAtt = question.getAttachMent();
 
     List<String> listNodeNames = new ArrayList<String>();
@@ -1610,6 +1610,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   private void resetIndex(Node goingCategory, long index, long gindex) throws Exception {
+    if(index == gindex) {
+      return;
+    }
     Node parent = goingCategory.getParent();
     Node node;
     NodeIterator iter = getCategoriesIterator(parent);
@@ -1671,6 +1674,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   @Override
   public void saveCategory(String parentId, Category cat, boolean isAddNew){
+    saveCategory(parentId, cat, isAddNew, (isAddNew && cat.getIndex() != 0 || isAddNew == false));
+  }
+
+  @Override
+  public void saveCategory(String parentId, Category cat, boolean isAddNew, boolean isResetIndex){
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node newCategory;
@@ -1685,10 +1693,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
       long index = cat.getIndex();
       long oldIndex = new PropertyReader(newCategory).l(EXO_INDEX, newCategory.getParent().getNodes().getSize());
-      boolean isResetIndex = (isAddNew || (oldIndex != index));
-      if (isResetIndex) {
-        cat.setIndex(oldIndex);
-      }
+      cat.setIndex(oldIndex);
+      //
       saveCategory(newCategory, cat, isAddNew, sProvider);
       if (isResetIndex) {
         index = (index < oldIndex) ? index - 1 : index;
