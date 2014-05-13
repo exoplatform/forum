@@ -360,7 +360,9 @@ public interface ForumNodeTypes {
   public static final String NT_RESOURCE                    = "nt:resource";
   
   public static final String MIXIN_REFERENCEABLE_TYPE       = "mix:referenceable";
-  
+
+  public static final String MIXIN_FORUM_CATEGORY           = "mix:forumCategory";
+
   public static final String ASCENDING                      = " ascending";
 
   public static final String DESCENDING                     = " descending";

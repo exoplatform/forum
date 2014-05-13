@@ -877,6 +877,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     cat.setCreateTopicRole(reader.strings(EXO_CREATE_TOPIC_ROLE));
     cat.setPoster(reader.strings(EXO_POSTER));
     cat.setIncludedSpace(reader.bool(EXO_INCLUDED_SPACE));
+    if (!cateNode.isNodeType(MIXIN_FORUM_CATEGORY)) {
+      LOG.warn(String.format("The cateogry %s has not mixin-type mix:forumCategory. Please, excute the forum upgrade plugin.", cateNode.getName()));
+    }
     return cat;
   }
 
@@ -894,7 +897,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
         } catch (Exception e) {
-          catNode.addMixin("mix:forumCategory");
+          catNode.addMixin(MIXIN_FORUM_CATEGORY);
           catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
         }
         categoryHome.getSession().save();
@@ -1320,7 +1323,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // get all categories not in space that user can create topics
     StringBuilder cateBuilder = new StringBuilder();
     if (isIgnoreSpace) {
-      cateBuilder.append(EXO_INCLUDED_SPACE).append("='false' AND exo:id <> '").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("'");
+      cateBuilder.append(EXO_ID).append(" <> '").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("'");
     }
     cateBuilder.append((isIgnoreSpace) ? " AND " : "").append(getCanCreateTopicQuery(listOfUser, true));
 
