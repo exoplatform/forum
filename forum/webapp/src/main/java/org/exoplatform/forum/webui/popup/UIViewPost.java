@@ -130,6 +130,7 @@ public class UIViewPost extends BaseForumForm implements UIPopupComponent {
       post.setIsApproved(true);
       post.setIsHidden(false);
       post.setIsWaiting(false);
+      post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
       List<Post> posts = new ArrayList<Post>();
       posts.add(post);
       try {

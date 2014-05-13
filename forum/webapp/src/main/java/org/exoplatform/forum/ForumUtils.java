@@ -128,18 +128,26 @@ public class ForumUtils {
     return link.toString();
   }
 
-  public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
-    String host = fullUrl.substring(0, fullUrl.indexOf(SLASH, 8));
-    return new StringBuffer(host).append(createdSubForumLink(type, id, isPrivate)).toString();
+  public static String createdForumLink(String type, String id, boolean isPrivate) {
+    try {
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
+      String host = fullUrl.substring(0, fullUrl.indexOf(SLASH, 8));
+      return new StringBuffer(host).append(createdSubForumLink(type, id, isPrivate)).toString();
+    } catch (Exception e) {
+      return id;
+    }
   }
 
-  public static String createdSubForumLink(String type, String id, boolean isPrivate) throws Exception {    
-    String containerName = CommonsUtils.getService(ExoContainerContext.class).getPortalContainerName();
-    String pageNodeSelected = Util.getUIPortal().getSelectedUserNode().getURI();
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    return buildLink(portalContext.getPortalURI(), containerName , pageNodeSelected, type, id, isPrivate);
+  public static String createdSubForumLink(String type, String id, boolean isPrivate) {
+    try {
+      String containerName = CommonsUtils.getService(ExoContainerContext.class).getPortalContainerName();
+      String pageNodeSelected = Util.getUIPortal().getSelectedUserNode().getURI();
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      return buildLink(portalContext.getPortalURI(), containerName, pageNodeSelected, type, id, isPrivate);
+    } catch (Exception e) {
+      return id;
+    }
   }
 
   public static String buildLink(String portalURI, String containerName, String selectedNode, String type, String id, boolean isPrivate){
@@ -276,6 +284,25 @@ public class ForumUtils {
       strOrderBy = param + " ascending";
     }
     return strOrderBy;
+  }
+
+  /**
+   * Get orderBy of SQL query by input parameter
+   * 
+   * @param strOrderBy The existing orderBy.
+   * @param param The property parameter
+   * @return The new oderBy
+   */
+  public static String getSQLOrderBy(String strOrderBy, String param) {
+    if (isEmpty(param)) {
+      return strOrderBy;
+    }
+    //
+    if (isEmpty(strOrderBy) || strOrderBy.indexOf(param) < 0) {
+      return param + Utils.ASC;
+    }
+    // Reverse sort of a property: ASC to DESC or DESC to ASC
+    return param + ((strOrderBy.indexOf(Utils.DESC) > 0) ? Utils.ASC : Utils.DESC);
   }
   
   public static String updateMultiValues(String value, String values) {

@@ -19,10 +19,10 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -30,7 +30,6 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -156,12 +155,11 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           try {
             // set link
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
-            WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-            ResourceBundle res = context.getApplicationResourceBundle();
             
             String topicPath = Utils.getForumPath(path) + ForumUtils.SLASH + topicId;
             topic.setPath(topicPath);
-            uiForm.getForumService().splitTopic(topic, post, postPaths, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+            topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
+            uiForm.getForumService().splitTopic(topic, post, postPaths, WebUIUtils.getLabel(null, "UINotificationForm.label.EmailToAuthorMoved"), link);
           } catch (Exception e) {
             uiForm.log.error("Saving topic " + topic + " fail: " + e.getMessage(), e);
             uiForm.warning("UISplitTopicForm.msg.forum-deleted", false);

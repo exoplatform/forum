@@ -22,6 +22,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.exoplatform.commons.utils.HTMLEntityEncoder;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIForm;
@@ -29,6 +31,8 @@ import org.exoplatform.webui.form.UIFormInputBase;
 
 public class UIFormScrollSelectBox extends UIFormInputBase<String> {
 
+  protected Log log = ExoLogger.getLogger(this.getClass());
+  
   private String                         onchange_         = null;
 
   /**
@@ -205,6 +209,7 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
       try {
         label = res.getString(formId + ".option." + item.getValue());
       } catch (MissingResourceException ex) {
+        log.warn("Can not find resource bundle for key : " + formId + ".option." + label);
       }
 
       String value = item.getValue();

@@ -130,6 +130,7 @@ public abstract class AbstractPollInjector extends DataInjector {
       userNumber = userNumber(userBase);
     } catch (Exception e) {
       // If no user is existing, set keep 0 as value.
+      LOG.warn("Error when initilizing data.", e);
     }
 
     //
@@ -184,7 +185,9 @@ public abstract class AbstractPollInjector extends DataInjector {
       if (it.hasNext()) {
         return it.nextNode();
       }
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      LOG.warn("Failed to get public Poll node by name.", e);
+    }
     return null;
   }
   
@@ -234,7 +237,9 @@ public abstract class AbstractPollInjector extends DataInjector {
       if (it.hasNext()) {
         return getPoll(it.nextNode());
       }
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      LOG.warn("Failed to get private Poll node by name.", e);
+    }
     return null;
   }
 
@@ -275,6 +280,7 @@ public abstract class AbstractPollInjector extends DataInjector {
       .append("%')]");
       return forumService.search(sb.toString());
     } catch (Exception e) {
+      LOG.warn("Failed to find Poll nodes for public.", e);
     }
     return null;
   }

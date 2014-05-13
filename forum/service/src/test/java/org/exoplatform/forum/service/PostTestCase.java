@@ -113,4 +113,95 @@ public class PostTestCase extends BaseForumServiceTestCase {
     got = Arrays.asList(listAccess.load(3));
     assertEquals(got.size(), 6);
   }
+  
+  public void testGetPostByUser() throws Exception {
+    // set Data
+    initDefaultData();
+    
+    List<Post> posts = new ArrayList<Post>();
+    for (int i = 0; i < 25; ++i) {
+      Post post = createdPost();
+      posts.add(post);
+      forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    }
+    // getPost
+    assertNotNull(forumService_.getPost(categoryId, forumId, topicId, posts.get(0).getId()));
+
+    JCRPageList pageList = forumService_.getPagePostByUser("root", "root", true, "exo:createdDate");
+    pageList.setPageSize(10);
+    List<Post> got = pageList.getPage(0);
+    assertEquals(10, got.size());
+    //
+    got = pageList.getPage(1);
+    assertEquals(10, got.size());
+  }
+  
+  public void testGetPostByUserAbnormal() throws Exception {
+   
+    // get ListPost
+    JCRPageList pageList;
+    try {
+      pageList = forumService_.getPagePostByUser(null, "root", true, "exo:createdDate");
+      fail("userName");
+    } catch (Exception e) {
+    }
+    
+    try {
+      pageList = forumService_.getPagePostByUser("root", null, true, "exo:createdDate");
+      fail("userLogin");
+    } catch (Exception e) {
+    }
+    
+    try {
+      pageList = forumService_.getPagePostByUser(null, null, true, "exo:createdDate");
+      fail();
+    } catch (Exception e) {
+    }
+    
+   
+  }
+  
+  public void testGetPostForSplitTopic() throws Exception {
+    initDefaultData();
+    
+    List<Post> posts = new ArrayList<Post>();
+    for (int i = 0; i < 5; ++i) {
+      Post post = createdPost();
+      posts.add(post);
+      forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    }
+    String topicPath = categoryId + "/" + forumId + "/" + topicId;
+    JCRPageList pageList = forumService_.getPostForSplitTopic(topicPath);
+    assertEquals(5, pageList.getAvailable());
+  }
+  
+  public void testCensoredPost() throws Exception {
+    initDefaultData();
+    Topic topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    
+    //number of posts is 0
+    assertEquals(0, topic.getPostCount());
+    
+    //add new post
+    Post post = createdPost();
+    forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(1, topic.getPostCount());
+    
+    //add new pending post
+    post = createdPost();
+    post.setIsWaiting(true);
+    forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(1, topic.getPostCount());
+    
+    //approve the pending post
+    post.setIsWaiting(false);
+    List<Post> posts = new ArrayList<Post>();
+    posts.add(post);
+    forumService_.modifyPost(posts, 5);
+    topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+    assertEquals(2, topic.getPostCount());
+  }
+  
 }

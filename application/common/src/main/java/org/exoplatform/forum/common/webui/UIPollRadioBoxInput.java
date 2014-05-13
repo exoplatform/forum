@@ -21,12 +21,16 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
 public class UIPollRadioBoxInput extends UIFormRadioBoxInput {
 
+  protected Log log = ExoLogger.getLogger(this.getClass());
+  
   /**
    * The list of radio boxes
    */
@@ -80,7 +84,9 @@ public class UIPollRadioBoxInput extends UIFormRadioBoxInput {
       String label = si.getLabel();
       try {
         label = res.getString(getId() + ".label." + si.getLabel());
-      } catch (MissingResourceException e) {}
+      } catch (MissingResourceException e) {
+        log.warn("Can not find resource bundle for key : " + getId() + ".label." + label);
+      }
       w.write(label);
       w.write("      </span>\n");
       w.write("    </label>\n");

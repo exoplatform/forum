@@ -222,5 +222,22 @@ public class TestCommonUtils extends TestCase {
     //
     assertEquals(expecString, truncStr);
   }
-  
+
+  public void testGetURI() {
+    //
+    assertNull(CommonUtils.getURI(null));
+    //
+    assertEquals("", CommonUtils.getURI(""));
+    //
+    assertEquals("/path1/path2/", CommonUtils.getURI("/path1/path2/"));
+    //
+    assertEquals("http://domain.com", CommonUtils.getURI("http://domain.com"));
+    //
+    assertEquals("/", CommonUtils.getURI("http://domain.com/"));
+    //
+    assertEquals("/path1/path2/", CommonUtils.getURI("http://domain.com/path1/path2/"));
+    //
+    assertEquals("/path1/?q=flower", CommonUtils.getURI("http://domain.com/path1/?q=flower"));
+  }
+
 }

@@ -139,6 +139,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
           } else {
             post.setIsWaiting(false);
           }
+          post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
           posts.add(post);
         }
       }

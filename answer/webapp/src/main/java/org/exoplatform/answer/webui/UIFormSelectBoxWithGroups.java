@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
@@ -33,6 +35,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 public class UIFormSelectBoxWithGroups extends UIFormStringInput {
 
+  protected Log log = ExoLogger.getLogger(this.getClass());
+  
   /**
    * It make SelectBox's ability to select multiple values
    */
@@ -257,7 +261,9 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
       } else if (item instanceof SelectOptionGroup) {
         try {
           label = res.getString(getFrom().getId() + ".optionGroup.label." + label);
-        } catch (MissingResourceException ex) {}
+        } catch (MissingResourceException ex) {
+          log.warn("Can not find resource bundle for key : " + getFrom().getId() + ".optionGroup.label." + label);
+        }
         w.write("<optgroup label=\"");
         w.write(label);
         w.write("\">\n");
@@ -265,7 +271,9 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
           label = opt.getLabel();
           try {
             label = res.getString(formId + ".label.option." + opt.getValue());
-          } catch (MissingResourceException ex) {}
+          } catch (MissingResourceException ex) {
+            log.warn("Can not find resource bundle for key : " + formId + ".label.option." + label);
+          }
           w.write(renderOption(opt, label));
 
         }

@@ -33,7 +33,7 @@
 	      <%} else { 
 	          if(image.length() > 0){
 	      %>
-	          <a href="$url" onclick="$link; return false;">Home</a>
+	          <a href="$url" onclick="$link; return false;"><%=_ctx.appRes("UIBreadcumbs.label.categories")%></a>
 	          
 	        <%} else { %>
 	          <a href="$url" onclick="$link; return false;">$namePath</a>

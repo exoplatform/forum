@@ -49,9 +49,9 @@
 							"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;",
 							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 							"eXo.forum.UIForumPortlet.goLastPost('top');",
-							"eXo.forum.CheckBox.init('"+uicomponent.id+"');",
 							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
-							"eXo.forum.UIForumPortlet.controlLeftNavigation();"
+							"eXo.forum.UIForumPortlet.controlLeftNavigation();",
+							"forumCheckBox.init('"+uicomponent.id+"');"
 							];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);
 %>
@@ -161,7 +161,7 @@
 					<% } %> 
 					
 					<li class="defaultStyle forumSeparatorLine">
-						<div class="dropdown uiDropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiActionWithLabel">
+						<div class="dropdown uiDropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> actionIcon">
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>

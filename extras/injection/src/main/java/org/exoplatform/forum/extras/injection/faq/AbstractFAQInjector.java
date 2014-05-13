@@ -164,6 +164,7 @@ abstract public class AbstractFAQInjector extends DataInjector {
     }
     catch (Exception e) {
       // If no user is existing, set keep 0 as value.
+      LOG.warn("Error when initilizing data.", e);
     }
 
     //

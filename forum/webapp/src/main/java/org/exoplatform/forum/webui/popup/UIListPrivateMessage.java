@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UIForumActionBar;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -117,6 +118,8 @@ public class UIListPrivateMessage extends UIContainer {
                .addMessage(new ApplicationMessage("UIListInBoxPrivateMessage.msg.fail-view", null, ApplicationMessage.WARNING));
         }
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer.getAncestorOfType(UIForumPortlet.class)
+                                                                        .getChild(UIForumActionBar.class));
       event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer);
     }
   }

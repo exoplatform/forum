@@ -840,6 +840,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsApproved() == false) {
         topic.setIsApproved(true);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         return true;
       }
       return false;
@@ -1118,6 +1119,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     protected boolean modifyTopic(Topic topic) {
       if (topic.getIsWaiting() == true) {
         topic.setIsWaiting(false);
+        topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         return true;
       }
       return false;
@@ -1126,7 +1128,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class SetOrderByActionListener extends BaseTopicContainerActionListener {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String path) throws Exception {
-      uiTopicContainer.strOrderBy = ForumUtils.getOrderBy(uiTopicContainer.strOrderBy, path);
+      uiTopicContainer.strOrderBy = ForumUtils.getSQLOrderBy(uiTopicContainer.strOrderBy, path);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
     }
   }

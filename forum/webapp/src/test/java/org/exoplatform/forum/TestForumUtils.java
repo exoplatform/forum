@@ -244,6 +244,23 @@ public class TestForumUtils extends TestCase {
     assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));
   }
 
+  public void testGetSQLOrderBy() throws Exception {
+    String param = "dateTime", strOrderBy = ForumUtils.EMPTY_STR;
+    assertEquals("dateTime ASC",ForumUtils.getSQLOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime DESC";
+    assertEquals("dateTime ASC",ForumUtils.getSQLOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime ASC";
+    assertEquals("dateTime DESC",ForumUtils.getSQLOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime ASC";
+    assertEquals("dateTime DESC",ForumUtils.getSQLOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "name ASC";
+    assertEquals("dateTime ASC",ForumUtils.getSQLOrderBy(strOrderBy, param));
+  }
+
   public void testUpdateMultiValues() throws Exception {
     String value = "root,demo", values = ForumUtils.EMPTY_STR;
     assertEquals("root,demo", ForumUtils.updateMultiValues(value, values));
