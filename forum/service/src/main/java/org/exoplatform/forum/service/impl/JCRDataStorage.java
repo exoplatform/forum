@@ -1375,60 +1375,42 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl) query;
       queryImpl.setCaseInsensitiveOrder(true);
-      long totalSize, nextOffset = 0, gotItemNumber = 0;
-      if (maxSize > 0) {
-        totalSize = maxSize;
-      } else {
-        totalSize = query.execute().getNodes().getSize();
-      }
+
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
-      QueryResult qr;
       CategoryFilter categoryFilter;
       String categoryId, categoryName, forumId, forumName;
-      NodeIterator iter;
+      long gotItemNumber = 0;
       //
-      while (gotItemNumber < totalSize && nextOffset < totalSize) {
-        queryImpl.setOffset(nextOffset);
-        queryImpl.setLimit(totalSize);
+      NodeIterator iter = queryImpl.execute().getNodes();
+      //
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        categoryId = node.getParent().getName();
 
-        qr = queryImpl.execute();
-        iter = qr.getNodes();
-        if (iter.getSize() <= 0) {
-          return new ArrayList<CategoryFilter>(categoryFilters.values());
+        if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
+          continue;
         }
 
-        //
-        while (iter.hasNext()) {
-          Node node = iter.nextNode();
-          categoryId = node.getParent().getName();
-          
-          if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
-            continue;
+        forumId = node.getName();
+
+        // can create topic in category/forum
+        if (categoriesCanCreateTopics.contains(categoryId)) {
+
+          if (categoryFilters.containsKey(categoryId)) {
+            categoryFilter = categoryFilters.get(categoryId);
+          } else {
+            categoryName = node.getParent().getProperty(EXO_NAME).getString();
+            categoryFilter = new CategoryFilter(categoryId, categoryName);
+            categoryFilters.put(categoryId, categoryFilter);
           }
-          
-          forumId = node.getName();
-
-          // can create topic in category/forum
-          if (categoriesCanCreateTopics.contains(categoryId)) {
-
-            if (categoryFilters.containsKey(categoryId)) {
-              categoryFilter = categoryFilters.get(categoryId);
-            } else {
-              categoryName = node.getParent().getProperty(EXO_NAME).getString();
-              categoryFilter = new CategoryFilter(categoryId, categoryName);
-              categoryFilters.put(categoryId, categoryFilter);
-            }
-            forumName = node.getProperty(EXO_NAME).getString();
-            if (categoryFilter.setForumFilter(forumId, forumName)) {
-              gotItemNumber++;
-              if (gotItemNumber == totalSize) {
-                break;
-              }
+          forumName = node.getProperty(EXO_NAME).getString();
+          if (categoryFilter.setForumFilter(forumId, forumName)) {
+            gotItemNumber++;
+            if (gotItemNumber == maxSize) {
+              break;
             }
           }
         }
-
-        nextOffset += totalSize;
       }
 
       return Collections.unmodifiableList(new ArrayList<CategoryFilter>(categoryFilters.values()));

@@ -586,11 +586,4 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(1, forums.size());
   }
   
-  public void testFilterForumByName() throws Exception {
-    // set Data
-    initDefaultData();
-    List<CategoryFilter> result = forumService_.filterForumByName("_", "root", 2); 
-    assertEquals(1, result.size());
-  }
-  
 }
