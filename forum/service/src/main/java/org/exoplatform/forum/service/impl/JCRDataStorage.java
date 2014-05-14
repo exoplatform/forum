@@ -1328,7 +1328,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // get public forums
     qrCanCreateTopic = new StringBuilder(JCR_ROOT);
     qrCanCreateTopic.append(categoryHome.getPath())
-                    .append("/element(*,")
+                    .append("//element(*,")
                     .append(EXO_FORUM).append(")");
 
     qrCanCreateTopic.append("[")
@@ -1355,11 +1355,18 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
+      //removes all of group what contains "spaces" group 
+      List<String> userListWithoutSpace = new ArrayList<String>();
+      for(String group : listOfUser) {
+        if (group != null && group.indexOf(Utils.CATEGORY_SPACE) == -1) {
+          userListWithoutSpace.add(group);
+        }
+      }
       // get can create topic
-      List<String> canCreateTopicIds = getCategoryIdForumIdUserCanCreateTopic(categoryHome, listOfUser);
+      List<String> canCreateTopicIds = getCategoryIdForumIdUserCanCreateTopic(categoryHome, userListWithoutSpace);
 
       // get category private
-      Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), EXO_USER_PRIVATE);
+      Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, userListWithoutSpace, new ArrayList<String>(), new ArrayList<String>(), EXO_USER_PRIVATE);
       List<String> categoryPrivates = mapPrivate.get(Utils.CATEGORY);
       //query forum by input-key
 
@@ -1449,12 +1456,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (categoryPrivates.isEmpty() == false && categoryPrivates.contains(categoryId) == false) {
       return false;
     }
-    
-    //has right to create topic
-    if(canCreateTopicIds.isEmpty() || canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId)) { 
+
+    // has right to create topic
+    if (canCreateTopicIds.contains(categoryId) || canCreateTopicIds.contains(forumId)) {
       return true;
     }
-    
+
     return false;
   }
 
