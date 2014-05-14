@@ -223,4 +223,66 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     assertEquals(1, categoryFilters.size());
     assertEquals(5, categoryFilters.get(0).getForumFilters().size());
   }
+  
+  
+  public void testFilterAllForumByName() throws Exception {
+    // create Data
+    for (int i = 0; i < 3; i++) {
+      Category cate = createCategory(getId(Utils.CATEGORY));
+      cate.setCategoryName("cate number " + i);
+      cate.setUserPrivate(new String[] { USER_ROOT, USER_DEMO });
+      forumService_.saveCategory(cate, true);
+      for (int j = 0; j < 5; j++) {
+        Forum forum = createdForum();
+        forum.setForumName("forum number " + j + " of cate " + i);
+        forumService_.saveForum(cate.getId(), forum, true);
+      }
+    }
+    // limit 2 forums
+    List<CategoryFilter> result = forumService_.filterForumByName("_", USER_ROOT, 2);
+    assertEquals(2, getSizeOfForumFound(result));
+    // not limit
+    result = forumService_.filterForumByName("_", USER_ROOT, 0);
+    assertEquals(3 * 5, getSizeOfForumFound(result));
+    // add more category/forums space
+    Category cate = createCategory(Utils.CATEGORY_SPACE_ID_PREFIX);
+    cate.setCategoryName("spaces");
+    forumService_.saveCategory(cate, true);
+    for (int j = 0; j < 5; j++) {
+      Forum forum = createdForum();
+      forum.setForumName("forum number " + j + " of cate space");
+      forumService_.saveForum(cate.getId(), forum, true);
+    }
+    // result not change after add space
+    result = forumService_.filterForumByName("_", USER_ROOT, 0);
+    assertEquals(3 * 5, getSizeOfForumFound(result));
+    // test with FORUM-826
+    // create public category have one forum
+    cate = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cate, true);
+    Forum forum = createdForum();
+    forum.setForumName("a1 forum test");
+    forumService_.saveForum(cate.getId(), forum, true);
+    // create private category for DEMO have one forum
+    cate = createCategory(getId(Utils.CATEGORY));
+    cate.setUserPrivate(new String[] { USER_ROOT });
+    forumService_.saveCategory(cate, true);
+    forum = createdForum();
+    forum.setForumName("a2 forum test");
+    forumService_.saveForum(cate.getId(), forum, true);
+    // limit 2 forums for DEMO, before fix
+    // + if category private have 2 forums it will return 0
+    // + if category private have 1 forums it will return 1
+    result = forumService_.filterForumByName("_", USER_DEMO, 2);
+    assertEquals(2, getSizeOfForumFound(result));
+  }
+  
+  public static int getSizeOfForumFound(List<CategoryFilter> result) {
+    int found = 0;
+    for (CategoryFilter categoryFilter : result) {
+      found += categoryFilter.getForumFilters().size();
+    }
+    return found;
+  }
+  
 }
