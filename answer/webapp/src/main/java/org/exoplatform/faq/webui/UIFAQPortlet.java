@@ -17,7 +17,6 @@
 package org.exoplatform.faq.webui;
 
 import javax.portlet.PortletMode;
-import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.answer.webui.FAQUtils;
@@ -46,12 +45,21 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIFAQPortlet extends UIPortletApplication {
   private final static String SLASH     = "/".intern();
-  
+
   public UIFAQPortlet() throws Exception {
     addChild(UIViewer.class, null, null);
   }
   
   public String getDisplaySpaceName() {
+    Space space = getSpace();
+    if (space != null) {
+      return space.getDisplayName();
+    }
+
+    return CommonUtils.AMP_SPACE;
+  }
+  
+  private Space getSpace() {
     PortalRequestContext plcontext = Util.getPortalRequestContext();
     String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
     Route route = ExoRouter.route(requestPath);
@@ -63,10 +71,9 @@ public class UIFAQPortlet extends UIPortletApplication {
 
     if (spacePrettyName != null) {
       SpaceService sService = getApplicationComponent(SpaceService.class);
-      Space space = sService.getSpaceByPrettyName(spacePrettyName);
-      return (space != null) ? space.getDisplayName() : CommonUtils.AMP_SPACE;
+      return sService.getSpaceByPrettyName(spacePrettyName);
     }
-    return CommonUtils.AMP_SPACE;
+    return null;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
@@ -90,17 +97,14 @@ public class UIFAQPortlet extends UIPortletApplication {
     }
     super.processRender(app, context);
   }
-  
+
   public String getPathOfCateSpace() {
     try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences pref = pcontext.getRequest().getPreferences();
-      String url;
-      if ((url = pref.getValue(SpaceUtils.SPACE_URL, null)) != null) {
-        SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
-        FAQService fService = (FAQService) getApplicationComponent(FAQService.class);
-        Space space = sService.getSpaceByUrl(url);
-        String pathOfCateSpace = Utils.CATEGORY_HOME + SLASH + Utils.CATE_SPACE_ID_PREFIX + space.getPrettyName();
+      Space space = getSpace();
+      if (space != null) {
+        String spaceGroupId = space.getGroupId().replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
+        String pathOfCateSpace = Utils.CATEGORY_HOME + SLASH + Utils.CATE_SPACE_ID_PREFIX + spaceGroupId;
+        FAQService fService = getApplicationComponent(FAQService.class);
         if (fService.isExisting(pathOfCateSpace)) {
           return pathOfCateSpace;
         }
@@ -108,6 +112,6 @@ public class UIFAQPortlet extends UIPortletApplication {
       return Utils.CATEGORY_HOME;
     } catch (Exception e) {
       return Utils.CATEGORY_HOME;
-    }    
+    }
   }
 }
