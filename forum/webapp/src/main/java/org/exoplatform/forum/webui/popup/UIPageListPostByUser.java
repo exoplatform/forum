@@ -98,7 +98,8 @@ public class UIPageListPostByUser extends UIContainer {
       UserProfile userProfile = getUserProfile();
       boolean isMod = (userProfile.getUserRole() < 2) ? true : false;
       JCRPageList pageList = forumService.getPagePostByUser(this.userName, userProfile.getUserId(), isMod, strOrderBy);
-      forumPageIterator.updatePageList(pageList);
+      forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                                 pageList.getAvailable(), pageList.getAvailablePage());
       if (pageList != null) {
         pageList.setPageSize(10);
       }

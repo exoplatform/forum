@@ -114,7 +114,8 @@ public class UIForumListSearch extends BaseForumForm {
   public List<ForumSearchResult> getListEvent() {
     pageList = new ForumPageList(pageSize, listEvent.size());
     pageList.setPageSize(pageSize);
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     isShowIter = true;
     if (pageList.getAvailablePage() <= 1)
       isShowIter = false;
