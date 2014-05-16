@@ -877,6 +877,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     cat.setCreateTopicRole(reader.strings(EXO_CREATE_TOPIC_ROLE));
     cat.setPoster(reader.strings(EXO_POSTER));
     cat.setIncludedSpace(reader.bool(EXO_INCLUDED_SPACE));
+    if (!cateNode.hasProperty(EXO_INCLUDED_SPACE)) {
+      LOG.warn(String.format("The category %s has not property exo:includedSpace. Please, excute the forum upgrade plugin.", cateNode.getName()));
+    }
     return cat;
   }
 
@@ -890,15 +893,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         catNode.setProperty(EXO_ID, category.getId());
         catNode.setProperty(EXO_OWNER, category.getOwner());
         catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
-        boolean isIncludedSpace = category.isIncludedSpace() || category.getId().contains(Utils.CATEGORY_SPACE);
-        try {
-          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
-        } catch (Exception e) {
-          catNode.addMixin("mix:forumCategory");
-          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
-        }
+        boolean isIncludedSpace = category.isIncludedSpace() || category.getId().equals(Utils.CATEGORY_SPACE_ID_PREFIX);
+        catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
         categoryHome.getSession().save();
-        // addModeratorCalculateListener(catNode);
       } else {
         catNode = categoryHome.getNode(category.getId());
         String[] oldcategoryMod = new PropertyReader(catNode).strings(EXO_MODERATORS, new String[] { "" });
@@ -1320,7 +1317,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // get all categories not in space that user can create topics
     StringBuilder cateBuilder = new StringBuilder();
     if (isIgnoreSpace) {
-      cateBuilder.append(EXO_INCLUDED_SPACE).append("='false' AND exo:id <> '").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("'");
+      cateBuilder.append(EXO_ID).append(" <> '").append(Utils.CATEGORY_SPACE_ID_PREFIX).append("'");
     }
     cateBuilder.append((isIgnoreSpace) ? " AND " : "").append(getCanCreateTopicQuery(listOfUser, true));
 

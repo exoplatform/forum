@@ -71,16 +71,16 @@ public class ForumServiceUpdaterTestCase extends BaseForumServiceTestCase {
     // check before upgrade
     Category cateSpace = dataStorage.getCategory(Utils.CATEGORY_SPACE_ID_PREFIX);
     assertNotNull(cateSpace);
-    assertEquals(false, cateSpace.isIncludedSpace());
+    assertFalse(cateSpace.isIncludedSpace());
 
     // get by DataStorage#getCategoryIncludedSpace
     Category cateSpace2 = dataStorage.getCategoryIncludedSpace();
     assertNotNull(cateSpace2);
 
-    // check with new normal category
+    // check with normal category
     Category category = dataStorage.getCategory(Utils.CATEGORY + "0");
-    assertNotNull(cateSpace);
-    assertEquals(false, hasProperty(category.getPath(), ForumNodeTypes.EXO_INCLUDED_SPACE));
+    assertNotNull(category);
+    assertFalse(hasProperty(category.getPath(), ForumNodeTypes.EXO_INCLUDED_SPACE));
 
     // run upgrade
     serviceUpdaterPlugin.processUpgrade("3.5.x", "4.0.x");
@@ -88,18 +88,26 @@ public class ForumServiceUpdaterTestCase extends BaseForumServiceTestCase {
     // check after upgrade
     cateSpace = dataStorage.getCategory(Utils.CATEGORY_SPACE_ID_PREFIX);
     assertNotNull(cateSpace);
-    assertEquals(true, cateSpace.isIncludedSpace());
+    assertTrue(cateSpace.isIncludedSpace());
 
     // get by DataStorage#getCategoryIncludedSpace
     cateSpace2 = dataStorage.getCategoryIncludedSpace();
     assertNotNull(cateSpace2);
     assertEquals(cateSpace, cateSpace2);
+    
+    // check with old normal category
+    Category oldCategory = dataStorage.getCategory(Utils.CATEGORY + "0");
+    assertNotNull(category);
+    assertTrue(hasProperty(oldCategory.getPath(), ForumNodeTypes.EXO_INCLUDED_SPACE));
+    assertFalse(oldCategory.isIncludedSpace());
 
-    // check with new normal category
+    // check with create new normal category
     initDefaultData();
+    //
     category = dataStorage.getCategory(categoryId);
-    assertNotNull(cateSpace);
-    assertEquals(true, hasProperty(category.getPath(), ForumNodeTypes.EXO_INCLUDED_SPACE));
+    assertNotNull(category);
+    assertTrue(hasProperty(category.getPath(), ForumNodeTypes.EXO_INCLUDED_SPACE));
+    assertFalse(category.isIncludedSpace());
   }
 
   private boolean hasProperty(String path, String property) throws Exception {

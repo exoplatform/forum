@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.updater;
 import java.io.InputStream;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
 import org.exoplatform.commons.upgrade.UpgradeProductPlugin;
@@ -69,15 +70,22 @@ public class ForumServiceUpdaterPlugin extends UpgradeProductPlugin {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Session session = dataLocator.getSessionManager().getSession(sProvider);
     Node cateHome = session.getRootNode().getNode(dataLocator.getForumCategoriesLocation());
-    if (cateHome.hasNode(Utils.CATEGORY_SPACE_ID_PREFIX)) {
-      Node cateSpace = cateHome.getNode(Utils.CATEGORY_SPACE_ID_PREFIX);
-      try {
-        cateSpace.setProperty(ForumNodeTypes.EXO_INCLUDED_SPACE, true);
-      } catch (Exception e) {
-        cateSpace.addMixin("mix:forumCategory");
-        cateSpace.setProperty(ForumNodeTypes.EXO_INCLUDED_SPACE, true);
+    NodeIterator iter = cateHome.getNodes();
+    while (iter.hasNext()) {
+      addMixinForumCategory(iter.nextNode());
+    }
+    //
+    session.save();
+  }
+
+  private void addMixinForumCategory(Node cateNode) {
+    try {
+      if (!cateNode.isNodeType(ForumNodeTypes.MIXIN_FORUM_CATEGORY)) {
+        cateNode.addMixin(ForumNodeTypes.MIXIN_FORUM_CATEGORY);
+        cateNode.setProperty(ForumNodeTypes.EXO_INCLUDED_SPACE, cateNode.getName().equals(Utils.CATEGORY_SPACE_ID_PREFIX));
       }
-      session.save();
+    } catch (Exception e) {
+      LOG.warn(String.format("Upgrade the category %s is unsuccessful", cateNode.toString()), e);
     }
   }
 
