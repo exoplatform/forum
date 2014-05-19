@@ -439,7 +439,7 @@
           }
         } else {
           var obj = document.getElementById(idLastPost);
-          if (eXo.core.Browser.isIE()) {
+          if (obj && eXo.core.Browser.isIE()) {
             var correctOffset = 0;
             while(obj.offsetParent) {
               correctOffset += obj.offsetTop;
