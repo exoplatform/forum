@@ -422,3 +422,5 @@ eXoPlugin.getContent = function() {
 eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
 
 FCK["eXoPlugin"] = eXoPlugin;
+
+window.top.forumFCK = FCK;

@@ -133,6 +133,23 @@
     },
     getCookie : function(name) {
       return eXo.core.Browser.getCookie(name);
+    },
+
+    submitFCKEditerForm : function(elm) {
+      if (eXo.core.Browser.isIE()) {
+        var fck = gj(elm).parents('.UIForm:first').find('iframe:first');
+        if (fck.exists()) {
+          var elmId = fck.attr('id').replace('___Frame', '');
+          if(window.FCKeditorAPI.Instances && window.FCKeditorAPI.Instances['elmId']) {
+            window.FCKeditorAPI.Instances['elmId'].UpdateLinkedField();
+          } else if(window.forumFCK) {
+            window.forumFCK.UpdateLinkedField();
+          }
+        }
+      }
+      //
+      var action = gj(elm).attr('data-link').replace('javascript:', '');
+      eval(action);
     }
     
   };
@@ -172,6 +189,10 @@
     ForumUtils.currWidth = document.documentElement.clientWidth;
   });
   gj('body').click(ForumUtils.hideElements);
- 
+
+  window.eXo = window.eXo || {};
+  window.eXo.forum = window.eXo.forum || {};
+  window.eXo.forum.ForumUtils = window.eXo.forum.ForumUtils || {};
+  window.eXo.forum.ForumUtils.submitFCKEditerForm= ForumUtils.submitFCKEditerForm;
  return ForumUtils;
 })(gj);
