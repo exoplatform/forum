@@ -10,9 +10,9 @@
 	<div class="uiAction uiActionBorder">
 	<% for(action in uicomponent.getActions()) { 
 				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-				 String link = uicomponent.event(action) ;
+				 String link = uicomponent.event(action);
 			%>
-		<button onclick="$link" class="btn" type="button">$actionLabel</button>
+		<button onclick="eXo.forum.ForumUtils.submitFCKEditorForm(this)" data-link="$link" class="btn" type="button">$actionLabel</button>
 		<%}%>
 	</div>
 	<%uiform.end()%>
