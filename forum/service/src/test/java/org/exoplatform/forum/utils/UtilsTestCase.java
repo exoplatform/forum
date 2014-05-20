@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.jcr.Value;
 
@@ -110,7 +112,18 @@ public class UtilsTestCase extends TestCase {
   }
 
   public void testMapToArray() {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> hashMap = new HashMap<String, String>();
+    //
+    runTestMapToArray(hashMap);
+  }
+
+  public void testConcurrentMapToArray() {
+    ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<String, String>();
+    //
+    runTestMapToArray(concurrentMap);
+  }
+
+  private void runTestMapToArray(Map<String, String> map) {
     String[] actual = Utils.mapToArray(map);
     AssertUtils.assertContains(actual, " ");
 
