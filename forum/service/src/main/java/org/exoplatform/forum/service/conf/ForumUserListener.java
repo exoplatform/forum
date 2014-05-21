@@ -95,6 +95,8 @@ public class ForumUserListener extends UserEventListener {
         log.warn("Error while updating forum profile: ", e);
       }
     }
+    //
+    ForumServiceUtils.clearCache();
   }
 
   private ForumService getForumService() {
@@ -108,7 +110,8 @@ public class ForumUserListener extends UserEventListener {
     } catch (Exception e) {
       log.warn("failed to remove member : ", e);
     }
-
+    //
+    ForumServiceUtils.clearCache();
   }
 
   @Override

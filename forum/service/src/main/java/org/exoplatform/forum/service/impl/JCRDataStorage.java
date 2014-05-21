@@ -503,7 +503,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (list.contains(userName))
         return true;
       String[] adminrules = Utils.getStringsInList(list);
-      if (ForumServiceUtils.hasPermission(adminrules, userName))
+      if (ForumServiceUtils.isModerator(adminrules, userName))
         return true;
     }
     return false;
@@ -1782,7 +1782,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (isDelete) {
           String[] cateMods = PropertyReader.valuesToArray(cateNode.getProperty(EXO_MODERATORS).getValues());
           if (cateMods != null && cateMods.length > 0 && !Utils.isEmpty(cateMods[0])) {
-            if (ForumServiceUtils.hasPermission(cateMods, userName))
+            if (ForumServiceUtils.isModerator(cateMods, userName))
               continue;
           }
           if (forumNode.hasProperty(EXO_MODERATORS)) {
@@ -2364,6 +2364,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     topicNew.setId(topicNode.getName());
     topicNew.setPath(topicNode.getPath());
     topicNew.setIcon(reader.string(EXO_ICON));
+    topicNew.setOwner(reader.string(EXO_OWNER));
     topicNew.setTopicName(reader.string(EXO_NAME));
     topicNew.setLastPostBy(reader.string(EXO_LAST_POST_BY));
     topicNew.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
@@ -3764,25 +3765,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // viewer of forum
     viewers.addAll(reader.set(EXO_VIEWER, new HashSet<String>()));
     // forum of space - only check permission on forum
+    String[] moderators = reader.strings(EXO_MODERATE_FORUMS, new String[] {});
     if (forumNode.getParent().getName().equals(Utils.CATEGORY_SPACE_ID_PREFIX)) {
       // moderators
-      if (ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+      if (!CommonUtils.isEmpty(moderators) && ForumServiceUtils.hasPermission(moderators, user)) {
         return true;
       }
     } else {
       // administrators or moderators
-      if (isAdminRole(user) || ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+      if (isAdminRole(user) || (!CommonUtils.isEmpty(moderators) && ForumServiceUtils.hasPermission(moderators, user))) {
         return true;
       }
       // private categories
       String[] userPrivates = new PropertyReader(forumNode.getParent()).strings(EXO_USER_PRIVATE, new String[] {});
-      if (!CommonUtils.isEmpty(userPrivates) && !ForumServiceUtils.hasPermission(userPrivates, user)) {
+      if (!ForumServiceUtils.hasPermission(userPrivates, user)) {
         return false;
       }
       // all viewers on category
       viewers.addAll(new PropertyReader(forumNode.getParent()).list(EXO_VIEWER, new ArrayList<String>()));
     }
-    return viewers.isEmpty() || ForumServiceUtils.hasPermission(viewers.toArray(new String[viewers.size()]), user);
+    return ForumServiceUtils.hasPermission(viewers.toArray(new String[viewers.size()]), user);
   }
   
   private void sendNotificationWhenCreateTopic(SessionProvider sProvider, Node forumNode, Topic topic, MessageBuilder messageBuilder) throws Exception {
