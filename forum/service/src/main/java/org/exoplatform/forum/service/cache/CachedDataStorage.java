@@ -835,7 +835,10 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
-    String topicPath = new StringBuffer(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
+    String topicPath = topicId;
+    if (!Utils.isEmpty(categoryId)) {
+      topicPath = new StringBuilder(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
+    }
     //
     return getTopicByPath(topicPath, false);
   }

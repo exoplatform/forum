@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
@@ -36,6 +37,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService;
 import org.exoplatform.forum.service.CacheUserProfile;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
@@ -91,19 +93,22 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   final Queue<UserLoginLogEntry>     queue           = new ConcurrentLinkedQueue<UserLoginLogEntry>();
 
-//  private String                     lastLogin_      = "";
   private Map<String, String>        lastLoginMap      = new HashMap<String, String>();
 
   private ForumStatisticsService     forumStatisticsService;
+
+  private LifeCycleCompletionService completionService;
 
   private JobSchedulerService        jobSchedulerService;
 
   protected List<ForumEventListener> listeners_      = new ArrayList<ForumEventListener>(3);
   
-  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService forumStatisticsService, JobSchedulerService jobSchedulerService) {
+  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage,
+                          ForumStatisticsService staticsService, JobSchedulerService jobService, LifeCycleCompletionService completionService) {
     this.storage = dataStorage;
-    this.forumStatisticsService = forumStatisticsService;
-    this.jobSchedulerService = jobSchedulerService;
+    this.forumStatisticsService = staticsService;
+    this.jobSchedulerService = jobService;
+    this.completionService = completionService;
   }
 
   /**
@@ -545,21 +550,10 @@ public class ForumServiceImpl implements ForumService, Startable {
       edited.setEditedIsLock(topic.getIsLock());
       edited.setEditedIsWaiting(topic.getIsWaiting());
     }
-    
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
-    for (ForumEventLifeCycle f : listeners_) {
-      try {
-        if (isNew) {
-          f.addTopic(topic);
-        } else {
-          if (edited != null) {
-            f.updateTopic(edited);
-          }
-        }
-      } catch (Exception e) {
-        log.debug("Failed to run function addTopic/updateTopic in the class ForumEventLifeCycle. ", e);
-      }
-    }
+    //
+    Callable<Boolean> callAble = new ForumEventCompletion.ProcessTopic(((isNew) ? topic : edited), isNew).setListeners(listeners_);
+    completionService.addTask(callAble);
   }
 
   /**
@@ -733,16 +727,9 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
-    for (ForumEventLifeCycle f : listeners_) {
-      try {
-        if (isNew)
-          f.addPost(post);
-        else
-          f.updatePost(post);
-      } catch (Exception e) {
-        log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
-      }
-    }
+    //
+    Callable<Boolean> callAble = new ForumEventCompletion.ProcessPost(post, isNew).setListeners(listeners_);
+    completionService.addTask(callAble);
   }
 
   /**

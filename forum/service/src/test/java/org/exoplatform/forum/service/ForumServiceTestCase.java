@@ -58,9 +58,42 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
 
   public void testForumStatic() throws Exception {
-    ForumStatistic forumStatistic = new ForumStatistic();
+    //
+    resetAllUserProfile();
+    
+    ForumStatistic forumStatistic = forumService_.getForumStatistic();
+    assertNotNull(forumStatistic);
+    assertEquals(8, forumStatistic.getMembersCount());
+    
+    forumStatistic.setPostCount(20);
+    forumStatistic.setTopicCount(10);
     forumService_.saveForumStatistic(forumStatistic);
-    assertNotNull(forumService_.getForumStatistic());
+
+    forumStatistic = forumService_.getForumStatistic();
+    assertEquals(10, forumStatistic.getTopicCount());
+    assertEquals(20, forumStatistic.getPostCount());
+    // reset
+    forumService_.saveForumStatistic(new ForumStatistic());
+    // make one topic
+    initDefaultData();
+    // create 10 topics and 10 posts for each topic. On each topic contain one post is first post.
+    for (int i = 0; i < 10; i++) {
+      forumService_.saveTopic(categoryId, forumId, createdTopic(USER_DEMO), true, false, new MessageBuilder());
+      forumService_.savePost(categoryId, forumId, topicId, createdPost(), true, new MessageBuilder());
+    }
+    forumStatistic = forumService_.getForumStatistic();
+    // we have 11 topics and 21 posts.
+    assertEquals(11, forumStatistic.getTopicCount());
+    assertEquals(21, forumStatistic.getPostCount());
+    
+    UserProfile profile = forumService_.getUserInfo(USER_ROOT);
+    
+    assertEquals(1, profile.getTotalTopic());
+    assertEquals(11, profile.getTotalPost());
+    
+    profile = forumService_.getUserInfo(USER_DEMO);
+    assertEquals(10, profile.getTotalTopic());
+    assertEquals(10, profile.getTotalPost());
   }
 
   public void testForumAdministration() throws Exception {
@@ -540,5 +573,45 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forum = forumService_.getForum(cat1.getId(), forumId);
     assertNotNull(forum);
     
+  }
+  
+  public void testSplitTopic() throws Exception {
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat.getId(), forum, true);
+    forum = forumService_.getForum(cat.getId(), forum.getId());
+    Topic topic = createdTopic(USER_ROOT);
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    List<String> postPath = new ArrayList<String>();
+    String firstPostId = "";
+    for (int i = 0; i < 5; ++i) {
+      Post post = createdPost();
+      if (i == 2) {
+        firstPostId = post.getId();
+      }
+      if (i > 1) {
+        postPath.add(topic.getPath() + "/" + post.getId());
+      }
+      forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+    }
+    
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    assertEquals(5, topic.getPostCount());
+    
+    Post firstPost = forumService_.getPost(cat.getId(), forum.getId(), topic.getId(), firstPostId);
+    Topic newTopic = createdTopic(USER_ROOT);
+    newTopic.setPath(forum.getPath() + "/" + newTopic.getId());
+    forumService_.splitTopic(newTopic, firstPost, postPath, "", "");
+    
+    newTopic = forumService_.getTopic(cat.getId(), forum.getId(), newTopic.getId(), "");
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    
+    assertEquals(2, topic.getPostCount());
+    assertEquals(2, newTopic.getPostCount());
+    
+    //Clean all data
+    forumService_.removeCategory(cat.getId());
   }
 }
