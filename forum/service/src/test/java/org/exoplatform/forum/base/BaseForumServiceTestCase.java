@@ -168,12 +168,8 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     userProfile.setUserId(userName);
     userProfile.setUserRole((long) 0);
     userProfile.setUserTitle(Utils.ADMIN);
-<<<<<<< HEAD
     userProfile.setScreenName(userName);
-    userProfile.setEmail(userName + "@plf.com");
-=======
     userProfile.setEmail(userName + "@exoplf.com");
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
     userProfile.setJoinedDate(new Date());
     userProfile.setTimeZone(7.0);
     userProfile.setSignature("signature");

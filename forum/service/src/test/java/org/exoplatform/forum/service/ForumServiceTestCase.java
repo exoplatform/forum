@@ -29,16 +29,13 @@ import javax.jcr.ImportUUIDBehavior;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
-<<<<<<< HEAD
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.User;
-=======
 import org.exoplatform.services.organization.OrganizationService;
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
@@ -346,13 +343,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // addWatch
     String forumPath = categoryId + "/" + forumId;
     List<String> values = new ArrayList<String>();
-<<<<<<< HEAD
-    values.add("exo_test@plf.com");
-    forumService_.addWatch(1, topicPath, values, USER_ROOT);
-=======
     values.add("exo@exoplf.com");
     forumService_.addWatch(1, forumPath, values, "root");
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
     // watch by user
     List<Watch> watchs = forumService_.getWatchByUser(USER_ROOT);
     assertEquals(watchs.get(0).getEmail(), values.get(0));
@@ -362,19 +354,12 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     assertEquals(watchs.size(), 0);
     // add watch for category
     forumService_.addWatch(1, categoryId, values, USER_DEMO);
-<<<<<<< HEAD
-    assertEquals(1, forumService_.getCategory(categoryId).getEmailNotification().length);
-    // remove watch
-    forumService_.removeWatch(1, categoryId, "/" + values.get(0 ));
-    assertEquals(0, forumService_.getCategory(categoryId).getEmailNotification().length);
-    // Sleep to done run task notification.
-=======
     //
     assertEquals(1, forumService_.getCategory(categoryId).getEmailNotification().length);
     // remove watched
     forumService_.removeWatch(1, categoryId, "/" + values.get(0));
     assertEquals(0, forumService_.getCategory(categoryId).getEmailNotification().length);
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
+    // Sleep to done run task notification.
   }
 
   public void testIpBan() throws Exception {

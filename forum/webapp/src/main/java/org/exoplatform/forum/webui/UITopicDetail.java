@@ -333,42 +333,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     /**
      * Set permission for current user login.    
     */
-    isMod = (getUserProfile().getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.hasPermission(forum.getModerators(), userName));
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    isMod = (getUserProfile().getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.isModerator(forum.getModerators(), userName));
     if (topic != null) {
-      canCreateTopic = getCanCreateTopic();
-      isCanPost = isCanPostReply();
+      canCreateTopic =  forumPortlet.checkForumHasAddTopic(categoryId, forumId);
+      isCanPost = forumPortlet.checkForumHasAddPost(categoryId, forumId, topicId);
     }
   }
 
   public void setIsGetSv(boolean isGetSv) {
     this.isGetSv = isGetSv;
-  }
-
-  private boolean getCanCreateTopic() throws Exception {
-    /**
-     * set permission for create new thread
-     */
-    boolean canCreateTopic = true;
-    boolean isCheck = true;
-    List<String> ipBaneds = forum.getBanIP();
-    if (ipBaneds != null && ipBaneds.contains(getRemoteIP()) || getUserProfile().getIsBanned()) {
-      canCreateTopic = false;
-      isCheck = false;
-    }
-    if (!this.isMod && isCheck) {
-      String[] strings = this.forum.getCreateTopicRole();
-      boolean isEmpty = false;
-      if (!ForumUtils.isArrayEmpty(strings)) {
-        canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
-      }
-      if (isEmpty || !canCreateTopic) {
-        strings = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_CREATE_TOPIC_ROLE);
-        if (!ForumUtils.isArrayEmpty(strings)) {
-          canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
-        }
-      }
-    }
-    return canCreateTopic;
   }
 
   public boolean getCanPost() throws Exception {
@@ -379,7 +353,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     this.forum = forum;
   }
 
-  private boolean isCanPostReply() throws Exception {
+  protected boolean isCanPostReply() throws Exception {
     //
     boolean isCanReply = (forum != null && !forum.getIsClosed() && !forum.getIsLock() &&
                            topic != null && !topic.getIsClosed() && !topic.getIsLock() &&
@@ -474,24 +448,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   public boolean userCanView() throws Exception {
-    if (isMod)
-      return true;
-    else {
-      if (forum.getIsClosed() || topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting())
-        return false;
-    }
-    if (getCanPost())
-      return true;
-    List<String> listUser = new ArrayList<String>();
-
-    listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
-    listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
-    listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER));
-    if (listUser.size() > 0) {
-      listUser.add(topic.getOwner());
-      return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
-    }
-    return true;
+    return getAncestorOfType(UIForumPortlet.class).checkCanView(getForumService().getCategory(categoryId), forum, topic);
   }
 
   public String getImageUrl(String imagePath) throws Exception {

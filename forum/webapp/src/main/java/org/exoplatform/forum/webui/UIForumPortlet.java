@@ -495,70 +495,109 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
-  private boolean isArrayNotNull(String[] strs) {
-    if (strs != null && strs.length > 0 && !strs[0].equals(" "))
-      return true;// private
-    else
-      return false;
-  }
-  
   public boolean checkForumHasAddTopic(String categoryId, String forumId) throws Exception {
-    if (getUserProfile().getUserRole() == 0) return true;
-    if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
+    // is guest or banned 
+    if (getUserProfile().getUserRole() == UserProfile.GUEST || 
+        getUserProfile().getIsBanned() || getUserProfile().isDisabled()) {
+      return false;
+    }
     try {
-      Forum forum = (Forum) forumService.getForum(categoryId, forumId);
-      if (forum.getIsClosed() || forum.getIsLock())
+      Category cate = forumService.getCategory(categoryId);
+      Forum forum = forumService.getForum(categoryId, forumId);
+      if (forum == null) {
         return false;
-      if(userProfile.getUserRole() == 1 && ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId())) {
+      }
+      // forum close or lock
+      if (forum.getIsClosed() || forum.getIsLock()) {
+        return false;
+      }
+      // isAdmin
+      if (getUserProfile().getUserRole() == 0) {
         return true;
       }
-      Category cate = (Category) forumService.getCategory(categoryId);
-      boolean isAdd = true;
-      if(!Utils.isEmpty(cate.getUserPrivate())) {
-        isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
-      }
-      if(isAdd) {
-        if (userProfile.getUserRole() > 1) {
-          String[] canCreadTopic = ForumUtils.arraysMerge(forum.getCreateTopicRole(), cate.getCreateTopicRole());
-          if (!Utils.isEmpty(canCreadTopic) && !canCreadTopic[0].equals(" ")) {
-            return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());
-          }
+      // is moderator
+      if (getUserProfile().getUserRole() == 1) {
+        String[] morderators = ForumUtils.arraysMerge(cate.getModerators(), forum.getModerators());
+        //
+        if (ForumServiceUtils.isModerator(morderators, userProfile.getUserId())) {
+          return true;
         }
-      } else return false;
+      }
+      // ban IP of forum.
+      if (isEnableIPLogging() && forum.getBanIP() != null && forum.getBanIP().contains(WebUIUtils.getRemoteIP())) {
+        return false;
+      }
+      // check access category
+      if (!ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId())) {
+        return false;
+      }
+      // can add topic on category/forum
+      String[] canCreadTopic = ForumUtils.arraysMerge(forum.getCreateTopicRole(), cate.getCreateTopicRole());
+      if (!ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId())) {
+        return false;
+      }
     } catch (Exception e) {
-      log.debug("Failed to check: " + e.getMessage(), e);
+      log.warn(String.format("Check permission to add topic of category %s, forum %s unsuccessfully.", categoryId, forumId));
+      log.debug(e);
       return false;
     }
     return true;
   }
   
   public boolean checkForumHasAddPost(String categoryId, String forumId, String topicId) throws Exception {
-    if (getUserProfile().getUserRole() == 0) return true;
-    if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
+    // is guest or banned 
+    if (getUserProfile().getUserRole() == UserProfile.GUEST || 
+        getUserProfile().getIsBanned() || getUserProfile().isDisabled()) {
+      return false;
+    }
     try {
-      Topic topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
-      if (topic.getIsClosed() || topic.getIsLock())
+      Category cate = forumService.getCategory(categoryId);
+      Forum forum = forumService.getForum(categoryId, forumId);
+      Topic topic = forumService.getTopic(categoryId, forumId, topicId, null);
+      String userId = getUserProfile().getUserId();
+      //
+      if (topic == null) {
         return false;
-      Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
-      if (forum.getIsClosed() || forum.getIsLock())
-        return false;
-      Category cate = (Category) forumService.getObjectNameById(categoryId, Utils.CATEGORY);
-      boolean isAdd = true;
-      if(!Utils.isEmpty(cate.getUserPrivate())) {
-        isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
       }
-      if(isAdd) {
-        if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
-          if (!topic.getIsActive() || !topic.getIsActiveByForum())
-            return false;
-          String[] canCreadPost = ForumUtils.arraysMerge(cate.getPoster(), ForumUtils.arraysMerge(topic.getCanPost(), forum.getPoster()));
-          if (!ForumUtils.isArrayEmpty(canCreadPost)) {
-            return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
-          }
+      // topic is closed/locked
+      if (topic.getIsClosed() || topic.getIsLock() || forum.getIsClosed() || forum.getIsLock()) {
+        return false;
+      }
+      // isAdmin
+      if (getUserProfile().getUserRole() == 0) return true;
+      // is moderator
+      if (getUserProfile().getUserRole() == 1) {
+        String[] morderators = ForumUtils.arraysMerge(cate.getModerators(), forum.getModerators());
+        //
+        if (ForumServiceUtils.isModerator(morderators, userId)) {
+          return true;
         }
-      } else return false;
+      }
+      // ban IP of forum.
+      if (isEnableIPLogging() && forum.getBanIP() != null && forum.getBanIP().contains(WebUIUtils.getRemoteIP())) {
+        return false;
+      }
+      // check access category
+      if (!ForumServiceUtils.hasPermission(cate.getUserPrivate(), userId)) {
+        return false;
+      }
+      //topic not active
+      if (!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting() || 
+          (forum.getIsModerateTopic() && !topic.getIsApproved())) {
+        return false;
+      }
+      // owner topic
+      if (topic.getOwner() != null && topic.getOwner().equals(userId)) {
+        return true;
+      }
+      // check can post
+      String[] canCreadPost = ForumUtils.arraysMerge(cate.getPoster(), ForumUtils.arraysMerge(topic.getCanPost(), forum.getPoster()));
+      if (!ForumServiceUtils.hasPermission(canCreadPost, userId)) {
+        return false;
+      }
     } catch (Exception e) {
-      log.debug("Failed to check: " + e.getMessage(), e);
+      log.warn(String.format("Check permission to add post of category %s, forum %s, topic %s unsuccessfully.", categoryId, forumId, topicId));
+      log.debug(e);
       return false;
     }
     return true;
@@ -575,36 +614,41 @@ public class UIForumPortlet extends UIPortletApplication {
         && invisibleForums.contains(forum.getId()) == false) {
       return false;
     }
-    //
-    if (getUserProfile().getUserRole() == 0)
+    // isAdmin
+    if (getUserProfile().getUserRole() == 0) {
       return true;
-    List<String> userBound = UserHelper.getAllGroupAndMembershipOfUser(null);
-    String[] viewer = cate.getUserPrivate();
-    if (isArrayNotNull(viewer)) {
-      if (!Utils.hasPermission(Arrays.asList(viewer), userBound))
-        return false;
     }
-    if (forum != null) {
-      if (isArrayNotNull(forum.getModerators())) {
-        if (Utils.hasPermission(Arrays.asList(forum.getModerators()), userBound))
-          return true;
-      } else if (forum.getIsClosed())
-        return false;
+
+    String userId = getUserProfile().getUserId();
+    // is moderator
+    if (getUserProfile().getUserRole() == 1) {
+      String[] morderators = ForumUtils.arraysMerge(cate.getModerators(), (forum != null) ? forum.getModerators() : new String[] {});
+      //
+      if (ForumServiceUtils.isModerator(morderators, userId)) {
+        return true;
+      }
+    }
+    // check access category
+    if (!ForumServiceUtils.hasPermission(cate.getUserPrivate(), userId)) {
+      return false;
     }
     if (topic != null) {
-      List<String> list = new ArrayList<String>();
-      list = ForumUtils.addArrayToList(list, topic.getCanView());
-      list = ForumUtils.addArrayToList(list, forum.getViewer());
-      list = ForumUtils.addArrayToList(list, cate.getViewer());
-
-      if (!list.isEmpty() && topic.getOwner() != null)
-        list.add(topic.getOwner());
-      if (topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsWaiting() || (!list.isEmpty() && !Utils.hasPermission(list, userBound)))
+      // owner topic
+      if (topic.getOwner() != null && topic.getOwner().equals(userId)) {
+        return true;
+      }
+      // topic not active
+      if (!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting() || (forum.getIsModerateTopic() && !topic.getIsApproved())) {
         return false;
+      }
+      // check can view
+      String[] canView = ForumUtils.arraysMerge(cate.getViewer(), ForumUtils.arraysMerge(topic.getCanView(), forum.getViewer()));
+      if (!ForumServiceUtils.hasPermission(canView, userId)) {
+        return false;
+      }
     }
     return true;
   }
-
   
   public static void showWarningMessage(WebuiRequestContext context, String key, String... args) {
     context.getUIApplication().addMessage(new ApplicationMessage(key, args, ApplicationMessage.WARNING));
@@ -697,7 +741,7 @@ public class UIForumPortlet extends UIPortletApplication {
                   UIPopupAction popupAction = this.getChild(UIPopupAction.class);
                   UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
                   UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null);
-                  boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId());
+                  boolean isMod = ForumServiceUtils.isModerator(forum.getModerators(), this.userProfile.getUserId());
                   postForm.setPostIds(id[0], id[1], topic.getId(), topic);
                   postForm.setMod(isMod);
                   Post post = this.forumService.getPost(id[0], id[1], topic.getId(), postId);

@@ -107,12 +107,9 @@ public class CachedDataStorage implements DataStorage, Startable {
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
   private static final String SCREEN_NAME_KEY = "screenName";
   private static final String FORUM_CAN_VIEW_KEY = "userCanView";
-<<<<<<< HEAD
   private static final String USER_AVATAR_KEY = "userAvatarKey";
-=======
   private static final String PROFILE_KEY = "profile";
   private static final String WATCH_TYPE = "watchType";
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
 
   private DataStorage storage;
   private CacheService service;
@@ -333,20 +330,13 @@ public class CachedDataStorage implements DataStorage, Startable {
     String categoryId = Utils.getCategoryId(watchingItemPath);
     String forumId = Utils.getForumId(watchingItemPath);
     String topicPath = Utils.getTopicPath(watchingItemPath);
-<<<<<<< HEAD
-=======
 
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
     // Clear watching item data
     if (!Utils.isEmpty(topicPath)) {
       clearTopicCache(topicPath);
     } else if (!Utils.isEmpty(forumId)) {
       clearForumCache(categoryId, forumId, false);
-<<<<<<< HEAD
-    } else {
-=======
     } else if (!Utils.isEmpty(categoryId)) {
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
       clearCategoryCache(categoryId);
     }
   }
@@ -669,15 +659,11 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
     clearObjectCache(category, isNew);
-<<<<<<< HEAD
     //
     clearUserProfile(null);
     if (isNew == false) {
       clearCategoryCache(category);
     }
-=======
-    clearCategoryCache(category);
->>>>>>> FORUM-819 | Forum disabled users should not receive emails
   }
 
   public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {

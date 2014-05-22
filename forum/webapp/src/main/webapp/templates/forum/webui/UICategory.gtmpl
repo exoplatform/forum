@@ -222,7 +222,6 @@
 						long postCount = forum.getPostCount();
 						if(postCount < 0) postCount = 0;
 						String fontWeight = "normal";
-						boolean hasModerators = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin);
 						path = categoryId+"/"+forumId ;
 						Topic topicNewPost = uicomponent.getLastTopic(category, forum);
 						if(topicNewPost != null) {

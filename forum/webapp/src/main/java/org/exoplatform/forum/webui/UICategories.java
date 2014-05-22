@@ -243,11 +243,7 @@ public class UICategories extends UIContainer {
   }
 
   protected boolean getIsPrivate(String[] uesrs) throws Exception {
-    if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
-      return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId());
-    } else {
-      return true;
-    }
+    return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId());
   }
 
   static public class CollapCategoryActionListener extends EventListener<UICategories> {

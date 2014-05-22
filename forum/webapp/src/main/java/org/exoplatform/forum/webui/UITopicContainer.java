@@ -110,7 +110,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private Forum                  forum;
 
   private List<Topic>            topicList;
-
+  
   private List<String>           moderators;
 
   private boolean                isModerator       = false;
@@ -562,7 +562,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         }
         forum = forumService.getForum(topic.getCategoryId(), topic.getForumId());
         boolean isModerator = (component.getUserProfile().getUserRole() == 0 || (component.getUserProfile().getUserRole() == 1 &&
-                                  ForumServiceUtils.hasPermission(forum.getModerators(), component.getUserProfile().getUserId())));
+                                  ForumServiceUtils.isModerator(forum.getModerators(), component.getUserProfile().getUserId())));
         if (isModerator == false) {
           if (forum.getIsClosed()) {
             warning("UIForumPortlet.msg.do-not-permission", false);

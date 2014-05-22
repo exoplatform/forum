@@ -18,16 +18,11 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -36,7 +31,6 @@ import org.exoplatform.webui.core.UIContainer;
     template = "app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer {
-  private UserProfile userProfile;
 
   private boolean     enableIPLogging = true;
   
@@ -80,16 +74,7 @@ public class UIForumInfos extends UIContainer {
           if (!moderators.contains(userProfile.getUserId())) {
             isLock = forum.getBanIP().contains(getRemoteIP());
             if (!isLock) {
-              String[] listUser = forum.getCreateTopicRole();
-              if (!CommonUtils.isEmpty(listUser)) {
-                isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId());
-              } else {
-                ForumService forumService = CommonsUtils.getService(ForumService.class);
-                listUser = forumService.getCategory(forum.getCategoryId()).getCreateTopicRole();
-                if (!CommonUtils.isEmpty(listUser)) {
-                  isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId());
-                }
-              }
+              isLock = !forumPortlet.checkForumHasAddTopic(forum.getCategoryId(), forum.getId());
             }
           }
         }
