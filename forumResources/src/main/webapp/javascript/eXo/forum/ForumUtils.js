@@ -140,8 +140,8 @@
         var fck = gj(elm).parents('.UIForm:first').find('iframe:first');
         if (fck.exists()) {
           var elmId = fck.attr('id').replace('___Frame', '');
-          if(window.FCKeditorAPI.Instances && window.FCKeditorAPI.Instances['elmId']) {
-            window.FCKeditorAPI.Instances['elmId'].UpdateLinkedField();
+          if(window.FCKeditorAPI.Instances && window.FCKeditorAPI.Instances[elmId]) {
+            window.FCKeditorAPI.Instances[elmId].UpdateLinkedField();
           } else if(window.forumFCK) {
             window.forumFCK.UpdateLinkedField();
           }
