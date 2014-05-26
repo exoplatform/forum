@@ -52,14 +52,9 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.social.common.router.ExoRouter;
-import org.exoplatform.social.common.router.ExoRouter.Route;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -224,6 +219,8 @@ public class UIForumPortlet extends UIPortletApplication {
     String portalName = Util.getUIPortal().getName();
     if(url.contains(portalName + pageNodeSelected)) {
       url = url.substring(url.lastIndexOf(portalName + pageNodeSelected)+ (portalName + pageNodeSelected).length());
+    } else if(url.contains(pageNodeSelected + ForumUtils.SLASH)) {
+      url = url.substring(url.lastIndexOf(pageNodeSelected + ForumUtils.SLASH)+ pageNodeSelected.length());
     } else if(url.contains(pageNodeSelected)) {
       url = url.substring(url.lastIndexOf(pageNodeSelected)+ pageNodeSelected.length());
     }
@@ -233,7 +230,7 @@ public class UIForumPortlet extends UIPortletApplication {
            ((url.contains(ForumUtils.SLASH+Utils.TOPIC)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.TOPIC)+1) :
            ((url.contains(ForumUtils.SLASH+Utils.FORUM)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.FORUM)+1) : url)));
     } else {
-      if (!ForumUtils.isEmpty(getForumIdOfSpace())){
+      if (portalName.startsWith(SpaceUtils.SPACE_GROUP)) {
         url = getForumIdOfSpace();
       }
     }
@@ -247,28 +244,12 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public String getForumIdOfSpace() {
-    PortalRequestContext plcontext = Util.getPortalRequestContext();
-    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
-    Route route = ExoRouter.route(requestPath);
-    if (route == null){
-      return null;
-    }
-    //
-    String spacePrettyName = route.localArgs.get("spacePrettyName");
-
-    if (spacePrettyName != null && ForumUtils.isEmpty(forumSpId)) {
-      SpaceService sService = getApplicationComponent(SpaceService.class);
-      Space space = sService.getSpaceByPrettyName(spacePrettyName);
-      try {
-        spaceGroupId = space.getGroupId();
-        forumSpId = Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
-        spaceDisplayName = space.getDisplayName();
-        OrganizationService service = getApplicationComponent(OrganizationService.class);
-        String parentGrId = service.getGroupHandler().findGroupById(spaceGroupId).getParentId();
-        categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
-      } catch (Exception e) {
-        return null;
-      }
+    Space space = WebUIUtils.getSpaceByContext();
+    if (space != null) {
+      spaceGroupId = space.getGroupId();
+      spaceDisplayName = space.getDisplayName();
+      forumSpId = Utils.FORUM_SPACE_ID_PREFIX + spaceGroupId.substring(spaceGroupId.indexOf(CommonUtils.SLASH, 1) + 1);
+      categorySpId = Utils.CATEGORY_SPACE_ID_PREFIX;
     }
     return forumSpId;
   }
@@ -660,19 +641,21 @@ public class UIForumPortlet extends UIPortletApplication {
   
   public void calculateRenderComponent(String path, WebuiRequestContext context) throws Exception {
     ResourceBundle res = context.getApplicationResourceBundle();
-    if (path.equals(Utils.FORUM_SERVICE)) {
+    //
+    String openType = Utils.getObjectType(path);
+    if (Utils.FORUM_SERVICE.equals(openType)) {
       renderForumHome();
-    } else if (path.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
+    } else if (ForumUtils.FIELD_SEARCHFORUM_LABEL.equals(openType)) {
       updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       UISearchForm searchForm = getChild(UISearchForm.class);
       searchForm.setPath(ForumUtils.EMPTY_STR);
       searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
       searchForm.setSearchOptionsObjectType(ForumUtils.EMPTY_STR);
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
-    } else if (path.indexOf(Utils.TAG) == 0) {
+    } else if (openType.indexOf(Utils.TAG) == 0) {
       updateIsRendered(ForumUtils.TAG);
       getChild(UITopicsTag.class).setIdTag(path);
-    } else if (isRenderedTopic(path)) {
+    } else if (Utils.TOPIC.equals(openType) || Utils.POST.equals(openType)) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
@@ -809,7 +792,7 @@ public class UIForumPortlet extends UIPortletApplication {
         renderForumHome();
         path = Utils.FORUM_SERVICE;
       }
-    } else if ((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
+    } else if (Utils.FORUM.equals(openType)) {
       try {
         Forum forum = null;
         String cateId = null;
@@ -892,7 +875,7 @@ public class UIForumPortlet extends UIPortletApplication {
         renderForumHome();
         path = Utils.FORUM_SERVICE;
       }
-    } else if (path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf(ForumUtils.SLASH) < 0) {
+    } else if (Utils.CATEGORY.equals(openType)) {
       UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
       try {
         Category category = this.forumService.getCategory(path);
@@ -923,27 +906,6 @@ public class UIForumPortlet extends UIPortletApplication {
       path = Utils.FORUM_SERVICE;
     }
     getChild(UIBreadcumbs.class).setUpdataPath(path);
-  }
-  
-  /* Check if path is rendered topic. There are 2 syntax indicating a topic to render
-   * Case 1: topic(\w)*
-   * Case 2: CategorySpace(\w)* /ForumSpace(w)* /topic(w)*
-   * @param path the path to check
-   * @return isRendered Topic or not
-   */
-  private boolean isRenderedTopic(String path) {
-    if (CommonUtils.isEmpty(path)) {
-      return false;
-    }
-    // Check case 1
-    if (path.startsWith(Utils.TOPIC)) {
-      return true;
-    }
-    // Check case 2
-    if (path.lastIndexOf("/" + Utils.TOPIC) >= 0) {
-      return true;
-    }
-    return false;
   }
 
   static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {

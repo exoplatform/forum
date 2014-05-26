@@ -526,7 +526,30 @@ public class UtilsTestCase extends TestCase {
     assertEquals("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484",
                  Utils.getTopicPath("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topica77c1c017f0001012b4161eb9eaed484/posta77c1c237f00010145419cee3ac29fe5"));
   }
-  
+
+  public void testGetPathByType() {
+    //
+    String firstPath = "/exo:applications/ForumService/ForumData/CategoryHome/";
+    String subPath = "forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721/topicforumCategoryforumpost2877f0001093a09/postforumCategoryforumtopic419cee3afe5/false?addPoll=true&addTopic=false";
+    String fullPath = firstPath + subPath;
+    
+    assertEquals("forumCategoryforumtopicpostk779f0d5087a590", Utils.getPathByType(subPath, Utils.CATEGORY));
+    assertEquals(firstPath + "forumCategoryforumtopicpostk779f0d5087a590", Utils.getPathByType(fullPath, Utils.CATEGORY));
+
+    assertEquals("forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721", Utils.getPathByType(subPath, Utils.FORUM));
+    assertEquals(firstPath + "forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721", Utils.getPathByType(fullPath, Utils.FORUM));
+
+    assertEquals("forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721/topicforumCategoryforumpost2877f0001093a09",
+                 Utils.getPathByType(subPath, Utils.TOPIC));
+    assertEquals(firstPath + "forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721/topicforumCategoryforumpost2877f0001093a09",
+                 Utils.getPathByType(fullPath, Utils.TOPIC));
+
+    assertEquals("forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721/topicforumCategoryforumpost2877f0001093a09/postforumCategoryforumtopic419cee3afe5",
+                 Utils.getPathByType(subPath, Utils.POST));
+    assertEquals(firstPath + "forumCategoryforumtopicpostk779f0d5087a590/forumforumCategorytopicpostf0010162d3ae76721/topicforumCategoryforumpost2877f0001093a09/postforumCategoryforumtopic419cee3afe5",
+                 Utils.getPathByType(fullPath, Utils.POST));
+  }
+
   public void testGetSubPath() {
     String path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00";
     String expected = "forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f0001011393a0953f0d2e00";
@@ -567,6 +590,34 @@ public class UtilsTestCase extends TestCase {
     assertEquals("forumCategory", Utils.getObjectType(path));
   }
 
+  public void testGetObjectTypeWithSpecialCase() {
+    String path = null;
+    assertNull(Utils.getObjectType(path));
+    path = "";
+    assertEquals("", Utils.getObjectType(path));
+    path = Utils.FORUM_SERVICE;
+    assertEquals(Utils.FORUM_SERVICE, Utils.getObjectType(path));
+    path = "SearchForum";
+    assertEquals("SearchForum", Utils.getObjectType(path));
+    path = Utils.TAG + "abc";
+    assertTrue(Utils.getObjectType(path).indexOf(Utils.TAG) == 0);
+    //
+    assertEquals(Utils.CATEGORY, Utils.getObjectType("forumCategoryforumtopicpost4fsf"));
+    assertEquals(Utils.FORUM, Utils.getObjectType("forumforumCategorytopicpostf23423"));
+    assertEquals(Utils.FORUM, Utils.getObjectType("forumSpaceforum"));
+    assertEquals(Utils.FORUM, Utils.getObjectType("forumSpacetestforum"));
+    assertEquals(Utils.FORUM, Utils.getObjectType("forumSpaceforumtest"));
+    assertEquals(Utils.TOPIC, Utils.getObjectType("topicforumCategoryforumpost43435"));
+    assertEquals(Utils.POST, Utils.getObjectType("postforumCategoryforumtopicfds8f7ds"));
+    //
+    assertEquals(Utils.CATEGORY, Utils.getObjectType("category/forumCategoryforumtopicpostk"));
+    assertEquals(Utils.FORUM, Utils.getObjectType("forumCategoryforumtopicpostk/forumforumCategorytopicpost132fdsfd"));
+    assertEquals(Utils.POST, Utils.getObjectType("forumCategoryforumtopicpostk/forumforumCategorytopicpostf23423/topicforumCategoryforumpost43435/postforumCategoryforumtopicxxxx"));
+    assertEquals(Utils.POST, Utils.getObjectType("forumCategoryforumtopicpostk/forumforumCategorytopicpostf23423/topicforumCategoryforumpost43435/postforumCategoryforumtopicxxxx/false"));
+    assertEquals(Utils.TOPIC, Utils.getObjectType("forumCategoryforumtopicpostk/forumforumCategorytopicpostf23423/topicforumCategoryforumpost43435/pollxxx"));
+    assertEquals(Utils.TOPIC, Utils.getObjectType("forumCategoryforumtopicpostk/forumforumCategorytopicpostf23423/topicforumCategoryforumpost43435/true"));
+  }
+
   public void testGetIdByType() {
     String path = "/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topica779f2877f000/post9r8fsdfsdf";
     assertEquals("post9r8fsdfsdf", Utils.getIdByType(path, "post"));
@@ -591,5 +642,40 @@ public class UtilsTestCase extends TestCase {
 
     path = "tagd57f00010108ac0bffsdf010162d38dbc5ae7672";
     assertEquals("tagd57f00010108ac0bffsdf010162d38dbc5ae7672", Utils.getIdByType(path, "tag"));
+  }
+  
+  public void testGetIdByTypeWithSpecialCase() {
+    String input = "forumCategoryforumtest/forumSpaceforumtest/topicabc";
+    assertEquals("forumCategoryforumtest", Utils.getIdByType(input, Utils.CATEGORY));
+
+    input = "/forumCategoryforumtest/forumSpaceforumtest/topicabc";
+    assertEquals("forumCategoryforumtest", Utils.getIdByType(input, Utils.CATEGORY));
+
+    input = "forumSpaceforumtest/topicabc";
+    assertEquals("forumSpaceforumtest", Utils.getIdByType(input, Utils.FORUM));
+
+    input = "forumCategoryforumtest/forumSpaceforumtest/topicabc";
+    assertEquals("forumSpaceforumtest", Utils.getIdByType(input, Utils.FORUM));
+
+    input = "forumCategoryforumtest/forumSpaceforumtest/topicforumabc";
+    assertEquals("forumSpaceforumtest", Utils.getIdByType(input, Utils.FORUM));
+
+    input = "/:spaces:forum/forum/forum/forum/forumSpaceforum";
+    assertEquals("forumSpaceforum", Utils.getIdByType(input, Utils.FORUM));
+
+    input = "forumCategorytestforum/forumSpaceforumtest/topicforumabc";
+    assertEquals("forumSpaceforumtest", Utils.getIdByType(input, Utils.FORUM));
+
+    input = "forumCategorytestforum/forumSpacetopictest/topicforumtopic";
+    assertEquals("topicforumtopic", Utils.getIdByType(input, Utils.TOPIC));
+
+    input = "forumCategorytestforum/forumSpacetopictest/topicforumtopic/posttopicxxx";
+    assertEquals("topicforumtopic", Utils.getIdByType(input, Utils.TOPIC));
+
+    input = "forumCategorytesttopic/forumSpacetopictest/topicforumtopic/posttopicxxx";
+    assertEquals("topicforumtopic", Utils.getIdByType(input, Utils.TOPIC));
+
+    input = "forumCategoryposttopic/forumSpacetopicpost/topicforumtopicpost/posttopicxxx";
+    assertEquals("posttopicxxx", Utils.getIdByType(input, Utils.POST));
   }
 }
