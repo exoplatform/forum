@@ -9,19 +9,19 @@
   }catch(Exception e) {}
   
   String getHref(int i, boolean isMod) {
-		String href = uicomponent.event("GoPage", "$i");
-		if(isMod == false) {
-		  href = uicomponent.getURLGopage(String.valueOf(i));
-		}
-		return href;
+	if(isMod == false) {
+	  return "href=\"" + uicomponent.getURLGopage(String.valueOf(i)) + "\"";
+	} else {
+	  return "href=\"javascript:void(0);\" onclick=\"" + uicomponent.event("GoPage", String.valueOf(i)) + "\"";
+	}
   }
   void render(int i, boolean isMod) {
 	  String href = getHref(i, isMod);
       if( i == uicomponent.getPageSelect()) { 
       %>
-    <li class="active"><a href="javascript:void(0);" onclick="<%=href%>"><%=i%></a></li>
+    <li class="active"><a <%=href%>><%=i%></a></li>
   <%  } else { %>
-    <li><a href="javascript:void(0);" onclick="<%=href%>"><%=i%></a></li>
+    <li><a <%=href%>><%=i%></a></li>
   <%  }   
   }
   String classNagination = "uiPageIterator";
@@ -34,7 +34,7 @@
 <% if(totalPage > 1) {%>  
   <ul class="pull-right">
   <%if( currentPage > 1 ){%>        
-  <li><a href="javascript:void(0);" onclick="<%=getHref(currentPage - 1, isMod)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><i class="uiIconPrevArrow"></i></a></li>
+  <li><a <%=getHref(currentPage - 1, isMod)%> rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><i class="uiIconPrevArrow"></i></a></li>
   <% } else {%>
   <li class="disabled"><a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><i class="uiIconPrevArrow"></i></a></li>
   <%}%>
@@ -70,7 +70,7 @@
   }%>   
         
   <% if(currentPage < totalPage) { %>
-  <li><a href="javascript:void(0);" onclick="<%=getHref(currentPage + 1, isMod)%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.next")%>"><i class="uiIconNextArrow"></i></a></li>
+  <li><a <%=getHref(currentPage + 1, isMod)%> rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.next")%>"><i class="uiIconNextArrow"></i></a></li>
   <% } else { %>
   <li class="disabled"><a rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPageIterator.label.next")%>"><i class="uiIconNextArrow"></i></a></li>
   <%}%> 
