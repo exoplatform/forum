@@ -70,7 +70,9 @@ public class BaseCategoryTreeInputForm extends BaseUIFAQForm {
         isChecked = categoriesChecked.isEmpty() || categoriesChecked.contains(category.getId());
       }
       categoryMap.put(category.getId(), category.getPath());
-      categoryStatus.put(category.getId(), Boolean.valueOf(isChecked));
+      if (! categoryStatus.containsKey(category.getId())) {
+        categoryStatus.put(category.getId(), Boolean.valueOf(isChecked));
+      }
       UICheckBoxInput checkBoxInput = categoryScoping.getUICheckBoxInput(category.getId());
       if (checkBoxInput == null) {
         checkBoxInput = new UICheckBoxInput(category.getId(), category.getId(), isChecked);

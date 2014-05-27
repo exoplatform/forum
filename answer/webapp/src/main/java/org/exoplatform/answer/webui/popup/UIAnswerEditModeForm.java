@@ -17,6 +17,7 @@
 package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -309,8 +310,10 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
       List<UIComponent> childrens = scopingTab.getChildren();
       for (UIComponent child : childrens) {
         if(child instanceof UICheckBoxInput) {
-          if(Boolean.valueOf(((UICheckBoxInput)child).isChecked()).equals(settingForm.categoryStatus.get(child.getId())) == false) {
+          boolean ischecked = ((UICheckBoxInput)child).isChecked();
+          if(Boolean.valueOf(ischecked).equals(settingForm.categoryStatus.get(child.getId())) == false) {
             listCateIds.add(settingForm.categoryMap.get(child.getId()));
+            settingForm.categoryStatus.put(child.getId(), Boolean.valueOf(ischecked)) ;
           }
         }
       }
@@ -359,6 +362,20 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
         settingForm.indexOfTab = Integer.parseInt(tabId[1]);
         settingForm.isResetMail = true;
       }
+      
+      UIFormInputWithActions categoryScoping = settingForm.getChildById(CATEGORY_SCOPING);
+      settingForm.categoriesChecked = new ArrayList<String>();
+      List<UIComponent> childs = categoryScoping.getChildren();
+      for (UIComponent child : childs) {
+        if(child instanceof UICheckBoxInput) {
+          boolean ischecked = ((UICheckBoxInput) child).isChecked();
+          if(ischecked) {
+            settingForm.categoriesChecked.add(child.getId());
+          }
+        }
+        
+      }
+      if (settingForm.categoriesChecked.size() == 0) settingForm.categoriesChecked = null;
       event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent());
     }
   }
