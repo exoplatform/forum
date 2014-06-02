@@ -198,7 +198,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     try {
       List<JobDetail> jobs = jobSchedulerService.getAllJobs();
       for (JobDetail jobDetail : jobs) {
-        managementView.registerJobManager(new JobManager(jobDetail));
+        if (JobManager.forumJobs.contains(jobDetail.getJobClass().getName())) {
+          managementView.registerJobManager(new JobManager(jobDetail));
+        }
       }
     } catch (Exception e) {
       log.error("failed to register jobs manager", e);
