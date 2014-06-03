@@ -1866,48 +1866,44 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node forumHomeNode = getForumHomeNode(sProvider);
       String oldCatePath = "";
       if (!forums.isEmpty()) {
         String forumPath = forums.get(0).getPath();
-        oldCatePath = forumPath.substring(0, forumPath.lastIndexOf("/"));
+        oldCatePath = Utils.getCategoryPath(forumPath);
       } else {
         return;
       }
-      Node oldCatNode = (Node) forumHomeNode.getSession().getItem(oldCatePath);
-      Node newCatNode = (Node) forumHomeNode.getSession().getItem(destCategoryPath);
+      Node forumHomeNode = getForumHomeNode(sProvider);
+      Session session = forumHomeNode.getSession();
+      Node oldCatNode = (Node) session.getItem(oldCatePath);
+      Node newCatNode = (Node) session.getItem(destCategoryPath);
+      PropertyReader reader = new PropertyReader(newCatNode);
       for (Forum forum : forums) {
         String newForumPath = destCategoryPath + "/" + forum.getId();
-        forumHomeNode.getSession().getWorkspace().move(forum.getPath(), newForumPath);
-        Node forumNode = (Node) forumHomeNode.getSession().getItem(newForumPath);
+        //
+        session.getWorkspace().move(forum.getPath(), newForumPath);
+        //
+        Node forumNode = (Node) session.getItem(newForumPath);
         forumNode.setProperty(EXO_PATH, newForumPath);
         String[] strModerators = forum.getModerators();
         forumNode.setProperty(EXO_MODERATORS, strModerators);
-        if (strModerators != null && strModerators.length > 0 && !Utils.isEmpty(strModerators[0])) {
-          if (newCatNode.hasProperty(EXO_USER_PRIVATE)) {
-            List<String> listPrivate = new ArrayList<String>();
-            listPrivate.addAll(Utils.valuesToList(newCatNode.getProperty(EXO_USER_PRIVATE).getValues()));
-            if (!Utils.isEmpty(listPrivate.get(0))) {
-              for (int i = 0; i < strModerators.length; i++) {
-                if (!listPrivate.contains(strModerators[i])) {
-                  listPrivate.add(strModerators[i]);
-                }
-              }
-              newCatNode.setProperty(EXO_USER_PRIVATE, listPrivate.toArray(new String[listPrivate.size()]));
+        if (!CommonUtils.isEmpty(strModerators)) {
+          Set<String> listPrivate = reader.set(EXO_USER_PRIVATE, new HashSet<String>());
+          if (!listPrivate.isEmpty()) {
+            for (int i = 0; i < strModerators.length; i++) {
+              listPrivate.add(strModerators[i]);
             }
+            newCatNode.setProperty(EXO_USER_PRIVATE, listPrivate.toArray(new String[listPrivate.size()]));
           }
         }
       }
       long forumCount = forums.size();
-      oldCatNode.setProperty(EXO_FORUM_COUNT, oldCatNode.getProperty(EXO_FORUM_COUNT).getLong() - forumCount);
-      if (newCatNode.hasProperty(EXO_FORUM_COUNT))
-        forumCount = newCatNode.getProperty(EXO_FORUM_COUNT).getLong() + forumCount;
+      oldCatNode.setProperty(EXO_FORUM_COUNT, new PropertyReader(oldCatNode).l(EXO_FORUM_COUNT) - forumCount);
+      //
+      forumCount += reader.l(EXO_FORUM_COUNT);
       newCatNode.setProperty(EXO_FORUM_COUNT, forumCount);
-      if (forumHomeNode.isNew()) {
-        forumHomeNode.getSession().save();
-      } else {
-        forumHomeNode.save();
-      }
+      //
+      session.save();
     } catch (Exception e) {
       LOG.error("Failed to move forum", e);
     }

@@ -22,14 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
-import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
@@ -576,6 +574,22 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forum = forumService_.getForum(cat1.getId(), forumId);
     assertNotNull(forum);
     
+    //Move a forum from category space to a normal category
+    String cateIdSpace = Utils.CATEGORY_SPACE_ID_PREFIX;
+    Category catSpace = createCategory(cateIdSpace);
+    forumService_.saveCategory(catSpace, true);
+    // save forum in space 1
+    Forum forumSpace = createdForum();
+    forumSpace.setId("forumSpaceroot_space");
+    forumSpace.setForumName("Root spase");
+    forumService_.saveForum(catSpace.getId(), forumSpace, true);
+    forums = new ArrayList<Forum>();
+    forums.add(forumSpace);
+    //move to cat1
+    forumService_.moveForum(forums, cat1.getPath());
+    
+    forumSpace = forumService_.getForum(cat1.getId(), forumSpace.getId());
+    assertNotNull(forumSpace);
   }
   
   public void testGetForumByFilter() throws Exception {
