@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
@@ -233,7 +234,7 @@ public class MessageBuilder {
   public void makePrivateLink() {
     try {
       if (!CommonUtils.isEmpty(link)) {
-        String host = CommonUtils.getDomainURL();
+        String host = CommonsUtils.getCurrentDomain();
         if (link.indexOf("http") == 0) {
           host = link.substring(0, link.indexOf(SLASH, 8));
         } else {

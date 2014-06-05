@@ -92,8 +92,6 @@ public class CommonUtils {
 
   public static final String         AMP          = "&amp;";
 
-  public static final String         DOMAIN_KEY   = "gatein.email.domain.url";
-
   public static final String         FROM_KEY     = "gatein.email.smtp.from";
 
   private static final String        SPECIAL_CHARACTOR_FORSERACH_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\?\\*%0-9]";
@@ -244,15 +242,6 @@ public class CommonUtils {
     }
   }
 
-  /**
-   * @return
-   */
-  public static String getDomainURL() {
-    Properties props = new Properties(System.getProperties());
-    String domain = props.getProperty(DOMAIN_KEY);
-    return isEmpty(domain) ? EMPTY_STR : domain;
-  }
-  
   /**
    * Get the URI of full URL
    * 
