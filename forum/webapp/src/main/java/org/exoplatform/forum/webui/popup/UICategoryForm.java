@@ -53,7 +53,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
-import org.exoplatform.webui.organization.account.UIUserSelector;
 
 @ComponentConfigs ( {
         @ComponentConfig(
@@ -389,9 +388,9 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     }
   }
 
-  static public class CloseActionListener extends EventListener<UIUserSelector> {
-    public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource();
+  static public class CloseActionListener extends EventListener<UIUserSelect> {
+    public void execute(Event<UIUserSelect> event) throws Exception {
+      UIUserSelect uiUserSelector = event.getSource();
       UIPopupWindow popupWindow = uiUserSelector.getParent();
       closePopupWindow(popupWindow);
     }

@@ -48,7 +48,6 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
-import org.exoplatform.webui.organization.account.UIUserSelector;
 
 @ComponentConfigs ( 
   {
@@ -322,9 +321,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     }
   }
 
-  static public class CloseActionListener extends EventListener<UIUserSelector> {
-    public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource();
+  static public class CloseActionListener extends EventListener<UIUserSelect> {
+    public void execute(Event<UIUserSelect> event) throws Exception {
+      UIUserSelect uiUserSelector = event.getSource();
       UIPopupWindow popupWindow = uiUserSelector.getParent();
       closePopupWindow(popupWindow);
     }
