@@ -512,11 +512,9 @@ public class FAQEventQuery implements FAQNodeTypes {
     // search on language questions
     StringBuilder questionLanguageSearch = new StringBuilder("");
     if (question != null && question.length() > 0) {
-      questionLanguageSearch.append("((exo:language='").append(language).append("')");
-      questionLanguageSearch.append(" and ( jcr:contains(@exo:title,'").append(question).append("') or jcr:contains(@exo:name, '").append(question).append("')");
+      questionLanguageSearch.append(" jcr:contains(@exo:title,'").append(question).append("') or jcr:contains(@exo:name, '").append(question).append("')");
       //
       applyAsteriskCondition(questionLanguageSearch, "@exo:title", "@exo:name");
-      questionLanguageSearch.append("))");
       if (isSearchOnDefaultLanguage)
         isLanguageLevelSearch = false;
       else
@@ -526,32 +524,28 @@ public class FAQEventQuery implements FAQNodeTypes {
     // search on answers
     StringBuilder answerSearch = new StringBuilder("");
     if (response != null && response.length() > 0) {
-      answerSearch.append("( exo:responseLanguage='").append(language).append("'");
       if(response.contains(CommonUtils.PERCENT_STR)){
-        answerSearch.append(" and (jcr:like(@exo:responses,'" + response + "')");
+        answerSearch.append(" jcr:like(@exo:responses,'" + response + "')");
       }else {
-        answerSearch.append(" and (jcr:contains(@exo:responses,'" + response + "')");
+        answerSearch.append(" jcr:contains(@exo:responses,'" + response + "')");
       }
       //
       answerSearch = applyAsteriskCondition(answerSearch, "@exo:responses");
       
-      answerSearch.append("))");
       isAnswerCommentLevelSearch = true;
     }
 
     // search on comments
     StringBuilder commentSearch = new StringBuilder();
     if (comment != null && comment.length() > 0) {
-      commentSearch.append("( exo:commentLanguage='").append(language).append("'");
       if(comment.contains(CommonUtils.PERCENT_STR)){
-        commentSearch.append(" and (jcr:like(@exo:comments,'" + comment + "')");
+        commentSearch.append(" jcr:like(@exo:comments,'" + comment + "')");
       }else {
-        commentSearch.append(" and (jcr:contains(@exo:comments,'" + comment + "')");
+        commentSearch.append(" jcr:contains(@exo:comments,'" + comment + "')");
       }
       //
       commentSearch = applyAsteriskCondition(commentSearch, "@exo:comments");
       
-      commentSearch.append("))");
       isAnswerCommentLevelSearch = true;
     }
 
@@ -600,7 +594,6 @@ public class FAQEventQuery implements FAQNodeTypes {
     if (text != null && text.length() > 0) {
       textSearch.append("("); // open block.
       textSearch.append("jcr:contains(., '").append(text).append("')");
-      textSearch.append(" and ( ").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
       textSearch.append(")"); // close block.
       isLanguageLevelSearch = false;
       isAnswerCommentLevelSearch = false;
@@ -623,10 +616,6 @@ public class FAQEventQuery implements FAQNodeTypes {
         queryString.append(" and ");
       }
       queryString.append(quesAnsComClause.toString());
-    }
-
-    if (!isAnd && !isAdd) { // if all of fields is empty of null, the search will be by language.
-      queryString.append("(").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
     }
 
     /*

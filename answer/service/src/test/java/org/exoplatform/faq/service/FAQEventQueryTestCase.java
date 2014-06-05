@@ -120,14 +120,13 @@ public class FAQEventQueryTestCase extends TestCase {
     predicate += " and ((@exo:createdDate <= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateResponse <= xs:dateTime('" + ISO8601.format(calendar) + "')) " + "or (@exo:dateComment <= xs:dateTime('" + ISO8601.format(calendar) + "')))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
-    eventQuery.setLanguage("English");
     eventQuery.setResponse("response");
     eventQuery.setAsteriskConditionSearch("*condition*");
-    predicate += ") and (( exo:responseLanguage='English' and (jcr:contains(@exo:responses,'response') or jcr:contains(@exo:responses,'*condition*')))";
+    predicate += ") and ( jcr:contains(@exo:responses,'response') or jcr:contains(@exo:responses,'*condition*')";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setComment("comment");
-    predicate += " or ( exo:commentLanguage='English' and (jcr:contains(@exo:comments,'comment') or jcr:contains(@exo:comments,'*condition*')))";
+    predicate += " or  jcr:contains(@exo:comments,'comment') or jcr:contains(@exo:comments,'*condition*')";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     /*
@@ -136,7 +135,7 @@ public class FAQEventQueryTestCase extends TestCase {
 
     eventQuery.setText("text");
 
-    predicate += " or (jcr:contains(., 'text') and (  exo:language='English' or exo:commentLanguage='English' or exo:responseLanguage='English'))";
+    predicate += " or (jcr:contains(., 'text'))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setViewingCategories(Arrays.asList("categoryId1", "categoryId2"));
