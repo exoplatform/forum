@@ -277,7 +277,7 @@ public class MessageBuilder {
     content_ = StringUtils.replace(content_, "$CATEGORY", catName);
     content_ = StringUtils.replace(content_, "$FORUM", forumName);
     content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-    message.setBody(CommonUtils.convertCodeHTML(content_));
+    message.setBody(CommonUtils.convertCodeHTML(CommonUtils.decodeSpecialCharToHTMLnumber(content_)));
     return message;
   }
 
@@ -297,7 +297,7 @@ public class MessageBuilder {
 
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
     content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));
-    message.setBody(CommonUtils.convertCodeHTML(content_));
+    message.setBody(CommonUtils.convertCodeHTML(CommonUtils.decodeSpecialCharToHTMLnumber(content_)));
     return message;
   }
 
