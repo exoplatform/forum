@@ -16,6 +16,12 @@
  */
 package org.exoplatform.forum.utils;
 
+import java.util.ConcurrentModificationException;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
 import junit.framework.TestCase;
 
 import org.exoplatform.commons.testing.AssertUtils;
@@ -26,9 +32,16 @@ import org.exoplatform.forum.service.UserProfile;
  * @version $Revision$
  */
 public class UserProfileUtilsTestCase extends TestCase {
-
+  private ExecutorService executor;
   protected void setUp() throws Exception {
     super.setUp();
+    ThreadFactory threadFactory = new ThreadFactory() {
+      public Thread newThread(Runnable arg0) {
+        return new Thread(arg0, "UserProfile thread");
+      }
+    };
+
+    executor = Executors.newFixedThreadPool(20, threadFactory);
   }
 
   public void testSetLastReadPostOfTopic() {
@@ -97,6 +110,32 @@ public class UserProfileUtilsTestCase extends TestCase {
     actual = profile.getScreenName();
     assertEquals("bar", actual);
 
+  }
+  
+  public void testConcurrentAddLastReadPost() throws Exception {
+    final UserProfile userProfile = new UserProfile();
+    final String s = "qwertyuiopasdfghjklzxcvbnm";
+    for (int i = 0; i < 500; i++) {
+      executor.execute(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            String r = s.substring(0, new Random().nextInt(s.length() - 1));
+            // add
+            userProfile.addLastPostIdReadOfForum(r + new Random().nextLong(), r + new Random().nextInt());
+            userProfile.addLastPostIdReadOfTopic(r + new Random().nextLong(), r + new Random().nextInt());
+            // get
+            userProfile.getLastReadPostOfForum();
+            userProfile.getLastReadPostOfTopic();
+            assertTrue(true);
+          } catch (ConcurrentModificationException e) {
+            assertFalse(true);
+          }
+        }
+      });
+    }
+    //
+    Thread.sleep(1000);
   }
 
 }

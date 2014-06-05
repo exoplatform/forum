@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class UserProfile {
 
@@ -71,13 +73,9 @@ public class UserProfile {
 
   private String[]            bookmark;
 
-  private String[]            lastReadPostOfTopic;
+  private ConcurrentMap<String, String> lastPostIdReadOfTopic  = new ConcurrentHashMap<String, String>();
 
-  private String[]            lastReadPostOfForum;
-
-  private Map<String, String> lastPostIdReadOfTopic  = new HashMap<String, String>();
-
-  private Map<String, String> lastPostIdReadOfForum  = new HashMap<String, String>();
+  private ConcurrentMap<String, String> lastPostIdReadOfForum  = new ConcurrentHashMap<String, String>();
 
   private Date                joinedDate             = null;
 
@@ -142,8 +140,6 @@ public class UserProfile {
     bookmark = new String[] {};
     banReasonSummary = new String[] {};
     collapCategories = new String[] {};
-    lastReadPostOfTopic = new String[] { "" };
-    lastReadPostOfForum = new String[] { "" };
     timeZone = getDefaultTimeZone();
     shortDateformat = "MM/dd/yyyy";
     longDateformat = "EEE, MMM dd, yyyy";
@@ -423,12 +419,11 @@ public class UserProfile {
   }
 
   public String[] getLastReadPostOfTopic() {
-    return lastReadPostOfTopic;
+    return Utils.mapToArray(lastPostIdReadOfTopic);
   }
 
   public void setLastReadPostOfTopic(String[] lastReadPostOfTopic) {
-    this.lastReadPostOfTopic = lastReadPostOfTopic;
-    lastPostIdReadOfTopic = Utils.arrayToMap(lastReadPostOfTopic);
+    lastPostIdReadOfTopic = new ConcurrentHashMap<String, String>(Utils.arrayToMap(lastReadPostOfTopic));
   }
 
   public String getLastPostIdReadOfTopic(String topicId) {
@@ -440,16 +435,14 @@ public class UserProfile {
 
   public void addLastPostIdReadOfTopic(String topicId, String postId) {
     lastPostIdReadOfTopic.put(topicId, postId);
-    lastReadPostOfTopic = Utils.mapToArray(lastPostIdReadOfTopic);
   }
 
   public String[] getLastReadPostOfForum() {
-    return lastReadPostOfForum;
+    return Utils.mapToArray(lastPostIdReadOfForum);
   }
 
   public void setLastReadPostOfForum(String[] lastReadPostOfForum) {
-    this.lastReadPostOfForum = lastReadPostOfForum;
-    lastPostIdReadOfForum = Utils.arrayToMap(lastReadPostOfForum);
+    lastPostIdReadOfForum = new ConcurrentHashMap<String, String>(Utils.arrayToMap(lastReadPostOfForum));
   }
 
   public String getLastPostIdReadOfForum(String forumId) {
@@ -461,7 +454,6 @@ public class UserProfile {
 
   public void addLastPostIdReadOfForum(String forumId, String postId) {
     lastPostIdReadOfForum.put(forumId, postId);
-    lastReadPostOfForum = Utils.mapToArray(lastPostIdReadOfForum);
   }
 
   public boolean getIsOnline() {
