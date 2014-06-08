@@ -36,6 +36,7 @@ import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
@@ -122,7 +123,7 @@ public class UICreateForm extends BaseUIForm {
       List<Space> spaces = spaceService.getLastAccessedSpace(currentUser, null, 0, forums.size());
       Forum forum;
       for (Space space : spaces) {
-        forum = getForum(forums, space.getPrettyName(), groupAndMembershipInfos);
+        forum = getForum(forums, space.getGroupId(), groupAndMembershipInfos);
         if (forum != null) {
           list.add(new SelectItemOption<String>(space.getDisplayName(), forum.getId()));
         }
@@ -144,9 +145,10 @@ public class UICreateForm extends BaseUIForm {
     }
   }
   
-  private Forum getForum(List<Forum> forums, String spacePrettyName, List<String> listOfCanviewrs) {
+  private Forum getForum(List<Forum> forums, String spaceGroupId, List<String> listOfCanviewrs) {
+    String spaceName = spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);    
     for (Forum forum : forums) {
-      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spacePrettyName)) {
+      if(forum.getId().equals(Utils.FORUM_SPACE_ID_PREFIX + spaceName)) {
         if(forum.getIsLock() || 
             (forum.getCreateTopicRole() != null && Utils.hasPermission(listOfCanviewrs, Arrays.asList(forum.getCreateTopicRole())) == false)) {
           return null;
