@@ -614,9 +614,12 @@ public class FAQUtils {
           if (isAddSup && subTree.getCategory().getPath().indexOf(categoryId) >= 0){
             continue;
           }
-          builder.append("<li class=\"node\">");
-          builder.append(renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup));
-          builder.append("</li>");
+          String subCategoryInfo = renderCategoryTree(subTree, uiForm, actionName, categoryId, isAddSup);
+          if (!CommonUtils.isEmpty(subCategoryInfo)) {
+            builder.append("<li class=\"node\">");
+            builder.append(subCategoryInfo);
+            builder.append("</li>");
+          }
         }
         builder.append("</ul>");
       }
