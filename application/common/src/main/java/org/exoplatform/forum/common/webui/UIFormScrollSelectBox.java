@@ -148,6 +148,14 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     }
     return null;
   }
+
+  private String getLabelOption(ResourceBundle res, String formId, SelectItemOption<String> option) {
+    try {
+      return res.getString(formId + ".option." + option.getValue());
+    } catch (MissingResourceException ex) {
+      return option.getLabel();
+    }
+  }
   
   public void processRender(WebuiRequestContext context) throws Exception {
     ResourceBundle res = context.getApplicationResourceBundle();
@@ -205,12 +213,7 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     w.write("    <ul class=\"option-list dropdown-menu\">\n");
 
     for (SelectItemOption<String> item : options_) {
-      String label = item.getLabel();
-      try {
-        label = res.getString(formId + ".option." + item.getValue());
-      } catch (MissingResourceException ex) {
-        log.warn("Can not find resource bundle for key : " + formId + ".option." + label);
-      }
+      String label = getLabelOption(res, formId, item);
 
       String value = item.getValue();
       value = HTMLEntityEncoder.getInstance().encodeHTMLAttribute(value);
