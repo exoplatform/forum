@@ -26,14 +26,11 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.social.common.router.ExoRouter;
-import org.exoplatform.social.common.router.ExoRouter.Route;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -71,18 +68,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
 
   public String getSpaceCategoryId() {
     try {
-      PortalRequestContext plcontext = Util.getPortalRequestContext();
-      String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
-      Route route = ExoRouter.route(requestPath);
-      if (route == null) {
-        return null;
-      }
-      //
-      String spacePrettyName = route.localArgs.get("spacePrettyName");
-
-      if (spacePrettyName != null) {
-        SpaceService sService = getApplicationComponent(SpaceService.class);
-        Space space = sService.getSpaceByPrettyName(spacePrettyName);
+      Space space = WebUIUtils.getSpaceByContext();
+      if (space != null) {
         spaceGroupId = space.getGroupId();
         String categoryId = Utils.CATE_SPACE_ID_PREFIX + spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
         FAQService fService = getApplicationComponent(FAQService.class);

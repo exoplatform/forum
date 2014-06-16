@@ -23,14 +23,11 @@ import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.social.common.router.ExoRouter;
-import org.exoplatform.social.common.router.ExoRouter.Route;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -98,18 +95,7 @@ public class UIFAQPortlet extends UIPortletApplication {
   }
   
   private Space getSpace() {
-    PortalRequestContext plcontext = Util.getPortalRequestContext();
-    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
-    Route route = ExoRouter.route(requestPath);
-    if (route == null) {
-      return null;
-    }
-    //
-    String spacePrettyName = route.localArgs.get(SPACE_PRETTY_NAME);
-    if (!FAQUtils.isFieldEmpty(spacePrettyName)) {
-      return getApplicationComponent(SpaceService.class).getSpaceByPrettyName(spacePrettyName);
-    }
-    return null;
+    return WebUIUtils.getSpaceByContext();
   }
   
   public String getPathOfCateSpace() {

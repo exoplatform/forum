@@ -16,6 +16,17 @@
  */
 package org.exoplatform.forum.service.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.exoplatform.forum.service.conf.DeactiveJob;
+import org.exoplatform.forum.service.conf.DelayWritesJob;
+import org.exoplatform.forum.service.conf.LoginJob;
+import org.exoplatform.forum.service.conf.RecountActiveUserJob;
+import org.exoplatform.forum.service.conf.SendMailJob;
+import org.exoplatform.forum.service.conf.UpdateDataJob;
+import org.exoplatform.forum.service.conf.UpdateUserProfileJob;
+import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.annotations.ManagedName;
@@ -26,9 +37,14 @@ import org.quartz.JobDetail;
 
 @Managed
 @NameTemplate( { @Property(key = "service", value = "forum"), @Property(key = "view", value = "jobs"), @Property(key = "name", value = "{Name}") })
-@ManagedDescription("Plugin that defines rules for administrator role")
+@ManagedDescription("Forum management jobs")
 public class JobManager {
   JobDetail jobDetail;
+  
+  public static final List<String> forumJobs = Arrays.asList(DeactiveJob.class.getName(), DelayWritesJob.class.getName(),
+                                                               LoginJob.class.getName(), RecountActiveUserJob.class.getName(),
+                                                               SendMailJob.class.getName(), UpdateDataJob.class.getName(), 
+                                                               UpdateUserProfileJob.class.getName(), AutoPruneJob.class.getName());
 
   public JobManager(JobDetail jobDetail) {
     this.jobDetail = jobDetail;
@@ -46,4 +62,9 @@ public class JobManager {
     return jobDetail.getJobDataMap();
   }
 
+  @Managed
+  @ManagedName("JobClassName")
+  public String getJobClassName() {
+    return jobDetail.getJobClass().getName();
+  }
 }

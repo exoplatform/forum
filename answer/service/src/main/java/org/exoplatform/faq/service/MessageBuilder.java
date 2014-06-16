@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
@@ -173,7 +174,7 @@ public class MessageBuilder implements FAQNodeTypes {
     body = StringUtils.replace(body, "&questionContent_", questionContent);
     //
     if (!CommonUtils.isEmpty(questionLink) && questionLink.indexOf("http") < 0) {
-      questionLink = CommonUtils.getDomainURL() + questionLink;
+      questionLink = CommonsUtils.getCurrentDomain() + questionLink;
     }
     body = StringUtils.replace(body, "&questionLink_", questionLink);
     body = StringUtils.replace(body, "&answerNowLink_", questionLink + Utils.ANSWER_NOW + "true");

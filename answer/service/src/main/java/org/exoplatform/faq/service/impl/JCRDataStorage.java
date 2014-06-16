@@ -2426,6 +2426,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     eventQuery.setPath(categoryHome.getPath());
     try {
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      
       Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -2798,7 +2799,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         }
 
         String excerptField = "";
-        if (nodeObj.isNodeType(EXO_FAQ_QUESTION)) {
+        if (nodeObj.isNodeType(EXO_FAQ_QUESTION) || nodeObj.isNodeType(EXO_FAQ_LANGUAGE)) {
           objectResult = ResultType.QUESTION.get(nodeObj, eventQuery, retrictedCategoryList);
           excerptField = EXO_NAME;
         } else if (nodeObj.isNodeType(EXO_ANSWER)) {
@@ -2845,6 +2846,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
       @Override
       public ObjectSearchResult get(Node node, FAQEventQuery eventQuery, List<String> retrictedCategoryList) throws Exception {
+        if (node.isNodeType(EXO_FAQ_LANGUAGE)) {
+          node = node.getParent().getParent();
+        }
         if(checkQuestionHasApproved(node, eventQuery, retrictedCategoryList) == true) {
           return getQuestionObjectSearchResult(node);
         }

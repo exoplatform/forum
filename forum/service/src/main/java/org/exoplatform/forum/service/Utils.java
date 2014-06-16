@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jcr.Value;
 
@@ -123,6 +125,13 @@ public class Utils implements ForumNodeTypes {
 
   public static final String SPACE                 = " ".intern();
 
+  private static Pattern     categoryPattern          = Pattern.compile("forumCategory([a-zA-Z_0-9])");
+
+  private static Pattern     forumPattern             = Pattern.compile("forum([a-zA-Z_0-9])");
+
+  private static Pattern     topicPattern             = Pattern.compile("topic([a-zA-Z_0-9])");
+
+  private static Pattern     postPattern              = Pattern.compile("post([a-zA-Z_0-9])");
   /**
    * start with forum prefix.
    */
@@ -798,10 +807,7 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getCategoryPath(String path) {
-    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.CATEGORY) != -1) {
-      return path.substring(0, path.lastIndexOf(Utils.CATEGORY) + getCategoryId(path).length());
-    }
-    return null;
+    return getPathByType(path, CATEGORY);
   }
 
   /**
@@ -821,10 +827,7 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getForumPath(String path) {
-    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.FORUM) != -1) {
-      return path.substring(0, path.lastIndexOf(Utils.FORUM) + getForumId(path).length());
-    }
-    return null;
+    return getPathByType(path, FORUM);
   }
 
   /**
@@ -844,8 +847,21 @@ public class Utils implements ForumNodeTypes {
    * @since 4.0
    */
   public static String getTopicPath(String path) {
-    if (isEmpty(path) == false  && path.lastIndexOf(TOPIC) != -1) {
-      return path.substring(0, path.lastIndexOf(TOPIC) + getTopicId(path).length());
+    return getPathByType(path, TOPIC);
+  }
+
+  /**
+   * Get object path by path and type
+   * 
+   * @param path
+   * @param type
+   * @return
+   * @since 4.1
+   */
+  public static String getPathByType(String path, String type) {
+    if (!isEmpty(path) && path.indexOf(type) != -1) {
+      String objectId = getIdByType(path, type);
+      return path.substring(0, path.lastIndexOf(objectId) + objectId.length());
     }
     return null;
   }
@@ -859,11 +875,16 @@ public class Utils implements ForumNodeTypes {
    */
   public static String getIdByType(String path, String type) {
     if (isEmpty(path) == false && path.indexOf(type) != -1) {
-      String objectId = path.substring(path.lastIndexOf(type));
-      if (objectId.indexOf("/") != -1) {
-        objectId = objectId.substring(0, objectId.indexOf("/"));
+      if (path.indexOf("/") >= 0) {
+        String[] objectIds = path.split("/");
+        for (int i = objectIds.length - 1; i >= 0; i--) {
+          if (objectIds[i].indexOf(type) == 0) {
+            return objectIds[i];
+          }
+        }
+      } else if (path.indexOf(type) == 0) {
+        return path;
       }
-      return objectId;
     }
     return null;
   }
@@ -890,12 +911,51 @@ public class Utils implements ForumNodeTypes {
    * @since 4.1
    */   
   public static String getObjectType(String objectIdOrPath) {
-    objectIdOrPath = getSubPath(objectIdOrPath);
-    if (objectIdOrPath.indexOf(POST) >= 0) return POST;
-    if (objectIdOrPath.indexOf(TOPIC) >= 0) return TOPIC;
-    if (objectIdOrPath.indexOf(CATEGORY) == 0 && objectIdOrPath.lastIndexOf(FORUM) > 0 || 
-        objectIdOrPath.indexOf(CATEGORY) < 0 && objectIdOrPath.lastIndexOf(FORUM) == 0) return FORUM;
-    if (objectIdOrPath.indexOf(CATEGORY) == 0) return CATEGORY;
-    return "";
+    if (isEmpty(objectIdOrPath)) {
+      return objectIdOrPath;
+    }
+    if (objectIdOrPath.indexOf("/") >= 0) {
+      String[] objectIds = getSubPath(objectIdOrPath).split("/");
+      for (int i = objectIds.length - 1; i >= 0; i--) {
+        String result = isMatcherId(objectIds[i]);
+        if (!result.equals(objectIds[i])) {
+          return result;
+        }
+      }
+      return objectIdOrPath;
+    }
+    return isMatcherId(objectIdOrPath);
+  }
+
+  private static boolean isMatcher(Pattern pattern, String input) {
+    Matcher m = pattern.matcher(input);
+    return m.find() && m.start() == 0;
+  }
+
+  /**
+   * Matcher the object type by id
+   *  + If objectId is Category's id return type: forumCategory
+   *  + If objectId is forum's id return type: forum
+   *  + If objectId is topic's id return type: topic
+   *  + If objectId is post's id return type: post
+   *  + Other return objectId input
+   * 
+   * @param objectId
+   * @return
+   */
+  public static String isMatcherId(String objectId) {
+    if (isMatcher(postPattern, objectId)) {
+      return POST;
+    }
+    if (isMatcher(topicPattern, objectId)) {
+      return TOPIC;
+    }
+    if (isMatcher(categoryPattern, objectId)) {
+      return CATEGORY;
+    }
+    if (isMatcher(forumPattern, objectId)) {
+      return FORUM;
+    }
+    return objectId;
   }
 }

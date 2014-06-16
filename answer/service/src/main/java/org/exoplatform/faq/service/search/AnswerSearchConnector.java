@@ -85,17 +85,12 @@ public class AnswerSearchConnector extends SearchServiceConnector {
     eventQuery.setQuestion(query);
     eventQuery.setResponse(query);
     eventQuery.setAsteriskConditionSearch(asteriskQuery);
-    
+
     eventQuery.setUserId(getCurrentUserName());
     eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
+
     eventQuery.setLanguageLevelSearch(false);
-    
-    String language = "English";
-    if (localeConfigService != null) {
-      language = localeConfigService.getDefaultLocaleConfig().getLocale().getDisplayLanguage();
-    }
-    eventQuery.setLanguage(language);
-    eventQuery.setSearchOnDefaultLanguage(true);
+    eventQuery.setSearchOnDefaultLanguage(false);
 
     eventQuery.setOffset(offset);
     eventQuery.setLimit(limit);
