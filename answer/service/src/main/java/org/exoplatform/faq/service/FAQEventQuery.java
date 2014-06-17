@@ -71,7 +71,7 @@ public class FAQEventQuery implements FAQNodeTypes {
 
   private Calendar           toDate;
 
-  private String             language;
+  private String             language                   = null;
 
   private boolean            isAnd                      = false;
 
@@ -494,14 +494,12 @@ public class FAQEventQuery implements FAQNodeTypes {
     if (fromDate != null) {
       if (isAnd)
         propertiesSearch.append(" and ");
-      // propertiesSearch.append("@exo:createdDate").append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')") ;
       propertiesSearch.append("((@exo:createdDate >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " + "or (@exo:dateResponse >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " + "or (@exo:dateComment >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')))");
       isAnd = true;
     }
     if (toDate != null) {
       if (isAnd)
         propertiesSearch.append(" and ");
-      // propertiesSearch.append("@exo:createdDate").append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("')") ;
       propertiesSearch.append("((@exo:createdDate <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " + "or (@exo:dateResponse <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " + "or (@exo:dateComment <= xs:dateTime('").append(ISO8601.format(toDate)).append("')))");
       isAnd = true;
     }
@@ -510,47 +508,66 @@ public class FAQEventQuery implements FAQNodeTypes {
       isQuestionLevelSearch = true;
 
     // search on language questions
-    StringBuilder questionLanguageSearch = new StringBuilder("");
-    if (question != null && question.length() > 0) {
-      questionLanguageSearch.append("((exo:language='").append(language).append("')");
-      questionLanguageSearch.append(" and ( jcr:contains(@exo:title,'").append(question).append("') or jcr:contains(@exo:name, '").append(question).append("')");
+    StringBuilder questionLanguageSearch = new StringBuilder();
+    if (!CommonUtils.isEmpty(question)) {
+      questionLanguageSearch.append("(");
       //
-      applyAsteriskCondition(questionLanguageSearch, "@exo:title", "@exo:name");
+      if(!CommonUtils.isEmpty(language))  {
+        questionLanguageSearch.append("(@exo:language='").append(language).append("') and ");
+      }
+      questionLanguageSearch.append("(jcr:contains(@exo:title,'").append(question).append("')")
+                            .append(" or jcr:contains(@exo:name, '").append(question).append("')");
+      //
+      String asteriskCondition = applyAsteriskCondition("@exo:title", "@exo:name");
+      if(!CommonUtils.isEmpty(asteriskCondition)) {
+        questionLanguageSearch.append(" or ").append(asteriskCondition);
+      }
       questionLanguageSearch.append("))");
-      if (isSearchOnDefaultLanguage)
-        isLanguageLevelSearch = false;
-      else
-        isLanguageLevelSearch = true;
+      //
+      isLanguageLevelSearch = !isSearchOnDefaultLanguage;
     }
 
     // search on answers
-    StringBuilder answerSearch = new StringBuilder("");
-    if (response != null && response.length() > 0) {
-      answerSearch.append("( exo:responseLanguage='").append(language).append("'");
-      if(response.contains(CommonUtils.PERCENT_STR)){
-        answerSearch.append(" and (jcr:like(@exo:responses,'" + response + "')");
-      }else {
-        answerSearch.append(" and (jcr:contains(@exo:responses,'" + response + "')");
-      }
+    StringBuilder answerSearch = new StringBuilder();
+    if (!CommonUtils.isEmpty(response)) {
+      answerSearch.append("(");
       //
-      answerSearch = applyAsteriskCondition(answerSearch, "@exo:responses");
-      
+      if(!CommonUtils.isEmpty(language))  {
+        answerSearch.append("(@exo:responseLanguage='").append(language).append("') and ");
+      }
+      String jcrCm = "jcr:contains";
+      if(response.contains(CommonUtils.PERCENT_STR)){
+        jcrCm = "jcr:like";
+      }
+      answerSearch.append("(").append(jcrCm).append("(@exo:responses,'").append(response).append("')");
+      //
+      String asteriskCondition = applyAsteriskCondition("@exo:responses");
+      if(!CommonUtils.isEmpty(asteriskCondition)) {
+        answerSearch.append(" or ").append(asteriskCondition);
+      }
       answerSearch.append("))");
       isAnswerCommentLevelSearch = true;
     }
 
-    // search on comments
+    
+    // search on answers
     StringBuilder commentSearch = new StringBuilder();
-    if (comment != null && comment.length() > 0) {
-      commentSearch.append("( exo:commentLanguage='").append(language).append("'");
-      if(comment.contains(CommonUtils.PERCENT_STR)){
-        commentSearch.append(" and (jcr:like(@exo:comments,'" + comment + "')");
-      }else {
-        commentSearch.append(" and (jcr:contains(@exo:comments,'" + comment + "')");
-      }
+    if (!CommonUtils.isEmpty(comment)) {
+      commentSearch.append("(");
       //
-      commentSearch = applyAsteriskCondition(commentSearch, "@exo:comments");
-      
+      if(!CommonUtils.isEmpty(language))  {
+        commentSearch.append("(@exo:commentLanguage='").append(language).append("') and ");
+      }
+      String jcrCm = "jcr:contains";
+      if(comment.contains(CommonUtils.PERCENT_STR)){
+        jcrCm = "jcr:like";
+      }
+      commentSearch.append("(").append(jcrCm).append("(@exo:comments,'").append(comment).append("')");
+      //
+      String asteriskCondition = applyAsteriskCondition("@exo:comments");
+      if(!CommonUtils.isEmpty(asteriskCondition)) {
+        commentSearch.append(" or ").append(asteriskCondition);
+      }
       commentSearch.append("))");
       isAnswerCommentLevelSearch = true;
     }
@@ -598,9 +615,14 @@ public class FAQEventQuery implements FAQNodeTypes {
     StringBuilder textSearch = new StringBuilder("");
 
     if (text != null && text.length() > 0) {
-      textSearch.append("("); // open block.
-      textSearch.append("jcr:contains(., '").append(text).append("')");
-      textSearch.append(" and ( ").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
+      textSearch.append("(jcr:contains(., '").append(text).append("')");
+      if(!CommonUtils.isEmpty(language)) {
+        textSearch.append(" and ( ")
+        .append(" @exo:language='").append(language).append("'")
+        .append(" or @exo:commentLanguage='").append(language).append("'")
+        .append(" or @exo:responseLanguage='").append(language).append("'")
+        .append(")");
+      }
       textSearch.append(")"); // close block.
       isLanguageLevelSearch = false;
       isAnswerCommentLevelSearch = false;
@@ -615,8 +637,9 @@ public class FAQEventQuery implements FAQNodeTypes {
         isAdd = true;
       }
     }
-    if (isAdd)
+    if (isAdd) {
       quesAnsComClause.append(")"); // close question, answer, comment search clause.
+    }
 
     if (quesAnsComClause.length() > 0) {
       if (isAnd) {
@@ -625,15 +648,11 @@ public class FAQEventQuery implements FAQNodeTypes {
       queryString.append(quesAnsComClause.toString());
     }
 
-    if (!isAnd && !isAdd) { // if all of fields is empty of null, the search will be by language.
-      queryString.append("(").append(" exo:language='").append(language).append("'").append(" or exo:commentLanguage='").append(language).append("'").append(" or exo:responseLanguage='").append(language).append("'").append(")");
+    if (!isAnd && !isAdd && !CommonUtils.isEmpty(language)) { // if all of fields is empty of null, the search will be by language.
+      queryString.append("(").append(" @exo:language='").append(language).append("'")
+                 .append(" or @exo:commentLanguage='").append(language).append("'")
+                 .append(" or @exo:responseLanguage='").append(language).append("'").append(")");
     }
-
-    /*
-     * if(text != null && text.length() > 0 ) { if(isAdd){ queryString.append(" or (  jcr:contains(., '").append(text).append("')") ; }else { queryString.append("jcr:contains(., '").append(text).append("')") ; } queryString.append(" and ( " ) .append(" exo:language='").append(language).append("'") .append(" or exo:commentLanguage='").append(language).append("'")
-     * .append(" or exo:responseLanguage='").append(language).append("'") .append(")") ; if(isAdd) queryString.append(" ) " ) ; isAdd = true ; } else if(text == null && !isAnswerCommentLevelSearch && questionLanguageSearch.length() <= 0){ if(isAdd){ queryString.append(" and (exo:language='").append(language).append("')") ; }else { queryString.append("(exo:language='").append(language).append("')")
-     * ; isAdd = true ; } }
-     */
 
     if (!searchCategoryScoping.toString().equals("()")) {
       if (isAnd || isAdd) {
@@ -669,19 +688,23 @@ public class FAQEventQuery implements FAQNodeTypes {
     return queryString;
   }
   
-  private StringBuilder applyAsteriskCondition(StringBuilder sb, String... jcrField) {
+  private String applyAsteriskCondition(String... jcrField) {
     //for asterisk condition search
-    if(asteriskConditionSearch != null && asteriskConditionSearch.length() > 0){
+    StringBuilder sb = new StringBuilder();
+    if (!CommonUtils.isEmpty(asteriskConditionSearch)) {
       String jcrQuery = "jcr:contains";
       if(asteriskConditionSearch.contains(CommonUtils.PERCENT_STR)) {
         jcrQuery = "jcr:like";
       }
       //
       for (String field : jcrField) {
-        sb.append(" or " + jcrQuery + "(fn:upper-case(" + field + "),'" + asteriskConditionSearch + "')");
+        if(sb.length() > 0) {
+          sb.append(" or ");
+        }
+        sb.append(jcrQuery).append("(fn:upper-case(").append(field).append("),'").append(asteriskConditionSearch + "')");
       }     
     }
-    return sb;
+    return sb.toString();
   }
 
   private StringBuilder buildCategoryAndQuestionQuery() {
@@ -726,11 +749,6 @@ public class FAQEventQuery implements FAQNodeTypes {
       }
       queryString.append(")");
     }
-
-    // search restricted audience
-    /*
-     * if(userMembers != null && userMembers.size() > 0) { queryString.append(" and (") ; int k = 0 ; for(String id : userMembers) { if(k > 0) queryString.append(" or "); queryString.append("(@exo:userPrivate='").append(id).append("')"); k ++ ; } queryString.append(" )") ; }else { queryString.append(" and not(@exo:userPrivate)") ; }
-     */
 
     // add condition for exo:dateResponse and exo:dateComment to search on answers & comments
     if (fromDate != null) {

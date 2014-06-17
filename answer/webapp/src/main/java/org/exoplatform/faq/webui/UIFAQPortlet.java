@@ -23,13 +23,11 @@ import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.application.RequestNavigationData;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.social.common.router.ExoRouter;
-import org.exoplatform.social.common.router.ExoRouter.Route;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -43,16 +41,11 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
     template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
 )
 public class UIFAQPortlet extends UIPortletApplication {
-  private final static String SLASH             = "/".intern();
+  private final static String SLASH             = "/";
 
   private final static String SPACE_PRETTY_NAME = "spacePrettyName";
 
   private final static String CATEGORY_ID       = "categoryId";
-
-  private boolean isInSpace = false;
-
-  private String   pathOfCateSpace = null;
-
 
   public UIFAQPortlet() throws Exception {
     addChild(UIViewer.class, null, null);
@@ -102,55 +95,34 @@ public class UIFAQPortlet extends UIPortletApplication {
   }
   
   private Space getSpace() {
-    PortalRequestContext plcontext = Util.getPortalRequestContext();
-    String requestPath = plcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
-    Route route = ExoRouter.route(requestPath);
-    if (route == null) {
-      return null;
-    }
-    //
-    String spacePrettyName = route.localArgs.get(SPACE_PRETTY_NAME);
-
-    if (spacePrettyName != null) {
-      SpaceService sService = getApplicationComponent(SpaceService.class);
-      Space space = sService.getSpaceByPrettyName(spacePrettyName);
-      return space;
-    }
-    return null;
+    return WebUIUtils.getSpaceByContext();
   }
   
   public String getPathOfCateSpace() {
-    if (FAQUtils.isFieldEmpty(pathOfCateSpace)) {
-      Space space = getSpace();
-      if (space != null) {
-        isInSpace = true;
-        pathOfCateSpace = buildPathOfSpace(space.getPrettyName());
-      } else {
-        isInSpace = false;
-        pathOfCateSpace = Utils.CATEGORY_HOME;
-      }
+    Space space = getSpace();
+    if (space != null) {
+      return buildPathOfSpace(space.getGroupId());
+    } else {
+      return Utils.CATEGORY_HOME;
     }
-    return pathOfCateSpace;
   }
   
   public String getDisplaySpaceName() {
     Space space = getSpace();
     if (space != null) {
-      isInSpace = true;
-      pathOfCateSpace = buildPathOfSpace(space.getPrettyName());
       return space.getDisplayName();
     }
-    pathOfCateSpace = Utils.CATEGORY_HOME;
     return CommonUtils.AMP_SPACE;
   }
   
-  public String buildPathOfSpace(String spaceName) {
+  public String buildPathOfSpace(String spaceGroupId) {
+    String groupId = spaceGroupId.replaceAll(SpaceUtils.SPACE_GROUP + SLASH, CommonUtils.EMPTY_STR);
     StringBuilder sb = new StringBuilder();
-    sb.append(Utils.CATEGORY_HOME).append(SLASH).append(Utils.CATE_SPACE_ID_PREFIX).append(spaceName);
+    sb.append(Utils.CATEGORY_HOME).append(SLASH).append(Utils.CATE_SPACE_ID_PREFIX).append(groupId);
     return sb.toString();
   }
 
   public boolean isInSpace() {
-    return isInSpace;
+    return (getSpace() != null);
   }
 }

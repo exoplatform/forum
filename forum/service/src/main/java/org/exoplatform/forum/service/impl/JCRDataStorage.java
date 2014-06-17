@@ -1375,60 +1375,42 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryImpl queryImpl = (QueryImpl) query;
       queryImpl.setCaseInsensitiveOrder(true);
-      long totalSize, nextOffset = 0, gotItemNumber = 0;
-      if (maxSize > 0) {
-        totalSize = maxSize;
-      } else {
-        totalSize = query.execute().getNodes().getSize();
-      }
+
       LinkedHashMap<String, CategoryFilter> categoryFilters = new LinkedHashMap<String, CategoryFilter>();
-      QueryResult qr;
       CategoryFilter categoryFilter;
       String categoryId, categoryName, forumId, forumName;
-      NodeIterator iter;
+      long gotItemNumber = 0;
       //
-      while (gotItemNumber < totalSize && nextOffset < totalSize) {
-        queryImpl.setOffset(nextOffset);
-        queryImpl.setLimit(totalSize);
+      NodeIterator iter = queryImpl.execute().getNodes();
+      //
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        categoryId = node.getParent().getName();
 
-        qr = queryImpl.execute();
-        iter = qr.getNodes();
-        if (iter.getSize() <= 0) {
-          return new ArrayList<CategoryFilter>(categoryFilters.values());
+        if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
+          continue;
         }
 
-        //
-        while (iter.hasNext()) {
-          Node node = iter.nextNode();
-          categoryId = node.getParent().getName();
-          
-          if (Utils.CATEGORY_SPACE_ID_PREFIX.equalsIgnoreCase(categoryId)) {
-            continue;
+        forumId = node.getName();
+
+        // can create topic in category/forum
+        if (categoriesCanCreateTopics.contains(categoryId)) {
+
+          if (categoryFilters.containsKey(categoryId)) {
+            categoryFilter = categoryFilters.get(categoryId);
+          } else {
+            categoryName = node.getParent().getProperty(EXO_NAME).getString();
+            categoryFilter = new CategoryFilter(categoryId, categoryName);
+            categoryFilters.put(categoryId, categoryFilter);
           }
-          
-          forumId = node.getName();
-
-          // can create topic in category/forum
-          if (categoriesCanCreateTopics.contains(categoryId)) {
-
-            if (categoryFilters.containsKey(categoryId)) {
-              categoryFilter = categoryFilters.get(categoryId);
-            } else {
-              categoryName = node.getParent().getProperty(EXO_NAME).getString();
-              categoryFilter = new CategoryFilter(categoryId, categoryName);
-              categoryFilters.put(categoryId, categoryFilter);
-            }
-            forumName = node.getProperty(EXO_NAME).getString();
-            if (categoryFilter.setForumFilter(forumId, forumName)) {
-              gotItemNumber++;
-              if (gotItemNumber == totalSize) {
-                break;
-              }
+          forumName = node.getProperty(EXO_NAME).getString();
+          if (categoryFilter.setForumFilter(forumId, forumName)) {
+            gotItemNumber++;
+            if (gotItemNumber == maxSize) {
+              break;
             }
           }
         }
-
-        nextOffset += totalSize;
       }
 
       return Collections.unmodifiableList(new ArrayList<CategoryFilter>(categoryFilters.values()));
@@ -1884,48 +1866,44 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node forumHomeNode = getForumHomeNode(sProvider);
       String oldCatePath = "";
       if (!forums.isEmpty()) {
         String forumPath = forums.get(0).getPath();
-        oldCatePath = forumPath.substring(0, forumPath.lastIndexOf("/"));
+        oldCatePath = Utils.getCategoryPath(forumPath);
       } else {
         return;
       }
-      Node oldCatNode = (Node) forumHomeNode.getSession().getItem(oldCatePath);
-      Node newCatNode = (Node) forumHomeNode.getSession().getItem(destCategoryPath);
+      Node forumHomeNode = getForumHomeNode(sProvider);
+      Session session = forumHomeNode.getSession();
+      Node oldCatNode = (Node) session.getItem(oldCatePath);
+      Node newCatNode = (Node) session.getItem(destCategoryPath);
+      PropertyReader reader = new PropertyReader(newCatNode);
       for (Forum forum : forums) {
         String newForumPath = destCategoryPath + "/" + forum.getId();
-        forumHomeNode.getSession().getWorkspace().move(forum.getPath(), newForumPath);
-        Node forumNode = (Node) forumHomeNode.getSession().getItem(newForumPath);
+        //
+        session.getWorkspace().move(forum.getPath(), newForumPath);
+        //
+        Node forumNode = (Node) session.getItem(newForumPath);
         forumNode.setProperty(EXO_PATH, newForumPath);
         String[] strModerators = forum.getModerators();
         forumNode.setProperty(EXO_MODERATORS, strModerators);
-        if (strModerators != null && strModerators.length > 0 && !Utils.isEmpty(strModerators[0])) {
-          if (newCatNode.hasProperty(EXO_USER_PRIVATE)) {
-            List<String> listPrivate = new ArrayList<String>();
-            listPrivate.addAll(Utils.valuesToList(newCatNode.getProperty(EXO_USER_PRIVATE).getValues()));
-            if (!Utils.isEmpty(listPrivate.get(0))) {
-              for (int i = 0; i < strModerators.length; i++) {
-                if (!listPrivate.contains(strModerators[i])) {
-                  listPrivate.add(strModerators[i]);
-                }
-              }
-              newCatNode.setProperty(EXO_USER_PRIVATE, listPrivate.toArray(new String[listPrivate.size()]));
+        if (!CommonUtils.isEmpty(strModerators)) {
+          Set<String> listPrivate = reader.set(EXO_USER_PRIVATE, new HashSet<String>());
+          if (!listPrivate.isEmpty()) {
+            for (int i = 0; i < strModerators.length; i++) {
+              listPrivate.add(strModerators[i]);
             }
+            newCatNode.setProperty(EXO_USER_PRIVATE, listPrivate.toArray(new String[listPrivate.size()]));
           }
         }
       }
       long forumCount = forums.size();
-      oldCatNode.setProperty(EXO_FORUM_COUNT, oldCatNode.getProperty(EXO_FORUM_COUNT).getLong() - forumCount);
-      if (newCatNode.hasProperty(EXO_FORUM_COUNT))
-        forumCount = newCatNode.getProperty(EXO_FORUM_COUNT).getLong() + forumCount;
+      oldCatNode.setProperty(EXO_FORUM_COUNT, new PropertyReader(oldCatNode).l(EXO_FORUM_COUNT) - forumCount);
+      //
+      forumCount += reader.l(EXO_FORUM_COUNT);
       newCatNode.setProperty(EXO_FORUM_COUNT, forumCount);
-      if (forumHomeNode.isNew()) {
-        forumHomeNode.getSession().save();
-      } else {
-        forumHomeNode.save();
-      }
+      //
+      session.save();
     } catch (Exception e) {
       LOG.error("Failed to move forum", e);
     }

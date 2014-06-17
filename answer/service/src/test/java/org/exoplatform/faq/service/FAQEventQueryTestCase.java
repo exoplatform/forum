@@ -37,10 +37,6 @@ public class FAQEventQueryTestCase extends TestCase {
   public void testQuickSearch() throws Exception {
     FAQEventQuery queryObject = new FAQEventQuery();
 
-    /*
-     * eventQuery.setAdmin(uiQuickSearch.faqSetting_.isAdmin()) ; eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser())); eventQuery.setUserId(FAQUtils.getCurrentUser()) ; eventQuery.setText(text); eventQuery.setType("categoryAndQuestion");
-     */
-
     queryObject.setPath("/foo");
     queryObject.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
     queryObject.setAdmin(true);
@@ -123,20 +119,17 @@ public class FAQEventQueryTestCase extends TestCase {
     eventQuery.setLanguage("English");
     eventQuery.setResponse("response");
     eventQuery.setAsteriskConditionSearch("*condition*");
-    predicate += ") and (( exo:responseLanguage='English' and (jcr:contains(@exo:responses,'response') or jcr:contains(fn:upper-case(@exo:responses),'*condition*')))";
+    
+    predicate += ") and (((@exo:responseLanguage='English') and (jcr:contains(@exo:responses,'response') or jcr:contains(fn:upper-case(@exo:responses),'*condition*')))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setComment("comment");
-    predicate += " or ( exo:commentLanguage='English' and (jcr:contains(@exo:comments,'comment') or jcr:contains(fn:upper-case(@exo:comments),'*condition*')))";
+    predicate += " or ((@exo:commentLanguage='English') and (jcr:contains(@exo:comments,'comment') or jcr:contains(fn:upper-case(@exo:comments),'*condition*')))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
-
-    /*
-     * String tempPredicate = predicate; eventQuery.setText("") ; //tempPredicate += ") and (exo:language='English')"; assertEquals(selector + tempPredicate + "]", eventQuery.getQuery());
-     */
 
     eventQuery.setText("text");
 
-    predicate += " or (jcr:contains(., 'text') and (  exo:language='English' or exo:commentLanguage='English' or exo:responseLanguage='English'))";
+    predicate += " or (jcr:contains(., 'text') and (  @exo:language='English' or @exo:commentLanguage='English' or @exo:responseLanguage='English'))";
     assertEquals(selector + predicate + ")]" + orderBy, eventQuery.getQuery().trim());
 
     eventQuery.setViewingCategories(Arrays.asList("categoryId1", "categoryId2"));
@@ -148,4 +141,26 @@ public class FAQEventQueryTestCase extends TestCase {
     eventQuery.setAdmin(true);
   }
 
+  public void testBuildQuestionQueryWithAllLanguage() throws Exception {
+    String selector = "/jcr:root/foo//* [(";
+    String predicate = "jcr:contains(@exo:author, 'root')";
+    String orderBy = " order by @exo:title ascending";
+    final FAQEventQuery eventQuery = new FAQEventQuery();
+    eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
+    eventQuery.setPath("/foo");
+    eventQuery.setAuthor("root");
+    eventQuery.setResponse("response");
+    eventQuery.setAsteriskConditionSearch("*condition*");
+
+    predicate += ") and (((jcr:contains(@exo:responses,'response') or jcr:contains(fn:upper-case(@exo:responses),'*condition*')))";
+    assertEquals((selector + predicate + ")]") + orderBy, eventQuery.getQuery());
+
+    eventQuery.setComment("comment");
+    predicate += " or ((jcr:contains(@exo:comments,'comment') or jcr:contains(fn:upper-case(@exo:comments),'*condition*')))";
+    assertEquals((selector + predicate + ")]") + orderBy, eventQuery.getQuery());
+
+    eventQuery.setText("text");
+    predicate += " or (jcr:contains(., 'text'))";
+    assertEquals((selector + predicate + ")]") + orderBy, eventQuery.getQuery());
+  }
 }

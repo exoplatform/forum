@@ -47,7 +47,8 @@ public class UISliderControl extends UIFormInputBase<String> {
     w.write("    </div>");
     w.write("  </div>");
     w.write("  <div class=\"boxNumber pull-left\">");
-    w.write(new StringBuilder("    <input class=\"uiSliderInput\" type=\"text\" name=\"").append(getName()).append("\" id=\"").append(getName()).append("\" value=\"").append(value_).append("\" readonly disabled/>").toString());
+    w.write(new StringBuilder("    <input class=\"uiSliderInput\" type=\"text\" name=\"").append(getName())
+                    .append("\" id=\"").append(getName()).append("\" value=\"").append(value_).append("\" readonly/>").toString());
     w.write("  </div>");
     w.write("</div>");
 

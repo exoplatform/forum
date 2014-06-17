@@ -21,13 +21,21 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.application.RequestNavigationData;
+import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.common.router.ExoRouter;
+import org.exoplatform.social.common.router.ExoRouter.Route;
+import org.exoplatform.social.core.space.SpaceUtils;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.RequireJS;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -111,6 +119,33 @@ public class WebUIUtils {
     addScripts(new String[] { "SyntaxHighlighter.initLoader()", "SyntaxHighlighter.all()", "dp.SyntaxHighlighter.HighlightAll('code')" });
     //
     return scripts.toString();
+  }
+
+  public static Space getSpaceByContext() {
+    //
+    PortalRequestContext pcontext = Util.getPortalRequestContext();
+    if (!pcontext.getSiteType().equals(SiteType.GROUP) ||
+        !pcontext.getSiteName().startsWith(SpaceUtils.SPACE_GROUP)) {
+      return null;
+    }
+    String requestPath = pcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_PATH);
+    Route route = ExoRouter.route(requestPath);
+
+    SpaceService spaceService = CommonsUtils.getService(SpaceService.class);
+    if (route == null) {
+      String groupId = pcontext.getControllerContext().getParameter(RequestNavigationData.REQUEST_SITE_NAME);
+      return spaceService.getSpaceByGroupId(groupId);
+    }
+
+    //
+    String spacePrettyName = route.localArgs.get("spacePrettyName");
+    Space space = spaceService.getSpaceByPrettyName(spacePrettyName);
+    if (space == null) {
+      String groupId = String.format("%s/%s", SpaceUtils.SPACE_GROUP, spacePrettyName);
+      space = spaceService.getSpaceByGroupId(groupId);
+    }
+
+    return space;
   }
   
 }
