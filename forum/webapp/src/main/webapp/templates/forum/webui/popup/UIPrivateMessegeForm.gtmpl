@@ -84,7 +84,7 @@
 	<div class="uiAction<%=((uiform.isFullMessage() ==  false) ? " uiActionBorder" : "")%>">
 	
 	<% if(uiform.isFullMessage() ==  false) { %>
-	    <button onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>  
+	    <button onclick="eXo.forum.ForumUtils.submitFCKEditerForm(this)" class="btn" type="button"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></button>  
 	<%}%>
 		<button onclick="<%=uicomponent.event("Cancel")%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Cancel");%></button>
 	</div>
