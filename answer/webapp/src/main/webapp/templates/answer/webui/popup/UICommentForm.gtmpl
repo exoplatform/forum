@@ -5,7 +5,7 @@
 				
 			<div class="control-group">
 				<label class="control-label"> <%=_ctx.appRes("UICommentForm.title.Author")%>:</label>
-				<div class="controls"><%=uicomponent.getCurrentUserDisplayName();%></div>
+				<div class="controls"><%=uicomponent.getAuthorDisplayName()%></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label"><%=_ctx.appRes("UICommentForm.title.Language")%>:</label>

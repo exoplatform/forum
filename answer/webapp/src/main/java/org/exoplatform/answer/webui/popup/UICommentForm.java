@@ -29,13 +29,13 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -64,9 +64,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String       questionDetail;
 
-  private String       currentUser_    = "";
-
-  private String       currentUserDisplayName    = "";
+  private String       author = null;
 
   private final String COMMENT_CONTENT = "CommentContent";
 
@@ -75,28 +73,15 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
   private RenderHelper renderHelper    = new RenderHelper();
 
   public UICommentForm() throws Exception {
-    currentUser_ = FAQUtils.getCurrentUser();
     UIFormRichtextInput commentContent = new UIFormRichtextInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
     commentContent.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
     commentContent.setHeight("'250px'");
     commentContent.setIsPasteAsPlainText(true);
     this.addChild(commentContent);
-    User user = FAQUtils.getCurrentUserObject();
-    if(user != null) {
-	String fullName = FAQUtils.getFullName(user.getUserName());
-    if (fullName == null || fullName.length() == 0)
-      this.currentUserDisplayName = user.getUserName();
-    else
-      this.currentUserDisplayName = fullName;
-    }
   }
 
-  public String getCurrentUserDisplayName() {
-    return currentUserDisplayName;
-  }
-
-  public void setCurrentUserDisplayName(String currentUserDisplayName) {
-    this.currentUserDisplayName = currentUserDisplayName;
+  public String getAuthorDisplayName() {
+    return FAQUtils.getFullName(author);
   }
 
   public String getQuestionContent() {
@@ -138,6 +123,9 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     if (commentId.indexOf("new") < 0) {
       comment = getFAQService().getCommentById(question.getPath(), commentId, language);
       ((UIFormRichtextInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
+      this.author = comment.getCommentBy();
+    } else {
+      this.author = null;
     }
   }
 
@@ -174,6 +162,12 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
           commentForm.comment.setNew(true);
         }
         commentForm.comment.setComments(comment);
+        String currentUser = UserHelper.getCurrentUser();
+        String author = commentForm.author;
+        if (CommonUtils.isEmpty(author)) {
+          author = currentUser;
+        }
+        
         // For discuss in forum
         String topicId = commentForm.question_.getTopicIdDiscuss();
         if (topicId != null && topicId.length() > 0) {
@@ -187,7 +181,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
             String postId = commentForm.comment.getPostId();
             if (postId == null || postId.length() == 0) {
               Post post = new Post();
-              post.setOwner(commentForm.currentUser_);
+              post.setOwner(author);
               post.setIcon("ViewIcon");
               post.setName("Re: " + commentForm.question_.getQuestion());
               post.setMessage(comment);
@@ -207,14 +201,14 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
                 if (post == null) {
                   post = new Post();
                   isNew = true;
-                  post.setOwner(commentForm.currentUser_);
+                  post.setOwner(author);
                   post.setIcon("ViewIcon");
                   post.setName("Re: " + commentForm.question_.getQuestion());
                   commentForm.comment.setPostId(post.getId());
                   post.setLink(linkForum+"/"+postId);
                   post.setRemoteAddr(remoteAddr);
                 } else {
-                  post.setModifiedBy(commentForm.currentUser_);
+                  post.setModifiedBy(currentUser);
                 }
                 post.setIsApproved(!topic.getIsModeratePost());
                 post.setMessage(comment);
@@ -227,11 +221,13 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         }
 
         String language = "";
-        if (!commentForm.languageSelected.equals(commentForm.question_.getLanguage()))
+        if (!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
           language = commentForm.languageSelected;
-        String currentUser = FAQUtils.getCurrentUser() ;
-        commentForm.comment.setCommentBy(currentUser);
-        commentForm.comment.setFullName(FAQUtils.getFullName(null)) ;
+        }
+        //
+        commentForm.comment.setCommentBy(author);
+        commentForm.comment.setFullName(FAQUtils.getFullName(author)) ;
+        //
         commentForm.getFAQService().saveComment(commentForm.question_.getPath(), commentForm.comment, language);
         if (!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
           try {
