@@ -28,7 +28,6 @@ import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.UISelector;
 import org.exoplatform.forum.common.webui.UIUserSelect;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -45,11 +44,9 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.organization.account.UIUserSelector;
-import org.exoplatform.webui.form.UIFormRichtextInput;
-
 
 @ComponentConfigs ( 
   {
@@ -321,9 +318,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     }
   }
 
-  static public class CloseActionListener extends EventListener<UIUserSelector> {
-    public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource();
+  static public class CloseActionListener extends EventListener<UIUserSelect> {
+    public void execute(Event<UIUserSelect> event) throws Exception {
+      UIUserSelect uiUserSelector = event.getSource();
       UIPopupWindow popupWindow = uiUserSelector.getParent();
       closePopupWindow(popupWindow);
     }
