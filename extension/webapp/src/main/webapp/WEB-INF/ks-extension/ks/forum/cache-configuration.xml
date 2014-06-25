@@ -225,6 +225,203 @@
 
       </init-params>
     </component-plugin>
+    
+    <component-plugin profiles="cluster">
+      <name>addExoCacheConfig</name>
+      <set-method>addExoCacheConfig</set-method>
+      <type>org.exoplatform.services.cache.ExoCacheConfigPlugin</type>
+      <description>add Exo Cache Configuration</description>
+      <init-params>
+        <!-- UserProfiles -->
+        <object-param>
+          <name>forum.UserProfiles</name>
+          <description>The JBoss Cache configuration for the forum.UserProfiles</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.UserProfiles</string></field>
+            <field name="maxNodes"><int>${cache.exo.forum.UserProfiles.Capacity:500}</int></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.UserProfiles.TimeToLive:-1}</long></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- Categories -->
+        <object-param>
+          <name>forum.CategoryData</name>
+          <description>The JBoss Cache configuration for the forum.CategoryData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.CategoryData</string></field>
+            <field name="maxNodes"><int>${cache.exo.forum.CategoryData.Capacity:10}</int></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.CategoryData.TimeToLive:-1}</long></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.CategoryList</name>
+          <description>The JBoss Cache configuration for the forum.CategoryList</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.CategoryList</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.CategoryList.TimeToLive:-1}</long></field>
+            <field name="maxSize"><int>${cache.exo.forum.CategoryList.Capacity:5}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- Forums -->
+        <object-param>
+          <name>forum.ForumData</name>
+          <description>The JBoss Cache configuration for the forum.ForumData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.ForumData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.ForumData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.ForumData.Capacity:150}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.ForumList</name>
+          <description>The JBoss Cache configuration for the forum.ForumList</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.ForumList</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.ForumList.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.ForumList.Capacity:30}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- Topics -->
+        <object-param>
+          <name>forum.TopicData</name>
+          <description>The JBoss Cache configuration for the forum.TopicData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.TopicData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.TopicData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.TopicData.Capacity:500}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.TopicList</name>
+          <description>The JBoss Cache configuration for the forum.ListTopicData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.TopicList</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.TopicList.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.TopicList.Capacity:150}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.TopicListCount</name>
+          <description>The JBoss Cache configuration for the forum.ListTopicData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.TopicListCount</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.TopicListCount.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.TopicListCount.Capacity:150}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <!-- Post -->
+        <object-param>
+          <name>forum.PostData</name>
+          <description>The JBoss Cache configuration for the forum.PostData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.PostData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.PostData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.PostData.Capacity:3000}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+          </object-param>
+          <object-param>
+            <name>forum.PostList</name>
+            <description>The JBoss Cache configuration for the forum.PostList</description>
+            <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+              <field name="name"><string>forum.PostList</string></field>
+              <field name="expirationTimeout"><long>${cache.exo.forum.PostList.TimeToLive:86400}</long></field>
+              <field name="maxNodes"><int>${cache.exo.forum.PostList.Capacity:150}</int></field>
+              <field name="distributed"><boolean>true</boolean></field>
+            </object>
+          </object-param>
+          <object-param>
+            <name>forum.PostListCount</name>
+            <description>The JBoss Cache configuration for the forum.PostListCount</description>
+            <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+              <field name="name"><string>forum.PostListCount</string></field>
+              <field name="expirationTimeout"><long>${cache.exo.forum.PostListCount.TimeToLive:-1}</long></field>
+              <field name="maxNodes"><int>${cache.exo.forum.PostListCount.Capacity:150}</int></field>
+              <field name="distributed"><boolean>true</boolean></field>
+            </object>
+          </object-param>
+
+        <!-- Watches -->
+        <object-param>
+          <name>forum.WatchListData</name>
+          <description>The JBoss Cache configuration for the forum.WatchListData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.WatchListData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.WatchListData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.WatchListData.Capacity:300}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- Links -->
+        <object-param>
+          <name>forum.LinkListData</name>
+          <description>The JBoss Cache configuration for the forum.LinkListData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.LinkListData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.LinkListData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.LinkListData.Capacity:150}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- ObjectNameData -->
+        <object-param>
+          <name>forum.ObjectNameData</name>
+          <description>The JBoss Cache configuration for the forum.ObjectNameData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.ObjectNameData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.ObjectNameData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.ObjectNameData.Capacity:1800}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- MiscData -->
+        <object-param>
+          <name>forum.MiscData</name>
+          <description>The JBoss Cache configuration for the forum.MiscData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.MiscData</string></field>
+            <field name="maxNodes"><int>${cache.exo.forum.MiscData.Capacity:600}</int></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.MiscData.TimeToLive:86400}</long></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+
+        <!-- BBCode -->
+        <object-param>
+          <name>forum.BBCodeData</name>
+          <description>The JBoss Cache configuration for the forum.BBCodeData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.BBCodeData</string></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.BBCodeData.TimeToLive:-1}</long></field>
+            <field name="maxNodes"><int>${cache.exo.forum.BBCodeData.Capacity:3000}</int></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>forum.BBCodeListData</name>
+          <description>The JBoss Cache configuration for the forum.BBCodeListData</description>
+          <object type="org.exoplatform.services.cache.impl.jboss.ea.EAExoCacheConfig">
+            <field name="name"><string>forum.BBCodeListData</string></field>
+            <field name="maxNodes"><int>${cache.exo.forum.BBCodeListData.Capacity:10}</int></field>
+            <field name="expirationTimeout"><long>${cache.exo.forum.BBCodeListData.TimeToLive:86400}</long></field>
+            <field name="distributed"><boolean>true</boolean></field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
   </external-component-plugins>
 
 </configuration>
