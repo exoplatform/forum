@@ -39,7 +39,7 @@
     },
     openAddTag : function(event) {
       var str = String(SearchTagName.jInputSearch.val());
-      if (SearchTagName.jcontainer.css('display') === 'none' && str.trim().length === 0) {
+      if (SearchTagName.jcontainer.css('display') === 'none' && $.trim(str).length === 0) {
         SearchTagName.searchTagName('onclickForm');
       }
     },
@@ -47,7 +47,7 @@
       var key = utils.getKeynum(event);
       var KEY = SearchTagName.key;
       if (key == KEY.ENTER) {
-        var str = String(SearchTagName.jInputSearch.val()).trim();
+        var str = $.trim(String(SearchTagName.jInputSearch.val()));
         if (SearchTagName.jcontainer.css('display') === 'none') {
           SearchTagName.jcontainer.hide();
           SearchTagName.searchTagName(' ');
@@ -83,10 +83,10 @@
         }
       } else if (key > KEY.DOWN || key == KEY.BACK || key == KEY.SPACE) {
         var str = String(SearchTagName.jInputSearch.val());
-        if ((key == KEY.BACK && str.trim().length == 0) || key == KEY.SPACE) {
+        if ((key == KEY.BACK && $.trim(str).length == 0) || key == KEY.SPACE) {
           SearchTagName.searchTagName('onclickForm');
         } else {
-          var val = String(SearchTagName.jInputSearch.val()).trim();
+          var val = $.trim(String(SearchTagName.jInputSearch.val()));
           if(val.indexOf(' ') > 0 ) {
             val = val.substring(val.indexOf(' '));
           }
@@ -118,7 +118,7 @@
       if (keyword === SearchTagName.lastkey) {
         return;
       }
-      if (keyword.trim().length > 0) {
+      if ($.trim(keyword).length > 0) {
         var userAndTopicId = SearchTagName.jcontainer.attr("data-userandtopicid");
         var restPath = SearchTagName.jcontainer.attr("data-restpath");
         if (userAndTopicId) {
