@@ -117,7 +117,8 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
     pageList = new ForumPageList(8, listIpBan.size());
     pageList.setPageSize(8);
     pageIterator = this.getChild(UIForumPageIterator.class);
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     List<String> list = new ArrayList<String>();
     list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan));
     pageIterator.setSelectPage(pageList.getCurrentPage());

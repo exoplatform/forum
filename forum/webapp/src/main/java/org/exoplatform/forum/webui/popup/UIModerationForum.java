@@ -114,7 +114,8 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     }
     pageList = new ForumPageList(10, list_.size());
     pageList.setPageSize(10);
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     isShowIter = true;
     if (pageList.getAvailablePage() <= 1)
       isShowIter = false;

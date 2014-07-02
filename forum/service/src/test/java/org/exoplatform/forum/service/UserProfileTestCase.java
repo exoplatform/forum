@@ -16,14 +16,21 @@
  */
 package org.exoplatform.forum.service;
 
+import java.util.Arrays;
+
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.service.cache.CachedDataStorage;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 
 public class UserProfileTestCase extends BaseForumServiceTestCase {
-
+  
+  CachedDataStorage cachedStorage;
+  
   @Override
   public void setUp() throws Exception {
     super.setUp();
-
+    
+    cachedStorage = (CachedDataStorage) getService(DataStorage.class);
   }
   
   @Override
@@ -48,11 +55,7 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertNotNull("Get default UserProfile is null", userProfile);
     
     // test cache user profile, get this profile is not null
-    assertNotNull("Get default UserProfile is null", CacheUserProfile.getFromCache(userName));
-    // remove this profile in ExoCache by update this profile
-    forumService_.saveUserSettingProfile(userProfile);
-    // get by ExoCache is null 
-    assertNull("Get default UserProfile is null", CacheUserProfile.getFromCache(userName));
+    assertNotNull("Get default UserProfile is null", cachedStorage.getDefaultUserProfile(userName, null));
     
     // getUserInformations
     userProfile = forumService_.getUserInformations(userProfile);
@@ -68,17 +71,48 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     forumService_.saveUserSettingProfile(userProfile);
     userProfile = forumService_.getUserSettingProfile(userName);
     assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
+  }
+  
+  public void testUserProfileListAccess() throws Exception {
     //
+    UserProfile profile1 = createdUserProfile("username1");
+    profile1.setScreenName("User " + profile1.getUserId());
+    UserProfile profile2 = createdUserProfile("username2");
+    profile2.setScreenName("User " + profile2.getUserId());
+    forumService_.saveUserProfile(profile1, true, true);
+    forumService_.saveUserProfile(profile2, true, true);
+    
+    //
+    UserProfile[] userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter(profile1.getUserId())).load(0, 5);
+    assertEquals(1, userProfiles.length);
+    //
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter(profile2.getUserId())).load(0, 5);
+    assertEquals(1, userProfiles.length);
+    //
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("User")).load(0, 5);
+    assertEquals(2, userProfiles.length);
+    //not found
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("guys")).load(0, 5);
+    assertEquals(0, userProfiles.length);
+    
+    //contains %
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user%")).load(0, 5);
+    assertEquals(2, userProfiles.length);
+    
+    //contains *
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user*")).load(0, 5);
+    assertEquals(2, userProfiles.length);
+    
+    //Get all profiles
+    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("")).load(0, 5);
+    assertEquals(2, userProfiles.length);
+    assertEquals(2, forumService_.searchUserProfileByFilter(new UserProfileFilter("")).getSize());
   }
 
   public void testUserLogin() throws Exception {
     String[] userIds = new String[] { USER_ROOT, USER_JOHN, USER_DEMO };
     for (int i = 0; i < userIds.length; i++) {
-      try {
-        forumService_.getQuickProfile(userIds[i]);
-      } catch (Exception e) {
-        forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
-      }
+      forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
     }
     // Add user login
     forumService_.userLogin(USER_ROOT);
@@ -95,6 +129,20 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     // userLogout
     forumService_.userLogout(USER_DEMO);
     assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
+  }
+  
+  public void testCacheLoginUser() throws Exception {
+    String[] userIds = new String[] { "user1", "user2" };
+    for (int i = 0; i < userIds.length; i++) {
+      forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
+    }
+    // Add user login
+    forumService_.userLogin("user1");
+    forumService_.userLogin("user2");
+    
+    UserProfile profile = cachedStorage.getDefaultUserProfile("user2", null);
+    assertEquals("user2", profile.getScreenName());
+    
   }
 
 
