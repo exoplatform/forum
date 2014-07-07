@@ -36,7 +36,6 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
-import org.exoplatform.forum.service.CacheUserProfile;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
@@ -71,6 +70,8 @@ import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.PostListAccess;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.impl.model.TopicListAccess;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
+import org.exoplatform.forum.service.impl.model.UserProfileListAccess;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -239,16 +240,8 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void removeMember(User user) throws Exception {
     String userName = user.getUserName();
-    if (storage.deleteUserProfile(userName))
+    if (storage.deleteUserProfile(userName)) {
       forumStatisticsService.removeMember(userName);
-    UserProfile userProfile = CacheUserProfile.getFromCache(userName);
-    if (userProfile != null) {
-      UserProfile profile = new UserProfile();
-      profile.setUserId(userName);
-      profile.setUserTitle(UserProfile.USER_REMOVED);
-      profile.setUserRole(UserProfile.USER_DELETED);
-      profile.setIsBanned(true);
-      CacheUserProfile.storeInCache(userName, profile);
     }
   }
 
@@ -653,7 +646,6 @@ public class ForumServiceImpl implements ForumService, Startable {
         }
       }
     }
-    CacheUserProfile.clearCache();
   }
 
   /**
@@ -676,7 +668,6 @@ public class ForumServiceImpl implements ForumService, Startable {
         log.debug("Failed to run function removeActivity in the class ForumEventLifeCycle. ", e);
       }
     }
-    CacheUserProfile.clearCache();
     return topic;
   }
 
@@ -783,7 +774,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
-    CacheUserProfile.clearCache();
   }
 
   /**
@@ -795,8 +785,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     //
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
     //
-    CacheUserProfile.clearCache();
-
     Topic newTopic = storage.getTopicByPath(destTopicPath, false);
     newTopic.setTopicName(topicMergeTitle);
     for (ForumEventLifeCycle f : listeners_) {
@@ -826,7 +814,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) {
-    CacheUserProfile.clearCache();
     String topicActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId));
     String postActivityId = storage.getActivityIdForOwner(categoryId.concat("/").concat(forumId).concat("/").concat(topicId).concat("/").concat(postId));
     Post deleted = storage.removePost(categoryId, forumId, topicId, postId);
@@ -945,9 +932,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
-    String userId = userProfile.getUserId();
     storage.saveUserProfile(userProfile, isOption, isBan);
-    removeCacheUserProfile(userId);
   }
 
   /**
@@ -983,7 +968,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception {
     storage.saveUserBookmark(userName, bookMark, isNew);
-    removeCacheUserProfile(userName);
   }
 
   /**
@@ -1236,7 +1220,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     UserLoginLogEntry loginEntry = new UserLoginLogEntry(currentTenant, userId, onlinUsers.size(), 
                                                          CommonUtils.getGreenwichMeanTime());
     queue.add(loginEntry);
-    CacheUserProfile.storeInCache(userId, storage.getDefaultUserProfile(userId, null));
+    storage.getDefaultUserProfile(userId, null);
   }
 
   /**
@@ -1248,7 +1232,7 @@ public class ForumServiceImpl implements ForumService, Startable {
       onlinUsers.remove(userId);
       onlineUserMap.put(Utils.getCurrentTenantName(), onlinUsers);
     }
-    removeCacheUserProfile(userId);
+    storage.removeCacheUserProfile(userId);
   }
 
   /**
@@ -1392,11 +1376,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
-    UserProfile userProfile = CacheUserProfile.getFromCache(userName);
-    if (userProfile == null) {
-      userProfile = storage.getDefaultUserProfile(userName, null);
-      CacheUserProfile.storeInCache(userName, userProfile);
-    }
+    UserProfile userProfile = storage.getDefaultUserProfile(userName, null);
     if (!userProfile.getIsBanned() && ip != null) {
       userProfile.setIsBanned(storage.isBanIp(ip));
     }
@@ -1429,7 +1409,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
-    removeCacheUserProfile(userProfile.getUserId());
   }
 
   /**
@@ -1631,10 +1610,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   public void removeCacheUserProfile(String userName) {
-    UserProfile userProfile = CacheUserProfile.getFromCache(userName);
-    if (userProfile != null && UserProfile.USER_DELETED != userProfile.getUserRole()) {
-      CacheUserProfile.removeInCache(userName);
-    }
+    storage.removeCacheUserProfile(userName);
   }
 
   public void saveActivityIdForOwnerId(String ownerId,  String activityId) {
@@ -1668,4 +1644,10 @@ public class ForumServiceImpl implements ForumService, Startable {
   public String getCommentIdForOwnerPath(String ownerPath) {
     return storage.getActivityIdForOwner(ownerPath);
   }
+
+  @Override
+  public ListAccess<UserProfile> searchUserProfileByFilter(UserProfileFilter userProfileFilter) throws Exception {
+    return new UserProfileListAccess(storage, userProfileFilter);
+  }
+
 }

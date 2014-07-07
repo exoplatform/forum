@@ -20,12 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
@@ -33,16 +29,13 @@ import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
+import org.exoplatform.forum.service.impl.model.UserProfileListAccess;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.Query;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -83,8 +76,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   private String[]            permissionUser                     = null;
 
   private String[]            titleUser                          = null;
-
-  protected JCRPageList       userPageList;
 
   private boolean             isEdit                             = false;
 
@@ -146,13 +137,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   public static final String  FIELD_SEARCH_USER                  = "SearchUser";
 
-  private String              valueSearch                        = null;
-
-  private String              keyWord                            = ForumUtils.EMPTY_STR;
+  private String              valueSearch                        = ForumUtils.EMPTY_STR;
 
   private boolean             isViewSearchUser                   = false;
 
   private UIForumPageIterator pageIterator                       = null;
+  
+  private UserProfileListAccess userProfileListAccess            = null;
   
   public UIModeratorManagementForm() throws Exception {
     pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator");
@@ -173,16 +164,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", i18n("UIModeratorManagementForm.label.Search"));
   }
   
-  public void setValueSearch(String value) {
-    this.valueSearch = value;
-  }
-
-  public void setPageListUserProfile() throws Exception {
-    userPageList = this.getForumService().getPageListUserProfile();
-    userPageList.setPageSize(5);
-    this.pageIterator.updatePageList(this.userPageList);
-  }
-
   private boolean isAdmin(String userId) throws Exception {
     return getForumService().isAdminRoleConfig(userId);
   }
@@ -197,43 +178,19 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
     return true;
   }
-
-  @SuppressWarnings("unchecked")
-  private void setListUserProfile() throws Exception {
-    this.userProfiles =  new CopyOnWriteArrayList<UserProfile>();
-    if (valueSearch == null || valueSearch.trim().length() < 1) {
-      int page = pageIterator.getPageSelected();
-      this.userProfiles.addAll(this.userPageList.getPage(page));
-      pageIterator.setSelectPage(userPageList.getCurrentPage());
-    } else {
-      this.userProfiles.addAll(this.userPageList.getpage(this.valueSearch));
-      pageIterator.setSelectPage(this.userPageList.getCurrentPage());
-      valueSearch = null;
-    }
-  }
-
-  protected List<UserProfile> getListProFileUser() throws Exception {
-    if (!isViewSearchUser) {
-      this.setListUserProfile();
-    } else {
-      try {
-        int page = pageIterator.getPageSelected();
-        this.userProfiles = new ArrayList<UserProfile>();
-        List list = this.userPageList.getPageUser(page);
-        for (Object obj : list) {
-          if (obj instanceof User)
-            this.userProfiles.add(getForumService().getUserProfileManagement(((User) obj).getUserName()));
-          else if (obj instanceof UserProfile)
-            this.userProfiles.add((UserProfile) obj);
-        }
-      } catch (Exception e) {
-        log.debug("Failed to get user info to list of userProfiles.", e);
-        this.setListUserProfile();
-      }
-    }
-    if (userProfiles == null){
-      return new ArrayList<UserProfile>();
-    }
+  
+  protected List<UserProfile> getListProfileUser() throws Exception {
+    //
+    userProfileListAccess = (UserProfileListAccess) this.getForumService().searchUserProfileByFilter(new UserProfileFilter(valueSearch));
+    userProfileListAccess.initialize(5, pageIterator.getPageSelected());
+    pageIterator.initPage(5, userProfileListAccess.getCurrentPage(), 
+                          userProfileListAccess.getSize(), userProfileListAccess.getTotalPages());
+    //load data
+    UserProfile[] objs = userProfileListAccess.load(pageIterator.getPageSelected());
+    userProfiles = Arrays.asList(objs);
+    
+    pageIterator.setSelectPage(userProfileListAccess.getCurrentPage());
+    
     return userProfiles;
   }
 
@@ -631,49 +588,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private void searchUserProfileByKey(String keyword) throws Exception {
     try {
-      Map<String, Object> mapObject = new HashMap<String, Object>();
-      OrganizationService service = this.getApplicationComponent(OrganizationService.class);
-      keyword = "*" + keyword + "*";
-      List<Object> results = new CopyOnWriteArrayList<Object>();
-      Query q;
-      q = new Query();
-      q.setUserName(keyword);
-      ListAccess<User> listAcess = service.getUserHandler().findUsersByQuery(q);
-      for (User user : listAcess.load(0, listAcess.getSize())) {
-        mapObject.put(user.getUserName(), user);
-      }
-
-      q = new Query();
-      q.setLastName(keyword);
-      listAcess = service.getUserHandler().findUsersByQuery(q);
-      for (User user : listAcess.load(0, listAcess.getSize())) {
-        mapObject.put(user.getUserName(), user);
-      }
-
-      q = new Query();
-      q.setFirstName(keyword);
-      listAcess = service.getUserHandler().findUsersByQuery(q);
-      for (User user : listAcess.load(0, listAcess.getSize())) {
-        mapObject.put(user.getUserName(), user);
-      }
-
-      q = new Query();
-      q.setEmail(keyword);
-      listAcess = service.getUserHandler().findUsersByQuery(q);
-      for (User user : listAcess.load(0, listAcess.getSize())) {
-        mapObject.put(user.getUserName(), user);
-      }
-
-      for (Object object : getForumService().searchUserProfile(keyword).getAll()) {
-        mapObject.put(((UserProfile) object).getUserId(), object);
-      }
-
-      results.addAll(Arrays.asList(mapObject.values().toArray()));
-
-      this.userPageList = new ForumPageList(results);
-      this.userPageList.setPageSize(5);
-      pageIterator.updatePageList(this.userPageList);
+      //
+      this.valueSearch = keyword;
+      //
+     // getListProfileUser();
       pageIterator.setSelectPage(1);
+      
+      //this.valueSearch = ForumUtils.EMPTY_STR;
       this.isViewSearchUser = true;
     } catch (Exception e) {
       this.isViewSearchUser = false;
@@ -892,11 +813,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         uiForm.log.trace("\nSave user profile fail: " + e.getMessage() + "\n" + e.getCause());
       }
       uiForm.isEdit = false;
-      if (ForumUtils.isEmpty(uiForm.keyWord)) {
+      if (ForumUtils.isEmpty(uiForm.valueSearch)) {
         uiForm.isViewSearchUser = false;
-        uiForm.setPageListUserProfile();
       } else {
-        uiForm.searchUserProfileByKey(uiForm.keyWord);
+        uiForm.searchUserProfileByKey(uiForm.valueSearch);
       }
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
       popupWindow.setWindowSize(760, 350);
@@ -932,8 +852,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
       UIModeratorManagementForm uiForm = event.getSource();
       uiForm.isViewSearchUser = false;
-      uiForm.keyWord = ForumUtils.EMPTY_STR;
-      uiForm.setPageListUserProfile();
+      uiForm.valueSearch = ForumUtils.EMPTY_STR;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }

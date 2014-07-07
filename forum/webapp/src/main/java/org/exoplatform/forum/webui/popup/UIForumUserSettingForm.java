@@ -325,7 +325,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
     pageIterator = addChild(UIForumPageIterator.class, null, WATCHES_ITERATOR);
     pageList = new ForumPageList(7, listWatches.size());
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     try {
       if (pageIterator.getInfoPage().get(3) <= 1)
         pageIterator.setRendered(false);
@@ -516,7 +517,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
           }
         }
         uiForm.pageList = new ForumPageList(7, uiForm.listWatches.size());
-        uiForm.pageIterator.updatePageList(uiForm.pageList);
+        uiForm.pageIterator.initPage(uiForm.pageList.getPageSize(), uiForm.pageList.getCurrentPage(), 
+                                     uiForm.pageList.getAvailable(), uiForm.pageList.getAvailablePage());
       } catch (Exception e) {
         uiForm.log.warn("Failed to delete watch emails",e);
         uiForm.warning("UIForumUserSettingForm.msg.fail-delete-watch-emails", false);

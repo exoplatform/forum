@@ -103,7 +103,8 @@ public class UIWatchToolsForm extends BaseForumForm implements UIPopupComponent 
     pageList = new ForumPageList(6, listEmail.size());
     pageList.setPageSize(6);
     pageIterator = this.getChild(UIForumPageIterator.class);
-    pageIterator.updatePageList(pageList);
+    pageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
+                          pageList.getAvailable(), pageList.getAvailablePage());
     try {
       if (pageIterator.getInfoPage().get(3) <= 1)
         pageIterator.setRendered(false);

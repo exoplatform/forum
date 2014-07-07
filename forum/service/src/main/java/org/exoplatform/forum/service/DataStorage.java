@@ -32,9 +32,11 @@ import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.organization.UIAccountForm.SearchUserActionListener;
 
 public interface DataStorage {
 
@@ -272,9 +274,35 @@ public interface DataStorage {
 
   void saveTag(Tag newTag) throws Exception;
 
+  /**
+   * @deprecated Use {@link #searchUserProfileByFilter(UserProfileFilter, int, int)}  instead of. 
+   */
   JCRPageList getPageListUserProfile() throws Exception;
 
+  /**
+   * @deprecated Use {@link #searchUserProfileByFilter(UserProfileFilter, int, int)}  instead of.
+   */
   JCRPageList searchUserProfile(String userSearch) throws Exception;
+  
+  /**
+   * Search for user profiles by filter and return as list.
+   * @param userProfileFilter the filter object
+   * @param offset
+   * @param limit
+   * @return List of user profiles matched
+   * @throws Exception
+   * @since 4.0.5
+   */
+  List<UserProfile> searchUserProfileByFilter(UserProfileFilter userProfileFilter, int offset, int limit) throws Exception;
+  
+  /**
+   * Get count number of all user profiles is filtered by filter.
+   * @param userProfileFilter the filter object
+   * @return the count number
+   * @throws Exception
+   * @since 4.0.5
+   */
+  int getUserProfileByFilterCount(UserProfileFilter userProfileFilter) throws Exception;
 
   UserProfile getDefaultUserProfile(String userName, String ip) throws Exception;
 
@@ -459,6 +487,12 @@ public interface DataStorage {
   public void saveActivityIdForOwner(String ownerId,  String type, String activityId);
 
   public void saveActivityIdForOwner(String ownerPath, String activityId);
+  
+  /**
+   * Remove cache of UserProfile by specific userName
+   * @param userName user name of user
+   */
+  public void removeCacheUserProfile(String userName);
 
   public String getActivityIdForOwner(String ownerId, String type);
 

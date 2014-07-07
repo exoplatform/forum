@@ -173,6 +173,14 @@ public class UIPoll extends BasePollForm {
         }
         UIPollRadioBoxInput input = new UIPollRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
+        int c = 0;
+        for (int i = 0; i < poll_.getUserVote().length; i++) {
+          if (poll_.getUserVote()[i].startsWith(userId + ":")) {
+            c = Integer.valueOf(poll_.getUserVote()[i].split(":")[1]);
+            break;
+          }
+        }
+        input.setValue(getOptionId(POLL_OPTION_VALUE, c));
         addUIFormInput(input);
       } else {
         String[] options = poll_.getOption();

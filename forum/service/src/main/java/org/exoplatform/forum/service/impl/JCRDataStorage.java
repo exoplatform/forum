@@ -122,6 +122,7 @@ import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.jcr.listener.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.jcr.listener.DeletedUserCalculateEventListener;
 import org.exoplatform.forum.service.jcr.listener.StatisticEventListener;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
@@ -365,7 +366,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       ObservationManager observation = node.getSession().getWorkspace().getObservationManager();
       DeletedUserCalculateEventListener deleteUserListener = new DeletedUserCalculateEventListener();
-      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, node.getPath(), false, new String[] { EXO_FORUM_USER_PROFILE }, null, false);
+      observation.addEventListener(deleteUserListener, Event.NODE_ADDED | Event.NODE_REMOVED, node.getPath(), false, null, new String[] { Utils.USER_PROFILES_TYPE, EXO_USER_DELETED }, false);
     } catch (Exception e) {
       LOG.error("Can not add listener for node " + node.getName(), e);
     }
@@ -1289,15 +1290,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = getNodeIteratorBySQLQuery(sProvider, sqlQuery.toString(), filter.offset(), filter.limit(), true);
 
       List<Forum> forums = new ArrayList<Forum>();
+      DataStorage storage = getCachedDataStorage();
       while (iter.hasNext()) {
         Node forumNode = null;
         try {
           forumNode = iter.nextNode();
-          if (filter.isSummary()) {
-            forums.add(getForum(forumNode));
-          } else {
-            forums.add(getForumSummary(forumNode));
-          }
+          forums.add(storage.getForum(filter.categoryId(), forumNode.getName()));
         } catch (Exception e) {
           LOG.debug("Failed to load forum node " + forumNode.getPath(), e);
         }
@@ -2122,14 +2120,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Topic> topics = new ArrayList<Topic>();
+    DataStorage storage = getCachedDataStorage();
     try {
       Node forumNode = getCategoryHome(sProvider).getNode(categoryId).getNode(forumId);
       NodeIterator iter = forumNode.getNodes();
       while (iter.hasNext()) {
         try {
           Node topicNode = iter.nextNode();
-          if (topicNode.isNodeType(EXO_TOPIC))
-            topics.add(getTopicNode(topicNode));
+          if (topicNode.isNodeType(EXO_TOPIC)) {
+            topics.add(storage.getTopicByPath(topicNode.getPath(), false));
+          }
         } catch (Exception e) {
           if (LOG.isDebugEnabled()) {
             LOG.debug("Can not get topic", e);
@@ -4708,6 +4708,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile.setIsBanned(isBanIp(ip));
       }
     } catch (Exception e) {
+      userProfile.setUserId(userName);
       if (LOG.isDebugEnabled()) {
         LOG.debug("Failed to get default userprofile of user: " + userName, e);
       }
@@ -4716,18 +4717,31 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    Node profileNode = getUserProfileNode(sProvider, userProfile.getUserId());
+    PropertyReader reader = new PropertyReader(profileNode);
+    //
     if (userProfile.getIsBanned()) {
-      SessionProvider sProvider = CommonUtils.createSystemProvider();
-      Node profileNode = getUserProfileNode(sProvider, userProfile.getUserId());
-      if (profileNode.hasProperty(EXO_BAN_UNTIL)) {
-        userProfile.setBanUntil(profileNode.getProperty(EXO_BAN_UNTIL).getLong());
-        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-          profileNode.setProperty(EXO_IS_BANNED, false);
-          profileNode.save();
-          userProfile.setIsBanned(false);
-        }
+      userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
+      if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+        profileNode.setProperty(EXO_IS_BANNED, false);
+        profileNode.save();
+        userProfile.setIsBanned(false);
       }
     }
+    //
+    userProfile.setTimeZone(reader.d(ForumNodeTypes.EXO_TIME_ZONE));
+    userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT, userProfile.getShortDateFormat()));
+    userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT, userProfile.getLongDateFormat()));
+    userProfile.setModerateForums(reader.strings(EXO_MODERATE_FORUMS, new String[] {}));
+    userProfile.setModerateCategory(reader.strings(EXO_MODERATE_CATEGORY, new String[] {}));
+    userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC, 10));
+    userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST, 10));
+    userProfile.setBanReason(reader.string(EXO_BAN_REASON, ""));
+    userProfile.setBanCounter(Integer.parseInt(reader.string(EXO_BAN_COUNTER, "0")));
+    userProfile.setBanReasonSummary(reader.strings(EXO_BAN_REASON_SUMMARY, new String[] {}));
+    userProfile.setCreatedDateBan(reader.date(EXO_CREATED_DATE_BAN));
+    
     return userProfile;
   }
 
@@ -4770,7 +4784,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Session session = sessionManager.getSession(sProvider);
     try {
       userProfile = getCachedDataStorage().getQuickProfile(userName);
-      Node profileNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation() + "/" + userProfile.getPath());
+      Node profileNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation() + "/" + userName);
       PropertyReader reader = new PropertyReader(profileNode);
       //some information of profile has been loaded by getQuickProfile, don't loading anymore.
       //userProfile.setUserId(userName);
@@ -4951,64 +4965,23 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception {
-    UserProfile userProfile;
     List<UserProfile> profiles = new ArrayList<UserProfile>();
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    PropertyReader reader;
-    Node userProfileNode;
     try {
-      Node userProfileHome = getUserProfileHome(sProvider);
+      DataStorage storage = getCachedDataStorage();
       for (String userName : userList) {
-        userProfile = new UserProfile();
-        userProfileNode = getUserProfileNode(userProfileHome, userName);
-        reader = new PropertyReader(userProfileNode);
-        userProfile.setPath(dataLocator.getUserProfilesLocation());
-        userProfile.setUserId(userName);
-        userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
-        userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-        userProfile.setScreenName(getScreenName(userName, userProfileNode));
-        userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
-        userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false));
-        userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
-        if (userProfile.getTotalPost() > 0) {
-          userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
-        }
-        userProfile.setLastLoginDate(reader.date(EXO_LAST_LOGIN_DATE));
-        userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
-        if (userProfile.getIsDisplaySignature())
-          userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
-        profiles.add(userProfile);
+        profiles.add(storage.getQuickProfile(userName));
       }
     } catch (Exception e) {
       LOG.trace("\nUser Name must exist: " + e.getMessage() + "\n" + e.getCause());
     }
     return profiles;
   }
-  
 
   public UserProfile getQuickProfile(String userName) throws Exception {
-    UserProfile userProfile;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Node userProfileHome = getUserProfileHome(sProvider);
-    userProfile = new UserProfile();
-    Node userProfileNode = getUserProfileNode(userProfileHome, userName);
-    PropertyReader reader = new PropertyReader(userProfileNode);
-    userProfile.setUserId(userName);
-    userProfile.setPath(dataLocator.getUserProfilesLocation());
-    userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
-    userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-    userProfile.setScreenName(getScreenName(userName, userProfileNode));
-    userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
-    userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false));
-    userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
-    if (userProfile.getTotalPost() > 0) {
-      userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
-    }
-    userProfile.setLastLoginDate(reader.date(EXO_LAST_LOGIN_DATE));
-    userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
-    if (userProfile.getIsDisplaySignature())
-      userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
-    return userProfile;
+    //
+    return getUserProfile(getUserProfileNode(userProfileHome, userName));
   }
 
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
@@ -5110,59 +5083,24 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private UserProfile getUserProfile(Node userProfileNode) throws Exception {
     UserProfile userProfile = new UserProfile();
-    userProfile.setUserId(userProfileNode.getName());
+    String userName = userProfileNode.getName();
     PropertyReader reader = new PropertyReader(userProfileNode);
+    userProfile.setUserId(userName);
     userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-    userProfile.setScreenName(getScreenName(userProfileNode.getName(), userProfileNode));
-    userProfile.setFullName(reader.string(EXO_FULL_NAME, ""));
-    userProfile.setFirstName(reader.string(EXO_FIRST_NAME, ""));
-    userProfile.setLastName(reader.string(EXO_LAST_NAME, ""));
-    userProfile.setEmail(reader.string(EXO_EMAIL, ""));
-    userProfile.setUserRole(reader.l(EXO_USER_ROLE));
-    userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
-    userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
-    userProfile.setTotalTopic(reader.l(EXO_TOTAL_TOPIC));
-    userProfile.setModerateForums(reader.strings(EXO_MODERATE_FORUMS, new String[] {}));
-    try {
-      userProfile.setModerateCategory(reader.strings(EXO_MODERATE_CATEGORY, new String[] {}));
-    } catch (Exception e) {
-      userProfile.setModerateCategory(new String[] {});
-    }
-
-    if (userProfileNode.hasProperty(EXO_LAST_LOGIN_DATE))
-      userProfile.setLastLoginDate(userProfileNode.getProperty(EXO_LAST_LOGIN_DATE).getDate().getTime());
-    if (userProfileNode.hasProperty(EXO_JOINED_DATE))
-      userProfile.setJoinedDate(userProfileNode.getProperty(EXO_JOINED_DATE).getDate().getTime());
-    if (userProfileNode.hasProperty(EXO_LAST_POST_DATE))
-      userProfile.setLastPostDate(userProfileNode.getProperty(EXO_LAST_POST_DATE).getDate().getTime());
-    userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE));
+    userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
+    userProfile.setScreenName(getScreenName(userName, userProfileNode));
+    userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
     userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
-    userProfile.setNewMessage(reader.l(EXO_NEW_MESSAGE));
-    userProfile.setTimeZone(reader.d(EXO_TIME_ZONE));
-    userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT, ""));
-    userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT, ""));
-    userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, ""));
-    userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST));
-    userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC));
-    userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
-    if (userProfile.getIsBanned()) {
-      if (userProfileNode.hasProperty(EXO_BAN_UNTIL)) {
-        userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
-        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-          userProfileNode.setProperty(EXO_IS_BANNED, false);
-          userProfileNode.save();
-          userProfile.setIsBanned(false);
-        }
-      }
+    userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
+    if (userProfile.getTotalPost() > 0) {
+      userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
     }
-    if (userProfileNode.hasProperty(EXO_BAN_REASON))
-      userProfile.setBanReason(reader.string(EXO_BAN_REASON, ""));
-    if (userProfileNode.hasProperty(EXO_BAN_COUNTER))
-      userProfile.setBanCounter(Integer.parseInt(reader.string(EXO_BAN_COUNTER, "")));
-    if (userProfileNode.hasProperty(EXO_BAN_REASON_SUMMARY))
-      userProfile.setBanReasonSummary(reader.strings(EXO_BAN_REASON_SUMMARY, new String[] {}));
-    if (userProfileNode.hasProperty(EXO_CREATED_DATE_BAN))
-      userProfile.setCreatedDateBan(userProfileNode.getProperty(EXO_CREATED_DATE_BAN).getDate().getTime());
+    userProfile.setLastLoginDate(reader.date(EXO_LAST_LOGIN_DATE));
+    userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
+    if (userProfile.getIsDisplaySignature())
+      userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
+    userProfile.setIsBanned(reader.bool(ForumNodeTypes.EXO_IS_BANNED));
+    
     return userProfile;
   }
 
@@ -8079,7 +8017,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return list;
   }
 
-//the function use to get recent post for everyone.  
+  //the function use to get recent post for everyone.  
   public List<Post> getNewPosts(int number) throws Exception {
     List<Post> list = new ArrayList<Post>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
@@ -8368,13 +8306,79 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     return null;
   }
-
+  
   private StringBuilder jcrPathLikeAndNotLike(String nodeType, String fullPath) {
-    StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(nodeType).append(" WHERE (");
-    sqlQuery.append(JCR_PATH).append(" LIKE '").append(fullPath).append("/%' AND NOT ").append(JCR_PATH).append(" LIKE '").append(fullPath).append("/%/%')");
+    StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(nodeType)
+        .append(" WHERE (").append("jcr:path LIKE '").append(fullPath)
+        .append("/%' AND NOT jcr:path LIKE '").append(fullPath).append("/%/%'").append(")");
     return sqlQuery;
   }
 
+  @Override
+  public List<UserProfile> searchUserProfileByFilter(UserProfileFilter userProfileFilter, int offset, int limit) throws Exception {
+
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    List<UserProfile> list = new ArrayList<UserProfile>();
+    try {
+      //
+      DataStorage storage = getCachedDataStorage();
+      Node userProfileNode = getUserProfileHome(sProvider);
+      QueryManager qm = userProfileNode.getSession().getWorkspace().getQueryManager();
+
+      QueryImpl query = (QueryImpl) qm.createQuery(buildSearchUserProfileQuery(userProfileFilter.getSearchKey()), Query.SQL);
+      query.setOffset(offset);
+      query.setLimit(limit);
+
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        list.add(storage.getQuickProfile(node.getName()));
+      }
+    } catch (Exception e) {
+      LOG.warn("Get UserProfile by filter failed.", e);
+    }
+
+    return list;
+  }
+  
+  @Override
+  public int getUserProfileByFilterCount(UserProfileFilter userProfileFilter) throws Exception {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      //
+      Node userProfileNode = getUserProfileHome(sProvider);
+      QueryManager qm = userProfileNode.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(buildSearchUserProfileQuery(userProfileFilter.getSearchKey()), Query.SQL);
+      QueryResult result = query.execute();
+      NodeIterator iterator = result.getNodes();
+
+      return (int) iterator.getSize();
+    } catch (Exception e) {
+      LOG.warn("Get count of UserProfile by filter failed.", e);
+    }
+    return 0;
+  }
+
+  private String buildSearchUserProfileQuery(String searchKey) {
+    String fullPath = "/" + dataLocator.getUserProfilesLocation();
+
+    StringBuilder sqlQuery = jcrPathLikeAndNotLike(Utils.USER_PROFILES_TYPE, fullPath);
+    if (Utils.isEmpty(searchKey) == false) {
+      searchKey = searchKey.replace("*", "%");
+      sqlQuery.append(" AND (")
+      .append(EXO_USER_ID).append(" LIKE '%").append(searchKey).append("%' OR ")
+      .append(EXO_FULL_NAME).append(" LIKE '%").append(searchKey).append("%' OR ")
+      .append(EXO_SCREEN_NAME).append(" LIKE '%").append(searchKey).append("%'")
+      .append(")");
+    }
+    return sqlQuery.toString();
+  }
+  
+  @Override
+  public void removeCacheUserProfile(String userName) {
+  }
+  
   private NodeIterator getNodeIteratorBySQLQuery(SessionProvider sProvider, String sqlQuery, int offset, int limit, boolean caseInsensitiveOrder) throws Exception {
     QueryManager qm = sessionManager.getSession(sProvider).getWorkspace().getQueryManager();
     QueryImpl query = (QueryImpl) qm.createQuery(sqlQuery, Query.SQL);
@@ -8388,5 +8392,5 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     QueryResult result = query.execute();
     return result.getNodes();
   }
-
+  
 }

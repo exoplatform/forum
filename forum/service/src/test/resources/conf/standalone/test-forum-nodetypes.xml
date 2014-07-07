@@ -1449,6 +1449,19 @@
     </childNodeDefinitions>
   </nodeType>
   
+  <nodeType name="exo:userDeleted" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+  
   <nodeType name="exo:forumStatistic" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
     <supertypes>
       <supertype>nt:base</supertype>
@@ -1550,6 +1563,11 @@
           <requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:userDeleted</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
     </childNodeDefinitions>
   </nodeType>
   
