@@ -237,11 +237,15 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearUserProfileListCache() throws Exception {
-    userProfileList.select(new ScopeCacheSelector<UserProfileListKey, ListUserProfileData>());
+    if (userProfileList != null) {
+      userProfileList.select(new ScopeCacheSelector<UserProfileListKey, ListUserProfileData>());
+    }
   }
   
   private void clearUserProfileListCountCache() throws Exception {
-    userProfileListCount.select(new ScopeCacheSelector<UserProfileListCountKey, SimpleCacheData<Integer>>());
+    if (userProfileListCount != null) {
+      userProfileListCount.select(new ScopeCacheSelector<UserProfileListCountKey, SimpleCacheData<Integer>>());
+    }
   }
   
   private void clearTopicCache(String topicPath) {
