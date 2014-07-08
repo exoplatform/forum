@@ -23,12 +23,13 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 
 public class ScopeCacheKey implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public final static ScopeCacheKey NULL = new ScopeCacheKey();
-
+  
   private final String scope;
 
   public ScopeCacheKey() {
@@ -72,7 +73,8 @@ public class ScopeCacheKey implements Serializable {
       repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
     }
     try {
-      return repositoryService.getCurrentRepository().getConfiguration().getName();
+      ManageableRepository manageableRepository = repositoryService.getCurrentRepository();
+      return manageableRepository == null ? null : manageableRepository.getConfiguration().getName();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

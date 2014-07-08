@@ -25,6 +25,9 @@ import org.exoplatform.services.cache.ObjectCacheInfo;
 public class ScopeCacheSelector<T extends ScopeCacheKey, U> implements CachedObjectSelector<T, U> {
 
   public boolean select(final T key, final ObjectCacheInfo<? extends U> ocinfo) {
+    if (key.getScope() == null) {
+      return false;
+    }
     return ScopeCacheKey.getCurrentRepositoryName().equals(key.getScope());
   }
 
