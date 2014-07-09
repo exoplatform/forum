@@ -250,10 +250,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     list.set(0, String.valueOf(isLock));
     param.setInfoRules(list);
     if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumModerateEvent"), param);
       actionRes.setEvent(new QName("ForumRuleEvent"), param);
     } else {
-      portletSession.setAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
       portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);      
     }
   }

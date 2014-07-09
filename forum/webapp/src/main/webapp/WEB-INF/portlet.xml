@@ -148,35 +148,6 @@
   </portlet>
   
   <portlet>
-    <description xml:lang="EN">Forum Moderate Portlet</description>
-    <portlet-name>ForumModeratePortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Moderate Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumModeratePortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumModeratePortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Moderate Portlet</title>
-      <short-title>Forum Moderate Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
-    <portlet-preferences></portlet-preferences>
-    
-    <supported-processing-event>
-      <name>ForumModerateEvent</name>
-    </supported-processing-event>
-  </portlet>
-  
-  <portlet>
     <description xml:lang="EN">Forum Rule Portlet</description>
     <portlet-name>ForumRulePortlet</portlet-name>
     <display-name xml:lang="EN">Forum Rule Portlet</display-name>
@@ -242,9 +213,6 @@
   </event-definition>
   <event-definition>
     <name>OpenLink</name>
-  </event-definition>
-  <event-definition>
-    <name>ForumModerateEvent</name>
   </event-definition>
   <event-definition>
     <name>ForumRuleEvent</name>
