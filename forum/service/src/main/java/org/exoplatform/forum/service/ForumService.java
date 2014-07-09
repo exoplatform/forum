@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.user.UserStateService;
 
 /**
  * Manages Forums and all its related objects (categories, topics and posts).
@@ -1049,6 +1050,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   void userLogin(String userId) throws Exception;
+  void userLogin(String repoName, String userId) throws Exception;
 
   /**
    * Sets the logout information of a user.
@@ -1066,6 +1068,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return If "true", the checked user is online.
    * @throws Exception the exception
    * @LevelAPI Platform
+   * @deprecated  use {@link UserStateService#isOnline(String)}
    */
   boolean isOnline(String userId) throws Exception;
 
@@ -1658,6 +1661,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   public void updateLoggedinUsers() throws Exception;
+  
+  public void updateLoggedinUsers(String repoName) throws Exception;
 
   /**
    * Updates statistics when a user is deleted.
