@@ -23,7 +23,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -191,13 +190,8 @@ public class UIViewPost extends BaseForumForm implements UIPopupComponent {
       popupAction.deActivate();
       context.addUIComponentToUpdateByAjax(popupAction);
     } else {
-      try {
-        UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      } catch (Exception e) {
-        UIForumQuickReplyPortlet forumPortlet = getAncestorOfType(UIForumQuickReplyPortlet.class);
-        forumPortlet.cancelAction();
-      }
+      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
     }
   }
 

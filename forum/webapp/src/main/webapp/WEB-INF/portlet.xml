@@ -179,35 +179,6 @@
     </supported-processing-event>
   </portlet>
   
-  <portlet>
-    <description xml:lang="EN">Forum Quick Reply Portlet</description>
-    <portlet-name>ForumQuickReplyPortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Quick Reply Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumQuickReplyPortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumQuickReplyPortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Quick Reply Portlet</title>
-      <short-title>Forum Quick Reply Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
-    <portlet-preferences></portlet-preferences>
-    
-    <supported-processing-event>
-      <name>QuickReplyEvent</name>
-    </supported-processing-event>
-  </portlet>
-  
   <event-definition>
     <name>ReLoadPortletEvent</name>
   </event-definition>
@@ -217,8 +188,5 @@
   <event-definition>
     <name>ForumRuleEvent</name>
   </event-definition>
-  <event-definition>
-    <name>QuickReplyEvent</name>
-  </event-definition>     
   
 </portlet-app>
