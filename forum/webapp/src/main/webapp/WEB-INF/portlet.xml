@@ -237,40 +237,11 @@
     </supported-processing-event>
   </portlet>
   
-  <portlet>
-    <description xml:lang="EN">Forum Icon State Portlet</description>
-    <portlet-name>ForumIconStatePortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Icon State Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumIconStatePortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumIconStatePortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Icon State Portlet</title>
-      <short-title>Forum Icon State Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
-  
-    <portlet-preferences></portlet-preferences>
-  </portlet>
-  
   <event-definition>
     <name>ReLoadPortletEvent</name>
   </event-definition>
   <event-definition>
     <name>OpenLink</name>
-  </event-definition>
-  <event-definition>
-    <name>ForumPollEvent</name>
   </event-definition>
   <event-definition>
     <name>ForumModerateEvent</name>
