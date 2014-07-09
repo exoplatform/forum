@@ -325,12 +325,13 @@ public class UITopicForm extends BaseForumForm {
         String userName = uiForm.getUserProfile().getUserId();
         topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
         Post postNew = new Post();
-        postNew.setOwner(userName);
         postNew.setName(topicTitle);
-        if (ForumUtils.isEmpty(uiForm.topicId)) {
+        if (CommonUtils.isEmpty(uiForm.topicId)) {
+          postNew.setOwner(userName);
           postNew.setCreatedDate(CommonUtils.getGreenwichMeanTime().getTime());
           postNew.setModifiedDate(CommonUtils.getGreenwichMeanTime().getTime());
         } else {
+          postNew.setOwner(uiForm.topic.getOwner());
           postNew.setCreatedDate(uiForm.topic.getCreatedDate());
           postNew.setModifiedDate(uiForm.topic.getModifiedDate());
         }
@@ -393,6 +394,7 @@ public class UITopicForm extends BaseForumForm {
             k = 0;
           }
           if (t > 0 && k != 0 && !checksms.equals("null")) {
+            Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
             message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             message = TransformHTML.fixAddBBcodeAction(message);
             message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
@@ -432,13 +434,9 @@ public class UITopicForm extends BaseForumForm {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);
             //
             String userName = userProfile.getUserId();
-            topicNew.setOwner(userName);
             topicNew.setTopicName(topicTitle);
-            topicNew.setCreatedDate(new Date());
             topicNew.setModifiedBy(userName);
-            topicNew.setModifiedDate(new Date());
-            topicNew.setLastPostBy(userName);
-            topicNew.setLastPostDate(new Date());
+            topicNew.setModifiedDate(currentDate);
             topicNew.setDescription(message);
             topicNew.setLink(link);
             if (whenNewPost) {
@@ -491,6 +489,10 @@ public class UITopicForm extends BaseForumForm {
                 return;
               }
             } else {
+              topicNew.setOwner(userName);
+              topicNew.setCreatedDate(currentDate);
+              topicNew.setLastPostBy(userName);
+              topicNew.setLastPostDate(currentDate);
               topicNew.setVoteRating(0.0);
               topicNew.setUserVoteRating(new String[] {});
               try {

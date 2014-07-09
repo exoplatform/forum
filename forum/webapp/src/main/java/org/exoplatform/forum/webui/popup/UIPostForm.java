@@ -265,7 +265,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
       int t = 0, k = 1;
       String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
-      String userName = UserHelper.getCurrentUser();
+      String userName = uiForm.getUserProfile().getUserId();
       String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
       String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
@@ -274,15 +274,16 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         k = 0;
       }
       if (t > 0 && k != 0 && !checksms.equals("null")) {
+        Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
         postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
         Post post = uiForm.post_;
         post.setName(postTitle);
         post.setMessage(message);
-        post.setOwner(userName);
-        if (ForumUtils.isEmpty(uiForm.postId)) {
-          post.setCreatedDate(CommonUtils.getGreenwichMeanTime().getTime());
-          post.setModifiedDate(CommonUtils.getGreenwichMeanTime().getTime());
+        if (CommonUtils.isEmpty(uiForm.postId) || (uiForm.isQuote || uiForm.isMP)) {
+          post.setOwner(userName);
+          post.setCreatedDate(currentDate);
         }
+        post.setModifiedDate(currentDate);
         post.setModifiedBy(userName);
         post.setRemoteAddr(ForumUtils.EMPTY_STR);
         post.setIcon("uiIconForumTopic uiIconForumLightGray");
@@ -382,12 +383,14 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             // set link
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId, false);
             //
-            if (uiForm.isQuote || uiForm.isMP)
+            Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
+            if (uiForm.isQuote || uiForm.isMP || CommonUtils.isEmpty(uiForm.postId)) {
               post = new Post();
+              post.setOwner(userName);
+              post.setCreatedDate(currentDate);
+            }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
             post.setMessage(message);
-            post.setOwner(userName);
-            post.setCreatedDate(new Date());
             post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());
             post.setIsWaiting(isOffend);
@@ -420,7 +423,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 } else {
                   // post.setId(uiForm.postId) ;
                   post.setModifiedBy(userName);
-                  post.setModifiedDate(new Date());
+                  post.setModifiedDate(currentDate);
                   post.setEditReason(editReason);
                   try {
                     uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, messageBuilder);
@@ -450,7 +453,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 }
               }
               uiForm.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(), uiForm.topicId);
-              forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
+              forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, currentDate.getTime());
             } catch (Exception e) {
               uiForm.log.warn("Failed to save topic", e);
             }
