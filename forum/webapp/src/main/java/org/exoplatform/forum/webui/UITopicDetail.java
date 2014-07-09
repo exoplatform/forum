@@ -351,7 +351,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     if (pcontext.getResponse() instanceof ActionResponse) {
       actionRes = (ActionResponse) pcontext.getResponse();
     }
-    sendForumPollEvent(actionRes, portletSession);
     sendQuickReplyEvent(actionRes, portletSession);
     sendRuleEvent(actionRes, portletSession);
     
@@ -387,19 +386,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       actionRes.setEvent(new QName("QuickReplyEvent"), param);
     } else {
       portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-    }
-  }
-
-  private void sendForumPollEvent(ActionResponse actionRes, PortletSession portletSession) {
-    ForumParameter param = new ForumParameter();
-    param.setCategoryId(categoryId);
-    param.setForumId(forumId);
-    param.setTopicId(topicId);
-    param.setRenderPoll(topic.getIsPoll());
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumPollEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
     }
   }
 

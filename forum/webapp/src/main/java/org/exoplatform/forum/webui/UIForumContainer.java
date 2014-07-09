@@ -53,10 +53,8 @@ public class UIForumContainer extends UIContainer {
       param.setRenderPoll(false);
       if (actionRes != null) {
         actionRes.setEvent(new QName("QuickReplyEvent"), param);
-        actionRes.setEvent(new QName("ForumPollEvent"), param);
       } else {
         portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-        portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
       }
     }
   }

@@ -29,7 +29,6 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIFormMultiValueInputSet;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
@@ -43,6 +42,8 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -95,6 +96,8 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
   private boolean                  isUpdate                = false;
 
   private boolean                  isAddTopic              = false;
+  
+  private static final Log    LOG               = ExoLogger.getLogger(UIPollForm.class);
 
   public UIPollForm() throws Exception {
     UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, null);
@@ -408,42 +411,32 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
           uiForm.log.debug("Failed to save poll.", e);
         }
         uiForm.isUpdate = false;
-        try {
-          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-          UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-          UITopicDetailContainer detailContainer = forumContainer.getChild(UITopicDetailContainer.class);
-          detailContainer.setRederPoll(true);
-          detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+        UITopicDetailContainer detailContainer = forumContainer.getChild(UITopicDetailContainer.class);
+        detailContainer.setRederPoll(true);
+        detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
+        
+        forumPortlet.cancelAction();
+        
+        if(uiForm.isAddTopic) {
           
-          forumPortlet.cancelAction();
-          
-          if(uiForm.isAddTopic) {
-            
-            Forum forum = uiForm.getForumService().getForum(topic.getCategoryId(), topic.getForumId());
-            forumContainer.setIsRenderChild(false);
-            forumContainer.getChild(UIForumDescription.class).setForum(forum);
+          Forum forum = uiForm.getForumService().getForum(topic.getCategoryId(), topic.getForumId());
+          forumContainer.setIsRenderChild(false);
+          forumContainer.getChild(UIForumDescription.class).setForum(forum);
 
-            UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
-            event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
-            topicContainer.setUpdateForum(topic.getCategoryId(), forum, 0);
-            Event<UIComponent> openTopicEvent = topicContainer.createEvent("OpenTopic", Event.Phase.PROCESS, event.getRequestContext());
-            if (openTopicEvent != null) {
-              topicContainer.openTopicId = topic.getId();
-              openTopicEvent.broadcast();
-            }
-          } else {
-            UITopicDetail topicDetail = detailContainer.getChild(UITopicDetail.class);
-            topicDetail.hasPoll(true);
-            event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
+          UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
+          event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+          topicContainer.setUpdateForum(topic.getCategoryId(), forum, 0);
+          Event<UIComponent> openTopicEvent = topicContainer.createEvent("OpenTopic", Event.Phase.PROCESS, event.getRequestContext());
+          if (openTopicEvent != null) {
+            topicContainer.openTopicId = topic.getId();
+            openTopicEvent.broadcast();
           }
-        } catch (Exception e) {
-          
-          UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class);
-          if(forumPollPortlet != null) {
-            forumPollPortlet.cancelAction();
-            forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
-            event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
-          }
+        } else {
+          UITopicDetail topicDetail = detailContainer.getChild(UITopicDetail.class);
+          topicDetail.hasPoll(true);
+          event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
         }
       }
       if (!ForumUtils.isEmpty(sms)) {
@@ -474,13 +467,8 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
   static public class CancelActionListener extends EventListener<UIPollForm> {
     public void execute(Event<UIPollForm> event) throws Exception {
       UIPollForm uiForm = event.getSource();
-      try {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      } catch (Exception e) {
-        UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class);
-        forumPollPortlet.cancelAction();
-      }
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
       uiForm.isUpdate = false;
     }
   }

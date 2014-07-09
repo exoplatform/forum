@@ -88,8 +88,6 @@ public class UIForumPortlet extends UIPortletApplication {
   
   public static String QUICK_REPLY_EVENT_PARAMS    = "UIForumPortlet.QuickReplyEventParams";
 
-  public static String FORUM_POLL_EVENT_PARAMS     = "UIForumPortlet.ForumPollEventParams";
-
   public static String RULE_EVENT_PARAMS           = "UIForumPortlet.RuleEventParams";
 
   public static String FORUM_MODERATE_EVENT_PARAMS = "UIForumPortlet.ForumModerateEvent";
@@ -311,12 +309,10 @@ public class UIForumPortlet extends UIPortletApplication {
     param.setRenderRule(false);
     if (actionRes != null) {
       actionRes.setEvent(new QName("QuickReplyEvent"), param);
-      actionRes.setEvent(new QName("ForumPollEvent"), param);
       actionRes.setEvent(new QName("ForumModerateEvent"), param);
       actionRes.setEvent(new QName("ForumRuleEvent"), param);
     } else {
       portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-      portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
       portletSession.setAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
       portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
     }
