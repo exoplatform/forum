@@ -21,12 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
-import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -278,9 +275,6 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UIForumContainer.class).setRendered(isForumRendered);
     getChild(UITopicsTag.class).setRendered(isTagRendered);
     getChild(UISearchForm.class).setRendered(isSearchRendered);
-    if (!isForumRendered) {
-      this.setRenderQuickReply();
-    }
   }
 
   public void renderForumHome() throws Exception{
@@ -291,25 +285,6 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
   }
   
-  public void setRenderQuickReply() {
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletSession portletSession = pcontext.getRequest().getPortletSession();
-    ActionResponse actionRes = null;
-    if (pcontext.getResponse() instanceof ActionResponse) {
-      actionRes = (ActionResponse) pcontext.getResponse();
-    }
-    ForumParameter param = new ForumParameter();
-    param.setRenderQuickReply(false);
-    param.setRenderPoll(false);
-    param.setRenderModerator(false);
-    param.setRenderRule(false);
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumRuleEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-    }
-  }
-
   public void loadPreferences() throws Exception {
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
     if (context instanceof PortletRequestContext){

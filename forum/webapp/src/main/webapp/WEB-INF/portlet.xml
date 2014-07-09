@@ -147,46 +147,11 @@
     <portlet-preferences></portlet-preferences>
   </portlet>
   
-  <portlet>
-    <description xml:lang="EN">Forum Rule Portlet</description>
-    <portlet-name>ForumRulePortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Rule Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumRulePortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-      <!--portlet-mode>help</portlet-mode-->
-      <!--portlet-mode>edit</portlet-mode-->
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumRulePortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Rule Portlet</title>
-      <short-title>Forum Rule Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
-  
-    <portlet-preferences></portlet-preferences>
-
-    <supported-processing-event>
-      <name>ForumRuleEvent</name>
-    </supported-processing-event>
-  </portlet>
-  
   <event-definition>
     <name>ReLoadPortletEvent</name>
   </event-definition>
   <event-definition>
     <name>OpenLink</name>
-  </event-definition>
-  <event-definition>
-    <name>ForumRuleEvent</name>
   </event-definition>
   
 </portlet-app>

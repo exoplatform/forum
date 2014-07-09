@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletSession;
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
@@ -34,7 +30,6 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -53,8 +48,6 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
-import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -230,32 +223,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return this.canAddNewThread;
   }
 
-  private void setForumModeratorPortlet(){
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletSession portletSession = pcontext.getRequest().getPortletSession();
-    ActionResponse actionRes = null;
-    if (pcontext.getResponse() instanceof ActionResponse) {
-      actionRes = (ActionResponse) pcontext.getResponse();
-    }
-    ForumParameter param = new ForumParameter();
-    param.setRenderModerator(true);
-    param.setModerators(moderators);
-    param.setRenderRule(true);
-    List<String> list = param.getInfoRules();
-    boolean isLock = forum.getIsClosed();
-    if (!isLock)
-      isLock = forum.getIsLock();
-    if (!isLock)
-      isLock = !canAddNewThread;
-    list.set(0, String.valueOf(isLock));
-    param.setInfoRules(list);
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumRuleEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);      
-    }
-  }
-
   public void setForum(boolean isSetModerator) throws Exception {
     this.forum = getForum();
     this.canAddNewThread = true;
@@ -283,8 +250,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         }
       }
     }
-    if (isSetModerator)
-      setForumModeratorPortlet();
     UIForumContainer forumContainer = this.getParent();
     if (this.forum != null) {
       forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
