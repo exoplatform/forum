@@ -33,7 +33,6 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -55,7 +54,6 @@ import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -73,7 +71,6 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
                  lifecycle = UIApplicationLifecycle.class,
                  template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
                  events = {
-                   @EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class),
                    @EventConfig(listeners = UIForumPortlet.ViewPublicUserInfoActionListener.class ) ,
                    @EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ),
                    @EventConfig(listeners = UIForumPortlet.PrivateMessageActionListener.class ),
@@ -871,32 +868,11 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UIBreadcumbs.class).setUpdataPath(path);
   }
 
-  static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {
-    public void execute(Event<UIForumPortlet> event) throws Exception {
-      UIForumPortlet forumPortlet = event.getSource();
-      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      if (params.getTopicId() != null) {
-        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
-        UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-        topicDetail.setIdPostView("lastpost");
-      }
-      if (params.isRenderPoll()) {
-        UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
-        topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
-        topicDetailContainer.getChild(UITopicPoll.class).setEditPoll(true);
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-    }
-  }
   
   static public class OpenLinkActionListener extends EventListener<UIForumPortlet> {
     public void execute(Event<UIForumPortlet> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      if (ForumUtils.isEmpty(path)) {
-        ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-        path = params.getPath();
-      }
       if (ForumUtils.isEmpty(path))
         return;
       forumPortlet.calculateRenderComponent(path, event.getRequestContext());

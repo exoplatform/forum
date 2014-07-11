@@ -113,45 +113,6 @@
       </preference>
       
     </portlet-preferences>
-    <supported-processing-event>
-      <name>ReLoadPortletEvent</name>
-    </supported-processing-event>
-    <supported-processing-event>
-      <name>OpenLink</name>
-    </supported-processing-event>
   </portlet>
-  
-  <portlet>
-    <description xml:lang="EN">Forum Statistic Portlet</description>
-    <portlet-name>ForumStatisticPortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Statistic Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/forum/ForumStatisticPortlet/webui/configuration.xml</value>
-    </init-param>
-
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.forum.ForumStatisticPortlet</resource-bundle>
-    <portlet-info>
-      <title>Forum Statistic Portlet</title>
-      <short-title>Forum Statistic Portlet</short-title>
-      <keywords>forum</keywords>
-    </portlet-info>
-  
-    <portlet-preferences></portlet-preferences>
-  </portlet>
-  
-  <event-definition>
-    <name>ReLoadPortletEvent</name>
-  </event-definition>
-  <event-definition>
-    <name>OpenLink</name>
-  </event-definition>
   
 </portlet-app>
