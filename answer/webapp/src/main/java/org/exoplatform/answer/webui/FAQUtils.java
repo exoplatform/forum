@@ -53,7 +53,6 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
@@ -185,6 +184,13 @@ public class FAQUtils {
     return new String[] {};
   }
 
+  /**
+   * Get current user's id
+   * 
+   * @return
+   * @throws Exception
+   * @deprecated use {@link UserHelper#getCurrentUser()}
+   */
   static public String getCurrentUser() throws Exception {
     return UserHelper.getCurrentUser();
   }
@@ -194,7 +200,7 @@ public class FAQUtils {
       ConversationState state = ConversationState.getCurrent();
       User user = (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
       if (user == null) {
-        user = UserHelper.getOrganizationService().getUserHandler().findUserByName(UserHelper.getCurrentUser());
+        user = UserHelper.getUserByUserId(state.getIdentity().getUserId());
       }
       return user;
     } catch (Exception e) {
@@ -211,10 +217,7 @@ public class FAQUtils {
     if (userName == null) {
       return getCurrentUserObject().getEmail();
     } else {
-      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-      User user = organizationService.getUserHandler().findUserByName(userName);
-      String email = user.getEmail();
-      return email;
+      return UserHelper.getEmailUser(userName);
     }
   }
 
@@ -225,32 +228,40 @@ public class FAQUtils {
    */
   static public String getFullName(String userName) {
     try {
-      if (userName == null) {
+      if (CommonUtils.isEmpty(userName)) {
         return getUserFullName(getCurrentUserObject());
       }
-      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-      User user = organizationService.getUserHandler().findUserByName(userName);
-      return getUserFullName(user);
+      return getUserFullName(UserHelper.getUserByUserId(userName));
     } catch (Exception e) {
       return getScreenName(userName, "");
     }
   }
 
   public static String getUserFullName(User user) {
+    if (user == null) {
+      return "";
+    }
     String displayName = user.getDisplayName();
-    if (isFieldEmpty(displayName)) {
+    if (CommonUtils.isEmpty(displayName)) {
       displayName = new StringBuffer(user.getFirstName()).append(" ").append(user.getLastName()).toString();
     }
     return displayName;
   }
 
   public static String getScreenName(String userName, String fullName) {
-    return (userName.contains(Utils.DELETED)) ? ("<s>" + ((isFieldEmpty(fullName)) ? 
+    return (userName.contains(Utils.DELETED)) ? ("<s>" + ((CommonUtils.isEmpty(fullName)) ? 
                 (userName.substring(0, userName.indexOf(Utils.DELETED))) : fullName) + "</s>") : userName;
   }
   
+  /**
+   * Check string is null or empty
+   * 
+   * @param s
+   * @return
+   * @deprecated use {@link CommonUtils#isEmpty(String)}
+   */
   public static boolean isFieldEmpty(String s) {
-    return (s == null || s.trim().length() <= 0) ? true : false;
+    return CommonUtils.isEmpty(s);
   }
 
   public static boolean isValidEmailAddresses(String addressList) throws Exception {

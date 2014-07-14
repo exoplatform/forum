@@ -16,19 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.forum.info.ForumParameter;
-import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 
 @ComponentConfig(
-    template = "app:/templates/forum/webui/UIForumIconState.gtmpl",
-    events = {
-      @EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)      
-    }  
+    template = "app:/templates/forum/webui/UIForumIconState.gtmpl"
 )
 public class UIForumIconState extends UIContainer {
   private boolean isForumIcon = true;
@@ -44,11 +36,4 @@ public class UIForumIconState extends UIContainer {
     return this.isForumIcon;
   }
 
-  static public class IconStateParamActionListener extends EventListener<UIForumIconState> {
-    public void execute(Event<UIForumIconState> event) throws Exception {
-      UIForumIconState forumIconState = event.getSource();
-      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      forumIconState.isForumIcon = params.isForumIcon();
-    }
-  }
 }

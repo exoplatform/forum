@@ -16,13 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletSession;
-import javax.xml.namespace.QName;
-
-import org.exoplatform.forum.info.ForumParameter;
-import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -41,23 +34,5 @@ public class UIForumContainer extends UIContainer {
     getChild(UITopicContainer.class).setRendered(isRender);
     getChild(UITopicDetailContainer.class).setRendered(!isRender);
     getChild(UIForumSummary.class).setRendered(isRender);
-    if (isRender) {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletSession portletSession = pcontext.getRequest().getPortletSession();
-      ActionResponse actionRes = null;
-      if (pcontext.getResponse() instanceof ActionResponse) {
-        actionRes = (ActionResponse) pcontext.getResponse();
-      }
-      ForumParameter param = new ForumParameter();
-      param.setRenderQuickReply(false);
-      param.setRenderPoll(false);
-      if (actionRes != null) {
-        actionRes.setEvent(new QName("QuickReplyEvent"), param);
-        actionRes.setEvent(new QName("ForumPollEvent"), param);
-      } else {
-        portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-        portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-      }
-    }
   }
 }

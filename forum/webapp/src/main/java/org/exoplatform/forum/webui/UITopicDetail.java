@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletSession;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -40,7 +37,6 @@ import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
@@ -73,7 +69,6 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -343,63 +338,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     if (topic != null) {
       canCreateTopic = getCanCreateTopic();
       isCanPost = isCanPostReply();
-    }
-
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletSession portletSession = pcontext.getRequest().getPortletSession();
-    ActionResponse actionRes = null;
-    if (pcontext.getResponse() instanceof ActionResponse) {
-      actionRes = (ActionResponse) pcontext.getResponse();
-    }
-    sendForumPollEvent(actionRes, portletSession);
-    sendQuickReplyEvent(actionRes, portletSession);
-    sendRuleEvent(actionRes, portletSession);
-    
-  }
-
-  private void sendRuleEvent(ActionResponse actionRes, PortletSession portletSession) throws Exception {
-    ForumParameter param = new ForumParameter();
-    List<String> list = param.getInfoRules();
-    if (forum.getIsClosed() || forum.getIsLock()) {
-      list.set(0, "true");
-    } else {
-      list.set(0, ForumUtils.EMPTY_STR);
-    }
-    list.set(1, String.valueOf(canCreateTopic));
-    list.set(2, String.valueOf(isCanPost));
-    param.setInfoRules(list);
-    param.setRenderRule(true);
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumRuleEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-    }
-  }
-
-  private void sendQuickReplyEvent(ActionResponse actionRes, PortletSession portletSession) {
-    ForumParameter param = new ForumParameter();
-    param.setRenderQuickReply(isCanPost);
-    param.setModerator(isMod);
-    param.setCategoryId(categoryId);
-    param.setForumId(forumId);
-    param.setTopicId(topicId);
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("QuickReplyEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-    }
-  }
-
-  private void sendForumPollEvent(ActionResponse actionRes, PortletSession portletSession) {
-    ForumParameter param = new ForumParameter();
-    param.setCategoryId(categoryId);
-    param.setForumId(forumId);
-    param.setTopicId(topicId);
-    param.setRenderPoll(topic.getIsPoll());
-    if (actionRes != null) {
-      actionRes.setEvent(new QName("ForumPollEvent"), param);
-    } else {
-      portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
     }
   }
 

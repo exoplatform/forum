@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.portlet.ActionResponse;
-import javax.xml.namespace.QName;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
@@ -30,8 +27,6 @@ import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPollRadioBoxInput;
 import org.exoplatform.forum.common.webui.UIPopupAction;
-import org.exoplatform.forum.info.ForumParameter;
-import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
@@ -80,7 +75,7 @@ public class UITopicPoll extends BaseForumForm {
   private PollService pollService;
 
   private String      pollId;
-
+  
   public UITopicPoll() throws Exception {
     pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
   }
@@ -318,14 +313,8 @@ public class UITopicPoll extends BaseForumForm {
 
   static public class EditPollActionListener extends BaseEventListener<UITopicPoll> {
     public void onEvent(Event<UITopicPoll> event, UITopicPoll topicPoll, final String objectId) throws Exception {
-      UIPopupAction popupAction;
-      try {
-        UIForumPortlet forumPortlet = topicPoll.getAncestorOfType(UIForumPortlet.class);
-        popupAction = forumPortlet.getChild(UIPopupAction.class);
-      } catch (Exception e) {
-        UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class);
-        popupAction = forumPollPortlet.getChild(UIPopupAction.class);
-      }
+      UIForumPortlet forumPortlet = topicPoll.getAncestorOfType(UIForumPortlet.class);
+      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
       String path = topicPoll.categoryId + CommonUtils.SLASH + topicPoll.forumId + CommonUtils.SLASH + topicPoll.topicId;
       pollForm.setTopicPath(path);
@@ -341,20 +330,10 @@ public class UITopicPoll extends BaseForumForm {
       UITopicPoll topicPoll = event.getSource();
       topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + CommonUtils.SLASH + topicPoll.poll_.getId());
       topicPoll.removeChilren();
-      try {
-        UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) topicPoll.getParent();
-        topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
-        topicPoll.isEditPoll = false;
-        event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
-      } catch (Exception e) {
-        UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class);
-        topicPoll.setRendered(false);
-        ActionResponse actionRes = event.getRequestContext().getResponse();
-        ForumParameter param = new ForumParameter();
-        param.setRenderPoll(true);
-        actionRes.setEvent(new QName("ReLoadPortletEvent"), param);
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
-      }
+      UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) topicPoll.getParent();
+      topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
+      topicPoll.isEditPoll = false;
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
     }
   }
 
