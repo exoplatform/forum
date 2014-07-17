@@ -137,8 +137,20 @@
           <name>autoCreatedInNewRepository</name>
           <description>Node types configuration file</description>
           <value>jar:/conf/portal/activity-extension-nodetypes.xml</value>
+          <value>jar:/conf/settings-nodetypes.xml</value>
           <value>jar:/conf/standalone/test-forum-nodetypes.xml</value>
         </values-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>add.namespaces</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>
+      <init-params>
+        <properties-param>
+          <name>namespaces</name>
+          <property name="stg" value="http://www.gatein.org/jcr/stg/1.0/" />
+        </properties-param>
       </init-params>
     </component-plugin>
   </external-component-plugins>

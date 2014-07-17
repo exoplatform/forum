@@ -16,8 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Arrays;
-
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
@@ -31,12 +29,14 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     super.setUp();
     
     cachedStorage = (CachedDataStorage) getService(DataStorage.class);
+    setMembershipEntry("/platform/administrators", "*", true);
   }
   
   @Override
   public void tearDown() throws Exception {
     //
     super.tearDown();
+    membershipEntries.clear();
   }
 
   public void testUserProfile() throws Exception {
@@ -115,8 +115,11 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
     }
     // Add user login
+    loginUser(USER_ROOT);
     forumService_.userLogin(USER_ROOT);
+    loginUser(USER_JOHN);
     forumService_.userLogin(USER_JOHN);
+    loginUser(USER_DEMO);
     forumService_.userLogin(USER_DEMO);
 
     // Get all user online:
@@ -126,9 +129,6 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertEquals("John is not Online", forumService_.isOnline(USER_JOHN), true);
     // get Last Login
     assertEquals("Demo can't last Login", forumService_.getLastLogin(), USER_DEMO);
-    // userLogout
-    forumService_.userLogout(USER_DEMO);
-    assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
   }
   
   public void testCacheLoginUser() throws Exception {
@@ -137,12 +137,13 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
     }
     // Add user login
+    loginUser("user1");
     forumService_.userLogin("user1");
+    loginUser("user2");
     forumService_.userLogin("user2");
     
     UserProfile profile = cachedStorage.getDefaultUserProfile("user2", null);
     assertEquals("user2", profile.getScreenName());
-    
   }
 
 
