@@ -33,6 +33,10 @@
   <component>
     <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
   </component>
+
+   <component>
+      <type>org.exoplatform.services.user.UserStateService</type>
+   </component>
   
   <component>
     <key>org.exoplatform.forum.service.DataStorage</key>
