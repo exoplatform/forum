@@ -166,7 +166,7 @@
 							</td>
 							<td class="center actionContainer">
 								<a class="actionIcon" href="javascript:void(0)" onclick="$linkResponse" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>" >
-								 	<i class="uiIconAnsAnswer uiIconAnsLightGray"></i>
+								 	<i class="uiIconEdit uiIconLightGray"></i>
 								</a>
 								<a class="actionIcon" href="javascript:void(0)" onclick="$linkDelete" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>" >
 								 	<i class="uiIconDelete uiIconLightGray"></i>
