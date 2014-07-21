@@ -36,7 +36,6 @@ import org.exoplatform.forum.common.EmailNotifyPlugin;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
@@ -48,10 +47,10 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.UIFormRichtextInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
@@ -200,10 +199,10 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, contenQuestion.replaceAll("<br\\s*\\/?>", " "))
 	  .addValidator(MandatoryValidator.class));
     UIFormRichtextInput filedMessage = new UIFormRichtextInput(FILED_MESSAGE, FILED_MESSAGE, "");
-    filedMessage.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(stringBuffer.toString()));
-    filedMessage.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    filedMessage.setIsPasteAsPlainText(true);
-    filedMessage.addValidator(MandatoryValidator.class);
+    filedMessage.setIgnoreParserHTML(true).setIsPasteAsPlainText(true)
+                .setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
+    filedMessage.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(stringBuffer.toString()))
+                .addValidator(MandatoryValidator.class);
     addChild(filedMessage);
   }
 
@@ -238,14 +237,15 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
   static public class SendActionListener extends BaseEventListener<UISendMailForm> {
     public void onEvent(Event<UISendMailForm> event, UISendMailForm sendMailForm, String objectId) throws Exception {
-      String fromName = ((UIFormStringInput) sendMailForm.getChildById(FILED_FROM_NAME)).getValue();
-      String from = ((UIFormStringInput) sendMailForm.getChildById(FILED_FROM)).getValue();
+      String fromName = sendMailForm.getUIStringInput(FILED_FROM_NAME).getValue();
+      String from = sendMailForm.getUIStringInput(FILED_FROM).getValue();
       String fullFrom = fromName + " (" + from + ") <" + sendMailForm.getServerConfig().get("account") + ">";
-      String to = ((UIFormStringInput) sendMailForm.getChildById(FILED_TO)).getValue();
-      String subject = ((UIFormStringInput) sendMailForm.getChildById(FILED_SUBJECT)).getValue();
-      String body = ((UIFormRichtextInput) sendMailForm.getChildById(FILED_MESSAGE)).getValue();
-      if (to != null && to.indexOf(";") > -1)
+      String to = sendMailForm.getUIStringInput(FILED_TO).getValue();
+      String subject = sendMailForm.getUIStringInput(FILED_SUBJECT).getValue();
+      String body = sendMailForm.getUIFormRichtextInput(FILED_MESSAGE).getValue();
+      if (to != null && to.indexOf(";") > -1) {
         to = to.replace(';', ',');
+      }
       if (FAQUtils.isFieldEmpty(fromName)) {
         warning("UISendMailForm.msg.fromName-field-empty");
         return;

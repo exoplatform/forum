@@ -30,6 +30,7 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 
 
 /**
@@ -97,6 +98,10 @@ public class BaseUIForm extends UIForm {
   }
   public UIFormScrollSelectBox getUIFormScrollSelectBox(String name) {
     return (UIFormScrollSelectBox) getUIInput(name);
+  }
+
+  public UIFormRichtextInput getUIFormRichtextInput(String name) {
+    return (UIFormRichtextInput) getUIInput(name);
   }
   
   public UIForumFilter getUIForumFilter(String name) {

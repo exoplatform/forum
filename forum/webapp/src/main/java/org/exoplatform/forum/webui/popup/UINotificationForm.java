@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseEventListener;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -34,9 +34,9 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.UIFormRichtextInput;
 
 
 @ComponentConfig(
@@ -106,24 +106,24 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
 
   private UIFormRichtextInput initNotifyMoveField() {
     String value = administration.getNotifyEmailMoved();
-    if (ForumUtils.isEmpty(value))
+    if (CommonUtils.isEmpty(value)) {
       value = this.getLabel("EmailToAuthorMoved");
-    UIFormRichtextInput notifyEmailMoved = new UIFormRichtextInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
+    }
+    UIFormRichtextInput notifyEmailMoved = new UIFormRichtextInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, CommonUtils.EMPTY_STR);
     notifyEmailMoved.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    notifyEmailMoved.setIsPasteAsPlainText(true);
-    notifyEmailMoved.setWidth("94%");
+    notifyEmailMoved.setIsPasteAsPlainText(true).setIgnoreParserHTML(true).setWidth("94%");
     notifyEmailMoved.setValue(value);
     return notifyEmailMoved;
   }
 
   private UIFormRichtextInput initNotifyEmailField() {
     String value = administration.getNotifyEmailContent();
-    if (ForumUtils.isEmpty(value))
-      value = this.getLabel("notifyEmailContentDefault");
-    UIFormRichtextInput notifyEmail = new UIFormRichtextInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
+    if (CommonUtils.isEmpty(value)) {
+      value = getLabel("notifyEmailContentDefault");
+    }
+    UIFormRichtextInput notifyEmail = new UIFormRichtextInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, CommonUtils.EMPTY_STR);
     notifyEmail.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    notifyEmail.setIsPasteAsPlainText(true);
-    notifyEmail.setWidth("94%");
+    notifyEmail.setIsPasteAsPlainText(true).setIgnoreParserHTML(true).setWidth("94%");
     notifyEmail.setValue(value);
     return notifyEmail;
   }

@@ -99,10 +99,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     sendTo.addValidator(MandatoryValidator.class);
     UIFormStringInput mailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
     mailTitle.addValidator(MandatoryValidator.class);
-    UIFormRichtextInput formWYSIWYGInput = new UIFormRichtextInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, ForumUtils.EMPTY_STR);
+    UIFormRichtextInput formWYSIWYGInput = new UIFormRichtextInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, CommonUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    formWYSIWYGInput.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    formWYSIWYGInput.setIsPasteAsPlainText(true);
+    formWYSIWYGInput.setIsPasteAsPlainText(true).setIgnoreParserHTML(true).setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
     UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(sendTo);
     sendMessageTab.addUIFormInput(mailTitle);

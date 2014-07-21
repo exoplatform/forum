@@ -17,7 +17,6 @@
 package org.exoplatform.answer.webui.popup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,10 +39,11 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.exoplatform.webui.form.UIFormRichtextInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 @ComponentConfig(
    lifecycle = UIFormLifecycle.class, 
@@ -165,11 +165,13 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
     setAddColonInLabel(true);
   }
 
-  private UIFormRichtextInput addNewUIFormRichtextInput(String id) {
-	  UIFormRichtextInput wysiwygInput = new UIFormRichtextInput(id, id, "");
-    wysiwygInput.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    wysiwygInput.setIsPasteAsPlainText(true);
-    return wysiwygInput;
+  private UIFormRichtextInput addNewUIFormRichtextInput(String id) throws Exception {
+	  UIFormRichtextInput richtext = new UIFormRichtextInput(id, id, "");
+    richtext.setIsPasteAsPlainText(true)
+            .setIgnoreParserHTML(true)
+            .setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.addValidator(MandatoryValidator.class);
+    return richtext;
   }
 
   public void activate() {}
@@ -238,13 +240,13 @@ public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements U
   private void setValueEmailContent(String tabId, String editorId, String value) {
     UIFormInputWithActions emailTab = getChildById(SET_DEFAULT_EMAIL_TAB);
     UIFormInputWithActions inputWithActions = emailTab.getChildById(tabId);
-    ((UIFormRichtextInput) inputWithActions.getChildById(editorId)).setValue(value);
+    inputWithActions.getChild(UIFormRichtextInput.class).setValue(value);
   }
 
   private String getValueEmailContent(String tabId, String editorId) {
     UIFormInputWithActions emailTab = getChildById(SET_DEFAULT_EMAIL_TAB);
     UIFormInputWithActions inputWithActions = emailTab.getChildById(tabId);
-    return ((UIFormRichtextInput) inputWithActions.getChildById(editorId)).getValue();
+    return inputWithActions.getChild(UIFormRichtextInput.class).getValue();
   }
 
   public void setPathCatygory(List<String> idForumName) {

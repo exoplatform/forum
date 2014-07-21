@@ -152,8 +152,10 @@ public class UITopicForm extends BaseForumForm {
                                                            getLabel(FIELD_STICKY_CHECKBOX), false);
         
     UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    richtext.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    richtext.setIsPasteAsPlainText(true);
+    richtext.setIsPasteAsPlainText(true)
+            .setIgnoreParserHTML(true)
+            .setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.addValidator(MandatoryValidator.class);
 
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
     threadContent.addUIFormInput(topicTitle);
