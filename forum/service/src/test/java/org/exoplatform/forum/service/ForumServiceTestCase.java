@@ -653,7 +653,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     //
     String lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
     assertNotSame(topic.getId(), Utils.getTopicId(lastTopicPath));
-    Thread.sleep(5500);
+    Thread.sleep(6000);
     //
     lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
     assertEquals(topic.getId(), Utils.getTopicId(lastTopicPath));
@@ -671,8 +671,6 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
       topic = createdTopic(USER_ROOT);
       dataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
     }
-    //
-    assertEquals(0, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
     //
     Thread.sleep(10000);
     //
