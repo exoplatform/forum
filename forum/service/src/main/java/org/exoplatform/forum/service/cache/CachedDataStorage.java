@@ -653,6 +653,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
     clearObjectCache(category, isNew);
+    //
+    clearUserProfile(null);
     if (isNew == false) {
       clearCategoryCache(category);
     }
@@ -664,13 +666,17 @@ public class CachedDataStorage implements DataStorage, Startable {
       categoryData.select(new CategoryIdSelector(moderatorCate, categoryData));
     } catch (Exception e) {
       LOG.debug("Can not clear list categories in cached.", e);
-    } 
+    }
+    //
+    clearUserProfile(null);
   }
 
   public void calculateModerator(String nodePath, boolean isNew) throws Exception {
     storage.calculateModerator(nodePath, isNew);
     clearForumCache(Utils.getCategoryId(nodePath), Utils.getForumId(nodePath), false);
     clearForumListCache();
+    //
+    clearUserProfile(null);
   }
 
   public Category removeCategory(String categoryId) throws Exception {
@@ -678,6 +684,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryData.remove(new CategoryKey(categoryId));
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
+    //
+    clearUserProfile(null);
     return storage.removeCategory(categoryId);  
   }
 
@@ -753,6 +761,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearObjectCache(forum, true);
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
   }
 
   public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
@@ -764,6 +774,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
   }
 
   public Forum removeForum(String categoryId, String forumId) throws Exception {
@@ -785,6 +797,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearLinkListCache();
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
     storage.moveForum(forums, destCategoryPath);
     //
     topicData.clearCache();
@@ -1033,6 +1047,7 @@ public class CachedDataStorage implements DataStorage, Startable {
       clearTopicCache(topic);
     } else {
       clearTopicListCountCache(forumId);
+      clearUserProfile(topic.getOwner());
     }
   }
 
@@ -1121,11 +1136,11 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearTopicCache(categoryId, forumId, topicId);
     clearTopicListCache(forumId);
     clearPostListCache();
-
     //
     if (isNew == false) {
       clearPostCache(categoryId, forumId, topicId, post.getId());
     } else {
+      clearUserProfile(post.getOwner());
       clearPostListCountCache(topicId);
     }
     statistic = null;
@@ -1279,8 +1294,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     //
     completionService.addTask(new SaveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic));
-    //
-    refreshUserProfile(new UserProfile().setUserId(userId));
   }
 
   class SaveLastPostIdRead implements Callable<Boolean> {
