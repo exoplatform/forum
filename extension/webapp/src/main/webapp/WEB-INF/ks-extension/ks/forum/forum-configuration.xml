@@ -37,7 +37,7 @@
     <init-params>
       <value-param>
         <name>persisterThreshold</name> <!-- The number of task to persister on each time -->
-        <value>20</value>
+        <value>1</value>
       </value-param>
       <value-param>
         <name>intervalPersist</name><!-- The time to repeat interval call persister tasks -->
