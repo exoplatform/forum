@@ -3667,8 +3667,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean postActive =  (postRead.bool(EXO_IS_APPROVED) && postRead.bool(EXO_IS_HIDDEN) == false && 
                               postRead.bool(EXO_IS_WAITING) == false && postRead.list(EXO_USER_PRIVATE).size() != 2);
 
-      boolean isPublic = (hasProperty(categoryNode, EXO_VIEWER) == false && hasProperty(forumNode, EXO_VIEWER) == false && 
-                            hasProperty(topicNode, EXO_CAN_VIEW) == false);
       // set active by topic
       postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, (topicActive || isFirstPost));
 
@@ -3679,7 +3677,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       // update topic
-      if (postActive && isPublic) {
+      if (postActive) {
         topicNode.setProperty(EXO_POST_COUNT, Math.max(topicPostCount, 0));
         topicNode.setProperty(EXO_LAST_POST_DATE, getGreenwichMeanTime());
         topicNode.setProperty(EXO_LAST_POST_BY, owner);

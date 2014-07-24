@@ -206,4 +206,28 @@ public class PostTestCase extends BaseForumServiceTestCase {
     assertEquals(2, topic.getPostCount());
   }
   
+  public void testAddPostInSpaceContext() throws Exception {
+    String groupId = "/spaces/new_space";
+    String groupName = "new_space";
+    String cateSpaceId = Utils.CATEGORY + "spaces";
+    String forumSpaceId = Utils.FORUM_SPACE_ID_PREFIX + groupName;
+    Category category = createCategory(cateSpaceId);
+    category.setCategoryName("spaces");
+    category.setUserPrivate(new String[] { groupId });
+    forumService_.saveCategory(category, true);
+    Forum forum = createdForum();
+    forum.setForumName("New Space");
+    forum.setId(forumSpaceId);
+    forumService_.saveForum(cateSpaceId, forum, true);
+    
+    Topic topicSpace = createdTopic("mary");
+    
+    forumService_.saveTopic(cateSpaceId, forumSpaceId, topicSpace, true, false, new MessageBuilder());
+    
+    Post post = createdPost();
+    forumService_.savePost(cateSpaceId, forumSpaceId, topicSpace.getId(), post, true, new MessageBuilder());
+    topicSpace = forumService_.getTopic(cateSpaceId, forumSpaceId, topicSpace.getId(), "");
+    assertEquals(1, topicSpace.getPostCount());
+  }
+  
 }
