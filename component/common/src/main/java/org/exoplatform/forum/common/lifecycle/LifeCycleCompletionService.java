@@ -16,58 +16,70 @@
  */
 package org.exoplatform.forum.common.lifecycle;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.forum.common.InitParamsValue;
 
 public class LifeCycleCompletionService {
   private final String                 THREAD_NUMBER_KEY       = "thread-number";
 
   private final String                 ASYNC_EXECUTION_KEY     = "async-execution";
 
+  private final String                 PRIORITY_KEY            = "thread-priority";
+  
+  private final String KEEP_ALIVE_TIME = "keepAliveTime";
+
   private Executor                     executor;
 
   private ExecutorCompletionService<?> ecs;
+  
+  private BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
 
   private final int                   DEFAULT_THREAD_NUMBER   = 1;
 
   private final boolean               DEFAULT_ASYNC_EXECUTION = true;
 
-  private int                          configThreadNumber;
+  private final int                   DEFAULT_KEEP_ALIVE_TIME = 10;
 
-  private boolean                     configAsyncExecution;
+  private final int                   DEFAULT_THREAD_PRIORITY = 10;
+
+  private final boolean configAsyncExecution;
+
 
   public LifeCycleCompletionService(InitParams params) {
 
     //
-    ValueParam threadNumber = params.getValueParam(THREAD_NUMBER_KEY);
-    ValueParam asyncExecution = params.getValueParam(ASYNC_EXECUTION_KEY);
+    final int configThreadNumber = InitParamsValue.getInteger(params, THREAD_NUMBER_KEY, DEFAULT_THREAD_NUMBER);
+    final int keepAliveTime = InitParamsValue.getInteger(params, KEEP_ALIVE_TIME, DEFAULT_KEEP_ALIVE_TIME);
+    final int threadPriority = InitParamsValue.getInteger(params, PRIORITY_KEY, DEFAULT_THREAD_PRIORITY);
+    this.configAsyncExecution = InitParamsValue.getBoolean(params, ASYNC_EXECUTION_KEY, DEFAULT_ASYNC_EXECUTION);
 
+    int threadNumber_ = configThreadNumber <= 0 ? configThreadNumber : Runtime.getRuntime().availableProcessors();
     //
-    try {
-      this.configThreadNumber = Integer.valueOf(threadNumber.getValue());
-    } catch (Exception e) {
-      this.configThreadNumber = DEFAULT_THREAD_NUMBER;
-    }
-
-    //
-    try {
-      this.configAsyncExecution = Boolean.valueOf(asyncExecution.getValue());
-    } catch (Exception e) {
-      this.configAsyncExecution = DEFAULT_ASYNC_EXECUTION;
-    }
-
+    ThreadFactory threadFactory = new ThreadFactory() {
+      public Thread newThread(Runnable runable) {
+        Thread t = new Thread(runable, "Forum-Thread");
+        t.setPriority(threadPriority);
+        return t;
+      }
+    };
     //
     if (configAsyncExecution) {
-      this.executor = Executors.newFixedThreadPool(this.configThreadNumber);
+      executor = new ThreadPoolExecutor(threadNumber_, threadNumber_, keepAliveTime, 
+                                              TimeUnit.SECONDS, workQueue, threadFactory);
+      ((ThreadPoolExecutor) executor).allowCoreThreadTimeOut(true);
     } else {
-      this.executor = new DirectExecutor();
+      executor = new DirectExecutor();
     }
 
     //
@@ -87,6 +99,15 @@ public class LifeCycleCompletionService {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public boolean shutdownNow() {
+    boolean isDone = true;
+    Future<?> f;
+    while (ecs != null && (f = ecs.poll()) != null) {
+      isDone &= f.cancel(true);
+    }
+    return isDone;
   }
 
   public boolean isAsync() {

@@ -152,8 +152,10 @@ public class UITopicForm extends BaseForumForm {
                                                            getLabel(FIELD_STICKY_CHECKBOX), false);
         
     UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    richtext.setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    richtext.setIsPasteAsPlainText(true);
+    richtext.setIsPasteAsPlainText(true)
+            .setIgnoreParserHTML(true)
+            .setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.addValidator(MandatoryValidator.class);
 
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
     threadContent.addUIFormInput(topicTitle);
@@ -219,7 +221,7 @@ public class UITopicForm extends BaseForumForm {
       ActionData fileUpload = new ActionData();
       fileUpload.setActionListener(ForumUtils.EMPTY_STR);
       fileUpload.setActionType(ActionData.TYPE_ATT);
-      String fileName = attachdata.getName();;
+      String fileName = attachdata.getName();
       fileUpload.setActionName(fileName + "(" + ForumUtils.getSizeFile(attachdata.getSize()) + ")");
       fileUpload.setShowLabel(true);
       fileUpload.setCssIconClass(CssClassUtils.getCSSClassByFileNameAndFileType(fileName, attachdata.getMimeType(), null));
@@ -301,7 +303,7 @@ public class UITopicForm extends BaseForumForm {
       String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST);
       Post post = getForumService().getPost(this.categoryId, this.forumId, this.topicId, postId);
       if (post != null && post.getAttachments() != null && post.getAttachments().size() > 0) {
-        this.attachments_ = post.getAttachments();
+        this.attachments_.addAll(post.getAttachments());
         this.refreshUploadFileList();
       }
     }
@@ -323,12 +325,13 @@ public class UITopicForm extends BaseForumForm {
         String userName = uiForm.getUserProfile().getUserId();
         topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
         Post postNew = new Post();
-        postNew.setOwner(userName);
         postNew.setName(topicTitle);
-        if (ForumUtils.isEmpty(uiForm.topicId)) {
+        if (CommonUtils.isEmpty(uiForm.topicId)) {
+          postNew.setOwner(userName);
           postNew.setCreatedDate(CommonUtils.getGreenwichMeanTime().getTime());
           postNew.setModifiedDate(CommonUtils.getGreenwichMeanTime().getTime());
         } else {
+          postNew.setOwner(uiForm.topic.getOwner());
           postNew.setCreatedDate(uiForm.topic.getCreatedDate());
           postNew.setModifiedDate(uiForm.topic.getModifiedDate());
         }
@@ -391,6 +394,7 @@ public class UITopicForm extends BaseForumForm {
             k = 0;
           }
           if (t > 0 && k != 0 && !checksms.equals("null")) {
+            Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
             message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             message = TransformHTML.fixAddBBcodeAction(message);
             message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
@@ -430,13 +434,9 @@ public class UITopicForm extends BaseForumForm {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);
             //
             String userName = userProfile.getUserId();
-            topicNew.setOwner(userName);
             topicNew.setTopicName(topicTitle);
-            topicNew.setCreatedDate(new Date());
             topicNew.setModifiedBy(userName);
-            topicNew.setModifiedDate(new Date());
-            topicNew.setLastPostBy(userName);
-            topicNew.setLastPostDate(new Date());
+            topicNew.setModifiedDate(currentDate);
             topicNew.setDescription(message);
             topicNew.setLink(link);
             if (whenNewPost) {
@@ -489,6 +489,10 @@ public class UITopicForm extends BaseForumForm {
                 return;
               }
             } else {
+              topicNew.setOwner(userName);
+              topicNew.setCreatedDate(currentDate);
+              topicNew.setLastPostBy(userName);
+              topicNew.setLastPostDate(currentDate);
               topicNew.setVoteRating(0.0);
               topicNew.setUserVoteRating(new String[] {});
               try {
@@ -591,7 +595,6 @@ public class UITopicForm extends BaseForumForm {
       for (ForumAttachment att : uiTopicForm.attachments_) {
         if (att.getId().equals(attFileId)) {
           uiTopicForm.removeFromUploadFileList(att);
-          uiTopicForm.attachments_.remove(att);
           break;
         }
       }

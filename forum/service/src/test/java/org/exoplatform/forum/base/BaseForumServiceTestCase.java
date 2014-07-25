@@ -98,7 +98,7 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
 
   @Override
   public void tearDown() throws Exception {
-
+    Thread.sleep(1000);
     removeAllData();
     //
     end();

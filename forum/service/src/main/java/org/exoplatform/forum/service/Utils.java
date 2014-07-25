@@ -30,15 +30,12 @@ import java.util.regex.Pattern;
 
 import javax.jcr.Value;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.SortSettings.Direction;
 import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
@@ -762,32 +759,20 @@ public class Utils implements ForumNodeTypes {
    * Get current tenant name via repository name
    * @return
    * @since 2.2.9
+   * @deprecated will remove on version 4.1-RC2
    */  
   static public String getCurrentTenantName() {
-    try {
-      RepositoryService repositoryService = (RepositoryService) PortalContainer.getInstance()
-                                                                               .getComponentInstanceOfType(RepositoryService.class);
-      if (repositoryService == null) {
-        repositoryService = (RepositoryService) RootContainer.getInstance()
-                                                             .getPortalContainer(PortalContainer.getCurrentPortalContainerName())
-                                                             .getComponentInstanceOfType(RepositoryService.class);
-      }
-      return repositoryService.getCurrentRepository().getConfiguration().getName();
-    } catch (Exception e) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Can not get current repository", e.getMessage());
-      }
-    }
     return DEFAULT_TENANT_NAME;
   }
 
+  /**
+   * @param onlineUserMap
+   * @return
+   * @since 2.2.9
+   * @deprecated will remove on version 4.1-RC2
+   */
   static public List<String> getOnlineUserByTenantName(Map<String, List<String>> onlineUserMap) {
-    List<String> onlinUsers = new ArrayList<String>();
-    String currentTenant = getCurrentTenantName();
-    if (onlineUserMap != null && onlineUserMap.get(currentTenant) != null) {
-      onlinUsers.addAll(onlineUserMap.get(currentTenant));
-    }
-    return onlinUsers;
+    return new ArrayList<String>();
   }
 
   /**
@@ -817,6 +802,13 @@ public class Utils implements ForumNodeTypes {
    * @since 2.3.0
    */
   public static String getForumId(String path) {
+    if (!Utils.isEmpty(path) && path.lastIndexOf(Utils.FORUM) != -1) {
+      String categoryId = getCategoryId(path);
+      if (!isEmpty(categoryId)) {
+        path = path.substring(path.lastIndexOf(categoryId) + categoryId.length());
+        return getForumId(path);
+      }
+    }
     return getIdByType(path, FORUM);
   }
 

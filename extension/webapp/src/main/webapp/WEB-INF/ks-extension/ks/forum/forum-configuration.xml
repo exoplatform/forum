@@ -30,6 +30,36 @@
   <component>
     <type>org.exoplatform.forum.service.ws.ForumWebservice</type>
   </component>
+  
+  <component>
+    <key>org.exoplatform.forum.service.task.QueryLastPostTaskManager</key>
+    <type>org.exoplatform.forum.service.task.QueryLastPostTaskManager</type>
+    <init-params>
+      <value-param>
+        <name>persisterThreshold</name> <!-- The number of task to persister on each time -->
+        <value>1</value>
+      </value-param>
+      <value-param>
+        <name>intervalPersist</name><!-- The time to repeat interval call persister tasks -->
+        <value>5000</value>
+      </value-param>
+    </init-params>
+  </component>
+
+  <component>
+    <key>org.exoplatform.forum.service.task.SendNotificationTaskManager</key>
+    <type>org.exoplatform.forum.service.task.SendNotificationTaskManager</type>
+    <init-params>
+      <value-param>
+        <name>persisterThreshold</name> <!-- The number of task to persister on each time -->
+        <value>50</value>
+      </value-param>
+      <value-param>
+        <name>intervalPersist</name><!-- The time to repeat interval call persister tasks -->
+        <value>30000</value>
+      </value-param>
+    </init-params>
+  </component>
 
    <!--component>
     <key>org.exoplatform.forum.bench.ForumDataInitializer</key>

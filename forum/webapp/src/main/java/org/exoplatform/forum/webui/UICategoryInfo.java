@@ -49,7 +49,12 @@ public class UICategoryInfo extends UIContainer {
   }
 
   protected List<String> getUserOnline() throws Exception {
-    return forumService.getOnlineUsers();
+    List<String> onlines = forumService.getOnlineUsers();
+    String currentUser = getUserProfile().getUserId();
+    if (!onlines.contains(currentUser) && !UserProfile.USER_GUEST.equals(currentUser)) {
+      onlines.add(currentUser);
+    }
+    return onlines;
   }
 
   protected String getScreenName(String userName) throws Exception {
@@ -75,8 +80,10 @@ public class UICategoryInfo extends UIContainer {
       long l = Long.parseLong(strs[1].replace("at", ForumUtils.EMPTY_STR).trim());
       Calendar calendar = CommonUtils.getGreenwichMeanTime();
       double timeZone = userProfile.getTimeZone();
-      if (userProfile.getUserId().equals(UserProfile.USER_GUEST)){
+      if (userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
         timeZone = 0;
+      } else if (l == 0) {
+        l = calendar.getTimeInMillis();
       }
       long zone = (long) (timeZone * 3600000);
       calendar.setTimeInMillis(l - zone);
@@ -88,6 +95,8 @@ public class UICategoryInfo extends UIContainer {
           builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));
         else
           builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));
+      } else if("0".equals(strs[0])) {
+        strs[0] = "1";
       }
       //
       return label.replace("{0}", strs[0]).replace("{1}", builder.toString());

@@ -145,8 +145,8 @@ public class PollWebserviceTest extends AbstractResourceTest {
 
     // Test percent of each vote
     assertEquals("0.0", pMulti.getVote()[0]);
-    assertEquals("50.0", pMulti.getVote()[1]);
-    assertEquals("50.0", pMulti.getVote()[2]);
+    assertEquals("100.0", pMulti.getVote()[1]);
+    assertEquals("100.0", pMulti.getVote()[2]);
     assertEquals("0.0", pMulti.getVote()[3]);
 
     // Test the number of vote, here is 1 (one vote but multi options)
@@ -168,9 +168,9 @@ public class PollWebserviceTest extends AbstractResourceTest {
     Poll pMultiUpdate = (Poll) responseMulti.getEntity();
 
     // Test percent of each vote
-    assertEquals("50.0", pMultiUpdate.getVote()[0]);
+    assertEquals("100.0", pMultiUpdate.getVote()[0]);
     assertEquals("0.0", pMultiUpdate.getVote()[1]);
-    assertEquals("50.0", pMultiUpdate.getVote()[2]);
+    assertEquals("100.0", pMultiUpdate.getVote()[2]);
     assertEquals("0.0", pMultiUpdate.getVote()[3]);
 
     // Test the number of vote, here is 1 (one vote but multi options)
@@ -192,13 +192,39 @@ public class PollWebserviceTest extends AbstractResourceTest {
     Poll pMultiNew = (Poll) responseMulti.getEntity();
 
     // Test percent of each vote 
-    assertEquals("25.0", pMultiNew.getVote()[0]);
-    assertEquals("25.0", pMultiNew.getVote()[1]);
-    assertEquals("25.0", pMultiNew.getVote()[2]);
-    assertEquals("25.0", pMultiNew.getVote()[3]);
+    assertEquals("50.0", pMultiNew.getVote()[0]);
+    assertEquals("50.0", pMultiNew.getVote()[1]);
+    assertEquals("50.0", pMultiNew.getVote()[2]);
+    assertEquals("50.0", pMultiNew.getVote()[3]);
 
     // Test the number of vote, here is 2
     assertEquals(2, Integer.parseInt(pMultiNew.getInfoVote()[pMultiNew.getInfoVote().length-1]));
+
+    /***************************************************/
+
+    // Add new multi vote by "john" for option at index 0, 1 and 3 ==> "abc", "def" and
+    // "jqk"
+    //Notice the vote index where there is two "3" indexes to test this option is
+    //voted once
+    resourceUrlMulti = RESOURCE_URL + "/votepoll/" + pollMulti.getId() + "/0:1:3:3";
+    startSessionAs("john");
+    responseMulti = service("GET", resourceUrlMulti, "", null, null);
+
+    // Test the status of response (must be 200)
+    assertEquals("containerResponse1.getStatus() must return: " + 200,
+        200,
+        responseMulti.getStatus());
+
+    pMultiNew = (Poll) responseMulti.getEntity();
+
+    // Test percent of each vote
+    assertEquals("66.66667", pMultiNew.getVote()[0]);
+    assertEquals("66.66667", pMultiNew.getVote()[1]);
+    assertEquals("33.333336", pMultiNew.getVote()[2]);
+    assertEquals("66.66667", pMultiNew.getVote()[3]);
+
+    // Test the number of vote, here is 3 ("mary", "demo" and "john")
+    assertEquals(3, Integer.parseInt(pMultiNew.getInfoVote()[pMultiNew.getInfoVote().length-1]));
     
     /*    Clear all poll    */
     tearDownPollList.add(poll);

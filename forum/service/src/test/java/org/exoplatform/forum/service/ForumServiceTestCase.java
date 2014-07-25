@@ -26,9 +26,10 @@ import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
-import org.exoplatform.forum.service.filter.model.ForumFilter;
+import org.exoplatform.forum.service.impl.JCRDataStorage;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   
@@ -338,6 +339,14 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.removeWatch(1, topicPath, "/" + values.get(0));
     watchs = forumService_.getWatchByUser("root");
     assertEquals(watchs.size(), 0);
+    // add watch for category
+    forumService_.addWatch(1, categoryId, values, USER_DEMO);
+    assertEquals(1, forumService_.getCategory(categoryId).getEmailNotification().length);
+    // remove watch
+    forumService_.removeWatch(1, categoryId, "/" + values.get(0 ));
+    assertEquals(0, forumService_.getCategory(categoryId).getEmailNotification().length);
+    // Sleep to done run task notification.
+    Thread.sleep(5000);
   }
 
   public void testIpBan() throws Exception {
@@ -590,13 +599,82 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumSpace = forumService_.getForum(cat1.getId(), forumSpace.getId());
     assertNotNull(forumSpace);
   }
+
+  public void testSplitTopic() throws Exception {
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat.getId(), forum, true);
+    forum = forumService_.getForum(cat.getId(), forum.getId());
+    Topic topic = createdTopic(USER_ROOT);
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    List<String> postPath = new ArrayList<String>();
+    String firstPostId = "";
+    for (int i = 0; i < 5; ++i) {
+      Post post = createdPost();
+      if (i == 2) {
+        firstPostId = post.getId();
+      }
+      if (i > 1) {
+        postPath.add(topic.getPath() + "/" + post.getId());
+      }
+      forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+    }
+
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+    assertEquals(5, topic.getPostCount());
+
+    Post firstPost = forumService_.getPost(cat.getId(), forum.getId(), topic.getId(), firstPostId);
+    Topic newTopic = createdTopic(USER_ROOT);
+    newTopic.setPath(forum.getPath() + "/" + newTopic.getId());
+    forumService_.splitTopic(newTopic, firstPost, postPath, "", "");
+
+    newTopic = forumService_.getTopic(cat.getId(), forum.getId(), newTopic.getId(), "");
+    topic = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
+
+    assertEquals(2, topic.getPostCount());
+    assertEquals(2, newTopic.getPostCount());
+
+    // Clean all data
+    forumService_.removeCategory(cat.getId());
+  }
   
-  public void testGetForumByFilter() throws Exception {
+  public void testLastTopicOfForum() throws Exception {
     initDefaultData();
-    
-    List<Forum> forums = forumService_.getForums(new ForumFilter(categoryId, true).isPublic(true));
-    
-    assertEquals(1, forums.size());
+    //
+    JCRDataStorage dataStorage = getService(JCRDataStorage.class);
+    // create 20 topics
+    Topic topic = null;
+    for (int i = 0; i < 20; i++) {
+      topic = createdTopic(USER_ROOT);
+      dataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    }
+    //
+    String lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
+    assertNotSame(topic.getId(), Utils.getTopicId(lastTopicPath));
+    Thread.sleep(6000);
+    //
+    lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
+    assertEquals(topic.getId(), Utils.getTopicId(lastTopicPath));
+  }
+  
+  public void testSendEmailNotification() throws Exception {
+    initDefaultData();
+    //
+    JCRDataStorage dataStorage = getService(JCRDataStorage.class);
+    // Add watch
+    dataStorage.addWatch(1, categoryId + "/" + forumId, Arrays.asList("test@plf.com"), USER_DEMO);
+    // create 20 topics
+    Topic topic = null;
+    for (int i = 0; i < 20; i++) {
+      topic = createdTopic(USER_ROOT);
+      dataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    }
+    //
+    Thread.sleep(10000);
+    //
+    assertEquals(21, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
   }
   
 }

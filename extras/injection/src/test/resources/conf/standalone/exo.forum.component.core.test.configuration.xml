@@ -33,6 +33,10 @@
   <component>
     <type>org.exoplatform.services.bench.DataInjectorService</type>
   </component>
+
+   <component>
+      <type>org.exoplatform.services.user.UserStateService</type>
+   </component>
   
   <!-- Forum Injector Definition-->
   <component>
@@ -97,6 +101,20 @@
     <type>org.exoplatform.forum.extras.injection.poll.VoteInjector</type>
   </component>
   
+  <component>
+    <key>org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService</key>
+    <type>org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService</type>
+    <init-params>
+      <value-param>
+        <name>thread-number</name>
+        <value>5</value>
+      </value-param>
+      <value-param>
+        <name>async-execution</name>
+        <value>false</value>
+      </value-param>
+    </init-params>
+  </component>
   
   <component>
     <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
@@ -197,11 +215,24 @@
         <values-param>
           <name>autoCreatedInNewRepository</name>
           <description>Node types configuration file</description>
+          <value>jar:/conf/portal/activity-extension-nodetypes.xml</value>
+          <value>jar:/conf/settings-nodetypes.xml</value>
           <value>jar:/conf/portal/forum-nodetypes.xml</value>
           <value>jar:/conf/portal/faq-nodetypes.xml</value>
           <value>jar:/conf/portal/poll-nodetypes.xml</value>
           <value>jar:/conf/portal/bbcode-nodetypes.xml</value>
         </values-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>add.namespaces</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>
+      <init-params>
+        <properties-param>
+          <name>namespaces</name>
+          <property name="stg" value="http://www.gatein.org/jcr/stg/1.0/" />
+        </properties-param>
       </init-params>
     </component-plugin>
   </external-component-plugins>

@@ -66,6 +66,8 @@ public class UserProfileData implements CachedData<UserProfile> {
 
   private long                maxPost                = 10;
   
+  private long                totalPost              = 0;
+  
   private String[]            moderateForums;                                        
 
   private String[]            moderateCategory;
@@ -79,6 +81,7 @@ public class UserProfileData implements CachedData<UserProfile> {
     this.lastLoginDate = profile.getLastLoginDate();
     this.joinedDate = profile.getJoinedDate();
     this.lastPostDate = profile.getLastPostDate();
+    this.totalPost = profile.getTotalPost();
     this.isDisplaySignature = profile.getIsDisplaySignature();
     this.isDisplayAvatar = profile.getIsDisplayAvatar();
     this.timeZone = profile.getTimeZone();
@@ -107,6 +110,7 @@ public class UserProfileData implements CachedData<UserProfile> {
     userProfile.setLastLoginDate(this.lastLoginDate);
     userProfile.setJoinedDate(this.joinedDate);
     userProfile.setLastPostDate(this.lastPostDate);
+    userProfile.setTotalPost(this.totalPost);
     userProfile.setIsDisplaySignature(this.isDisplaySignature);
     userProfile.setIsDisplayAvatar(this.isDisplayAvatar);
     userProfile.setTimeZone(this.timeZone);

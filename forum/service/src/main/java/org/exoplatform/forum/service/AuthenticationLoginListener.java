@@ -18,13 +18,13 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
 public class AuthenticationLoginListener extends Listener<ConversationRegistry, ConversationState> {
-
   private ExoContainerContext context;
 
   public AuthenticationLoginListener(ExoContainerContext context) throws Exception {
@@ -33,10 +33,18 @@ public class AuthenticationLoginListener extends Listener<ConversationRegistry, 
 
   @Override
   public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
-    String name = context.getPortalContainerName();
-    ExoContainer container = ExoContainerContext.getContainerByName(name);
+    ConversationState state = event.getData();
+    String userId = state.getIdentity().getUserId();
+    ExoContainer container = context.getContainer();
     ForumService fservice = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-    String userId = event.getData().getIdentity().getUserId();
-    fservice.userLogin(userId);
+    String masterHost = System.getProperty("tenant.masterhost");
+    if(masterHost == null) {
+      ConversationState.setCurrent(state);
+      fservice.userLogin(userId);
+    } else {
+      String currentLoginRepo = ((RepositoryService) container.getComponentInstanceOfType(RepositoryService.class))
+          .getCurrentRepository().getConfiguration().getName();
+      fservice.userLogin(currentLoginRepo, userId);
+    }
   }
 }

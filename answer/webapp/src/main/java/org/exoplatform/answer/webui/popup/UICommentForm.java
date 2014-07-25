@@ -43,6 +43,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormRichtextInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 
 @ComponentConfig(
@@ -66,7 +67,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String       author = null;
 
-  private final String COMMENT_CONTENT = "CommentContent";
+  private static final String COMMENT_CONTENT = "CommentContent";
 
   private FAQSetting   faqSetting_;
 
@@ -76,7 +77,11 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     UIFormRichtextInput commentContent = new UIFormRichtextInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
     commentContent.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
     commentContent.setHeight("'250px'");
-    commentContent.setIsPasteAsPlainText(true);
+    commentContent.addValidator(MandatoryValidator.class);
+    commentContent.setIsPasteAsPlainText(true)
+                  .setIgnoreParserHTML(true)
+                  .setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    //
     this.addChild(commentContent);
   }
 
@@ -122,7 +127,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     FAQUtils.getEmailSetting(faqSetting_, false, false);
     if (commentId.indexOf("new") < 0) {
       comment = getFAQService().getCommentById(question.getPath(), commentId, language);
-      ((UIFormRichtextInput) this.getChildById(COMMENT_CONTENT)).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
+      getUIFormRichtextInput(COMMENT_CONTENT).setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(comment.getComments()));
       this.author = comment.getCommentBy();
     } else {
       this.author = null;
@@ -139,7 +144,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   static public class SaveActionListener extends BaseEventListener<UICommentForm> {
     public void onEvent(Event<UICommentForm> event, UICommentForm commentForm, final String objectId) throws Exception {
-      String comment = ((UIFormRichtextInput) commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
+      String comment = commentForm.getUIFormRichtextInput(COMMENT_CONTENT).getValue();
       if (CommonUtils.isEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)) {
         warning("UICommentForm.msg.comment-is-null");
         return;

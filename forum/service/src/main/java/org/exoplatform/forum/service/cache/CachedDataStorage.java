@@ -107,6 +107,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   private static final String PRIVATE_MESSAGE_COUNT_KEY = "messageCount";
   private static final String SCREEN_NAME_KEY = "screenName";
   private static final String FORUM_CAN_VIEW_KEY = "userCanView";
+  private static final String USER_AVATAR_KEY = "userAvatarKey";
 
   private DataStorage storage;
   private CacheService service;
@@ -320,18 +321,16 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearWatchingItemCache(String watchingItemPath) throws Exception {
-    String categoryId = watchingItemPath.contains("/") ? watchingItemPath.substring(0, watchingItemPath.indexOf("/")) : watchingItemPath;
-    String forumId = watchingItemPath.contains("/" + Utils.FORUM) ? watchingItemPath.substring(watchingItemPath.indexOf("/" + Utils.FORUM) + 1) : null;
-    forumId = (!Utils.isEmpty(forumId) && forumId.contains("/")) ? forumId.substring(0, forumId.indexOf("/")) : forumId;
-    String topicId = watchingItemPath.contains(Utils.TOPIC) ? watchingItemPath.substring(watchingItemPath.indexOf(Utils.TOPIC)) : null;
-    
+    String categoryId = Utils.getCategoryId(watchingItemPath);
+    String forumId = Utils.getForumId(watchingItemPath);
+    String topicPath = Utils.getTopicPath(watchingItemPath);
     // Clear watching item data
-    if (!Utils.isEmpty(topicId)) {
-      clearTopicCache(categoryId + "/" + forumId + "/" + topicId);
+    if (!Utils.isEmpty(topicPath)) {
+      clearTopicCache(topicPath);
     } else if (!Utils.isEmpty(forumId)) {
-      forumData.remove(new ForumKey(categoryId, forumId));
+      clearForumCache(categoryId, forumId, false);
     } else {
-      categoryData.remove(new CategoryKey(categoryId));
+      clearCategoryCache(categoryId);
     }
   }
 
@@ -563,14 +562,27 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void setDefaultAvatar(String userName) {
     storage.setDefaultAvatar(userName);
+    miscData.remove(new SimpleCacheKey(USER_AVATAR_KEY, userName));
   }
 
-  public ForumAttachment getUserAvatar(String userName) throws Exception {
-    return storage.getUserAvatar(userName);
+  public ForumAttachment getUserAvatar(final String userName) throws Exception {
+    SimpleCacheKey key = new SimpleCacheKey(USER_AVATAR_KEY, userName);
+    //
+    return (ForumAttachment) miscDataFuture.get(new ServiceContext<SimpleCacheData>() {
+      public SimpleCacheData<ForumAttachment> execute() {
+        try {
+          ForumAttachment got = storage.getUserAvatar(userName);
+          return new SimpleCacheData<ForumAttachment>(got);
+        } catch (Exception e) {
+          return new SimpleCacheData<ForumAttachment>(null);
+        }
+      }
+    }, key).build();
   }
 
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception {
     storage.saveUserAvatar(userId, fileAttachment);
+    miscData.remove(new SimpleCacheKey(USER_AVATAR_KEY, userId));
   }
 
   public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception {
@@ -641,6 +653,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
     clearObjectCache(category, isNew);
+    //
+    clearUserProfile(null);
     if (isNew == false) {
       clearCategoryCache(category);
     }
@@ -652,13 +666,17 @@ public class CachedDataStorage implements DataStorage, Startable {
       categoryData.select(new CategoryIdSelector(moderatorCate, categoryData));
     } catch (Exception e) {
       LOG.debug("Can not clear list categories in cached.", e);
-    } 
+    }
+    //
+    clearUserProfile(null);
   }
 
   public void calculateModerator(String nodePath, boolean isNew) throws Exception {
     storage.calculateModerator(nodePath, isNew);
     clearForumCache(Utils.getCategoryId(nodePath), Utils.getForumId(nodePath), false);
     clearForumListCache();
+    //
+    clearUserProfile(null);
   }
 
   public Category removeCategory(String categoryId) throws Exception {
@@ -666,6 +684,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryData.remove(new CategoryKey(categoryId));
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
+    //
+    clearUserProfile(null);
     return storage.removeCategory(categoryId);  
   }
 
@@ -741,6 +761,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearObjectCache(forum, true);
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
   }
 
   public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
@@ -752,6 +774,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     }
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
   }
 
   public Forum removeForum(String categoryId, String forumId) throws Exception {
@@ -773,6 +797,8 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearLinkListCache();
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
+    //
+    clearUserProfile(null);
     storage.moveForum(forums, destCategoryPath);
     //
     topicData.clearCache();
@@ -880,8 +906,8 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
     String topicPath = topicId;
-    if (Utils.isEmpty(categoryId) == false) {
-      topicPath = new StringBuffer(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
+    if (!Utils.isEmpty(categoryId)) {
+      topicPath = new StringBuilder(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
     }
     //
     return getTopicByPath(topicPath, false);
@@ -1021,6 +1047,7 @@ public class CachedDataStorage implements DataStorage, Startable {
       clearTopicCache(topic);
     } else {
       clearTopicListCountCache(forumId);
+      clearUserProfile(topic.getOwner());
     }
   }
 
@@ -1109,11 +1136,11 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearTopicCache(categoryId, forumId, topicId);
     clearTopicListCache(forumId);
     clearPostListCache();
-
     //
     if (isNew == false) {
       clearPostCache(categoryId, forumId, topicId, post.getId());
     } else {
+      clearUserProfile(post.getOwner());
       clearPostListCountCache(topicId);
     }
     statistic = null;
@@ -1267,8 +1294,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     //
     completionService.addTask(new SaveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic));
-    //
-    refreshUserProfile(new UserProfile().setUserId(userId));
   }
 
   class SaveLastPostIdRead implements Callable<Boolean> {

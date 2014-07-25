@@ -56,6 +56,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.UIFormRichtextInput;
 
 
@@ -122,8 +123,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   public UIResponseForm() throws Exception {
     isChildOfQuestionManager_ = false;
     inputResponseQuestion_ = new UIFormRichtextInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "");
-    inputResponseQuestion_.setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
-    inputResponseQuestion_.setIsPasteAsPlainText(true);
+    inputResponseQuestion_.setIgnoreParserHTML(true).setIsPasteAsPlainText(true)
+                          .setToolbar(UIFormRichtextInput.FAQ_TOOLBAR);
+    inputResponseQuestion_.addValidator(MandatoryValidator.class);
     checkShowAnswer_ = new UICheckBoxInput(SHOW_ANSWER, SHOW_ANSWER, false);
     isApproved_ = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, null);

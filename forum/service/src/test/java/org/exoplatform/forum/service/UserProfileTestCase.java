@@ -16,8 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Arrays;
-
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
@@ -31,12 +29,14 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     super.setUp();
     
     cachedStorage = (CachedDataStorage) getService(DataStorage.class);
+    setMembershipEntry("/platform/administrators", "*", true);
   }
   
   @Override
   public void tearDown() throws Exception {
     //
     super.tearDown();
+    membershipEntries.clear();
   }
 
   public void testUserProfile() throws Exception {
@@ -115,8 +115,11 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
     }
     // Add user login
+    loginUser(USER_ROOT);
     forumService_.userLogin(USER_ROOT);
+    loginUser(USER_JOHN);
     forumService_.userLogin(USER_JOHN);
+    loginUser(USER_DEMO);
     forumService_.userLogin(USER_DEMO);
 
     // Get all user online:
@@ -126,9 +129,6 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertEquals("John is not Online", forumService_.isOnline(USER_JOHN), true);
     // get Last Login
     assertEquals("Demo can't last Login", forumService_.getLastLogin(), USER_DEMO);
-    // userLogout
-    forumService_.userLogout(USER_DEMO);
-    assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
   }
   
   public void testCacheLoginUser() throws Exception {
@@ -137,13 +137,79 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
     }
     // Add user login
+    loginUser("user1");
     forumService_.userLogin("user1");
+    loginUser("user2");
     forumService_.userLogin("user2");
     
     UserProfile profile = cachedStorage.getDefaultUserProfile("user2", null);
     assertEquals("user2", profile.getScreenName());
-    
   }
 
+  public void testSavePostCount() throws Exception {
+    // set Data
+    initDefaultData();
+    //
+    String userGhost = "ghost";
+    forumService_.saveUserProfile(createdUserProfile(userGhost), false, false);
+    //
+    UserProfile profile = cachedStorage.getQuickProfile(userGhost);
+    assertNotNull(profile);
+    assertEquals(0, profile.getTotalPost());
+    Post newPost = createdPost();
+    newPost.setOwner("ghost");
+    forumService_.savePost(categoryId, forumId, topicId, newPost, true, new MessageBuilder());
+    // Save last read of user ghost
+    cachedStorage.saveLastPostIdRead(userGhost, new String[]{forumId + "/" + newPost.getId()},
+                                     new String[]{topicId + "/" + newPost.getId()});
+    //
+    profile = cachedStorage.getQuickProfile(userGhost);
+    assertEquals(1, profile.getTotalPost());
+  }
+
+  public void testSaveModerator() throws Exception {
+    //
+    initDefaultData();
+    //
+    String userGhost = "ghost";
+    UserProfile userProfile = createdUserProfile(userGhost);
+    userProfile.setUserRole(2l);
+    userProfile.setUserTitle(Utils.USER);
+    forumService_.saveUserProfile(userProfile, false, false);
+    UserProfile profile = cachedStorage.getQuickProfile(userGhost);
+    assertNotNull(profile);
+    assertEquals(2, profile.getUserRole());
+
+    // Save moderator on forum for user ghost
+    Forum forum = forumService_.getForum(categoryId, forumId);
+    forum.setModerators(new String[]{userGhost});
+    forumService_.saveForum(categoryId, forum, false);
+    //Save last read of user ghost
+    cachedStorage.saveLastPostIdRead(userGhost, new String[]{forumId + "/postId"},
+                                     new String[]{topicId + "/postId"});
+    // Check role of user ghost
+    profile = cachedStorage.getQuickProfile(userGhost);
+    assertEquals(1, profile.getUserRole());
+    assertEquals(Utils.MODERATOR, profile.getUserTitle());
+
+    // Remove moderator user ghost 
+    forum.setModerators(new String[]{});
+    forumService_.saveForum(categoryId, forum, false);
+    // Check again role of user ghost
+    profile = cachedStorage.getQuickProfile(userGhost);
+    assertEquals(2, profile.getUserRole());
+
+    // Save moderator on category for user ghost
+    Category cate = forumService_.getCategory(categoryId);
+    cate.setModerators(new String[]{userGhost});
+    forumService_.saveCategory(cate, false);
+    //Save last read of user ghost
+    cachedStorage.saveLastPostIdRead(userGhost, new String[]{forumId + "/postId"},
+                                     new String[]{topicId + "/postId"});
+    //
+    profile = cachedStorage.getQuickProfile(userGhost);
+    assertEquals(1, profile.getUserRole());
+    assertEquals(Utils.MODERATOR, profile.getUserTitle());
+  }
 
 }

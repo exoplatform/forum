@@ -23,10 +23,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.jcr.NodeIterator;
 
@@ -34,8 +33,8 @@ import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
@@ -77,35 +76,39 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.exoplatform.services.user.UserStateModel;
+import org.exoplatform.services.user.UserStateService;
 import org.picocontainer.Startable;
 import org.quartz.JobDetail;
 
 @ManagedBy(ForumServiceManaged.class)
 public class ForumServiceImpl implements ForumService, Startable {
 
-  private static final Log           log             = ExoLogger.getLogger(ForumServiceImpl.class);
+  private static final Log         log             = ExoLogger.getLogger(ForumServiceImpl.class);
 
   private DataStorage                storage;
 
-  private ForumServiceManaged        managementView;                                                  // will be automatically set at @ManagedBy processing
+  private ForumServiceManaged        managementView; // will be automatically set at @ManagedBy processing
 
-  private Map<String, List<String>>  onlineUserMap   = new HashMap<String, List<String>>();
-
-  final Queue<UserLoginLogEntry>     queue           = new ConcurrentLinkedQueue<UserLoginLogEntry>();
-
-//  private String                     lastLogin_      = "";
-  private Map<String, String>        lastLoginMap      = new HashMap<String, String>();
+  private final Map<String, LinkedList<UserLoginLogEntry>> queueMap_  = new HashMap<String, LinkedList<UserLoginLogEntry>>();
 
   private ForumStatisticsService     forumStatisticsService;
 
+  private LifeCycleCompletionService completionService;
+
   private JobSchedulerService        jobSchedulerService;
+
+  private UserStateService           userStateService;
 
   protected List<ForumEventListener> listeners_      = new ArrayList<ForumEventListener>(3);
   
-  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService forumStatisticsService, JobSchedulerService jobSchedulerService) {
+  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService staticsService,
+                          JobSchedulerService jobService, UserStateService userStateService, LifeCycleCompletionService completionService) {
     this.storage = dataStorage;
-    this.forumStatisticsService = forumStatisticsService;
-    this.jobSchedulerService = jobSchedulerService;
+    this.forumStatisticsService = staticsService;
+    this.jobSchedulerService = jobService;
+    this.userStateService = userStateService;
+    this.completionService = completionService;
   }
 
   /**
@@ -222,6 +225,9 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void stop() {
+    if (completionService != null) {
+      completionService.shutdownNow();
+    }
   }
 
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
@@ -542,16 +548,14 @@ public class ForumServiceImpl implements ForumService, Startable {
       edited.setEditedIsLock(topic.getIsLock());
       edited.setEditedIsWaiting(topic.getIsWaiting());
     }
-    
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
+    //
     for (ForumEventLifeCycle f : listeners_) {
       try {
-        if (isNew) {
+        if (isNew && topic != null) {
           f.addTopic(topic);
-        } else {
-          if (edited != null) {
-            f.updateTopic(edited);
-          }
+        } else if (edited != null) {
+          f.updateTopic(edited);
         }
       } catch (Exception e) {
         log.debug("Failed to run function addTopic/updateTopic in the class ForumEventLifeCycle. ", e);
@@ -727,14 +731,17 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
     if (post.getUserPrivate().length > 1)
       return;
-    for (ForumEventLifeCycle f : listeners_) {
-      try {
-        if (isNew)
-          f.addPost(post);
-        else
-          f.updatePost(post);
-      } catch (Exception e) {
-        log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+    //
+    if (post != null) {
+      for (ForumEventLifeCycle f : listeners_) {
+        try {
+          if (isNew)
+            f.addPost(post);
+          else
+            f.updatePost(post);
+        } catch (Exception e) {
+          log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+        }
       }
     }
   }
@@ -1163,27 +1170,33 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage.getJobWattingForModeratorByUser(userId);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void updateLoggedinUsers() throws Exception {
-    UserLoginLogEntry loginEntry = queue.poll();
-    if (loginEntry == null)
+  @Override
+  public void updateLoggedinUsers(String repoName) throws Exception {
+    //
+    LinkedList<UserLoginLogEntry> queue = queueMap_.get(repoName);
+    if (queue == null || queue.size() == 0) {
       return;
-    int maxOnline = 1;
-    Calendar timestamp = loginEntry.loginTime;
-    while (loginEntry != null) {
-      if(Utils.getCurrentTenantName().equals(loginEntry.tenantName)) {
-        storage.updateLastLoginDate(loginEntry.userName);
-        if (loginEntry.totalOnline > maxOnline) {
-          maxOnline = loginEntry.totalOnline;
-          timestamp = loginEntry.loginTime;
-        }
-      }
-      loginEntry = queue.poll();
     }
+    queueMap_.remove(repoName);
+    //
+    for (UserLoginLogEntry loginEntry_ : queue) {
+      storage.updateLastLoginDate(loginEntry_.userName);
+    }
+    //
+    UserLoginLogEntry loginEntry = queue.getFirst();
+    int maxOnline = loginEntry.totalOnline;
+    Calendar timestamp = loginEntry.loginTime;
 
     ForumStatistic stats = storage.getForumStatistic();
+
+    int jcrMostOnline = getMaxOnlineFromStorage(stats);
+    if (maxOnline > jcrMostOnline) {
+      stats.setMostUsersOnline(maxOnline + "," + timestamp.getTimeInMillis());
+      storage.saveForumStatistic(stats);
+    }
+  }
+  
+  private int getMaxOnlineFromStorage(ForumStatistic stats) throws Exception {
     int mostOnline = 0;
     String mostUsersOnline = stats.getMostUsersOnline();
     if (mostUsersOnline != null && mostUsersOnline.length() > 0) {
@@ -1191,69 +1204,82 @@ public class ForumServiceImpl implements ForumService, Startable {
       try {
         mostOnline = Integer.parseInt(array[0].trim());
       } catch (NumberFormatException e) {
-        mostOnline = 0;
+        return 0;
       }
     }
-    if (maxOnline > mostOnline) {
-      stats.setMostUsersOnline(maxOnline + "," + timestamp.getTimeInMillis());
-    } else if (mostOnline == 0) {
-      // this case is expected to appear when the first user logins to system and the statistic is not activated before.
-      // the maximum number of online users will jump from N/A to 1
-      stats.setMostUsersOnline("1," + timestamp.getTimeInMillis());
-    }
-    storage.saveForumStatistic(stats);
-
+    return mostOnline;
   }
 
   /**
    * {@inheritDoc}
    */
+  public void updateLoggedinUsers() throws Exception {
+    updateLoggedinUsers(Utils.DEFAULT_TENANT_NAME);
+  }
+  /**
+   * {@inheritDoc}
+   */
   public void userLogin(String userId) throws Exception {
-    // Note: login and onlineUserlist shoudl be anaged by forumStatisticsService.memberIn();
-    String currentTenant = Utils.getCurrentTenantName();
-    lastLoginMap.put(currentTenant, userId);
-    List<String> onlinUsers = Utils.getOnlineUserByTenantName(onlineUserMap);
-    if (!onlinUsers.contains(userId)) {
-      onlinUsers.add(userId);
-      onlineUserMap.put(currentTenant, onlinUsers);
+    userLogin(Utils.DEFAULT_TENANT_NAME, userId);
+    userStateService.ping(userId);
+  }
+  
+  public void userLogin(String repoName, String userId) throws Exception {
+    //
+    if (userStateService.isOnline(userId)) {
+      return;
     }
-    UserLoginLogEntry loginEntry = new UserLoginLogEntry(currentTenant, userId, onlinUsers.size(), 
-                                                         CommonUtils.getGreenwichMeanTime());
-    queue.add(loginEntry);
-    storage.getDefaultUserProfile(userId, null);
+    //
+    LinkedList<UserLoginLogEntry> queue = queueMap_.get(repoName);
+    if (queue == null) {
+      queue = new LinkedList<UserLoginLogEntry>();
+    }
+    int onlineSize = userStateService.online().size() + 1;
+    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, Math.max(onlineSize, queue.size() + 1));
+    int latestMaxOnline = (queue.size() > 0) ? queue.getFirst().totalOnline : 0;
+    if (latestMaxOnline < onlineSize) {
+      queue.addFirst(loginEntry);
+    } else {
+      queue.addLast(loginEntry);
+    }
+    //
+    queueMap_.put(repoName, queue);
   }
 
   /**
    * {@inheritDoc}
    */
   public void userLogout(String userId) throws Exception {
-    List<String> onlinUsers = Utils.getOnlineUserByTenantName(onlineUserMap);
-    if (onlinUsers.contains(userId)) {
-      onlinUsers.remove(userId);
-      onlineUserMap.put(Utils.getCurrentTenantName(), onlinUsers);
-    }
-    storage.removeCacheUserProfile(userId);
+    removeCacheUserProfile(userId);
   }
 
   /**
    * {@inheritDoc}
    */
   public boolean isOnline(String userId) throws Exception {
-    return Utils.getOnlineUserByTenantName(onlineUserMap).contains(userId);
+    return userStateService.isOnline(userId);
   }
 
   /**
    * {@inheritDoc}
    */
   public List<String> getOnlineUsers() throws Exception {
-    return Utils.getOnlineUserByTenantName(onlineUserMap);
+    List<String> onlineUsers = new ArrayList<String>();
+    List<UserStateModel> onlines = userStateService.online();
+    for (UserStateModel model : onlines) {
+      onlineUsers.add(model.getUserId());
+    }
+    
+    return onlineUsers;
   }
 
   /**
    * {@inheritDoc}
    */
   public String getLastLogin() throws Exception {
-    return lastLoginMap.get(Utils.getCurrentTenantName());
+    List<String> onlineUsers = getOnlineUsers();
+    int size = onlineUsers.size();
+    return (size > 0) ? onlineUsers.get(size - 1) : "";
   }
 
   /**

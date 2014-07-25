@@ -18,6 +18,7 @@ package org.exoplatform.forum.service.conf;
 
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.job.MultiTenancyJob;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.JobExecutionContext;
@@ -41,7 +42,14 @@ public class LoginJob extends MultiTenancyJob {
       super.run();
       try {
         ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        forumService.updateLoggedinUsers();
+        String masterHost = System.getProperty("tenant.masterhost");
+        if (masterHost == null) {
+          forumService.updateLoggedinUsers();
+        } else {
+          String currentLoginRepo = ((RepositoryService) container.getComponentInstanceOfType(RepositoryService.class))
+                                                                  .getCurrentRepository().getConfiguration().getName();
+          forumService.updateLoggedinUsers(currentLoginRepo);
+        }
       } catch (Exception e) {
         log_.warn("Period login job can not execute ...");
       }

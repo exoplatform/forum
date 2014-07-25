@@ -18,9 +18,9 @@ package org.exoplatform.forum.service;
 
 import java.util.Calendar;
 
-public class UserLoginLogEntry {
+import org.exoplatform.forum.common.CommonUtils;
 
-  public String   tenantName = Utils.DEFAULT_TENANT_NAME;
+public class UserLoginLogEntry {
 
   public String   userName;
 
@@ -28,11 +28,15 @@ public class UserLoginLogEntry {
 
   public Calendar loginTime;
 
-  public UserLoginLogEntry(String tenantName, String username, int totalonline, Calendar time) {
+  public UserLoginLogEntry(String username, int totalonline) {
     this.userName = username;
     this.totalOnline = totalonline;
-    this.loginTime = time;
-    this.tenantName = tenantName;
+    this.loginTime = CommonUtils.getGreenwichMeanTime();
+  }
+  
+  @Override
+  public String toString() {
+    return "{ userName: " + userName + ", totalOnnline: " + totalOnline + ", time: " + loginTime.getTimeInMillis() + "}";
   }
 
 }
