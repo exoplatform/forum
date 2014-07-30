@@ -24,15 +24,6 @@
 	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_3 http://www.gatein.org/xml/ns/gatein_resources_1_3"
 		xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
 
-  <portlet-skin>
-    <application-name>poll</application-name>
-    <portlet-name>PollPortlet</portlet-name>
-    <skin-name>Default</skin-name>
-    <css-path>/skin/css/pollPortlet.css</css-path>
-    <css-priority>1</css-priority>
-  </portlet-skin>
-
-
   <module>
     <name>UIPollPortlet</name>
     <as>poll</as>
