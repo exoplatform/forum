@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.net.URLDecoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -206,6 +208,7 @@ public class UIForumPortlet extends UIPortletApplication {
       return;
 
     String url = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
+    url = URLDecoder.decode(url, "UTF-8");
     String pageNodeSelected = ForumUtils.SLASH + Util.getUIPortal().getSelectedUserNode().getURI();
     String portalName = Util.getUIPortal().getName();
     if(url.contains(portalName + pageNodeSelected)) {
