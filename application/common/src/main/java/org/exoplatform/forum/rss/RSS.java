@@ -112,9 +112,9 @@ public class RSS {
     Document doc = docBuilder.parse(inputStream);
     doc.getDocumentElement().normalize();
 
-    SyndFeedInput input = new SyndFeedInput();
-    SyndFeed feed = input.build(doc);
-    return feed;
+//    SyndFeedInput input = new SyndFeedInput();
+//    SyndFeed feed = input.build(doc);
+    return null;
     }
     catch (Exception e) {
       LOG.error("Failed to read RSS feed");
