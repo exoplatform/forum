@@ -83,7 +83,7 @@
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
 			<div class="pendingTopic forumSeparatorLine pull-right">
-				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon clearfix"><span class="topicNumber pull-right">$total</span><i class="uiIconForumPending uiIconForumLightGray"></i>&nbsp;$pending</a>
+				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending <span class="topicNumber">$total</span></a>
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
