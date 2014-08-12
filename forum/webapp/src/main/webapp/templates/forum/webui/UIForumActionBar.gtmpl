@@ -82,8 +82,8 @@
 				String pending = _ctx.appRes("UIBreadcumbs.label.Pending");
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
-			<div class="pull-right forumSeparatorLine">
-				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+			<div class="pendingTopic forumSeparatorLine pull-right">
+				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon clearfix"><span class="topicNumber pull-right">$total</span><i class="uiIconForumPending uiIconForumLightGray"></i>&nbsp;$pending</a>
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
