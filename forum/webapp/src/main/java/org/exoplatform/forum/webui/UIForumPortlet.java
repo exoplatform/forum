@@ -873,7 +873,6 @@ public class UIForumPortlet extends UIPortletApplication {
       if (log.isDebugEnabled()){
         log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.");
       }
-      showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", ForumUtils.EMPTY_STR);
       renderForumHome();
       path = Utils.FORUM_SERVICE;
     }
