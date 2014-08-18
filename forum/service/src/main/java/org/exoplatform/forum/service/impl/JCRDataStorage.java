@@ -111,6 +111,7 @@ import org.exoplatform.forum.service.TopicListAccess;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
@@ -7616,10 +7617,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumNode = (Node) getForumHomeNode(sProvider).getSession().getItem(pSetting.getForumPath());
       NodeIterator iter = getIteratorPrune(sProvider, pSetting);
+      List<String> topicPruned = new ArrayList<String>();
       while (iter.hasNext()) {
         Node topic = iter.nextNode();
         topic.setProperty(EXO_IS_ACTIVE, false);
         topic.save();
+        topicPruned.add(topic.getPath());
         try {
           Node forumN = topic.getParent();
           if (new PropertyReader(forumN).string(EXO_LAST_TOPIC_PATH, "").indexOf(topic.getName()) >= 0) {
@@ -7633,6 +7636,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node setting = forumNode.getNode(pSetting.getId());
       setting.setProperty(EXO_LAST_RUN_DATE, getGreenwichMeanTime());
       forumNode.save();
+      //
+      DataStorage storage = getCachedDataStorage();
+      if (storage instanceof CachedDataStorage) {
+        for (String topicPath : topicPruned) {
+          ((CachedDataStorage) storage).clearTopicCache(storage.getTopicByPath(topicPath, false));
+        }
+      }
     } catch (Exception e) {
       LOG.error("Failed to run prune", e);
     }
@@ -7645,7 +7655,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
     QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
     StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("//element(*,").append(EXO_TOPIC).append(")[ @").append(EXO_IS_ACTIVE).append("='true' and @").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')]");
+    stringBuffer.append(JCR_ROOT).append(forumNode.getPath()).append("/element(*,").append(EXO_TOPIC).append(")[ @").append(EXO_IS_ACTIVE).append("='true' and @").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')]");
     Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
     QueryResult result = query.execute();
     return result.getNodes();

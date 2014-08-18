@@ -261,12 +261,11 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearTopicCache(getTopicByPath(topicPath, false));
   }
   
-  private void clearTopicCache(Topic topic) throws Exception {
+  public void clearTopicCache(Topic topic) throws Exception {
     if (topic != null) {
       clearTopicCache(topic.getPath());
       objectNameData.remove(new ObjectNameKey(topic.getId(), Utils.TOPIC));
     }
-    
   }
 
   private void clearPostCache(String categoryId, String forumId, String topicId, String postId) throws Exception {
@@ -1704,10 +1703,24 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void runPrune(String forumPath) throws Exception {
     storage.runPrune(forumPath);
+    //
+    clearRunPrune(forumPath);
+  }
+  
+  private void clearRunPrune(String forumPath) throws Exception {
+    //
+    String forumId = Utils.getForumId(forumPath);
+    clearForumCache(Utils.getCategoryId(forumPath), forumId, false);
+    //
+    clearTopicListCache(forumId);
+    clearTopicListCountCache(forumId);
   }
 
   public void runPrune(PruneSetting pSetting) throws Exception {
     storage.runPrune(pSetting);
+    //
+    String forumPath = pSetting.getForumPath();
+    clearRunPrune(forumPath);
   }
 
   public long checkPrune(PruneSetting pSetting) throws Exception {

@@ -17,6 +17,8 @@
 package org.exoplatform.forum.service.cache;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -30,7 +32,9 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
@@ -353,9 +357,56 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     cacheDataStorage.removeCategory(categoryId);
   }
   
-  private void saveHasPoll(String topicPath, boolean status) throws Exception {
+  public void testRunPruneForum() throws Exception {
+    // default data
+    initDefaultData();
+    loginUser(USER_DEMO);
+    //
+    Topic topic = createdTopic(USER_DEMO);
+    forumService_.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    Post post = createdPost();
+    forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+    //
+    Calendar lastPost = Calendar.getInstance();
+    long twoDays = 48*60*60*1000;
+    lastPost.setTimeInMillis(lastPost.getTimeInMillis() - twoDays);
+    Session session = getSession();
+    Node topicNode = (Node) session.getItem(topic.getPath());
+    topicNode.setProperty(Utils.EXO_LAST_POST_DATE, lastPost);
+    session.save();
+    session.logout();
+    //
+    PruneSetting pruneSetting = new PruneSetting();
+    pruneSetting.setId(Utils.PRUNESETTING);
+    pruneSetting.setActive(true);
+    pruneSetting.setForumPath(cacheDataStorage.getForum(categoryId, forumId).getPath());
+    pruneSetting.setInActiveDay(1);
+    // check Prune
+    assertEquals(1, cacheDataStorage.checkPrune(pruneSetting));
+    // check before prune
+    TopicFilter filter = new TopicFilter(categoryId, forumId);
+    filter.isAdmin(false).isApproved(true);
+    long count = cacheDataStorage.getTopicsCount(filter);
+    assertEquals(2, count);
+    
+    topic = cacheDataStorage.getTopic(categoryId, forumId, topic.getId(), null);
+    assertTrue(topic.getIsActive());
+    // run prune
+    cacheDataStorage.runPrune(pruneSetting);
+    // check before run pruned
+    count = cacheDataStorage.getTopicsCount(filter);
+    assertEquals(1, count);
+    topic = cacheDataStorage.getTopic(categoryId, forumId, topic.getId(), null);
+    assertFalse(topic.getIsActive());
+  }
+  
+  private Session getSession() throws Exception {
     KSDataLocation dataLocation = getService(KSDataLocation.class);
-    Session session = dataLocation.getSessionManager().createSession();
+    return dataLocation.getSessionManager().createSession();
+  }
+  
+  private void saveHasPoll(String topicPath, boolean status) throws Exception {
+    Session session = getSession();
     Node node = (Node) session.getItem(topicPath);
     node.setProperty(ForumNodeTypes.EXO_IS_POLL, status);
     session.save();
