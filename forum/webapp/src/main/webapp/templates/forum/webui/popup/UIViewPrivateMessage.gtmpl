@@ -22,7 +22,7 @@
 			<a href="<%=uicomponent.event("Close")%>" class="uiIconClose pull-right"><div class="ClosePopup" style="width: 16px; height: 16px;"><span></span></div></a>
 			<span class="popupTitle"><%=_ctx.appRes("UIPrivateMessageForm.label.MailTitle");%>: $title </span>
 		</h5>
-		<div class="uiContentBox postContent">
+		<div class="uiContentBox postContent" id="uiViewPrivateMessage">
 			$message
 			<div class="uiActionDashed">
 				<button class="btn" onclick="<%=action%>" type="button"><i class="uiIconReply uiIconLightGray"></i> <%=label%></button>&nbsp;

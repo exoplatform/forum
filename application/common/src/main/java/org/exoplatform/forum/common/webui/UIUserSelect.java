@@ -68,10 +68,10 @@ public class UIUserSelect extends BaseUIForm implements UIPopupComponent  {
   public static final String   FIELD_KEYWORD     = "QuickSearch";
   public static final String   FIELD_FILTER      = "filter";
   public static final String   FIELD_GROUP       = "group";
-  public static final String   USER_NAME         = FilterType.USER_NAME.toString();
-  public static final String   LAST_NAME         = FilterType.LAST_NAME.toString();
-  public static final String   FIRST_NAME        = FilterType.FIRST_NAME.toString();
-  public static final String   EMAIL             = FilterType.EMAIL.toString();
+  public static final String   USER_NAME         = FilterType.USER_NAME.getName();
+  public static final String   LAST_NAME         = FilterType.LAST_NAME.getName();
+  public static final String   FIRST_NAME        = FilterType.FIRST_NAME.getName();
+  public static final String   EMAIL             = FilterType.EMAIL.getName();
 
   protected Map<String, User>  userData_          = new HashMap<String, User>();
 
@@ -213,10 +213,10 @@ public class UIUserSelect extends BaseUIForm implements UIPopupComponent  {
 
   private List<SelectItemOption<String>> getFilters() {
     List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
-    options.add(new SelectItemOption<String>(USER_NAME, USER_NAME));
-    options.add(new SelectItemOption<String>(LAST_NAME, LAST_NAME));
-    options.add(new SelectItemOption<String>(FIRST_NAME, FIRST_NAME));
-    options.add(new SelectItemOption<String>(EMAIL, EMAIL));
+    options.add(new SelectItemOption<String>(getLabel(USER_NAME), USER_NAME));
+    options.add(new SelectItemOption<String>(getLabel(LAST_NAME), LAST_NAME));
+    options.add(new SelectItemOption<String>(getLabel(FIRST_NAME), FIRST_NAME));
+    options.add(new SelectItemOption<String>(getLabel(EMAIL), EMAIL));
     return options;
   }
 

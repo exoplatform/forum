@@ -14,9 +14,11 @@
 		
 		<table class="uiGrid table table-hover table-striped">
 			<thead>
-				<th style="width:35px;" class="center"></th>
-				<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
-				<th style="width:40px;" class="center"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
+        <tr>
+  				<th style="width:35px;" class="center">&nbsp;</th>
+  				<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
+  				<th style="width:40px;" class="center">&nbsp;</th>
+        </tr>
 			</thead>
 			<tbody>
 				<%

@@ -9,9 +9,7 @@
 		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.CategoryClosedPosts")%>
 	<% } else { %>
 		<span class="textHotTopic"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></span>
- 		<!-- <div class="IconForum HotThreadNoNewPost"><i class=""></i><%=_ctx.appRes("UIForumIconState.label.ForumHotNoNewPost")%></div> -->
 		<i class="uiIconForumColorUnread"></i><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%>
-		<!-- <div class="IconForum ThreadNoNewPost"><i class=""></i><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div> -->
 		<i class="uiIconForumColorLockTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%>
 		<i class="uiIconForumColorCloseTiny"></i><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%>
 		<i class="uiIconForumStick uiIconForumLightGray"></i><%=_ctx.appRes("UIForumIconState.label.TopicStick")%>

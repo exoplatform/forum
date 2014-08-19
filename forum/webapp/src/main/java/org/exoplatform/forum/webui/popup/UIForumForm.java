@@ -358,7 +358,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       String notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue();
 
       if (!ForumUtils.isValidEmailAddresses(notifyWhenAddPosts) || !ForumUtils.isValidEmailAddresses(notifyWhenAddTopics)) {
-        uiForm.warning("UIAddMultiValueForm.msg.invalid-field");
+        uiForm.warning("MessagePost.msg.invalid-email");
         uiForm.isDoubleClickSubmit = false;
         return;
       }
