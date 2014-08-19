@@ -26,7 +26,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
-import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
@@ -79,8 +78,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   final static public String    FIELD_FROM_INPUT       = "FromInput";
 
   final static public String    FIELD_MESSAGECONTENT   = "MessageContent";
-
-  final static public String    FIELD_ORIGINALLY       = "Originally";
 
   public static final String    FIELD_THREADCONTEN_TAB = "ThreadContent";
 
@@ -291,7 +288,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         post.setAttachments(uiForm.getAttachFileList());
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
         UIViewPost viewPost = uiForm.openPopup(popupContainer, UIViewPost.class, 670, 0);
-        viewPost.setId("viewPost");
         viewPost.setPostView(post);
         viewPost.setActionForm(new String[] { "Close" });
       } else {

@@ -349,8 +349,7 @@ public class UITopicForm extends BaseForumForm {
         if (k == 0) {
           args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) };
           if (t <= 0)
-            args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " " + 
-                                  uiForm.getLabel("and") + " " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
+            args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " & " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
           warning("NameValidator.msg.ShortMessage", args);
         } else if (t <= 0) {
           warning("NameValidator.msg.ShortMessage", args);

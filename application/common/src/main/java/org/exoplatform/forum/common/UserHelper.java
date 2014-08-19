@@ -67,7 +67,7 @@ public class UserHelper {
 
     public static FilterType getType(String name) {
       for (FilterType type : values()) {
-        if (type.getName().equals(name)) {
+        if (type.getName().equalsIgnoreCase(name)) {
           return type;
         }
       }

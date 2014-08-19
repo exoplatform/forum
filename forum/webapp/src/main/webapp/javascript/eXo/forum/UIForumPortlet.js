@@ -652,9 +652,9 @@
 
     reSizeImagesInMessageForm : function() {
       if (eXo.core.Browser.isIE6())
-        setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "UIViewPrivateMessageForm")', 800);
+        setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "uiViewPrivateMessage")', 800);
       else
-        setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
+        setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "uiViewPrivateMessage")', 400);
     },
 
     setSizeImages : function(delta, classParant) {

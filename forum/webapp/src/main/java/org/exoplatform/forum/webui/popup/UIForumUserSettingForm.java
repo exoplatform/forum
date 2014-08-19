@@ -65,8 +65,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIForumUserSettingForm.AttachmentActionListener.class), 
-      @EventConfig(listeners = UIForumUserSettingForm.SetDefaultAvatarActionListener.class), 
       @EventConfig(listeners = UIForumUserSettingForm.SaveActionListener.class), 
       @EventConfig(listeners = UIForumUserSettingForm.OpenTabActionListener.class), 
       @EventConfig(listeners = UIForumUserSettingForm.OpentContentActionListener.class), 
@@ -479,25 +477,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String objectId) throws Exception {
       uiForm.tabId = objectId;
       Util.getPortalRequestContext().setResponseComplete(true);
-    }
-  }
-
-  static public class AttachmentActionListener extends EventListener<UIForumUserSettingForm> {
-    public void execute(Event<UIForumUserSettingForm> event) throws Exception {
-      UIForumUserSettingForm uiForm = event.getSource();
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0);
-      attachFileForm.updateIsTopicForm(false);
-      attachFileForm.setIsChangeAvatar(true);
-      attachFileForm.setMaxField(1, true);
-    }
-  }
-
-  static public class SetDefaultAvatarActionListener extends EventListener<UIForumUserSettingForm> {
-    public void execute(Event<UIForumUserSettingForm> event) throws Exception {
-      UIForumUserSettingForm uiForm = event.getSource();
-      uiForm.getForumService().setDefaultAvatar(uiForm.userProfileSetting.getUserId());
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
 

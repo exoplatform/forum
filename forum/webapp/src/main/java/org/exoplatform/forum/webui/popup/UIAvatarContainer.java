@@ -15,7 +15,7 @@ import org.exoplatform.webui.form.UIFormInputSet;
 @ComponentConfig(
      template = "app:/templates/forum/webui/popup/UIAvatarContainer.gtmpl",
      events = {
-       @EventConfig(listeners = UIAvatarContainer.SetDeaultAvatarActionListener.class,  confirm="UIModeratorManagementForm.msg.setDefaultAvartar"),
+       @EventConfig(listeners = UIAvatarContainer.SetDeaultAvatarActionListener.class,  confirm="UIAvatarContainer.msg.setDefaultAvartar"),
        @EventConfig(listeners = UIAvatarContainer.UpdateAvatarActionListener.class)
      }
  )
