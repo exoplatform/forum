@@ -190,7 +190,7 @@
 							</div>
 							<ul class="dropdown-menu">
 							<%
-							String []classIconsTopic = ["uiIconEdit", "uiIconOpen", "uiIconMinus", "uiIconLockMedium", "uiIconUnlockMedium", "uiIconForumStick", "uiIconForumUnStick", "uiIconMove", "uiIconDelete", "uiIconForumMerge", "uiIconForumCensor", "uiIconForumApprove", "uiIconActivateTopics"];
+							String []classIconsTopic = ["uiIconEdit", "uiIconOpen", "uiIconMinus", "uiIconLockMedium", "uiIconUnlockMedium", "uiIconForumStick", "uiIconForumUnStick", "uiIconMove", "uiIconDelete", "uiIconForumMerge", "uiIconForumCensor", "uiIconForumApprove", "uiIconForumApprove"];
 							int idIc = 0;
 								for(action in uicomponent.getActionMenuTopic()) {
 								String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
