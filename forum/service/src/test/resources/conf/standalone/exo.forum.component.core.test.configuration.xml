@@ -130,6 +130,15 @@
     <key>org.exoplatform.forum.mock.ResultTestForumListener</key>
     <type>org.exoplatform.forum.mock.ResultTestForumListener</type>
   </component>
+  <component>
+    <key>org.exoplatform.forum.base.mock.MockOtherService</key>
+    <type>org.exoplatform.forum.base.mock.MockOtherService</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
+    <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+  </component>
 
   <external-component-plugins>
     <target-component>org.exoplatform.forum.service.ForumService</target-component>
@@ -198,4 +207,14 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>ForumEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.forum.base.mock.MockForumEventListener</type>
+    </component-plugin>
+  </external-component-plugins>
+
 </configuration>

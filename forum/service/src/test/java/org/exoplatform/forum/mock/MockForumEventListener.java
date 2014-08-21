@@ -52,6 +52,12 @@ public class MockForumEventListener extends ForumEventListener {
   public void moveTopic(Topic topic, String toCategoryName, String toForumName) {
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public void movePost(List<Post> posts, List<String> srcPostActivityIds, String desTopicPath) {
+  }
+  
   @Override
   public void mergeTopic(Topic newTopic, String removeActivityId1, String removeActivityId2) {
   }

@@ -348,6 +348,9 @@ public class TestCacheDataStrorage extends BaseForumServiceTestCase {
     // Check topic watch's list after deleting
     watchedList = cacheDataStorage.getWatchByUser("john");
     assertEquals(watchedList.size(), 0);
+
+    //
+    cacheDataStorage.removeCategory(categoryId);
   }
   
   private void saveHasPoll(String topicPath, boolean status) throws Exception {
