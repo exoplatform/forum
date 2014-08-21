@@ -31,6 +31,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -85,7 +86,7 @@ public class ResultQuickSearch extends BaseUIFAQForm implements UIPopupComponent
     searchResults_ = new ArrayList<ObjectSearchResult>();
     try {
       long pageSelected = pageIterator.getPageSelected();
-      searchResults_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
+      searchResults_.addAll(pageList.getPageResultSearch(pageSelected, UserHelper.getCurrentUser()));
     } catch (Exception e) {
       if (log.isDebugEnabled()) {
         log.debug("Failed to get search results", e);
