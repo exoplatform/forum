@@ -859,6 +859,23 @@ public class Utils implements ForumNodeTypes {
   }
 
   /**
+   * Get Post ID from post path.
+   * @param path
+   * @return
+   * @since 4.1-RC2
+   */
+  public static String getPostId(String path) {
+    if (isEmpty(path) == false && path.lastIndexOf(POST) != -1) {
+      String postId = path.substring(path.lastIndexOf(POST));
+      if (postId.indexOf("/") != -1) {
+        postId = postId.substring(0, postId.indexOf("/"));
+      }
+      return postId;
+    }
+    return null;
+  }
+
+  /**
    * Get object id by path and type
    * @param path
    * @param type

@@ -680,4 +680,13 @@ public class UtilsTestCase extends TestCase {
     input = "forumCategoryposttopic/forumSpacetopicpost/topicforumtopicpost/posttopicxxx";
     assertEquals("posttopicxxx", Utils.getIdByType(input, Utils.POST));
   }
+  
+  public void testGetPostId() {
+    assertEquals("posta77c1c237f00010145419cee3ac29fe5",
+                 Utils.getPostId("posta77c1c237f00010145419cee3ac29fe5"));
+    assertEquals("posta77c1c237f00010145419cee3ac29fe5",
+                 Utils.getPostId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya779f0d57f00010108ac0b087a59082f/foruma779f0ea7f00010162d38dbc5ae76721/topicx77608da7f0001017c1031ba8c6197c2/posta77c1c237f00010145419cee3ac29fe5"));
+    assertEquals("posta77c1c237f00010145419cee3ac29fe5",
+                 Utils.getPostId("/exo:applications/ForumService/ForumData/CategoryHome/forumCategorya77c1bd07f0001013c4096e6275324ea/foruma77c1be27f000101712b773a1be93fc9/topicx77608da7f0001017c1031ba8c6197c2/posta77c1c237f00010145419cee3ac29fe5"));
+  }
 }
