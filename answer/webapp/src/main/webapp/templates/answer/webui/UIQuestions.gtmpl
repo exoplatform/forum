@@ -38,7 +38,7 @@
 		<ul class="menuLeft pull-left">
 		<%if(canEditQuestion || uicomponent.isAddQuestion()) { %>
 			<li>
-				<button class="btn btn-primary addNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" type="button"><i class="uiIconAnsSubmitQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.AddNewQuestion");%></button>
+				<button class="btn btn-primary addNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" type="button"><i class="uiIconAnsSubmitQuestion uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.AddNewQuestion");%></button>
 			</li>
 		<%}
 			if(uicomponent.faqSetting_.isEnableAutomaticRSS()) {
