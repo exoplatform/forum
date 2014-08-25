@@ -248,22 +248,25 @@ public class CachedDataStorage implements DataStorage, Startable {
       userProfileListCount.select(new ScopeCacheSelector<UserProfileListCountKey, SimpleCacheData<Integer>>());
     }
   }
-  
+
   private void clearTopicCache(String topicPath) {
-    topicPath = Utils.getSubPath(topicPath);
-    topicData.remove(new TopicKey(topicPath, true));
-    topicData.remove(new TopicKey(topicPath, false));
-    topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
+    try {
+      Topic topic = getTopicByPath(topicPath, false);
+      clearTopicCache(topic);
+    } catch (Exception e) {}
   }
 
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
     String topicPath = new StringBuffer(categoryId).append("/").append(forumId).append("/").append(topicId).toString();
-    clearTopicCache(getTopicByPath(topicPath, false));
+    clearTopicCache(topicPath);
   }
   
   private void clearTopicCache(Topic topic) throws Exception {
     if (topic != null) {
-      clearTopicCache(topic.getPath());
+      String topicPath = Utils.getSubPath(topic.getPath());
+      topicData.remove(new TopicKey(topicPath, true));
+      topicData.remove(new TopicKey(topicPath, false));
+      topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
       objectNameData.remove(new ObjectNameKey(topic.getId(), Utils.TOPIC));
     }
     

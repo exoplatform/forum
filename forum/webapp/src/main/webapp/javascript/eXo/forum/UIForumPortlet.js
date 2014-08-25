@@ -13,6 +13,12 @@
         UIForumPortlet.initShowUserInfo();
         UIForumPortlet.disableOnClickMenu('SearchForm');
         UIForumPortlet.initTooltip(id);
+        jportlet.find('.dropdown').parent().on('click', function(evt) {
+          var menu = $(this).find('.dropdown-menu:first');
+          if (menu.find('input:first').exists()) {
+            var t = setTimeout(function() { menu.find('input:first').focus(); clearTimeout(t); }, 200)
+          }
+        });
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 

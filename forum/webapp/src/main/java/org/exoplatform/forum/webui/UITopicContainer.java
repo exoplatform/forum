@@ -546,8 +546,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         topicId = strs[0];
         pageuNumber = Integer.parseInt(strs[1].trim());
         postView = strs[2];
-
-        topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
+        
+        topic = forumService.getTopic(component.categoryId, component.forumId, topicId, null);
+        if (topic == null) {
+          topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
+        }
         if (topic == null) {
           topicNotExist();
           return false;
