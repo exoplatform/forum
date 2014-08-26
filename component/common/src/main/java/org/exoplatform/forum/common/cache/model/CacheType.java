@@ -39,7 +39,7 @@ public enum CacheType {
   POLL_SUMMARY_DATA("poll.PollSummaryData"),
   
   BBCODE_DATA("forum.BBCodeData"),
-  LIST_BBCODE_DATA("forum.ListBBCodeData");
+  LIST_BBCODE_DATA("forum.BBCodeListData");
   
   private final String name;
 
