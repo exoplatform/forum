@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.forum.common.jcr.JCRQueryUtils;
 
 public class ForumEventQuery implements ForumNodeTypes {
   public static final String VALUE_IN_ENTIRE = "entire";
@@ -402,6 +403,7 @@ public class ForumEventQuery implements ForumNodeTypes {
     StringBuffer stringBuffer = new StringBuffer();
     StringBuilder builder = new StringBuilder();
     values = values.replaceAll(";", ",");
+    values = JCRQueryUtils.escapeSimpleQuoteCharacter(values);
     if (values.indexOf(",") > 0) {
       String[] vls = values.split(",");
       int i = 0;

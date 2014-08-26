@@ -372,13 +372,13 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       eventQuery.setKeyValue(keyValue);
       eventQuery.setValueIn(valueIn);
       eventQuery.setPath(uiForm.path);
-      eventQuery.setByUser(CommonUtils.encodeSpecialCharInSearchTerm(byUser));
+      eventQuery.setByUser(byUser);
       eventQuery.setIsLock(isLock);
       eventQuery.setIsClose(isClosed);
       eventQuery.setTopicCountMin(uiForm.checkValue(topicCountMin));
       eventQuery.setPostCountMin(uiForm.checkValue(postCountMin));
       eventQuery.setViewCountMin(uiForm.checkValue(viewCountMin));
-      eventQuery.setModerator(CommonUtils.encodeSpecialCharInSearchTerm(moderator));
+      eventQuery.setModerator(moderator);
       eventQuery.setFromDateCreated(fromDateCreated);
       eventQuery.setToDateCreated(toDateCreated);
       eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost);

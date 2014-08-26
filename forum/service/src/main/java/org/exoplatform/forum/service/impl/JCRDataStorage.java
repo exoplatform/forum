@@ -73,6 +73,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.jcr.JCRQueryUtils;
 import org.exoplatform.forum.common.jcr.JCRSessionManager;
 import org.exoplatform.forum.common.jcr.JCRTask;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
@@ -8223,7 +8224,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       for (int i = 0; i < strs.length; i++) {
         if (i > 0)
           builder.append(" or ");
-        builder.append("(@").append(strs[i]).append("='").append(userName).append("')");
+        builder.append("(@").append(strs[i]).append("='").append(JCRQueryUtils.escapeSimpleQuoteCharacter(userName)).append("')");
       }
 
       StringBuilder pathQuery = new StringBuilder();
