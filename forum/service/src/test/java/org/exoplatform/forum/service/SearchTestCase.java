@@ -268,4 +268,47 @@ public void testAdvancedSearch() throws Exception {
     
   }
 
+  public void testAdvancedSearchByUserEmail() throws Exception {
+    String owner = "rootloca'l@host";
+    String moderator = "jo'hn@localhost";
+    
+    Category cat = new Category();
+    cat.setOwner(owner);
+    cat.setCategoryName("social");
+    cat.setDescription("about your team");
+    forumService_.saveCategory(cat, true);
+    //Root create a forum
+    Forum forum = new Forum();
+    forum.setOwner(owner);
+    forum.setForumName("general question");
+    forum.setDescription("all yours questions here");
+    String[] mods = {moderator};
+    forum.setModerators(mods);
+    forumService_.saveForum(cat.getId(), forum, true);
+    //Root create a topic
+    Topic topic = new Topic();
+    topic.setOwner(owner);
+    topic.setTopicName("where do you go?");
+    topic.setDescription("the next week");
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    //Root post a message
+    Post post = new Post();
+    post.setOwner(owner);
+    post.setName("new post");
+    post.setMessage("go to the hell");
+    forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+    
+    ForumEventQuery eventQuery = new ForumEventQuery(); 
+    eventQuery.setUserPermission(0); 
+    eventQuery.setType(Utils.CATEGORY) ; //search only category
+    eventQuery.setValueIn("entire") ; //search all : owner, title, content, message ... (not only title)
+    eventQuery.setByUser(owner); //filter by owner (all in this case)
+    
+    //Test search "root" in all category
+    List<ForumSearchResult> forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); 
+    assertNotNull(forumSearchs);
+    assertEquals(1, forumSearchs.size());
+    assertEquals("social", forumSearchs.get(0).getName());
+  }
+
 }
