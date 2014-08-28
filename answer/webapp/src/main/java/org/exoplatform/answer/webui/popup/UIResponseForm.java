@@ -54,6 +54,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
@@ -65,10 +66,10 @@ import org.exoplatform.webui.form.UIFormRichtextInput;
     template = "app:/templates/answer/webui/popup/UIResponseForm.gtmpl", 
     events = {
         @EventConfig(listeners = UIResponseForm.SaveActionListener.class), 
-        @EventConfig(listeners = UIResponseForm.CancelActionListener.class), 
-        @EventConfig(listeners = UIResponseForm.AddRelationActionListener.class), 
-        @EventConfig(listeners = UIResponseForm.RemoveRelationActionListener.class), 
-        @EventConfig(listeners = UIResponseForm.ChangeLanguageActionListener.class) 
+        @EventConfig(listeners = UIResponseForm.CancelActionListener.class,phase = Phase.DECODE), 
+        @EventConfig(listeners = UIResponseForm.AddRelationActionListener.class,phase = Phase.DECODE), 
+        @EventConfig(listeners = UIResponseForm.RemoveRelationActionListener.class,phase = Phase.DECODE), 
+        @EventConfig(listeners = UIResponseForm.ChangeLanguageActionListener.class,phase = Phase.DECODE) 
     }
 )
 public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
@@ -149,13 +150,20 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   public Question getQuestion() {
     return question_;
   }
+  
+  private void setValueTextInput(String value) {
+    if (CommonUtils.isEmpty(value)) {
+      value = "";
+    }
+    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(value));
+  }
 
   public void setAnswerInfor(Question question, Answer answer, String language) {
     //
     setQuestionId(question, language, answer.getApprovedAnswers());
     mapAnswers.clear();
     mapAnswers.put(answer.getLanguage(), answer);
-    inputResponseQuestion_.setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(answer.getResponses()));
+    setValueTextInput(answer.getResponses());
     
     questionLanguages_.setValue(answer.getLanguage());
     questionLanguages_.setSelectedValues(new String[] { answer.getLanguage() });
@@ -548,9 +556,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
       // get answer by language
       if (responseForm.mapAnswers.containsKey(newLanguage))
-        responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(newLanguage).getResponses());
+        responseForm.setValueTextInput(responseForm.mapAnswers.get(newLanguage).getResponses());
       else
-        responseForm.inputResponseQuestion_.setValue("");
+        responseForm.setValueTextInput("");
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
     }
   }
