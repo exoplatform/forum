@@ -42,6 +42,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
@@ -51,7 +52,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
     template = "app:/templates/answer/webui/popup/UICommentForm.gtmpl", 
     events = {
         @EventConfig(listeners = UICommentForm.SaveActionListener.class), 
-        @EventConfig(listeners = UICommentForm.CancelActionListener.class) 
+        @EventConfig(listeners = UICommentForm.CancelActionListener.class,phase = Phase.DECODE) 
     }
 )
 public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
