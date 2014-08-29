@@ -37,7 +37,7 @@
 	.resize {
 		margin-top: 8px;
 		a {
-			#gradient > .vertical(@white,@grayWhiteSmoke);
+			#gradient > .vertical(@white,@componentBackground);
 			border: 1px solid @borderColor;
 			border-right: 0;
 			padding: 4px 0;
@@ -146,7 +146,7 @@
 		.border-radius(@borderRadiusSmall);
 		& >.responseItemContainer {
 			.border-radius(@borderRadiusSmall @borderRadiusSmall  0 0);
-			background: @grayWhiteSmoke;
+			background: @componentBackground;
 			min-height: 110px;
 			.languageContainer  {
 				margin: 0 20px 0 0;
@@ -294,7 +294,7 @@
 		.border-radius(0  @borderRadiusSmall @borderRadiusSmall  0 );
 	}
 	&.boxNumGray {
-		background: @grayWhiteSmoke;
+		background: @componentBackground;
 	}
 	& + .boxNum {
 		border-left: 1px solid @componentBackgroundHover;
