@@ -301,7 +301,6 @@
 <%uiform.end()%>
 
 </div>
-<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>
 
 <div class="uiAction uiActionBorder">
 

@@ -84,7 +84,7 @@
       var leftNav = $('.LeftNavigationTDContainer:first');
       if(leftNav.exists()) {
         leftNav.css('height', 'auto');
-        setTimeout(forumLeftNavigation.resize, 100);
+        setTimeout(forumLeftNavigation.resize, 1000);
       }
     },
 

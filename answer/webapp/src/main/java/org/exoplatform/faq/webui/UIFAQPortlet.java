@@ -22,6 +22,7 @@ import org.exoplatform.answer.webui.FAQUtils;
 import org.exoplatform.answer.webui.popup.UIFAQSettingForm;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.webui.BuildRendering;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -72,7 +73,9 @@ public class UIFAQPortlet extends UIPortletApplication {
         settingForm.defaulValue();
       }
     }
+    BuildRendering.startRender(context);
     super.processRender(app, context);
+    BuildRendering.endRender(context);
   }
   
   public void renderPortletByURL(UIViewer uiViewer) throws Exception {

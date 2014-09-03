@@ -945,4 +945,3 @@
 		<%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR);%>
 	</div>
 </div>
-<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>

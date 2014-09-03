@@ -36,4 +36,3 @@
     </div>
 	<%uiform.end()%>
 </div>
-<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>

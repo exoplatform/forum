@@ -16,23 +16,28 @@
  */
 package org.exoplatform.forum.rendering;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
-import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.forum.common.webui.BuildRendering.AbstractRenderDelegate;
 import org.exoplatform.forum.service.Post;
-
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class RenderHelper {
-
+  protected static final Log LOG = ExoLogger.getLogger(RenderHelper.class);
   private MarkupRenderingService markupRenderingService;
-
   public RenderHelper() {
   }
 
+  private static final AbstractRenderDelegate<Post> POST_DELEGATE = new AbstractRenderDelegate<Post>() {
+    @Override
+    public String getMessage(Post post) {
+      return post.getMessage();
+    }
+  };
+  
   /**
    * Render markup for a forum Post
    * 
@@ -41,36 +46,22 @@ public class RenderHelper {
    */
   public String renderPost(Post post) {
     try {
-      return getMarkupRenderingService().delegateRendering(new PostDelegate(), post);
+      return getMarkupRenderingService().delegateRendering(POST_DELEGATE, post);
     } catch (Exception e) {
-      throw new RenderingException(e);
+      LOG.warn("Failed to render post: " + post.getId());
+      LOG.debug(e.getMessage(), e);
+      return  post.getMessage();
     }
   }
-
-  static class PostDelegate implements MarkupRenderDelegate<Post> {
-
-    public String getMarkup(Post post) {
-      return CommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
-    }
-
-    /**
-     * Note: when Forum will support more syntaxes, we should have the resolving logic here
-     */
-    public String getSyntax(Post target) {
-      return SupportedSyntaxes.bbcode.name();
-    }
-
-  }
-
+  
   public MarkupRenderingService getMarkupRenderingService() {
-    if (this.markupRenderingService == null) {
-      this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MarkupRenderingService.class);
+    if (markupRenderingService == null) {
+      markupRenderingService = CommonsUtils.getService(MarkupRenderingService.class);
     }
-    return this.markupRenderingService;
+    return markupRenderingService;
   }
 
-  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
-    this.markupRenderingService = markupRenderingService;
+  public void setMarkupRenderingService(MarkupRenderingService service) {
+    this.markupRenderingService = service;
   }
-
 }
