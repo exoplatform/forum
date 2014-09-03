@@ -124,5 +124,4 @@
 	<button onclick="$link" class="btn" type="button">$actionLabel</button>
       <%}%>
 </div>
-<%=org.exoplatform.forum.common.webui.WebUIUtils.addScriptSyntaxhighlighter()%>
 <%uiform.end();%>

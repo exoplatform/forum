@@ -16,6 +16,8 @@
  */
 package org.exoplatform.forum.common.webui;
 
+import java.text.MessageFormat;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -42,7 +44,8 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
 public class WebUIUtils {
   private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
-  private static final String SCRIPT = "<script src=\"/forumResources/syntaxhighlighter/Scripts/SCRIPT_NAME\" type=\"text/javascript\"></script>";
+  private static final String SCRIPT_PATTERN = 
+      "<script src=\"/forumResources/syntaxhighlighter/Scripts/{0}\" id=\"script_{1}_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
 
   public static String getRemoteIP() {
     String remoteAddr = "";
@@ -108,15 +111,43 @@ public class WebUIUtils {
     return requireJS;
   }
   
-  static public String addScriptSyntaxhighlighter() {
+  /**
+   * Build the script tag HTML
+   * 
+   * @param scriptName
+   * @param index
+   * @return The script tag
+   */
+  private static String makeScript(String scriptName, int index) {
+    return MessageFormat.format(SCRIPT_PATTERN, scriptName, index);
+  }
+  
+  /**
+   * Attach the list javaScript files of SyntaxHighlighter
+   * @param languageOption The list of files name javaScript
+   * @return The list files attach for SyntaxHighlighter
+   */
+  static public String attachJSSyntaxHighlighter(List<String> languageOption) {
     StringBuilder scripts = new StringBuilder();
-    //
-    scripts.append(SCRIPT.replace("SCRIPT_NAME", "shCore.js"))
-           .append(SCRIPT.replace("SCRIPT_NAME", "shAutoloader.js"))
-           .append(SCRIPT.replace("SCRIPT_NAME", "shLegacy.js"))
-           .append(SCRIPT.replace("SCRIPT_NAME", "load_syntaxhighlighter.js"));
-    //
-    addScripts(new String[] { "SyntaxHighlighter.initLoader()", "SyntaxHighlighter.all()", "dp.SyntaxHighlighter.HighlightAll('code')" });
+    if(languageOption != null && languageOption.size() > 0) {
+      int index = 0;
+      //Attach javaScript core of SyntaxHighlighter
+      scripts.append(makeScript("shCore.js", (index++)))
+             .append(makeScript("shAutoloader.js", (index++)));
+      // Attach javaScript by language code (ex: java, php, script, html ...) 
+      for (String lang : languageOption) {
+        scripts.append(makeScript("shBrush" + lang + ".js", (index++)));
+      }
+      // Attach javaScript loader of SyntaxHighlighter
+      scripts.append(makeScript("shLegacy.js", (index++)))
+             .append(makeScript("load_syntaxhighlighter.js", (index++)));
+      // Execute method javaScript to process SyntaxHighlighter
+      try {
+        String script = "setTimeout(function() {try {SyntaxHighlighter.initLoader();SyntaxHighlighter.all();" +
+                        "dp.SyntaxHighlighter.HighlightAll('code');}catch(err){if(window.console && SyntaxHighlighter.config.strings.isAlert) {window.console.log(err);}}}, 500);";
+        addScripts(new String[] { script });
+      } catch (Exception e) {}
+    }
     //
     return scripts.toString();
   }

@@ -115,7 +115,6 @@
 					<button type="button" onclick="$actionPriview" class="btn"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></button>
 				</div>
 			</div>
-			<%=WebUIUtils.addScriptSyntaxhighlighter()%>
 			<% } %>
 						
 			<% 

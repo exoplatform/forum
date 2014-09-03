@@ -768,7 +768,6 @@
 		</div>
 	</div>
 	<% } %>
-	<%=WebUIUtils.addScriptSyntaxhighlighter()%>
 	<% } else {
 		uicomponent.renderPoll();
 	%>
