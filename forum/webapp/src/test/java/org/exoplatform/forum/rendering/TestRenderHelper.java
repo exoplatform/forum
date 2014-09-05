@@ -19,10 +19,12 @@ package org.exoplatform.forum.rendering;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.exoplatform.commons.testing.mock.MockWebUIRequestContext;
 import org.exoplatform.forum.bbcode.core.BBCodeRenderer;
 import org.exoplatform.forum.common.webui.BuildRendering;
@@ -99,16 +101,10 @@ public class TestRenderHelper extends TestCase {
     //
     assertNull(BuildRendering.getCodeHighlighters(context));
   }
-  
-  public void testGetCodeSupportedLangs() {
-    String expected = "{Bash=[bash, shell, sh], AppleScript=[applescript], Diff=[diff, patch], "
-        + "JavaFX=[jfx, javafx], Perl=[perl, Perl, pl], Java=[java], AS3=[actionscript3, as3], "
-        + "Erlang=[erl, erlang], Scala=[scala], Cpp=[cpp, c], Python=[py, python], "
-        + "JScript=[js, jscript, javascript], CSharp=[c#, c-sharp, csharp], Sass=[sass, scss], "
-        + "Ruby=[ruby, rails, ror, rb], ColdFusion=[coldfusion, cf], Sql=[sql], "
-        + "PowerShell=[powershell, ps, posh], Php=[php], Delphi=[delphi, pascal, pas], Xml=[xml, xhtml, xslt, html], "
-        + "Vb=[vb, vbnet], Haxe=[haxe, hx], TypeScript=[ts, typescript], Plain=[text, plain], Groovy=[groovy], Css=[css, less]}";
 
-    assertEquals(expected, BuildRendering.getCodeSupportedLangs().toString());
+  public void testGetCodeSupportedLangs() {
+    List<String> expected = Arrays.asList("Bash", "AppleScript", "Diff", "JavaFX", "Perl", "Java", "AS3", "Erlang", "Scala", "Cpp", "Python", "JScript", "CSharp",
+                                          "Sass", "Ruby", "ColdFusion", "Sql", "PowerShell", "Php", "Delphi", "Xml", "Vb", "Haxe", "TypeScript", "Plain", "Groovy", "Css");
+    assertTrue(CollectionUtils.isEqualCollection(expected, BuildRendering.getCodeSupportedLangs().keySet()));
   }
 }
