@@ -21,31 +21,39 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 
 public class PersisterTaskTest extends TestCase {
+  
 
-  public void TestPersisterTimerTask() throws Exception {
+  public void testPersisterTimerTask() throws Exception {
     MockPersister persister = new MockPersister(1000, TimeUnit.MILLISECONDS, 5);
+    
+    assertEquals(0, persister.getCommitedCount());
+    for (int i = 0; i < 4; ++i) {
+      persister.addTask(new MockPersister.Task());
+    }
+    
+    Thread.sleep(1005);
+    persister.doneSignal().await();
 
-    Thread.sleep(2010);
-    //
-    assertEquals(2, persister.getCommitedCount());
-    persister.stopPersister();
+    assertEquals(0, persister.getCommitedCount());
+    persister.clear();
   }
 
   public void testPersisterSizeTask() throws Exception {
     MockPersister persister = new MockPersister(1000, TimeUnit.MILLISECONDS, 5);
-    Thread.sleep(510);
+    //Thread.sleep(510);
     //First run
-    assertEquals(1, persister.getCommitedCount());
+    assertEquals(0, persister.getCommitedCount());
     for (int i = 0; i < 6; ++i) {
       persister.addTask(new MockPersister.Task());
     }
     // Run by fix size
-    assertEquals(2, persister.getCommitedCount());
+    assertEquals(1, persister.getCommitedCount());
     //
-    Thread.sleep(1000);
+    Thread.sleep(1005);
+    persister.doneSignal().await();
     //
-    assertEquals(3, persister.getCommitedCount());
-    persister.stopPersister();
+    assertEquals(0, persister.getCommitedCount());
+    persister.clear();
   }
 
 }

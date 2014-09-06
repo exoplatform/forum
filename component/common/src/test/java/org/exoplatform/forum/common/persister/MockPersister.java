@@ -18,6 +18,7 @@ package org.exoplatform.forum.common.persister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class MockPersister implements Persister {
@@ -25,6 +26,8 @@ public class MockPersister implements Persister {
   private int count = 0;
   private List<Task> tasks = new ArrayList<Task>();
   private PersisterTask timerTask;
+  private CountDownLatch doneSignal; 
+  
   public MockPersister(long wakeup, TimeUnit util, int maxFixedSize) {
     this.timerTask = PersisterTask.init().persister(this).wakeup(wakeup)
                                    .timeUnit(util).maxFixedSize(maxFixedSize).build();
@@ -34,13 +37,19 @@ public class MockPersister implements Persister {
   @Override
   public void commit(boolean forceCommit) {
     if (forceCommit || timerTask.shoudldPersist(tasks.size())) {
-      ++count;
+      doneSignal = new CountDownLatch(tasks.size());
+      for(Task t : tasks) {
+        t.run();
+        count--;
+        doneSignal.countDown();
+      }
       tasks.clear();
     }
   }
   
   public void addTask(Task task) {
     tasks.add(task);
+    ++count;
     //
     commit(false);
   }
@@ -49,8 +58,9 @@ public class MockPersister implements Persister {
     return count;
   }
   
-  public void stopPersister() {
-    this.timerTask.stop();
+  @Override
+  public void clear() {
+    this.tasks.clear();
   }
   
   public void resetCount() {
@@ -62,6 +72,12 @@ public class MockPersister implements Persister {
     public int run() {
       return 1;
     }
+  }
+
+
+  @Override
+  public CountDownLatch doneSignal() {
+    return this.doneSignal != null ? this.doneSignal : new CountDownLatch(0);
   }
   
 }

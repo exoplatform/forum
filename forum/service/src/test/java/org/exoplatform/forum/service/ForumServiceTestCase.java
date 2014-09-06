@@ -28,19 +28,28 @@ import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.forum.service.task.QueryLastPostTaskManager;
+import org.exoplatform.forum.service.task.SendNotificationTaskManager;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
+  private SendNotificationTaskManager sendNotificationManager;
+  private QueryLastPostTaskManager queryLastPostManager;
   
   @Override
   public void setUp() throws Exception {
     super.setUp();
+    sendNotificationManager = CommonsUtils.getService(SendNotificationTaskManager.class);
+    queryLastPostManager = CommonsUtils.getService(QueryLastPostTaskManager.class);
 
   }
 
   @Override
   public void tearDown() throws Exception {
+    sendNotificationManager.clear();
+    queryLastPostManager.clear();
     //
     removeAllData();
     super.tearDown();
@@ -642,6 +651,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   
   public void testLastTopicOfForum() throws Exception {
     initDefaultData();
+    
     //
     JCRDataStorage dataStorage = getService(JCRDataStorage.class);
     // create 20 topics
@@ -654,6 +664,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     String lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
     assertNotSame(topic.getId(), Utils.getTopicId(lastTopicPath));
     Thread.sleep(6000);
+    queryLastPostManager.doneSignal().await();
     //
     lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
     assertEquals(topic.getId(), Utils.getTopicId(lastTopicPath));
@@ -661,6 +672,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   
   public void testSendEmailNotification() throws Exception {
     initDefaultData();
+    
     //
     JCRDataStorage dataStorage = getService(JCRDataStorage.class);
     // Add watch
@@ -673,6 +685,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     }
     //
     Thread.sleep(10000);
+    sendNotificationManager.doneSignal().await();
     //
     assertEquals(21, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
   }

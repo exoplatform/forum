@@ -17,6 +17,7 @@
 package org.exoplatform.forum.service.task;
 
 import java.util.Queue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,8 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
   private int PERSISTER_THRESHOLD = 20;
   /** The Queue tasks **/
   private Queue<T> tasks = null;
+  /** Defines the signal done when task committed*/ 
+  private CountDownLatch doneSignal;
   
   public AbstractForumTaskManager(InitParams params) {
     long interval_task = InitParamsValue.getLong(params, INTERVAL_TASK_PERSIST_THRESHOLD_KEY, INTERVAL_TASK_PERSIST_THRESHOLD);
@@ -75,10 +78,12 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
       try {
         RequestLifeCycle.begin(PortalContainer.getInstance());
         T task;
+        doneSignal = new CountDownLatch(processTasks.size());
         while ((task = processTasks.poll()) != null) {
           //
           try {
             task.run();
+            doneSignal.countDown();
           } catch (Exception e) {
             LOG.warn(String.format("The task %s running unsuccessful.", task.getClass().getName()));
             LOG.debug(e.getMessage(), e);
@@ -120,5 +125,18 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
     tasks.add(task);
     //
     commit(false);
+  }
+  
+  @Override
+  public CountDownLatch doneSignal() {
+    return this.doneSignal != null ? this.doneSignal : new CountDownLatch(0);
+  }
+  
+  @Override
+  public void clear() {
+    if (this.tasks != null) {
+      this.tasks.clear();
+    }
+    
   }
 }
