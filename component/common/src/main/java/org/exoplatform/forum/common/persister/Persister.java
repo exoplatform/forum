@@ -16,6 +16,8 @@
  */
 package org.exoplatform.forum.common.persister;
 
+import java.util.concurrent.CountDownLatch;
+
 public interface Persister {
   
   /**
@@ -24,5 +26,18 @@ public interface Persister {
    * @param forceCommit
    */
   void commit(boolean forceCommit);
+  
+  /**
+   * The clear the persister
+   *   
+   */
+  void clear();
+  
+  /**
+   * Takes the signal when the task to be done.
+   * 
+   * @return
+   */
+  CountDownLatch doneSignal();
 
 }
