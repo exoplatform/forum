@@ -22,34 +22,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
-import org.exoplatform.forum.service.task.QueryLastPostTaskManager;
-import org.exoplatform.forum.service.task.SendNotificationTaskManager;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
-  private SendNotificationTaskManager sendNotificationManager;
-  private QueryLastPostTaskManager queryLastPostManager;
-  
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    sendNotificationManager = CommonsUtils.getService(SendNotificationTaskManager.class);
-    queryLastPostManager = CommonsUtils.getService(QueryLastPostTaskManager.class);
-
   }
 
   @Override
   public void tearDown() throws Exception {
-    sendNotificationManager.clear();
-    queryLastPostManager.clear();
     //
     removeAllData();
     super.tearDown();
@@ -663,7 +653,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     //
     String lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
     assertNotSame(topic.getId(), Utils.getTopicId(lastTopicPath));
-    Thread.sleep(6000);
+    Thread.sleep(1000);
     queryLastPostManager.doneSignal().await();
     //
     lastTopicPath = dataStorage.getForum(categoryId, forumId).getLastTopicPath();
@@ -671,12 +661,20 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
   
   public void testSendEmailNotification() throws Exception {
-    initDefaultData();
-    
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    String categoryId = cat.getId();
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    String forumId = forum.getId();
+    forumService_.saveForum(categoryId, forum, true);
+    //
+    String owner = "user_email";
+    UserProfile profile = createdUserProfile(owner);
+    forumService_.saveUserProfile(profile, false, false);
     //
     JCRDataStorage dataStorage = getService(JCRDataStorage.class);
     // Add watch
-    dataStorage.addWatch(1, categoryId + "/" + forumId, Arrays.asList("test@plf.com"), USER_DEMO);
+    dataStorage.addWatch(1, categoryId + "/" + forumId, Arrays.asList(profile.getEmail()), owner);
     // create 20 topics
     Topic topic = null;
     for (int i = 0; i < 20; i++) {
@@ -684,10 +682,41 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
       dataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
     }
     //
-    Thread.sleep(10000);
+    Thread.sleep(5000);
     sendNotificationManager.doneSignal().await();
     //
-    assertEquals(21, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
+    assertEquals(20, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
   }
   
+  public void testSendNotificationEmail () throws Exception {
+    String postMsg  = "test notification email";
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat.getId(), forum, true);
+    forum = forumService_.getForum(cat.getId(), forum.getId());
+    
+    // test send notification email if user registered for the Forum and Topic Watching notification 
+    String owner = "user0";
+    UserProfile profile = createdUserProfile(owner);
+    forumService_.saveUserProfile(profile, false, false);
+    //
+    MessageBuilder messageBuilder = new MessageBuilder();
+    messageBuilder.setContent(Utils.DEFAULT_EMAIL_CONTENT);
+    Topic topicNTF = createdTopic(owner);
+    topicNTF.setIsNotifyWhenAddPost(profile.getEmail());
+    // Save topic
+    forumService_.saveTopic(cat.getId(), forum.getId(), topicNTF, true, false, messageBuilder);
+    Post post = createdPost();
+    post.setMessage(postMsg);
+    // Save post
+    forumService_.savePost(cat.getId(), forum.getId(), topicNTF.getId(), post, true, messageBuilder);
+    Thread.sleep(2000);
+    sendNotificationManager.doneSignal().await();
+    // check result test
+    Iterator<SendMessageInfo> iter = forumService_.getPendingMessages();
+    SendMessageInfo msgInfo = iter.next();
+    assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
+    assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
+  }
 }

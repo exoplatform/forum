@@ -3587,12 +3587,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //
       post.setPath(postNode.getPath());
       //
-      if (topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId()) == false && isNew) {
-        addNotificationTask(topicNode.getPath(), null, post, messageBuilder, false);
-      }
-      //
       boolean sendAlertJob = (!messageBuilder.getLink().equals("link") && (post.getUserPrivate().length != 2) && 
                               (!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()));
+      
+      if (topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId()) == false && isNew) {
+        addNotificationTask(topicNode.getPath(), null, post, messageBuilder, !sendAlertJob);
+      }
+      
+      //
       if (sendAlertJob) {
         getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
       }
@@ -3873,14 +3875,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           List<String> emailListForum = new ArrayList<String>();
           // Owner Notify
           if (isApprovePost) {
-            String ownerTopicEmail = "";
-            String owner = node.getProperty(EXO_OWNER).getString();
-            if (node.hasProperty(EXO_IS_NOTIFY_WHEN_ADD_POST) && !Utils.isEmpty(node.getProperty(EXO_IS_NOTIFY_WHEN_ADD_POST).getString())) {
+            PropertyReader reader = new PropertyReader(node);
+            String owner = reader.string(EXO_OWNER);
+            String ownerTopicEmail = reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, StringUtils.EMPTY);
+            if (!CommonUtils.isEmpty(ownerTopicEmail)) {
               try {
                 Node userOwner = userProfileHome.getNode(owner);
-                ownerTopicEmail = userOwner.getProperty(EXO_EMAIL).getString();
-              } catch (Exception e) {
-                ownerTopicEmail = node.getProperty(EXO_IS_NOTIFY_WHEN_ADD_POST).getString();
+                reader = new PropertyReader(userOwner);
+                if(reader.bool(EXO_IS_BANNED)) {
+                  ownerTopicEmail = StringUtils.EMPTY;
+                } else if (!Utils.isEmpty(reader.string(EXO_EMAIL, StringUtils.EMPTY))) {
+                  ownerTopicEmail = userOwner.getProperty(EXO_EMAIL).getString();
+                }
+              } catch (PathNotFoundException e) {
+                // owner not existing
+                ownerTopicEmail = StringUtils.EMPTY;
               }
             }
             String[] users = post.getUserPrivate();
@@ -3901,6 +3910,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               }
             }
           }
+          
           /*
            * check is approved, is activate by topic and is not hidden before send mail
            */
