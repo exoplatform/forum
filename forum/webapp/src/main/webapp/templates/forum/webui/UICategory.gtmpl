@@ -136,7 +136,7 @@
 							</li>
 						<% 
 							} else if(action.equals("DeleteCategory")) {
-								String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
+								String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory"));
 						%>
 							<li>
 								<a href="javascript:if(confirm('$confirm')){$link;}" class="confirm"><i class="$classIconItem"></i><%=nameItem%></a>
