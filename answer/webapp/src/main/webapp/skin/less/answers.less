@@ -96,7 +96,7 @@
 
 	blockquote {
 		background: none;
-		 border-left: 5px solid #999;
+		border-left: 5px solid @grayLight;
 	    margin: 0 0 20px;
 	    padding: 0 0 0 15px;
 	    width: auto;
@@ -375,7 +375,7 @@
 	.contentQuote{
 		font-style: italic;
 		padding: 15px 15px 15px 20px;
-		background: #e6f3ff;
+		background: @quoteSecondBackground;
 		margin: 10px 0 0 15px;
 		word-wrap: break-word;
 		.border-radius(2px);
@@ -384,7 +384,7 @@
 			padding-left: 0;
 			margin-top: 10px;
 			.contentQuote{
-				border-left: solid 5px #aacded;
+				border-left: solid 5px @quoteSecondBorder;
 				padding: 0px 0px 0px 20px;
 				margin-top: 15px;
 				.titleQuote{
@@ -419,7 +419,7 @@
 .questionContainer {
 	.theContent {
 		.contentQuote {
-			background: #f8f8f8;
+			background: @componentBackgroundLight;
 		}
 	}
 }
