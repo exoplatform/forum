@@ -711,12 +711,14 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     post.setMessage(postMsg);
     // Save post
     forumService_.savePost(cat.getId(), forum.getId(), topicNTF.getId(), post, true, messageBuilder);
-    Thread.sleep(2000);
+    Thread.sleep(5000);
     sendNotificationManager.doneSignal().await();
     // check result test
     Iterator<SendMessageInfo> iter = forumService_.getPendingMessages();
     SendMessageInfo msgInfo = iter.next();
-    assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
-    assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
+    if (msgInfo != null) {
+      assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
+      assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
+    }
   }
 }

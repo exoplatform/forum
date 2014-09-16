@@ -16,7 +16,10 @@
  */
 package org.exoplatform.forum.service;
 
+import java.util.Calendar;
+
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 
@@ -210,6 +213,28 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     profile = cachedStorage.getQuickProfile(userGhost);
     assertEquals(1, profile.getUserRole());
     assertEquals(Utils.MODERATOR, profile.getUserTitle());
+  }
+  
+  public void testAccessTopic() throws Exception{
+    //
+    initDefaultData();
+    //
+    String userTest = "test_user";
+    UserProfile userProfile = createdUserProfile(userTest);
+    userProfile.setUserRole(2l);
+    userProfile.setUserTitle(Utils.USER);
+    forumService_.saveUserProfile(userProfile, false, false);
+    //
+    userProfile = cachedStorage.getDefaultUserProfile(userTest, "");
+    assertEquals(0, userProfile.getLastTimeAccessTopic(topicId));
+    //
+    long timeBeforeRead = CommonUtils.getGreenwichMeanTime().getTimeInMillis();
+    forumService_.updateTopicAccess(userTest, topicId);
+    forumService_.writeReads();
+    //
+    userProfile = cachedStorage.getDefaultUserProfile(userTest, "");
+    //
+    assertTrue(userProfile.getLastTimeAccessTopic(topicId) >= timeBeforeRead);
   }
 
 }

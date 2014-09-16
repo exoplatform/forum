@@ -381,6 +381,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
   
   public void updateCurrentUserProfile() {
+    UserProfile lastProfile = userProfile;
     try {
       String userId = UserHelper.getCurrentUser();
       if (enableBanIP) {
@@ -394,6 +395,11 @@ public class UIForumPortlet extends UIPortletApplication {
         userProfile.setUserRole((long) 3);
     } catch (Exception e) {
       userProfile = new UserProfile();
+    }
+    if (lastProfile != null) {
+      userProfile.getLastAccessTopics().putAll(lastProfile.getLastAccessTopics());
+      userProfile.getLastAccessForums().putAll(lastProfile.getLastAccessForums());
+      lastProfile = null;
     }
     if(UserProfile.USER_DELETED == userProfile.getUserRole() ||
        UserProfile.GUEST == userProfile.getUserRole() ) {

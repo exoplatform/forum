@@ -1636,10 +1636,12 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void updateTopicAccess(String userId, String topicId) {
     storage.updateTopicAccess(userId, topicId);
+    clearUserProfile(userId);
   }
 
   public void updateForumAccess(String userId, String forumId) {
     storage.updateForumAccess(userId, forumId);
+    clearUserProfile(userId);
   }
 
   public void writeReads() {
