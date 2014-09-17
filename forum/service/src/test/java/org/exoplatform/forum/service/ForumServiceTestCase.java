@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
@@ -30,7 +29,9 @@ import javax.jcr.ImportUUIDBehavior;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.services.organization.User;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
@@ -330,10 +331,10 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // addWatch
     String topicPath = categoryId + "/" + forumId;
     List<String> values = new ArrayList<String>();
-    values.add("duytucntt@gmail.com");
-    forumService_.addWatch(1, topicPath, values, "root");
+    values.add("exo_test@plf.com");
+    forumService_.addWatch(1, topicPath, values, USER_ROOT);
     // watch by user
-    List<Watch> watchs = forumService_.getWatchByUser("root");
+    List<Watch> watchs = forumService_.getWatchByUser(USER_ROOT);
     assertEquals(watchs.get(0).getEmail(), values.get(0));
     forumService_.removeWatch(1, topicPath, "/" + values.get(0));
     watchs = forumService_.getWatchByUser("root");
@@ -345,7 +346,6 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.removeWatch(1, categoryId, "/" + values.get(0 ));
     assertEquals(0, forumService_.getCategory(categoryId).getEmailNotification().length);
     // Sleep to done run task notification.
-    Thread.sleep(5000);
   }
 
   public void testIpBan() throws Exception {
@@ -661,6 +661,9 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
   
   public void testSendEmailNotification() throws Exception {
+    //reset old mails
+    forumService_.getPendingMessages();
+    //
     Category cat = createCategory(getId(Utils.CATEGORY));
     String categoryId = cat.getId();
     forumService_.saveCategory(cat, true);
@@ -689,17 +692,29 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   }
   
   public void testSendNotificationEmail () throws Exception {
+    //reset old mails
+    forumService_.getPendingMessages();
+    //
     String postMsg  = "test notification email";
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
     Forum forum = createdForum();
     forumService_.saveForum(cat.getId(), forum, true);
     forum = forumService_.getForum(cat.getId(), forum.getId());
-    
     // test send notification email if user registered for the Forum and Topic Watching notification 
-    String owner = "user0";
-    UserProfile profile = createdUserProfile(owner);
-    forumService_.saveUserProfile(profile, false, false);
+    String owner = "user_test_mail";
+    User user = UserHelper.getUserHandler().createUserInstance(owner);
+    user.setEmail(owner + "@plf.com");
+    user.setFirstName(owner);
+    user.setLastName(owner);
+    user.setDisplayName(owner);
+    user.setPassword("password");
+    //
+    UserHelper.getUserHandler().createUser(user, true);
+    //
+    UserProfile profile = forumService_.getUserInfo(owner);
+    assertNotNull(profile);
+    assertEquals(user.getEmail(), profile.getEmail());
     //
     MessageBuilder messageBuilder = new MessageBuilder();
     messageBuilder.setContent(Utils.DEFAULT_EMAIL_CONTENT);
@@ -714,11 +729,10 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     Thread.sleep(5000);
     sendNotificationManager.doneSignal().await();
     // check result test
-    Iterator<SendMessageInfo> iter = forumService_.getPendingMessages();
-    SendMessageInfo msgInfo = iter.next();
-    if (msgInfo != null) {
-      assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
-      assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
-    }
+    List messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    assertEquals(1, messages.size());
+    SendMessageInfo msgInfo = (SendMessageInfo) messages.get(0);
+    assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
+    assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
   }
 }
