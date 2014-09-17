@@ -33,6 +33,7 @@ public class UIForumContainer extends UIContainer {
   public void setIsRenderChild(boolean isRender) {
     getChild(UITopicContainer.class).setRendered(isRender);
     getChild(UITopicDetailContainer.class).setRendered(!isRender);
-    getChild(UIForumSummary.class).setRendered(isRender);
+    UIForumSummary forumSummary = getChild(UIForumSummary.class).setRendered(isRender);
+    forumSummary.getChild(UIForumIconState.class).setRendered(((UIForumPortlet)getParent()).isShowIconsLegend());
   }
 }
