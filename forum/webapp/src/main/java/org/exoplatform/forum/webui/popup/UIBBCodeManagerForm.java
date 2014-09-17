@@ -61,29 +61,30 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
   public void deActivate() {
   }
 
-  public void loadBBCodes() throws Exception {
+  public void loadBBCodes(boolean isFirstLoad) throws Exception {
     listBBCode = new ArrayList<BBCode>();
     try {
       listBBCode.addAll(bbCodeService.getAll());
     } catch (Exception e) {
       log.error("failed to set BBCode List", e);
     }
-    initCheckBoxActiveBBCode();
+    initCheckBoxActiveBBCode(isFirstLoad);
   }
 
   private String getIdCheckBox(String id) {
     return id.contains("=") ? id.replaceFirst("=", "opt") : id;
   }
 
-  public void initCheckBoxActiveBBCode() throws Exception {
+  public void initCheckBoxActiveBBCode(boolean isFirstLoad) throws Exception {
     for (BBCode bbc : listBBCode) {
       String id = getIdCheckBox(bbc.getId());
       UICheckBoxInput isActiveBBcode = getUICheckBoxInput(id);
       if (isActiveBBcode == null) {
-        isActiveBBcode = new UICheckBoxInput(id, id, false);
+        isActiveBBcode = new UICheckBoxInput(id, id, bbc.isActive());
         addUIFormInput(isActiveBBcode);
+      } else {
+        isActiveBBcode.setChecked(isFirstLoad ? bbc.isActive() : isActiveBBcode.isChecked());
       }
-      isActiveBBcode.setChecked(bbc.isActive());
     }
   }
 
@@ -124,7 +125,7 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
   static public class DeleteBBCodeActionListener extends BaseEventListener<UIBBCodeManagerForm> {
     public void onEvent(Event<UIBBCodeManagerForm> event, UIBBCodeManagerForm uiForm, final String objectId) throws Exception {
       uiForm.bbCodeService.delete(objectId);
-      uiForm.loadBBCodes();
+      uiForm.loadBBCodes(false);
       refresh();
     }
   }

@@ -177,7 +177,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       }
       try {
         UIBBCodeManagerForm codeManagerForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBBCodeManagerForm.class);
-        codeManagerForm.loadBBCodes();
+        codeManagerForm.loadBBCodes(false);
         event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm);
       } catch (Exception e) {
         log.error("Can not update from: UIBBCodeManagerForm", e);

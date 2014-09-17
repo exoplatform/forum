@@ -327,7 +327,7 @@ public class UIForumActionBar extends UIContainer {
       UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIBBCodeManagerForm codeManagerForm = popupContainer.addChild(UIBBCodeManagerForm.class, null, null);
-      codeManagerForm.loadBBCodes();
+      codeManagerForm.loadBBCodes(true);
       popupContainer.setId("BBCodeManagerForm");
       popupAction.activate(popupContainer, 650, 400);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
