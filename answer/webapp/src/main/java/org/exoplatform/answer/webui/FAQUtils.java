@@ -334,6 +334,8 @@ public class FAQUtils {
 
   public static void getPorletPreference(FAQSetting faqSetting) {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    ResourceBundle res = pcontext.getApplicationResourceBundle();
+    //
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     faqSetting.setEnableViewAvatar(Boolean.parseBoolean(portletPref.getValue("enableViewAvatar", "")));
     faqSetting.setEnableAutomaticRSS(Boolean.parseBoolean(portletPref.getValue("enableAutomaticRSS", "")));
@@ -344,7 +346,13 @@ public class FAQUtils {
     faqSetting.setOrderType(portletPref.getValue("orderType", ""));
     faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", "")));
     faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", ""));
-    faqSetting.setEmailMoveQuestion(portletPref.getValue("emailMoveQuestion", ""));
+    //
+    String emailMoveQuestion = portletPref.getValue("emailMoveQuestion", null);
+    if (emailMoveQuestion == null || StringUtils.isEmpty(emailMoveQuestion.trim())) {
+      faqSetting.setEmailMoveQuestion(res.getString("SendEmail.MoveQuetstion.Default"));
+    } else {
+      faqSetting.setEmailMoveQuestion(emailMoveQuestion);
+    }
     faqSetting.setPostQuestionInRootCategory(Boolean.parseBoolean(portletPref.getValue("isPostQuestionInRootCategory", "true")));
   }
 
@@ -358,8 +366,7 @@ public class FAQUtils {
       if (isSettingForm)
         emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
     }
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
+    ResourceBundle res = pcontext.getApplicationResourceBundle();
     if (emailContent == null || emailContent.trim().length() < 1) {
       if (isNew) {
         emailContent = res.getString("SendEmail.AddNewQuestion.Default");
