@@ -3,46 +3,44 @@
 %>
 <div class="uiFormForum $id">
 	<% uiform.begin() %>
-  <div class="resizable">
-		<div class="form-horizontal">
-			<% 
-				for(field in uiform.getChildren()) { 
-					if(field.isRendered()) {
-			%>
-						<div class="control-group">
-							<%fieldName = uicomponent.getLabel(field.getName());%>
-							<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
-								<% if(field.getName().equals("upload") == false) {%>
-								<label class="control-label">
-									<%if(field.getName().equals("censorKeyword")){ %>
-										<label for="<%=field.getId()%>"><%=fieldName%></label>
-									<%} else {%>
-                    <label for="<%=field.getId()%>"><%=fieldName%>:</label>
-                  <%} %>
-								</label>
-								
-								<div class="controls">
-									<% uiform.renderField(field) %>
-								</div>
+	<div class="form-horizontal resizable">
+		<%
+			for(field in uiform.getChildren()) {
+				if(field.isRendered()) {
+		%>
+					<div class="control-group">
+						<%fieldName = uicomponent.getLabel(field.getName());%>
+						<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>
+							<% if(field.getName().equals("upload") == false) {%>
+							<label class="control-label">
+								<%if(field.getName().equals("censorKeyword")){ %>
+									<label for="<%=field.getId()%>"><%=fieldName%></label>
 								<%} else {%>
-									<div class="controlUpload controls-full"><% uiform.renderField(field) %></div>
-								<%} %>
+                <label for="<%=field.getId()%>"><%=fieldName%>:</label>
+              <%} %>
+							</label>
+
+							<div class="controls">
+								<% uiform.renderField(field) %>
+							</div>
 							<%} else {%>
-								<div class="controls">
-									<label><% uiform.renderField(field) %></label>
-								</div>
-							<%}%>
-						</div>
-			<%
-					}
+								<div class="controlUpload controls-full"><% uiform.renderField(field) %></div>
+							<%} %>
+						<%} else {%>
+							<div class="controls">
+								<label><% uiform.renderField(field) %></label>
+							</div>
+						<%}%>
+					</div>
+		<%
 				}
-			%>
-				
-		</div>
-    </div>
+			}
+		%>
+
+	</div>
 	<div class="uiAction uiActionBorder">
-	<% for(action in uicomponent.getActions()) { 
-		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	<% for(action in uicomponent.getActions()) {
+		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 		 String link = uicomponent.event(action) ;
 		 String onclick = "" ;
 		 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
