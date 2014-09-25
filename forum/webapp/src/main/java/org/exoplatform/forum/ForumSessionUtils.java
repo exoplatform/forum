@@ -18,6 +18,7 @@ package org.exoplatform.forum;
 
 import java.util.List;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.user.CommonContact;
 import org.exoplatform.forum.common.user.ContactProvider;
@@ -51,29 +52,29 @@ public class ForumSessionUtils {
     String url = null;
     try {
       if (forumService == null) {
-        forumService = CommonUtils.getComponent(ForumService.class);
+        forumService = CommonsUtils.getService(ForumService.class);
       }
       ForumAttachment attachment = forumService.getUserAvatar(userName);
-      url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
+      if(attachment != null) {
+        url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
+      }
     } catch (Exception e) {
-//      if (LOG.isDebugEnabled())
-//        LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
+      LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
     }
-    if (url == null || url.trim().length() < 1) {
+    if (CommonUtils.isEmpty(url)) {
       CommonContact contact = getPersonalContact(userName);
-      if (!ForumUtils.isEmpty(contact.getAvatarUrl())) {
+      if (!CommonUtils.isEmpty(contact.getAvatarUrl())) {
         url = contact.getAvatarUrl();
       }
-      url = (url == null || url.trim().length() < 1) ? DEFAULT_AVATAR : url;
     }
-    return url;
+    return (CommonUtils.isEmpty(url)) ? DEFAULT_AVATAR : url;
   }
 
   public static CommonContact getPersonalContact(String userId) {
     try {
       if (userId.indexOf(Utils.DELETED) > 0)
         return new CommonContact();
-      ContactProvider provider = CommonUtils.getComponent(ContactProvider.class);
+      ContactProvider provider = CommonsUtils.getService(ContactProvider.class);
       return provider.getCommonContact(userId);
     } catch (Exception e) {
       return new CommonContact();
@@ -89,6 +90,6 @@ public class ForumSessionUtils {
   }
   
   public static List<Forum> getForumsOfCategory(String categoryId, UserProfile userProfile) throws Exception {
-    return CommonUtils.getComponent(ForumService.class).getForums(new ForumFilter(categoryId, true).userId(userProfile.getUserId()));
+    return CommonsUtils.getService(ForumService.class).getForums(new ForumFilter(categoryId, true).userId(userProfile.getUserId()));
   }
 }

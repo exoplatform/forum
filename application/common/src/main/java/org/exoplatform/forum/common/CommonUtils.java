@@ -41,13 +41,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.rendering.MarkupRenderingService;
 import org.exoplatform.forum.rendering.api.Renderer;
 import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
@@ -60,7 +60,7 @@ import org.w3c.dom.Document;
  * @version $Revision$
  */
 public class CommonUtils {
-  private static Log log = ExoLogger.getLogger(CommonUtils.class);
+  private static Log LOG = ExoLogger.getLogger(CommonUtils.class);
   
   public static final String         COMMA        = ",";
 
@@ -134,7 +134,7 @@ public class CommonUtils {
       }
        return sb.toString() ;
     }catch(Exception e) {
-      log.warn("Can not generate checksum for exporting data") ;
+      LOG.warn("Can not generate checksum for exporting data") ;
       return EMPTY_STR ;
     }
   }
@@ -181,32 +181,33 @@ public class CommonUtils {
   public static String getImageUrl(String imagePath) throws Exception {
     StringBuilder url = new StringBuilder() ;
     try {
-      ExoContainerContext exoContext = getComponent(ExoContainerContext.class);
+      ExoContainerContext exoContext = CommonsUtils.getService(ExoContainerContext.class);
       url.append(SLASH).append(exoContext.getRestContextName());
     } catch (Exception e) {
       url.append("/portal");
-      log.error("Can not get portal name or rest context name, exception: ",e);
+      LOG.error("Can not get portal name or rest context name: ",e);
     }
-    RepositoryService rService = getComponent(RepositoryService.class) ;
-    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath).append(SLASH);
+    //
+    url.append("/jcr/").append(CommonsUtils.getRepository().getConfiguration().getName()).append(imagePath).append(SLASH);
     return url.toString();
   }
   
-  public static String convertCodeHTML(String s) {
-    if (isEmpty(s))
+  public static String convertCodeHTML(String input) {
+    if (isEmpty(input)) {
       return EMPTY_STR;
-    s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-    s = s.replaceFirst("(<br/>)*", EMPTY_STR);
-    s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
-    try {
-      s = processBBCode(s);
-      s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
-           .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
-      s = s.replaceAll("&apos;", "'");
-    } catch (Exception e) {
-      log.error("Failed to convert HTML" + e.getMessage());
     }
-    return s;
+    input = input.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+    input = input.replaceFirst("(<br/>)*", EMPTY_STR);
+    input = input.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
+    try {
+      input = processBBCode(input);
+      input = input.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
+           .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
+      input = input.replaceAll("&apos;", "'");
+    } catch (Exception e) {
+      LOG.warn("Process the BBCode is unsuccessfully.");
+    }
+    return input;
   }
   
   /**
@@ -232,8 +233,8 @@ public class CommonUtils {
       try {
         return new InternetAddress(from + "<" + mailAddr + ">").toUnicodeString();
       } catch (AddressException e) {
-        if (log.isDebugEnabled()) {
-          log.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e);
         }
         return null;
       }
@@ -260,7 +261,7 @@ public class CommonUtils {
    * @return
    */
   public static String processBBCode(String s) {
-    MarkupRenderingService markupRenderingService = getComponent(MarkupRenderingService.class);
+    MarkupRenderingService markupRenderingService = CommonsUtils.getService(MarkupRenderingService.class);
     Renderer r = markupRenderingService.getRenderer(SupportedSyntaxes.bbcode.name());
     return r.render(s);
   }
@@ -651,12 +652,17 @@ public class CommonUtils {
     return calendar;
   }
   
-  public static <T>T getComponent(Class<T> type) {
-    return type.cast(PortalContainer.getInstance().getComponentInstanceOfType(type));
+  /**
+   * @param type
+   * @return
+   * @deprecated use by {@link CommonsUtils#getService(Class)}
+   */
+  public static <T> T getComponent(Class<T> type) {
+    return CommonsUtils.getService(type);
   }
 
   public static SessionProvider createSystemProvider() {
-    SessionProviderService sessionProviderService = getComponent(SessionProviderService.class);
+    SessionProviderService sessionProviderService = CommonsUtils.getService(SessionProviderService.class);
     return sessionProviderService.getSystemSessionProvider(null);
   }
   
