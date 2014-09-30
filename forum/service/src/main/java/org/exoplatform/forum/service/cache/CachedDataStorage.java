@@ -261,7 +261,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearTopicCache(topicPath);
   }
   
-  private void clearTopicCache(Topic topic) throws Exception {
+  public void clearTopicCache(Topic topic) throws Exception {
     if (topic != null) {
       String topicPath = Utils.getSubPath(topic.getPath());
       topicData.remove(new TopicKey(topicPath, true));
@@ -269,7 +269,6 @@ public class CachedDataStorage implements DataStorage, Startable {
       topicData.remove(new TopicKey(topicPath.toUpperCase(), false));
       objectNameData.remove(new ObjectNameKey(topic.getId(), Utils.TOPIC));
     }
-    
   }
 
   private void clearPostCache(String categoryId, String forumId, String topicId, String postId) throws Exception {
@@ -1637,10 +1636,12 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void updateTopicAccess(String userId, String topicId) {
     storage.updateTopicAccess(userId, topicId);
+    clearUserProfile(userId);
   }
 
   public void updateForumAccess(String userId, String forumId) {
     storage.updateForumAccess(userId, forumId);
+    clearUserProfile(userId);
   }
 
   public void writeReads() {
@@ -1707,10 +1708,24 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void runPrune(String forumPath) throws Exception {
     storage.runPrune(forumPath);
+    //
+    clearRunPrune(forumPath);
+  }
+  
+  private void clearRunPrune(String forumPath) throws Exception {
+    //
+    String forumId = Utils.getForumId(forumPath);
+    clearForumCache(Utils.getCategoryId(forumPath), forumId, false);
+    //
+    clearTopicListCache(forumId);
+    clearTopicListCountCache(forumId);
   }
 
   public void runPrune(PruneSetting pSetting) throws Exception {
     storage.runPrune(pSetting);
+    //
+    String forumPath = pSetting.getForumPath();
+    clearRunPrune(forumPath);
   }
 
   public long checkPrune(PruneSetting pSetting) throws Exception {

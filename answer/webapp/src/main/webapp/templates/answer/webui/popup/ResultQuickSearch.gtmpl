@@ -63,7 +63,7 @@
  										 %>
  										 <tr>	
 											<td class="empty center" colspan="3">
-												<%= _ctx.appRes("ResultSearch.title.no-matches"); %>
+												<%= _ctx.appRes("ResultQuickSearch.title.no-matches"); %>
 											</td>
   										</tr>
 						<% } %> 

@@ -36,6 +36,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
@@ -50,10 +51,10 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
    template = "app:/templates/answer/webui/popup/UIAnswerEditModeForm.gtmpl", 
      events = {
          @EventConfig(listeners = UIAnswerEditModeForm.SaveActionListener.class), 
-         @EventConfig(listeners = UIAnswerEditModeForm.ChildTabChangeActionListener.class), 
-         @EventConfig(listeners = UIAnswerEditModeForm.ResetMailContentActionListener.class), 
-         @EventConfig(listeners = UIAnswerEditModeForm.SelectCategoryForumActionListener.class), 
-         @EventConfig(listeners = UIAnswerEditModeForm.CancelActionListener.class) 
+         @EventConfig(listeners = UIAnswerEditModeForm.ChildTabChangeActionListener.class, phase = Phase.DECODE), 
+         @EventConfig(listeners = UIAnswerEditModeForm.ResetMailContentActionListener.class, phase = Phase.DECODE), 
+         @EventConfig(listeners = UIAnswerEditModeForm.SelectCategoryForumActionListener.class, phase = Phase.DECODE), 
+         @EventConfig(listeners = UIAnswerEditModeForm.CancelActionListener.class, phase = Phase.DECODE) 
      }
  )
 public class UIAnswerEditModeForm extends BaseCategoryTreeInputForm implements UIPopupComponent {

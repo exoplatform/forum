@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -42,8 +43,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
@@ -102,7 +101,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     UIFormRichtextInput formWYSIWYGInput = new UIFormRichtextInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, CommonUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setIsPasteAsPlainText(true).setIgnoreParserHTML(true).setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
-    UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
+    UIForumInputWithActions sendMessageTab = new UIForumInputWithActions(FIELD_SENDMESSAGE_TAB);
     sendMessageTab.addUIFormInput(sendTo);
     sendMessageTab.addUIFormInput(mailTitle);
     sendMessageTab.addUIFormInput(formWYSIWYGInput);
@@ -124,7 +123,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       actions.add(ad);
       ++i;
     }
-    sendMessageTab.setActionField(FIELD_SENDTO_TEXT, actions);
+    sendMessageTab.setActionAddItem(FIELD_SENDTO_TEXT);
     addUIFormInput(sendMessageTab);
     addChild(UIListInBoxPrivateMessage.class, null, null);
     addChild(UIListSentPrivateMessage.class, null, null);
@@ -178,7 +177,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   static public class SendPrivateMessageActionListener extends EventListener<UIPrivateMessageForm> {
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
       UIPrivateMessageForm messageForm = event.getSource();
-      UIFormInputWithActions messageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+      UIForumInputWithActions messageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
       UIFormStringInput inputSendTo = messageForm.getUIStringInput(FIELD_SENDTO_TEXT);
       String sendTo = inputSendTo.getValue();
       sendTo = ForumUtils.removeSpaceInString(sendTo);
@@ -268,7 +267,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
   }
 
   public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) throws Exception {
-    UIFormInputWithActions messageTab = getChildById(FIELD_SENDMESSAGE_TAB);
+    UIForumInputWithActions messageTab = getChildById(FIELD_SENDMESSAGE_TAB);
     UIFormStringInput stringInput = messageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     UIFormRichtextInput message = messageTab.getChild(UIFormRichtextInput.class);
     String content = privateMessage.getMessage();

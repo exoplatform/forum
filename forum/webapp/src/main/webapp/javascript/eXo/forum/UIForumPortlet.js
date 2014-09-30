@@ -955,7 +955,7 @@
       var textContent = uiRightActionBar.text();
       textContent = textContent.replace(/\n/g, '').replace(/\s\s|\t\t|\r\r/g, '');
       var l = (textContent.length) * 1 + 1;
-      uiRightActionBar.css('width', ((l * 6.5) + 65) + "px");
+      uiRightActionBar.css('width', ((l * 7) + 70) + "px");
     }
   };
 

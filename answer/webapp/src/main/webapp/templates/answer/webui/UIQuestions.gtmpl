@@ -38,7 +38,7 @@
 		<ul class="menuLeft pull-left">
 		<%if(canEditQuestion || uicomponent.isAddQuestion()) { %>
 			<li>
-				<button class="btn btn-primary addNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" type="button"><i class="uiIconAnsSubmitQuestion"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.AddNewQuestion");%></button>
+				<button class="btn btn-primary addNewQuestion" onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" type="button"><i class="uiIconAnsSubmitQuestion uiIconLightGray"></i>&nbsp;<%=_ctx.appRes("UIQuestions.action.AddNewQuestion");%></button>
 			</li>
 		<%}
 			if(uicomponent.faqSetting_.isEnableAutomaticRSS()) {
@@ -245,6 +245,7 @@
 						<%
 							String authorOfLastAct = question.getAuthorOfLastActivity();
 							if (authorOfLastAct != null && !authorOfLastAct.isEmpty()) {
+							  if (uicomponent.viewAuthorInfor) {
 						%>
 								<div class="pull-right name">
 									<a class="avatarMini" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>">
@@ -252,6 +253,7 @@
 										<span><%= FAQUtils.getFullName(authorOfLastAct);%></span>
 									</a>
 								</div>
+								<%} %>
 								<div class="time"><%= uicomponent.calculateTimeMessageOfLastActivity(question.getTimeOfLastActivity());%></div>
 						<%} %>
 							</div>
@@ -276,11 +278,15 @@
 										String author = question.getAuthor();
 								%>
 									<div class="avatarLarge pull-left ">
+									<% if (uicomponent.viewAuthorInfor) {%>
 										<a class="authorInfor" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", author)%>" >
 											<img src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
 										</a>
-									<% if (uicomponent.viewAuthorInfor) {%>
-											<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", author)%>"><%=FAQUtils.getFullName(question.getAuthor())%></a>
+										<a class="authorName" rel="tooltip" data-placement="bottom" title="<%=viewProfileLabel%>" href="javascript:void(0);" onclick="<%=uicomponent.event("ViewUserProfile", author)%>"><%=FAQUtils.getFullName(question.getAuthor())%></a>
+									<% } else {%>
+								    <a class="authorInfor">
+                      <img src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UIUserSettingForm.label.Avatar")%>"/>
+                    </a>
 									<% } %>
 									</div>
 							<% } %>

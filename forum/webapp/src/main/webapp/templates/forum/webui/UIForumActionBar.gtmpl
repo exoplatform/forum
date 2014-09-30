@@ -70,7 +70,7 @@
 				} else if(numberOfNewMessage < 100) {
 					className = "numberMessageMore10";
 				}
-				newMessage = "<span class=\"numberMessage " + className + "\">" + numberOfNewMessage + "</span>";
+				newMessage = "<span class=\"badgeDefault badgePrimary mini " + className + "\">" + numberOfNewMessage + "</span>";
 			}
 	%>
 
@@ -82,14 +82,14 @@
 				String pending = _ctx.appRes("UIBreadcumbs.label.Pending");
 				String style = (total > 0)?"text-decoration:blink;":"";
 		%>
-			<div class="pull-right forumSeparatorLine">
-				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending:(<span style="font-weight:bold; $style">$total</span>)</a>
+			<div class="pendingTopic forumSeparatorLine pull-right">
+				<a id="PendingJob" href="javascript:void(0);" onclick="<%=uicomponent.event("Moderation");%>" class="actionIcon"><i class="uiIconForumPending uiIconForumLightGray"></i> $pending <span class="badgeDefault badgePrimary mini  top">$total</span></a>
 			</div>
 		<%}%>
 			<span class="forumSeparatorLine pull-right" style="display:inline-block; width: 1px ;height: 23px; margin: 0 5px;"></span>
 			<div class="pull-right privateMessage">
 				<a href="javascript:void(0);" onclick="<%=uicomponent.event("PrivateMessage");%>" class="actionIcon">
-					<i class="uiIconMail uiIconLightGray"></i>$newMessage &nbsp;<%=_ctx.appRes("UIBreadcumbs.label.PrivateMessages");%>
+					<span class="badgeNotification"><i class="uiIconMail uiIconLightGray"></i>$newMessage</span> &nbsp;<%=_ctx.appRes("UIBreadcumbs.label.PrivateMessages");%>
 				</a>
 			</div>
 		</li>

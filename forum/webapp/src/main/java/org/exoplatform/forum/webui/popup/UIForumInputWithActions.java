@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
@@ -34,6 +35,7 @@ import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormInputSet;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
+import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 public class UIForumInputWithActions extends UIFormInputSet {
@@ -94,6 +96,11 @@ public class UIForumInputWithActions extends UIFormInputSet {
       super.processRender(context);
       return;
     }
+    
+    if (getUIFormRichtextInput() != null && getUIFormRichtextInput().getValue() == null) {
+      getUIFormRichtextInput().setValue(StringUtils.EMPTY);  
+    }
+    
     UIForm uiForm = getAncestorOfType(UIForm.class);
     Writer w = context.getWriter();
     w.write("<div id=\"" + getId() + "\" class=\"UIFormInputSet " + getId() + "\">");
@@ -204,6 +211,10 @@ public class UIForumInputWithActions extends UIFormInputSet {
     return (UICheckBoxInput) findComponentById(name);
   }
 
+  private UIFormRichtextInput getUIFormRichtextInput() {
+    return (UIFormRichtextInput)getChild(UIFormRichtextInput.class);
+  }
+  
   static public class ActionData {
     final public static int TYPE_ICON       = 0;
 
