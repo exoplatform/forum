@@ -28,6 +28,7 @@ import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
@@ -41,6 +42,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
   @Override
   public void tearDown() throws Exception {
+    sendNotificationManager.clear();
+    queryLastPostManager.clear();
     //
     removeAllData();
     super.tearDown();
