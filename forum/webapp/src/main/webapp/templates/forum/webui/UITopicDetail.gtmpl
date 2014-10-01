@@ -119,7 +119,7 @@
 						String tagName = tag.getName();
 				%>
 				<li>
-					<span class="tagItem">
+					<span class="uiMention">
 						<a rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 						<i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.label.UnTag");%>" onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>" class="uiIconClose uiIconLightGray"></i>
 					</span>
