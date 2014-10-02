@@ -56,8 +56,7 @@ public class ForumSessionUtils {
       ForumAttachment attachment = forumService.getUserAvatar(userName);
       url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
     } catch (Exception e) {
-//      if (LOG.isDebugEnabled())
-//        LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
+      LOG.debug(String.format("Failed to load avatar of [%s] as file resource", userName), e);
     }
     if (url == null || url.trim().length() < 1) {
       CommonContact contact = getPersonalContact(userName);
