@@ -17,10 +17,13 @@
 package org.exoplatform.forum.service;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-abstract public class ForumAttachment {
+abstract public class ForumAttachment implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private String id;
 
   private String name;
