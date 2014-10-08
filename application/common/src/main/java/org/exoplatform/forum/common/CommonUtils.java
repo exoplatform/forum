@@ -478,7 +478,7 @@ public class CommonUtils {
      * + When all characters in param s is special characters has in charIgnore, we must encode all characters.
      * + If all characters in param s is not special characters, we can ignore some special characters [!#:?=.,+;~`_]
     */
-    String charIgnore = "&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_";
+    String charIgnore = "&#<>[]/:\"'=.,*$%()\\+@!^*-}{;`~_";
     if (!isEmpty(s)) {
       int i = 0;
       while (charIgnore.indexOf(String.valueOf(s.charAt(i))) >= 0) {
