@@ -147,7 +147,7 @@ public class WebUIUtils {
                         "dp.SyntaxHighlighter.HighlightAll('code');}catch(err){if(window.console && SyntaxHighlighter.config.strings.isAlert) {window.console.log(err);}}}, 500);";
         addScripts(new String[] { script });
       } catch (Exception e) {
-        LOG.debug("Add JavaScript for using SyntaxHighlighter is unsuccessfully.", e);
+        LOG.error("Failed to add script : " + e.getMessage(), e);
       }
     }
     //

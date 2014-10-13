@@ -116,15 +116,15 @@ public class BuildRendering {
   public static void startRender(WebuiRequestContext context) {
     UIApplication uiApplication = context.getUIApplication();
     codeHighlighterMap.put(uiApplication.getId(), new HashSet<String>());
-    try {
-      UIScriptBBCodeContainer scriptContainer = uiApplication.getChild(UIScriptBBCodeContainer.class);
-      if(scriptContainer == null) {
+    UIScriptBBCodeContainer scriptContainer = uiApplication.getChild(UIScriptBBCodeContainer.class);
+    if(scriptContainer == null) {
+      try {
         uiApplication.addChild(UIScriptBBCodeContainer.class, null, null).setRendered(true);
+      } catch (Exception e) {
+        LOG.error("Failed to add component : " + e.getMessage(), e);  
       }
-      context.addUIComponentToUpdateByAjax(scriptContainer);
-    } catch (Exception e) {
-      LOG.debug("Start the BBCode render is unsuccessfully.", e);
     }
+    context.addUIComponentToUpdateByAjax(scriptContainer);
   }
 
   public static Collection<String> getCodeHighlighters(WebuiRequestContext context) {
