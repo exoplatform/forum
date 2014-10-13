@@ -146,9 +146,7 @@ public class WebUIUtils {
         String script = "setTimeout(function() {try {SyntaxHighlighter.initLoader();SyntaxHighlighter.all();" +
                         "dp.SyntaxHighlighter.HighlightAll('code');}catch(err){if(window.console && SyntaxHighlighter.config.strings.isAlert) {window.console.log(err);}}}, 500);";
         addScripts(new String[] { script });
-      } catch (Exception e) {
-        LOG.error("Failed to add script : " + e.getMessage(), e);
-      }
+      } catch (Exception e) {}
     }
     //
     return scripts.toString();

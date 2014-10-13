@@ -253,9 +253,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     try {
       Topic topic = getTopicByPath(topicPath, false);
       clearTopicCache(topic);
-    } catch (Exception e) {
-      LOG.error("Failed to clear topic cache by path : " + e.getMessage(), e);
-    }
+    } catch (Exception e) {}
   }
 
   private void clearTopicCache(String categoryId, String forumId, String topicId) throws Exception {
