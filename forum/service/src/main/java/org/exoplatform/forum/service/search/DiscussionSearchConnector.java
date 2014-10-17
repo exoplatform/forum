@@ -3,7 +3,6 @@ package org.exoplatform.forum.service.search;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -62,11 +61,13 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   
   @Override
   public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
+    List<SearchResult> results = new ArrayList<SearchResult>();
+    if (CommonUtils.isEmpty(query)) {
+      return results;
+    }
     ExoContainerContext eXoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer()
         .getComponentInstanceOfType(ExoContainerContext.class);
     String portalName = eXoContext.getPortalContainerName();
-
-    List<SearchResult> results = new ArrayList<SearchResult>();
     String currentUser = getCurrentUserName();
     try {
       List<ForumSearchResult> searchResults = storage.getUnifiedSearch(query, currentUser, offset, limit, sort, order);

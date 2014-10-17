@@ -162,6 +162,32 @@ public class TestCommonUtils extends TestCase {
     assertEquals("a ? * % * _bc", CommonUtils.removeSpecialCharacterForSearch(input));
   }
 
+  public void testNormalizeUnifiedSearchInput() {
+    String input = "";
+    assertEquals("", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "normal   text";
+    assertEquals("*normal* *text*", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "normal text";
+    assertEquals("*normal* *text*", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "normal~0.5 text";
+    assertEquals("*normal* *text*", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "normal~0.5 text~0.5 text~1 text~1.0";
+    assertEquals("*normal* *text* *text* *text*", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "normal~0.5 text~0.5 text~1 text~1.0 text~text";
+    assertEquals("*normal* *text* *text* *text* *texttext*", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "abc z!@#";
+    assertEquals("*abc* *z*", CommonUtils.normalizeUnifiedSearchInput(input));
+    //
+    input = "Japan~1 日本~1";
+    assertEquals("%Japan% %日本%", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "Việt~1.0 nam";
+    assertEquals("%Việt% %nam%", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "Russia~0.5 Частушки";
+    assertEquals("%Russia% %Частушки%", CommonUtils.normalizeUnifiedSearchInput(input));
+    input = "Korea 한국";
+    assertEquals("%Korea% %한국%", CommonUtils.normalizeUnifiedSearchInput(input));
+  }
+
   public void testHasSpecialCharacter() {
     String input = null;
     assertFalse(CommonUtils.hasSpecialCharacter(input));
