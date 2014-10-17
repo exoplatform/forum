@@ -353,21 +353,9 @@ public class CommonUtils {
     for (String s : tab){
       if (isEmpty(s)) continue;
       String searchTerm = s.split("~")[0];
-      String similarity = s.split("~").length > 1 ? s.split("~")[1] : "0.5";
+      String similarity = s.split("~")[1];
       searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
       builder.append(searchTerm).append("~").append(similarity).append(" ");
-    }
-    return builder.toString().trim();
-  }
-  
-  public static String processLikeCondition(String input) {
-    StringBuilder builder = new StringBuilder();
-    String[] tab = input.split(" ");
-    for (String s : tab){
-      if (isEmpty(s)) continue;
-      String searchTerm = s.split("~")[0];
-      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
-      builder.append(PERCENT_STR).append(searchTerm).append(PERCENT_STR).append(" ");
     }
     return builder.toString().trim();
   }
