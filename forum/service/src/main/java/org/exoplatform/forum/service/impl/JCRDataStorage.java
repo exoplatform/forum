@@ -5933,7 +5933,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //String rootPath = categoryHome.getPath();
 
       //process query for asterisk 
-      String asteriskQuery = CommonUtils.processSearchCondition(textQuery);
+      String asteriskQuery = CommonUtils.normalizeUnifiedSearchInput(textQuery);
       textQuery = CommonUtils.processUnifiedSearchSearchCondition(textQuery);
       //textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
 
@@ -5944,7 +5944,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       //for (String type : types) {
         StringBuilder queryString = buildSQLQueryUnifiedSearch(listForumIds, asteriskQuery, textQuery, isAdmin, sort, order, userId, listOfUser);
-        //System.out.println("\n" + queryString.toString() + "\n");
+        LOG.debug("UnifiedSearch statement query: " + queryString.toString());
         QueryImpl query = (QueryImpl)qm.createQuery(queryString.toString(), Query.SQL);
         query.setLimit(30);
         query.setOffset(offset);
@@ -5989,10 +5989,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       queryString.append(") and ");
     }
     queryString.append("(")
-               .append("CONTAINS (exo:message, '").append(textQuery).append("')")
+               .append("CONTAINS (exo:message, '").append(asteriskQuery).append("')")
                .append(" or (exo:isFirstPost='true' and ")
-               .append("CONTAINS (exo:name, '").append(textQuery).append("')))");
-    
+               .append("CONTAINS (exo:name, '").append(asteriskQuery).append("'))")
+               .append(")");
+
     // if user isn't admin
     if (!isAdmin) {
       queryString.append(" and ");
