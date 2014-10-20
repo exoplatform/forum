@@ -300,7 +300,7 @@
 													<button data-toggle="dropdown" class="btn" type="button">
 														<i class="uiIconSettings uiIconLightGray"></i>
 															<span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
-														<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+														<i class="uiIconArrowDown uiIconLightGray"></i>
 													</button>
 													<!--	Begin popup menu	-->
 													<ul class="dropdown-menu">
@@ -703,7 +703,7 @@
 												<button data-toggle="dropdown" class="btn" type="button">
 													<i class="uiIconSettings uiIconLightGray"></i>
 														<span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
-													<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+													<i class="uiIconArrowDown uiIconLightGray"></i>
 												</button>
 												<!--	Begin answers popup menu	-->
 												<ul class="dropdown-menu">
@@ -870,7 +870,7 @@
 											<button data-toggle="dropdown" class="btn" type="button">
 												 <i class="uiIconSettings uiIconLightGray"></i>
 													 <span><%=_ctx.appRes("UIQuestions.label.MoreAction")%>&nbsp;</span>
-												 <i class="uiIconMiniArrowDown uiIconLightGray"></i>
+												 <i class="uiIconArrowDown uiIconLightGray"></i>
 											 </button>
 											<!--	Begin popup menu	-->
 											<ul class="dropdown-menu">

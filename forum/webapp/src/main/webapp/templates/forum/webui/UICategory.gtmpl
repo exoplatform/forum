@@ -88,7 +88,7 @@
 						<div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
 							<%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
-							<i class="uiIconMiniArrowDown uiIconLightGray"></i>					
+							<i class="uiIconArrowDown uiIconLightGray"></i>					
 						</div>
 						<ul class="dropdown-menu">
 							<li>
@@ -109,7 +109,7 @@
 						<div data-toggle="dropdown">
 						 <i class="uiIconForumManageCategory uiIconForumLightGray"></i>
 							 <%=_ctx.appRes("UICategory.label.manageCategory");%>
-						<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+						<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
 						<ul class="dropdown-menu uiCategoryPopupMenu">
 						<%
