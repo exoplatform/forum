@@ -35,7 +35,7 @@
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
 			 <div class="dropdown uiDropdownWithIcon actionIcon">
 				<div data-toggle="dropdown">
-				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
+				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconArrowDown"></i>
 				</div>
 				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
 				<% 

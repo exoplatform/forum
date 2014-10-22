@@ -109,7 +109,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSettings uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
-								<i class="uiIconMiniArrowDown"></i>
+								<i class="uiIconArrowDown"></i>
 							</div>
 							<ul class="dropdown-menu">
 							<% if(!isLock && hasCreadTopic) { %>	 
@@ -165,7 +165,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-								<i class="uiIconMiniArrowDown"></i>				 
+								<i class="uiIconArrowDown"></i>				 
 							</div>
 							<ul class="dropdown-menu">
 								<li>
@@ -186,7 +186,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconForumModerator uiIconForumLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.Moderation");%>
-								<i class="uiIconMiniArrowDown"></i>
+								<i class="uiIconArrowDown"></i>
 							</div>
 							<ul class="dropdown-menu">
 							<%

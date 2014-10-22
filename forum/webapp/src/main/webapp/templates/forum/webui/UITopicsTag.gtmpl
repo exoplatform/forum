@@ -46,7 +46,7 @@
       		</div>
       	<% if(isShowMenu){ %>
 					<div class="pull-right dropdown uiDropdownWithIcon" style="padding: 5px;">
-						<a href="javascript:void(0)" class="actionIcon" data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconMiniArrowDown"></i></a>
+						<a href="javascript:void(0)" class="actionIcon" data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconArrowDown"></i></a>
 						<ul class="dropdown-menu">
 							<li>
 								<a href="javascript:void(0)" class="confirm"
