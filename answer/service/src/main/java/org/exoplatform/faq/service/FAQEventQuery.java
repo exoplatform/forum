@@ -692,16 +692,11 @@ public class FAQEventQuery implements FAQNodeTypes {
     //for asterisk condition search
     StringBuilder sb = new StringBuilder();
     if (!CommonUtils.isEmpty(asteriskConditionSearch)) {
-      String jcrQuery = "jcr:contains";
-      if(asteriskConditionSearch.contains(CommonUtils.PERCENT_STR)) {
-        jcrQuery = "jcr:like";
-      }
-      //
       for (String field : jcrField) {
         if(sb.length() > 0) {
           sb.append(" or ");
         }
-        sb.append(jcrQuery).append("(fn:upper-case(").append(field).append("),'").append(asteriskConditionSearch + "')");
+        sb.append("jcr:contains(").append(field).append(",'").append(asteriskConditionSearch + "')");
       }     
     }
     return sb.toString();
