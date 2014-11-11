@@ -738,7 +738,7 @@ public class FAQEventQuery implements FAQNodeTypes {
     // search restricted audience in category
     if(!isAdmin) {
       queryString.append(" and (");
-      queryString.append(" @exo:userPrivate=''");
+      queryString.append(" not(@exo:userPrivate) or @exo:userPrivate=''");
       if (userMembers != null && userMembers.size() > 0) {
         for (String id : userMembers) {
           queryString.append(" or @exo:userPrivate='").append(id).append("'");
