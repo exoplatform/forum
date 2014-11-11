@@ -183,6 +183,21 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     assertEquals("Questiontest C", rDateDesc.get(0).getTitle());
     assertEquals("Questiontest B", rDateDesc.get(1).getTitle());
   }
+
+  public void testJapaneseData() throws Exception {
+    Category cat = createCategory("Category X", 0);
+    faqService_.saveCategory(Utils.CATEGORY_HOME, cat, true);
+    //
+    Question question = createQuestion(Utils.CATEGORY_HOME + "/" + cat.getId());;
+    question.setQuestion(" 広いニーズ  C");
+    question.setDetail(" 広いニーズに応えます ");
+    faqService_.saveQuestion(question, true, new FAQSetting());
+    //
+    assertEquals(1, answerSearchConnector.search(context, "広いニー" ,  Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    assertEquals(1, answerSearchConnector.search(context, "に応えます" ,  Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    //
+    faqService_.removeCategory(cat.getPath());
+  }
   
   private void loadController() throws Exception {
     ClassLoader loader = getClass().getClassLoader();
