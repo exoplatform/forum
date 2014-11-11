@@ -7,7 +7,7 @@ CKEDITOR.plugins.add('helpBBCode',
 			editor.ui.addButton(
 				'helpBBCode.btn',
 				{
-					label : editor.lang.HelpBBCode,
+					label : editor.lang.helpBBCode.HelpBBCode,
 					command : 'helpBBCode.cmd',
 					icon : mypath + 'helpBBCode.png'
 				}
