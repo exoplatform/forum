@@ -47,7 +47,7 @@ public class FAQEventQueryTestCase extends TestCase {
     assertEquals(selector + "[ jcr:contains(., 'bar')]", queryObject.getQuery());
 
     queryObject.setAdmin(false);
-    String predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' )  and ( @exo:userPrivate='' )";
+    String predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' )  and ( not(@exo:userPrivate) or @exo:userPrivate='' )";
     assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
     //
     queryObject.setAdmin(true);
@@ -55,7 +55,7 @@ public class FAQEventQueryTestCase extends TestCase {
 
     queryObject.setAdmin(false);
     queryObject.setUserId("zed");
-    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and ( @exo:userPrivate='' )";
+    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and ( not(@exo:userPrivate) or @exo:userPrivate='' )";
     assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
     //
     queryObject.setAdmin(true);
@@ -63,7 +63,7 @@ public class FAQEventQueryTestCase extends TestCase {
 
     queryObject.setViewingCategories(Arrays.asList("cat1"));
     queryObject.setAdmin(false);
-    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and (@exo:categoryId='cat1' or @exo:id='cat1') and ( @exo:userPrivate='' )";
+    predicate = "jcr:contains(., 'bar') and ( not(@exo:isApproved) or @exo:isApproved='true' or exo:author='zed' )  and (@exo:categoryId='cat1' or @exo:id='cat1') and ( not(@exo:userPrivate) or @exo:userPrivate='' )";
     assertEquals(selector + "[ " + predicate + " ]", queryObject.getQuery());
     //
     queryObject.setAdmin(true);

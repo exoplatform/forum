@@ -368,6 +368,51 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     assertEquals(1, listQuickSearch.size());
   }
   
+  public void testQuickSearch() throws Exception {
+
+    FAQEventQuery eventQuery = new FAQEventQuery();
+
+    // search with text = "test"
+    eventQuery.setText("test");
+    eventQuery.setUserMembers(new ArrayList<String>());
+
+    // quick search (for all questions and categories)
+    
+    // Administrator search
+    eventQuery.setAdmin(true);
+    eventQuery.setUserId(USER_ROOT);
+    eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
+    List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(7, listQuickSearch.size());
+    // Normal user search
+    eventQuery.setAdmin(false);
+    eventQuery.setUserId(USER_DEMO);
+    listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(7, listQuickSearch.size());
+    //
+    Category cate1 = createCategory("Cate 1", 0);
+    cate1.setIndex(1);
+    cate1.setUserPrivate(new String[]{USER_ROOT});
+    faqService_.saveCategory(Utils.CATEGORY_HOME, cate1, true);
+    //
+    Question q = createQuestion(cate1.getPath());
+    q.setQuestion("question test ");
+    faqService_.saveQuestion(q, true, faqSetting_);
+    // Administrator search
+    eventQuery.setAdmin(true);
+    eventQuery.setUserId(USER_ROOT);
+    eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
+    listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(8, listQuickSearch.size());
+    // Normal user search
+    eventQuery.setAdmin(false);
+    eventQuery.setUserId(USER_DEMO);
+    listQuickSearch = faqService_.getSearchResults(eventQuery);
+    assertEquals(7, listQuickSearch.size());
+    //
+    faqService_.removeCategory(cate1.getPath());
+  }
+
   public void testSearchWithSpecialCharaters() throws Exception {
     FAQEventQuery eventQuery = new FAQEventQuery();
 
