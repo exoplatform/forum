@@ -356,10 +356,15 @@ public class CommonUtils {
     String[] tab = input.split(" ");
     for (String s : tab){
       if (isEmpty(s)) continue;
-      String searchTerm = s.split("~")[0];
-      String similarity = s.split("~")[1];
-      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
-      builder.append(searchTerm).append("~").append(similarity).append(" ");
+      if (s.indexOf("~") > -1) {
+        String searchTerm = s.split("~")[0];
+        String similarity = s.split("~")[1];
+        searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+        builder.append(searchTerm).append("~").append(similarity).append(" ");
+      } else {
+        String searchTerm = encodeSpecialCharToHTMLnumber(s.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+        builder.append(searchTerm).append(" ");
+      }
     }
     return builder.toString().trim();
   }
@@ -381,7 +386,9 @@ public class CommonUtils {
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
       token = encodeSpecialCharToHTMLnumber(token.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, EMPTY_STR), "~", true);
-      builder.append(wildcardCharacters).append(token).append(wildcardCharacters).append((tokenizer.hasMoreTokens()) ? SPACE : EMPTY_STR);
+      if (token.length() > 0) {
+        builder.append(wildcardCharacters).append(token).append(wildcardCharacters).append((tokenizer.hasMoreTokens()) ? SPACE : EMPTY_STR);
+      }
     }
     return builder.toString();
   }

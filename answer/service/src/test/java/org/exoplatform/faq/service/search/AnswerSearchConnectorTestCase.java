@@ -199,6 +199,22 @@ public class AnswerSearchConnectorTestCase extends FAQServiceBaseTestCase {
     faqService_.removeCategory(cat.getPath());
   }
   
+  public void testSpecialCharacters() throws Exception {
+    Category cat = createCategory("Category X", 0);
+    faqService_.saveCategory(Utils.CATEGORY_HOME, cat, true);
+    //
+    Question question = createQuestion(Utils.CATEGORY_HOME + "/" + cat.getId());;
+    question.setQuestion(" Question 1");
+    question.setDetail(" Detail of question 1 ");
+    faqService_.saveQuestion(question, true, new FAQSetting());
+    //
+    assertEquals(0, answerSearchConnector.search(context, "\" ' ( ) \"" ,  Collections.EMPTY_LIST, 0, 10, "relevancy", "ASC").size());
+    //
+    faqService_.removeCategory(cat.getPath());
+  }
+  
+  
+  
   private void loadController() throws Exception {
     ClassLoader loader = getClass().getClassLoader();
     InputStream in = loader.getResourceAsStream(CONTROLLER_PATH);

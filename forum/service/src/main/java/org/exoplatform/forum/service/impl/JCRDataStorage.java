@@ -5932,10 +5932,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       //String rootPath = categoryHome.getPath();
 
-      //process query for asterisk 
-      String asteriskQuery = CommonUtils.normalizeUnifiedSearchInput(textQuery);
+      //process query for asterisk
       textQuery = CommonUtils.processUnifiedSearchSearchCondition(textQuery);
-      //textQuery = CommonUtils.encodeSpecialCharToHTMLnumber(textQuery, "~", true);
+      String asteriskQuery = CommonUtils.normalizeUnifiedSearchInput(textQuery);
+      
+      if (Utils.isEmpty(asteriskQuery)) return list;
 
       boolean isAdmin = isAdminRole(userId);
 

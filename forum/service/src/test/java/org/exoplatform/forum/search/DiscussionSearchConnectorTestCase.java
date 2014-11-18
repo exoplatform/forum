@@ -358,4 +358,28 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     
     forumService_.removeCategory(cateId);
   }
+  
+  public void testSpecialCaseComplex() throws Exception {
+    String cateId = getId(Utils.CATEGORY);
+    Category cat = createCategory(cateId);
+    cat.setCategoryName("cat1");
+    forumService_.saveCategory(cat, true);
+    
+    Forum forum = createdForum();
+    forum.setForumName("forum1");
+    forumService_.saveForum(cateId, forum, true);
+
+    Topic topic1 = createdTopic(USER_ROOT);
+    topic1.setTopicName("reply 1");
+    topic1.setDescription("reply 1");
+    forumService_.saveTopic(cateId, forum.getId(), topic1, true, false, new MessageBuilder());
+    
+    Post post = createdPost();
+    post.setName("Reply A1");
+    post.setMessage("reply A1");
+    forumService_.savePost(cateId, forum.getId(), topic1.getId(), post, true, new MessageBuilder());
+    assertEquals(0, discussionSearchConnector.search(context, "\" ' ( ) \"" , Collections.<String> emptyList(), 0, 5, "relevancy", "ASC").size());
+    
+    forumService_.removeCategory(cateId);
+  }
 }
