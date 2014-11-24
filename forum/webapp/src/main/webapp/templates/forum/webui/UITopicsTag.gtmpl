@@ -46,7 +46,7 @@
       		</div>
       	<% if(isShowMenu){ %>
 					<div class="pull-right dropdown uiDropdownWithIcon" style="padding: 5px;">
-						<a href="javascript:void(0)" class="actionIcon" data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconArrowDown"></i></a>
+						<a href="javascript:void(0)" class="actionIcon" data-toggle="dropdown"><i class="uiIconSettings uiIconLightGray"></i> <%=_ctx.appRes("UITopicsTag.label.ManageTag");%> <i class="uiIconArrowDown uiIconLightGray"></i></a>
 						<ul class="dropdown-menu">
 							<li>
 								<a href="javascript:void(0)" class="confirm"
@@ -156,10 +156,10 @@
   	
   						String iconStatusTopic = "";
   						if(topic.getIsLock()) {
-  						 iconStatusTopic = "uiIconForumColorLockTiny";
+  						 iconStatusTopic = "uiIconForumColorLockTiny uiIconForumLightGray";
   						}
   						if(topic.getIsClosed()) {
-  						 iconStatusTopic = "uiIconForumColorCloseTiny";
+  						 iconStatusTopic = "uiIconForumColorCloseTiny uiIconForumLightGray";
   						}
   	
   						String approved = "" ;
@@ -203,7 +203,7 @@
 							<td>
 							
 							<% if(topic.getIsSticky()) {%>
-								<i class="uiIconForumStick"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
+								<i class="uiIconForumStick uiIconForumLightGray"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
 							<% } %>
 								
 								<% ++rCNB; %>

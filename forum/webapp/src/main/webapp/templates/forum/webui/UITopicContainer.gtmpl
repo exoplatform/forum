@@ -109,13 +109,13 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSettings uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.ForumTools");%>
-								<i class="uiIconArrowDown"></i>
+								<i class="uiIconArrowDown uiIconLightGray"></i>
 							</div>
 							<ul class="dropdown-menu">
 							<% if(!isLock && hasCreadTopic) { %>	 
 								<li>
 									<a href="<%=uicomponent.event("AddTopic")%>">
-									<i class="uiIconForumCreateTopic"></i><%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
+									<i class="uiIconForumCreateTopic uiIconForumLightGray"></i><%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
 									</a>
 								</li>
 								
@@ -123,7 +123,7 @@
 								boolean isView = false ;
 								String link , itemLabel, classIcon, classDisable="", confirm;
 								String[] actionMenuForum = uicomponent.getActionMenuForum() ;
-								String [] classIcons = ["uiIconEdit", "uiIconUnlockMedium", "uiIconLockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete", "uiIconExport", "uiIconWatch", "uiIconForumBanIp"];
+								String [] classIcons = ["uiIconEdit uiIconLightGray", "uiIconUnlockMedium uiIconLightGray", "uiIconLockMedium uiIconLightGray", "uiIconOpen uiIconLightGray", "uiIconMinus uiIconLightGray", "uiIconMove uiIconLightGray", "uiIconDelete uiIconLightGray", "uiIconExport uiIconLightGray", "uiIconWatch uiIconLightGray", "uiIconForumBanIp uiIconLightGray"];
 								int id = 0;
 								for(action in actionMenuForum) {
 									link = uicomponent.event(action,uicomponent.getName(),"topic") ;
@@ -151,7 +151,7 @@
 									if(isView){
 							%>
 								<li class="$classDisable">
-									<a href="$link"<%=confirm%>><i class="$classIcon"></i>$itemLabel</a>
+									<a href="$link"<%=confirm%>><i class="$classIcon "></i>$itemLabel</a>
 								</li>
 							<%	}
 							} %>
@@ -165,7 +165,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconSearch uiIconLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%>
-								<i class="uiIconArrowDown"></i>				 
+								<i class="uiIconArrowDown uiIconLightGray"></i>				 
 							</div>
 							<ul class="dropdown-menu">
 								<li>
@@ -186,7 +186,7 @@
 							<div data-toggle="dropdown">
 								<i class="uiIconForumModerator uiIconForumLightGray"></i>
 								<%=_ctx.appRes("UITopicContainer.label.Moderation");%>
-								<i class="uiIconArrowDown"></i>
+								<i class="uiIconArrowDown uiIconLightGray"></i>
 							</div>
 							<ul class="dropdown-menu">
 							<%
@@ -209,7 +209,7 @@
 								if(!action.equals("SetDeleteTopic")){
 							 %> 
 								<li>
-									<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
+									<a href="$link"><i class="$classIcon uiIconLightGray"></i>$itemLabel</a>
 								</li>
 							 <% 
 								} else {%>
@@ -219,7 +219,7 @@
 										 data-confirm-one="<%=_ctx.appRes("UITopicContainer.confirm.DeleteOneTopic")%>" 
 										 data-confirm-number="<%=_ctx.appRes("UITopicContainer.confirm.DeleteMoreTopic")%>" 
 										 data-confirm-not="<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>">
-										<i class="uiIconDelete"></i>$itemLabel</a>
+										<i class="uiIconDelete uiIconLightGray"></i>$itemLabel</a>
 								</li>
 								<%}
 							 } %>
@@ -326,10 +326,10 @@
 	
 						String iconStatusTopic = "";
 						if(topic.getIsLock() || isLock) {
-						 iconStatusTopic = "uiIconForumColorLockTiny";
+						 iconStatusTopic = "uiIconForumColorLockTiny uiIconForumLightGray";
 						}
 						if(topic.getIsClosed()) {
-						 iconStatusTopic = "uiIconForumColorCloseTiny";
+						 iconStatusTopic = "uiIconForumColorCloseTiny uiIconForumLightGray";
 						}
 	
 						String approved = "" ;
@@ -373,7 +373,7 @@
 					<td>
 					
 					<% if(topic.getIsSticky()) {%>
-						<i class="uiIconForumStick"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
+						<i class="uiIconForumStick uiIconForumLightGray"></i><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:
 					<% } %>
 						
 						<% ++rCNB; %>

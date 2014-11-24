@@ -28,8 +28,8 @@
 		
 			<li class="pull-right">
 				<div class="actionExpandCollapse">
-					<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>"></i>
-					<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>"></i>
+					<i class="uiIconArrowDown uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>"></i>
+					<i style="display:none" class="uiIconArrowRight uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>"></i>
 				</div>
 			</li>
 			
@@ -51,10 +51,10 @@
 						</li>
 						<li onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
 							<% if(poll.getIsClosed() || isTimeOut){ %>
-							<a href="javaScript:void(0);"><i class="uiIconOpen"></i><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
+							<a href="javaScript:void(0);"><i class="uiIconOpen uiIconLightGray"></i><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
 							<% } else { %>
 							
-							<a href="javaScript:void(0);"><i class="uiIconMinus"></i><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
+							<a href="javaScript:void(0);"><i class="uiIconMinus uiIconLightGray"></i><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
 							<% } %>
 						</li>
 						<li onclick="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
