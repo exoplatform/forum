@@ -411,12 +411,12 @@
 							}
 							if(post.getIsHidden()) {
 								if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
-								alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
+								else alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
 								isAnd = true;
 							}
 							if(post.getIsWaiting()) {
 								if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
-								alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
+								else alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
 								isAnd = true;
 							}
 							if(isModeratePost) {
