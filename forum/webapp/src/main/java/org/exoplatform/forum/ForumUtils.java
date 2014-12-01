@@ -130,9 +130,7 @@ public class ForumUtils {
 
   public static String createdForumLink(String type, String id, boolean isPrivate) {
     try {
-      PortalRequestContext portalContext = Util.getPortalRequestContext();
-      String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
-      String host = fullUrl.substring(0, fullUrl.indexOf(SLASH, 8));
+      String host = CommonsUtils.getCurrentDomain();
       return new StringBuffer(host).append(createdSubForumLink(type, id, isPrivate)).toString();
     } catch (Exception e) {
       return id;
