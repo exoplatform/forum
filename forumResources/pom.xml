@@ -107,33 +107,4 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
-  <build>
-    <finalName>forumResources</finalName>
-    <plugins>
-      <!-- Copy project less files -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/webapp</directory>
-                  <includes>
-                    <include>skin/less/**</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-</project>
+  </project>
