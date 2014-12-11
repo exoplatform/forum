@@ -20,24 +20,6 @@
 	            <field  name="description"><string>KS Portlets</string></field> 
 	            <field  name="applications">
 		            <collection type="java.util.ArrayList">
-	                <value>                 
-		                <object type="org.exoplatform.application.registry.Application">                     
-		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
-		                  <field name="applicationName"><string>AnswersPortlet</string></field>
-						          <field name="displayName"><string>Answers Portlet</string></field>
-		                  <field name="applicationType"><string>portlet</string></field>
-		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
-		                </object>
-	                </value>
-									<value>                 
-		                <object type="org.exoplatform.application.registry.Application">                     
-		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
-		                  <field name="applicationName"><string>FAQPortlet</string></field>
-						          <field name="displayName"><string>FAQ Portlet</string></field>
-		                  <field name="applicationType"><string>portlet</string></field>
-		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
-		                </object>
-	                </value>
 					        <value>                 
 		                <object type="org.exoplatform.application.registry.Application">                     
 		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
