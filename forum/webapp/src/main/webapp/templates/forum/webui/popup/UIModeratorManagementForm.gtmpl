@@ -14,8 +14,9 @@
   <div class="resizable">
     <div class="managementContent">
     
-      <div class="uiSearchInput clearfix ">
+      <div class="uiSearchInput clearfix searchWithIcon">
         <div class="pull-right">
+        <a data-original-title="search" class="advancedSearch" rel="tooltip" data-placement="bottom" title="" href="javascript:void(0)"><i class="uiIconSearch uiIconLightGray"></i></a>
           <span class="actionSubmitLink" data-link="<%=uicomponent.event("SearchUser");%>">
             <%  
               uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
