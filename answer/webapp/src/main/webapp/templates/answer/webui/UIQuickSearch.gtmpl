@@ -4,11 +4,11 @@
   uicomponent.initPlaceholder();
 %>
 
-<div class="uiAnswersSearchBox uiSearchInput pull-right" id="uiAnswersSearchBox">
+<div class="uiAnswersSearchBox uiSearchInput pull-right searchWithIcon" id="uiAnswersSearchBox">
   <% uiform.begin() %>  
-   <!-- div class="AdvancedSearch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div -->
-  <div class="actionAnswerSearch" style="display:none" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
-   
+   <div class="actionAnswerSearch" style="display:none" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
+    <a href="javascript:void(0)" class="advancedSearch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><i class="uiIconSearch uiIconLightGray"></i></a>
+
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
       %>

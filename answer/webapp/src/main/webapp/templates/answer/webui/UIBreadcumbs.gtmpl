@@ -5,7 +5,10 @@
  // def requireJS = _ctx.getRequestContext().getJavascriptManager().getRequireJS();
  // requireJS.addScripts("eXo.answer.UIAnswersPortlet.loadBreadcumbScroll();");
 %>
-<div class="uiGrayLightBox clearfix" id="$uicomponent.id">
+<div class="uiGrayLightBox " id="$uicomponent.id">
+	<div class="clearfix">
+
+  <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
   <ul class="uiAnswersBreadcumbs breadcrumb pull-left">
     
 	  <%  
@@ -64,8 +67,7 @@
 	
 	  <% } %>
 
- </ul>      
-  <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
-
+ </ul>
+	</div>
   
 </div>
