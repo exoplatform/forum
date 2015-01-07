@@ -161,7 +161,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   protected void initPlaceholder() throws Exception {
-    ((UIFormStringInput)getChildById(FIELD_SEARCH_USER)).setHTMLAttribute("placeholder", i18n("UIModeratorManagementForm.label.Search"));
+    getUIStringInput(FIELD_SEARCH_USER).setHTMLAttribute("placeholder", i18n("UIModeratorManagementForm.label.Search"));
   }
   
   private boolean isAdmin(String userId) throws Exception {

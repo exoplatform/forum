@@ -3,17 +3,14 @@
   requireJS.addScripts("eXo.answer.UIAnswersPortlet.submitSearch('uiAnswersSearchBox');");
   uicomponent.initPlaceholder();
 %>
-
 <div class="uiAnswersSearchBox uiSearchInput pull-right searchWithIcon" id="uiAnswersSearchBox">
-  <% uiform.begin() %>  
-   <div class="actionAnswerSearch" style="display:none" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
-    <a href="javascript:void(0)" class="advancedSearch" rel="tooltip" data-placement="bottom" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><i class="uiIconSearch uiIconLightGray"></i></a>
-
+  <% uiform.begin();%>  
+    <a href="javascript:void(0)" class="advancedSearch actionAnswerSearch" rel="tooltip" data-placement="bottom" 
+    	 title="<%= _ctx.appRes("UIQuickSeach.label.search")%>" onclick="<%=uicomponent.event("Search")%>">
+    	<i class="uiIconSearch uiIconLightGray"></i>
+    </a>
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
       %>
-    
-    <!--div class="FR"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div-->
-
-  <%uiform.end()%>
+  <%uiform.end();%>
 </div>

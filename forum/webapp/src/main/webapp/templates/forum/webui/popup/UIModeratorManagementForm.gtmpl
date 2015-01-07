@@ -10,18 +10,21 @@
   uicomponent.initPlaceholder();
 %>
 <div class="uiModeratorManagementForm">
-  <% uiform.begin() %>
+  <% uiform.begin();%>
   <div class="resizable">
     <div class="managementContent">
     
       <div class="uiSearchInput clearfix searchWithIcon">
         <div class="pull-right">
-        <a data-original-title="search" class="advancedSearch" rel="tooltip" data-placement="bottom" title="" href="javascript:void(0)"><i class="uiIconSearch uiIconLightGray"></i></a>
-          <span class="actionSubmitLink" data-link="<%=uicomponent.event("SearchUser");%>">
+          <div class="actionSubmitLink" style="display:inline-block; position:relative;" data-link="<%=uicomponent.event("SearchUser")%>">
+	        	<a class="advancedSearch" href="javascript:void(0)" onclick="<%=uicomponent.event("SearchUser")%>"
+	        		rel="tooltip" data-placement="bottom"  data-original-title="search" title="">
+	        		<i class="uiIconSearch uiIconLightGray"></i>
+	        	</a>
             <%  
               uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
             %>
-          </span>
+          </div>
           
           <%if(uicomponent.isViewSearchUser){%>
           <a class="actionIcon" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
@@ -144,5 +147,5 @@
     <button onclick="<%=uicomponent.event("Close");%>" class="btn" type="button"><%=_ctx.appRes("UIForumPortlet.label.Close");%></button>
   </div>
   
-  <%uiform.end()%>
+  <%uiform.end();%>
 </div>

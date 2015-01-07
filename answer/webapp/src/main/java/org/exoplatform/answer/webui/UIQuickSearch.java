@@ -71,7 +71,7 @@ public class UIQuickSearch extends BaseUIFAQForm {
   }
   
   protected void initPlaceholder() throws Exception {
-    ((UIFormStringInput)getChildById(FIELD_SEARCHVALUE)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+    getUIStringInput(FIELD_SEARCHVALUE).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
   }
 
   static public class SearchActionListener extends BaseEventListener<UIQuickSearch> {
