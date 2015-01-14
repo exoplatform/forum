@@ -36,13 +36,13 @@ public class ForumSessionUtils {
 
   static private final Log   LOG            = ExoLogger.getLogger(ForumSessionUtils.class);
 
-  public final static String DEFAULT_AVATAR = "/eXoSkin/skin/images/social/skin/ShareImages/UserAvtDefault.png";
+  public final static String DEFAULT_AVATAR = "/eXoSkin/skin/images/Default/social/skin/ShareImages/UserAvtDefault.png";
 
   /**
    * create an avatar link for user. 
    * Firstly, the function tries to load avatar resource from user profile of forum.
    * if the resource is not found, try to get it from {@link ContactProvider}
-   * else, return default url: <a>/eXoSkin/skin/images/social/skin/ShareImages/UserAvtDefault.png</a>.
+   * else, return default url: <a>/eXoSkin/skin/images/Default/social/skin/ShareImages/UserAvtDefault.png</a>.
    * @param userName
    * @param forumService
    * @return

@@ -51,7 +51,7 @@ public class AnswerSearchConnector extends SearchServiceConnector {
 
   /** */
                                           //"/answer/skin/DefaultSkin/webui/skinIcons/48x48/defaultQuestion.png";
-  private static final String FIX_ICON = "/eXoResources/skin/images/Icons/AppIcons/uiIconAppGray.png";
+  private static final String FIX_ICON = "/eXoSkin/skin/images/Default/Icons/AppIcons/uiIconAppDefault.png";
   
   /** */
   private static final Log LOG = ExoLogger.getLogger(AnswerSearchConnector.class);
