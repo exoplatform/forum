@@ -27,7 +27,7 @@ import org.exoplatform.forum.common.jcr.KSDataLocation;
 public class Utils {
   final public static String FAQ_APP              = "faqApp".intern();
 
-  final public static String DEFAULT_AVATAR_URL   = "/eXoSkin/skin/images/Default/social/skin/ShareImages/UserAvtDefault.png";
+  final public static String DEFAULT_AVATAR_URL   = "/eXoSkin/skin/images/themes/default/social/skin/ShareImages/UserAvtDefault.png";
 
   final public static String QUESTION_HOME        = "questions".intern();
 
