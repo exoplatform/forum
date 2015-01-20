@@ -36,7 +36,7 @@ public class ForumSessionUtils {
 
   static private final Log   LOG            = ExoLogger.getLogger(ForumSessionUtils.class);
 
-  public final static String DEFAULT_AVATAR = "/eXoSkin/skin/images/themes/default/social/skin/ShareImages/UserAvtDefault.png";
+  public final static String DEFAULT_AVATAR = "/eXoSkin/skin/images/system/UserAvtDefault.png";
 
   /**
    * create an avatar link for user. 
