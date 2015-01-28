@@ -51,8 +51,8 @@
 	<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped uiCollapExpand">
 		<caption class="rounded-corners-top">
 			<span class="pull-right actionExpandCollapse">
-				<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
-				<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+				<i class="uiIconArrowDown uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+				<i style="display:none" class="uiIconArrowRight uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 			</span>
 			<ul class="forumToolbar pull-right">
 
@@ -88,7 +88,7 @@
 						<div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
 							<%=_ctx.appRes("UICategory.label.SearchThisCategory");%>
-							<i class="uiIconMiniArrowDown uiIconLightGray"></i>					
+							<i class="uiIconArrowDown uiIconLightGray"></i>					
 						</div>
 						<ul class="dropdown-menu">
 							<li>
@@ -109,13 +109,13 @@
 						<div data-toggle="dropdown">
 						 <i class="uiIconForumManageCategory uiIconForumLightGray"></i>
 							 <%=_ctx.appRes("UICategory.label.manageCategory");%>
-						<i class="uiIconMiniArrowDown uiIconLightGray"></i>
+						<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
 						<ul class="dropdown-menu uiCategoryPopupMenu">
 						<%
 						String inSpace = (uicomponent.isCategorySpace()) ? _ctx.appRes("UICategory.confirm.in-space") : "";
 						String liClazz = "";
-						String [] newActions = [ "uiIconEdit", "uiIconExport", "uiIconImport", "uiIconDelete", "uiIconWatch", "uiIconForumCreateForum", "uiIconEdit", "uiIconLock", "uiIconUnlockMedium", "uiIconOpen", "uiIconMinus", "uiIconMove", "uiIconDelete" ];
+						String [] newActions = [ "uiIconEdit uiIconLightGray", "uiIconExport uiIconLightGray", "uiIconImport uiIconLightGray", "uiIconDelete uiIconLightGray", "uiIconWatch uiIconLightGray", "uiIconForumCreateForum uiIconForumLightGray", "uiIconEdit uiIconLightGray", "uiIconLock uiIconLightGray", "uiIconUnlockMedium uiIconLightGray", "uiIconOpen uiIconLightGray", "uiIconMinus uiIconLightGray", "uiIconMove uiIconLightGray", "uiIconDelete uiIconLightGray" ];
 						int i = 0;
 						for(action in uicomponent.getActions()) {
 							String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
@@ -132,18 +132,18 @@
 								<a href="$link;" class="forumAction confirm"
 									data-number="0" data-confirm-one="$removeForum" 
 									data-confirm-number="$deleteMoreForum" data-confirm-not="$notCheck">
-										<i class="$classIconItem"></i><%=nameItem%></a>
+										<i class="$classIconItem "></i><%=nameItem%></a>
 							</li>
 						<% 
 							} else if(action.equals("DeleteCategory")) {
 								String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
 						%>
 							<li>
-								<a href="javascript:if(confirm('$confirm')){$link;}" class="confirm"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a href="javascript:if(confirm('$confirm')){$link;}" class="confirm"><i class="$classIconItem uiIconLightGray"></i><%=nameItem%></a>
 							</li>
 						<%} else { %>
 							<li>
-								<a <%=liClazz%>href="$link"><i class="$classIconItem"></i><%=nameItem%></a>
+								<a <%=liClazz%>href="$link"><i class="$classIconItem "></i><%=nameItem%></a>
 							</li>
 						<%	if(action.equals("WatchOption")) { %>
 							<li class="divider"></li>
@@ -256,12 +256,12 @@
 						String isClose = "false";
 						if(forum.getIsLock() == true){
 							isLock = "true";
-							classIconStatusForum = "uiIconForumColorLockTiny";
+							classIconStatusForum = "uiIconForumColorLockTiny uiIconForumLightGray";
 							titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryLockedPosts");
 						}
 						if(forum.getIsClosed() == true){
 							isClose = "true" ;
-							classIconStatusForum = "uiIconForumColorCloseTiny";
+							classIconStatusForum = "uiIconForumColorCloseTiny uiIconForumLightGray";
 							titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 						}
 						if(uicomponent.userProfile.getUserRole() < 3){
@@ -278,10 +278,10 @@
 				%>
 							<tr class="$classRow oncontextmenu">
 								<td class="center" style="padding-left: 8px; padding-right: 3px;">
-									<i class="$classIconReadForum" rel="tooltip" data-placement="bottom" title="$titleNoNewPostForum"></i>
+									<i class="$classIconReadForum " rel="tooltip" data-placement="bottom" title="$titleNoNewPostForum"></i>
 								</td>
 								<td>
-									<i class="$classIconStatusForum" title="$titleIconForum"></i>
+									<i class="$classIconStatusForum " title="$titleIconForum"></i>
 									<% ++rCNB; 
 									String dataLink = "";
 									if (uicomponent.useAjax) {

@@ -206,7 +206,7 @@ public class UIFormScrollSelectBox extends UIFormInputBase<String> {
     w.write(getSelectedLabel());
     w.write("		</span>\n");
     w.write("		<span class=\"spiter\"></span>\n");
-    w.write("		<span class=\"caret\"></span>\n");
+    w.write("		<span class=\"uiIconMiniArrowDown uiIconLightGray\"></span>\n");
     w.write("  </div>\n");
     
     w.write("  <div class=\"optionMenu open" + clazzMaxSize + "\" style=\"position:absolute; visibility:hidden\">\n");

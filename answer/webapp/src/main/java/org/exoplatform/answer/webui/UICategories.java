@@ -226,7 +226,7 @@ public class UICategories extends BaseUIFAQForm {
       }
       if (categoryId_.equals(Utils.CATEGORY_HOME)) {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
-        currentCategoryName = "<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + currentCategoryName + "\"/>";
+        currentCategoryName = "<img src=\"/eXoSkin/skin/images/system/HomeIcon.gif\" alt=\"" + currentCategoryName + "\"/>";
       } else {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
       }

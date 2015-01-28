@@ -7,7 +7,7 @@
   <% uiform.begin() %>
   <div class="form-horizontal resizable">
       <p class="muted"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %></p>
-      <div class="uiTrees scrollArea" style="background: #fff; padding: 15px;">
+      <div class="uiTrees scrollArea" >
         <div class="treeContainer jsContainer">
         <%
         print(uicomponent.renderCategoryTree(uicomponent.getCategoryTree()));

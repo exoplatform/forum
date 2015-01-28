@@ -3,12 +3,16 @@
   ForumUtils.addScripts(null, null, "eXo.forum.UIForumPortlet.submitOnKey('"+uicomponent.id+"') ;");
   uicomponent.initPlaceholder();
 %>
-<div class="uiSearchInput">
-  <% uiform.begin() %>  
-	<div class="actionSubmitLink" data-link="<%=uicomponent.event("Search");%>">
+<div class="uiSearchInput searchWithIcon">
+  <% uiform.begin();%>  
+	<div class="actionSubmitLink" data-link="<%=uicomponent.event("Search")%>">
+		<a href="javascript:void(0)" class="advancedSearch" onclick="<%=uicomponent.event("Search")%>"
+			 data-placement="bottom" rel="tooltip" data-original-title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>">
+			<i class="uiIconSearch uiIconLightGray"></i>
+		</a>
 		<%  
 			uiform.renderChildren() ;
 		%>
 	</div>
-  <%uiform.end()%>
+  <%uiform.end();%>
 </div>

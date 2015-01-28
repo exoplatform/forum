@@ -119,7 +119,7 @@
 						String tagName = tag.getName();
 				%>
 				<li>
-					<span class="tagItem">
+					<span class="uiMention">
 						<a rel="tooltip" data-placement="bottom" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 						<i rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UITopicDetail.label.UnTag");%>" onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>" class="uiIconClose uiIconLightGray"></i>
 					</span>
@@ -210,7 +210,7 @@
 						<div data-toggle="dropdown">
 							<i class="uiIconSettings uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
-							<i class="uiIconMiniArrowDown"></i>
+							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
 						<ul class="dropdown-menu">
 							<%
@@ -270,7 +270,7 @@
 									if (isView) {
 							%>
 							<li>
-								<a href="$link"<%=confirm%>><i class="$classIcon"></i>$itemLabel</a>
+								<a href="$link"<%=confirm%>><i class="$classIcon uiIconLightGray"></i>$itemLabel</a>
 							</li>
 								<%} %>
 							<%}%>
@@ -284,7 +284,7 @@
 						<div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
-							<i class="uiIconMiniArrowDown"></i>
+							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
 						<ul class="dropdown-menu">
 							<li>
@@ -305,7 +305,7 @@
 						<div data-toggle="dropdown">
 							<i class="uiIconForumModerator uiIconForumLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.Moderation");%>
-							<i class="uiIconMiniArrowDown"></i>
+							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
 						<%
 							if(posts.size() > 1 || uicomponent.pageSelect > 1) {
@@ -345,7 +345,7 @@
 										} else {
 								%>
 							<li>
-								<a href="$link"><i class="$classIcon"></i>$itemLabel</a>
+								<a href="$link"><i class="$classIcon uiIconLightGray"></i>$itemLabel</a>
 							</li>
 							<%		}
 									}
@@ -444,7 +444,7 @@
 						%>
 						<div class="dropdown uiUserInfo">
 							<a href="javascript:void(0)" class="textTitleProfile">
-								<i class="$userSmile" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
+								<i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
 							</a>
 							<%=uicomponent.getMenuUser(userInfo) %>
 						</div>
@@ -747,8 +747,8 @@
 	
 	<div class="uiBox forumQuickReply uiCollapExpand">
 		<h5 class="title">
-			<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
-			<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+			<i class="uiIconArrowDown uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+			<i style="display:none" class="uiIconArrowRight uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 			<%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
 		</h5>
 		<div class="uiContentBox textQuickReply uiExpandContainer">

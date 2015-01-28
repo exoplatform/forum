@@ -41,7 +41,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
 
   private DataStorage storage;
                               //"/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
-  private String FIX_ICON = "/eXoResources/skin/images/Icons/AppIcons/uiIconAppGray.png";
+  private String FIX_ICON = "/eXoSkin/skin/images/themes/default/Icons/AppIcons/uiIconAppDefault.png";
   
   public static final String  SPACES_GROUP           = "spaces";
 

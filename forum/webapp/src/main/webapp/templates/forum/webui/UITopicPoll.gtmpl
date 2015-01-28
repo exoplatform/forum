@@ -39,7 +39,7 @@
 		<ul class="pull-right">
 			<li class="pull-right">
 				<div class="actionExpandCollapse">
-					<i class="uiIconArrowDown pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
+					<i class="uiIconArrowDown uiIconLightGray pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 					<i style="display:none" class="uiIconArrowRight pull-right" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></i>
 				</div>
 			</li>
@@ -57,9 +57,9 @@
 						</li>
 						<li>
 							<% if(poll.getIsClosed() || isTimeOut){ %>
-								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconOpen"></i><%=_ctx.appRes("UITopicPoll.label.OpenPoll")%></a>
+								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconOpen uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.OpenPoll")%></a>
 							<% } else { %>
-								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconMinus"></i><%=_ctx.appRes("UITopicPoll.label.ClosePoll")%></a>
+								<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut)%>"><i class="uiIconMinus uiIconLightGray"></i><%=_ctx.appRes("UITopicPoll.label.ClosePoll")%></a>
 							<% } %>
 						</li>
 						<li>
@@ -147,7 +147,7 @@
 				<div class="totalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
               <% if(isAgain && !isAnonim && !poll.getIsClosed() && !uicomponent.userIsBanned) { %>
 				<div class="uiAction">
-					<a href="<%=uicomponent.event("VoteAgainPoll")%>" class="btn LightBlueStyle"><%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %></a>
+					<a href="<%=uicomponent.event("VoteAgainPoll")%>" class="btn"><%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %></a>
 				</div>
              <% } %>
           <% } %>

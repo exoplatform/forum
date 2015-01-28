@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -43,7 +42,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 public class UIQuickSearchForm extends BaseForumForm {
   final static private String FIELD_SEARCHVALUE  = "inputValue";
 
-  private static final String SearchDefaultValue = "UIQuickSearchForm.label.Search";
 
   public UIQuickSearchForm() throws Exception {
     UIFormStringInput form = new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null);
@@ -51,7 +49,7 @@ public class UIQuickSearchForm extends BaseForumForm {
   }
   
   protected void initPlaceholder() throws Exception {
-    ((UIFormStringInput)getChildById(FIELD_SEARCHVALUE)).setHTMLAttribute("placeholder", WebUIUtils.getLabel(null, SearchDefaultValue));
+    getUIStringInput(FIELD_SEARCHVALUE).setHTMLAttribute("placeholder", getLabel("Search"));
   }
   
   static public class SearchActionListener extends EventListener<UIQuickSearchForm> {

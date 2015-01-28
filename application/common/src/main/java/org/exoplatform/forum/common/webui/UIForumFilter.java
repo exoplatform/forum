@@ -134,7 +134,7 @@ public class UIForumFilter extends UIFormInputBase<String> {
     w.write(getForumName());
     w.write("    </span>\n");
     w.write("    <span class=\"spiter\"></span>\n");
-    w.write("    <span class=\"caret\"></span>\n");
+    w.write("    <span class=\"uiIconMiniArrowDown uiIconLightGray\"></span>\n");
     w.write("</div>\n");
     
     w.write("    <div class=\"filterMenu open\" style=\"position:absolute; visibility:hidden\">\n");

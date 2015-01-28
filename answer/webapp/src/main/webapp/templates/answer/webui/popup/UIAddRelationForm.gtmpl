@@ -6,7 +6,7 @@
 <div class="uiAddRelationForm $uicomponent.id">
   <% uiform.begin() %>
   <div class="form-horizontal resizable">
-     <div class="uiTrees scrollArea" style="background: #fff; padding: 15px;">
+     <div class="uiTrees scrollArea">
        <div class="treeContainer jsContainer">
        <%
        print(uicomponent.renderCategoryTree());

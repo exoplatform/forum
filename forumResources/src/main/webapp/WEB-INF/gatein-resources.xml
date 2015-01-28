@@ -3,12 +3,6 @@
   xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_3 http://www.gatein.org/xml/ns/gatein_resources_1_3"
     xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_3">
 
-  <portal-skin>
-    <skin-name>Default</skin-name>
-    <skin-module>forumResources</skin-module>
-    <css-path>/skin/css/forum-resources.css</css-path>
-  </portal-skin>
-
   <module>
     <name>ForumUtils</name>
     <script>

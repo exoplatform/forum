@@ -35,11 +35,11 @@
 		  <li class="defaultStyle forumSeparatorLine" id="$action">
 			 <div class="dropdown uiDropdownWithIcon actionIcon">
 				<div data-toggle="dropdown">
-				   <i class="$icon"></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconMiniArrowDown"></i>
+				   <i class="$icon "></i> <%=_ctx.appRes("UIForumActionBar.label.Administrations");%> <i class="uiIconArrowDown uiIconLightGray"></i>
 				</div>
 				<ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
 				<% 
-				String [] classIcons = ["uiIconForumSort", "uiIconForumCensor", "uiIconNotification", "uiIconForumBBCode", "uiIconForumPrune", "uiIconForumBanIp", "uiIconExport", "uiIconImport"];
+				String [] classIcons = ["uiIconForumSort uiIconForumLightGray", "uiIconForumCensor uiIconForumLightGray", "uiIconNotification uiIconLightGray", "uiIconForumBBCode uiIconForumLightGray", "uiIconForumPrune uiIconForumLightGray", "uiIconForumBanIp uiIconForumLightGray", "uiIconExport uiIconLightGray", "uiIconImport uiIconLightGray"];
 				int j = 0;
 				for(ac in uicomponent.getActionMenu()){ 
 				  classIcon = classIcons[j];
@@ -47,7 +47,7 @@
 				%>
 				  <li>
 					<a href="javascript:void(0);" onclick="<%=uicomponent.event(ac)%>">
-						<i class="$classIcon"></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
+						<i class="$classIcon "></i><%= _ctx.appRes("UIForumActionBar.label." + ac); %>
 					</a>
 				   </li>
 				<%} %>
