@@ -279,8 +279,14 @@ public class PollWebservice implements ResourceContainer {
   private List<String> getGroupsOfUser(String username) {
     try {
       List<String> grIds = new ArrayList<String>();
-      for (Object gr : getOrganizationService().getGroupHandler().findGroupsOfUser(username)) {
-        grIds.add(((Group) gr).getId());
+      ConversationState state = ConversationState.getCurrent();
+      if(state != null && username.equals(state.getIdentity().getUserId())) {
+        Set<String> groupsSet = state.getIdentity().getGroups();
+        grIds.addAll(groupsSet);
+      } else {
+        for (Object gr : getOrganizationService().getGroupHandler().findGroupsOfUser(username)) {
+          grIds.add(((Group) gr).getId());
+        }
       }
       return grIds;
     } catch (Exception e) {
