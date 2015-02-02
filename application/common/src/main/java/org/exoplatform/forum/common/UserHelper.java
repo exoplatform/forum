@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ListAccess;
@@ -174,11 +175,9 @@ public class UserHelper {
   }
 
   public static String[] getUserGroups() throws Exception {
-    Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();
-    String[] groupIds = new String[objGroupIds.length];
-    for (int i = 0; i < groupIds.length; i++) {
-      groupIds[i] = ((GroupImpl) objGroupIds[i]).getId();
-    }
+    ConversationState state = ConversationState.getCurrent();
+    Set<String> groups = state.getIdentity().getGroups();
+    String[] groupIds = groups.toArray(new String[groups.size()]);
     return groupIds;
   }
 
