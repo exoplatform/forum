@@ -31,6 +31,7 @@ import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
@@ -274,7 +275,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (isModerator == false) {
       filter.viewers(ForumUtils.arraysMerge(forum.getViewer(), getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER)));
     }
-    
+
+    ForumAdministration forumAdministration = getForumService().getForumAdministration();
+    this.strOrderBy = forumAdministration.getTopicSortBy()+" "+forumAdministration.getTopicSortByType();
     filter.orderBy(strOrderBy);
     //
     this.topicListAccess = (TopicListAccess) getForumService().getTopics(filter);
