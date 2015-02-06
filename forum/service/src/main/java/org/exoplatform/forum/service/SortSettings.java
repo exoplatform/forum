@@ -115,7 +115,7 @@ public class SortSettings {
 
   public static List<String> getForumSortBys() {
     List<String> listOrderBy = new ArrayList<String>(Arrays.asList(SortField.toValues()));
-    listOrderBy.remove(SortField.POSTCOUNT.toString());
+    listOrderBy.remove(SortField.LASTPOST.toString());
     listOrderBy.remove(SortField.VIEWCOUNT.toString());
     listOrderBy.remove(SortField.ATTACHMENTS.toString());
     return listOrderBy;
