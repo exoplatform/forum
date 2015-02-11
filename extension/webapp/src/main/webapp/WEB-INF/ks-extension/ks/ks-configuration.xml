@@ -65,13 +65,6 @@
 
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
-    <!--Answer user listener-->
-    <component-plugin>
-      <name>answer.user.event.listener</name>
-      <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.faq.service.conf.FAQUserListener</type>
-      <description>calculate info when deleted users</description>
-    </component-plugin>
     <!--Forum user listener-->
     <component-plugin>
       <name>forum.user.event.listener</name>
@@ -116,27 +109,6 @@
           <property name="jobName" value="SendMailJob" />
           <property name="groupName" value="KnowlegedSuite" />
           <property name="job" value="org.exoplatform.forum.service.conf.SendMailJob" />
-          <property name="repeatCount" value="0" />
-          <property name="period" value="120000" /> <!-- 2 mins-->
-          <property name="startTime" value="+0" />
-          <property name="endTime" value="" />
-        </properties-param>
-      </init-params>
-    </component-plugin>
-
-    <!--FAQ send email notification configuration-->
-    <component-plugin>
-      <name>FAQSendNotificationJob</name>
-      <set-method>addPeriodJob</set-method>
-      <type>org.exoplatform.services.scheduler.PeriodJob</type>
-      <description>update logged in user information to forum service</description>
-      <init-params>
-        <properties-param>
-          <name>job.info</name>
-          <description>save the monitor data periodically</description>
-          <property name="jobName" value="NotifyJob" />
-          <property name="groupName" value="KnowlegedSuite" />
-          <property name="job" value="org.exoplatform.faq.service.notify.NotifyJob" />
           <property name="repeatCount" value="0" />
           <property name="period" value="120000" /> <!-- 2 mins-->
           <property name="startTime" value="+0" />

@@ -18,7 +18,6 @@
     <module>application</module>
     <module>poll</module>
     <module>forum</module>
-    <module>answer</module>
     <module>gadgets</module>
     <module>extension</module>
     <module>extras</module>

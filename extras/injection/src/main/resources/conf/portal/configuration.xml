@@ -54,36 +54,7 @@
   <component>
     <type>org.exoplatform.services.bench.DataInjectorService</type>
   </component>
-  
-  <!-- FAQ Injector Definition-->
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.CategoryInjector</type>
-  </component>
 
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.AnswerInjector</type>
-  </component>
-
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.ProfileInjector</type>
-  </component>
-
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.QuestionInjector</type>
-  </component>
-
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.CommentInjector</type>
-  </component>
-
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.AttachmentInjector</type>
-  </component>
-
-  <component>
-    <type>org.exoplatform.forum.extras.injection.faq.MembershipInjector</type>
-  </component>
-  
   <!-- Poll Injector Definition-->
   <component>
     <type>org.exoplatform.forum.extras.injection.poll.GroupInjector</type>
@@ -134,42 +105,6 @@
       <name>forumAttachment</name>
       <set-method>addInjector</set-method>
       <type>org.exoplatform.forum.extras.injection.forum.AttachmentInjector</type>
-    </component-plugin>
-
-    <component-plugin>
-      <name>faqProfile</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.ProfileInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqCategory</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.CategoryInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqQuestion</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.QuestionInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqAnswer</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.AnswerInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqComment</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.CommentInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqAttachment</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.AttachmentInjector</type>
-    </component-plugin>
-    <component-plugin>
-      <name>faqMembership</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.extras.injection.faq.MembershipInjector</type>
     </component-plugin>
 
     <component-plugin>
