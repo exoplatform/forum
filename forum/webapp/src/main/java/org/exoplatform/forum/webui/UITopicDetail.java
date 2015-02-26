@@ -67,6 +67,8 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -78,7 +80,6 @@ import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
-import org.jfree.util.Log;
 
 
 @ComponentConfig(
@@ -141,6 +142,7 @@ import org.jfree.util.Log;
     }
 )
 public class UITopicDetail extends UIForumKeepStickPageIterator {
+  private static final Log           LOG                     = ExoLogger.getLogger(UITopicDetail.class);
 
   private String                     categoryId;
 
@@ -1396,7 +1398,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         selectProfile = topicDetail.getForumService().getUserInformations(selectProfile);
       } catch (Exception e) {
-        Log.warn("Failed in getting user informations.", e);
+        LOG.warn("Failed in getting user informations.", e);
       }
       viewUserProfile.setUserProfileViewer(selectProfile);
     }
