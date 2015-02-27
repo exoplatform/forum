@@ -29,6 +29,7 @@ import org.exoplatform.forum.common.persister.Persister;
 import org.exoplatform.forum.common.persister.PersisterTask;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 public abstract class AbstractForumTaskManager<T extends AbstractForumTask> implements Persister {
   private static final Log LOG = ExoLogger.getLogger(AbstractForumTaskManager.class);
@@ -47,7 +48,7 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
   protected Queue<T> tasks = null;
   /** Defines the signal done when task committed*/ 
   private CountDownLatch doneSignal;
-  
+
   public AbstractForumTaskManager(InitParams params) {
     long interval_task = InitParamsValue.getLong(params, INTERVAL_TASK_PERSIST_THRESHOLD_KEY, INTERVAL_TASK_PERSIST_THRESHOLD);
     int persisterThreshold = InitParamsValue.getInteger(params, PERSISTER_THRESHOLD_KEY, PERSISTER_THRESHOLD);
@@ -80,13 +81,16 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
         T task;
         doneSignal = new CountDownLatch(processTasks.size());
         while ((task = processTasks.poll()) != null) {
-          //
+          ConversationState state = ConversationState.getCurrent();
           try {
-            task.run();
+            startProcess(task);
+            task.process();
             doneSignal.countDown();
           } catch (Exception e) {
             LOG.warn(String.format("The task %s running unsuccessful.", task.getClass().getName()));
             LOG.debug(e.getMessage(), e);
+          } finally {
+            endProcess(task, state);
           }
         }
       } finally {
@@ -95,7 +99,6 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
       }
     }
   }
-  
   /**
    * Gets the tasks to commit, it will ignore same task added.
    * @return
@@ -126,17 +129,32 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
     //
     commit(false);
   }
-  
+
+  private void startProcess(T task) {
+    try {
+      ConversationState.setCurrent(task.getState());
+    } catch (Exception e) {
+      LOG.warn("Failed to set state context for forum activity task executing", e);
+    }
+  }
+
+  private void endProcess(T task, ConversationState state) {
+    try {
+      ConversationState.setCurrent(state);
+    } catch (Exception e) {
+      LOG.warn("Failed to reset state context for forum activity task executing", e);
+    }
+  }
+
   @Override
   public CountDownLatch doneSignal() {
     return this.doneSignal != null ? this.doneSignal : new CountDownLatch(0);
   }
-  
+
   @Override
   public void clear() {
     if (this.tasks != null) {
       this.tasks.clear();
     }
-    
   }
 }

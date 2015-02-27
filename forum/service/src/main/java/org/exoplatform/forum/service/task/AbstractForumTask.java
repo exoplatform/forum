@@ -21,44 +21,50 @@ import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.services.security.ConversationState;
 
 public abstract class AbstractForumTask {
+  /*
+   * FORUM-1065 : Thread safety issue in multitenancy environment private static
+   * JCRDataStorage storage;
+   */
+  private final ConversationState state;
 
-  private static JCRDataStorage storage;
+  public AbstractForumTask() {
+    state = ConversationState.getCurrent();
+  }
+
+  public ConversationState getState() {
+    return this.state;
+  }
 
   protected static JCRDataStorage getJCRDataStorage() {
-    if (storage == null) {
-      storage = CommonsUtils.getService(JCRDataStorage.class);
-    }
-    return storage;
+    return CommonsUtils.getService(JCRDataStorage.class);
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     return super.equals(obj);
   }
-  
-  /**
-   * The method use to running task.
-   * @throws Exception
-   */
-  public abstract void run() throws Exception;
-  
+
+  public abstract void process() throws Exception;
+
   /**
    * The class is task to call query last post of forum 
-   *
    */
   public static class QueryLastPostTask extends AbstractForumTask {
 
-    /** The jcr path of forum node. **/
+    /** The JCR-Path of forum node. **/
     private final String forumPath;
 
     public QueryLastPostTask(String forumPath) {
+      super();
+      //
       this.forumPath = forumPath;
     }
 
     @Override
-    public void run() throws Exception {
+    public void process() throws Exception {
       getJCRDataStorage().queryLastPostForum(forumPath);
     }
 
@@ -95,6 +101,8 @@ public abstract class AbstractForumTask {
     private final MessageBuilder messageBuilder;
 
     public SendNotificationTask(String nodePath, Topic topic, Post post, MessageBuilder messageBuilder, boolean isApprovePost) {
+      super();
+      //
       this.topic = topic;
       this.post = post;
       this.nodePath = nodePath;
@@ -103,13 +111,13 @@ public abstract class AbstractForumTask {
     }
 
     @Override
-    public void run() throws Exception {
+    public void process() throws Exception {
       getJCRDataStorage().sendNotification(nodePath, topic, post, messageBuilder, isApprovePost);
     }
 
     @Override
     public boolean equals(Object o) {
-      if(super.equals(o)) {
+      if (super.equals(o)) {
         return true;
       }
       if (o instanceof SendNotificationTask) {
