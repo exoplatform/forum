@@ -43,7 +43,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
 public class WebUIUtils {
-  private static Log LOG = ExoLogger.getLogger(WebUIUtils.class);
+  private static final Log LOG = ExoLogger.getLogger(WebUIUtils.class);
   private static final String SCRIPT_PATTERN = 
       "<script src=\"/forumResources/syntaxhighlighter/Scripts/{0}\" id=\"script_{1}_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
 
@@ -127,9 +127,9 @@ public class WebUIUtils {
    * @param languageOption The list of files name javaScript
    * @return The list files attach for SyntaxHighlighter
    */
-  static public String attachJSSyntaxHighlighter(List<String> languageOption) {
+  public static String attachJSSyntaxHighlighter(List<String> languageOption) {
     StringBuilder scripts = new StringBuilder();
-    if(languageOption != null && languageOption.size() > 0) {
+    if(languageOption != null && !languageOption.isEmpty()) {
       int index = 0;
       //Attach javaScript core of SyntaxHighlighter
       scripts.append(makeScript("shCore.js", (index++)))
@@ -146,7 +146,9 @@ public class WebUIUtils {
         String script = "setTimeout(function() {try {SyntaxHighlighter.initLoader();SyntaxHighlighter.all();" +
                         "dp.SyntaxHighlighter.HighlightAll('code');}catch(err){if(window.console && SyntaxHighlighter.config.strings.isAlert) {window.console.log(err);}}}, 500);";
         addScripts(new String[] { script });
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        LOG.warn("Failed to add JavaScripts for SyntaxHighlighter");
+      }
     }
     //
     return scripts.toString();

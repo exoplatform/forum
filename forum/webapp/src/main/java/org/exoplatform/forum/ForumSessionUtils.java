@@ -39,10 +39,10 @@ public class ForumSessionUtils {
   public final static String DEFAULT_AVATAR = "/eXoSkin/skin/images/system/UserAvtDefault.png";
 
   /**
-   * create an avatar link for user. 
+   * Create an avatar link for user. 
    * Firstly, the function tries to load avatar resource from user profile of forum.
    * if the resource is not found, try to get it from {@link ContactProvider}
-   * else, return default url: <a>/eXoSkin/skin/images/Default/social/skin/ShareImages/UserAvtDefault.png</a>.
+   * else, return default URL: <a>/eXoSkin/skin/images/Default/social/skin/ShareImages/UserAvtDefault.png</a>.
    * @param userName
    * @param forumService
    * @return
@@ -54,19 +54,17 @@ public class ForumSessionUtils {
         forumService = CommonUtils.getComponent(ForumService.class);
       }
       ForumAttachment attachment = forumService.getUserAvatar(userName);
-      url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
-    } catch (Exception e) {
-//      if (LOG.isDebugEnabled())
-//        LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
-    }
-    if (url == null || url.trim().length() < 1) {
-      CommonContact contact = getPersonalContact(userName);
-      if (!ForumUtils.isEmpty(contact.getAvatarUrl())) {
-        url = contact.getAvatarUrl();
+      if (attachment != null) {
+        url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
       }
-      url = (url == null || url.trim().length() < 1) ? DEFAULT_AVATAR : url;
+    } catch (Exception e) {
+      LOG.warn(String.format("can not load avatar of [%s] as file resource", userName));
+      LOG.debug(e);
     }
-    return url;
+    if (CommonUtils.isEmpty(url)) {
+      url = getPersonalContact(userName).getAvatarUrl();
+    }
+    return CommonUtils.isEmpty(url) ? DEFAULT_AVATAR : url;
   }
 
   public static CommonContact getPersonalContact(String userId) {
