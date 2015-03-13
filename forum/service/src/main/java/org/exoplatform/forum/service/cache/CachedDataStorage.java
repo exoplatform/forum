@@ -305,7 +305,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearUserProfile(String userName) {
-    if (userName != null && Utils.isEmpty(userName) == false) {
+    if (!Utils.isEmpty(userName)) {
       UserProfileKey key = new UserProfileKey(userName);
       userProfileData.remove(key);
       loginUserProfile.remove(key);
@@ -661,9 +661,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearObjectCache(category, isNew);
     //
     clearUserProfile(null);
-    if (isNew == false) {
-      clearCategoryCache(category);
-    }
+    clearCategoryCache(category);
   }
 
   public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
@@ -1773,6 +1771,14 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.processEnabledUser(userName, email, isEnabled);
     //
     clearAllForumCache();
+    //
+    clearUserProfile(userName);
+    try {
+      clearUserProfileListCache();
+      clearUserProfileListCountCache();
+    } catch (Exception e) {
+      LOG.warn("Failed to clear user cached.");
+    }
   }
 
   public void calculateDeletedUser(String userName) throws Exception {

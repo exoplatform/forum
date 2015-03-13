@@ -62,7 +62,6 @@
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>
-  
  
   <component>
     <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
@@ -82,17 +81,6 @@
           <value>jar:/conf/standalone/test-poll-nodetypes.xml</value>
         </values-param>
       </init-params>
-    </component-plugin>
-  </external-component-plugins>
-  
-  <external-component-plugins>
-    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
-    <!--Answer user listener-->
-    <component-plugin>
-      <name>answer.user.event.listener</name>
-      <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.faq.service.conf.FAQUserListener</type>
-      <description>calculate info when deleted users</description>
     </component-plugin>
   </external-component-plugins>
 </configuration>

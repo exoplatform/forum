@@ -762,7 +762,6 @@ public class UIForumPortlet extends UIPortletApplication {
                     popupContainer.setId("UIAddPostContainer");
                   }
                   popupAction.activate(popupContainer, 900, 500);
-                  context.addUIComponentToUpdateByAjax(popupAction);
                 } catch (Exception e) {
                   log.error(e);
                 }

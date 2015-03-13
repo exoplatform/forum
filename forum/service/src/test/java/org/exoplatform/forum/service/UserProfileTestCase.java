@@ -16,13 +16,11 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Calendar;
-
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
-import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
 
@@ -227,6 +225,8 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
   }
 
   public void testSearchUserProfile() throws Exception {
+    
+    int before = forumService_.getPageListUserProfile().getAvailable();
     //
     int numberUser = 20;
     // create user
@@ -237,30 +237,33 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       user.setFirstName("test");
       user.setLastName("abc user");
       user.setPassword("exo");
+      user.isEnabled();
       //
       userHandler.createUser(user, true);
+      userHandler.setEnabled(user.getUserName(), true, true);
     }
-    int allSize = UserHelper.getUserHandler().findAllUsers().getSize();
-    
+
+    int allSize = before + numberUser;
     // check get all user profile (8 users create by OrganizationDatabaseInitializer)
-    assertEquals(allSize, forumService_.getPageListUserProfile().getAvailable());
-    assertEquals(20, forumService_.searchUserProfile("foo").getAvailable());
+    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
     assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
     // Disable 10 users
+    System.out.println("Disable 10 users");
     for (int i = 0; i < 10; i++) {
       userHandler.setEnabled("foo" + i, false, true);
     }
     //
-    assertEquals(allSize - 10, forumService_.getPageListUserProfile().getAvailable());
-    assertEquals(10, forumService_.searchUserProfile("foo").getAvailable());
+    assertEquals(allSize - 10, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(10, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
     assertEquals(true, forumService_.getQuickProfile("foo0").isDisabled());
     // Enable 10 users
     for (int i = 0; i < 10; i++) {
       userHandler.setEnabled("foo" + i, true, true);
     }
     //
-    assertEquals(allSize, forumService_.getPageListUserProfile().getAvailable());
-    assertEquals(20, forumService_.searchUserProfile("foo").getAvailable());
+    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
     assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
   }
 

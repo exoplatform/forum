@@ -36,6 +36,7 @@ import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.UserStatus;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
@@ -177,6 +178,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   public void testGetObjectNameById() throws Exception {
     // set Data
     initDefaultData();
+    UserProfile profile = createdUserProfile(USER_DEMO);
+    forumService_.saveUserProfile(profile, false, false);
 
     // Test get object by id
     assertNotNull(forumService_.getObjectNameById(forumId, Utils.FORUM));
@@ -202,12 +205,12 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // by saveModerateOfForums
     List<String> list = new ArrayList<String>();
     list.add(categoryId + "/" + forumId);
-    forumService_.saveModerateOfForums(list, "demo", false);
+    forumService_.saveModerateOfForums(list, USER_DEMO, false);
     updatedForum = convertToForum(forumService_.getObjectNameById(forumId, Utils.FORUM));
     assertNotNull(updatedForum);
     list.clear();
     list.addAll(Arrays.asList(updatedForum.getModerators()));
-    assertTrue(list.contains("demo"));
+    assertTrue(list.contains(USER_DEMO));
 
     // by moveForum
     Category cate = createCategory(getId(Utils.CATEGORY));
@@ -420,7 +423,10 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.saveUserProfile(profile, false, false);
     forumService_.saveUserModerator(USER_JOHN, new ArrayList<String>(), false);
     assertEquals(UserProfile.USER, forumService_.getUserInfo(USER_JOHN).getUserRole());
-
+    //
+    profile = createdUserProfile(USER_ROOT);
+    profile.setUserRole(UserProfile.ADMIN);
+    forumService_.saveUserProfile(profile, false, false);
     String[] groupUser = new String[] { groupId, USER_ROOT };
     Category category = createCategory(getId(Utils.CATEGORY));
     category.setUserPrivate(groupUser);
@@ -795,14 +801,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forum = forumService_.getForum(cat.getId(), forum.getId());
     // test send notification email if user registered for the Forum and Topic Watching notification 
     String owner = "user_test_mail";
-    User user = UserHelper.getUserHandler().createUserInstance(owner);
-    user.setEmail(owner + "@plf.com");
-    user.setFirstName(owner);
-    user.setLastName(owner);
-    user.setDisplayName(owner);
-    user.setPassword("password");
-    //
-    UserHelper.getUserHandler().createUser(user, true);
+    User user = getOrCreateUser(owner);
     //
     UserProfile profile = forumService_.getUserInfo(owner);
     assertNotNull(profile);
@@ -966,6 +965,21 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
   private void addUserToGroup(String userId, Group group, String type) throws Exception {
     MembershipType m = (MembershipType) UserHelper.getOrganizationService().getMembershipTypeHandler().findMembershipType(type);
-    UserHelper.getMembershipHandler().linkMembership(UserHelper.getUserByUserId(userId), group, m, true);
+    UserHelper.getMembershipHandler().linkMembership(getOrCreateUser(userId), group, m, true);
+  }
+  
+  private User getOrCreateUser(String userId) throws Exception {
+    User user = UserHelper.getUserHandler().findUserByName(userId, UserStatus.ANY);
+    if (user == null) {
+      user = UserHelper.getUserHandler().createUserInstance(userId);
+      user.setEmail(userId + "@plf.com");
+      user.setFirstName(userId);
+      user.setLastName(userId);
+      user.setDisplayName(userId);
+      user.setPassword("password");
+      //
+      UserHelper.getUserHandler().createUser(user, true);
+    }
+    return user;
   }
 }

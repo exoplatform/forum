@@ -8257,14 +8257,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node profileHome = getUserProfileHome(sProvider);
       Node profileNode = profileHome.getNode(userName);
-      if (!isEnabled) {
-        if(profileNode.canAddMixin(EXO_DISABLED)) {
-          profileNode.addMixin(EXO_DISABLED);
-          profileNode.setProperty(EXO_IS_DISABLED, true);
-        }
-      } else {
-        profileNode.removeMixin(EXO_DISABLED);
+      if (!profileNode.isNodeType(EXO_DISABLED)) {
+        profileNode.addMixin(EXO_DISABLED);
       }
+      profileNode.setProperty(EXO_IS_DISABLED, !isEnabled);
       profileHome.getSession().save();
     } catch (Exception e) {
       logDebug(String.format("Process to to update status disabled/enabled of used %s is unsuccessfully.", userName), e);
@@ -8662,6 +8658,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       .append(EXO_SCREEN_NAME).append(" LIKE '%").append(searchKey).append("%'")
       .append(")");
     }
+    sqlQuery.append(" AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ")
+            .append(EXO_IS_DISABLED).append("<>'true')");
     return sqlQuery.toString();
   }
   

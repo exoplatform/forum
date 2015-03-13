@@ -45,6 +45,8 @@ public class UserProfileData implements CachedData<UserProfile> {
   private boolean             isDisplayAvatar        = true;
 
   private boolean             isBanned               = false;
+
+  private boolean             isDisabled             = false;
   
   private long                banUntil               = 0;
   
@@ -97,6 +99,7 @@ public class UserProfileData implements CachedData<UserProfile> {
     this.banCounter = profile.getBanCounter();
     this.banReasonSummary = profile.getBanReasonSummary();
     this.createdDateBan = profile.getCreatedDateBan();
+    this.isDisabled = profile.isDisabled();
   }
   
   @Override
@@ -126,6 +129,7 @@ public class UserProfileData implements CachedData<UserProfile> {
     userProfile.setBanCounter(this.banCounter);
     userProfile.setBanReasonSummary(this.banReasonSummary);
     userProfile.setCreatedDateBan(this.createdDateBan);
+    userProfile.setDisabled(this.isDisabled);
     return userProfile;
   }
 

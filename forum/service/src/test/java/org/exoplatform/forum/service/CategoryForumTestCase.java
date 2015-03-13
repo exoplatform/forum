@@ -77,13 +77,16 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
 
   public void testGetCategoryIncludedSpace() throws Exception {
     assertNull(forumService_.getCategoryIncludedSpace());
-    Category cat = createCategory(getId(Utils.CATEGORY));
+    Category cat = createCategory(getId(Utils.CATEGORY_SPACE_ID_PREFIX));
     cat.setIncludedSpace(true);
     forumService_.saveCategory(cat, true);
     assertNotNull(forumService_.getCategoryIncludedSpace());
   }
 
   public void testForum() throws Exception {
+    forumService_.saveUserProfile(createdUserProfile(USER_DEMO), false, false);
+    forumService_.saveUserProfile(createdUserProfile(USER_JOHN), false, false);
+    //
     String catId = getId(Utils.CATEGORY);
     Category cat = createCategory(catId);
     // create new category
@@ -125,11 +128,11 @@ public class CategoryForumTestCase extends BaseForumServiceTestCase {
     // saveModerateOfForum
     List<String> list = new ArrayList<String>();
     list.add(catId + "/" + forum.getId());
-    forumService_.saveModerateOfForums(list, "demo", false);
+    forumService_.saveModerateOfForums(list, USER_DEMO, false);
     forum = forumService_.getForum(catId, forumId);
     list.clear();
     list.addAll(Arrays.asList(forum.getModerators()));
-    assertEquals(list.contains("demo"), true);
+    assertEquals(list.contains(USER_DEMO), true);
 
     // test moderator of category.
     list.clear();
