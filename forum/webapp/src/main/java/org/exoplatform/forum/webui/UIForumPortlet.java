@@ -67,7 +67,6 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
-import org.mortbay.cometd.AbstractBayeux;
 import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
 @ComponentConfig(
@@ -456,7 +455,7 @@ public class UIForumPortlet extends UIPortletApplication {
 
   protected String getCometdContextName() {
     EXoContinuationBayeux bayeux = (EXoContinuationBayeux) PortalContainer.getInstance()
-                                                                          .getComponentInstanceOfType(AbstractBayeux.class);
+                                                                          .getComponentInstanceOfType(EXoContinuationBayeux.class);
     return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
   }
 
