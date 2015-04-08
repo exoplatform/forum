@@ -99,9 +99,9 @@ public class UIPageListTopicByUser extends UIContainer {
       pageList = forumService.getPageTopicByUser(this.userName, isMod, strOrderBy);
       forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
                                  pageList.getAvailable(), pageList.getAvailablePage());
-      if (pageList != null)
-        pageList.setPageSize(5);
       topics = pageList.getPage(forumPageIterator.getPageSelected());
+      if (pageList != null)
+        pageList.setPageSize(topics.size());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
       log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
