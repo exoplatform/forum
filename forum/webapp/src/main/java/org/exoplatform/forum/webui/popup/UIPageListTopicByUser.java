@@ -56,6 +56,8 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 public class UIPageListTopicByUser extends UIContainer {
+  public static final int PAGE_SIZE = 5;
+
   private ForumService forumService;
 
   private JCRPageList  pageList;
@@ -97,10 +99,10 @@ public class UIPageListTopicByUser extends UIContainer {
       if (getUserProfile().getUserRole() == 0)
         isMod = true;
       pageList = forumService.getPageTopicByUser(this.userName, isMod, strOrderBy);
+      if (pageList != null)
+        pageList.setPageSize(PAGE_SIZE);
       forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
                                  pageList.getAvailable(), pageList.getAvailablePage());
-      if (pageList != null)
-        pageList.setPageSize(5);
       topics = pageList.getPage(forumPageIterator.getPageSelected());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
