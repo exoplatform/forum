@@ -438,10 +438,10 @@ public class FAQServiceTestCase extends FAQServiceBaseTestCase {
     assertEquals(1, listQuickSearch.size());
     
     Question question7 = createQuestion(categoryId1);
-    question7.setDetail(CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:\"'=.,*$%()\\+@!^*-}{;`~_"));
+    question7.setDetail(CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_"));
     faqService_.saveQuestion(question7, true, faqSetting_);
     
-    text = CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:\"'=.,*$%()\\+@!^*-}{;`~_");
+    text = CommonUtils.encodeSpecialCharInSearchTerm("&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_");
     eventQuery.setText(text);
     listQuickSearch = faqService_.getSearchResults(eventQuery);
     assertEquals(1, listQuickSearch.size());
