@@ -56,6 +56,8 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 public class UIPageListTopicByUser extends UIContainer {
+  public static final int PAGE_SIZE = 5;
+
   private ForumService forumService;
 
   private JCRPageList  pageList;
@@ -97,11 +99,11 @@ public class UIPageListTopicByUser extends UIContainer {
       if (getUserProfile().getUserRole() == 0)
         isMod = true;
       pageList = forumService.getPageTopicByUser(this.userName, isMod, strOrderBy);
+      if (pageList != null)
+        pageList.setPageSize(PAGE_SIZE);
       forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
                                  pageList.getAvailable(), pageList.getAvailablePage());
       topics = pageList.getPage(forumPageIterator.getPageSelected());
-      if (pageList != null)
-        pageList.setPageSize(topics.size());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
       log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
