@@ -361,7 +361,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     List<Topic> topics = storage.getTopics(forum.getCategoryId(), forum.getId());
     for (ForumEventLifeCycle f : listeners_) {
       try {
-        f.updateTopics(topics, forum.getIsLock());
+        f.updateTopics(topics, (Utils.LOCK == type) ? forum.getIsLock() : forum.getIsClosed());
       } catch (Exception e) {
         log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
       }
