@@ -123,11 +123,15 @@ import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
+import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.forum.service.jcr.listener.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.jcr.listener.DeletedUserCalculateEventListener;
 import org.exoplatform.forum.service.jcr.listener.StatisticEventListener;
-import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
+import org.exoplatform.forum.service.task.AbstractForumTask.QueryLastPostTask;
+import org.exoplatform.forum.service.task.AbstractForumTask.SendNotificationTask;
+import org.exoplatform.forum.service.task.QueryLastPostTaskManager;
+import org.exoplatform.forum.service.task.SendNotificationTaskManager;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -151,10 +155,7 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
-import org.exoplatform.forum.service.task.AbstractForumTask.QueryLastPostTask;
-import org.exoplatform.forum.service.task.AbstractForumTask.SendNotificationTask;
-import org.exoplatform.forum.service.task.QueryLastPostTaskManager;
-import org.exoplatform.forum.service.task.SendNotificationTaskManager;
+
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -2748,8 +2749,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           long newTopicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong() + 1;
           forumNode.setProperty(EXO_TOPIC_COUNT, newTopicCount);
         }
-        //
-        addNotificationTask(forumNode.getPath(), topic, null, messageBuilder, true);
       } else {
         topicNode = forumNode.getNode(topic.getId());
         isChangeClose = (topic.getIsClosed() != topicNode.getProperty(EXO_IS_CLOSED).getBoolean());
@@ -2773,13 +2772,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, topic.getNumberAttachment());
       topicNode.setProperty(EXO_CAN_POST, convertArray(topic.getCanPost()));
       topicNode.setProperty(EXO_CAN_VIEW, convertArray(topic.getCanView()));
+      topic.setPath(topicNode.getPath());
+      //
       if (isNew) {
         forumNode.getSession().save();
+        //
+        addNotificationTask(forumNode.getPath(), topic, null, messageBuilder, true);
       } else {
         forumNode.save();
       }
-      //
-      topic.setPath(topicNode.getPath());
       //
       if (topic.getIsWaiting() || !topic.getIsApproved()) {
         getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
@@ -3734,260 +3735,218 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
   
+  private boolean canReceiveNotification(Node topicNode, String user) throws Exception {
+    Node forumNode = topicNode.getParent();
+    PropertyReader reader = new PropertyReader(forumNode);
+    // viewer of topic
+    Set<String> viewers = new PropertyReader(topicNode).set(EXO_CAN_VIEW, new HashSet<String>());
+    // viewer of forum
+    viewers.addAll(reader.set(EXO_VIEWER, new HashSet<String>()));
+    // forum of space - only check permission on forum
+    if (forumNode.getParent().getName().equals(Utils.CATEGORY_SPACE_ID_PREFIX)) {
+      // moderators
+      if (ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+        return true;
+      }
+    } else {
+      // administrators or moderators
+      if (isAdminRole(user) || ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+        return true;
+      }
+      // private categories
+      String[] userPrivates = new PropertyReader(forumNode.getParent()).strings(EXO_USER_PRIVATE, new String[] {});
+      if (!CommonUtils.isEmpty(userPrivates) && !ForumServiceUtils.hasPermission(userPrivates, user)) {
+        return false;
+      }
+      // all viewers on category
+      viewers.addAll(new PropertyReader(forumNode.getParent()).list(EXO_VIEWER, new ArrayList<String>()));
+    }
+    return viewers.isEmpty() || ForumServiceUtils.hasPermission(viewers.toArray(new String[viewers.size()]), user);
+  }
+  
+  private void sendNotificationWhenCreateTopic(SessionProvider sProvider, Node forumNode, Topic topic, MessageBuilder messageBuilder) throws Exception {
+    messageBuilder.setForumName(forumNode.getProperty(EXO_NAME).getString());
+    Node categoryNode = forumNode.getParent();
+    messageBuilder.setCatName(categoryNode.getProperty(EXO_NAME).getString());
+    messageBuilder.setTopicName(topic.getTopicName());
+    //
+    List<String> emailList = new ArrayList<String>();
+    List<String> emailListCate = new ArrayList<String>();
+    Node node = categoryNode;
+    Node topicNode = forumNode.getNode(topic.getId());
+    while (true) {
+      emailListCate.addAll(emailList);
+      emailList = new ArrayList<String>();
+      if (node.isNodeType(EXO_FORUM_WATCHING) && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
+        PropertyReader reader = new PropertyReader(node);
+        List<String> users = reader.list(EXO_USER_WATCHING, new ArrayList<String>());
+        if (!users.isEmpty()) {
+          int i = 0;
+          String[] emails = reader.strings(EXO_EMAIL_WATCHING, new String[] {});
+          for (String user : users) {
+            if (user.equals(topic.getOwner()) || canReceiveNotification(topicNode, user)) {
+              emailList.add(emails[i]);
+            }
+            i++;
+          }
+        }
+        emailList.addAll(reader.list(EXO_NOTIFY_WHEN_ADD_TOPIC, new ArrayList<String>()));
+      }
+      //
+      emailList.removeAll(emailListCate);
+      if (emailList.size() > 0) {
+        String owner = getScreenName(sProvider, topic.getOwner());
+        messageBuilder.setObjName(node.getProperty(EXO_NAME).getString());
+        if (node.isNodeType(EXO_FORUM)) {
+          messageBuilder.setWatchType(Utils.FORUM);
+        } else {
+          messageBuilder.setWatchType(Utils.CATEGORY);
+        }
+        messageBuilder.setId(topic.getId().replaceFirst(Utils.TOPIC, Utils.POST));
+        messageBuilder.setAddType(Utils.TOPIC);
+        messageBuilder.setAddName(topic.getTopicName());
+        messageBuilder.setMessage(topic.getDescription());
+        messageBuilder.setCreatedDate(topic.getCreatedDate());
+        messageBuilder.setOwner(owner);
+        if(Utils.isEmpty(messageBuilder.getLink())) {
+          messageBuilder.setLink(topic.getLink());
+        }
+        sendEmailNotification(emailList, messageBuilder.getContentEmail());
+      }
+      if(node.isNodeType(EXO_FORUM)) {
+        break;
+      }
+      node = forumNode;
+    }
+  }
+  
+  private void sendNotificationWhenCreatePost(SessionProvider sProvider, Node topicNode, Post post, MessageBuilder messageBuilder, boolean isApprovePost) throws Exception {
+    if (!topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+      Node userProfileHome = getUserProfileHome(sProvider);
+      Node forumNode = topicNode.getParent();
+      Node categoryNode = forumNode.getParent();
+      messageBuilder.setCatName(categoryNode.getProperty(EXO_NAME).getString());
+      messageBuilder.setForumName(forumNode.getProperty(EXO_NAME).getString());
+      messageBuilder.setTopicName(topicNode.getProperty(EXO_NAME).getString());
+      /*
+       * check is approved, is activate by topic and is not hidden before send mail
+       */
+      if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
+        List<String> userPrivates = new ArrayList<String>();
+        if (!CommonUtils.isEmpty(post.getUserPrivate()) && post.getUserPrivate().length == 2) {
+          userPrivates.addAll(Arrays.asList(post.getUserPrivate()));
+        }
+        
+        PropertyReader catReader = new PropertyReader(categoryNode);
+        PropertyReader forumReader = new PropertyReader(forumNode);
+        PropertyReader topicReader = new PropertyReader(topicNode);
+        // get all emails watched
+        List<String> emailListCategory = catReader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
+        List<String> emailListForum = forumReader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
+        List<String> emailListTopic = topicReader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
+        //
+        List<String> userListCategory = catReader.list(EXO_USER_WATCHING, new ArrayList<String>());
+        List<String> userListForum = forumReader.list(EXO_USER_WATCHING, new ArrayList<String>());
+        List<String> userListTopic = topicReader.list(EXO_USER_WATCHING, new ArrayList<String>());
+        // validate permission and remove duplicate email
+        // Watched on category
+        int i = 0;
+        for (String user : userListCategory) {
+          if(!canReceiveNotification(topicNode, user)) {
+            emailListCategory.remove(i);
+          }
+          ++i;
+        }
+        // Watched on forum
+        i = 0;
+        for (String user : userListForum) {
+          if(userListCategory.contains(user)
+              || !canReceiveNotification(topicNode, user)) {
+            emailListForum.remove(i);
+          }
+          ++i;
+        }
+        // Watched on topic
+        i = 0;
+        for (String user : userListTopic) {
+          if(userListCategory.contains(user)
+              || userListForum.contains(user)
+              || !canReceiveNotification(topicNode, user)) {
+            emailListTopic.remove(i);
+          }
+          ++i;
+        }
+        // Owner Notify
+        if (isApprovePost) {
+          String owner = topicReader.string(EXO_OWNER);
+          String ownerTopicEmail = topicReader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, StringUtils.EMPTY);
+          if (!CommonUtils.isEmpty(ownerTopicEmail)) {
+            try {
+              Node userOwner = userProfileHome.getNode(owner);
+              PropertyReader userReader = new PropertyReader(userOwner);
+              String email = userReader.string(EXO_EMAIL, StringUtils.EMPTY);
+              if(userReader.bool(EXO_IS_BANNED)) {
+                ownerTopicEmail = StringUtils.EMPTY;
+              } else if (!Utils.isEmpty(email)) {
+                ownerTopicEmail = email;
+              }
+            } catch (PathNotFoundException e) {
+              // owner not existing
+              ownerTopicEmail = StringUtils.EMPTY;
+            }
+          }
+          if(!CommonUtils.isEmpty(ownerTopicEmail)) {
+            emailListTopic.add(ownerTopicEmail);
+          }
+        }
+        //
+        emailListForum.addAll(forumReader.list(EXO_NOTIFY_WHEN_ADD_POST, new ArrayList<String>()));
+        //
+        String fullName = getScreenName(sProvider, post.getOwner());
+        messageBuilder.setOwner(fullName);
+        messageBuilder.setId(post.getId());
+        messageBuilder.setAddType(Utils.POST);
+        messageBuilder.setAddName(post.getName());
+        messageBuilder.setMessage(post.getMessage());
+        messageBuilder.setCreatedDate(post.getCreatedDate());
+        if(Utils.isEmpty(messageBuilder.getLink())) {
+          messageBuilder.setLink(post.getLink());
+        }
+        // send email by category
+        if (emailListCategory.size() > 0) {
+          messageBuilder.setObjName(messageBuilder.getCatName());
+          messageBuilder.setWatchType(Utils.CATEGORY);
+          sendEmailNotification(emailListCategory, messageBuilder.getContentEmail());
+        }
+        // send email by forum
+        if (emailListForum.size() > 0) {
+          messageBuilder.setObjName(messageBuilder.getForumName());
+          messageBuilder.setWatchType(Utils.FORUM);
+          sendEmailNotification(emailListForum, messageBuilder.getContentEmail());
+        }
+        // send email by topic
+        if (emailListTopic.size() > 0) {
+          messageBuilder.setObjName(messageBuilder.getTopicName());
+          messageBuilder.setWatchType(Utils.TOPIC);
+          sendEmailNotification(emailListTopic, messageBuilder.getContentEmail());
+        }
+      }
+    }
+  }
+
   public void sendNotification(String nodePath, Topic topic, Post post, MessageBuilder messageBuilder, boolean isApprovePost) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Session session = sessionManager.getSession(sProvider);
-      if(!session.itemExists(nodePath)) {
+      if (!session.itemExists(nodePath)) {
         return;
       }
-
       Node node = (Node) session.getItem(nodePath);
       messageBuilder = getInfoMessageMove(sProvider, messageBuilder.getContent(), messageBuilder.getHeaderSubject(), false);
-
-      List<String> listUser = new ArrayList<String>();
-      List<String> emailList = new ArrayList<String>();
-      List<String> emailListCate = new ArrayList<String>();
-      Node userProfileHome = getUserProfileHome(sProvider);
-
-      int count = 0;
       if (post == null) {
-        Node forumNode = node;
-        messageBuilder.setForumName(node.getProperty(EXO_NAME).getString());
-        node = node.getParent();
-        messageBuilder.setCatName(node.getProperty(EXO_NAME).getString());
-        messageBuilder.setTopicName(topic.getTopicName());
-        while (true) {
-          emailListCate.addAll(emailList);
-          emailList = new ArrayList<String>();
-          if (node.isNodeType(EXO_FORUM_WATCHING) && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
-            // set Category Private
-            Node categoryNode = null;
-            if (node.isNodeType(EXO_FORUM_CATEGORY)) {
-              categoryNode = node;
-            } else {
-              categoryNode = node.getParent();
-            }
-            if (categoryNode.hasProperty(EXO_USER_PRIVATE))
-              listUser.addAll(Utils.valuesToList(categoryNode.getProperty(EXO_USER_PRIVATE).getValues()));
-
-            if (!listUser.isEmpty() && !Utils.isEmpty(listUser.get(0))) {
-              if (node.hasProperty(EXO_EMAIL_WATCHING)) {
-                List<String> emails = Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues());
-                int i = 0;
-                for (String user : Utils.valuesToList(node.getProperty(EXO_USER_WATCHING).getValues())) {
-                  if (ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
-                    emailList.add(emails.get(i));
-                  }
-                  i++;
-                }
-              }
-            } else {
-              if (node.hasProperty(EXO_EMAIL_WATCHING))
-                emailList.addAll(Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues()));
-            }
-          }
-          if (node.hasProperty(EXO_NOTIFY_WHEN_ADD_TOPIC)) {
-            List<String> notyfys = Utils.valuesToList(node.getProperty(EXO_NOTIFY_WHEN_ADD_TOPIC).getValues());
-            if (!notyfys.isEmpty()) {
-              emailList.addAll(notyfys);
-            }
-          }
-          for (String string : emailListCate) {
-            while (emailList.contains(string))
-              emailList.remove(string);
-          }
-          if (emailList.size() > 0) {
-            String owner = getScreenName(sProvider, topic.getOwner());
-            messageBuilder.setObjName(node.getProperty(EXO_NAME).getString());
-            if (node.isNodeType(EXO_FORUM)) {
-              messageBuilder.setWatchType(Utils.FORUM);
-            } else {
-              messageBuilder.setWatchType(Utils.CATEGORY);
-            }
-            messageBuilder.setId(topic.getId().replaceFirst(Utils.TOPIC, Utils.POST));
-            messageBuilder.setAddType(Utils.TOPIC);
-            messageBuilder.setAddName(topic.getTopicName());
-            messageBuilder.setMessage(topic.getDescription());
-            messageBuilder.setCreatedDate(topic.getCreatedDate());
-            messageBuilder.setOwner(owner);
-            if(Utils.isEmpty(messageBuilder.getLink())) {
-              messageBuilder.setLink(topic.getLink());
-            }
-            sendEmailNotification(emailList, messageBuilder.getContentEmail());
-          }
-          if (node.isNodeType(EXO_FORUM) || count > 1)
-            break;
-          ++count;
-          node = forumNode;
-        }
+        sendNotificationWhenCreateTopic(sProvider, node, topic, messageBuilder);
       } else {
-        if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-          /*
-           * check is approved, is activate by topic and is not hidden before send mail
-           */
-          Node forumNode = node.getParent();
-          Node categoryNode = forumNode.getParent();
-          messageBuilder.setCatName(categoryNode.getProperty(EXO_NAME).getString());
-          messageBuilder.setForumName(forumNode.getProperty(EXO_NAME).getString());
-          messageBuilder.setTopicName(node.getProperty(EXO_NAME).getString());
-          boolean isSend = false;
-          if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
-            isSend = true;
-            List<String> listCanViewInTopic = new ArrayList<String>();
-            if (node.hasProperty(EXO_CAN_VIEW))
-              listCanViewInTopic.addAll(Utils.valuesToList(node.getProperty(EXO_CAN_VIEW).getValues()));
-            if (post.getUserPrivate() != null && post.getUserPrivate().length > 1) {
-              listUser.addAll(Arrays.asList(post.getUserPrivate()));
-            }
-            if ((listUser.isEmpty() || listUser.size() == 1)) {
-              if (!listCanViewInTopic.isEmpty() && !Utils.isEmpty(listCanViewInTopic.get(0))) {
-                listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty(EXO_POSTER).getValues()));
-                listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty(EXO_VIEWER).getValues()));
-              }
-              // set Category Private
-              if (categoryNode.hasProperty(EXO_USER_PRIVATE))
-                listUser.addAll(Utils.valuesToList(categoryNode.getProperty(EXO_USER_PRIVATE).getValues()));
-              if (!listUser.isEmpty() && !Utils.isEmpty(listUser.get(0))) {
-                if (!listCanViewInTopic.isEmpty() && !Utils.isEmpty(listCanViewInTopic.get(0))) {
-                  listUser = Utils.extractSameItems(listUser, listCanViewInTopic);
-                  if (listUser.isEmpty() || Utils.isEmpty(listUser.get(0)))
-                    isSend = false;
-                }
-              } else
-                listUser = listCanViewInTopic;
-            }
-          }
-          if (node.isNodeType(EXO_FORUM_WATCHING) && node.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-            if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
-              List<String> emails = Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues());
-              int i = 0;
-              for (String user : Utils.valuesToList(node.getProperty(EXO_USER_WATCHING).getValues())) {
-                if (ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
-                  emailList.add(emails.get(i));
-                }
-                i++;
-              }
-            } else {
-              emailList = Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues());
-            }
-          }
-          List<String> emailListForum = new ArrayList<String>();
-          // Owner Notify
-          if (isApprovePost) {
-            PropertyReader reader = new PropertyReader(node);
-            String owner = reader.string(EXO_OWNER);
-            String ownerTopicEmail = reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, StringUtils.EMPTY);
-            if (!CommonUtils.isEmpty(ownerTopicEmail)) {
-              try {
-                Node userOwner = userProfileHome.getNode(owner);
-                reader = new PropertyReader(userOwner);
-                if(reader.bool(EXO_IS_BANNED)) {
-                  ownerTopicEmail = StringUtils.EMPTY;
-                } else if (!Utils.isEmpty(reader.string(EXO_EMAIL, StringUtils.EMPTY))) {
-                  ownerTopicEmail = userOwner.getProperty(EXO_EMAIL).getString();
-                }
-              } catch (PathNotFoundException e) {
-                // owner not existing
-                ownerTopicEmail = StringUtils.EMPTY;
-              }
-            }
-            String[] users = post.getUserPrivate();
-            if (users != null && users.length == 2) {
-              if (!Utils.isEmpty(ownerTopicEmail) && (users[0].equals(owner) || users[1].equals(owner))) {
-                emailList.add(ownerTopicEmail);
-              }
-              owner = forumNode.getProperty(EXO_OWNER).getString();
-              if (forumNode.hasProperty(EXO_NOTIFY_WHEN_ADD_POST) && (users[0].equals(owner) || users[1].equals(owner))) {
-                emailListForum.addAll(Utils.valuesToList(forumNode.getProperty(EXO_NOTIFY_WHEN_ADD_POST).getValues()));
-              }
-            } else {
-              if (!Utils.isEmpty(ownerTopicEmail)) {
-                emailList.add(ownerTopicEmail);
-              }
-              if (forumNode.hasProperty(EXO_NOTIFY_WHEN_ADD_POST)) {
-                emailListForum.addAll(Utils.valuesToList(forumNode.getProperty(EXO_NOTIFY_WHEN_ADD_POST).getValues()));
-              }
-            }
-          }
-          
-          /*
-           * check is approved, is activate by topic and is not hidden before send mail
-           */
-          if (forumNode.isNodeType(EXO_FORUM_WATCHING) && forumNode.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-            if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
-              List<String> emails = Utils.valuesToList(forumNode.getProperty(EXO_EMAIL_WATCHING).getValues());
-              int i = 0;
-              for (String user : Utils.valuesToList(forumNode.getProperty(EXO_USER_WATCHING).getValues())) {
-                if (ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
-                  emailListForum.add(emails.get(i));
-                }
-                i++;
-              }
-            } else {
-              emailListForum.addAll(Utils.valuesToList(forumNode.getProperty(EXO_EMAIL_WATCHING).getValues()));
-            }
-          }
-
-          List<String> emailListCategory = new ArrayList<String>();
-          if (categoryNode.isNodeType(EXO_FORUM_WATCHING) && categoryNode.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-            if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
-              List<String> emails = Utils.valuesToList(categoryNode.getProperty(EXO_EMAIL_WATCHING).getValues());
-              int i = 0;
-              for (String user : Utils.valuesToList(categoryNode.getProperty(EXO_USER_WATCHING).getValues())) {
-                if (ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
-                  emailListCategory.add(emails.get(i));
-                }
-                i++;
-              }
-            } else {
-              emailListCategory.addAll(Utils.valuesToList(categoryNode.getProperty(EXO_EMAIL_WATCHING).getValues()));
-            }
-          }
-
-          String fullName = getScreenName(sProvider, post.getOwner());
-          messageBuilder.setOwner(fullName);
-          messageBuilder.setId(post.getId());
-          messageBuilder.setAddType(Utils.POST);
-          messageBuilder.setAddName(post.getName());
-          messageBuilder.setMessage(post.getMessage());
-          messageBuilder.setCreatedDate(post.getCreatedDate());
-          if(Utils.isEmpty(messageBuilder.getLink())) {
-            messageBuilder.setLink(post.getLink());
-          }
-          // send email by category
-          if (emailListCategory.size() > 0) {
-            messageBuilder.setObjName(messageBuilder.getCatName());
-            messageBuilder.setWatchType(Utils.CATEGORY);
-            sendEmailNotification(emailListCategory, messageBuilder.getContentEmail());
-          }
-          for (String string : emailListCategory) {
-            while (emailListForum.contains(string))
-              emailListForum.remove(string);
-          }
-
-          // send email by forum
-          if (emailListForum.size() > 0) {
-            messageBuilder.setObjName(messageBuilder.getForumName());
-            messageBuilder.setWatchType(Utils.FORUM);
-            sendEmailNotification(emailListForum, messageBuilder.getContentEmail());
-          }
-          for (String string : emailListCategory) {
-            while (emailList.contains(string))
-              emailList.remove(string);
-          }
-          for (String string : emailListForum) {
-            while (emailList.contains(string))
-              emailList.remove(string);
-          }
-
-          // send email by topic
-          if (emailList.size() > 0) {
-            messageBuilder.setObjName(messageBuilder.getTopicName());
-            messageBuilder.setWatchType(Utils.TOPIC);
-            sendEmailNotification(emailList, messageBuilder.getContentEmail());
-          }
-        }
+        sendNotificationWhenCreatePost(sProvider, node, post, messageBuilder, isApprovePost);
       }
     } catch (Exception e) {
       LOG.error("Failed to send notification.", e);

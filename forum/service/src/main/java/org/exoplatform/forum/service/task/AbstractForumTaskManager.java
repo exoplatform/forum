@@ -44,7 +44,7 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
   /** The default value of persister threshold **/
   private int PERSISTER_THRESHOLD = 20;
   /** The Queue tasks **/
-  private Queue<T> tasks = null;
+  protected Queue<T> tasks = null;
   /** Defines the signal done when task committed*/ 
   private CountDownLatch doneSignal;
   
