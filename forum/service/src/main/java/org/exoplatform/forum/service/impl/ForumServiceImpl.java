@@ -547,6 +547,13 @@ public class ForumServiceImpl implements ForumService, Startable {
       edited.setEditedIsClosed(topic.getIsClosed());
       edited.setEditedIsLock(topic.getIsLock());
       edited.setEditedIsWaiting(topic.getIsWaiting());
+      // check moderate topic then update all post
+      if (! topic.getIsModeratePost() && edited.getIsModeratePost()) {
+        // get all post
+        List<Post> posts = storage.getPosts(new PostFilter(categoryId, forumId, topic.getId(), "false", null, null, null), 0, -1);
+        modifyPost(posts, Utils.APPROVE);
+      }
+      // 
     }
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     //
