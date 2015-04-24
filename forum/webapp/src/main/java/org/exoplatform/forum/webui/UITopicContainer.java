@@ -48,6 +48,7 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -513,7 +514,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 520);
       topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
-      topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
+      String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
+      if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiTopicContainer.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
+        spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + uiTopicContainer.forumId.replace(Utils.FORUM_SPACE_ID_PREFIX, "");
+      }
+      topicForm.setSpaceGroupId(spaceGroupId);
       topicForm.setMod(uiTopicContainer.isModerator);
     }
   }
@@ -608,6 +613,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       UIForumForm forumForm = uiTopicContainer.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
       if (uiTopicContainer.userProfile.getUserRole() == 1){
         forumForm.setMode(true);
+      }
+      if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiTopicContainer.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
+        spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + uiTopicContainer.forumId.replace(Utils.FORUM_SPACE_ID_PREFIX, "");
       }
       forumForm.initForm(spaceGroupId);
       forumForm.setCategoryValue(uiTopicContainer.categoryId, false);
@@ -847,7 +855,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum);
         topicForm.setUpdateTopic(topic, true);
         topicForm.setMod(uiTopicContainer.isModerator);
-        topicForm.setSpaceGroupId(uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
+        String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
+        if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiTopicContainer.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
+          spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + uiTopicContainer.forumId.replace(Utils.FORUM_SPACE_ID_PREFIX, "");
+        }
+        topicForm.setSpaceGroupId(spaceGroupId);
       } else {
         warningMessage();
       }
