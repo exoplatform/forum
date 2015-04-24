@@ -28,16 +28,24 @@ import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.GroupHandler;
+import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.User;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
+    //
+    for (String userId : Arrays.asList(USER_DEMO, USER_JOHN, USER_ROOT, "mary", "ghost", "paul")) {
+      UserProfile profile = createdUserProfile(userId);
+      profile.setUserRole(2l);
+      forumService_.saveUserProfile(profile, true, true);
+    }
   }
 
   @Override
@@ -688,7 +696,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
       dataStorage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
     }
     //
-    Thread.sleep(5000);
+    Thread.sleep(500);
     sendNotificationManager.doneSignal().await();
     //
     assertEquals(20, IteratorUtils.toList(dataStorage.getPendingMessages()).size());   
@@ -737,5 +745,146 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     SendMessageInfo msgInfo = (SendMessageInfo) messages.get(0);
     assertTrue(msgInfo.getEmailAddresses().contains(profile.getEmail()));
     assertTrue(msgInfo.getMessage().getBody().contains(postMsg));
+  }
+
+  public void testEmailPermissionOnSpace() throws Exception {
+    // reset old mails
+    forumService_.getPendingMessages();
+    // Create space group
+    Group parent = createGroup(null, "spaces");
+    Group spaceTest = createGroup(parent, "test_space");
+    // Add users to space group
+    addUserToGroup(USER_DEMO, spaceTest, "member");
+    addUserToGroup(USER_JOHN, spaceTest, "member");
+    addUserToGroup("mary", spaceTest, "member");
+    // Set root is administrator
+    UserProfile profile = forumService_.getUserProfileManagement(USER_ROOT);
+    profile.setUserRole(UserProfile.ADMIN);
+    forumService_.saveUserProfile(profile, false, false);
+    //
+    MessageBuilder messageBuilder = new MessageBuilder();
+    messageBuilder.setContent(Utils.DEFAULT_EMAIL_CONTENT);
+    // Create category, forum of space
+    Category spaceCat = createCategory(Utils.CATEGORY_SPACE_ID_PREFIX);
+    spaceCat.setViewer(new String[] { USER_ROOT });
+    forumService_.saveCategory(spaceCat, true);
+    Forum spaceForum = createdForum();
+    spaceForum.setId(Utils.FORUM_SPACE_ID_PREFIX + "test_space");
+    spaceForum.setModerators(new String[] { "manager:" + spaceTest.getId() });
+    spaceForum.setViewer(new String[] { spaceTest.getId() });
+    forumService_.saveForum(spaceCat.getId(), spaceForum, true);
+    // demo watch forum of space
+    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId(), Arrays.asList(USER_DEMO + "@mail.com"), USER_DEMO);
+    // root watch category of space
+    forumService_.addWatch(1, spaceCat.getId(), Arrays.asList(USER_ROOT + "@mail.com"), USER_ROOT);
+    // Add topic
+    Topic topic = createdTopic(USER_JOHN);
+    forumService_.saveTopic(spaceCat.getId(), spaceForum.getId(), topic, true, false, messageBuilder);
+    //
+    sendNotificationManager.doneSignal().await();
+    List<?> messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    // have one type of watched
+    assertEquals(1, messages.size());
+    // only one email sent to user Demo
+    assertEquals(1, ((SendMessageInfo) messages.get(0)).getEmailAddresses().size());
+    assertTrue(((SendMessageInfo) messages.get(0)).getEmailAddresses().get(0).contains(USER_DEMO));
+    // Mary watch on topic of space
+    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId() + "/" + topic.getId(), Arrays.asList("mary@mail.com"), "mary");
+    // Add post
+    Post post = createdPost();
+    post.setOwner(USER_JOHN);
+    forumService_.savePost(spaceCat.getId(), spaceForum.getId(), topic.getId(), post, true, messageBuilder);
+    //
+    messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    // we have two types of watched email, one for on topic and one for on forum.
+    assertEquals(2, messages.size());
+    // have one email sent to Demo 
+    SendMessageInfo messageInfo = (SendMessageInfo) messages.get(0);
+    assertEquals(1, messageInfo.getEmailAddresses().size());
+    // have one email sent to Mary
+    messageInfo = (SendMessageInfo) messages.get(1);
+    assertEquals(1, messageInfo.getEmailAddresses().size());
+  }
+
+  public void testEmailPermissionOnIntranet() throws Exception {
+    // reset old mails
+    forumService_.getPendingMessages();
+    // Set root is administrator
+    UserProfile profile = forumService_.getUserProfileManagement(USER_ROOT);
+    profile.setUserRole(UserProfile.ADMIN);
+    forumService_.saveUserProfile(profile, false, false);
+    //
+    MessageBuilder messageBuilder = new MessageBuilder();
+    messageBuilder.setContent(Utils.DEFAULT_EMAIL_CONTENT);
+    // Forum on intranet
+    Category normalCat = createCategory(getId(Utils.CATEGORY));
+    normalCat.setViewer(new String[] { "mary" });
+    forumService_.saveCategory(normalCat, true);
+    Forum forum = createdForum();
+    forum.setViewer(new String[] { USER_JOHN, USER_DEMO });
+    forumService_.saveForum(normalCat.getId(), forum, true);
+    forum = forumService_.getForum(normalCat.getId(), forum.getId());
+    // Root watch category
+    forumService_.addWatch(1, normalCat.getId(), Arrays.asList(USER_ROOT + "@mail.com"), USER_ROOT);
+    // Demo watch forum
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList(USER_DEMO + "@mail.com"), USER_DEMO);
+    // Mary watch forum
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList("mary@mail.com"), "mary");
+    //
+    Topic topic = createdTopic(USER_JOHN);
+    forumService_.saveTopic(normalCat.getId(), forum.getId(), topic, true, false, messageBuilder);
+    //
+    sendNotificationManager.doneSignal().await();
+    List<?> messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    // 1 email sent for Root (administrator) watched on category
+    SendMessageInfo messageInfo = (SendMessageInfo) messages.get(0);
+    assertEquals(1, messageInfo.getEmailAddresses().size());
+    assertTrue(messageInfo.getEmailAddresses().get(0).contains(USER_ROOT));
+    // 2 email sent for Demo and Mary (can view topic) watched on forum.
+    messageInfo = (SendMessageInfo) messages.get(1);
+    assertEquals(2, messageInfo.getEmailAddresses().size());
+    //
+    topic.setCanView(new String[] { "paul" });
+    forumService_.saveTopic(normalCat.getId(), forum.getId(), topic, false, false, messageBuilder);
+    // Paul watch space forum (Paul has permission to view topics)
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId() + "/" + topic.getId(), Arrays.asList("paul@mail.com"), "paul");
+    //
+    Post post = createdPost();
+    post.setOwner(USER_JOHN);
+    forumService_.savePost(normalCat.getId(), forum.getId(), topic.getId(), post, true, messageBuilder);
+    //
+    messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    // we have 3 types of watched email, one for on topic, one for on forum and
+    // one for on category.
+    assertEquals(3, messages.size());
+    // one email for Root
+    messageInfo = (SendMessageInfo) messages.get(0);
+    assertEquals(1, messageInfo.getEmailAddresses().size());
+    // 2 email sent for Demo and Mary (can view topic) watched on forum.
+    messageInfo = (SendMessageInfo) messages.get(1);
+    assertEquals(2, messageInfo.getEmailAddresses().size());
+    // one email for Paul
+    messageInfo = (SendMessageInfo) messages.get(2);
+    assertEquals(1, messageInfo.getEmailAddresses().size());
+  }
+  
+  private Group createGroup(Group parent, String groupName) throws Exception {
+    GroupHandler groupHandler = UserHelper.getGroupHandler();
+    String parentId = (parent == null) ? "" : parent.getId() + "/";
+    if(groupHandler.findGroupById(parentId + groupName) == null) {
+      Group group = groupHandler.createGroupInstance();
+      group.setGroupName(groupName);
+      group.setLabel(groupName);
+      group.setDescription(groupName);
+      //
+      groupHandler.addChild(parent, group, true);
+    }
+    //
+    return groupHandler.findGroupById(parentId + groupName);
+  }
+
+  private void addUserToGroup(String userId, Group group, String type) throws Exception {
+    MembershipType m = (MembershipType) UserHelper.getOrganizationService().getMembershipTypeHandler().findMembershipType(type);
+    UserHelper.getMembershipHandler().linkMembership(UserHelper.getUserByUserId(userId), group, m, true);
   }
 }

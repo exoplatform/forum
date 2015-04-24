@@ -36,6 +36,7 @@ import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -305,6 +306,9 @@ public class UICategory extends BaseForumForm {
       List<Forum> forums = uiCategory.getForumsChecked(true);
       if (forums.size() > 0) {
         String spaceGroupId = uiCategory.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
+        if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiCategory.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
+          spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + forums.get(0).getId().replace(Utils.FORUM_SPACE_ID_PREFIX, "");
+        }
         UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
         forumForm.setMode(false);
         forumForm.initForm(spaceGroupId);

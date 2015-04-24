@@ -126,16 +126,26 @@ public class UIViewPost extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIViewPost> event) throws Exception {
       UIViewPost uiForm = event.getSource();
       Post post = uiForm.post;
-      post.setIsApproved(true);
-      post.setIsHidden(false);
-      post.setIsWaiting(false);
+      List<Integer> types = new ArrayList<Integer>();
+      if (! post.getIsApproved()) {
+        post.setIsApproved(true);
+        types.add(Utils.APPROVE);
+      }
+      if (post.getIsHidden()) {
+        post.setIsHidden(false);
+        types.add(Utils.HIDDEN);
+      }
+      if (post.getIsWaiting()) {
+        post.setIsWaiting(false);
+        types.add(Utils.WAITING);
+      }
       post.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, post.getTopicId(), false));
       List<Post> posts = new ArrayList<Post>();
       posts.add(post);
       try {
-        uiForm.getForumService().modifyPost(posts, Utils.APPROVE);
-        uiForm.getForumService().modifyPost(posts, Utils.HIDDEN);
-        uiForm.getForumService().modifyPost(posts, Utils.WAITING);
+        for (int type : types) {
+          uiForm.getForumService().modifyPost(posts, type);
+        }
       } catch (Exception e) {
         log.debug("\nModify post fail: ", e);
       }

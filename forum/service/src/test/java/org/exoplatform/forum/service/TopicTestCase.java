@@ -27,6 +27,7 @@ import javax.jcr.Session;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.jcr.SessionManager;
+import org.exoplatform.forum.service.impl.model.PostFilter;
 import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.impl.model.TopicListAccess;
 
@@ -43,6 +44,35 @@ public class TopicTestCase extends BaseForumServiceTestCase {
     //
     super.tearDown();
   }
+  
+  public void testUpdateTopicWithModeratePost() throws Exception {
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat.getId(), forum, true);
+    forum = forumService_.getForum(cat.getId(), forum.getId());
+    Topic topic = createdTopic(USER_ROOT);
+    topic.setIsModeratePost(true);
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    Post post = createdPost();
+    post.setIsApproved(!topic.getIsModeratePost());
+    forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+    
+    //get all approved post, only first post is approved
+    PostFilter filter = new PostFilter(cat.getId(), forum.getId(), topic.getId(), "true", null, null, null);
+    Post[] posts = forumService_.getPosts(filter).load(0, 10);
+    assertEquals(1, posts.length);
+    assertEquals("Topic description", posts[0].getMessage());
+    
+    //edit topic by removing moderate post
+    topic.setIsModeratePost(false);
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, false, false, new MessageBuilder());
+    
+    filter = new PostFilter(cat.getId(), forum.getId(), topic.getId(), "true", null, null, null);
+    posts = forumService_.getPosts(filter).load(0, 10);
+    assertEquals(2, posts.length);
+  }
+  
   public void testTopic() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);

@@ -361,7 +361,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     List<Topic> topics = storage.getTopics(forum.getCategoryId(), forum.getId());
     for (ForumEventLifeCycle f : listeners_) {
       try {
-        f.updateTopics(topics, forum.getIsLock());
+        f.updateTopics(topics, (Utils.LOCK == type) ? forum.getIsLock() : forum.getIsClosed());
       } catch (Exception e) {
         log.debug("Failed to run function updateTopic in the class ForumEventLifeCycle. ", e);
       }
@@ -547,6 +547,13 @@ public class ForumServiceImpl implements ForumService, Startable {
       edited.setEditedIsClosed(topic.getIsClosed());
       edited.setEditedIsLock(topic.getIsLock());
       edited.setEditedIsWaiting(topic.getIsWaiting());
+      // check moderate topic then update all post
+      if (! topic.getIsModeratePost() && edited.getIsModeratePost()) {
+        // get all post
+        List<Post> posts = storage.getPosts(new PostFilter(categoryId, forumId, topic.getId(), "false", null, null, null), 0, -1);
+        modifyPost(posts, Utils.APPROVE);
+      }
+      // 
     }
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
     //

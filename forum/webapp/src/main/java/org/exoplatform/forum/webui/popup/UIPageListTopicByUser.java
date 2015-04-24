@@ -132,7 +132,12 @@ public class UIPageListTopicByUser extends UIContainer {
       String categoryId = path[i - 3];
       String forumId = path[i - 2];
       uiForm.forumService.removeTopic(categoryId, forumId, topicId);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class));
+      UIModeratorManagementForm parent = uiForm.getAncestorOfType(UIModeratorManagementForm.class);
+      if(parent != null) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+      }else {
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class));
+      }
     }
   }
 

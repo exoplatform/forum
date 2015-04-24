@@ -27,6 +27,7 @@ import javax.jcr.Node;
 
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;
@@ -61,10 +62,13 @@ public class ForumServiceUtils {
    */
   @SuppressWarnings("unchecked")
   public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
-    IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
+    if (CommonUtils.isEmpty(userGroupMembership)) {
+      return false;
+    }
+    IdentityRegistry identityRegistry = CommonUtils.getComponent(IdentityRegistry.class);
     Identity identity = identityRegistry.getIdentity(userId);
     if (identity == null) {
-      OrganizationService oService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+      OrganizationService oService = CommonUtils.getComponent(OrganizationService.class);
       Collection<Membership> memberships = oService.getMembershipHandler().findMembershipsByUser(userId);
       //
       List<MembershipEntry> entries = new ArrayList<MembershipEntry>();
@@ -76,9 +80,6 @@ public class ForumServiceUtils {
       //
       identity = new Identity(userId, entries);
     }
-
-    if (userGroupMembership == null || userGroupMembership.length <= 0 || userGroupMembership[0].equals(" "))
-      return false;
 
     for (String item : userGroupMembership) {
       String expr = item.trim();

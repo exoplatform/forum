@@ -59,4 +59,6 @@
 		<servlet-name>GateInServlet</servlet-name>
 		<url-pattern>/gateinservlet</url-pattern>
 	</servlet-mapping>
+	
+	<absolute-ordering/>
 </web-app>

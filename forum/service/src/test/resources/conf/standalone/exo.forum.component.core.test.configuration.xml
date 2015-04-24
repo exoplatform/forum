@@ -55,7 +55,7 @@
 
   <component>
     <key>org.exoplatform.forum.service.task.SendNotificationTaskManager</key>
-    <type>org.exoplatform.forum.service.task.SendNotificationTaskManager</type>
+    <type>org.exoplatform.forum.base.mock.MockSendNotificationTaskManager</type>
     <init-params>
       <value-param>
         <name>persisterThreshold</name> <!-- The number of task to persister on each time -->

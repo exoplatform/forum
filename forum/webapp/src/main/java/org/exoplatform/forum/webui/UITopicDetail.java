@@ -69,6 +69,7 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -948,7 +949,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum);
         topicForm.setUpdateTopic(topicDetail.getTopic(), true);
         topicForm.setMod(topicDetail.isMod);
-        topicForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
+        String spaceGroupId = forumPortlet.getSpaceGroupId();
+        if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(topicDetail.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
+          spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + topicDetail.forumId.replace(Utils.FORUM_SPACE_ID_PREFIX, "");
+        }
+        topicForm.setSpaceGroupId(spaceGroupId);
         topicForm.setIsDetail(true);
         topicDetail.isEditTopic = true;
       } catch (Exception e) {
