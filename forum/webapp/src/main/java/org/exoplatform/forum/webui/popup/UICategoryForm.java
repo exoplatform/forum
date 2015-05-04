@@ -346,18 +346,13 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     public void onEvent(Event<UICategoryForm> event, UICategoryForm uiForm, String id) throws Exception {
       uiForm.id = Integer.parseInt(id);
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
-      if (uiForm.id == 1) {
-        popupWindow.setWindowSize(550, 440);
-      } else {
-        popupWindow.setWindowSize(550, 380);
-      }
+      popupWindow.setWindowSize(665, 380);
       Util.getPortalRequestContext().setResponseComplete(true);
     }
   }
 
   static public class AddPrivateActionListener extends BaseEventListener<UICategoryForm> {
     public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String objectId) throws Exception {
-      ;
       String[] objects = objectId.split(ForumUtils.COMMA);
       String type = objects[0];
       String param = objects[1];
