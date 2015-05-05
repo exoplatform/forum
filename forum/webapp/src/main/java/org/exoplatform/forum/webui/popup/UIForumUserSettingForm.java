@@ -125,6 +125,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   protected String           tabId                              = "ForumUserProfile";
 
+  private boolean            isDoubleClickSubmit                = false;
+
   private Map<String, String>permissionUser                     = new HashMap<String, String>();
 
   private List<Watch>        listWatches                        = new ArrayList<Watch>();
@@ -134,6 +136,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
   private UserProfile        userProfileSetting           = new UserProfile();
 
   UIForumPageIterator        pageIterator;
+
 
   public UIForumUserSettingForm() throws Exception {
     permissionUser.clear();
@@ -403,9 +406,19 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   static public class SaveActionListener extends BaseEventListener<UIForumUserSettingForm> {
     public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String objectId) throws Exception {
+      if (uiForm.isDoubleClickSubmit)
+        return;
+      uiForm.isDoubleClickSubmit = true;
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
-      String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
+      String screenName = (inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue()).trim();
+      int max = 45;
+      if (screenName.length() > max) {
+        String[] args = { uiForm.getLabel(FIELD_SCREENNAME_INPUT), String.valueOf(max) };
+        uiForm.warning("NameValidator.msg.warning-long-text", args);
+        uiForm.isDoubleClickSubmit = false;
+        return;
+      }
       screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
       UserProfile userProfileSetting = uiForm.userProfileSetting;
       if (ForumUtils.isEmpty(userTitle)) {

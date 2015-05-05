@@ -55,6 +55,8 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 
   private List<Topic>         listTopic;
 
+  private boolean            isDoubleClickSubmit      = false;
+
   public UIMergeTopicForm() throws Exception {
   }
 
@@ -93,8 +95,18 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
   static public class SaveActionListener extends EventListener<UIMergeTopicForm> {
     public void execute(Event<UIMergeTopicForm> event) throws Exception {
       UIMergeTopicForm uiForm = event.getSource();
+      if (uiForm.isDoubleClickSubmit)
+        return;
+      uiForm.isDoubleClickSubmit = true;
       String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue();
-      String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue();
+      String topicMergeTitle = (uiForm.getUIStringInput(TITLE).getValue()).trim();
+      int maxText = ForumUtils.MAXTITLE;
+      if (topicMergeTitle.length() > maxText) {
+        String[] args = { uiForm.getLabel(TITLE), String.valueOf(maxText) };
+        uiForm.warning("NameValidator.msg.warning-long-text", args);
+        uiForm.isDoubleClickSubmit = false;
+        return;
+      }
       if (!ForumUtils.isEmpty(topicMergeTitle)) {
         topicMergeTitle = CommonUtils.encodeSpecialCharInTitle(topicMergeTitle);
         Topic topicMerge = new Topic();
