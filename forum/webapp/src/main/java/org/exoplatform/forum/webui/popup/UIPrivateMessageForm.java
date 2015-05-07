@@ -119,11 +119,11 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         ad.setActionListener("AddValuesUser");
       ad.setActionParameter(String.valueOf(i));
       ad.setCssIconClass(icons[i]);
-      ad.setActionName(string);
+      ad.setActionName("UIPrivateMessageForm.label.action." + string);
       actions.add(ad);
       ++i;
     }
-    sendMessageTab.setActionAddItem(FIELD_SENDTO_TEXT);
+    sendMessageTab.setActionField(FIELD_SENDTO_TEXT, actions);
     addUIFormInput(sendMessageTab);
     addChild(UIListInBoxPrivateMessage.class, null, null);
     addChild(UIListSentPrivateMessage.class, null, null);
