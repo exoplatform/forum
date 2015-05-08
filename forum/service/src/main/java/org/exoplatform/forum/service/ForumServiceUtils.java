@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -25,11 +26,13 @@ import java.util.Set;
 
 import javax.jcr.Node;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.SessionManager;
+import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
@@ -43,6 +46,8 @@ import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
 import org.exoplatform.services.security.MembershipEntry;
+import org.exoplatform.social.core.space.SpaceUtils;
+import org.exoplatform.social.core.space.spi.SpaceService;
 
 public class ForumServiceUtils {
 
@@ -60,7 +65,6 @@ public class ForumServiceUtils {
    * @return true if the user match at least one of the expressions
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
   public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
     if (CommonUtils.isEmpty(userGroupMembership)) {
       return false;
@@ -134,6 +138,26 @@ public class ForumServiceUtils {
   }
   
   /**
+   * Get all User's managers on space
+   * 
+   * @param memberShip
+   * @return
+   */
+  private static List<String> getUserManagerOnSpace(String memberShip) {
+    try {
+      String managerType = CommonsUtils.getService(UserACL.class).getAdminMSType();
+      managerType += ":" + SpaceUtils.SPACE_GROUP;
+      if (memberShip.startsWith(managerType)) {
+        SpaceService spaceService = CommonsUtils.getService(SpaceService.class);
+        return Arrays.asList(spaceService.getSpaceByGroupId(memberShip.split(COLON)[1]).getManagers());
+      }
+      return null;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
+  /**
    * Find usernames matching membership expressions
    * @param organizationService 
    * @param memberShip the membership, ex: member:/platform/users , *:/platform/users. 
@@ -147,14 +171,22 @@ public class ForumServiceUtils {
       return users;
     }
     users = new ArrayList<String>();
-    String[] array = memberShip.trim().split(COLON);
+    memberShip = memberShip.trim();
+    String[] array = memberShip.split(COLON);
     UserHandler userHandler = organizationService.getUserHandler();
     if (array[0].length() > 1) {
-      List<String> usersOfGroup = getUserByGroupId(userHandler, array[1]);
-      MembershipHandler membershipHandler = organizationService.getMembershipHandler();
-      for (String userName : usersOfGroup) {
-        if (membershipHandler.findMembershipByUserGroupAndType(userName, array[1], array[0]) != null) {
-          users.add(userName);
+      // manager:/spaces/space_test
+      List<String> spaceManagers = getUserManagerOnSpace(memberShip);
+      if (spaceManagers != null) {
+        users.addAll(spaceManagers);
+      } else {
+        //
+        List<String> usersOfGroup = getUserByGroupId(userHandler, array[1]);
+        MembershipHandler membershipHandler = organizationService.getMembershipHandler();
+        for (String userName : usersOfGroup) {
+          if (membershipHandler.findMembershipByUserGroupAndType(userName, array[1], array[0]) != null) {
+            users.add(userName);
+          }
         }
       }
     } else {
@@ -256,7 +288,7 @@ public class ForumServiceUtils {
 
   private static ExoCache<Serializable, List<String>> getCache(){
     CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
-    return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
+    return cacheService.getCacheInstance("forum.ForumPermissionsUsers");
   }
 
   public static void reparePermissions(Node node, String owner) throws Exception {
