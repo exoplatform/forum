@@ -46,9 +46,14 @@ import org.exoplatform.forum.common.jcr.JCRTask;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.forum.membership.AbstractJCRTestCase;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.MessageBuilder;
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.junit.FixMethodOrder;
@@ -280,6 +285,45 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
 
   }
 
+  public void testUpdatePostCount() throws Exception {
+    //
+    initDefaultData();
+    // default data
+    Forum forum = storage.getForum(categoryId, forumId);
+    assertNotNull(forum);
+    assertEquals(1, forum.getPostCount());
+    // Test auto update by JCR listener
+    Topic topic = createdTopic(USER_DEMO);
+    storage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    assertEquals(2, storage.getForum(categoryId, forumId).getPostCount());
+    assertEquals(1, storage.getUserInfo(USER_ROOT).getTotalPost());
+    
+    // add more 3 posts
+    storage.savePost(categoryId, forumId, topic.getId(), createdPost(), true, new MessageBuilder());
+    storage.savePost(categoryId, forumId, topic.getId(), createdPost(), true, new MessageBuilder());
+    storage.savePost(categoryId, forumId, topic.getId(), createdPost(), true, new MessageBuilder());
+    //
+    assertEquals(5, storage.getForum(categoryId, forumId).getPostCount());
+    assertEquals(3, storage.getTopic(categoryId, forumId, topic.getId(), "").getPostCount());
+    assertEquals(4, storage.getUserInfo(USER_ROOT).getTotalPost());
+    
+    // manual call JCRDataStorage#updatePostCount
+    // save new post on default topic
+    Post p = createdPost();
+    storage.savePost(categoryId, forumId, topicId, p, true, new MessageBuilder());
+    assertEquals(6, storage.getForum(categoryId, forumId).getPostCount());
+    assertEquals(1, storage.getTopic(categoryId, forumId, topicId, "").getPostCount());
+    assertEquals(5, storage.getUserInfo(USER_ROOT).getTotalPost());
+    //
+    for (int i = 0; i < 3; i++) {
+      storage.updatePostCount(p.getPath(), USER_ROOT);
+    }
+    assertEquals(9, storage.getForum(categoryId, forumId).getPostCount());
+    assertEquals(4, storage.getTopic(categoryId, forumId, topicId, "").getPostCount());
+    // method JCRDataStorage#updatePostCount() can not update user profile
+    assertEquals(5, storage.getUserInfo(USER_ROOT).getTotalPost());
+  }
+  
   private String adminNodeFixture() throws Exception {
     String adminPath = storage.getDataLocation().getAdministrationLocation();
     if (!getSession().getRootNode().hasNode(adminPath)) {
