@@ -55,9 +55,10 @@
 						</div>
 						<%	
 						String userTitle = userProfileViewer.getUserTitle();
-						if(userProfileViewer.getIsDisplayAvatar()) {
 						%>
 						<div class="rank">$userTitle</div>
+						<% if(userProfileViewer.getIsDisplayAvatar()) {
+						%>
 						<div class="avatarXLarge"><img src="<%=uiform.getAvatarUrl()%>" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/></div>
 						<% } %>
 						<div class="infoMember">
