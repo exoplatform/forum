@@ -1132,6 +1132,20 @@ public class CachedDataStorage implements DataStorage, Startable {
     ).build();
 
   }
+  
+  public void putPost(Post post) {
+    PostKey key = new PostKey(post.getCategoryId(), post.getForumId(), post.getTopicId(), post.getId());
+    postData.put(key, new PostData(post));
+  }
+
+  public Post getPostFromCache(final String categoryId, final String forumId, final String topicId, final String postId) {
+    PostKey key = new PostKey(categoryId, forumId, topicId, postId);
+    PostData postCache = postData.get(key);
+    if (postCache != null && postCache != PostData.NULL) {
+      return postCache.build();
+    }
+    return null;
+  }
 
   public JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception {
     return storage.getListPostsByIP(ip, strOrderBy);

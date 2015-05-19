@@ -552,7 +552,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   protected List<Post> getPostPageList() throws Exception {
     Post[] posts = null;
-    
+    mapUserProfile.clear();
     int pageSize = (int)getUserProfile().getMaxPostInPage();
     try {
       try {
@@ -583,7 +583,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       pagePostRemember.put(topicId, pageSelect);
 
       List<String> userNames = new ArrayList<String>();
-      mapUserProfile.clear();
       for (Post post : posts) {
         if (!userNames.contains(post.getOwner()))
           userNames.add(post.getOwner());
@@ -603,17 +602,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
         if (!UserProfile.USER_GUEST.equals(userName)) {
           getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
-        }
-      }
-      // updateUserProfiles
-      if (userNames.size() > 0) {
-        try {
-          List<UserProfile> profiles = getForumService().getQuickProfiles(userNames);
-          for (UserProfile profile : profiles) {
-            mapUserProfile.put(profile.getUserId(), profile);
-          }
-        } catch (Exception e) {
-          log.warn("Failed to load qui profiles: " + e.getMessage(), e);
         }
       }
     } catch (Exception e) {
