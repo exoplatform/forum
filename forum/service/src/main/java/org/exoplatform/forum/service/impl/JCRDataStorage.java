@@ -3655,12 +3655,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node postNode = (Node) session.getItem(postPath);
       Node topicNode = postNode.getParent();
       Node forumNode = topicNode.getParent();
-      Node categoryNode = forumNode.getParent();
       //
       boolean isFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(postNode.getName());
       PropertyReader postRead = new PropertyReader(postNode);
       PropertyReader topicRead = new PropertyReader(topicNode);
-      PropertyReader forumRead = new PropertyReader(topicNode);
+      PropertyReader forumRead = new PropertyReader(forumNode);
       //
       long topicPostCount = topicRead.l(EXO_POST_COUNT) + 1;
       long newNumberAttach = topicRead.l(EXO_NUMBER_ATTACHMENTS) + postRead.l(EXO_NUMBER_ATTACH);

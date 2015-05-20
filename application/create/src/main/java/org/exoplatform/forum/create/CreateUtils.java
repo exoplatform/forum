@@ -39,6 +39,8 @@ import org.exoplatform.portal.mop.user.UserNode;
 import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.web.url.navigation.NavigationResource;
 import org.exoplatform.web.url.navigation.NodeURL;
@@ -224,7 +226,8 @@ public class CreateUtils {
    * @since 4.0
    */
   public static String getSpaceHomeURL(String spaceGroupId) {
-    String permanentSpaceName = spaceGroupId.split("/")[2];
+    Space space = CommonUtils.getComponent(SpaceService.class).getSpaceByGroupId(spaceGroupId);
+    String permanentSpaceName = space.getPrettyName();
 
     NodeURL nodeURL = RequestContext.getCurrentInstance().createURL(NodeURL.TYPE);
     NavigationResource resource = new NavigationResource(SiteType.GROUP, spaceGroupId, permanentSpaceName);

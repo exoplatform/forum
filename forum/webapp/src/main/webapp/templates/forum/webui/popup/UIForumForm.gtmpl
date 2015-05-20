@@ -1,24 +1,19 @@
+<div class="uiForumForm">
+  <% uiform.begin();%>
 
-<div class="uiForumForm">	
-	<% uiform.begin() %>	
-  
-  <div class="uiTabPane uiTabNormal" id="$uicomponent.id">
+  <div class="uiTabPane uiTabNormal">
     <ul class="nav nav-tabs">
       <%String classCss = "" ; 
         int i = 0;
         for(tabcontent in uiform.getChildren()){ 
           if(tabcontent.id.equals("Category")) continue ;
-          String link = "javascript:void(0);";
+          String link = uiform.event("SelectTab",""+i);
           String tabId = tabcontent.getId();
-          String paneId = uicomponent.getId();
-          if(uiform.getIsSelected(i)) classCss = "active" ;
-          else {
-            classCss = "" ;
-            link = uicomponent.event("SelectTab",""+i) ;
-          }
+          String paneId = uiform.getId();
+          classCss = (uiform.getIsSelected(i)) ? "active" : "";
       %>
-         <li class="$classCss" onclick="eXo.webui.UIHorizontalTabs.changeTabForUITabPane(this, '$paneId', '$tabId');$link;">              
-            <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id); %></a>
+         <li class="$classCss" onclick="$link;">              
+            <a data-toggle="tab" data-target="#$tabId-tab"><%=_ctx.appRes(uiform.id + ".label." + tabcontent.id)%></a>
         </li>   
       <%i++; } %>           
     </ul>
@@ -30,23 +25,27 @@
           if(tabcontent.id.equals("Category")) continue ;
           if(uiform.getIsSelected(j)) active =  "in active";
           else active = "";
-          println "<div id=\"$tabcontent.id-tab\" class=\"tab-pane fade $active\">" ;
-          println "<div class='resizable'>";
+      %>
+          <div id="${tabcontent.id}-tab" class="tab-pane fade $active">
+            <div class="resizable">
+      <% 
           uiform.renderChild(tabcontent.id) ;
-          println "</div>";
-          println "</div>" ;
+      %>
+            </div>
+          </div>
+      <% 
           j++ ;
         }
-        %>
+      %>
     </div>
   </div>
-	<div class="uiAction">
-  <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-				%>
-		<button onclick="$link" class="btn" type="button">$actionLabel</button>
-      <%}%>
-    </div>
-	<%uiform.end()%>
+  <div class="uiAction">
+  <% for(action in uiform.getActions()) { 
+       String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
+       String link = uiform.event(action) ;
+  %>
+    <button onclick="$link" class="btn" type="button">$actionLabel</button>
+  <%}%>
+  </div>
+  <%uiform.end();%>
 </div>
