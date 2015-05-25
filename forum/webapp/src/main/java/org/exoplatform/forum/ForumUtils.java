@@ -672,4 +672,15 @@ public class ForumUtils {
     }
     return profile;
   }
+  
+  public static String replaceStateURL(String fullUrl) {
+    if (isEmpty(fullUrl)) {
+      return EMPTY_STR;
+    }
+    fullUrl = fullUrl.replaceFirst("/false", "").replaceFirst("/true", "").replaceFirst("/lastpost", "");
+    StringBuilder newURL = new StringBuilder();
+    newURL.append("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', '")
+          .append(fullUrl).append("');} })();");
+    return newURL.toString();
+  }
 }
