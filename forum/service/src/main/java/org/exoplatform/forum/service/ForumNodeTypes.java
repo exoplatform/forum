@@ -19,8 +19,7 @@ package org.exoplatform.forum.service;
 /**
  * Constants for Forum nodetypes and properties.
  * 
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
- *         Lamarque</a>
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public interface ForumNodeTypes {
@@ -176,6 +175,10 @@ public interface ForumNodeTypes {
   public static final String EXO_USER_TITLE                 = "exo:userTitle";
 
   public static final String EXO_USER_ID                    = "exo:userId";
+
+  public static final String EXO_DISABLED                   = "exo:disabled";
+
+  public static final String EXO_IS_DISABLED                = "exo:isDisabled";
 
   public static final String EXO_TOTAL_POST                 = "exo:totalPost";
 

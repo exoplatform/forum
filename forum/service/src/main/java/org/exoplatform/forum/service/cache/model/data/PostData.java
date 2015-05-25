@@ -24,6 +24,7 @@ public class PostData  implements CachedData<Post> {
   private final String icon;
   private final String link;
   private final boolean isApproved;
+  private final boolean isFirstPost;
   private final boolean isHidden;
   private final boolean isWaiting;
   private final boolean isActiveByTopic;
@@ -47,6 +48,7 @@ public class PostData  implements CachedData<Post> {
     this.isApproved = post.getIsApproved();
     this.isHidden = post.getIsHidden();
     this.isWaiting = post.getIsWaiting();
+    this.isFirstPost = post.getIsFirstPost();
     this.isActiveByTopic = post.getIsActiveByTopic();
     this.userPrivate = post.getUserPrivate();
     this.numberAttach = post.getNumberAttach();
@@ -81,6 +83,7 @@ public class PostData  implements CachedData<Post> {
     post.setIsHidden(this.isHidden);
     post.setIsWaiting(this.isWaiting);
     post.setIsActiveByTopic(this.isActiveByTopic);
+    post.setFirstPost(this.isFirstPost);
     post.setUserPrivate(this.userPrivate);
     post.setNumberAttach(this.numberAttach);
     if (this.attachments != null) {

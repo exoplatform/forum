@@ -145,12 +145,7 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
     try {      
       if (userProfile.getUserRole() > 0) {
         for (Category category : getForumService().getCategories()) {
-          String[] uesrs = category.getUserPrivate();
-          if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
-            if (ForumServiceUtils.hasPermission(uesrs, userId)) {
-              categoryList.add(category);
-            }
-          } else {
+          if (ForumServiceUtils.hasPermission(category.getUserPrivate(), userId)) {
             categoryList.add(category);
           }
         }

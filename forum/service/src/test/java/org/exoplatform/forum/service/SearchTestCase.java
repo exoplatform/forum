@@ -269,8 +269,10 @@ public void testAdvancedSearch() throws Exception {
   }
 
   public void testAdvancedSearchByUserEmail() throws Exception {
-    String owner = "rootloca'l@host";
-    String moderator = "jo'hn@localhost";
+    String owner = "rootlocal@host";
+    String moderator = "john@localhost";
+    forumService_.saveUserProfile(createdUserProfile(owner), false, false);
+    forumService_.saveUserProfile(createdUserProfile(moderator), false, false);
     
     Category cat = new Category();
     cat.setOwner(owner);

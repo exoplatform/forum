@@ -110,7 +110,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private Forum                  forum;
 
   private List<Topic>            topicList;
-
+  
   private List<String>           moderators;
 
   private boolean                isModerator       = false;
@@ -562,7 +562,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         }
         forum = forumService.getForum(topic.getCategoryId(), topic.getForumId());
         boolean isModerator = (component.getUserProfile().getUserRole() == 0 || (component.getUserProfile().getUserRole() == 1 &&
-                                  ForumServiceUtils.hasPermission(forum.getModerators(), component.getUserProfile().getUserId())));
+                                  ForumServiceUtils.isModerator(forum.getModerators(), component.getUserProfile().getUserId())));
         if (isModerator == false) {
           if (forum.getIsClosed()) {
             warning("UIForumPortlet.msg.do-not-permission", false);
@@ -611,7 +611,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       Forum forum = uiTopicContainer.getForum();
       String spaceGroupId = uiTopicContainer.getAncestorOfType(UIForumPortlet.class).getSpaceGroupId();
       UIForumForm forumForm = uiTopicContainer.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
-      if (uiTopicContainer.userProfile.getUserRole() == 1){
+      if (uiTopicContainer.userProfile.getUserRole() == UserProfile.MODERATOR){
         forumForm.setMode(true);
       }
       if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(uiTopicContainer.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {

@@ -108,6 +108,8 @@ public class CachedDataStorage implements DataStorage, Startable {
   private static final String SCREEN_NAME_KEY = "screenName";
   private static final String FORUM_CAN_VIEW_KEY = "userCanView";
   private static final String USER_AVATAR_KEY = "userAvatarKey";
+  private static final String PROFILE_KEY = "profile";
+  private static final String WATCH_TYPE = "watchType";
 
   private DataStorage storage;
   private CacheService service;
@@ -303,7 +305,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
   
   private void clearUserProfile(String userName) {
-    if (userName != null && Utils.isEmpty(userName) == false) {
+    if (!Utils.isEmpty(userName)) {
       UserProfileKey key = new UserProfileKey(userName);
       userProfileData.remove(key);
       loginUserProfile.remove(key);
@@ -328,12 +330,13 @@ public class CachedDataStorage implements DataStorage, Startable {
     String categoryId = Utils.getCategoryId(watchingItemPath);
     String forumId = Utils.getForumId(watchingItemPath);
     String topicPath = Utils.getTopicPath(watchingItemPath);
+
     // Clear watching item data
     if (!Utils.isEmpty(topicPath)) {
       clearTopicCache(topicPath);
     } else if (!Utils.isEmpty(forumId)) {
       clearForumCache(categoryId, forumId, false);
-    } else {
+    } else if (!Utils.isEmpty(categoryId)) {
       clearCategoryCache(categoryId);
     }
   }
@@ -653,15 +656,12 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveCategory(Category category, boolean isNew) throws Exception {
     storage.saveCategory(category, isNew);
-    categoryData.put(new CategoryKey(category), new CategoryData(category));
     categoryList.select(new ScopeCacheSelector<CategoryListKey, ListCategoryData>());
     clearLinkListCache();
     clearObjectCache(category, isNew);
     //
     clearUserProfile(null);
-    if (isNew == false) {
-      clearCategoryCache(category);
-    }
+    clearCategoryCache(category);
   }
 
   public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
@@ -1551,19 +1551,19 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception {
     storage.addWatch(watchType, path, values, currentUser);
-    watchListData.remove(new SimpleCacheKey(null, currentUser));
+    watchListData.remove(new SimpleCacheKey(WATCH_TYPE, currentUser));
     clearWatchingItemCache(path);
   }
 
   public void removeWatch(int watchType, String path, String values) throws Exception {
     storage.removeWatch(watchType, path, values);
-    watchListData.select(new ScopeCacheSelector());
+    watchListData.select(new ScopeCacheSelector<SimpleCacheKey, ListWatchData>());
     clearWatchingItemCache(path);
   }
 
   public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception {
     storage.updateEmailWatch(listNodeId, newEmailAdd, userId);
-    watchListData.remove(new SimpleCacheKey(null, userId));
+    watchListData.remove(new SimpleCacheKey(WATCH_TYPE, userId));
     for (String id : listNodeId) {
       if (id.contains(Utils.CATEGORY)) {
         categoryData.remove(new CategoryKey(id));
@@ -1579,7 +1579,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   // TODO : need range
   public List<Watch> getWatchByUser(final String userId) throws Exception {
 
-    SimpleCacheKey key = new SimpleCacheKey(null, userId);
+    SimpleCacheKey key = new SimpleCacheKey(WATCH_TYPE, userId);
 
     return buildWatchOutput(watchListDataFuture.get(
       new ServiceContext<ListWatchData>() {
@@ -1765,6 +1765,20 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.clearCache();
     //
     miscData.clearCache();
+  }
+
+  public void processEnabledUser(String userName, String email, boolean isEnabled) {
+    storage.processEnabledUser(userName, email, isEnabled);
+    //
+    clearAllForumCache();
+    //
+    clearUserProfile(userName);
+    try {
+      clearUserProfileListCache();
+      clearUserProfileListCountCache();
+    } catch (Exception e) {
+      LOG.warn("Failed to clear user cached.");
+    }
   }
 
   public void calculateDeletedUser(String userName) throws Exception {
@@ -2057,5 +2071,10 @@ public class CachedDataStorage implements DataStorage, Startable {
   @Override
   public void removeCacheUserProfile(String userName) {
     clearUserProfile(userName);
+  }
+
+  @Override
+  public void saveUserPrivateOfCategory(String categoryId, String priInfo) {
+    storage.saveUserPrivateOfCategory(categoryId, priInfo);
   }
 }

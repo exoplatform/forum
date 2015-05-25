@@ -60,6 +60,7 @@ import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ActivityTypeUtils;
@@ -502,7 +503,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (list.contains(userName))
         return true;
       String[] adminrules = Utils.getStringsInList(list);
-      if (ForumServiceUtils.hasPermission(adminrules, userName))
+      if (ForumServiceUtils.isModerator(adminrules, userName))
         return true;
     }
     return false;
@@ -933,14 +934,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node catNode = null;
     try {
       Node categoryHome = getCategoryHome(sProvider);
+      Session session = categoryHome.getSession();
       if (isNew) {
         catNode = categoryHome.addNode(category.getId(), EXO_FORUM_CATEGORY);
         catNode.setProperty(EXO_ID, category.getId());
         catNode.setProperty(EXO_OWNER, category.getOwner());
         catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         boolean isIncludedSpace = category.isIncludedSpace() || category.getId().equals(Utils.CATEGORY_SPACE_ID_PREFIX);
-        catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
-        categoryHome.getSession().save();
+        try {
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        } catch (Exception e) {
+          catNode.addMixin("mix:forumCategory");
+          catNode.setProperty(EXO_INCLUDED_SPACE, isIncludedSpace);
+        }
+        session.save();
       } else {
         catNode = categoryHome.getNode(category.getId());
         String[] oldcategoryMod = new PropertyReader(catNode).strings(EXO_MODERATORS, new String[] { "" });
@@ -958,11 +965,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       catNode.setProperty(EXO_VIEWER, convertArray(category.getViewer()));
       category.setPath(catNode.getPath());
-      catNode.save();
+      session.save();
       try {
         if ((isNew && category.getModerators().length > 0) || !isNew) {
           catNode.setProperty(EXO_MODERATORS, category.getModerators());
-          catNode.save();
+          session.save();
         }
       } catch (Exception e) {
         LOG.debug("Failed to save category moderators ", e);
@@ -970,6 +977,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     } catch (Exception e) {
       LOG.error("Failed to save category", e);
       throw e;
+    }
+  }
+
+  @Override
+  public void saveUserPrivateOfCategory(String categoryId, String priInfo) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    try {
+      Node cateHome = getCategoryHome(sProvider);
+      Node cateNode = cateHome.getNode(categoryId);
+      Set<String> privates = new HashSet<String>(new PropertyReader(cateNode).list(EXO_USER_PRIVATE, new ArrayList<String>()));
+      privates.add(priInfo);
+      cateNode.setProperty(EXO_USER_PRIVATE, privates.toArray(new String[privates.size()]));
+      cateHome.getSession().save();
+    } catch (Exception e) {
+        LOG.error("Failed to save user private of category", e);
     }
   }
 
@@ -1760,7 +1782,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (isDelete) {
           String[] cateMods = PropertyReader.valuesToArray(cateNode.getProperty(EXO_MODERATORS).getValues());
           if (cateMods != null && cateMods.length > 0 && !Utils.isEmpty(cateMods[0])) {
-            if (ForumServiceUtils.hasPermission(cateMods, userName))
+            if (ForumServiceUtils.isModerator(cateMods, userName))
               continue;
           }
           if (forumNode.hasProperty(EXO_MODERATORS)) {
@@ -2342,6 +2364,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     topicNew.setId(topicNode.getName());
     topicNew.setPath(topicNode.getPath());
     topicNew.setIcon(reader.string(EXO_ICON));
+    topicNew.setOwner(reader.string(EXO_OWNER));
     topicNew.setTopicName(reader.string(EXO_NAME));
     topicNew.setLastPostBy(reader.string(EXO_LAST_POST_BY));
     topicNew.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
@@ -3742,25 +3765,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     // viewer of forum
     viewers.addAll(reader.set(EXO_VIEWER, new HashSet<String>()));
     // forum of space - only check permission on forum
+    String[] moderators = reader.strings(EXO_MODERATE_FORUMS, new String[] {});
     if (forumNode.getParent().getName().equals(Utils.CATEGORY_SPACE_ID_PREFIX)) {
       // moderators
-      if (ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+      if (!CommonUtils.isEmpty(moderators) && ForumServiceUtils.hasPermission(moderators, user)) {
         return true;
       }
     } else {
       // administrators or moderators
-      if (isAdminRole(user) || ForumServiceUtils.hasPermission(reader.strings(EXO_MODERATE_FORUMS, new String[] {}), user)) {
+      if (isAdminRole(user) || (!CommonUtils.isEmpty(moderators) && ForumServiceUtils.hasPermission(moderators, user))) {
         return true;
       }
       // private categories
       String[] userPrivates = new PropertyReader(forumNode.getParent()).strings(EXO_USER_PRIVATE, new String[] {});
-      if (!CommonUtils.isEmpty(userPrivates) && !ForumServiceUtils.hasPermission(userPrivates, user)) {
+      if (!ForumServiceUtils.hasPermission(userPrivates, user)) {
         return false;
       }
       // all viewers on category
       viewers.addAll(new PropertyReader(forumNode.getParent()).list(EXO_VIEWER, new ArrayList<String>()));
     }
-    return viewers.isEmpty() || ForumServiceUtils.hasPermission(viewers.toArray(new String[viewers.size()]), user);
+    return ForumServiceUtils.hasPermission(viewers.toArray(new String[viewers.size()]), user);
   }
   
   private void sendNotificationWhenCreateTopic(SessionProvider sProvider, Node forumNode, Topic topic, MessageBuilder messageBuilder) throws Exception {
@@ -4696,10 +4720,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public JCRPageList getPageListUserProfile() throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node userProfileNode = getUserProfileHome(sProvider);
-      NodeIterator iterator = userProfileNode.getNodes();
-      JCRPageList pageList = new ForumPageList(iterator, 10, userProfileNode.getPath(), false);
-      return pageList;
+      Node userProfileHome = getUserProfileHome(sProvider);
+      QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
+      StringBuilder strQuery = jcrPathLikeAndNotLike(EXO_FORUM_USER_PROFILE, userProfileHome.getPath());
+      strQuery.append(" AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ").append(EXO_IS_DISABLED).append("<>'true')");
+      
+      Query query = qm.createQuery(strQuery.toString(), Query.SQL);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      return new ForumPageList(iter, 10, strQuery.toString(), true);
     } catch (Exception e) {
       return null;
     }
@@ -4710,13 +4739,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node userProfileHome = getUserProfileHome(sProvider);
       QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(userProfileHome.getPath()).append("/element(*,").append(EXO_FORUM_USER_PROFILE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
-      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      StringBuilder strQuery = jcrPathLikeAndNotLike(EXO_FORUM_USER_PROFILE, userProfileHome.getPath());
+      strQuery.append(" AND (").append(EXO_USER_ID).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_FIRST_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_LAST_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_FULL_NAME).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_EMAIL).append(" LIKE '%").append(userSearch).append("%'")
+              .append(" OR ").append(EXO_USER_TITLE).append(" LIKE '%").append(userSearch).append("%'")
+              .append(") AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ").append(EXO_IS_DISABLED).append("<>'true')");
+
+      Query query = qm.createQuery(strQuery.toString(), Query.SQL);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
-      JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
-      return pagelist;
+      return new ForumPageList(iter, 10, strQuery.toString(), true);
     } catch (Exception e) {
       return null;
     }
@@ -4987,8 +5022,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return profileHome.getNode(userName);
     } catch (PathNotFoundException e) {
-      return profileHome.getNode(Utils.USER_PROFILE_DELETED).getNode(userName);
-    } catch (Exception e) {
+      if (profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
+        Node deletedHome = profileHome.getNode(Utils.USER_PROFILE_DELETED);
+        return deletedHome.getNode(userName);
+      }
       throw e;
     }
   }
@@ -5026,6 +5063,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
       userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE));
       userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
+      userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
 
     } catch (PathNotFoundException e) {
       userProfile.setUserId(userName);
@@ -5070,6 +5108,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setLastName(reader.string(EXO_LAST_NAME, ""));
     userProfile.setFullName(reader.string(EXO_FULL_NAME, ""));
     userProfile.setEmail(reader.string(EXO_EMAIL, ""));
+    userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
     return userProfile;
   }
 
@@ -5168,6 +5207,25 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setScreenName(getScreenName(userName, userProfileNode));
     userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
     userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
+    userProfile.setNewMessage(reader.l(EXO_NEW_MESSAGE));
+    userProfile.setTimeZone(reader.d(EXO_TIME_ZONE));
+    userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT, ""));
+    userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT, ""));
+    userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, ""));
+    userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST));
+    userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC));
+    userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
+    userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
+    if (userProfile.getIsBanned()) {
+      if (userProfileNode.hasProperty(EXO_BAN_UNTIL)) {
+        userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
+        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+          userProfileNode.setProperty(EXO_IS_BANNED, false);
+          userProfileNode.save();
+          userProfile.setIsBanned(false);
+        }
+      }
+    }
     userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
     if (userProfile.getTotalPost() > 0) {
       userProfile.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
@@ -5176,7 +5234,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
     if (userProfile.getIsDisplaySignature())
       userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
-    userProfile.setIsBanned(reader.bool(ForumNodeTypes.EXO_IS_BANNED));
     
     return userProfile;
   }
@@ -8177,6 +8234,141 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return true;
   }
 
+  /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.DataStorage#processEnabledUser(java.lang.String, java.lang.String, boolean)
+   */
+  @Override
+  public void processEnabledUser(String userName, String email, boolean isEnabled) {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    if (!isEnabled && !CommonUtils.isEmpty(userName)) {
+      processWatched(sProvider, userName);
+    }
+    //
+    if (!isEnabled && !CommonUtils.isEmpty(email)) {
+      processForumNotifyEmail(sProvider, email);
+    }
+    //
+    if (!CommonUtils.isEmpty(userName)) {
+      processUserProfile(sProvider, userName, isEnabled);
+    }
+  }
+  
+  private void processUserProfile(SessionProvider sProvider, String userName, boolean isEnabled) {
+    try {
+      Node profileHome = getUserProfileHome(sProvider);
+      Node profileNode = profileHome.getNode(userName);
+      if (!profileNode.isNodeType(EXO_DISABLED)) {
+        profileNode.addMixin(EXO_DISABLED);
+      }
+      profileNode.setProperty(EXO_IS_DISABLED, !isEnabled);
+      profileHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Process to to update status disabled/enabled of used %s is unsuccessfully.", userName), e);
+    }
+  }
+
+  /**
+   * Process remove userName and email, that watched by disabled user
+   * @param sProvider
+   * @param userName The userName of disabled user
+   */
+  private void processWatched(SessionProvider sProvider, String userName) {
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_FORUM_WATCHING);
+      sqlQuery.append(" WHERE ").append(EXO_USER_WATCHING).append("='").append(userName).append("'");
+      Query query = qm.createQuery(sqlQuery.toString(), Query.SQL);
+      NodeIterator iter = query.execute().getNodes();
+      while (iter.hasNext()) {
+        Node watchedNode = iter.nextNode();
+        updateWatchedProperty(watchedNode, userName);
+      }
+      categoryHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Removes UserName %s is unsuccessfully.", userName), e);
+    }
+  }
+
+  /**
+   * Process remove email on forum notify.
+   * 
+   * @param sProvider
+   * @param email The email of disabled user
+   */
+  private void processForumNotifyEmail(SessionProvider sProvider, String email) {
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      //
+      StringBuilder sqlQuery = new StringBuilder("SELECT * FROM ").append(EXO_FORUM);
+      sqlQuery.append(" WHERE (").append(EXO_NOTIFY_WHEN_ADD_TOPIC).append("='").append(email).append("' OR ")
+              .append(EXO_NOTIFY_WHEN_ADD_POST).append("='").append(email).append("')");
+      Query query = qm.createQuery(sqlQuery.toString(), Query.SQL);
+      NodeIterator iter = query.execute().getNodes();
+      //
+      while (iter.hasNext()) {
+        Node forumNode = iter.nextNode();
+        updateForumNotifyEmail(forumNode, email);
+      }
+
+      categoryHome.getSession().save();
+    } catch (Exception e) {
+      logDebug(String.format("Removes email %s is unsuccessfully.", email), e);
+    }
+  }
+
+  /**
+   * Update two properties of Forum, that contain email of disabled user 
+   * 
+   * @param forumNode
+   * @param email
+   */
+  private void updateForumNotifyEmail(Node forumNode, String email) {
+    try {
+      removeValueProperty(forumNode, EXO_NOTIFY_WHEN_ADD_TOPIC, email);
+      removeValueProperty(forumNode, EXO_NOTIFY_WHEN_ADD_POST, email);
+    } catch (Exception e) {
+      logDebug(String.format("Updated forum notify of email %s is unsuccessfully.", email), e);
+    }
+  }
+
+  /**
+   * Remove value of property
+   * 
+   * @param node The node want to update
+   * @param property The property change
+   * @param removeValue The value will remove
+   * @return
+   * @throws Exception
+   */
+  private int removeValueProperty(Node node, String property, String removeValue) throws Exception {
+    String[] values = new PropertyReader(node).strings(property, new String[] {});
+    int index = ArrayUtils.indexOf(values, removeValue);
+    if (index >= 0) {
+      node.setProperty(property, (String[]) ArrayUtils.remove(values, index));
+    }
+    return index;
+  }
+
+  /**
+   * Update watched properties of categories/forums/topics, that disabled user watched.
+   * 
+   * @param watchedNode
+   * @param userName
+   */
+  private void updateWatchedProperty(Node watchedNode, String userName) {
+    try {
+      int index = removeValueProperty(watchedNode, EXO_USER_WATCHING, userName);
+      if (index >= 0) {
+        String[] emails = new PropertyReader(watchedNode).strings(EXO_EMAIL_WATCHING, new String[] {});
+        watchedNode.setProperty(EXO_EMAIL_WATCHING, (String[]) ArrayUtils.remove(emails, index));
+      }
+    } catch (Exception e) {
+      logDebug(String.format("Updated watched user %s is unsuccessfully.", userName), e);
+    }
+  }
+
   public void calculateDeletedUser(String userName) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     String tempUserName = userName;
@@ -8200,7 +8392,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
 
-      List<String> list;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
         if (node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM) || node.isNodeType(EXO_TOPIC) || node.isNodeType(EXO_POST)) {
@@ -8210,21 +8401,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                 node.setProperty(strs[i], tempUserName);
               }
             } else {
-              PropertyReader reader = new PropertyReader(node);
-              list = reader.list(strs[i], new ArrayList<String>());
-              if (list.contains(userName)) {
-                if (strs[i].equals(EXO_USER_WATCHING)) {
-                  try {
-                    int t = list.indexOf(userName);
-                    List<String> list2 = reader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
-                    list2.remove(t);
-                    node.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
-                  } catch (Exception e) {
-                    LOG.debug("Failed to get email watching by user deleted.", e);
-                  }
-                }
-                list.remove(userName);
-                node.setProperty(strs[i], list.toArray(new String[list.size()]));
+              if (strs[i].equals(EXO_USER_WATCHING)) {
+                updateWatchedProperty(node, userName);
+              } else {
+                removeValueProperty(node, strs[i], userName);
               }
             }
           }
@@ -8478,6 +8658,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       .append(EXO_SCREEN_NAME).append(" LIKE '%").append(searchKey).append("%'")
       .append(")");
     }
+    sqlQuery.append(" AND (").append(EXO_IS_DISABLED).append(" IS NULL OR ")
+            .append(EXO_IS_DISABLED).append("<>'true')");
     return sqlQuery.toString();
   }
   

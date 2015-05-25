@@ -16,33 +16,25 @@
  */
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupEventListener;
 
 public class ForumGroupListener extends GroupEventListener {
-  private static final Log log          = ExoLogger.getLogger(ForumGroupListener.class);
-
-  private ForumService     forumService = null;
 
   public ForumGroupListener() {
-
   }
 
-  private ForumService getForumService() {
-    if (forumService == null) {
-      forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    }
-    return forumService;
+  public void postSave(Group group, boolean isNew) throws Exception{
+    ForumServiceUtils.clearCache();
   }
 
   public void preDelete(Group group) throws Exception {
-    String groupId = group.getId();
-    log.info("Calculate deleted group from forum: " + groupId);
-    getForumService().calculateDeletedGroup(groupId, group.getGroupName());
+    CommonsUtils.getService(ForumService.class).calculateDeletedGroup(group.getId(), group.getGroupName());
+    //
+    ForumServiceUtils.clearCache();
   }
 
 }

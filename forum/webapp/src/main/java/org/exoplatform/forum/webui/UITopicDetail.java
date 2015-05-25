@@ -126,11 +126,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
       @EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
       
-      @EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
-      @EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
-      @EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
       @EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
-      @EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
       @EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
       @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
       @EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
@@ -337,42 +333,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     /**
      * Set permission for current user login.    
     */
-    isMod = (getUserProfile().getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.hasPermission(forum.getModerators(), userName));
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    isMod = (getUserProfile().getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.isModerator(forum.getModerators(), userName));
     if (topic != null) {
-      canCreateTopic = getCanCreateTopic();
-      isCanPost = isCanPostReply();
+      canCreateTopic =  forumPortlet.checkForumHasAddTopic(categoryId, forumId);
+      isCanPost = forumPortlet.checkForumHasAddPost(categoryId, forumId, topicId);
     }
   }
 
   public void setIsGetSv(boolean isGetSv) {
     this.isGetSv = isGetSv;
-  }
-
-  private boolean getCanCreateTopic() throws Exception {
-    /**
-     * set permission for create new thread
-     */
-    boolean canCreateTopic = true;
-    boolean isCheck = true;
-    List<String> ipBaneds = forum.getBanIP();
-    if (ipBaneds != null && ipBaneds.contains(getRemoteIP()) || getUserProfile().getIsBanned()) {
-      canCreateTopic = false;
-      isCheck = false;
-    }
-    if (!this.isMod && isCheck) {
-      String[] strings = this.forum.getCreateTopicRole();
-      boolean isEmpty = false;
-      if (!ForumUtils.isArrayEmpty(strings)) {
-        canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
-      }
-      if (isEmpty || !canCreateTopic) {
-        strings = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_CREATE_TOPIC_ROLE);
-        if (!ForumUtils.isArrayEmpty(strings)) {
-          canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
-        }
-      }
-    }
-    return canCreateTopic;
   }
 
   public boolean getCanPost() throws Exception {
@@ -383,19 +353,34 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     this.forum = forum;
   }
 
-  private boolean isCanPostReply() throws Exception {
-    if (getUserProfile().getUserRole() == 3)
+  protected boolean isCanPostReply() throws Exception {
+    //
+    boolean isCanReply = (forum != null && !forum.getIsClosed() && !forum.getIsLock() &&
+                           topic != null && !topic.getIsClosed() && !topic.getIsLock() &&
+                           getUserProfile().getUserRole() != UserProfile.GUEST && !userProfile.isDisabled());
+    if(!isCanReply) {
       return false;
-    if (forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock())
-      return false;
-    if (getUserProfile().getIsBanned())
-      return false;
-    if (isMod)
+    }
+    //
+    if(isMod) {
       return true;
-    if (isIPBaned(getRemoteIP()))
+    }
+    //1. topic is Active -> can reply
+    //2. forum is Active -> can reply
+    //3. topic is Waiting -> can not reply
+    //4. forum is moderate topic AND topic is Approved -> can reply
+    //5. forum is moderate topic AND topic is UnApproved -> can not reply
+    //6. user's IP is not banned -> can reply
+    //7. user is not banned -> can reply
+    isCanReply = (!userProfile.getIsBanned() && !isIPBaned(getRemoteIP()) &&
+                  topic.getIsActive() && topic.getIsActiveByForum() && !topic.getIsWaiting());
+    //Forum moderating option a topic is active AND topic is approved) 
+    //OR (Forum moderating option a topic is deactivate)  -> CAN POST
+    isCanReply &= ((forum.getIsModerateTopic() && topic.getIsApproved()) || !forum.getIsModerateTopic());
+    //
+    if(!isCanReply) {
       return false;
-    if (!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting())
-      return false;
+    }
     try {
       List<String> listUser = new ArrayList<String>();
       listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
@@ -406,7 +391,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
       }
     } catch (Exception e) {
-      log.error("Check can reply is fall, exception: ", e);
+      log.warn("Check can reply topic is unsuccessfully.");
+      log.debug(e.getMessage(), e);
     }
     return true;
   }
@@ -462,24 +448,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   public boolean userCanView() throws Exception {
-    if (isMod)
-      return true;
-    else {
-      if (forum.getIsClosed() || topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting())
-        return false;
-    }
-    if (getCanPost())
-      return true;
-    List<String> listUser = new ArrayList<String>();
-
-    listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
-    listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
-    listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER));
-    if (listUser.size() > 0) {
-      listUser.add(topic.getOwner());
-      return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
-    }
-    return true;
+    return getAncestorOfType(UIForumPortlet.class).checkCanView(getForumService().getCategory(categoryId), forum, topic);
   }
 
   public String getImageUrl(String imagePath) throws Exception {
@@ -542,6 +511,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     } catch (Exception e) {
       log.debug("Failed to init topic page: " + e.getMessage(), e);
     }
+  }
+
+  protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) {
+    List<String> actions = new ArrayList<String>();
+    if(getUserProfile().getUserRole() < 3 ) {
+      if(!userProfile.getUserId().equals(owner.getUserId())) {
+        actions.add("Quote");
+        if(!owner.isDisabled()){
+          actions.add("PrivatePost");
+        }
+      }
+      if (!isFirstPost && (actions.isEmpty() || isModerator())) {
+        actions.add("Delete");
+        actions.add("Edit");
+      }
+    }
+    //
+    return actions;
   }
 
   protected boolean getIsModeratePost() {
@@ -1440,6 +1427,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       topicCreatedByUser.setUserId(userId);
     }
   }
+
   private String getTitle(String title, WebuiRequestContext context) {
     String strRe = context.getApplicationResourceBundle().getString("UIPostForm.label.ReUser")+": ";
     while (title.indexOf(strRe.trim()) == 0) {
@@ -1717,21 +1705,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
   
   protected String getMenuUser(UserProfile userInfo) throws Exception {
-    String editByScreeName = userInfo.getScreenName();
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     StringBuilder builder = new StringBuilder("<ul class=\"dropdown-menu uiUserMenuInfo dropdownArrowTop\">");
-
-    String[] menuViewInfos = new String[] { "ViewPublicUserInfo", "PrivateMessage", "ViewPostedByUser", "ViewThreadByUser" };
+    //
+    String[] menuViewInfos = ForumUtils.getUserActionsMenu(getUserProfile().getUserRole(), userInfo.getUserId());
+    //
     for (int i = 0; i < menuViewInfos.length; i++) {
       String viewAction = menuViewInfos[i];
-      if ((getUserProfile().getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) {
-        continue;
-      }
-      String itemLabelView = WebUIUtils.getLabel(null, "UITopicDetail.action." + viewAction);
-      if (!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-        itemLabelView = itemLabelView + " " + editByScreeName;
-      }
+      String action = forumPortlet.getPortletLink(viewAction, userInfo.getUserId());
+      String itemLabelView = WebUIUtils.getLabel(null, "UITopicDetail.action." + viewAction).replace("{0}", userInfo.getScreenName());
 
-      builder.append("<li onclick=\"").append(event(viewAction, userInfo.getUserId())).append("\">")
+      builder.append("<li onclick=\"").append(action).append("\">")
              .append("  <a href=\"javaScript:void(0)\">").append(itemLabelView).append("</a>")
              .append("</li>");
     }

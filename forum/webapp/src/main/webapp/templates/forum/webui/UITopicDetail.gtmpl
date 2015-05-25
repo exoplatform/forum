@@ -655,42 +655,16 @@
 							<% } %>
 							<div class="btnDetailTopic">
 								<%
-									if(isShowMenu) {
-									String[] actions = ["Quote","PrivatePost","Delete","Edit"] ;
-									boolean isShowAction = true, isShowPri = true ;
+									//
+									List actions = uicomponent.getActionsEachPost(userInfo, post.getIsFirstPost());
 									for(action in actions) {
-										isShowAction = true;
-										isShowPri = true ;
-										if(!(userLogin.equals(owner))) {
-											if(!canEdit){
-												if(action.equals("Edit")||action.equals("Delete")){
-													isShowAction = false;
-												}
-											}
-										}
-										if(isShowAction && checked == 0){
-											if(action.equals("Edit")||action.equals("Delete")){
-												isShowAction = false;
-											}
-										}
-										if(isShowAction && !isCanReply&&(action.equals("Edit") || action.equals("Quote") || action.equals("PrivatePost"))) {
-											isShowAction = false;
-										}
-										if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
-											isShowAction = false;
-											isShowPri = false;
-										}
-										if(isShowAction) {
 											String actionLink = uicomponent.event(action, uiformId, postId);
 											String title = _ctx.appRes("UITopicDetail.title." + action);
 											String label = _ctx.appRes("UITopicDetail.action." + action);
 											String confirm = (action.equals("Delete") == true) ? "btn confirm" : "btn";
 								%>
 								<a onclick="$actionLink" class="$confirm" rel="tooltip" data-placement="bottom" title="$title">$label</a>
-								<%	}
-									}
-									checked = 1;
-								} %>
+								<%} %>
 							</div>
 						</div>
 						

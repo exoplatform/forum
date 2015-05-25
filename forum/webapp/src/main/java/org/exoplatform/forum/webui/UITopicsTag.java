@@ -124,7 +124,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       }
       Forum forum = this.getForumService().getForum(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
       if (role == 1) {
-        if (!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)) {
+        if (!ForumServiceUtils.isModerator(forum.getModerators(), userLogin)) {
           isHidden = "false";
         }
       }
@@ -210,9 +210,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         if (ids[i].indexOf(Utils.FORUM) >= 0)
           forumId = ids[i];
       }
-      Category category = ((ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class)).getCategory(cateId);
-      String[] privateUsers = category.getUserPrivate();
-      if (privateUsers.length > 0 && privateUsers[0].trim().length() > 0 && !ForumServiceUtils.hasPermission(privateUsers, uiTopicsTag.userProfile.getUserId())) {
+      Category category = uiTopicsTag.getForumService().getCategory(cateId);
+      if (!ForumServiceUtils.hasPermission(category.getUserPrivate(), uiTopicsTag.userProfile.getUserId())) {
         warning("UIForumPortlet.msg.do-not-permission");
         return;
       }

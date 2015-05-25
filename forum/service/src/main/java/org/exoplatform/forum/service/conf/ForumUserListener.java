@@ -18,11 +18,13 @@ package org.exoplatform.forum.service.conf;
 
 import java.util.TimeZone;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ExoProperties;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -93,6 +95,8 @@ public class ForumUserListener extends UserEventListener {
         log.warn("Error while updating forum profile: ", e);
       }
     }
+    //
+    ForumServiceUtils.clearCache();
   }
 
   private ForumService getForumService() {
@@ -106,6 +110,27 @@ public class ForumUserListener extends UserEventListener {
     } catch (Exception e) {
       log.warn("failed to remove member : ", e);
     }
-
+    //
+    ForumServiceUtils.clearCache();
   }
+
+  @Override
+  public void postSetEnabled(User user) {
+    ForumService fservice = CommonsUtils.getService(ForumService.class);
+    //
+    fservice.processEnabledUser(user.getUserName(), user.getEmail(), user.isEnabled());
+    
+    if (!user.isEnabled()) {
+      //
+      try {
+        fservice.userLogout(user.getUserName());
+      } catch (Exception e) {
+        log.warn(String.format("Removes online for user %s is unsuccessful.", user.getUserName()));
+        log.debug(e.getMessage(), e);
+      }
+    }
+    //
+    ForumServiceUtils.clearCache();
+  }
+
 }

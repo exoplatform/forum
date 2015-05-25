@@ -130,6 +130,8 @@ public class UserProfile implements Serializable {
   private long                newMessage             = 0;
 
   private long                totalMessage           = 0;
+  
+  private boolean            isDisabled              = false;
 
   public UserProfile() {
     userId = USER_GUEST;
@@ -448,10 +450,18 @@ public class UserProfile implements Serializable {
     lastPostIdReadOfForum.put(forumId, postId);
   }
 
+  public boolean isDisabled() {
+    return isDisabled;
+  }
+
+  public void setDisabled(boolean isDisabled) {
+    this.isDisabled = isDisabled;
+  }
+
   public boolean getIsOnline() {
     return isOnline;
   }
-
+  
   public void setIsOnline(boolean isOnline) {
     this.isOnline = isOnline;
   }

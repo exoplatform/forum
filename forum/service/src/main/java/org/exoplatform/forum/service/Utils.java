@@ -659,8 +659,7 @@ public class Utils implements ForumNodeTypes {
   public static List<String> getGroupSpaceOfUser(String userId) {
     List<String> groupId = new ArrayList<String>();
     try {
-      @SuppressWarnings("unchecked")
-      Collection<Group> groups = UserHelper.getOrganizationService().getGroupHandler().findGroupsOfUser(userId);
+      Collection<Group> groups = UserHelper.getGroupHandler().findGroupsOfUser(userId);
       for (Group group : groups) {
         if (group.getId().indexOf(CommonUtils.SLASH + CATEGORY_SPACE) >= 0) {
           groupId.add(group.getGroupName());

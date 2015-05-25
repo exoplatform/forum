@@ -40,7 +40,6 @@
 	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
-	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 	boolean isShowMenu = (userProfile.getUserRole() == UserProfile.ADMIN) ? true : false;
 %>
 
@@ -223,7 +222,6 @@
 						long postCount = forum.getPostCount();
 						if(postCount < 0) postCount = 0;
 						String fontWeight = "normal";
-						boolean hasModerators = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin);
 						path = categoryId+"/"+forumId ;
 						Topic topicNewPost = uicomponent.getLastTopic(category, forum);
 						if(topicNewPost != null) {
@@ -337,13 +335,10 @@
 										<a href="javaScript:void(0)">$screemNamePost</a>
 										<ul class="dropdown-menu dropdownArrowTop uiUserMenuInfo">
 											<%
+												String[] menuViewInfos = ForumUtils.getUserActionsMenu(userProfile.getUserRole(), lastPostBy);
 												for(viewAction in menuViewInfos) {
-												if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
-												String linkView = uicomponent.getActionViewInfoUser(viewAction, lastPostBy) ;
-												String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-												if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
-													itemLabelView = itemLabelView + " " + screemNamePost ;
-												}
+													String linkView = uicomponent.getActionViewInfoUser(viewAction, lastPostBy) ;
+													String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction).replace("{0}", screemNamePost);
 											%>
 												<li onclick="$linkView">
 													 <a href="javaScript:void(0)">$itemLabelView</a>

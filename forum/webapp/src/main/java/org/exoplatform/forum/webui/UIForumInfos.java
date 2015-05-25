@@ -18,14 +18,12 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -33,9 +31,10 @@ import org.exoplatform.webui.core.UIContainer;
     template = "app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer {
-  private UserProfile userProfile;
 
   private boolean     enableIPLogging = true;
+  
+  private Forum forum;
 
   public UIForumInfos() throws Exception {
     addChild(UIPostRules.class, null, null);
@@ -50,45 +49,41 @@ public class UIForumInfos extends UIContainer {
   }
 
   public void setForum(Forum forum) throws Exception {
-    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    this.forum = forum;
+  }
+  
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    initContainer();
+    //
+    super.processRender(context);
+  }
+  
+  private void initContainer() throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     enableIPLogging = forumPortlet.isEnableIPLogging();
-    this.userProfile = forumPortlet.getUserProfile();
-    String[] mods = forum.getModerators();
-    if (ForumUtils.isArrayEmpty(mods))
-      mods = new String[] {};
-    List<String> moderators = ForumServiceUtils.getUserPermission(mods);
+    UserProfile userProfile = forumPortlet.getUserProfile();
+    List<String> moderators = ForumServiceUtils.getUserPermission((forum != null) ? forum.getModerators() : null);
     UIPostRules postRules = getChild(UIPostRules.class);
-    boolean isShowRule = forumPortlet.isShowRules();
-    postRules.setRendered(isShowRule);
-    if (isShowRule) {
-      boolean isLock = forum.getIsClosed();
-      if (!isLock)
-        isLock = forum.getIsLock();
-      if (!isLock && userProfile.getUserRole() != 0) {
-        if (!moderators.contains(userProfile.getUserId())) {
-          List<String> ipBaneds = forum.getBanIP();
-          if (ipBaneds.contains(getRemoteIP()))
-            isLock = true;
-          if (!isLock) {
-            String[] listUser = forum.getCreateTopicRole();
-            boolean isEmpty = false;
-            if (!ForumUtils.isArrayEmpty(listUser)) {
-              isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId());
-            } else
-              isEmpty = true;
-            if (isEmpty || isLock) {
-              ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-              listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), Utils.EXO_CREATE_TOPIC_ROLE);
-              if (!ForumUtils.isArrayEmpty(listUser)) {
-                isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId());
-              }
+    //
+    if (forumPortlet.isShowRules()) {
+      boolean isLock = true;
+      if (forum != null) {
+        isLock = forum.getIsClosed() || forum.getIsLock();
+        if (!isLock && userProfile.getUserRole() != 0) {
+          if (!moderators.contains(userProfile.getUserId())) {
+            isLock = forum.getBanIP().contains(getRemoteIP());
+            if (!isLock) {
+              isLock = !forumPortlet.checkForumHasAddTopic(forum.getCategoryId(), forum.getId());
             }
           }
         }
       }
       postRules.setLock(isLock);
-      postRules.setUserProfile(this.userProfile);
+      postRules.setUserProfile(userProfile);
     }
+    postRules.setRendered(forumPortlet.isShowRules());
+    //
     UIForumModerator forumModerator = getChild(UIForumModerator.class);
     if (forumPortlet.isShowModerators()) {
       forumModerator.setModeratorsForum(moderators);
