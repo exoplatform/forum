@@ -726,6 +726,9 @@ public class UIForumPortlet extends UIPortletApplication {
               } else {
                 showWarningMessage(context, "UIPostForm.msg.no-permission", ForumUtils.EMPTY_STR);
               }
+              String fullUrl = ((HttpServletRequest) Util.getPortalRequestContext().getRequest()).getRequestURL().toString();
+              String newURL = fullUrl.replaceFirst("/false", "").replaceFirst("/true", "");
+              context.getJavascriptManager().getRequireJS().addScripts("(function(){window.history.replaceState({}, '', '" + newURL + "');})();");
             }
             if (!UserHelper.isAnonim()) {
               this.forumService.updateTopicAccess(userProfile.getUserId(), topic.getId());
