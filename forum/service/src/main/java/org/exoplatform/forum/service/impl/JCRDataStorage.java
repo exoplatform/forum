@@ -3847,31 +3847,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         // validate permission and remove duplicate email
         // Watched on category
         int i = 0;
+        List<String> removeEmail = new ArrayList<String>();
         for (String user : userListCategory) {
           if(!canReceiveNotification(topicNode, user)) {
-            emailListCategory.remove(i);
+            removeEmail.add(emailListCategory.get(i));
           }
           ++i;
         }
+        emailListCategory.removeAll(removeEmail);
+        removeEmail.clear();
         // Watched on forum
         i = 0;
         for (String user : userListForum) {
           if(userListCategory.contains(user)
               || !canReceiveNotification(topicNode, user)) {
-            emailListForum.remove(i);
+            removeEmail.add(emailListForum.get(i));
           }
           ++i;
         }
+        emailListForum.removeAll(removeEmail);
+        removeEmail.clear();
         // Watched on topic
         i = 0;
         for (String user : userListTopic) {
           if(userListCategory.contains(user)
               || userListForum.contains(user)
               || !canReceiveNotification(topicNode, user)) {
-            emailListTopic.remove(i);
+            removeEmail.add(emailListTopic.get(i));
           }
           ++i;
         }
+        emailListTopic.removeAll(removeEmail);
         // Owner Notify
         if (isApprovePost) {
           String owner = topicReader.string(EXO_OWNER);
