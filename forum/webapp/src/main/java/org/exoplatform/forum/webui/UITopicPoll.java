@@ -164,7 +164,7 @@ public class UITopicPoll extends BaseForumForm {
 
   private Poll getPoll() throws Exception {
     if (!CommonUtils.isEmpty(categoryId)) {
-      if (userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId()))
+      if (userProfile.getUserRole() == 0 || ForumServiceUtils.isModerator(this.forum.getModerators(), userProfile.getUserId()))
         this.canViewEditMenu = true;
       else
         this.canViewEditMenu = false;

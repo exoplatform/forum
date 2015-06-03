@@ -91,7 +91,13 @@
       <type>org.exoplatform.forum.service.conf.ForumGroupListener</type>
       <description>Remove the forums in spaces and remove group storage in categories/forums/topics</description>
     </component-plugin>
-
+    <!--Forum membership listener-->
+    <component-plugin>
+      <name>forum.membership.event.listener </name>
+      <set-method>addListenerPlugin </set-method>
+      <type>org.exoplatform.forum.service.conf.ForumMembershipEventListener</type>
+      <description>Remove the cache of users permissions on forum</description>
+    </component-plugin>
   </external-component-plugins>
 
   <external-component-plugins>

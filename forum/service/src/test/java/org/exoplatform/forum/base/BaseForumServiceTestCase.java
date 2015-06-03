@@ -169,7 +169,7 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     userProfile.setUserRole((long) 0);
     userProfile.setUserTitle(Utils.ADMIN);
     userProfile.setScreenName(userName);
-    userProfile.setEmail(userName + "@plf.com");
+    userProfile.setEmail(userName + "@exoplf.com");
     userProfile.setJoinedDate(new Date());
     userProfile.setTimeZone(7.0);
     userProfile.setSignature("signature");

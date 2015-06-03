@@ -16,12 +16,13 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Calendar;
-
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
+import org.exoplatform.services.organization.User;
+import org.exoplatform.services.organization.UserHandler;
 
 public class UserProfileTestCase extends BaseForumServiceTestCase {
   
@@ -43,23 +44,31 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
   }
 
   public void testUserProfile() throws Exception {
-    String userName = "tu.duy";
-    UserProfile userProfile = createdUserProfile(userName);
-
-    // save UserProfile
-    forumService_.saveUserProfile(userProfile, true, true);
+    // create user profile
+    String userName = "user_bar";
+    UserHandler userHandler = UserHelper.getUserHandler();
+    User user = userHandler.createUserInstance(userName);
+    user.setEmail("user_bar@plf.com");
+    user.setFirstName(userName);
+    user.setLastName(userName);
+    user.setPassword("exo");
+    //
+    userHandler.createUser(user, true);
 
     // getUserInfo
-    userProfile = forumService_.getUserInfo(userName);
+    UserProfile userProfile = forumService_.getUserInfo(userName);
     assertNotNull("Get info UserProfile is null", userProfile);
 
     // get Default and storage this profile in ExoCache
     userProfile = forumService_.getDefaultUserProfile(userName, "");
     assertNotNull("Get default UserProfile is null", userProfile);
-    
+
     // test cache user profile, get this profile is not null
     assertNotNull("Get default UserProfile is null", cachedStorage.getDefaultUserProfile(userName, null));
     
+    // remove this profile in ExoCache by update this profile
+    forumService_.saveUserSettingProfile(userProfile);
+
     // getUserInformations
     userProfile = forumService_.getUserInformations(userProfile);
     assertNotNull("Get informations UserProfile is null", userProfile);
@@ -214,7 +223,50 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertEquals(1, profile.getUserRole());
     assertEquals(Utils.MODERATOR, profile.getUserTitle());
   }
-  
+
+  public void testSearchUserProfile() throws Exception {
+    
+    int before = forumService_.getPageListUserProfile().getAvailable();
+    //
+    int numberUser = 20;
+    // create user
+    UserHandler userHandler = UserHelper.getUserHandler();
+    for (int i = 0; i < numberUser; i++) {
+      User user = userHandler.createUserInstance("foo" + i);
+      user.setEmail("foo" + i + "@plf.com");
+      user.setFirstName("test");
+      user.setLastName("abc user");
+      user.setPassword("exo");
+      user.isEnabled();
+      //
+      userHandler.createUser(user, true);
+      userHandler.setEnabled(user.getUserName(), true, true);
+    }
+
+    int allSize = before + numberUser;
+    // check get all user profile (8 users create by OrganizationDatabaseInitializer)
+    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
+    assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
+    // Disable 10 users
+    System.out.println("Disable 10 users");
+    for (int i = 0; i < 10; i++) {
+      userHandler.setEnabled("foo" + i, false, true);
+    }
+    //
+    assertEquals(allSize - 10, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(10, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
+    assertEquals(true, forumService_.getQuickProfile("foo0").isDisabled());
+    // Enable 10 users
+    for (int i = 0; i < 10; i++) {
+      userHandler.setEnabled("foo" + i, true, true);
+    }
+    //
+    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
+    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
+    assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
+  }
+
   public void testAccessTopic() throws Exception{
     //
     initDefaultData();

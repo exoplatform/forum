@@ -54,8 +54,7 @@ public class BaseDataForm extends BaseForumForm {
     List<Category> categories = new ArrayList<Category>();
     for (Category category : getForumService().getCategories()) {
       if (getUserProfile().getUserRole() == 1) {
-        if (!ForumUtils.isArrayEmpty(category.getUserPrivate()) && 
-            !ForumServiceUtils.hasPermission(category.getUserPrivate(), userProfile.getUserId())) {
+        if (!ForumServiceUtils.hasPermission(category.getUserPrivate(), userProfile.getUserId())) {
           continue;
         }
         if (isMoveTopic == true && ForumServiceUtils.hasPermission(category.getCreateTopicRole(), userProfile.getUserId())) {
@@ -85,12 +84,11 @@ public class BaseDataForm extends BaseForumForm {
         if (forum.getIsClosed()) {
           continue;
         }
-        if (!ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId())) {
+        if (!ForumServiceUtils.isModerator(forum.getModerators(), userProfile.getUserId())) {
           if (forum.getIsLock()) {
             continue;
           }
-          if (isMoveTopic == true && !canAddTopics.contains(categoryId) && !ForumUtils.isArrayEmpty(forum.getCreateTopicRole()) && 
-              !ForumServiceUtils.hasPermission(forum.getCreateTopicRole(), userProfile.getUserId())) {
+          if (isMoveTopic == true && !canAddTopics.contains(categoryId) && !ForumServiceUtils.hasPermission(forum.getCreateTopicRole(), userProfile.getUserId())) {
             continue;
           }
         }
@@ -111,7 +109,7 @@ public class BaseDataForm extends BaseForumForm {
   public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
     List<Topic> topics = new ArrayList<Topic>();
     Forum forum = getForumService().getForum(categoryId, forumId);
-    boolean isMode = (getUserProfile().getUserRole() == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()));
+    boolean isMode = (getUserProfile().getUserRole() == 0 || ForumServiceUtils.isModerator(forum.getModerators(), userProfile.getUserId()));
     for (Topic topic : getForumService().getTopics(categoryId, forumId)) {
       if (topic.getId().equalsIgnoreCase(topicId)) {
         if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
@@ -122,10 +120,10 @@ public class BaseDataForm extends BaseForumForm {
         if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() ||
              topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
           continue;
-        if (!canViewPosts.contains(categoryId) && canViewPosts.contains(forumId) && topic.getCanView().length > 0 && 
+        if (!canViewPosts.contains(categoryId) && canViewPosts.contains(forumId) &&
             !ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()))
           continue;
-        if (!canAddPosts.contains(categoryId) && canAddPosts.contains(forumId) && topic.getCanPost().length > 0 && 
+        if (!canAddPosts.contains(categoryId) && canAddPosts.contains(forumId) && 
             !ForumServiceUtils.hasPermission(topic.getCanPost(), userProfile.getUserId()))
           continue;
       }

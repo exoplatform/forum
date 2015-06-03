@@ -109,7 +109,7 @@ public class KSDataLocation {
     this.creator = creator;
     this.workspace = getParam(params, WORKSPACE_PARAM, DEFAULT_WORKSPACE_NAME);
     this.repositoryService = repositoryService;
-    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
+    this.sessionManager = new JCRSessionManager(workspace);
     initPathes();
   }
 
@@ -120,13 +120,13 @@ public class KSDataLocation {
   public KSDataLocation(String workspace, RepositoryService repositoryService) {
     this.workspace = workspace;
     this.repositoryService = repositoryService;
-    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
+    this.sessionManager = new JCRSessionManager(workspace);
     initPathes();
   }
 
   public KSDataLocation(String workspace) {
     this.workspace = workspace;
-    this.sessionManager = new JCRSessionManager(workspace, null);
+    this.sessionManager = new JCRSessionManager(workspace);
     initPathes();
   }
 
@@ -163,7 +163,7 @@ public class KSDataLocation {
    */
   public void setLocation(DataLocationPlugin plugin) {
     this.workspace = plugin.getWorkspace();
-    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
+    this.sessionManager = new JCRSessionManager(workspace);
   }
 
   /**

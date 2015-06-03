@@ -18,9 +18,7 @@ package org.exoplatform.forum.common.jcr;
 
 import javax.jcr.Session;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 public class JCRSessionManager implements SessionManager {
@@ -30,18 +28,11 @@ public class JCRSessionManager implements SessionManager {
 
   String                                    workspaceName  = "portal-system";
 
-  RepositoryService                         repositoryService;
-
   /**
    * Constructor
    * @param workspace
    * @param repositoryService
    */
-  public JCRSessionManager(String workspace, RepositoryService repositoryService) {
-    this.workspaceName = workspace;
-    this.repositoryService = repositoryService;
-  }
-
   public JCRSessionManager(String workspace) {
     this.workspaceName = workspace;
   }
@@ -75,11 +66,7 @@ public class JCRSessionManager implements SessionManager {
   public Session getSession(SessionProvider sessionProvider) {
     Session session = null;
     try {
-      if (repositoryService == null) {
-        repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-      }
-      ManageableRepository repository = repositoryService.getCurrentRepository();
-      session = sessionProvider.getSession(workspaceName, repository);
+      session = sessionProvider.getSession(workspaceName, CommonsUtils.getRepository());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -119,11 +106,7 @@ public class JCRSessionManager implements SessionManager {
   public Session createSession() {
     Session session = null;
     try {
-      if (repositoryService == null) {
-        repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-      }
-      ManageableRepository repository = repositoryService.getCurrentRepository();
-      session = repository.getSystemSession(workspaceName);
+      session = CommonsUtils.getRepository().getSystemSession(workspaceName);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

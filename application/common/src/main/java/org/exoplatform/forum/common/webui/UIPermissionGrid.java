@@ -25,13 +25,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.portal.webui.container.UIContainer;
-import org.exoplatform.services.organization.GroupHandler;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event;
@@ -144,7 +140,7 @@ public class UIPermissionGrid extends UIContainer {
     return true;
   }
 
-  String getOwnersByPermission(String permission) {
+  protected String getOwnersByPermission(String permission) {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, Set<String>> entry : owners.entrySet()) {
       Set<String> permissions = entry.getValue();
@@ -156,29 +152,7 @@ public class UIPermissionGrid extends UIContainer {
     return sb.length() == 0 ? CommonUtils.EMPTY_STR : sb.substring(0, sb.length() - 1);
   }
 
-  String getDisplayNameOfOwner(String owner) throws Exception {
-    if (CommonUtils.isEmpty(owner) == true) {
-      return CommonUtils.EMPTY_STR;
-    }
-
-    OrganizationService service = (OrganizationService) PortalContainer.getInstance().getComponentInstanceOfType(OrganizationService.class);
-    UserHandler userHandler = service.getUserHandler();
-    GroupHandler groupHandler = service.getGroupHandler();
-    if (owner.contains(CommonUtils.SLASH)) {
-      if (owner.contains(CommonUtils.COLON)) {
-        String membership = owner.substring(0, owner.indexOf(CommonUtils.COLON));
-        String groupId = owner.substring(membership.length() + 1);
-        String groupName = groupHandler.findGroupById(groupId).getGroupName();
-        return membership + " in " + groupName;
-      }
-      return groupHandler.findGroupById(owner).getGroupName();
-    } else {
-      User user = userHandler.findUserByName(owner);
-      String displayName = user.getDisplayName();
-      if (CommonUtils.isEmpty(displayName) || owner.equals(displayName)) {
-        displayName = user.getFirstName() + CommonUtils.SPACE + user.getLastName();
-      }
-      return displayName;
-    }
+  protected String getDisplayNameOfOwner(String owner) throws Exception {
+    return UserHelper.getDisplayNameOfOwner(owner);
   }
 }
