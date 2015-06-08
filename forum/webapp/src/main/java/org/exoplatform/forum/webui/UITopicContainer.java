@@ -126,6 +126,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private boolean                enableIPLogging   = true;
 
   private boolean                isShowActive      = false;
+  
+  private static boolean         isMergeCase       = false;
 
   public String                   openTopicId      = ForumUtils.EMPTY_STR;
 
@@ -784,6 +786,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         warning("UIForumPortlet.msg.topicEmpty", false);
       } else if (topicIdNotExist.size() > 1) {
         warning("UIForumPortlet.msg.listTopicEmpty", false);
+      } else if (isMergeCase) {
+        warning("UITopicDetail.msg.notCheckTopicMerge");
       } else {
         warning("UITopicDetail.msg.notCheckTopic");
       }
@@ -1031,7 +1035,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         popupAction.activate(mergeTopicForm, 560, 260);
         context.addUIComponentToUpdateByAjax(popupAction);
       } else {
+        isMergeCase = true;
         warningMessage();
+        isMergeCase = false;
       }
       context.addUIComponentToUpdateByAjax(uiTopicContainer);
     }
