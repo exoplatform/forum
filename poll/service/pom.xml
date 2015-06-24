@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-poll</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.2.x-SNAPSHOT</version>
+    <version>4.2.0</version>
   </parent>
   <artifactId>forum-poll-service</artifactId>
   <name>Forum Poll Service</name>
