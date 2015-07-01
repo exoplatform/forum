@@ -3135,11 +3135,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
         String query = Utils.getSQLQuery(isApproved, isHidden, isHidden, userLogin).toString();
         if (query.isEmpty() == false) {
-          sqlQuery.append(" AND (").append(sqlQuery).append(")");
+          sqlQuery.append(" AND (").append(query).append(")");
         }
         Calendar cal = postNode.getProperty(EXO_CREATED_DATE).getDate();
         sqlQuery.append(" AND (").append(EXO_CREATED_DATE).append(" <= TIMESTAMP '").append(ISO8601.format(cal)).append("')");
-        //
         NodeIterator iter = getNodeIteratorBySQLQuery(sProvider, sqlQuery.toString(), 0, 0, false);
         long size = iter.getSize();
         boolean isView = false;
@@ -3156,9 +3155,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         return size;
       }
     } catch (Exception e) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Exception occurs when get last read index", e);
-      }
+      LOG.error("Exception occurs when getting last read index", e);
     }
     return 0;
   }
@@ -3874,31 +3871,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         // validate permission and remove duplicate email
         // Watched on category
         int i = 0;
+        List<String> removeEmail = new ArrayList<String>();
         for (String user : userListCategory) {
           if(!canReceiveNotification(topicNode, user)) {
-            emailListCategory.remove(i);
+            removeEmail.add(emailListCategory.get(i));
           }
           ++i;
         }
+        emailListCategory.removeAll(removeEmail);
+        removeEmail.clear();
         // Watched on forum
         i = 0;
         for (String user : userListForum) {
           if(userListCategory.contains(user)
               || !canReceiveNotification(topicNode, user)) {
-            emailListForum.remove(i);
+            removeEmail.add(emailListForum.get(i));
           }
           ++i;
         }
+        emailListForum.removeAll(removeEmail);
+        removeEmail.clear();
         // Watched on topic
         i = 0;
         for (String user : userListTopic) {
           if(userListCategory.contains(user)
               || userListForum.contains(user)
               || !canReceiveNotification(topicNode, user)) {
-            emailListTopic.remove(i);
+            removeEmail.add(emailListTopic.get(i));
           }
           ++i;
         }
+        emailListTopic.removeAll(removeEmail);
         // Owner Notify
         if (isApprovePost) {
           String owner = topicReader.string(EXO_OWNER);

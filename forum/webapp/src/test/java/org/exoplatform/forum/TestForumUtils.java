@@ -456,4 +456,21 @@ public class TestForumUtils extends TestCase {
         ForumUtils.getCalculateListEmail(s));
   }
 
+  public void testReplaceStateURL() {
+    assertEquals(ForumUtils.EMPTY_STR, ForumUtils.replaceStateURL(null));
+    assertEquals(ForumUtils.EMPTY_STR, ForumUtils.replaceStateURL(""));
+    //
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum/test');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/test"));
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/lastpost"));
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/lastpost/false"));
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/lastpost/true"));
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/false"));
+    assertEquals("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', 'http://localhost:8080/portal/forum');} })();",
+                 ForumUtils.replaceStateURL("http://localhost:8080/portal/forum/true"));
+  }
 }
