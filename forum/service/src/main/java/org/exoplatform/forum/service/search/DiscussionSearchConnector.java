@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.exoplatform.commons.api.search.SearchServiceConnector;
@@ -30,6 +32,7 @@ import org.exoplatform.portal.mop.navigation.NodeModel;
 import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.resources.ResourceBundleService;
 import org.exoplatform.services.security.ConversationState;
 
 
@@ -50,9 +53,10 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final String FORUM_PAGE_NAGVIGATION = "forum";
 
   private static final String FORUM_PORTLET_NAME     = "ForumPortlet";
-  
-  private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
+  private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";
+
+  protected String language;
 
   public DiscussionSearchConnector(InitParams initParams, DataStorage storage) {
     super(initParams);
@@ -60,15 +64,27 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   }
   
   @Override
-  public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order) {
+  public Collection<SearchResult> search(SearchContext context, String query, Collection<String> sites, int offset, int limit, String sort, String order, String language) {
     List<SearchResult> results = new ArrayList<SearchResult>();
     if (CommonUtils.isEmpty(query)) {
       return results;
     }
+    setLanguage(language);
     ExoContainerContext eXoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer()
         .getComponentInstanceOfType(ExoContainerContext.class);
     String portalName = eXoContext.getPortalContainerName();
     String currentUser = getCurrentUserName();
+    ResourceBundle resourceBundle = null;
+    ResourceBundleService resourceBundleService = (ResourceBundleService) ExoContainerContext.getCurrentContainer().getComponentInstance(ResourceBundleService.class);
+    if(resourceBundleService != null) {
+      String[] sharedResourceBundleNames = resourceBundleService.getSharedResourceBundleNames();
+      for (String resourceBundleName : sharedResourceBundleNames) {
+        if (resourceBundleName.equals("locale.forum.discussion")) {
+          resourceBundle = resourceBundleService.getResourceBundle(resourceBundleName, Locale.forLanguageTag(getLanguage()));
+          break;
+        }
+      }
+    }
     try {
       List<ForumSearchResult> searchResults = storage.getUnifiedSearch(query, currentUser, offset, limit, sort, order);
       for (ForumSearchResult searchResult : searchResults) {
@@ -77,9 +93,9 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
         Topic topic = storage.getTopicByPath(id.getTopicPath(), false);
         StringBuilder sb = new StringBuilder();
         sb.append(forum.getForumName());
-        sb.append(" - " + topic.getPostCount() + " replies");
+        sb.append(" - " + topic.getPostCount() + " " + (resourceBundle != null ? resourceBundle.getString("DiscussionSearchConnector.reply") : "replies"));
         //sb.append(" - " + topic.getVoteRating());
-        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE, Locale.forLanguageTag(getLanguage()));
         sb.append(" - " + sdf.format(searchResult.getCreatedDate()));        
         String uri = buildLink(context, portalName, id.getCategoryId(), id.getForumId(), id.getTopicId(), topic.getLink());
         String postUri = (searchResult.getType().equals(Utils.POST) ? CommonUtils.SLASH + searchResult.getId() : CommonUtils.EMPTY_STR); 
@@ -273,4 +289,11 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
     return ConversationState.getCurrent().getIdentity().getUserId();
   }
 
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
 }
