@@ -125,9 +125,6 @@
       <as>utils</as>
     </depends>
     <depends>
-      <module>commons-cometd</module>
-    </depends>
-    <depends>
       <module>jquery</module>
       <as>gj</as>
     </depends> 
@@ -143,8 +140,8 @@
       <as>utils</as>
     </depends>
     <depends>
-      <module>commons-cometd</module>
-      <as>cometd</as>
+      <module>commons-cometd3</module>
+      <as>cCometd</as>
     </depends>
     <depends>
       <module>jquery</module>
@@ -166,8 +163,8 @@
       <as>gj</as>
     </depends>
     <depends>
-      <module>commons-cometd</module>
-      <as>cometd</as>
+      <module>commons-cometd3</module>
+      <as>cCometd</as>
     </depends>
   </module>
 
@@ -190,4 +187,3 @@
   </module>
 
 </gatein-resources>
-

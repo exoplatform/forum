@@ -5463,6 +5463,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       messageNode.setProperty(EXO_IS_UNREAD, true);
       messageNode.setProperty(EXO_TYPE, Utils.RECEIVE_MESSAGE);
     }
+    StringBuilder sent = new StringBuilder();
     for (String userName : userNames) {
       if (userName.equals(userNameFirst))
         continue;
@@ -5478,9 +5479,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
         profileNode.setProperty(EXO_NEW_MESSAGE, 1);
       }
+      if(sent.length() > 0) {
+        sent.append(",");
+      }
+      sent.append(userName);
     }
     // send notification message for user
     privateMessage.setType("PrivateMessage");
+    //
+    privateMessage.setSendTo(sent.toString());
     sendNotificationMessage(privateMessage);
     if (messageNode != null) {
       messageNode.setProperty(EXO_TYPE, Utils.SEND_MESSAGE);
