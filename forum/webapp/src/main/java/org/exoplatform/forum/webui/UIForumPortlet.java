@@ -491,7 +491,8 @@ public class UIForumPortlet extends UIPortletApplication {
                .append("clickHere : \"").append(WebUIUtils.getLabelEscapedJavaScript(getId(), "ClickHere")).append("\", ")
                .append("title : \"").append(WebUIUtils.getLabelEscapedJavaScript(getId(), "Title")).append("\"")
                .append("});");
-      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
+      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() })
+                .require("SHARED/jquery_cometd", "cometd");
     }
   }
 
