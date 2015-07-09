@@ -10,7 +10,7 @@
     "    .on('click'," +
     "        function() {" +
     "          var input = jq('input#${uicomponent.PERMISSION_INPUT}');" +
-    "          var eventURL = '" + eventURL + "&objectId=' + input.val();" +
+    "          var eventURL = '" + eventURL + "&objectId=' + encodeURIComponent(input.val());" +
     "          input.val('');" +
     "          processInput(input);" +
     "          window.ajaxGet(eventURL);" +
