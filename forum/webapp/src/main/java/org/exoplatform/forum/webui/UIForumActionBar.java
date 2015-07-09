@@ -130,7 +130,8 @@ public class UIForumActionBar extends UIContainer {
       init.append(userProfile.getUserId()).append("', '")
           .append(getUserToken()).append("', '")
           .append(getCometdContextName()).append("');");
-      ForumUtils.addScripts("ForumTotalJob", "forumJob", init.toString());
+      ForumUtils.addScripts("ForumTotalJob", "forumJob", init.toString())
+                .require("SHARED/jquery_cometd", "cometd");
     }
     ForumUtils.addScripts("UIForumPortlet", "forumPortlet", scripts.toArray(new String[]{}));
   }

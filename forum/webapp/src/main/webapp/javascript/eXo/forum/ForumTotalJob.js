@@ -1,31 +1,22 @@
-(function(Cometd, $, window, document) {
+(function(cCometD, $, window, document) {
   var ForumTotalJob = {
     currentUser : '',
     init : function(eXoUser, eXoToken, contextName) {
-      ForumTotalJob.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
       if (String(eXoToken)) {
-        if (!Cometd.isConnected()) {
-          if (ForumTotalJob.currentUser !== eXoUser || ForumTotalJob.currentUser === '') {
-            ForumTotalJob.currentUser = eXoUser;
-            document.cookie = 'forumCurrentUserId=' + escape(eXoUser) + ';path=/portal';
-            Cometd._connecting = false;
-            Cometd.currentTransport = null;
-            Cometd.clientId = null;
-          }
-          Cometd.url = '/' + contextName + '/cometd';
-          Cometd.exoId = eXoUser;
-          Cometd.exoToken = eXoToken;
-          Cometd.addOnConnectionReadyCallback(ForumTotalJob.subcribeCometdTopics);
-          Cometd.init(Cometd.url);
-        } else {
-          ForumTotalJob.subcribeCometdTopics();
-        }
+        var me = ForumTotalJob;
+        if(!me.Cometd) me.Cometd = cCometD;
+        var loc = window.location;
+        me.Cometd.configure({
+            url: loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '')  + '/' + contextName + '/cometd',
+            'exoId': eXoUser, 'exoToken': eXoToken
+        });
+        if (me.currentUser !== eXoUser || me.currentUser === '') {
+          me.currentUser = eXoUser;
+          me.Cometd.subscribe('/eXo/Application/Forum/messages', null, function(eventObj) {
+            me.alarm(eventObj);
+          });
+        }//end user
       }
-    },
-    subcribeCometdTopics : function() {
-      Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {
-        ForumTotalJob.alarm(eventObj);
-      });
     },
     alarm : function(eventObj) {
       var a = JSON.parse(eventObj.data);
@@ -44,5 +35,4 @@
   };
 
   return ForumTotalJob;
-
-})(cometd, gj, window, document);
+})(cCometd, gj, window, document);
