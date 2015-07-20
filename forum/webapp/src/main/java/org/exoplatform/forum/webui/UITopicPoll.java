@@ -312,6 +312,7 @@ public class UITopicPoll extends BaseForumForm {
       topicPoll.poll_ = topicPoll.getPoll();
       pollForm.setUpdatePoll(topicPoll.poll_, true);
       popupAction.activate(pollForm, 662, 466);
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 
