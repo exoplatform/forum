@@ -1,5 +1,5 @@
-(function(Cometd, $, document, window) {
-  
+(function(cCometD, $, document, window) {
+
   var ForumSendNotification = {
       i18n : {
           notification : "Notification",
@@ -21,34 +21,26 @@
     ForumSendNotification.i18n = $.extend(true, {}, ForumSendNotification.i18n, i18n);
     ForumSendNotification.portletId = portletId || ForumSendNotification.portletId;
     ForumSendNotification.postLink = postLink || ForumSendNotification.postLink;
-    ForumSendNotification.currentUser = $.trim(eXo.core.Browser.getCookie('forumCurrentUserId') || '');
+    ForumSendNotification.currentUser = '';
   };
 
   ForumSendNotification.initCometd = function(eXoUser, eXoToken, contextName) {
-    if (String(eXoToken) != '') {
-      if (Cometd.isConnected() === false) {
-        if (ForumSendNotification.currentUser !== eXoUser || ForumSendNotification.currentUser === '') {
-          ForumSendNotification.currentUser = eXoUser;
-          document.cookie = 'forumCurrentUserId=' + escape(eXoUser) + ';path=/portal';
-          Cometd._connecting = false;
-          Cometd.currentTransport = null;
-          Cometd.clientId = null;
-        }
-        Cometd.url = '/' + contextName + '/cometd';
-        Cometd.exoId = eXoUser;
-        Cometd.exoToken = eXoToken;
-        Cometd.addOnConnectionReadyCallback(ForumSendNotification.subcribeCometdSendNotification);
-        Cometd.init(Cometd.url);
-      } else {
-        ForumSendNotification.subcribeCometdSendNotification();
-      }
-    }
-  };
+    if (String(eXoToken)) {
+      var me = ForumSendNotification;
+      if(!me.Cometd) me.Cometd = cCometD;
+      var loc = window.location;
+      me.Cometd.configure({
+          url: loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '')  + '/' + contextName + '/cometd',
+          'exoId': eXoUser, 'exoToken': eXoToken
+      });
 
-  ForumSendNotification.subcribeCometdSendNotification = function() {
-    Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', function(eventObj) {
-      ForumSendNotification.createMessage(JSON.parse(eventObj.data))
-    });
+      if (me.currentUser !== eXoUser || me.currentUser === '') {
+        me.currentUser = eXoUser;
+        me.Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', null, function(eventObj) {
+          me.createMessage(JSON.parse(eventObj.data))
+        });
+      }//end user
+    }
   };
   
   ForumSendNotification.getPlainText = function(str) {
@@ -148,4 +140,4 @@
   };
   return ForumSendNotification;
 
-})(cometd, gj, document, window);
+})(cCometd, gj, document, window);

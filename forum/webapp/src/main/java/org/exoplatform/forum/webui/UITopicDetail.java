@@ -516,11 +516,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) {
     List<String> actions = new ArrayList<String>();
     if(getUserProfile().getUserRole() < 3 ) {
-      if(!userProfile.getUserId().equals(owner.getUserId())) {
-        actions.add("Quote");
-        if(!owner.isDisabled()){
-          actions.add("PrivatePost");
-        }
+      actions.add("Quote");
+      if(!owner.isDisabled()){
+        actions.add("PrivatePost");
       }
       if (!isFirstPost && (actions.isEmpty() || isModerator())) {
         actions.add("Delete");

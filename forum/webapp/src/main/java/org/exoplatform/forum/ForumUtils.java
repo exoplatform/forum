@@ -660,7 +660,6 @@ public class ForumUtils {
     return WebUIUtils.addScripts(module, alias, scripts);
   }
   
-
   public static UserProfile getDeletedUserProfile(ForumService forumService, String userName) {
     UserProfile profile;
     try {
@@ -675,6 +674,17 @@ public class ForumUtils {
     return profile;
   }
   
+  public static String replaceStateURL(String fullUrl) {
+    if (isEmpty(fullUrl)) {
+      return EMPTY_STR;
+    }
+    fullUrl = fullUrl.replaceFirst("/false", "").replaceFirst("/true", "").replaceFirst("/lastpost", "");
+    StringBuilder newURL = new StringBuilder();
+    newURL.append("(function(){ if(window.history.replaceState) { window.history.replaceState({}, '', '")
+          .append(fullUrl).append("');} })();");
+    return newURL.toString();
+  }
+
   /**
    * Get list actions that current user login can active on owner user
    * 

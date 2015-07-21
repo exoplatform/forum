@@ -491,7 +491,8 @@ public class UIForumPortlet extends UIPortletApplication {
                .append("clickHere : \"").append(WebUIUtils.getLabelEscapedJavaScript(getId(), "ClickHere")).append("\", ")
                .append("title : \"").append(WebUIUtils.getLabelEscapedJavaScript(getId(), "Title")).append("\"")
                .append("});");
-      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() });
+      ForumUtils.addScripts("ForumSendNotification", "forumNotify", new String[] { initParam.toString(), init.toString() })
+                .require("SHARED/jquery_cometd", "cometd");
     }
   }
 
@@ -769,8 +770,7 @@ public class UIForumPortlet extends UIPortletApplication {
                 showWarningMessage(context, "UIPostForm.msg.no-permission", ForumUtils.EMPTY_STR);
               }
               String fullUrl = ((HttpServletRequest) Util.getPortalRequestContext().getRequest()).getRequestURL().toString();
-              String newURL = fullUrl.replaceFirst("/false", "").replaceFirst("/true", "");
-              context.getJavascriptManager().getRequireJS().addScripts("(function(){window.history.replaceState({}, '', '" + newURL + "');})();");
+              context.getJavascriptManager().getRequireJS().addScripts(ForumUtils.replaceStateURL(fullUrl));
             }
             if (!UserHelper.isAnonim()) {
               this.forumService.updateTopicAccess(userProfile.getUserId(), topic.getId());
