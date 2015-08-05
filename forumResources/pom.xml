@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.3.x-SNAPSHOT</version>
+    <version>4.3.0-M2</version>
   </parent>
   <artifactId>forum-forumResources</artifactId>
   <packaging>war</packaging>
