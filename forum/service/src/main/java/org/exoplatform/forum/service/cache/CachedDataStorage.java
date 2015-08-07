@@ -1769,6 +1769,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.clearCache();
     //
     miscData.clearCache();
+    watchListData.clearCache();
   }
 
   public void processEnabledUser(String userName, String email, boolean isEnabled) {
