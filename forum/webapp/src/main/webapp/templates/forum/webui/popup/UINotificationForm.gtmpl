@@ -5,7 +5,7 @@
       <%
         String classCss = "" ; 
         int i = 0;
-        for(String tabcontent : uicomponent.getChildren()){ 
+        for(tabcontent in uicomponent.getChildren()){
           String link = "javascript:void(0);";
           String tabId = tabcontent.getId();
           String paneId = uicomponent.getId();
