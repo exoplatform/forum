@@ -16,11 +16,23 @@
  */
 package org.exoplatform.forum.service.conf;
 
+import javax.jcr.Node;
+
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.service.ForumNodeTypes;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.MembershipEventListener;
 
 public class ForumMembershipEventListener extends MembershipEventListener {
+  
+  private Log LOG = ExoLogger.getLogger(ForumMembershipEventListener.class);
+  
+  public static final String PLATFORM_ADMIN_GROUP = "/platform/administrators";
 
   @Override
   public void preSave(Membership m, boolean isNew) throws Exception {
@@ -31,4 +43,20 @@ public class ForumMembershipEventListener extends MembershipEventListener {
   public void preDelete(Membership m) throws Exception {
     ForumServiceUtils.clearCache();
   }
+  
+  @Override
+  public void postSave(Membership m, boolean isNew) throws Exception {
+    if (PLATFORM_ADMIN_GROUP.equals(m.getGroupId())) {
+      try {
+        KSDataLocation dataLocation = CommonsUtils.getService(KSDataLocation.class);
+        Node rootNode = dataLocation.getSessionManager().openSession().getRootNode();
+        Node userProfileNode = rootNode.getNode(dataLocation.getUserProfilesLocation()).getNode(m.getUserName());
+        userProfileNode.setProperty(ForumNodeTypes.EXO_USER_ROLE, 0);
+        userProfileNode.save();
+      } catch (Exception e) {
+        LOG.error("Failed to update user role : " + e.getMessage(), e);
+      }
+    }
+  }
+  
 }
