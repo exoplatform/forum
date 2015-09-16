@@ -369,7 +369,6 @@
 					if(checkeds == null) checkeds = new ArrayList<String>();
 					
 					if(posts != null && posts.size() > 0 && isShowPost) {
-						int checked = uiform.pageSelect - 1;
 						String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 						String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 						String shortDateFormat = userProfile.getShortDateFormat() ;
@@ -527,7 +526,7 @@
 								</div>
 								<%	 }
 									}
-									if(checked > 0) {
+									if(!post.getIsFirstPost()) {
 										String isChecked = "";
 										if(checkeds.contains(postId)){
 											isChecked = "checked=\"checked\"";

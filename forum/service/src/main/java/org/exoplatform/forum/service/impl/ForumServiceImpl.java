@@ -1296,7 +1296,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public List<String> getOnlineUsers() throws Exception {
-    List<String> onlineUsers = new ArrayList<String>();
+    List<String> onlineUsers = new LinkedList<String>();
     List<UserStateModel> onlines = userStateService.online();
     for (UserStateModel model : onlines) {
       onlineUsers.add(model.getUserId());
@@ -1309,9 +1309,8 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public String getLastLogin() throws Exception {
-    List<String> onlineUsers = getOnlineUsers();
-    int size = onlineUsers.size();
-    return (size > 0) ? onlineUsers.get(size - 1) : "";
+    UserStateModel model = userStateService.lastLogin();
+    return (model != null) ? model.getUserId() : "";
   }
 
   /**

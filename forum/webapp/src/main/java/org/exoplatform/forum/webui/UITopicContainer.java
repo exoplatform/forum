@@ -192,7 +192,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId));
     forumPortlet.updateAccessForum(forumId);
     cleanCheckedList();
-    setForum(true);
   }
 
   public boolean getIsAutoPrune() throws Exception {
@@ -213,7 +212,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId));
     }
     cleanCheckedList();
-    setForum(true);
   }
 
   protected String getActionViewInfoUser(String linkType, String userName) {
@@ -224,10 +222,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return this.canAddNewThread;
   }
 
-  public void setForum(boolean isSetModerator) throws Exception {
-    this.forum = getForum();
+  private void processForumPermission() throws Exception {
     this.canAddNewThread = true;
-    moderators = ForumServiceUtils.getUserPermission(forum.getModerators());
+    moderators = ForumServiceUtils.getUserPermission(getForum().getModerators());
     String userId = getUserProfile().getUserId();
     isModerator = (userProfile.getUserRole() == 0 || (!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId))) ? true : false;
     boolean isCheck = true;
@@ -258,11 +255,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private Forum getForum() throws Exception {
-    return getForumService().getForum(categoryId, forumId);
+    return (this.forum = getForumService().getForum(categoryId, forumId));
   }
 
   protected void initPage() throws Exception {
     setListWatches();
+    processForumPermission();
     objectId = forumId;
     if (getUserProfile() == null) {
       userProfile = new UserProfile();
@@ -271,7 +269,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     TopicFilter filter = new TopicFilter(categoryId, forumId);
     filter.isAdmin(isModerator)
           .userLogin(userProfile.getUserId())
-          .isApproved(forum.getIsModerateTopic());
+          .isApproved(getForum().getIsModerateTopic());
     if (isModerator == false) {
       filter.viewers(ForumUtils.arraysMerge(forum.getViewer(), getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER)));
     }
@@ -391,7 +389,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       } else {
         String isApprove = ForumUtils.EMPTY_STR;
         String userLogin = userProfile.getUserId();
-        if (this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+        if (getForum().getIsModeratePost() || topic.getIsModeratePost()) {
           if (!(topic.getOwner().equals(userLogin))) {
             isApprove = "true";
           }
@@ -635,7 +633,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         forum.setIsLock(isLock);
         forum.setIsClosed(isClosed);
         uiTopicContainer.getForumService().modifyForum(forum, modifyType);
-        uiTopicContainer.setForum(true);
       } catch (Exception e) {
         warning(String.format("UITopicContainer.msg.fail-%s-forum", action), false);
         uiTopicContainer.log.debug(String.format("Failed to %s forum %s", action, uiTopicContainer.forumId), e);

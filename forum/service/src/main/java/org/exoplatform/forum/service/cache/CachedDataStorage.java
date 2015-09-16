@@ -759,10 +759,14 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
     storage.saveForum(categoryId, forum, isNew);
+    //
     clearForumCache(forum, true);
     clearForumListCache();
     clearLinkListCache();
     clearObjectCache(forum, true);
+    //
+    clearTopicListCache(forum.getId());
+    clearTopicListCountCache(forum.getId());
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);
     //
@@ -1765,6 +1769,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     categoryList.clearCache();
     //
     miscData.clearCache();
+    watchListData.clearCache();
   }
 
   public void processEnabledUser(String userName, String email, boolean isEnabled) {

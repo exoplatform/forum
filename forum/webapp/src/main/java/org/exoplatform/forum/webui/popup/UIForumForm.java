@@ -459,7 +459,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
         forumDescription.setForum(newForum);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
         breadcumbs.setUpdataPath(categoryId + ForumUtils.SLASH + newForum.getId());
-        forumPortlet.findFirstComponentOfType(UITopicContainer.class).setForum(true);
         context.addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
