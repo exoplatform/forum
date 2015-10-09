@@ -163,7 +163,7 @@
 				
 				
 				<li class="defaultStyle forumSeparatorLine">
-					<a class="actionIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i>RSS</a>
+					<a class="actionIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> RSS</a>
 				</li>
 				
 				
