@@ -22,7 +22,7 @@
       }
       utils.onResize(UIForumPortlet.resizeCallback);
 
-      $.each($('ul.dropdown-menu').find('a'), function(i, item){
+      $.each(jportlet.find('ul.dropdown-menu').find('a'), function(i, item){
         $(item).on('click', function(){
           $(this).parents('.dropdown').removeClass('open');
         })

@@ -78,11 +78,7 @@
               newDiv = gj('<div><span></span></div>');
               newDiv.addClass('ClosePopup');
               closeButton.append(newDiv);
-            }
-            var w = closeButton.outerWidth();
-            var h = closeButton.outerHeight();
-            newDiv.css('width', ((w > 0) ? w : 22) + 'px');
-            newDiv.css('height', ((h > 0) ? h : 16) + 'px');
+            }            
             newDiv.on('click', function(event) {
               jmaskLayer.css('width', 'auto').css('height', 'auto');
             });
