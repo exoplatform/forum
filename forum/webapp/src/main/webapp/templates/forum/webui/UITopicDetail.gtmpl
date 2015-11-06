@@ -447,7 +447,18 @@
 							</a>
 							<%=uicomponent.getMenuUser(userInfo) %>
 						</div>
-						<div class="rank"><%=userInfo.getUserTitle();%></div>
+						<%
+							if(uicomponent.isModerator(owner)) {
+						%>
+								<div class="rank"><%=_ctx.appRes("UIForumPortlet.label.PermissionModerator")%></div>
+                        <%
+							} else {
+						%>
+								<div class="rank"><%=_ctx.appRes("UIForumPortlet.label.PermissionUser")%></div>
+
+						<%
+							}
+						%>
 						<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
 							if(isDisplayAvatar) {
 						%>

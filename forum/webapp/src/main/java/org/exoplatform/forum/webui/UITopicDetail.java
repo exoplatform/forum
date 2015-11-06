@@ -434,6 +434,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return isMod;
   }
 
+  protected boolean isModerator(String username) {
+    try {
+      return (getUserInfo(username).getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.isModerator(forum.getModerators(), username));
+    } catch (Exception e) {
+      log.warn("Failed to load userProfile : "+e.getMessage(),e);
+    }
+    return false;
+  }
+
   private Topic getTopic() throws Exception {
     try {
       if (this.isEditTopic || this.topic == null) {
