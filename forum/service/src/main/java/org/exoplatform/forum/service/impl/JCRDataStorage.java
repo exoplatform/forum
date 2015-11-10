@@ -2979,7 +2979,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     String headerSubject = new StringBuilder("[").append(new PropertyReader(destForumNode.getParent()).string(EXO_NAME)).append("][").append(forumName).append("] ").toString();
     MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, headerSubject, true);
-    messageBuilder.setOwner(getScreenName(sProvider, owner));
+    messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, owner)));
     messageBuilder.setAddType(forumName);
     messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
     // ----------------------- finish ----------------------
@@ -3827,7 +3827,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         messageBuilder.setAddName(topic.getTopicName());
         messageBuilder.setMessage(topic.getDescription());
         messageBuilder.setCreatedDate(topic.getCreatedDate());
-        messageBuilder.setOwner(owner);
+        messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(owner));
         if(Utils.isEmpty(messageBuilder.getLink())) {
           messageBuilder.setLink(topic.getLink());
         }
@@ -3929,7 +3929,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         emailListForum.addAll(forumReader.list(EXO_NOTIFY_WHEN_ADD_POST, new ArrayList<String>()));
         //
         String fullName = getScreenName(sProvider, post.getOwner());
-        messageBuilder.setOwner(fullName);
+        messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(fullName));
         messageBuilder.setId(post.getId());
         messageBuilder.setAddType(Utils.POST);
         messageBuilder.setAddName(post.getName());
@@ -4256,7 +4256,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, objectName, true);
     String topicName = destTopicNode.getProperty(EXO_NAME).getString();
     String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString();
-    messageBuilder.setOwner(getScreenName(sProvider, ownerTopic));
+    messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, ownerTopic)));
     messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topicName);
     messageBuilder.setAddType(topicName);
     link = link.replaceFirst("pathId", destTopicNode.getName());
