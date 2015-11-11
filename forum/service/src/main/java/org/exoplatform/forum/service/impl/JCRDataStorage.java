@@ -2977,8 +2977,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (Utils.isEmpty(owner)) {
       owner = topics.get(0).getEditReason();
     }
-    String headerSubject = new StringBuilder("[").append(new PropertyReader(destForumNode.getParent()).string(EXO_NAME)).append("][").append(forumName).append("] ").toString();
+    String categoryName = new PropertyReader(destForumNode.getParent()).string(EXO_NAME, "");
+    String headerSubject = new StringBuilder("[").append(categoryName).append("][").append(forumName).append("] ").toString();
     MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, headerSubject, true);
+    messageBuilder.setCatName(categoryName);
+    messageBuilder.setForumName(forumName);
+    messageBuilder.setTopicName(CommonUtils.EMPTY_STR);
     messageBuilder.setOwner(getScreenName(sProvider, owner));
     messageBuilder.setAddType(forumName);
     messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
@@ -4250,12 +4254,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     } else {
       forumHomeNode.save();
     }
-    String objectName = new StringBuilder("[").append(destForumNode.getParent().getProperty(EXO_NAME).getString())
-                                              .append("][").append(destForumNode.getProperty(EXO_NAME).getString()).append("] ").toString();
+    String categoryName = destForumNode.getParent().getProperty(EXO_NAME).getString();
+    String forumName = destForumNode.getProperty(EXO_NAME).getString();
+    String objectName = new StringBuilder("[").append(categoryName).append("][").append(forumName).append("] ").toString();
 
     MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, objectName, true);
     String topicName = destTopicNode.getProperty(EXO_NAME).getString();
     String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString();
+    messageBuilder.setCatName(categoryName);
+    messageBuilder.setForumName(forumName);
+    messageBuilder.setTopicName(CommonUtils.EMPTY_STR);
     messageBuilder.setOwner(getScreenName(sProvider, ownerTopic));
     messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topicName);
     messageBuilder.setAddType(topicName);
