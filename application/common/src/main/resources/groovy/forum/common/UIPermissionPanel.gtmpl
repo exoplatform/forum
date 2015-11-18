@@ -5,33 +5,35 @@
   eventURL = eventURL.substring("javascript:ajaxGet('".length(), eventURL.length() - 2);
   
   String script = 
-  "(function(jq) {" +
-    "jq('#${uicomponent.id} .addButton')" +
-    "    .on('click'," +
-    "        function() {" +
-    "          var input = jq('input#${uicomponent.PERMISSION_INPUT}');" +
-    "          var eventURL = '" + eventURL + "&objectId=' + encodeURIComponent(input.val());" +
-    "          input.val('');" +
-    "          processInput(input);" +
-    "          window.ajaxGet(eventURL);" +
-    "        });" +
+  "(function(jq) {\n" +
+    "jq('#${uicomponent.id} .addButton')\n" +
+    "    .on('click',\n" +
+    "        function() {\n" +
+    "          var input = jq('input#${uicomponent.PERMISSION_INPUT}');\n" +
+    "          var eventURL = '" + eventURL + "&objectId=' + encodeURIComponent(input.val());\n" +
+    "          input.val('');\n" +
+    "          var error = new Error();\n" +
+    "          console.log(error.stack);\n" +
+    "          processInput(input);\n" +
+    "          window.ajaxGet(eventURL);\n" +
+    "        });\n" +
 //
-    "function processInput(thizz) {" +
-    "  var val = thizz.val();" +
-    "  if (jq.trim(val).length == 0) {" +
-    "    jq('#${uicomponent.id} .addButton').attr('disabled', 'disabled');" +
-    "  } else {" +
-    "    jq('#${uicomponent.id} .addButton').removeAttr('disabled');" +
-    "  }" +
-    "}" +
+    "function processInput(thizz) {\n" +
+    "  var val = thizz.val();\n" +
+    "  if (jq.trim(val).length == 0) {\n" +
+    "    jq('#${uicomponent.id} .addButton').attr('disabled', 'disabled');\n" +
+    "  } else {\n" +
+    "    jq('#${uicomponent.id} .addButton').removeAttr('disabled');\n" +
+    "  }\n" +
+    "}\n" +
 //
-    "var input = jq('#${uicomponent.id} #${uicomponent.PERMISSION_INPUT}')" +
-    "     .on('keyup', function() { processInput(jq(this)); });" +
-    "jq('#${uicomponent.id}').find('[rel=tooltip]').tooltip();" +
+    "var input = jq('#${uicomponent.id} #${uicomponent.PERMISSION_INPUT}')\n" +
+    "     .on('keyup', function() { processInput(jq(this)); });\n" +
+    "jq('#${uicomponent.id}').find('[rel=tooltip]').tooltip();\n" +
 //
-    "processInput(input);" +
+    "processInput(input);\n" +
 
-  "})(gj);";
+  "})(gj);\n";
 
   WebUIUtils.addScripts("bts_tooltip", null);
   WebUIUtils.addScripts("jquery", "gj", script);

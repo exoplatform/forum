@@ -148,6 +148,7 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       String value = event.getRequestContext().getRequestParameter(OBJECTID);
       String errorUser = UserHelper.checkValueUser(value);
       if (CommonUtils.isEmpty(errorUser) == false) {
+        ((UIFormStringInput)panel.getChildById(PERMISSION_INPUT)).setValue("");       
         WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
         ApplicationMessage message = new ApplicationMessage("UserNameValidator.msg.error-input", 
                                                             new String[] { String.format("\"%s\"", errorUser) }, 
