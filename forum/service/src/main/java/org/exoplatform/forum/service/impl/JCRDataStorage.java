@@ -8289,12 +8289,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private void processUserProfile(SessionProvider sProvider, String userName, boolean isEnabled) {
     try {
       Node profileHome = getUserProfileHome(sProvider);
-      Node profileNode = profileHome.getNode(userName);
-      if (!profileNode.isNodeType(EXO_DISABLED)) {
-        profileNode.addMixin(EXO_DISABLED);
+      if (profileHome.hasNode(userName)) {
+        Node profileNode = profileHome.getNode(userName);
+        if (!profileNode.isNodeType(EXO_DISABLED)) {
+          profileNode.addMixin(EXO_DISABLED);
+        }
+        profileNode.setProperty(EXO_IS_DISABLED, !isEnabled);
+        profileHome.getSession().save();
+      } else {
+        LOG.warn(String.format("Forum's profile(%s) not found!", userName));
       }
-      profileNode.setProperty(EXO_IS_DISABLED, !isEnabled);
-      profileHome.getSession().save();
+      
     } catch (Exception e) {
       logDebug(String.format("Process to to update status disabled/enabled of used %s is unsuccessfully.", userName), e);
     }
