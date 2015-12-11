@@ -43,13 +43,10 @@
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
 					String toUserId = mail.getSendTo();
-
                                         OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
-
                                         UserHandler userHandler = organizationService.getUserHandler();
                                         String toUserFullName = userHandler.findUserByName(toUserId).getFullName();    
 					toUserId = ForumUtils.getCalculateListEmail(toUserId);
-
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
