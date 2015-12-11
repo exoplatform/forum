@@ -7,8 +7,6 @@
         import org.exoplatform.services.organization.OrganizationService;
         import org.exoplatform.services.organization.UserHandler;
         import org.exoplatform.container.ExoContainerContext;
-
-
 	UserProfile userProfile = uicomponent.getUserProfile();
 	List InBoxmails = uicomponent.getPrivateMessages() ;
 %>
@@ -23,7 +21,7 @@
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
-				<th style="width:140px"> <%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
+				<th style="width:140px"><%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.Receivedate");%></th>
 				<th style="width:60px" class="center"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>
@@ -43,14 +41,9 @@
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
 					String fromUser = mail.getFrom();
-                                       
-                                       OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
-
+                                        OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
                                         UserHandler userHandler = organizationService.getUserHandler();
-                                        String fromUserFullName = userHandler.findUserByName(fromUser).getFullName();    
-                                        
-                                        
-
+                                        String fromUserFullName = userHandler.findUserByName(fromUser).getFullName();
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
