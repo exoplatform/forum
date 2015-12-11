@@ -4,6 +4,11 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.popup.UIViewPrivateMessage;
+        import org.exoplatform.services.organization.OrganizationService;
+        import org.exoplatform.services.organization.UserHandler;
+        import org.exoplatform.container.ExoContainerContext;
+
+
 	UserProfile userProfile = uicomponent.getUserProfile();
 	List InBoxmails = uicomponent.getPrivateMessages() ;
 %>
@@ -18,7 +23,7 @@
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
-				<th style="width:140px"><%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
+				<th style="width:140px"> <%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.Receivedate");%></th>
 				<th style="width:60px" class="center"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>
@@ -38,11 +43,19 @@
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
 					String fromUser = mail.getFrom();
+                                       
+                                       OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+
+                                        UserHandler userHandler = organizationService.getUserHandler();
+                                        String fromUserFullName = userHandler.findUserByName(fromUser).getFullName();    
+                                        
+                                        
+
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
 				<td><a href="javascript:void(0);" onclick="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
-				<td>$fromUser</td>
+				<td>$fromUserFullName</td>
 				<td>$strFromDate</td>
 				<td class="center">
 					<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("ReplyMessage", mailId)%>">
