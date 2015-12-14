@@ -433,9 +433,12 @@ public class UITopicForm extends BaseForumForm {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);
             //
             String userName = userProfile.getUserId();
+            topicTitle = CommonUtils.encodeScriptMarkup(topicTitle);
             topicNew.setTopicName(topicTitle);
             topicNew.setModifiedBy(userName);
             topicNew.setModifiedDate(currentDate);
+            //encode XSS script
+            message = CommonUtils.encodeScriptMarkup(message);
             topicNew.setDescription(message);
             topicNew.setLink(link);
             if (whenNewPost) {
@@ -470,6 +473,7 @@ public class UITopicForm extends BaseForumForm {
             messageBuilder.setLink(link);
             if (!ForumUtils.isEmpty(uiForm.topicId)) {
               topicNew.setId(uiForm.topicId);
+              editReason = CommonUtils.encodeScriptMarkup(editReason);
               topicNew.setEditReason(editReason);
               try {
                 uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, messageBuilder);
