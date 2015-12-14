@@ -386,6 +386,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               post.setCreatedDate(currentDate);
             }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
+            message = CommonUtils.encodeScriptMarkup(message);
             post.setMessage(message);
             post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());

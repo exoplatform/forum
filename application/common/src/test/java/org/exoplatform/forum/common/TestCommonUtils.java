@@ -265,5 +265,16 @@ public class TestCommonUtils extends TestCase {
     //
     assertEquals("/path1/?q=flower", CommonUtils.getURI("http://domain.com/path1/?q=flower"));
   }
+  
+  public void testEncodeScriptMarkup() {
+    //
+    String input = "<p><Script>alert(1);</script>bbbb</p>";
+    String done = CommonUtils.encodeScriptMarkup(input);
+    assertEquals("<p>&lt;Script&gt;alert(1);&lt;&#x2f;script&gt;bbbb</p>", done);
+    
+    String input1 = "<p><Script>alert(1);</SCRIPT>bbbb</p>";
+    String done1 = CommonUtils.encodeScriptMarkup(input1);
+    assertEquals("<p>&lt;Script&gt;alert(1);&lt;&#x2f;SCRIPT&gt;bbbb</p>", done1);
+  }
 
 }
