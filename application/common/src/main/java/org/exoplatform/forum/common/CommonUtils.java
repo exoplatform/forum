@@ -112,8 +112,6 @@ public class CommonUtils {
   
   private static final Pattern EXCEPT_PATTERN = Pattern.compile("~(([1|0]\\.[0-9])|1)+");
   
-  private static final Pattern SCRIPT_TAG_PATTERN = Pattern.compile("<(/)?[ ]*script[^>]*>", Pattern.CASE_INSENSITIVE);
-  
   /*
    *  The distance code number content special character.
    *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
@@ -543,29 +541,6 @@ public class CommonUtils {
     return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
   }
   
-  /**
-   * Encode the XSS script
-   *  
-   * @param input the given string to encode
-   * 
-   * example: "<p><Script>alert(1);</script>bbbb</p>";
-   * CommonUtils.encodeScriptMarkup(input);
-   * result = "<p>&lt;Script&gt;alert(1);&lt;&#x2f;script&gt;bbbb</p>";
-   * @return Only encode the <script> tag. 
-   */
-  public static String encodeScriptMarkup(String input) {
-    if (input != null) {
-      Matcher matcher = SCRIPT_TAG_PATTERN.matcher(input);
-      StringBuffer str = new StringBuffer(input.length());
-      while (matcher.find()) {
-        matcher.appendReplacement(str, HTMLEntityEncoder.getInstance().encodeHTMLAttribute(matcher.group()));
-      }
-      matcher.appendTail(str);
-      input = str.toString();
-    }
-    return input;
-  }
-
   /**
    * Encode special character, use for input title or name of the object.
    * @param String s, the string input
