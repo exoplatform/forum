@@ -759,9 +759,7 @@ public class UIForumPortlet extends UIPortletApplication {
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {// Unknown error
-        if (log.isDebugEnabled()){
-          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
-        }
+          log.error("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
         showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", ForumUtils.EMPTY_STR);
         renderForumHome();
         path = Utils.FORUM_SERVICE;
@@ -841,9 +839,7 @@ public class UIForumPortlet extends UIPortletApplication {
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
-        if (log.isDebugEnabled()){
-          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
-        }
+          log.error("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
         showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", 
                            new String[] { res.getString("UIForumPortlet.label.forum") });
         renderForumHome();
@@ -864,9 +860,7 @@ public class UIForumPortlet extends UIPortletApplication {
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
-        if (log.isDebugEnabled()){
-          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
-        }
+          log.error("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
         showWarningMessage(context, "UIShowBookMarkForm.msg.link-not-found", ForumUtils.EMPTY_STR);
         renderForumHome();
         path = Utils.FORUM_SERVICE;
