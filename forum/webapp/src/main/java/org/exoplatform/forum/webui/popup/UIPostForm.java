@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
@@ -273,8 +274,10 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
         postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
+        postTitle = StringCommonUtils.encodeScriptMarkup(postTitle);
         Post post = uiForm.post_;
         post.setName(postTitle);
+        message = StringCommonUtils.encodeScriptMarkup(message);
         post.setMessage(message);
         if (CommonUtils.isEmpty(uiForm.postId) || (uiForm.isQuote || uiForm.isMP)) {
           post.setOwner(userName);
@@ -386,6 +389,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               post.setCreatedDate(currentDate);
             }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
+            message = StringCommonUtils.encodeScriptMarkup(message);
             post.setMessage(message);
             post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());
