@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
@@ -324,6 +325,7 @@ public class UITopicForm extends BaseForumForm {
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         String userName = uiForm.getUserProfile().getUserId();
         topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
+        topicTitle = StringCommonUtils.encodeScriptMarkup(topicTitle);
         Post postNew = new Post();
         postNew.setName(topicTitle);
         if (CommonUtils.isEmpty(uiForm.topicId)) {
@@ -336,6 +338,7 @@ public class UITopicForm extends BaseForumForm {
           postNew.setModifiedDate(uiForm.topic.getModifiedDate());
         }
         postNew.setModifiedBy(userName);
+        message = StringCommonUtils.encodeScriptMarkup(message);
         postNew.setMessage(message);
         postNew.setAttachments(uiForm.attachments_);
         postNew.setIcon("uiIconForumTopic uiIconForumLightGray");
@@ -396,7 +399,7 @@ public class UITopicForm extends BaseForumForm {
             Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
             message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             message = TransformHTML.fixAddBBcodeAction(message);
-            message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+            message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");           
             boolean isOffend = false;
             boolean hasForumMod = false;
             if (!uiForm.isMod()) {
@@ -433,9 +436,12 @@ public class UITopicForm extends BaseForumForm {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);
             //
             String userName = userProfile.getUserId();
+            topicTitle = StringCommonUtils.encodeScriptMarkup(topicTitle);
             topicNew.setTopicName(topicTitle);
             topicNew.setModifiedBy(userName);
             topicNew.setModifiedDate(currentDate);
+            //encode XSS script
+            message = StringCommonUtils.encodeScriptMarkup(message);
             topicNew.setDescription(message);
             topicNew.setLink(link);
             if (whenNewPost) {
@@ -470,6 +476,7 @@ public class UITopicForm extends BaseForumForm {
             messageBuilder.setLink(link);
             if (!ForumUtils.isEmpty(uiForm.topicId)) {
               topicNew.setId(uiForm.topicId);
+              editReason = StringCommonUtils.encodeScriptMarkup(editReason);
               topicNew.setEditReason(editReason);
               try {
                 uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, messageBuilder);
