@@ -520,7 +520,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       if(!owner.isDisabled()){
         actions.add("PrivatePost");
       }
-      if (!isFirstPost && (actions.isEmpty() || isModerator())) {
+      if (!isFirstPost && (actions.isEmpty() || isModerator() || owner.getUserId().equals(getUserProfile().getUserId()))) {
         actions.add("Delete");
         actions.add("Edit");
       }
