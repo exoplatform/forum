@@ -342,7 +342,8 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       }
       UIPopupWindow popupWindow = uiUserSelector.getParent();
       closePopupWindow(popupWindow);
-      event.getRequestContext().addUIComponentToUpdateByAjax(messageForm);
+      UIPopupContainer uiPopupContainer = messageForm.getAncestorOfType(UIPopupContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
     }
   }
 
