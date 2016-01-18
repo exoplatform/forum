@@ -196,7 +196,6 @@
 					GregorianCalendar calendar = new GregorianCalendar() ;
 					long toDay = calendar.getTimeInMillis();
 					String classRow = "EvenRow";
-					String topicNewPostIcon = "";
 					String topicNewPostTitle = "";
 					String lastPostBy = "";
 					String dateTime = "";
@@ -226,9 +225,6 @@
 						Topic topicNewPost = uicomponent.getLastTopic(category, forum);
 						if(topicNewPost != null) {
 							topicId = topicNewPost.getId();
-							topicNewPostIcon = topicNewPost.getIcon();
-							if(topicNewPostIcon.length() <= 0)
-											topicNewPostIcon = "NormalTopicIcon" ;
 							topicNewPostTitle = topicNewPost.getTopicName();
 							lastPostBy = topicNewPost.getLastPostBy();
 							dateTime = TimeConvertUtils.convertXTimeAgo(topicNewPost.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
