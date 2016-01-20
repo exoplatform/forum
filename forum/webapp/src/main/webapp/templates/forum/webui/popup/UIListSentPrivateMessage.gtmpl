@@ -5,6 +5,9 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.popup.UIViewPrivateMessage;
+        import org.exoplatform.services.organization.OrganizationService;
+        import org.exoplatform.services.organization.UserHandler;
+        import org.exoplatform.container.ExoContainerContext;
 
 	UserProfile userProfile = uicomponent.getUserProfile();
 	List sendmails = uicomponent.getPrivateMessages() ;
@@ -39,13 +42,16 @@
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
-					String fromUser = mail.getSendTo();
-					fromUser = ForumUtils.getCalculateListEmail(fromUser);
+					String toUserId = mail.getSendTo();
+                                        OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+                                        UserHandler userHandler = organizationService.getUserHandler();
+                                        String toUserFullName = userHandler.findUserByName(toUserId).getFullName();    
+					toUserId = ForumUtils.getCalculateListEmail(toUserId);
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
 				<td><a href="javascript:void(0);" onclick="<%=uicomponent.event("ViewMessage", mailId)%>">$nameMail</a></td>
-				<td>$fromUser</td>
+				<td>$toUserFullName</td>
 				<td>$strFromDate</td>
 				<td class="center">				
 					<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("ForwardMessage", mailId)%>">
