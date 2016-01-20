@@ -265,5 +265,5 @@ public class TestCommonUtils extends TestCase {
     //
     assertEquals("/path1/?q=flower", CommonUtils.getURI("http://domain.com/path1/?q=flower"));
   }
-
+  
 }
