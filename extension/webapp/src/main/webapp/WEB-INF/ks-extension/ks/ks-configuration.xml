@@ -75,12 +75,12 @@
         <properties-param>
           <name>user.profile.setting</name>
           <description>set default user profile</description>
-          <property name="timeZone" value="GMT" />
-          <property name="shortDateFormat" value="MM/dd/yyyy" />
-          <property name="longDateFormat" value="DDD,MMM dd,yyyy" />
-          <property name="timeFormat" value="hh:mm a" />
-          <property name="maxTopic" value="10" />
-          <property name="maxPost" value="10" />
+          <property name="timeZone" value="${exo.forum.extension.configuration.timeZone:GMT}" />
+          <property name="shortDateFormat" value="${exo.forum.extension.configuration.shortDateFormat:MM/dd/yyyy}" />
+          <property name="longDateFormat" value="${exo.forum.extension.configuration.longDateFormat:DDD,MMM dd,yyyy}" />
+          <property name="timeFormat" value="${exo.forum.extension.configuration.timeFormat:hh:mm a}" />
+          <property name="maxTopic" value="${exo.forum.extension.configuration.maxTopic:10}" />
+          <property name="maxPost" value="${exo.forum.extension.configuration.maxPost:10}" />
         </properties-param>
       </init-params>
     </component-plugin>
