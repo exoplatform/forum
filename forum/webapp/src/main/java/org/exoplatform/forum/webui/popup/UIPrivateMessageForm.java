@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
@@ -211,6 +212,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
       mailTitle = CommonUtils.encodeSpecialCharInTitle(mailTitle);
       UIFormRichtextInput formWYSIWYGInput = messageTab.getChild(UIFormRichtextInput.class);
       String message = formWYSIWYGInput.getValue();
+      message = StringCommonUtils.encodeScriptMarkup(message);
       if (!ForumUtils.isEmpty(message)) {
         ForumPrivateMessage privateMessage = new ForumPrivateMessage();
         privateMessage.setFrom(messageForm.userName);

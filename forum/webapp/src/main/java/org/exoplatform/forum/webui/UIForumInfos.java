@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.List;
+import java.util.Arrays;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.WebUIUtils;
@@ -63,7 +63,7 @@ public class UIForumInfos extends UIContainer {
     UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     enableIPLogging = forumPortlet.isEnableIPLogging();
     UserProfile userProfile = forumPortlet.getUserProfile();
-    List<String> moderators = ForumServiceUtils.getUserPermission((forum != null) ? forum.getModerators() : null);
+    String[] moderators = ((forum != null) ? forum.getModerators() : null);
     UIPostRules postRules = getChild(UIPostRules.class);
     //
     if (forumPortlet.isShowRules()) {
@@ -71,7 +71,7 @@ public class UIForumInfos extends UIContainer {
       if (forum != null) {
         isLock = forum.getIsClosed() || forum.getIsLock();
         if (!isLock && userProfile.getUserRole() != 0) {
-          if (!moderators.contains(userProfile.getUserId())) {
+          if (!ForumServiceUtils.hasPermission(moderators, userProfile.getUserId())) {
             isLock = forum.getBanIP().contains(getRemoteIP());
             if (!isLock) {
               isLock = !forumPortlet.checkForumHasAddTopic(forum.getCategoryId(), forum.getId());
@@ -86,7 +86,7 @@ public class UIForumInfos extends UIContainer {
     //
     UIForumModerator forumModerator = getChild(UIForumModerator.class);
     if (forumPortlet.isShowModerators()) {
-      forumModerator.setModeratorsForum(moderators);
+      forumModerator.setModeratorsForum(Arrays.asList(moderators));
       forumModerator.setUserRole(userProfile.getUserRole());
     }
     forumModerator.setRendered(forumPortlet.isShowModerators());
