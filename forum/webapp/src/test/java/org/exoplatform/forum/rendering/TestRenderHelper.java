@@ -20,6 +20,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -86,8 +87,11 @@ public class TestRenderHelper extends TestCase {
     //
     helper.renderPost(post);
     //
-    List<String> codeHighlighters = new ArrayList<String>(BuildRendering.getCodeHighlighters(context));
-    assertEquals("[JScript, Java]", codeHighlighters.toString());
+    List<String> codeHighlighters = new ArrayList<>(BuildRendering.getCodeHighlighters(context));
+    List<String> expectedCodeHighlighters = Arrays.asList("JScript", "Java");
+    Collections.sort(codeHighlighters);
+    Collections.sort(expectedCodeHighlighters);
+    assertTrue(CollectionUtils.isEqualCollection(codeHighlighters, expectedCodeHighlighters));
     String expected = 
         "<script src=\"/forumResources/syntaxhighlighter/Scripts/shCore.js\" id=\"script_0_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
         "<script src=\"/forumResources/syntaxhighlighter/Scripts/shAutoloader.js\" id=\"script_1_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +

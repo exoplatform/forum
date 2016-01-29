@@ -153,13 +153,21 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testArraysMerge() {
-    String[] str1 = null;
-    String[] str2 = new String[]{"abc5", "abc4", "abc3", "abc7"};
-    assertEquals("[abc5, abc4, abc3, abc7]", Arrays.asList(ForumUtils.arraysMerge(str1, str2)).toString());
-    str1 = new String[]{"abc1", "abc2", "abc3", "abc1"};
-    assertEquals("[abc1, abc4, abc5, abc2, abc3, abc7]", Arrays.asList(ForumUtils.arraysMerge(str1, str2)).toString());
+    String[] array1 = new String[]{"abc1", "abc2", "abc3", "abc1"};
+    String[] array2 = new String[]{"abc5", "abc4", "abc3", "abc7"};
+    String[] expectedMergedArray = new String[]{"abc1", "abc4", "abc5", "abc2", "abc3", "abc7"};
+    String[] mergedArray = ForumUtils.arraysMerge(array1, array2);
+    Arrays.sort(expectedMergedArray);
+    Arrays.sort(mergedArray);
+    assertTrue(Arrays.equals(expectedMergedArray, mergedArray));
   }
-  
+
+  public void testArraysMergeWithNullArray() {
+    String[] array1 = null;
+    String[] array2 = new String[]{"abc5", "abc4", "abc3", "abc7"};
+    assertTrue(Arrays.equals(array2, ForumUtils.arraysMerge(array1, array2)));
+  }
+
   public void testGetStarNumber() throws Exception {
 //    class return arrays class css of VoteRatingForm.
     // vote max is 5, vote is value mean of users voting.
