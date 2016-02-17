@@ -36,14 +36,12 @@ public interface ForumEventLifeCycle {
   /**
    * This will be call after add topic
    * @param topic
-   * @param forumId
    */
   public void addTopic(Topic topic);
 
   /**
    * This will be call after update topic
    * @param topic
-   * @param forumId
    * @since 4.0
    */
   public void updateTopic(Topic topic);
@@ -59,7 +57,7 @@ public interface ForumEventLifeCycle {
   /**
    * This will be call after moved topic to other forum.
    *    + Add new comment of activity's topic
-   *      width message has content Category Name > Forum Name 
+   *      width message has content {@literal Category Name > Forum Name}
    * 
    * @param topic
    * @param toCategoryName
@@ -72,7 +70,8 @@ public interface ForumEventLifeCycle {
    * This will be call after moving posts to other topic
    * 	+ Add new comment of activity's post for new destination topic
    * 	+ Remove comment of activity's post for source topic
-   * @param post
+   * @param posts
+   * @param srcPostActivityIds
    * @param desTopicPath
    */
   public void movePost(List <Post> posts, List<String> srcPostActivityIds, String desTopicPath);
@@ -105,16 +104,12 @@ public interface ForumEventLifeCycle {
    * This will be call after save post
    * 
    * @param post
-   * @param categoryId
-   * @param forumId
-   * @param topicId
    */
   public void addPost(Post post);
   
   /**
    * This will be call after save post
    * @param post
-   * @param forumId
    * @since 4.0
    */
   public void updatePost(Post post);

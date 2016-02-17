@@ -95,7 +95,6 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param categoryId Id of the category.
    * @return A category.
-   * @throws Exception the exception
    * @LevelAPI Platform
    */
   Category getCategory(String categoryId);
@@ -104,7 +103,6 @@ public interface ForumService extends ForumServiceLegacy {
    * Gets a category which contains the forum spaces. 
    * 
    * @return A category.
-   * @throws Exception
    * @LevelAPI Platform
    */
   Category getCategoryIncludedSpace();
@@ -148,7 +146,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @param moderatorCate The moderator.
    * @param userId Id of the moderator.
    * @param isAdd If "true", the moderator is added. If "false", the moderator is removed.
-   * @throws Exception the exception
    * @LevelAPI Platform
    * @since 1.2.x
    */
@@ -193,10 +190,8 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets a list forums by filter.
    * 
-   * @param userName Name of the user.
    * @param filter The condition to get forums.
    * @return The forums.
-   * @throws Exception the exception
    * @LevelAPI Platform
    */
   List<Forum> getForums(ForumFilter filter);
@@ -315,7 +310,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets a list access of topics by a given userName returned as ListAccess.
    * 
-   * @param userName Name of the user.
    * @param filter The condition to get posts.
    * @return The topics.
    * @throws Exception the exception
@@ -340,7 +334,7 @@ public interface ForumService extends ForumServiceLegacy {
    * Gets a list access of topics which were created before a given date.
    * 
    * @param date The given date.
-   * @param forumPatch Path to the forum which contains topics.
+   * @param forumPath Path to the forum which contains topics.
    * @return Topics.
    * @throws Exception the exception
    * @LevelAPI Platform
@@ -364,7 +358,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @param date The given date.
    * @param forumPatch Path to the forum which contains topics.
    * @return The total number of topics.
-   * @throws Exception the exception
    * @LevelAPI Platform
    */
   long getTotalTopicOld(long date, String forumPatch);

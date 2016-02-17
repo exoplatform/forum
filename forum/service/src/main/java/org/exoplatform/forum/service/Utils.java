@@ -144,9 +144,9 @@ public class Utils implements ForumNodeTypes {
                                                        + "<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <strong>$POSTER</strong> .</div><div>Go directly to the post: " + "<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">Click here." + "</a></div>".intern();
 
   /**
-   * Clear characters that have a codepoint < 31 (non printable) from a string
+   * Clear characters that have a {@literal codepoint < 31} (non printable) from a string
    * @param s string input
-   * @return the string with all character whose codepoint<31 removed
+   * @return the string with all character whose {@literal codepoint<31} removed
    */
   public static String removeCharterStrange(String s) {
     if (s == null || s.length() <= 0)
@@ -351,7 +351,7 @@ public class Utils implements ForumNodeTypes {
    * Transforms a jcr Value array into a string array . 
    * Calls {@link Value#getString()} on each item.
    * @see javax.jcr.Value
-   * @param values array of values to transform
+   * @param Val array of values to transform
    * @return string array for the Value array
    * @throws Exception
    */
@@ -416,7 +416,7 @@ public class Utils implements ForumNodeTypes {
 
   /**
    * Check string is null or empty 
-   * @param String s
+   * @param s
    * @return boolean
    */
   public static boolean isEmpty(String s) {
@@ -440,9 +440,9 @@ public class Utils implements ForumNodeTypes {
   
   /**
    * get Xpath query by one property. 
-   * @param String typeAdd
-   * @param String property
-   * @param String value
+   * @param typeAdd
+   * @param property
+   * @param value
    * @return String
    */
   @Deprecated
@@ -470,10 +470,10 @@ public class Utils implements ForumNodeTypes {
 
   /**
    * get Xpath query when get list post. 
-   * @param String isApproved
-   * @param String isHidden
-   * @param String isWaiting
-   * @param String userLogin
+   * @param isApproved
+   * @param isHidden
+   * @param isWaiting
+   * @param userLogin
    * @return StringBuilder
    */
   @Deprecated
@@ -540,7 +540,7 @@ public class Utils implements ForumNodeTypes {
 
   /**
    * Build Xpath query for check has property existing.
-   * @param String property is the property of node
+   * @param property is the property of node
    * @return String
    * @since 2.2.10
    */
@@ -577,8 +577,8 @@ public class Utils implements ForumNodeTypes {
 
   /**
    * Build Xpath query for case comparator with all properties of user and other property.
-   * @param String property is the property of node
-   * @param List groupAndMembershipInfos is list all properties of user
+   * @param property is the property of node
+   * @param groupAndMembershipInfos is list all properties of user
    * @return String
    * @since 2.2.10
    */
@@ -914,7 +914,7 @@ public class Utils implements ForumNodeTypes {
   
   /**
    * Get type of object (category/forum/topic/post) by path.
-   * @param path
+   * @param objectIdOrPath
    * @return
    * @since 4.1
    */   

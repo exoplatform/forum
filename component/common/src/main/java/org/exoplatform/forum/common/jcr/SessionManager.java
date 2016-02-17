@@ -42,7 +42,7 @@ public interface SessionManager {
   Session getSession(SessionProvider sessionProvider);
 
   /**
-   * <p>Returns the session currently associated with the current thread of execution.<br/>
+   * <p>Returns the session currently associated with the current thread of execution.<br>
    * The current session is set with {@link #openSession()} </p>
    *
    * @return the current session if exists, null otherwise

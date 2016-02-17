@@ -128,7 +128,6 @@ public abstract class RSSProcess {
    * Get one node in FORUM application by id
    * 
    * @param objectId id of node which is got
-   * @param sProvider the session provider
    * @return node
    * @throws Exception
    */

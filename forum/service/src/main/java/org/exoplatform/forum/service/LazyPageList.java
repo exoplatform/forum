@@ -25,7 +25,7 @@ import org.exoplatform.commons.utils.ListAccess;
  * A PageList implementation backed by a LazyList to load data lazily. 
  * Implementation was partially borrowed from kernel 2.1 class of same name. 
  * Extends JCRPageList for backward compatibility. 
- * @TODO : Change extends JCRPageList by extends PageList
+ * TODO : Change extends JCRPageList by extends PageList
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice lamarque</a>
  * @version $Revision$
  */

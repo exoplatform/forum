@@ -129,13 +129,13 @@ public interface DataStorage {
 
   /**
    * 
-   * @deprecated use {@link #getTopics(TopicFilter, int, int)
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)}
    */
   JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 
   /**
    * 
-   * @deprecated use {@link #getTopics(TopicFilter, int, int)
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)}
    */
   LazyPageList<Topic> getTopicList(String categoryId, String forumId, String xpathConditions, String strOrderBy, int pageSize) throws Exception;
   
@@ -175,7 +175,7 @@ public interface DataStorage {
   
   /**
    * 
-   * @deprecated use {@link #getTopics(TopicFilter, int, int);
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)}
    */
   JCRPageList getPageTopicOld(long date, String forumPath) throws Exception;
   
@@ -205,7 +205,7 @@ public interface DataStorage {
 
   /**
    * 
-   * @deprecated use {@link #getPosts(PostFilter, int, int)
+   * @deprecated use {@link #getPosts(PostFilter, int, int)}
    */
   JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 
@@ -231,19 +231,19 @@ public interface DataStorage {
 
   /**
    * 
-   * @deprecated use {@link #getPostsCount(PostFilter);
+   * @deprecated use {@link #getPostsCount(PostFilter)}
    */
   long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
   /**
    * 
-   * @deprecated use {@link #getPosts(PostFilter, int, int)
+   * @deprecated use {@link #getPosts(PostFilter, int, int)}
    */
   JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
   Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception;
   /**
    * 
-   * @deprecated use {@link #getPosts(PostFilter, int, int)
+   * @deprecated use {@link #getPosts(PostFilter, int, int)}
    */
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
 
@@ -268,7 +268,7 @@ public interface DataStorage {
   List<Tag> getMyTagInTopic(String[] tagIds) throws Exception;
   /**
    * 
-   * @deprecated use {@link #getPosts(PostFilter, int, int)
+   * @deprecated use {@link #getPosts(PostFilter, int, int)}
    */
   JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception;
 

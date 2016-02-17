@@ -338,7 +338,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
 /**
- * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
+ * Get a Node by path using the current session of {@link JCRSessionManager}.<br>
  * Note that a session must have been initalized by {@link JCRSessionManager#openSession() before calling this method
  * @param relPath path relative to root node of the workspace
  * @return JCR node located at relPath relative path from root node of the current workspace
@@ -2018,8 +2018,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   /**
-   * @deprecated use {@link #getTopics(TopicFilter, int, int)
-
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)}
    */
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
@@ -2040,7 +2039,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   /**
-   * @deprecated use {@link #getTopics(TopicFilter, int, int)
+   * @deprecated use {@link #getTopics(TopicFilter, int, int)}
 
    */
   public LazyPageList<Topic> getTopicList(String categoryId, String forumId, String xpathConditions, String strOrderBy, int pageSize) throws Exception {
@@ -3513,7 +3512,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   *
   * @param owner user's name of an user that create the post
   * @param postPath node's path of the last post
-  * @throws Exception
   */
   public void updateProfileAddPost(String owner, String postPath) {
     ReentrantLock lock = this.lock;

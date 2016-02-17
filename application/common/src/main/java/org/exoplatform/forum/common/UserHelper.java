@@ -150,7 +150,6 @@ public class UserHelper {
    * @param groupId The group to check
    * @param userId The user's id that to check
    * @return
-   * @throws Exception
    */
   public static boolean hasUserInGroup(String groupId, String userId) {
     try {
@@ -236,7 +235,6 @@ public class UserHelper {
    * @param userId userame
    * @return list of groups an user belong, and memberships of the user in each group. If userId is null, groups and memberships of the current
    * user will be returned.
-   * @throws Exception
    */
   public static List<String> getAllGroupAndMembershipOfUser(String userId) {
     List<String> listOfUser = new ArrayList<String>();

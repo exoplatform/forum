@@ -107,9 +107,9 @@ public class LoremIpsum4J {
    * Returns words from the lorem ipsum text.
    * 
    * @param amount Amount of words
-   * @param startIndex Start index of word to begin with (must be >= 0 and < 50)
+   * @param startIndex Start index of word to begin with {@literal (must be >= 0 and < 50)}
    * @return Lorem ipsum text
-   * @throws IndexOutOfBoundsException If startIndex is < 0 or > 49
+   * @throws IndexOutOfBoundsException If startIndex {@literal is < 0 or > 49}
    */
 
   public String getWords(int amount, int startIndex) {
@@ -152,9 +152,9 @@ public class LoremIpsum4J {
    * Returns words from the lorem ipsum text.
    * 
    * @param amount Amount of words
-   * @param startIndex Start index of word to begin with (must be >= 0 and < 50)
+   * @param startIndex Start index of word to begin with {@literal (must be >= 0 and < 50)}
    * @return Lorem ipsum text
-   * @throws IndexOutOfBoundsException If startIndex is < 0 or > 49
+   * @throws IndexOutOfBoundsException If startIndex {@literal is < 0 or > 49}
    */
 
   public String getCharacters(int amount, int startIndex) {

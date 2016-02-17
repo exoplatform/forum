@@ -39,7 +39,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 
 /**
- * @Since 2.2.x         
+ * @since 2.2.x
  */
 
 @ComponentConfigs({ 

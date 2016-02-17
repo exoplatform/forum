@@ -24,9 +24,9 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 /**
- * This class is meant to be the starting for any data storage access in KS.<br/>
- * Provides all JCR pathes usable in KS JCR data storage. <br/>
- * A {@link JCRSessionManager} accessible by {@link #getSessionManager()} is configured on the appropriate repository and workspace.<br/> 
+ * This class is meant to be the starting for any data storage access in KS.<br>
+ * Provides all JCR pathes usable in KS JCR data storage. <br>
+ * A {@link JCRSessionManager} accessible by {@link #getSessionManager()} is configured on the appropriate repository and workspace.<br>
  * Relies on {@link NodeHierarchyCreator} to initialize the structure and provide pathes aliases.
  * 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -102,7 +102,7 @@ public class KSDataLocation {
 
   /**
    * Creates a new {@link KSDataLocation} and initializes pathes.
-   * @param params {@link #REPOSITORY_PARAM} and {@link #WORKSPACE_PARAM} are expected as value-param 
+   * @param params {@link #WORKSPACE_PARAM} is expected as value-param
    * @param creator used to resolve path names. It is also declared here to ensure that the data structure has been initalized before.
    */
   public KSDataLocation(InitParams params, NodeHierarchyCreator creator, RepositoryService repositoryService) {

@@ -157,7 +157,6 @@ public abstract class BaseEventListener<T extends BaseUIForm> extends EventListe
   
   /**
    * Opens a popup and creates a component into it.
-   * @param <T> type of the component to display in the popup
    * @param parent parent above whch the popup should be open
    * @param componentType type of the component to open in the popup
    * @param popupId id for the popup

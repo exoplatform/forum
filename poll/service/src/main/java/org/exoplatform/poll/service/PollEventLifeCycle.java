@@ -36,7 +36,7 @@ public interface PollEventLifeCycle {
   
   /**
    * This will be call after remove poll
-   * @param poll
+   * @param pollId
    */
 
   public void pollRemove(String pollId);

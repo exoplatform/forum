@@ -102,7 +102,6 @@ public class RSS {
   /**
    * Read a SyndFeed from the
    * @return
-   * @throws Exception
    */
   public SyndFeed read() {
     try {
@@ -126,7 +125,6 @@ public class RSS {
    * Remove an item for the feed
    * @param uri
    * @return
-   * @throws Exception
    */
   @SuppressWarnings("unchecked")
   public SyndFeed removeEntry(String uri) {

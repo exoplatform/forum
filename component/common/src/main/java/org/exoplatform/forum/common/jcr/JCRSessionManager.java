@@ -31,7 +31,6 @@ public class JCRSessionManager implements SessionManager {
   /**
    * Constructor
    * @param workspace
-   * @param repositoryService
    */
   public JCRSessionManager(String workspace) {
     this.workspaceName = workspace;
@@ -46,7 +45,7 @@ public class JCRSessionManager implements SessionManager {
   }
 
   /**
-   * <p>Returns the session currently associated with the current thread of execution.<br/>
+   * <p>Returns the session currently associated with the current thread of execution.<br>
    * The current session is set with {@link #openSession()} </p>
    *
    * @return the current session if exists, null otherwise

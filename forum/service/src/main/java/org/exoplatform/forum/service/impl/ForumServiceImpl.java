@@ -622,7 +622,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   /**
-   * @deprecated use {@link ForumServiceImpl#getTopics(TopicFilter);
+   * @deprecated use {@link ForumServiceImpl#getTopics(TopicFilter)}
    */
   public LazyPageList<Topic> getTopicList(String categoryId, String forumId, String strQuery, String strOrderBy, int pageSize) throws Exception {
     return storage.getTopicList(categoryId, forumId, strQuery, strOrderBy, pageSize);
@@ -709,7 +709,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   /**
-   * @deprecated use {@link ForumServiceImpl#getPosts(PostFilter filter);
+   * @deprecated use {@link ForumServiceImpl#getPosts(PostFilter filter)}
    */
   public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
     return storage.getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
@@ -1104,7 +1104,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   /**
    * 
-   * @deprecated use {@link #getTopicsByUser(TopicFilter, int, int)}
+   * @deprecated use {@link #getPageTopicByUser(TopicFilter)}
    */
   public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
     return storage.getPageTopicByUser(userName, isMod, strOrderBy);

@@ -221,10 +221,12 @@ public class CommonUtils {
    * which is configured as system property : <code>gatein.email.smtp.from</code> or <code>mail.from</code>. <br>
    * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity
    * with authentication of smtp configuration.<br> It's because of 2 reasons: 
+   * <ul>
    * <li>we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel.</li>
    * <li>Almost authenticated smtp systems do not allow to separate email address in <code>from</code> field 
-   * of message from smtp authentication</b> (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)</li>
-   * 
+   * of message from smtp authentication (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)</li>
+   * </ul>
+   *
    * @param from
    * @return null if can not find suitable sender.
    */
@@ -271,14 +273,7 @@ public class CommonUtils {
     Renderer r = markupRenderingService.getRenderer(SupportedSyntaxes.bbcode.name());
     return r.render(s);
   }
-  
-  /**
-   * Get a Component from the current container context
-   * @param <T> type of the expected component
-   * @param type key for the component
-   * @return
-   */
-  
+
   public static ExoContainer getExoContainer(JobExecutionContext context) {
     if(context == null) return null;
     String portalName = context.getJobDetail().getKey().getGroup();
@@ -299,7 +294,7 @@ public class CommonUtils {
   
   /**
    * Check string is null or empty 
-   * @param String s
+   * @param s
    * @return boolean
    */
   public static boolean isEmpty(String s) {
@@ -518,7 +513,7 @@ public class CommonUtils {
   
   /**
    * Encode special character, use for input search
-   * @param String s, the string input
+   * @param s the string input
    * @return String 
    */
   public static String encodeSpecialCharInSearchTerm(String s) {
@@ -543,7 +538,7 @@ public class CommonUtils {
   
   /**
    * Encode special character, use for input title or name of the object.
-   * @param String s, the string input
+   * @param s the string input
    * @return String 
    */
   public static String encodeSpecialCharInTitle(String s) {
@@ -564,7 +559,7 @@ public class CommonUtils {
 
   /**
    * Encode special character, use for input content of object (only apply for input by FCKEditer).
-   * @param String s, the string input
+   * @param s the string input
    * @return String 
    */
   public static String encodeSpecialCharInContent(String s) {
@@ -592,10 +587,10 @@ public class CommonUtils {
   }
 
   /**
-   * Encode special character to html number. Ex: '/' --> &#47; 
-   * @param String s, the string input
-   * @param String charIgnore, the string content ignore some special character can not encode.
-   * @param boolean isTitle, the boolean for check convert is title or not.
+   * Encode special character to html number. Ex: '/' is encoded to &#47;
+   * @param s the string input
+   * @param charIgnore the string content ignore some special character can not encode.
+   * @param isTitle the boolean for check convert is title or not.
    * @return String 
    */
   public static String encodeSpecialCharToHTMLnumber(String s, String charIgnore, boolean isTitle) {
@@ -678,7 +673,7 @@ public class CommonUtils {
   }
   
   /**
-   *  Decode special chars to HTML number ignore char Less than '<' and Greater than '>' 
+   *  Decode special chars to HTML number ignore char {@literal Less than '<' and Greater than '>'}
    * 
    * @param str
    * @return
