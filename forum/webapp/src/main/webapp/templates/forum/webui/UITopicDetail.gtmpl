@@ -14,6 +14,7 @@
 	uicomponent.initPlaceholder();
 	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
+	String topicPath = uicomponent.getTopic().getPath();
 	String userLogin = "" ;
 	String linkGest = "" ;
 	String screenName ;
@@ -697,8 +698,8 @@
 	
 	<div class="clearfix">
 		<div class="pull-left">
-			<% if(isCanReply) { %>
-			<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+			<% if(isCanReply) {%>
+			<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost",topicPath)%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 			<% } else if(isNotLogin) {	%>
 			<a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 			<% } else {%>
@@ -732,7 +733,7 @@
 				<%
 					for(action in uicomponent.getActions()) {
 						String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-						String link = uicomponent.event(action);
+						String link = uicomponent.event(action,topicPath);
 						if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');"
 				%>
 				<a href="javascript:void(0);" onclick="$link" class="btn LightBlueStyle">$actionLabel</a>
