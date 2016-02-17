@@ -686,6 +686,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+        topicDetail.setUpdateTopic(topic.getCategoryId(), topic.getForumId(), topic.getId());
         UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
         postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);
@@ -1427,7 +1429,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       if (topicDetail.isDoubleClickQuickReply)
         return;
       topicDetail.isEditTopic = true;
-      Topic topic = topicDetail.getTopic();
+      Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+      topicDetail.setUpdateTopic(topic.getCategoryId(), topic.getForumId(), topic.getId());
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       if(topic == null) {
         warning("UIPostForm.msg.isParentDelete", false);
