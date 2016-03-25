@@ -28,7 +28,7 @@
 						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
 						}
-						String	name = ForumUtils.getSubString(namePath, 18);
+						String	name = ForumUtils.getSubString(namePath, 50);
 						namePath = namePath.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 						if(t+1 < uicomponent.getMaxPath()) {
 				%>
