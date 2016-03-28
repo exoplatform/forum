@@ -764,6 +764,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     clearForumListCache();
     clearLinkListCache();
     clearObjectCache(forum, true);
+    clearCategoryCache(categoryId);
     //
     clearTopicListCache(forum.getId());
     clearTopicListCountCache(forum.getId());
