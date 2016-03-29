@@ -16,7 +16,22 @@
     for(moderator in moderators) {
       String userView = uicomponent.getScreenName(moderator);
       ++i;
+      int index = userView.lastIndexOf("/");
+      if (index != -1) {
+        String groupName = userView.substring(index+1);
+        groupName = groupName.substring(0, 1).toUpperCase() + groupName.substring(1);
+        if (!userView.contains(":")) {
+          userView = _ctx.appRes("UIForumPortlet.label.Moderation").replace("{0}", _ctx.appRes("UIForumPortlet.label.Moderation.Any")).replace("{1}", groupName);
+        } else {
+          String membershipName = userView.substring(0, userView.indexOf(":"));
+          if (membershipName.equals("*")) membershipName = _ctx.appRes("UIForumPortlet.label.Moderation.Any");
+          userView = _ctx.appRes("UIForumPortlet.label.Moderation").replace("{0}", membershipName).replace("{1}", groupName);
+        }
   %>
+        <span>${userView}</span>
+     <%
+      } else {
+    %>
       <span class="dropdown uiUserInfo">
         <a href="javaScript:void(0)">&nbsp;${userView}</a>
         <ul class="dropdown-menu uiUserMenuInfo dropdownArrowTop">
@@ -31,13 +46,13 @@
           </li>
    <% } %>
         </ul>
-    <%
-      if(total != i) {
-        print("<span>,</span>");
-      }
-    %>
       </span>
     <%
+    }
+    if(total != i) {
+        %>
+        <span>,</span>
+    <% }
     }
     %>
     <% if(total <= 0) {%>
