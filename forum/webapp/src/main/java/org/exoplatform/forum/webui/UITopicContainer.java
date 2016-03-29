@@ -226,9 +226,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private void processForumPermission() throws Exception {
     this.canAddNewThread = true;
-    moderators = ForumServiceUtils.getUserPermission(getForum().getModerators());
     String userId = getUserProfile().getUserId();
-    isModerator = (userProfile.getUserRole() == 0 || (!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId))) ? true : false;
+    isModerator = (userProfile.getUserRole() == 0 || (!userProfile.getIsBanned() && ForumServiceUtils.hasPermission(forum.getModerators(), userId))) ? true : false;
     boolean isCheck = true;
     List<String> ipBaneds = forum.getBanIP();
     if (ipBaneds != null && ipBaneds.contains(getRemoteIP()) || userProfile.getIsBanned()) {
