@@ -7899,11 +7899,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node profile = null;
       Node profileHome = getUserProfileHome();
       final String userName = user.getUserName();
-      if (profileHome.hasNode(userName)) {
+      QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
+      QueryImpl query = (QueryImpl) qm.createQuery(buildSearchUserProfileByNameQuery(userName), Query.SQL);
+
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+
+      if (iter.hasNext()) {
         if (isNew) {
           LOG.warn("Request to add user " + userName + " was ignored because it already exists.");
         }
-        profile = profileHome.getNode(userName);
+        profile = iter.nextNode();
         added = false;
       } else {
         profile = profileHome.addNode(userName, EXO_FORUM_USER_PROFILE);
@@ -8487,6 +8493,18 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       .append(EXO_FULL_NAME).append(" LIKE '%").append(searchKey).append("%' OR ")
       .append(EXO_SCREEN_NAME).append(" LIKE '%").append(searchKey).append("%'")
       .append(")");
+    }
+    return sqlQuery.toString();
+  }
+
+  private String buildSearchUserProfileByNameQuery(String searchKey) {
+    String fullPath = "/" + dataLocator.getUserProfilesLocation();
+
+    StringBuilder sqlQuery = jcrPathLikeAndNotLike(Utils.USER_PROFILES_TYPE, fullPath);
+    if (!Utils.isEmpty(searchKey)) {
+      searchKey = searchKey.replace("*", "%");
+      sqlQuery.append(" AND (")
+              .append("LOWER("+EXO_USER_ID+")").append(" LIKE '%").append(searchKey.toLowerCase()).append("%' )");
     }
     return sqlQuery.toString();
   }
