@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-component</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.3.1-M11</version>
+    <version>4.3.x-SNAPSHOT</version>
   </parent>
   <artifactId>forum-component-common</artifactId>
   <name>Forum Common components</name>
