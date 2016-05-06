@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-application</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.3.x-SNAPSHOT</version>
+    <version>4.3.1-M11</version>
   </parent>
   <artifactId>forum-application-common</artifactId>
   <packaging>jar</packaging>
