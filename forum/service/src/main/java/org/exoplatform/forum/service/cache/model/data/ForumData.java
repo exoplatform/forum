@@ -83,7 +83,7 @@ public class ForumData implements CachedData<Forum> {
     forum.setForumOrder(this.forumOrder);
     forum.setCreatedDate(this.createdDate);
     forum.setModifiedBy(this.modifiedBy);
-    forum.setCreatedDate(this.modifiedDate);
+    forum.setModifiedDate(this.modifiedDate);
     forum.setLastTopicPath(this.lastTopicPath);
     forum.setForumName(this.name);
     forum.setDescription(this.description);
