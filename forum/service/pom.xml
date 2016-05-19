@@ -122,7 +122,7 @@
       <exclusions>
       	<exclusion>
           <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
+          <artifactId>javax.servlet-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -204,7 +204,7 @@
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
+      <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <!-- To upgrade the version required by picocontainer -->
