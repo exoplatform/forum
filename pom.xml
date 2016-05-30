@@ -16,12 +16,8 @@
   <modules>
     <module>component</module>
     <module>application</module>
-    <module>poll</module>
     <module>forum</module>
-    <module>gadgets</module>
-    <module>extension</module>
     <module>extras</module>
-    <module>forumResources</module>
   </modules>
   <scm>
     <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
@@ -134,23 +130,6 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-extension-config</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-extension-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-extension-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forum-service</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
@@ -164,48 +143,6 @@
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forum-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-forumResources</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-forumResources</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-gadgets</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-gadgets</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-poll-service</artifactId>
-        <version>${project.version}</version>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-poll-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-poll-webapp</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
       </dependency>

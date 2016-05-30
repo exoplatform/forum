@@ -20,5 +20,5 @@ CKEDITOR.plugins.add('helpBBCode',
 );
 
 function showHelpBBCode(e){   
-  window.open('/forumResources/eXoPlugins/helpBBCode/helpBBCode.html','helpBBCode','width=800,height=600');
+  window.open('/forum/eXoPlugins/helpBBCode/helpBBCode.html','helpBBCode','width=800,height=600');
 }
