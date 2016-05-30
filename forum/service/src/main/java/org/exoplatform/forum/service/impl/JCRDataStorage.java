@@ -3375,11 +3375,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception {
+    if (StringUtils.isEmpty(postId)) {
+      return null;
+    }
+
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
-      Node postNode;
-      if (postId.lastIndexOf("/") > 0) {
+      Node postNode;      
+      if (postId.lastIndexOf("/") > 0 || StringUtils.isEmpty(categoryId) || StringUtils.isEmpty(forumId) || StringUtils.isEmpty(topicId)) {
         if (postId.indexOf(categoryHome.getName()) < 0)
           postId = categoryHome.getPath() + "/" + postId;
         postNode = (Node) categoryHome.getSession().getItem(postId);
