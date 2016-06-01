@@ -12,6 +12,5 @@
   <description>KS Extension Root Pom</description>
   <modules>
     <module>config</module>
-    <module>webapp</module>
   </modules>
 </project>
