@@ -45,7 +45,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 public class WebUIUtils {
   private static final Log LOG = ExoLogger.getLogger(WebUIUtils.class);
   private static final String SCRIPT_PATTERN = 
-      "<script src=\"/forumResources/syntaxhighlighter/Scripts/{0}\" id=\"script_{1}_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
+      "<script src=\"/forum/syntaxhighlighter/Scripts/{0}\" id=\"script_{1}_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
 
   public static String getRemoteIP() {
     String remoteAddr = "";

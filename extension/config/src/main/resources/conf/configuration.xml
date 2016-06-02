@@ -58,9 +58,6 @@
                   <string>cometd</string>
                 </value>
                 <value>
-                  <string>forumResources</string>
-                </value>
-                <value>
                   <string>forum</string>
                 </value>
                 <value>
@@ -68,9 +65,6 @@
                 </value>
                 <value>
                   <string>ks</string>
-                </value>
-                <value>
-                  <string>forum-extension</string>
                 </value>
                 <value>
                   <string>forum-gadgets</string>

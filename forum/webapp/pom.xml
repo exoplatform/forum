@@ -22,7 +22,7 @@
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>javax.activation</groupId>
           <artifactId>activation</artifactId>
         </exclusion>
@@ -44,7 +44,7 @@
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>xpp3</groupId>
           <artifactId>xpp3_min</artifactId>
         </exclusion>
@@ -83,7 +83,7 @@
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.core</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>xml-apis</groupId>
           <artifactId>xml-apis</artifactId>
         </exclusion>
@@ -115,7 +115,7 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>javax.activation</groupId>
           <artifactId>activation</artifactId>
         </exclusion>
@@ -125,7 +125,7 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>javax.servlet-api</artifactId>
         </exclusion>
@@ -147,11 +147,11 @@
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
       <exclusions>
-      	<exclusion>
-      		<groupId>log4j</groupId>
-      		<artifactId>log4j</artifactId>
-      	</exclusion>
-      	<exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>javax.xml.stream</groupId>
           <artifactId>stax-api</artifactId>
         </exclusion>
@@ -177,11 +177,11 @@
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.component.web.resources</artifactId>
       <exclusions>
-      	<exclusion>
-      		<groupId>org.apache.ant</groupId>
-      		<artifactId>ant</artifactId>
-      	</exclusion>
-      	<exclusion>
+        <exclusion>
+          <groupId>org.apache.ant</groupId>
+          <artifactId>ant</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
         </exclusion>
@@ -195,7 +195,7 @@
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.eXo</artifactId>
       <exclusions>
-      	<exclusion>
+        <exclusion>
           <groupId>org.gatein.portal</groupId>
           <artifactId>exo.portal.webui.core</artifactId>
         </exclusion>
@@ -209,15 +209,15 @@
       <groupId>org.gatein.portal</groupId>
       <artifactId>exo.portal.webui.portal</artifactId>
       <exclusions>
-      	<exclusion>
-      		<groupId>commons-logging</groupId>
-      		<artifactId>commons-logging</artifactId>
-      	</exclusion>
-      	<exclusion>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
         </exclusion>
-      	<exclusion>
+        <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>javax.servlet-api</artifactId>
         </exclusion>

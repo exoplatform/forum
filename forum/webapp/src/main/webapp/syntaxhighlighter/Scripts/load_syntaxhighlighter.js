@@ -1,0 +1,31 @@
+SyntaxHighlighter.initLoader = function() {
+  SyntaxHighlighter.autoloader(
+      'applescript /forum/syntaxhighlighter/Scripts/shBrushAppleScript.js',
+      'actionscript3 as3 /forum/syntaxhighlighter/Scripts/shBrushAS3.js',
+      'bash shell sh /forum/syntaxhighlighter/Scripts/shBrushBash.js',
+      'coldfusion cf /forum/syntaxhighlighter/Scripts/shBrushColdFusion.js',
+      'cpp c /forum/syntaxhighlighter/Scripts/shBrushCpp.js',
+      'c# c-sharp csharp /forum/syntaxhighlighter/Scripts/shBrushCSharp.js',
+      'css /forum/syntaxhighlighter/Scripts/shBrushCss.js',
+      'delphi pascal pas /forum/syntaxhighlighter/Scripts/shBrushDelphi.js',
+      'diff patch /forum/syntaxhighlighter/Scripts/shBrushDiff.js',
+      'erl erlang /forum/syntaxhighlighter/Scripts/shBrushErlang.js',
+      'groovy /forum/syntaxhighlighter/Scripts/shBrushGroovy.js',
+      'haxe hx /forum/syntaxhighlighter/Scripts/shBrushHaxe.js',
+      'java /forum/syntaxhighlighter/Scripts/shBrushJava.js',
+      'jfx javafx /forum/syntaxhighlighter/Scripts/shBrushJavaFX.js',
+      'js jscript javascript /forum/syntaxhighlighter/Scripts/shBrushJScript.js',
+      'perl Perl pl /forum/syntaxhighlighter/Scripts/shBrushPerl.js',
+      'php /forum/syntaxhighlighter/Scripts/shBrushPhp.js',
+      'text plain /forum/syntaxhighlighter/Scripts/shBrushPlain.js',
+      'powershell ps posh /forum/syntaxhighlighter/Scripts/shBrushPowerShell.js',
+      'py python /forum/syntaxhighlighter/Scripts/shBrushPython.js',
+      'ruby rails ror rb /forum/syntaxhighlighter/Scripts/shBrushRuby.js',
+      'sass scss /forum/syntaxhighlighter/Scripts/shBrushSass.js',
+      'scala /forum/syntaxhighlighter/Scripts/shBrushScala.js',
+      'sql /forum/syntaxhighlighter/Scripts/shBrushSql.js',
+      'ts typescript /forum/syntaxhighlighter/Scripts/shBrushTypeScript.js',
+      'vb vbnet /forum/syntaxhighlighter/Scripts/shBrushVb.js',
+      'xml xhtml xslt html /forum/syntaxhighlighter/Scripts/shBrushXml.js'
+  );
+};
