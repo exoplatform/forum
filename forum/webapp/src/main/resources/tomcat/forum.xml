@@ -1,2 +1,4 @@
 <Context path="/forum" docBase="../../../eXoProjects/ks/trunk/eXoApplication/forum/webapp/src/main/webapp" 
          debug="0" reloadable="true"/>
+<Context path="/forum" docBase="../../../eXoProjects/ks/trunk/web/forum/src/main/webapp" 
+         debug="0" reloadable="true" />

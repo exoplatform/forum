@@ -93,12 +93,12 @@ public class TestRenderHelper extends TestCase {
     Collections.sort(expectedCodeHighlighters);
     assertTrue(CollectionUtils.isEqualCollection(codeHighlighters, expectedCodeHighlighters));
     String expected = 
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/shCore.js\" id=\"script_0_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/shAutoloader.js\" id=\"script_1_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/shBrushJScript.js\" id=\"script_2_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/shBrushJava.js\" id=\"script_3_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/shLegacy.js\" id=\"script_4_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
-        "<script src=\"/forumResources/syntaxhighlighter/Scripts/load_syntaxhighlighter.js\" id=\"script_5_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
+        "<script src=\"/forum/syntaxhighlighter/Scripts/shCore.js\" id=\"script_0_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
+        "<script src=\"/forum/syntaxhighlighter/Scripts/shAutoloader.js\" id=\"script_1_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
+        "<script src=\"/forum/syntaxhighlighter/Scripts/shBrushJScript.js\" id=\"script_2_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
+        "<script src=\"/forum/syntaxhighlighter/Scripts/shBrushJava.js\" id=\"script_3_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
+        "<script src=\"/forum/syntaxhighlighter/Scripts/shLegacy.js\" id=\"script_4_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>" +
+        "<script src=\"/forum/syntaxhighlighter/Scripts/load_syntaxhighlighter.js\" id=\"script_5_UIScriptBBCodeContainer\" type=\"text/javascript\"></script>";
     assertEquals(expected, WebUIUtils.attachJSSyntaxHighlighter(codeHighlighters));
     //
     BuildRendering.endRender(context);
