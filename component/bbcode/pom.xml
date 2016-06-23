@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-component</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.4.x-SNAPSHOT</version>
+    <version>4.4.0-M04</version>
   </parent>
   <artifactId>forum-component-bbcode</artifactId>
   <name>Forum BBCode processing</name>
