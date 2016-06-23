@@ -215,6 +215,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private QueryLastPostTaskManager     queryLastPostManager;
 
+  private static final String DOCTYPE_DECLARATION_DISALLOW = "http://apache.org/xml/features/disallow-doctype-decl";
+
   public JCRDataStorage() {
   }
 
@@ -7170,14 +7172,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     byte[] bdata = new byte[bis.available()];
     bis.read(bdata);
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    //disallow doctype declaration in order to prevent xxe attack
+    docBuilderFactory.setFeature(DOCTYPE_DECLARATION_DISALLOW,true);
     DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
     ByteArrayInputStream is = new ByteArrayInputStream(bdata);
-    Document doc = docBuilder.parse(is);
-    doc.getDocumentElement().normalize();
-    String typeNodeExport = ((org.w3c.dom.Node) doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0)).getTextContent();
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    List<String> patchNodeImport = new ArrayList<String>();
     try {
+      Document doc = docBuilder.parse(is);
+      doc.getDocumentElement().normalize();
+      String typeNodeExport = ((org.w3c.dom.Node) doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0)).getTextContent();
+      SessionProvider sProvider = CommonUtils.createSystemProvider();
+      List<String> patchNodeImport = new ArrayList<String>();
       Node forumHome = getForumHomeNode(sProvider);
       is = new ByteArrayInputStream(bdata);
       if (!typeNodeExport.equals(EXO_FORUM_CATEGORY) && !typeNodeExport.equals(EXO_FORUM)) {
