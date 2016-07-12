@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.commons.utils.StringCommonUtils;
+import org.exoplatform.commons.utils.HTMLSanitizer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
@@ -30,12 +30,7 @@ import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.service.BufferAttachment;
-import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.MessageBuilder;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.*;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -55,18 +50,13 @@ import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
-@ComponentConfig(
-    lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/forum/webui/popup/UIPostForm.gtmpl",
-    events = {
-      @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.SubmitPostActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.AttachmentActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
-      @EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE)
-    }
-)
+@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/forum/webui/popup/UIPostForm.gtmpl", events = {
+    @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UIPostForm.SubmitPostActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UIPostForm.AttachmentActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE),
+    @EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE) })
 public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   public static final String    FIELD_POSTTITLE_INPUT  = "PostTitle";
 
@@ -117,14 +107,11 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
     editReason.setRendered(false);
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
-    
-    
+
     UIFormRichtextInput richtext = new UIFormRichtextInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
-    richtext.setIsPasteAsPlainText(true)
-            .setIgnoreParserHTML(true)
-            .setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
+    richtext.setIsPasteAsPlainText(true).setIgnoreParserHTML(true).setToolbar(UIFormRichtextInput.FORUM_TOOLBAR);
     richtext.addValidator(MandatoryValidator.class);
-    
+
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);
     threadContent.addChild(richtext);
@@ -219,12 +206,14 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
       String message = CommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
       if (isQuote) {// quote
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
-        
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
+                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
+
         String value = "[QUOTE=" + getForumService().getScreenName(post.getOwner()) + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormRichtextInput.class).setValue(value);
       } else if (isPP) {
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
+                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       } else {// edit
         this.attachments_.clear();
         editReason.setRendered(true);
@@ -237,7 +226,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       }
     } else {
       if (!isQuote) {// reply
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
+                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       }
     }
   }
@@ -258,6 +248,14 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() {
   }
 
+  public boolean isMod() {
+    return isMod;
+  }
+
+  public void setMod(boolean isMod) {
+    this.isMod = isMod;
+  }
+
   static public class PreviewPostActionListener extends BaseEventListener<UIPostForm> {
     public void onEvent(Event<UIPostForm> event, UIPostForm uiForm, String id) throws Exception {
       UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
@@ -265,7 +263,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
       String userName = uiForm.getUserProfile().getUserId();
       String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
-      String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+      String checksms = TransformHTML.cleanHtmlCode(message,
+                                                    new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
       if (ForumUtils.isEmpty(postTitle)) {
@@ -320,19 +319,21 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
           boolean isAddRe = false;
           int maxText = ForumUtils.MAXTITLE;
-          if(!ForumUtils.isEmpty(postTitle)) {
+          if (!ForumUtils.isEmpty(postTitle)) {
             while (postTitle.indexOf(uiForm.getTitle("").trim()) == 0) {
               postTitle = postTitle.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
               isAddRe = true;
             }
             if (postTitle.length() > maxText) {
-              warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) });
+              warning("NameValidator.msg.warning-long-text",
+                      new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) });
               uiForm.isDoubleClickSubmit = false;
               return;
             }
           }
           String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
-          String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+          String checksms = TransformHTML.cleanHtmlCode(message,
+                                                        new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
           if (ForumUtils.isEmpty(postTitle)) {
@@ -341,7 +342,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           if (t > 0 && k != 0 && !checksms.equals("null")) {
             String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue();
             if (!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
-              warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) });
+              warning("NameValidator.msg.warning-long-text",
+                      new String[] { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) });
               uiForm.isDoubleClickSubmit = false;
               return;
             }
@@ -387,7 +389,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               post.setCreatedDate(currentDate);
             }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
-            message = StringCommonUtils.encodeScriptMarkup(message);
+            message = HTMLSanitizer.sanitize(message);
             post.setMessage(message);
             post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());
@@ -412,7 +414,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 if (uiForm.isQuote || uiForm.isMP) {
                   post.setRemoteAddr(WebUIUtils.getRemoteIP());
                   try {
-                    uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail());
+                    uiForm.getForumService().savePost(uiForm.categoryId,
+                                                      uiForm.forumId,
+                                                      uiForm.topicId,
+                                                      post,
+                                                      true,
+                                                      ForumUtils.getDefaultMail());
                     isNew = true;
                   } catch (PathNotFoundException e) {
                     isParentDelete = true;
@@ -424,7 +431,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   post.setModifiedDate(currentDate);
                   post.setEditReason(editReason);
                   try {
-                    uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, messageBuilder);
+                    uiForm.getForumService().savePost(uiForm.categoryId,
+                                                      uiForm.forumId,
+                                                      uiForm.topicId,
+                                                      post,
+                                                      false,
+                                                      messageBuilder);
                   } catch (PathNotFoundException e) {
                     isParentDelete = true;
                   }
@@ -433,7 +445,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               } else {
                 post.setRemoteAddr(WebUIUtils.getRemoteIP());
                 try {
-                  uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, messageBuilder);
+                  uiForm.getForumService()
+                        .savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, messageBuilder);
                   isNew = true;
                 } catch (PathNotFoundException e) {
                   isParentDelete = true;
@@ -538,13 +551,5 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.cancelAction();
     }
-  }
-
-  public boolean isMod() {
-    return isMod;
-  }
-
-  public void setMod(boolean isMod) {
-    this.isMod = isMod;
   }
 }
