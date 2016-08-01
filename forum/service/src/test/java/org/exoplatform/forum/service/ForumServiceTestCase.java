@@ -573,6 +573,26 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     }
   }
 
+  public void testImportXXE() throws Exception {
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(cat, true);
+    cat = forumService_.getCategory(cat.getId());
+    String pathNode = cat.getPath();
+    assertEquals("Before import data, category don't have any forum", forumService_.getForums(cat.getId(), "").size(), 0);
+    try {
+
+      File file = new File(System.getProperty("user.dir") + "/src/test/resources/conf/content/XXE_CONTENT.xml");
+      String content = FileUtils.readFileToString(file, "UTF-8");
+      byte currentXMLBytes[] = content.getBytes();
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
+      // Import forum into category
+      forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+      fail();
+    } catch (Exception e) {
+      log.info("XXE content not imported: "+e.getMessage());
+    }
+  }
+
   public void testExportXML() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
