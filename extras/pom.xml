@@ -27,7 +27,7 @@
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras</artifactId>
   <packaging>pom</packaging>
-  <name>Forum Extras</name>
+  <name>eXo PLF:: Forum Extras</name>
   <description>Forum Extras</description>
   <modules>
     <module>injection</module>

@@ -8,7 +8,7 @@
   </parent>
   <artifactId>forum-application-common</artifactId>
   <packaging>jar</packaging>
-  <name>Forum Applications commons</name>
+  <name>eXo PLF:: Forum Applications commons</name>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

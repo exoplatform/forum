@@ -9,7 +9,7 @@
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras-injection</artifactId>
   <packaging>jar</packaging>
-  <name>Forum Injectors</name>
+  <name>eXo PLF:: Forum Injectors</name>
   <description>Forum Injectors</description>
   <dependencies>
     <dependency>

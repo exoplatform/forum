@@ -7,7 +7,7 @@
     <version>4.4.x-SNAPSHOT</version>
   </parent>
   <artifactId>forum-component-bbcode</artifactId>
-  <name>Forum BBCode processing</name>
+  <name>eXo PLF:: Forum BBCode processing</name>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

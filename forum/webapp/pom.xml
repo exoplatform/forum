@@ -8,7 +8,7 @@
   </parent>
   <artifactId>forum-forum-webapp</artifactId>
   <packaging>war</packaging>
-  <name>Forum Forum application</name>
+  <name>eXo PLF:: Forum Forum application</name>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

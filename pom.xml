@@ -11,7 +11,7 @@
   <artifactId>forum</artifactId>
   <version>4.4.x-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>eXo Forum</name>
+  <name>eXo PLF:: Forum</name>
   <description>eXo Forum manages forum, answer and poll.</description>
   <modules>
     <module>component</module>

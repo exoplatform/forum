@@ -8,7 +8,7 @@
   </parent>
   <artifactId>forum-component</artifactId>
   <packaging>pom</packaging>
-  <name>Forum Components</name>
+  <name>eXo PLF:: Forum Components</name>
   <modules>
     <module>common</module>
     <module>rendering</module>

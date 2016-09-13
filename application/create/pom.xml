@@ -7,7 +7,7 @@
     <version>4.4.x-SNAPSHOT</version>
   </parent>
   <artifactId>forum-application-create</artifactId>
-  <name>Forum create</name>
+  <name>eXo PLF:: Forum create</name>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>

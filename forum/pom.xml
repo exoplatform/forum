@@ -8,7 +8,7 @@
   </parent>
   <artifactId>forum-forum</artifactId>
   <packaging>pom</packaging>
-  <name>Forum Forum</name>
+  <name>eXo PLF:: Forum Forum</name>
   <modules>
     <module>service</module>
     <module>webapp</module>

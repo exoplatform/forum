@@ -7,7 +7,7 @@
     <version>4.4.x-SNAPSHOT</version>
   </parent>
   <artifactId>forum-component-common</artifactId>
-  <name>Forum Common components</name>
+  <name>eXo PLF:: Forum Common components</name>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
