@@ -3776,8 +3776,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       sendNotificationManager.addTask(new SendNotificationTask(nodePath, topic, post, messageBuilder, isApprovePost));
     }
   }
-  
-  private boolean canReceiveNotification(Node topicNode, String user) throws Exception {
+
+  /**
+   * Check if a specific User have the permission to receive the email notification
+   * 
+   * @param topicNode the underlying watched topic 
+   * @param user the user watching the topic
+   * @param postAuthor the owner of the new post
+   * @throws Exception
+   */
+  private boolean canReceiveNotification(Node topicNode, String user, String postAuthor) throws Exception {
+    //if the watching user is the one who replied to the topic then don't send notification
+    if(user==null || user.equals(postAuthor)){
+      return false;
+    }
     Node forumNode = topicNode.getParent();
     PropertyReader reader = new PropertyReader(forumNode);
     // viewer of topic
@@ -3827,7 +3839,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           int i = 0;
           String[] emails = reader.strings(EXO_EMAIL_WATCHING, new String[] {});
           for (String user : users) {
-            if (user.equals(topic.getOwner()) || canReceiveNotification(topicNode, user)) {
+            if (user.equals(topic.getOwner()) || canReceiveNotification(topicNode, user, null)) {
               emailList.add(emails[i]);
             }
             i++;
@@ -3896,7 +3908,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         int i = 0;
         List<String> removeEmail = new ArrayList<String>();
         for (String user : userListCategory) {
-          if(!canReceiveNotification(topicNode, user)) {
+          if(!canReceiveNotification(topicNode, user, post.getOwner())) {
             removeEmail.add(emailListCategory.get(i));
           }
           ++i;
@@ -3907,7 +3919,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         i = 0;
         for (String user : userListForum) {
           if(userListCategory.contains(user)
-              || !canReceiveNotification(topicNode, user)) {
+              || !canReceiveNotification(topicNode, user, post.getOwner())) {
             removeEmail.add(emailListForum.get(i));
           }
           ++i;
@@ -3919,7 +3931,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         for (String user : userListTopic) {
           if(userListCategory.contains(user)
               || userListForum.contains(user)
-              || !canReceiveNotification(topicNode, user)) {
+              || !canReceiveNotification(topicNode, user, post.getOwner())) {
             removeEmail.add(emailListTopic.get(i));
           }
           ++i;
