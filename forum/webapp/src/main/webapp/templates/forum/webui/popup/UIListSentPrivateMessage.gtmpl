@@ -39,13 +39,12 @@
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
-					String fromUser = mail.getSendTo();
-					fromUser = ForumUtils.getCalculateListEmail(fromUser);
+					String toUsers = uicomponent.getCalculateListToUsers(mail.getSendTo());
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
 				<td><a href="javascript:void(0);" onclick="<%=uicomponent.event("ViewMessage", mailId)%>">$nameMail</a></td>
-				<td>$fromUser</td>
+				<td>$toUsers</td>
 				<td>$strFromDate</td>
 				<td class="center">				
 					<a class="actionIcon" href="javascript:void(0);" onclick="<%=uicomponent.event("ForwardMessage", mailId)%>">

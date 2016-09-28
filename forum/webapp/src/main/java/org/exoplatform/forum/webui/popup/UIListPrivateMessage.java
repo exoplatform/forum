@@ -29,6 +29,8 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumActionBar;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -39,6 +41,8 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIListPrivateMessage extends UIContainer {
   protected ForumService              forumService;
+  
+  protected UserHandler               userHandler;
 
   protected UserProfile               userProfile      = null;
 
@@ -52,10 +56,16 @@ public class UIListPrivateMessage extends UIContainer {
   
   public UIListPrivateMessage() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+    userHandler = organizationService.getUserHandler();
     addChild(UIForumPageIterator.class, null, null);
     addChild(UIViewPrivateMessage.class, null, null).setRendered(false);
   }
 
+  public String getUserFullNameById(String userId) throws Exception {
+    return userHandler.findUserByName(userId).getFullName();
+  }
+  
   public String getMessageType() {
     return messageType;
   }
@@ -99,6 +109,22 @@ public class UIListPrivateMessage extends UIContainer {
       }
     }
     return null;
+  }
+  
+  protected String getCalculateListToUsers(String toUsers) throws Exception {
+    String[] toUsersArray = ForumUtils.splitForForum(toUsers);
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < toUsersArray.length; i++) {
+      if (ForumUtils.isEmpty(toUsersArray[i])) {
+        continue;
+      }             
+      if (i > 0) {
+        builder.append(",<br/>");
+      }
+      String toUserFullName = userHandler.findUserByName(toUsersArray[i]).getFullName();
+      builder.append("<span title='").append(toUserFullName).append("'>").append(ForumUtils.getSubString(toUserFullName, 15)).append("</span>");
+    }
+    return builder.toString();
   }
 
   static public class ViewMessageActionListener extends EventListener<UIListPrivateMessage> {

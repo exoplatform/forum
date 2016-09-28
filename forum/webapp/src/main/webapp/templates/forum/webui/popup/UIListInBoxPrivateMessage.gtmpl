@@ -37,7 +37,7 @@
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
-					String fromUser = mail.getFrom();
+					String fromUser = uicomponent.getUserFullNameById(mail.getFrom());
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
