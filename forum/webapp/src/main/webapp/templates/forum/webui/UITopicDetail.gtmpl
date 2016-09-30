@@ -147,7 +147,6 @@
 	<div class="uiBox containerTopicDetail">
 		<div class="title clearfix">
 			<ul class="pull-right">
-				
 				<li class="defaultStyle forumSeparatorLine">
 					<% if(uicomponent.isWatching(topic.getPath())){ %>
 					<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
@@ -359,6 +358,10 @@
 				<% } %>
 				<% } %>
 			</ul>
+			<% 
+			  String postTtile = posts.get(0).getName();
+			%>
+			  <span id="titleTopic" class="defaultStyle forumSeparatorLine"> $postTtile</<span>
 		</div>
 		<div style="padding: 10px; position:relative;">
 			<!-- Start ContentContainer -->
@@ -431,69 +434,30 @@
 				%>
 				
 				<div class="contentTopicDetail clearfix divRow" id="$postId">
-					<!-- Start MemberContainer -->
-					<div class="memberContainer divCell">
-						
-						<%
-							String userSmile = "uiIconForumColorOffline";
-							String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
-							if(uicomponent.isOnline(owner)) {
-								userSmile = "uiIconForumColorOnline";
-								titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
-							}
-						%>
-						<div class="dropdown uiUserInfo">
-							<a href="javascript:void(0)" class="textTitleProfile">
-								<i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
-							</a>
-							<%=uicomponent.getMenuUser(userInfo) %>
-						</div>
-						<div class="rank"><%=userInfo.getUserTitle();%></div>
-						<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
-							if(isDisplayAvatar) {
-						%>
-						<div class="dropdown uiUserInfo avatarXLarge">
-							<a href="javascript:void(0)">
-								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-							</a>
-							<%=uicomponent.getMenuUser(userInfo) %>
-						</div>
-						<% } %>
-						
-						<div class="infoMember">
-							<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
-							<%
-								long totalPost = userInfo.getTotalPost();
-								if(totalPost > 0) {
-									Date lastPostOfUser = userInfo.getLastPostDate() ;
-									String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
-							<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
-							<%} else {%>
-							<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
-							<%}
-								if(!ForumUtils.isEmpty(location)) {
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
-							<%}
-								Date lastLogin = userInfo.getLastLoginDate();
-								String lastLoginUser = "" ;
-								if(lastLogin != null){
-									lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
-								}
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
-						</div>
-					</div>
-					<!-- End MemberContainer -->
+					<%
+						String userSmile = "uiIconForumColorOffline";
+						String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
+						if(uicomponent.isOnline(owner)) {
+							userSmile = "uiIconForumColorOnline";
+							titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
+						}
+					%>
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
 						<div class="postViewHeader clearfix">
+							<a href="javascript:void(0)" class="avatarXSmall pull-left">
+								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+							</a> 
+							<div class="dropdown uiUserInfo">
+							<a href="javascript:void(0)" class="textTitleProfile">
+								<i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
+							</a>
+							<%=uicomponent.getMenuUser(userInfo) %>
+							</div>
 							<% if(canEdit) {%>
 							<div class="pull-right">
-								
-								<span class="postTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
+
+								<span class="postTime"> <%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
 								<%
 									if(isShowIP) {
 										String ip = post.getRemoteAddr();
@@ -539,12 +503,10 @@
 								</span>
 								<%} %>
 							</div>
-							<div class="postViewTitle">$namePost $alert</div>
 							<% } else { %>
 							<div class="pull-right">
 								<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 							</div>
-							<div class="postViewTitle">$namePost $alert</div>
 							<% } %>
 						</div>
 						
