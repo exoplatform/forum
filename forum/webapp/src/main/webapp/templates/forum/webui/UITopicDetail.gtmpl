@@ -443,34 +443,16 @@
 							titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
 						}
 
-		def context = _ctx.getRequestContext();
-     	def jsManager = context.getJavascriptManager();
-
-      String statusTitle = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Loading"));
-      String connectLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Connect"));
-      String confirmLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Confirm"));
-      String cancelRequestLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.CancelRequest"));
-      String removeConnectionLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.RemoveConnection"));
-      String ignoreLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Ignore"));
-  
-      String labels = """ {
-      StatusTitle: '${statusTitle}',
-      Connect: '${connectLabel}',
-      Confirm: '${confirmLabel}',
-      CancelRequest: '${cancelRequestLabel}',
-      RemoveConnection: '${removeConnectionLabel}',
-      Ignore: '${ignoreLabel}'
-      } """;
-
+	
       String userForumId = userInfo.getUserId();
 
-      jsManager.require("SHARED/jquery", "gj").require("SHARED/userPopupPlugin","userPopup").addScripts("initUserProfilePopup($labels, '$userForumId');");
+     
 
 					%>
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
 						<div class="postViewHeader clearfix">
-							<a href="#" class="avatarXSmall pull-left forumUserPopup-$userForumId">
+							<a href="#" data="forumUserPopup-$userForumId" class="avatarXSmall pull-left forumUserPopup-$userForumId">
 								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 							</a> 
 							<div class="dropdown uiUserInfo">
@@ -741,26 +723,30 @@
 		if(uicomponent.isShowRule) {
 			uicomponent.renderChild(UIPostRules.class);
 		}
+
+
+	  def context = _ctx.getRequestContext();
+      def jsManager = context.getJavascriptManager();
+
+      String statusTitle = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Loading"));
+      String connectLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Connect"));
+      String confirmLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Confirm"));
+      String cancelRequestLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.CancelRequest"));
+      String removeConnectionLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.RemoveConnection"));
+      String ignoreLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Ignore"));
+  
+      String labels = """ {
+      StatusTitle: '${statusTitle}',
+      Connect: '${connectLabel}',
+      Confirm: '${confirmLabel}',
+      CancelRequest: '${cancelRequestLabel}',
+      RemoveConnection: '${removeConnectionLabel}',
+      Ignore: '${ignoreLabel}'
+      } """;
+
+ 	  jsManager.require("SHARED/jquery", "gj").require("SHARED/userPopupPlugin","userPopup").addScripts("initUserProfilePopup($labels);");
+
 	%>
 </div>
 
-<script language="javascript">
-      function initUserProfilePopup(globalLabels, urs) {
-          require(['SHARED/jquery','SHARED/userPopupPlugin','SHARED/socialUtil'],function(jQuery,userPopup,socialUtil){
-              var labels = {};
-              var profileLabels = jQuery.extend(true, {}, labels, globalLabels);
-              jQuery.each(profileLabels, function(key) {
-                profileLabels[key] =  window.decodeURIComponent(profileLabels[key]);
-              });
-              console.log(urs);
-              jQuery(".forumUserPopup-"+urs).userPopup({
-                  restURL: '//' + window.location.host + eXo.social.portal.context + '/' + eXo.social.portal.rest + '/social/people' + '/getPeopleInfo/'+urs+'.json',
-                  labels: profileLabels,
-                  content: false,
-                  defaultPosition: "left",
-                  keepAlive: true,
-                  maxWidth: "240px"
-              });
-          });
-      }
-</script> 
+<script src="/forum/javascript/eXo/forum/PopupActivator.js"></script>
