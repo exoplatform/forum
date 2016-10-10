@@ -612,7 +612,7 @@
 							<%
 								if(!ForumUtils.isEmpty(editBy)) {
 							%>
-							<div class="txtLastEdit">
+							<div class="txtLastEdit pull-left">
 								<div><%=uicomponent.getLastEditedBy(editBy, post.getModifiedDate())%></div>
 								<%
 									String reason = post.getEditReason() ;
