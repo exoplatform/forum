@@ -455,12 +455,12 @@
 							<a href="#" data="forumUserPopup-$userForumId" class="avatarXSmall pull-left forumUserPopup-$userForumId">
 								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 							</a> 
-							<div class="dropdown uiUserInfo">
+							<span id="fullNameTopic" class="dropdown">
 							<a href="javascript:void(0)" class="textTitleProfile">
-								<i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
+							 <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
 							</a>
-							<%=uicomponent.getMenuUser(userInfo) %>
-							</div>
+
+							</span>
 							<% if(canEdit) {%>
 							<div class="pull-right">
 
