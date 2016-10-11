@@ -19,11 +19,13 @@ package org.exoplatform.forum.service;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.listener.Asynchronous;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
+@Asynchronous
 public class AuthenticationLoginListener extends Listener<ConversationRegistry, ConversationState> {
   private ExoContainerContext context;
 
