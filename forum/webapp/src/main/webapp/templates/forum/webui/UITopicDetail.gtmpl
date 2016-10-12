@@ -141,13 +141,20 @@
 		</div>
 		
 	</div>
+
+<script src="/forum/javascript/eXo/forum/Utils.js"></script>
 	
 	<div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	
 	<!-- Start PostsInThreadContainer -->
 	<div class="uiBox containerTopicDetail">
 		<div class="title clearfix">
-			<ul class="pull-right">
+			<ul id="myTopnav" class="pull-right topnav">  <!-- xxx -->
+
+				<li class="icon defaultStyle forumSeparatorLine">
+    				<a href="javascript:void(0);" style="font-size:15px;" onclick="showHide()">☰</a>
+  				</li>
+
 				<li class="defaultStyle forumSeparatorLine">
 					<% if(uicomponent.isWatching(topic.getPath())){ %>
 					<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
@@ -452,14 +459,15 @@
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
 						<div class="postViewHeader clearfix">
-							<a href="#" data="forumUserPopup-$userForumId" class="avatarXSmall pull-left forumUserPopup-$userForumId">
-								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-							</a> 
-							<span id="fullNameTopic" class="dropdown">
-							<a href="javascript:void(0)" class="textTitleProfile">
-							 <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
-							</a>
-
+							<span href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId">
+								<a href="#" class="avatarXSmall pull-left">
+									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+								</a> 
+								<span id="fullNameTopic" class="dropdown">
+								  <a href="javascript:void(0)" class="textTitleProfile">
+								    <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
+								  </a>
+								</span>
 							</span>
 							<% if(canEdit) {%>
 							<div class="pull-right">
