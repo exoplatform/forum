@@ -16,15 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.NodeIterator;
-
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
@@ -34,6 +25,14 @@ import org.exoplatform.forum.service.impl.model.TopicFilter;
 import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.user.UserStateService;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.NodeIterator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Manages Forums and all its related objects (categories, topics and posts).
@@ -88,6 +87,15 @@ public interface ForumService extends ForumServiceLegacy {
    * @LevelAPI Platform
    */
   List<Category> getCategories();
+
+  /**
+   * Gets the list of categories in Forums according to the boolean value
+   * if true then returns all categories, if false then returns categories without the Space one.
+   *
+   * @return Categories.
+   * @LevelAPI Platform
+   */
+  List<Category> getCategories(boolean includeSpacesCategories);
 
   /**
    * 

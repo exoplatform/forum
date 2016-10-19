@@ -16,9 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
@@ -47,6 +44,9 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ComponentConfig(
     template = "app:/templates/forum/webui/UIForumActionBar.gtmpl", 
@@ -224,7 +224,7 @@ public class UIForumActionBar extends UIContainer {
   static public class AddForumActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      if (uiActionBar.forumService.getCategories().size() > 0) {
+      if (uiActionBar.forumService.getCategories(false).size() > 0) {
         UIForumPortlet forumPortlet = uiActionBar.getParent();
         UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
         UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);

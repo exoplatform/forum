@@ -16,10 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -40,6 +36,10 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ComponentConfig(
     template = "app:/templates/forum/webui/UICategories.gtmpl",
@@ -191,7 +191,7 @@ public class UICategories extends UIContainer {
 
   private List<Category> getCategoryList() throws Exception {
     try {
-      categoryList = forumService.getCategories();
+      categoryList = forumService.getCategories(false);
     } catch (Exception e) {
       categoryList = new ArrayList<Category>();
     }

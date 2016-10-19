@@ -16,19 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.NodeIterator;
-
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -81,6 +68,18 @@ import org.exoplatform.services.user.UserStateService;
 import org.picocontainer.Startable;
 import org.quartz.JobDetail;
 
+import javax.jcr.NodeIterator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 @ManagedBy(ForumServiceManaged.class)
 public class ForumServiceImpl implements ForumService, Startable {
 
@@ -101,7 +100,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   private UserStateService           userStateService;
 
   protected List<ForumEventListener> listeners_      = new ArrayList<ForumEventListener>(3);
-  
+
   public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService staticsService,
                           JobSchedulerService jobService, UserStateService userStateService, LifeCycleCompletionService completionService) {
     this.storage = dataStorage;
@@ -321,7 +320,25 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public List<Category> getCategories() {
-    return storage.getCategories();
+    return getCategories(true);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public List<Category> getCategories(boolean includeSpacesCategories) {
+    List<Category> displayedCategories = new ArrayList<Category>();
+    List<Category> categories = storage.getCategories();
+    if (includeSpacesCategories) {
+      displayedCategories = categories;
+    } else {
+      for (Category category : categories) {
+        if (!(category.getId().equals(Utils.CATEGORY_SPACE_ID_PREFIX))) {
+          displayedCategories.add(category);
+        }
+      }
+    }
+    return displayedCategories;
   }
 
   /**

@@ -16,13 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
@@ -56,6 +49,13 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @ComponentConfigs({
     @ComponentConfig(lifecycle = UIFormLifecycle.class, 
@@ -144,7 +144,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
     forum = new Forum();
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     if (ForumUtils.isEmpty(categoryId)) {
-      List<Category> categorys = getForumService().getCategories();
+      List<Category> categorys = getForumService().getCategories(false);
       for (Category category : categorys) {
         list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId()));
       }

@@ -16,16 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.jcr.ImportUUIDBehavior;
-
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
@@ -34,9 +24,18 @@ import org.exoplatform.forum.service.impl.JCRDataStorage;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.MembershipType;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserStatus;
+
+import javax.jcr.ImportUUIDBehavior;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
@@ -57,6 +56,60 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     //
     removeAllData();
     super.tearDown();
+  }
+
+  public void testCategoriesListWithoutSpacesCategory() throws Exception {
+    // Given
+    String cateId = Utils.CATEGORY_SPACE_ID_PREFIX;
+    Category categorySpace = createCategory(cateId);
+    categorySpace.setCategoryName("spaces");
+    forumService_.saveCategory(categorySpace, true);
+    Category category = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(category, true);
+
+    // When
+    List<Category> categories = forumService_.getCategories(false);
+
+    // Then
+    assertFalse(categories.contains(categorySpace));
+    assertTrue(categories.contains(category));
+
+  }
+
+  public void testCategoriesListWithSpacesCategory() throws Exception {
+    // Given
+    String cateId = Utils.CATEGORY_SPACE_ID_PREFIX;
+    Category categorySpace = createCategory(cateId);
+    categorySpace.setCategoryName("spaces");
+    forumService_.saveCategory(categorySpace, true);
+    Category category = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(category, true);
+
+    // When
+    List<Category> categories = forumService_.getCategories(true);
+
+    // Then
+    assertTrue(categories.contains(categorySpace));
+    assertTrue(categories.contains(category));
+
+  }
+
+  public void testCategories() throws Exception {
+    // Given
+    String cateId = Utils.CATEGORY_SPACE_ID_PREFIX;
+    Category categorySpace = createCategory(cateId);
+    categorySpace.setCategoryName("spaces");
+    forumService_.saveCategory(categorySpace, true);
+    Category category = createCategory(getId(Utils.CATEGORY));
+    forumService_.saveCategory(category, true);
+
+    // When
+    List<Category> categories = forumService_.getCategories();
+
+    // Then
+    assertTrue(categories.contains(categorySpace));
+    assertTrue(categories.contains(category));
+
   }
   
   public void testGetObjectNameByPathAfterDeleted() throws Exception {
