@@ -452,14 +452,18 @@
 
 	
       String userForumId = userInfo.getUserId();
-
+      String own = posts.get(0).getOwner();
      
 
 					%>
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
-						<div class="postViewHeader clearfix">
-							<span href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId">
+
+							<% if(!own.equals(userForumId)) { %>
+								<div href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId postViewHeader clearfix">
+							<% } else { %>
+								<div class="postViewHeader clearfix">
+							<% } %>
 								<a href="#" class="avatarXSmall pull-left">
 									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 								</a> 
@@ -467,7 +471,7 @@
 								  <a href="javascript:void(0)" class="textTitleProfile">
 								    <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
 								  </a>
-								</span>
+								
 							</span>
 							<% if(canEdit) {%>
 							<div class="pull-right">
