@@ -141,8 +141,6 @@
 		</div>
 		
 	</div>
-
-<script src="/forum/javascript/eXo/forum/Utils.js"></script>
 	
 	<div style="display:none;" id="divChecked" data-checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	
@@ -152,7 +150,7 @@
 			<ul id="myTopnav" class="pull-right topnav">  <!-- xxx -->
 
 				<li class="icon defaultStyle forumSeparatorLine">
-    				<a href="javascript:void(0);" style="font-size:15px;" onclick="showHide()">☰</a>
+    				<a href="javascript:void(0);" onclick="showHide()">☰</a>
   				</li>
 
 				<li class="defaultStyle forumSeparatorLine">
@@ -165,16 +163,6 @@
 				
 				
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
-				<li class="defaultStyle forumSeparatorLine">
-					<a class="actionIcon" href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-				</li>
-				
-				
-				<li class="defaultStyle forumSeparatorLine">
-					<a class="actionIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> RSS</a>
-				</li>
-				
-				
 				<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
 				<li class="defaultStyle forumSeparatorLine">
 					<div class="dropdown actionIcon uiActionWithLabel">
@@ -205,9 +193,6 @@
 						</ul>
 						<% /*End Popup Menu*/ %>
 					</div>
-				</li>
-				<li class="defaultStyle forumSeparatorLine"	onclick="<%=uicomponent.event("RatingTopic")%>">
-					<a class="actionIcon" href="javaScript:void(0)"><i class="uiIconForumStar uiIconForumLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
 				</li>
 				<%}%>
 				
@@ -282,6 +267,22 @@
 							</li>
 								<%} %>
 							<%}%>
+
+				<li>
+					<a href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> RSS</a>
+				</li>
+
+
+				<%if(uicomponent.userProfile.getUserRole() < 3){%>
+				<li>
+					<a href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+				</li>
+				
+				<li	onclick="<%=uicomponent.event("RatingTopic")%>">
+					<a href="javaScript:void(0)"><i class="uiIconForumStar uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
+				</li>
+				<%}%>
+
 						</ul>
 					</div>
 				</li>
@@ -366,10 +367,8 @@
 				<% } %>
 				<% } %>
 			</ul>
-			<% 
-			  String postTtile = posts.get(0).getName();
-			%>
-			  <span id="titleTopic" class="defaultStyle forumSeparatorLine"> $postTtile</<span>
+			<% String postTtile = posts.get(0).getName(); %>
+			  <span id="titleTopic" class="pull-left"> $postTtile</<span>
 		</div>
 		<div style="padding: 10px; position:relative;">
 			<!-- Start ContentContainer -->
@@ -452,17 +451,16 @@
 
 	
       String userForumId = userInfo.getUserId();
-      String own = posts.get(0).getOwner();
      
 
 					%>
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
-
-							<% if(!own.equals(userForumId)) { %>
-								<div href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId postViewHeader clearfix">
+							<div class="postViewHeader clearfix">
+							<% if(!userLogin.equals(userForumId)) { %>
+							  <div id="profileWrapper" href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId">
 							<% } else { %>
-								<div class="postViewHeader clearfix">
+							  <div id="profileWrapper">
 							<% } %>
 								<a href="#" class="avatarXSmall pull-left">
 									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
@@ -472,7 +470,8 @@
 								    <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
 								  </a>
 								
-							</span>
+								</span>
+							   </div>
 							<% if(canEdit) {%>
 							<div class="pull-right">
 
