@@ -104,7 +104,7 @@ public class ForumUtils {
   
   public static final int    MAXSIGNATURE            = 300;
 
-  public static final int    MAXTITLE                = 100;
+  public static final int    MAXTITLE                = 300;
 
   public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;  
 
