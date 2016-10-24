@@ -117,7 +117,6 @@
 			<%
 					GregorianCalendar calendar = new GregorianCalendar() ;
 					long toDay = calendar.getTimeInMillis();
-					String topicNewPostIcon = "";
 					String topicNewPostTitle = "";
 					String lastPostBy = "";
 					String dateTime = "";
@@ -150,8 +149,6 @@
 						if(topicNewPost != null) {
 							topicPath = categoryId+'/'+forumId+'/'+topicNewPost.getId() ;
 							topicId = topicNewPost.getId();
-							topicNewPostIcon = topicNewPost.getIcon();
-							if(topicNewPostIcon.length() <= 0) topicNewPostIcon = "NormalTopicIcon" ;
 							topicNewPostTitle = topicNewPost.getTopicName();
 							lastPostBy = topicNewPost.getLastPostBy();
 							dateTime = TimeConvertUtils.convertXTimeAgo(topicNewPost.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
