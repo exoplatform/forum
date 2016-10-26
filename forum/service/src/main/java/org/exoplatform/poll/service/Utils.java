@@ -28,6 +28,8 @@ import org.apache.commons.lang.StringUtils;
 public class Utils {
   public static final String COLON = ":".intern();
 
+  public static final int MAX_TITLE = 255;
+
   public static Calendar getGreenwichMeanTime() {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setLenient(false);

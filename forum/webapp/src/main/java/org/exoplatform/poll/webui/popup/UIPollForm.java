@@ -82,8 +82,6 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 
   public static final String       ZERO                       = "0.0";
 
-  public static final int          MAX_TITLE                  = 100;
-
   private UIFormMultiValueInputSet uiFormMultiValue           = new UIFormMultiValueInputSet(FIELD_OPTIONS, FIELD_OPTIONS);
 
   private Poll                     poll                       = new Poll();
@@ -212,8 +210,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       int i = 1;
       for (String value : values) {
         if (!Utils.isEmpty(value)) {
-          if (value.length() > MAX_TITLE) {
-            String[] args = new String[] { uiForm.getLabel(FIELD_OPTIONS) + "(" + i + ")", String.valueOf(MAX_TITLE) };
+          if (value.length() > org.exoplatform.poll.service.Utils.MAX_TITLE) {
+            String[] args = new String[] { uiForm.getLabel(FIELD_OPTIONS) + "(" + i + ")", String.valueOf(org.exoplatform.poll.service.Utils.MAX_TITLE) };
             uiForm.warning("NameValidator.msg.warning-long-text", args, false);
             return;
           }
@@ -232,8 +230,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
         sms = "NotQuestion";
         sizeOption = 0;
       } else {
-        if (question.length() > MAX_TITLE) {
-          String[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(MAX_TITLE) };
+        if (question.length() > org.exoplatform.poll.service.Utils.MAX_TITLE) {
+          String[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(org.exoplatform.poll.service.Utils.MAX_TITLE) };
           uiForm.warning("NameValidator.msg.warning-long-text", args, false);
           return;
         }

@@ -41,8 +41,6 @@ public class Utils {
 
   public static final int    MAXSIGNATURE = 300;
 
-  public static final int    MAXTITLE     = 100;
-
   public static final long   MAXMESSAGE   = 10000;
 
   public static String getFormatDate(String format, Date myDate) {
