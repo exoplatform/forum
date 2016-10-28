@@ -150,7 +150,7 @@
 			<ul id="myTopnav" class="pull-right topnav">  <!-- xxx -->
 
 				<li class="icon defaultStyle forumSeparatorLine">
-    				<a href="javascript:void(0);" onclick="showHide()">☰</a>
+    				<a href="javascript:void(0);" onclick="showHide()">More <i class="uiIconArrowDown uiIconLightGray"> </i> </a>
   				</li>
 
 				<li class="defaultStyle forumSeparatorLine">
@@ -457,12 +457,10 @@
 					<!-- Start PostViewContainer -->
 					<div class="postViewContainer divCell">
 							<div class="postViewHeader clearfix">
-							<% if(!userLogin.equals(userForumId)) { %>
-							  <div id="profileWrapper" href="#" data="forumUserPopup-$userForumId" class="forumUserPopup-$userForumId">
-							<% } else { %>
-							  <div id="profileWrapper">
-							<% } %>
-								<a href="#" class="avatarXSmall pull-left">
+							
+							  <div id="profileWrapper" href="/portal/intranet/profile/$userForumId">
+						
+								<a class="avatarXSmall pull-left">
 									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 								</a> 
 								<span id="fullNameTopic" class="dropdown">
@@ -755,7 +753,7 @@
       Ignore: '${ignoreLabel}'
       } """;
 
- 	  jsManager.require("SHARED/jquery", "gj").require("SHARED/userPopupPlugin","userPopup").addScripts("initUserProfilePopup($labels);");
+ 	  jsManager.require("SHARED/jquery", "gj").require("SHARED/userPopupPlugin","userPopup").addScripts("initUserProfilePopup('containerTopicDetail',$labels);"); 
 
 	%>
 </div>

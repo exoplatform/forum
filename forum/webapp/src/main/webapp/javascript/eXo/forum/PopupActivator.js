@@ -1,23 +1,31 @@
-
- function initUserProfilePopup(globalLabels) {
-      require(['SHARED/jquery','SHARED/userPopupPlugin','SHARED/socialUtil'],function(jQuery,userPopup,socialUtil){
-          var labels = {};
-          var profileLabels = jQuery.extend(true, {}, labels, globalLabels);
-          jQuery.each(profileLabels, function(key) {
-            profileLabels[key] =  window.decodeURIComponent(profileLabels[key]);
-          });
-
-          jQuery("[data^=forumUserPopup]").each(function() {
-			  var val = jQuery(this).attr('data');
-			  val = val.split("-")[1];
-		          jQuery(".forumUserPopup-"+val).userPopup({
-		              restURL: '//' + window.location.host + eXo.social.portal.context + '/' + eXo.social.portal.rest + '/social/people' + '/getPeopleInfo/'+val+'.json',
-		              labels: profileLabels,
-		              content: false,
-		              defaultPosition: "left",
-		              keepAlive: true,
-		              maxWidth: "240px"
-		          });
-		  });
-      });
-   }
+function initUserProfilePopup(uicomponentId, labels) {
+require(['SHARED/jquery','SHARED/userPopupPlugin','SHARED/socialUtil'],function($,userPopup,socialUtil){
+	var UIProfile = {
+	  labels: {},
+	  KEYS : {
+	    ENTER : 13
+	  } 
+	};
+    UIProfile.labels = $.extend(true, {}, UIProfile.labels, labels);
+    $.each(UIProfile.labels, function(key) {
+      UIProfile.labels[key] =  window.decodeURIComponent(UIProfile.labels[key]);
+    });
+    // User Profile Popup initialize
+    var portal = eXo.env.portal;
+    var restUrl = '//' + window.location.host + portal.context + '/' + portal.rest + '/social/people' + '/getPeopleInfo/{0}.json';
+    var userLinks = $('.' + uicomponentId).find('div[href]');
+    $.each(userLinks, function (idx, el) {
+        var userUrl = $(el).attr('href');
+        var userId = userUrl.substring(userUrl.lastIndexOf('/') + 1);
+        
+        $(el).userPopup({
+          restURL: restUrl,
+          labels: UIProfile.labels,
+          content: false,
+          defaultPosition: "left",
+          keepAlive: true,
+          maxWidth: "240px"
+        });
+    });
+  });
+}
