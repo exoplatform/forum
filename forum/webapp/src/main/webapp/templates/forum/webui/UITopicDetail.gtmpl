@@ -150,7 +150,7 @@
 			<ul id="myTopnav" class="pull-right topnav">  <!-- xxx -->
 
 				<li class="icon defaultStyle forumSeparatorLine">
-    				<a href="javascript:void(0);" onclick="showHide()">More <i class="uiIconArrowDown uiIconLightGray"> </i> </a>
+    				<a href="javascript:void(0);" onclick="showHide()"> <%=_ctx.appRes("UIForumPortlet.label.more");%> <i class="uiIconArrowDown uiIconLightGray"> </i> </a>
   				</li>
 
 				<li class="defaultStyle forumSeparatorLine">
