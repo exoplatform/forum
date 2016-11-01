@@ -147,13 +147,9 @@
 	<!-- Start PostsInThreadContainer -->
 	<div class="uiBox containerTopicDetail">
 		<div class="title clearfix">
-			<ul id="myTopnav" class="pull-right topnav">  <!-- xxx -->
+			<ul class="pull-right">
 
-				<li class="icon defaultStyle forumSeparatorLine">
-    				<a href="javascript:void(0);" onclick="showHide()"> <%=_ctx.appRes("UIForumPortlet.label.more");%> <i class="uiIconArrowDown uiIconLightGray"> </i> </a>
-  				</li>
-
-				<li class="defaultStyle forumSeparatorLine">
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<% if(uicomponent.isWatching(topic.getPath())){ %>
 					<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 					<% } else { %>
@@ -164,7 +160,7 @@
 				
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
 				<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
-				<li class="defaultStyle forumSeparatorLine">
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<div class="dropdown actionIcon uiActionWithLabel">
 						<div data-toggle="dropdown"><i class="uiIconTag uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.Tag");%></div>
 						<% /*Begin Popup Menu*/ %>
@@ -200,12 +196,24 @@
 				<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>
 				<li class="defaultStyle forumSeparatorLine">
 					<div class="dropdown uiDropdownWithIcon actionIcon">
-						<div data-toggle="dropdown">
+						<div class="visible-desktop" data-toggle="dropdown">
 							<i class="uiIconSettings uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
 							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
-						<ul class="dropdown-menu">
+						<div class="visible-phone visible-tablet" data-toggle="dropdown">
+							<i class="uiIconSettings uiIconLightGray"></i>
+              <%=_ctx.appRes("UIForumPortlet.label.more");%>
+							<i class="uiIconArrowDown uiIconLightGray"></i>
+						</div>
+						<ul class="dropdown-menu pull-right">
+              <li class="visible-phone visible-tablet">
+                <% if(uicomponent.isWatching(topic.getPath())){ %>
+                <a href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+                <% } else { %>
+                <a href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+                <% } %>
+              </li>
 							<%
 								String link = "", itemLabel = "", classIcon = "", confirm = "" ;
 								String[] menuTopicActions; String[] menuTopicIcons;
@@ -288,14 +296,14 @@
 				</li>
 				<% } %>
 				
-				<li class="defaultStyle forumSeparatorLine">
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<div class="dropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiDropdownWithIcon actionIcon">
 						<div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
 							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu pull-right">
 							<li>
 								<div class="searchAdvance">
 									<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
@@ -319,7 +327,7 @@
 						<%
 							if(posts.size() > 1 || uicomponent.pageSelect > 1) {
 						%>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu pull-right">
 							<%
 								String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetCensorPost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
 								
@@ -367,10 +375,10 @@
 				<% } %>
 				<% } %>
 			</ul>
+	
 			<% String postTtile = posts.get(0).getName(); %>
-			  <span id="titleTopic" class="pull-left"> $postTtile</<span>
+			<div id="titleTopic" class="ellipsed"> $postTtile</div>
 		</div>
-		<div style="padding: 10px; position:relative;">
 			<!-- Start ContentContainer -->
 			<div class="divTable">
 				<%
@@ -440,7 +448,7 @@
 							else alert = " " ;
 				%>
 				
-				<div class="contentTopicDetail clearfix divRow" id="$postId">
+				<div class="contentTopicDetail clearfix" id="$postId">
 					<%
 						String userSmile = "uiIconForumColorOffline";
 						String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
@@ -455,7 +463,7 @@
 
 					%>
 					<!-- Start PostViewContainer -->
-					<div class="postViewContainer divCell">
+					<div class="postViewContainer">
 							<div class="postViewHeader clearfix">
 							
 							  <div id="profileWrapper" href="/portal/intranet/profile/$userForumId">
@@ -471,7 +479,8 @@
 								</span>
 							   </div>
 							<% if(canEdit) {%>
-							<div class="pull-right">
+              <div class="clearfix visible-phone-small"></div>
+							<div class="postHeaderInfo">
 
 								<span class="postTime"> <%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
 								<%
@@ -653,9 +662,8 @@
 					
 				</div>
 				
-				<div class="divRow clearfix">
-					<div class="divCell"><span class="line"></span></div>
-					<div class="divCell"><span class="line"></span></div>
+				<div class="clearfix">
+					<div class=""><span class="line"></span></div>
 				</div>
 				<%	}//end for
 						ForumUtils.addScripts(null, null, "forumPortlet.goLastPost(\""+idLastPost+"\");");
@@ -669,7 +677,6 @@
 				<%	} %>
 				<%} %>
 			</div>
-		</div>
 		<!-- End ContentContainer -->
 	</div>
 	<!-- End PostsInThreadContainer -->
