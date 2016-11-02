@@ -10,6 +10,7 @@
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.webui.UIPostRules ;
 	import org.exoplatform.forum.common.webui.WebUIUtils;
+	import org.apache.commons.lang.StringEscapeUtils;
 	
 	uicomponent.initPlaceholder();
 	long setTime = 0;
@@ -147,8 +148,8 @@
 	<div class="uiBox containerTopicDetail">
 		<div class="title clearfix">
 			<ul class="pull-right">
-				
-				<li class="defaultStyle forumSeparatorLine">
+
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<% if(uicomponent.isWatching(topic.getPath())){ %>
 					<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 					<% } else { %>
@@ -158,18 +159,8 @@
 				
 				
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
-				<li class="defaultStyle forumSeparatorLine">
-					<a class="actionIcon" href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-				</li>
-				
-				
-				<li class="defaultStyle forumSeparatorLine">
-					<a class="actionIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> RSS</a>
-				</li>
-				
-				
 				<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
-				<li class="defaultStyle forumSeparatorLine">
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<div class="dropdown actionIcon uiActionWithLabel">
 						<div data-toggle="dropdown"><i class="uiIconTag uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.Tag");%></div>
 						<% /*Begin Popup Menu*/ %>
@@ -199,21 +190,30 @@
 						<% /*End Popup Menu*/ %>
 					</div>
 				</li>
-				<li class="defaultStyle forumSeparatorLine"	onclick="<%=uicomponent.event("RatingTopic")%>">
-					<a class="actionIcon" href="javaScript:void(0)"><i class="uiIconForumStar uiIconForumLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
-				</li>
 				<%}%>
 				
 				
 				<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>
 				<li class="defaultStyle forumSeparatorLine">
 					<div class="dropdown uiDropdownWithIcon actionIcon">
-						<div data-toggle="dropdown">
+						<div class="visible-desktop" data-toggle="dropdown">
 							<i class="uiIconSettings uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
 							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
-						<ul class="dropdown-menu">
+						<div class="visible-phone visible-tablet" data-toggle="dropdown">
+							<i class="uiIconSettings uiIconLightGray"></i>
+              <%=_ctx.appRes("UIForumPortlet.label.more");%>
+							<i class="uiIconArrowDown uiIconLightGray"></i>
+						</div>
+						<ul class="dropdown-menu pull-right">
+              <li class="visible-phone visible-tablet">
+                <% if(uicomponent.isWatching(topic.getPath())){ %>
+                <a href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+                <% } else { %>
+                <a href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+                <% } %>
+              </li>
 							<%
 								String link = "", itemLabel = "", classIcon = "", confirm = "" ;
 								String[] menuTopicActions; String[] menuTopicIcons;
@@ -275,19 +275,35 @@
 							</li>
 								<%} %>
 							<%}%>
+
+				<li>
+					<a href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;"><i class="uiIconRss uiIconLightGray"></i> RSS</a>
+				</li>
+
+
+				<%if(uicomponent.userProfile.getUserRole() < 3){%>
+				<li>
+					<a href="<%=uicomponent.event("AddBookMark")%>"><i class="uiIconBookmark uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+				</li>
+				
+				<li	onclick="<%=uicomponent.event("RatingTopic")%>">
+					<a href="javaScript:void(0)"><i class="uiIconForumStar uiIconLightGray"></i> <%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
+				</li>
+				<%}%>
+
 						</ul>
 					</div>
 				</li>
 				<% } %>
 				
-				<li class="defaultStyle forumSeparatorLine">
+				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<div class="dropdown <%=((isShowMenu && canEdit) ? "" : "pull-right" )%> uiDropdownWithIcon actionIcon">
 						<div data-toggle="dropdown">
 							<i class="uiIconSearch uiIconLightGray"></i>
 							<%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%>
 							<i class="uiIconArrowDown uiIconLightGray"></i>
 						</div>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu pull-right">
 							<li>
 								<div class="searchAdvance">
 									<p><input type="text" id="<%=ForumUtils.SEARCHFORM_ID%>" name="<%=ForumUtils.SEARCHFORM_ID%>"/>
@@ -311,7 +327,7 @@
 						<%
 							if(posts.size() > 1 || uicomponent.pageSelect > 1) {
 						%>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu pull-right">
 							<%
 								String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetCensorPost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
 								
@@ -359,8 +375,10 @@
 				<% } %>
 				<% } %>
 			</ul>
+	
+			<% String postTtile = posts.get(0).getName(); %>
+			<div id="titleTopic" class="ellipsed"> $postTtile</div>
 		</div>
-		<div style="padding: 10px; position:relative;">
 			<!-- Start ContentContainer -->
 			<div class="divTable">
 				<%
@@ -430,70 +448,41 @@
 							else alert = " " ;
 				%>
 				
-				<div class="contentTopicDetail clearfix divRow" id="$postId">
-					<!-- Start MemberContainer -->
-					<div class="memberContainer divCell">
-						
-						<%
-							String userSmile = "uiIconForumColorOffline";
-							String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
-							if(uicomponent.isOnline(owner)) {
-								userSmile = "uiIconForumColorOnline";
-								titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
-							}
-						%>
-						<div class="dropdown uiUserInfo">
-							<a href="javascript:void(0)" class="textTitleProfile">
-								<i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i>$viewScreenName
-							</a>
-							<%=uicomponent.getMenuUser(userInfo) %>
-						</div>
-						<div class="rank"><%=userInfo.getUserTitle();%></div>
-						<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();
-							if(isDisplayAvatar) {
-						%>
-						<div class="dropdown uiUserInfo avatarXLarge">
-							<a href="javascript:void(0)">
-								<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-							</a>
-							<%=uicomponent.getMenuUser(userInfo) %>
-						</div>
-						<% } %>
-						
-						<div class="infoMember">
-							<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
-							<%
-								long totalPost = userInfo.getTotalPost();
-								if(totalPost > 0) {
-									Date lastPostOfUser = userInfo.getLastPostDate() ;
-									String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
-							<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
-							<%} else {%>
-							<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
-							<%}
-								if(!ForumUtils.isEmpty(location)) {
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
-							<%}
-								Date lastLogin = userInfo.getLastLoginDate();
-								String lastLoginUser = "" ;
-								if(lastLogin != null){
-									lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
-								}
-							%>
-							<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
-						</div>
-					</div>
-					<!-- End MemberContainer -->
+				<div class="contentTopicDetail clearfix" id="$postId">
+					<%
+						String userSmile = "uiIconForumColorOffline";
+						String titleSmile = _ctx.appRes("UIForumPortlet.label.Offline").replace("{0}", owner);
+						if(uicomponent.isOnline(owner)) {
+							userSmile = "uiIconForumColorOnline";
+							titleSmile = _ctx.appRes("UIForumPortlet.label.Online").replace("{0}", owner);
+						}
+
+	
+      String userForumId = userInfo.getUserId();
+     
+
+					%>
 					<!-- Start PostViewContainer -->
-					<div class="postViewContainer divCell">
-						<div class="postViewHeader clearfix">
-							<% if(canEdit) {%>
-							<div class="pull-right">
+					<div class="postViewContainer">
+							<div class="postViewHeader clearfix">
+							
+							  <div id="profileWrapper" href="/portal/intranet/profile/$userForumId">
+						
+								<a class="avatarXSmall pull-left">
+									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+								</a> 
+								<span id="fullNameTopic" class="dropdown">
+								  <a href="javascript:void(0)" class="textTitleProfile">
+								    <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
+								  </a>
 								
-								<span class="postTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
+								</span>
+							   </div>
+							<% if(canEdit) {%>
+              <div class="clearfix visible-phone-small"></div>
+							<div class="postHeaderInfo">
+
+								<span class="postTime"> <%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
 								<%
 									if(isShowIP) {
 										String ip = post.getRemoteAddr();
@@ -539,12 +528,10 @@
 								</span>
 								<%} %>
 							</div>
-							<div class="postViewTitle">$namePost $alert</div>
 							<% } else { %>
 							<div class="pull-right">
 								<div class="postTime pull-right"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 							</div>
-							<div class="postViewTitle">$namePost $alert</div>
 							<% } %>
 						</div>
 						
@@ -643,7 +630,7 @@
 							<%
 								if(!ForumUtils.isEmpty(editBy)) {
 							%>
-							<div class="txtLastEdit">
+							<div class="txtLastEdit pull-left">
 								<div><%=uicomponent.getLastEditedBy(editBy, post.getModifiedDate())%></div>
 								<%
 									String reason = post.getEditReason() ;
@@ -675,9 +662,8 @@
 					
 				</div>
 				
-				<div class="divRow clearfix">
-					<div class="divCell"><span class="line"></span></div>
-					<div class="divCell"><span class="line"></span></div>
+				<div class="clearfix">
+					<div class=""><span class="line"></span></div>
 				</div>
 				<%	}//end for
 						ForumUtils.addScripts(null, null, "forumPortlet.goLastPost(\""+idLastPost+"\");");
@@ -691,7 +677,6 @@
 				<%	} %>
 				<%} %>
 			</div>
-		</div>
 		<!-- End ContentContainer -->
 	</div>
 	<!-- End PostsInThreadContainer -->
@@ -754,5 +739,30 @@
 		if(uicomponent.isShowRule) {
 			uicomponent.renderChild(UIPostRules.class);
 		}
+
+
+	  def context = _ctx.getRequestContext();
+      def jsManager = context.getJavascriptManager();
+
+      String statusTitle = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Loading"));
+      String connectLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Connect"));
+      String confirmLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Confirm"));
+      String cancelRequestLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.CancelRequest"));
+      String removeConnectionLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.RemoveConnection"));
+      String ignoreLabel = StringEscapeUtils.escapeJavaScript(_ctx.appRes("UserProfilePopup.label.Ignore"));
+  
+      String labels = """ {
+      StatusTitle: '${statusTitle}',
+      Connect: '${connectLabel}',
+      Confirm: '${confirmLabel}',
+      CancelRequest: '${cancelRequestLabel}',
+      RemoveConnection: '${removeConnectionLabel}',
+      Ignore: '${ignoreLabel}'
+      } """;
+
+ 	  jsManager.require("SHARED/jquery", "gj").require("SHARED/userPopupPlugin","userPopup").addScripts("initUserProfilePopup('containerTopicDetail',$labels);"); 
+
 	%>
 </div>
+
+<script src="/forum/javascript/eXo/forum/PopupActivator.js"></script>
