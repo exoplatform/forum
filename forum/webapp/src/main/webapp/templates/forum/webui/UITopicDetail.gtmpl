@@ -391,7 +391,8 @@
 						String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 						String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 						String shortDateFormat = userProfile.getShortDateFormat() ;
-						for(post in posts) {
+						for(int i = 0; i < posts.size(); i++) {
+							def post = posts.get(i);
 							String postId = post.getId();
 							String owner = post.getOwner() ;
 							CommonContact contact = uiform.getPersonalContact(owner) ;
@@ -623,7 +624,7 @@
 									post.setId(uicomponent.SIGNATURE);
 									String signature = uicomponent.renderPost(post);
 							%>
-							<div class="signature"><span></span><br/>$signature</div>
+							<div class="signature"><span></span><p>$signature</p></div>
 							<%} %>
 						</div>
 						<div class="footPost clearfix">
@@ -662,9 +663,11 @@
 					
 				</div>
 				
+						<% if((i + 1) < posts.size()) { %>
 				<div class="clearfix">
 					<div class=""><span class="line"></span></div>
 				</div>
+						<% } %>
 				<%	}//end for
 						ForumUtils.addScripts(null, null, "forumPortlet.goLastPost(\""+idLastPost+"\");");
 					} else {
