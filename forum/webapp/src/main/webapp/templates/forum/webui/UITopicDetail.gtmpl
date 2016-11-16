@@ -97,7 +97,7 @@
 	<div class="clearfix topContainer">
 		<div class="pull-left actionContainer">
 			<% if(isCanReply) { %>
-			<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost")%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
+			<a class="uiPostReplyIcon btn btn-primary" onclick="<%=uicomponent.event("AddPost",topicPath)%>"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 			<% } else if(isNotLogin) {	%>
 			<a class="uiPostReplyIcon btn btn-primary" href="$linkGest"><%=_ctx.appRes("UITopicDetail.action.AddPost");%></a>
 			<% } else {%>
