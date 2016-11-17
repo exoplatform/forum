@@ -382,7 +382,6 @@ public class UITopicForm extends BaseForumForm {
           }
           if (t > 0 && k != 0 && !checksms.equals("null")) {
             Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
-            message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             message = TransformHTML.fixAddBBcodeAction(message);
             message = message.replaceAll("<script", "&lt;script")
                              .replaceAll("<link", "&lt;link")

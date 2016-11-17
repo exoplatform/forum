@@ -350,7 +350,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             String userName = userProfile.getUserId();
             editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
             message = TransformHTML.fixAddBBcodeAction(message);
-            message = CommonUtils.encodeSpecialCharInSearchTerm(message);
             postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
             Post post = uiForm.post_;
             boolean isPP = false;
