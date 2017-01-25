@@ -1084,11 +1084,13 @@ public interface ForumService extends ForumServiceLegacy {
 
   /**
    * Gets the last login.
+   * @deprecated Use org.exoplatform.platform.gadget.services.LoginHistory.LoginHistoryService instead
    * 
    * @return Id of the user who did the last login.
    * @throws Exception the exception
    * @LevelAPI Platform
    */
+  @Deprecated
   String getLastLogin() throws Exception;
 
   /**
