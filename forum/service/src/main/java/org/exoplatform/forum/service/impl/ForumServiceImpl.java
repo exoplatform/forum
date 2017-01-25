@@ -1325,6 +1325,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
+  @Deprecated
   public String getLastLogin() throws Exception {
     UserStateModel model = userStateService.lastLogin();
     return (model != null) ? model.getUserId() : "";
