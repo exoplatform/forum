@@ -17,6 +17,8 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
@@ -29,14 +31,18 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumActionBar;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
+import org.exoplatform.services.organization.UserStatus;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.gatein.common.text.EntityEncoder;
 
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIListPrivateMessage extends UIContainer {
@@ -53,17 +59,29 @@ public class UIListPrivateMessage extends UIContainer {
   protected boolean                  isRenderIterator = false;
 
   protected String                    messageType      = Utils.SEND_MESSAGE;
+
+  protected String                    deletedUserFullName;
   
   public UIListPrivateMessage() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+    Locale locale = Util.getPortalRequestContext().getLocale();
+    ResourceBundle rs = ResourceBundle.getBundle("locale/portlet/forum/ForumPortlet", locale);
+    deletedUserFullName = EntityEncoder.FULL.encode(rs.getString("UIPrivateMessageForm.label.DeletedUser"));
     userHandler = organizationService.getUserHandler();
     addChild(UIForumPageIterator.class, null, null);
     addChild(UIViewPrivateMessage.class, null, null).setRendered(false);
   }
 
   public String getUserFullNameById(String userId) throws Exception {
-    return userHandler.findUserByName(userId).getFullName();
+    User user = userHandler.findUserByName(userId, UserStatus.ANY);
+    String userFullName;
+    if (user != null) {
+      userFullName = user.getFullName();
+    } else {
+      userFullName = deletedUserFullName;
+    }
+    return userFullName;
   }
   
   public String getMessageType() {
@@ -109,22 +127,6 @@ public class UIListPrivateMessage extends UIContainer {
       }
     }
     return null;
-  }
-  
-  protected String getCalculateListToUsers(String toUsers) throws Exception {
-    String[] toUsersArray = ForumUtils.splitForForum(toUsers);
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < toUsersArray.length; i++) {
-      if (ForumUtils.isEmpty(toUsersArray[i])) {
-        continue;
-      }             
-      if (i > 0) {
-        builder.append(",<br/>");
-      }
-      String toUserFullName = userHandler.findUserByName(toUsersArray[i]).getFullName();
-      builder.append("<span title='").append(toUserFullName).append("'>").append(ForumUtils.getSubString(toUserFullName, 15)).append("</span>");
-    }
-    return builder.toString();
   }
 
   static public class ViewMessageActionListener extends EventListener<UIListPrivateMessage> {
