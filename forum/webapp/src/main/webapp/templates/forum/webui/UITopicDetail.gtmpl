@@ -11,6 +11,7 @@
 	import org.exoplatform.forum.webui.UIPostRules ;
 	import org.exoplatform.forum.common.webui.WebUIUtils;
 	import org.apache.commons.lang.StringEscapeUtils;
+	import org.exoplatform.social.core.service.LinkProvider;
 	
 	uicomponent.initPlaceholder();
 	long setTime = 0;
@@ -467,7 +468,7 @@
 					<div class="postViewContainer">
 							<div class="postViewHeader clearfix">
 							
-							  <div id="profileWrapper" href="/portal/intranet/profile/$userForumId">
+							  <div id="profileWrapper" href="<%=LinkProvider.getUserProfileUri(userForumId);%>">
 						
 								<a class="avatarXSmall pull-left">
 									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
