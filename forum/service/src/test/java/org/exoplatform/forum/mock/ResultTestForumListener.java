@@ -17,6 +17,8 @@
 package org.exoplatform.forum.mock;
 
 
+import java.util.Date;
+
 public class ResultTestForumListener {
 
   public enum STATUS {
@@ -25,6 +27,8 @@ public class ResultTestForumListener {
   private int topicCount = 0;
   private int postCount = 0;
   private STATUS status = null;
+  private String modifier;
+  private Date modifiedDate;
 
   public ResultTestForumListener() {
   }
@@ -55,5 +59,20 @@ public class ResultTestForumListener {
     topicCount = postCount = 0;
     status = null;
   }
-  
+
+  public String getModifier() {
+    return modifier;
+  }
+
+  public void setModifier(String modifier) {
+    this.modifier = modifier;
+  }
+
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
+
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
 }
