@@ -16,6 +16,9 @@
  */
 package org.exoplatform.forum.service;
 
+import java.util.Calendar;
+
+
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.mock.ResultTestForumListener;
 import org.exoplatform.forum.mock.ResultTestForumListener.STATUS;
@@ -57,10 +60,14 @@ public class ForumListenerTestCase extends BaseForumServiceTestCase {
     //
     Topic topic = forumService_.getTopic(categoryId, forumId, topicId, null);
     topic.setTopicName("Edit topic");
+    topic.setModifiedBy(USER_JOHN);
+    topic.setModifiedDate(Calendar.getInstance().getTime());
     forumService_.saveTopic(categoryId, forumId, topic, false, false, new MessageBuilder());
     //
     waitForThreadDone(100);
     assertEquals(STATUS.UPDATE_TOPIC, resultListener.getStatus());
+    assertEquals(topic.getModifiedBy(), resultListener.getModifier());
+    assertEquals(topic.getModifiedDate(), resultListener.getModifiedDate());
   }
 
   @Test

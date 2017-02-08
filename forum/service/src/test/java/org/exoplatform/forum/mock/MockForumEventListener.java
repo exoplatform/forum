@@ -42,6 +42,8 @@ public class MockForumEventListener extends ForumEventListener {
   @Override
   public void updateTopic(Topic topic) {
     resultListener.setStatus(STATUS.UPDATE_TOPIC);
+    resultListener.setModifier(topic.getModifiedBy());
+    resultListener.setModifiedDate(topic.getModifiedDate());
   }
 
   @Override

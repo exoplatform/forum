@@ -562,13 +562,15 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
     //update case
     Topic edited = null;
-    if(isNew == false) {
+    if(!isNew) {
       edited = getTopic(categoryId, forumId, topic.getId(), "");
       edited.setEditedDescription(topic.getDescription());
       edited.setEditedTopicName(topic.getTopicName());
       edited.setEditedIsClosed(topic.getIsClosed());
       edited.setEditedIsLock(topic.getIsLock());
       edited.setEditedIsWaiting(topic.getIsWaiting());
+      edited.setModifiedBy(topic.getModifiedBy());
+      edited.setModifiedDate(topic.getModifiedDate());
       // check moderate topic then update all post
       if (! topic.getIsModeratePost() && edited.getIsModeratePost()) {
         // get all post
