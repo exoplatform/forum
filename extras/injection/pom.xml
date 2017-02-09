@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-extras</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>4.4.x-SNAPSHOT</version>
+    <version>4.4.1-RC04</version>
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum-extras-injection</artifactId>
