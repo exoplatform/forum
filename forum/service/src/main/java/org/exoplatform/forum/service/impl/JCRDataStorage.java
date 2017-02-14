@@ -3242,9 +3242,24 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private List<Post> getPosts(NodeIterator iter) throws Exception {
     Node currentNode = null;
     List<Post> posts = new ArrayList<Post>((int) iter.getSize());
+    //
+    DataStorage dataStorage = getCachedDataStorage();
+    boolean hasCache = (dataStorage instanceof CachedDataStorage);
     while (iter.hasNext()) {
       currentNode = iter.nextNode();
-      posts.add(getPost(currentNode));
+      if (hasCache) {
+        String path = currentNode.getPath();
+        CachedDataStorage storage = (CachedDataStorage) dataStorage;
+        String categoryId = Utils.getCategoryId(path), forumId = Utils.getForumId(path), topicId = Utils.getTopicId(path);
+        Post post = storage.getPostFromCache(categoryId, forumId, topicId, currentNode.getName());
+        if (post == null) {
+          post = getPost(currentNode);
+          storage.putPost(post);
+        }
+        posts.add(post);
+      } else {
+        posts.add(getPost(currentNode));
+      }
     }
     return posts;
   }
