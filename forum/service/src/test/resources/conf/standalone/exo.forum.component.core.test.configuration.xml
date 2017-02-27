@@ -44,7 +44,7 @@
     <init-params>
       <value-param>
         <name>persisterThreshold</name> <!-- The number of task to persister on each time -->
-        <value>50</value>
+        <value>1</value>
       </value-param>
       <value-param>
         <name>intervalPersist</name><!-- The time to repeat interval call persister tasks -->
@@ -121,7 +121,7 @@
       </value-param>
       <value-param>
         <name>async-execution</name>
-        <value>true</value>
+        <value>false</value>
       </value-param>
     </init-params>
   </component>
