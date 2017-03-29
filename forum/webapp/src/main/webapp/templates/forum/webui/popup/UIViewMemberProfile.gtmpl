@@ -4,6 +4,7 @@
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.common.user.CommonContact;
 	import org.exoplatform.forum.service.Utils;
+	import org.apache.commons.lang.StringEscapeUtils;
 %>
 <% uiform.begin() %>
 <div class="uiViewMemberProfile resizable">
@@ -33,6 +34,8 @@
 		str = contact.getLastName(); 
 		if(!ForumUtils.isEmpty(str)) fullName = fullName + " " + str ;
 	}
+	fullName = StringEscapeUtils.escapeHtml(fullName);
+
 	String createdDate = "";
 	if(userProfileViewer.getJoinedDate() != null){
 		createdDate = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getJoinedDate(), shortDateFormat, setTime) ;
@@ -101,8 +104,8 @@
 				}
 			  }
 								String []labels = uiform.getLabelProfile();	
-								String []contents = [userName, contact.getFirstName() , contact.getLastName(), birthDay, contact.getGender(), email,
-									contact.getJob(), location, contact.getHomePhone(), contact.getWorkPhone(), website]; 
+								String []contents = [userName, StringEscapeUtils.escapeHtml(contact.getFirstName()) , StringEscapeUtils.escapeHtml(contact.getLastName()), birthDay, contact.getGender(), email,
+									contact.getJob(), location, contact.getHomePhone(), contact.getWorkPhone(), website];
 								int i = 0 ;
 								for(label in labels) {
 									String content = contents[i];
