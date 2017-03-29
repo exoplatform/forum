@@ -5,6 +5,7 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.popup.UIViewPrivateMessage;
+	import org.apache.commons.lang.StringEscapeUtils;
 
 	UserProfile userProfile = uicomponent.getUserProfile();
 	List sendmails = uicomponent.getPrivateMessages() ;
@@ -39,7 +40,7 @@
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
-					String toUser = uicomponent.getUserFullNameById(mail.getSendTo());
+					String toUser = StringEscapeUtils.escapeHtml(uicomponent.getUserFullNameById(mail.getSendTo()));
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr>
