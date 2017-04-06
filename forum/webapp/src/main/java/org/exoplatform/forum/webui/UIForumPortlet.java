@@ -748,14 +748,14 @@ public class UIForumPortlet extends UIPortletApplication {
                   Post post = this.forumService.getPost(id[0], id[1], topic.getId(), postId);
                   if (isQuote) {
                     if (post != null) {
-                      postForm.updatePost(postId, true, (post.getUserPrivate().length == 2), post);
+                      postForm.updatePost(postId, true, (post.getUserPrivate().length > 1), post);
                       popupContainer.setId("UIQuoteContainer");
                     } else {
                       showWarningMessage(context, "UIBreadcumbs.msg.post-no-longer-exist", ForumUtils.EMPTY_STR);
                       uiTopicDetail.setIdPostView("normal");
                     }
                   } else {
-                    if (post != null && post.getUserPrivate().length == 2) {
+                    if (post != null && post.getUserPrivate().length > 1) {
                       postForm.updatePost(post.getId(), false, true, post);
                     } else {
                       postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);

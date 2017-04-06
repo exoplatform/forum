@@ -113,6 +113,24 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void updatePost(Post post);
+
+  /**
+   * This will be call after saving a private post
+   *
+   * @param post
+   * @since 5.0
+   */
+  public default void addPrivatePost(Post post) {
+
+  }
+
+  /**
+   * This will be call after updating a private post
+   * @param post
+   * @since 5.0
+   */
+  public default void updatePrivatePost(Post post){
+  }
   
   /**
    * This will be call after modify post

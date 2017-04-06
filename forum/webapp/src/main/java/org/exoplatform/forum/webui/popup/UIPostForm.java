@@ -368,7 +368,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   break;
                 }
               }
-              if (post.getUserPrivate() != null && post.getUserPrivate().length == 2)
+              if (post.getUserPrivate() != null && post.getUserPrivate().length > 1)
                 isPP = true;
               if ((!uiForm.isMP || !isPP) && uiForm.topic != null)
                 hasTopicMod = uiForm.topic.getIsModeratePost();

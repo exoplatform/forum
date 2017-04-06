@@ -760,10 +760,18 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
-    if (post.getUserPrivate().length > 1)
-      return;
-    //
-    if (post != null) {
+    if (post.getUserPrivate().length > 1) {
+      for (ForumEventLifeCycle f : listeners_) {
+        try {
+          if (isNew)
+            f.addPrivatePost(post);
+          else
+            f.updatePrivatePost(post);
+        } catch (Exception e) {
+          log.error("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+        }
+      }
+    } else {
       for (ForumEventLifeCycle f : listeners_) {
         try {
           if (isNew)
@@ -771,7 +779,7 @@ public class ForumServiceImpl implements ForumService, Startable {
           else
             f.updatePost(post);
         } catch (Exception e) {
-          log.debug("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
+          log.error("Failed to run function addPost/updatePost in the class ForumEventLifeCycle. ", e);
         }
       }
     }

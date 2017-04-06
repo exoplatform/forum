@@ -3569,6 +3569,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     postNode.setProperty(EXO_IS_HIDDEN, post.getIsHidden());
     postNode.setProperty(EXO_IS_WAITING, post.getIsWaiting());
     postNode.setProperty(EXO_NUMBER_ATTACH, post.getNumberAttach());
+    postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
   }
 
   private List<String> postAttachment(Node postNode, Post post) {
@@ -3631,7 +3632,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //
       post.setPath(postNode.getPath());
       //
-      boolean sendAlertJob = (!messageBuilder.getLink().equals("link") && (post.getUserPrivate().length != 2) && 
+      boolean sendAlertJob = (!messageBuilder.getLink().equals("link") && (post.getUserPrivate().length == 1) &&
                               (!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()));
       
       if (topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId()) == false && isNew) {
@@ -3646,7 +3647,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (post != null && post.getUserPrivate().length > 1) {
         ForumPrivateMessage message = new ForumPrivateMessage();
         message.setFrom(post.getOwner());
-        message.setSendTo(post.getUserPrivate()[0] + "," + post.getUserPrivate()[1]);
+        message.setSendTo(String.join(",",post.getUserPrivate()));
         message.setType("PrivatePost");
         message.setName(post.getName());
         message.setMessage(post.getMessage());
@@ -3888,7 +3889,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
        */
       if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
         List<String> userPrivates = new ArrayList<String>();
-        if (!CommonUtils.isEmpty(post.getUserPrivate()) && post.getUserPrivate().length == 2) {
+        if (!CommonUtils.isEmpty(post.getUserPrivate()) && post.getUserPrivate().length > 1) {
           userPrivates.addAll(Arrays.asList(post.getUserPrivate()));
         }
         
