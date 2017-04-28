@@ -17,6 +17,9 @@
 package org.exoplatform.forum.common;
 
 import org.exoplatform.commons.testing.BaseCommonsTestCase;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.forum.common.UserHelper.FilterType;
@@ -24,7 +27,8 @@ import org.exoplatform.forum.common.UserHelper.UserFilter;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.UserImpl;
-
+@ConfiguredBy({ @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/test-configuration.xml") })
 public class TestUserHelper extends BaseCommonsTestCase {
   @Override
   public void setUp() throws Exception {
