@@ -423,31 +423,21 @@
 							if(joinDate_ != null) {
 								joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_, shortDateFormat, setTime) ;
 							}
-							String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
-							boolean isAnd = false ;
-							if(post.getUserPrivate().length > 1){
-								alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
-								isAnd = true;
-							}
-							if(post.getIsHidden()) {
-								if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
-								else alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
-								isAnd = true;
-							}
-							if(post.getIsWaiting()) {
-								if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
-								else alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
-								isAnd = true;
-							}
-							if(isModeratePost) {
-								if(!post.getIsApproved()) {
-								if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
-								else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
-									isAnd = true;
-								}
-							}
-							if(isAnd) alert = alert + "!</span>) "
-							else alert = " " ;
+                            String alert = "" ;
+                            if(post.getUserPrivate().length > 1){
+                            alert = alert + "<span class='badge badge-primary'>" + _ctx.appRes("UITopicDetail.label.PostPrivate") + "</span>";
+                            }
+                            if(post.getIsHidden()) {
+                            alert = alert + "<span class='badge badge-primary'>" + _ctx.appRes("UITopicDetail.label.PostHidden") + "</span>";
+                            }
+                            if(post.getIsWaiting()) {
+                            alert = alert + "<span class='badge badge-primary'>" + _ctx.appRes("UITopicDetail.label.Censor") + "</span>";
+                            }
+                            if(isModeratePost) {
+                              if(!post.getIsApproved()) {
+                                alert = alert + "<span class='badge badge-primary'>" + _ctx.appRes("UITopicDetail.label.PostPendingApproval") + "</span>";
+                              }
+			    }  
 				%>
 				
 				<div class="contentTopicDetail clearfix" id="$postId">
@@ -483,7 +473,7 @@
 							<% if(canEdit) {%>
               <div class="clearfix visible-phone-small"></div>
 							<div class="postHeaderInfo">
-
+                                $alert
 								<span class="postTime"> <%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </span>
 								<%
 									if(isShowIP) {
