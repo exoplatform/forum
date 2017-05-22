@@ -352,7 +352,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             message = TransformHTML.fixAddBBcodeAction(message);
             postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
             Post post = uiForm.post_;
-            boolean isPP = false;
+            boolean isPP = post.getUserPrivate() != null && post.getUserPrivate().length > 1;
             boolean isOffend = false;
             boolean hasTopicMod = false;
             if (!uiForm.isMod()) {
@@ -368,8 +368,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   break;
                 }
               }
-              if (post.getUserPrivate() != null && post.getUserPrivate().length > 1)
-                isPP = true;
               if ((!uiForm.isMP || !isPP) && uiForm.topic != null)
                 hasTopicMod = uiForm.topic.getIsModeratePost();
             }
@@ -398,6 +396,9 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             if (uiForm.isMP) {
               userPrivate = new String[] { userName, uiForm.post_.getOwner() };
               hasTopicMod = false;
+            }
+            if(isPP){
+              userPrivate = post.getUserPrivate();
             }
             post.setUserPrivate(userPrivate);
             post.setIsApproved(!hasTopicMod);
