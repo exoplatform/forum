@@ -56,6 +56,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 
   private boolean            isSetPage               = true;
 
+  private boolean            isDoubleClickSubmit      = false;
   public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread";
 
   public UISplitTopicForm() throws Exception {
@@ -115,7 +116,17 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
   static public class SaveActionListener extends EventListener<UISplitTopicForm> {
     public void execute(Event<UISplitTopicForm> event) throws Exception {
       UISplitTopicForm uiForm = event.getSource();
-      String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue();
+      if (uiForm.isDoubleClickSubmit)
+        return;
+      uiForm.isDoubleClickSubmit = true;
+      String newTopicTitle = (uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue()).trim();
+      int maxText = ForumUtils.MAXTITLE;
+      if (newTopicTitle.length() > maxText) {
+        String[] args = { uiForm.getLabel(FIELD_SPLITTHREAD_INPUT), String.valueOf(maxText) };
+        uiForm.warning("NameValidator.msg.warning-long-text", args);
+        uiForm.isDoubleClickSubmit = false;
+        return;
+      }
       if (!ForumUtils.isEmpty(newTopicTitle)) {
         newTopicTitle = CommonUtils.encodeSpecialCharInTitle(newTopicTitle);
         // postIds number/id
