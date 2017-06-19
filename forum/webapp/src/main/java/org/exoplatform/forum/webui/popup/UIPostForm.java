@@ -380,10 +380,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId, false);
             //
             Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
+            boolean isNew = false;
             if (uiForm.isQuote || uiForm.isMP || CommonUtils.isEmpty(uiForm.postId)) {
               post = new Post();
               post.setOwner(userName);
               post.setCreatedDate(currentDate);
+              isNew = true;
             }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
             message = HTMLSanitizer.sanitize(message);
@@ -397,7 +399,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               userPrivate = new String[] { userName, uiForm.post_.getOwner() };
               hasTopicMod = false;
             }
-            if(isPP){
+            if(isPP && !isNew){
               userPrivate = post.getUserPrivate();
             }
             post.setUserPrivate(userPrivate);
@@ -406,7 +408,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
             UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
             boolean isParentDelete = false;
-            boolean isNew = false;
             try {
               MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
               messageBuilder.setLink(link);
@@ -420,7 +421,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                                                       post,
                                                       true,
                                                       ForumUtils.getDefaultMail());
-                    isNew = true;
                   } catch (PathNotFoundException e) {
                     isParentDelete = true;
                   }
@@ -447,7 +447,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 try {
                   uiForm.getForumService()
                         .savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, messageBuilder);
-                  isNew = true;
                 } catch (PathNotFoundException e) {
                   isParentDelete = true;
                 } catch (Exception ex) {
