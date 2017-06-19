@@ -17,7 +17,6 @@
     <module>component</module>
     <module>application</module>
     <module>forum</module>
-    <module>extras</module>
   </modules>
   <scm>
     <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
