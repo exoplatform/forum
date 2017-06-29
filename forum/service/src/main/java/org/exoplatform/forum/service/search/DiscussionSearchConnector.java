@@ -31,6 +31,8 @@ import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 
 
 /**
@@ -40,6 +42,8 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final Log LOG = ExoLogger.getLogger(DiscussionSearchConnector.class);
 
   private DataStorage storage;
+
+  private SpaceService spaceService;
                               //"/forum/skin/DefaultSkin/webui/skinIcons/48x48/defaultTopic.png";
   private String FIX_ICON = "/eXoSkin/skin/images/themes/default/Icons/AppIcons/uiIconAppDefault.png";
   
@@ -54,9 +58,10 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
   private static final String FORMAT_DATE           = "EEEEE, MMMMMMMM d, yyyy K:mm a";  
 
 
-  public DiscussionSearchConnector(InitParams initParams, DataStorage storage) {
+  public DiscussionSearchConnector(InitParams initParams, DataStorage storage, SpaceService spaceService) {
     super(initParams);
     this.storage = storage;
+    this.spaceService = spaceService;
   }
   
   @Override
@@ -208,6 +213,12 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
     //
     if (Utils.isEmpty(forumNavName)) {
       return CommonUtils.EMPTY_STR;
+    }
+    if(spaceService != null) {
+      Space space = spaceService.getSpaceByGroupId(spaceGroupId);
+      if(space != null){
+        groupId = space.getPrettyName();
+      }
     }
     path = groupId + CommonUtils.SLASH + forumNavName;
     

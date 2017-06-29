@@ -36,6 +36,7 @@ import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageService;
 import org.exoplatform.portal.mop.page.PageState;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.controller.metadata.ControllerDescriptor;
 import org.exoplatform.web.controller.metadata.DescriptorBuilder;
 import org.exoplatform.web.controller.router.Router;
@@ -156,9 +157,11 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     InitParams params = new InitParams();
     params.put("constructor.params", new PropertiesParam());
     
-    org.exoplatform.forum.service.DataStorage dataStorage = (org.exoplatform.forum.service.DataStorage) getService(org.exoplatform.forum.service.DataStorage.class);
-    
-    discussionSearchConnector = new DiscussionSearchConnector(params, dataStorage);
+    org.exoplatform.forum.service.DataStorage dataStorage = getService(org.exoplatform.forum.service.DataStorage.class);
+
+    SpaceService spaceService = getService(SpaceService.class);
+
+    discussionSearchConnector = new DiscussionSearchConnector(params, dataStorage, spaceService);
 
   }
 
