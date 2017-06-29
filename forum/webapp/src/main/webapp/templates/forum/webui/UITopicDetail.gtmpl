@@ -152,9 +152,9 @@
 
 				<li class="defaultStyle forumSeparatorLine visible-desktop">
 					<% if(uicomponent.isWatching(topic.getPath())){ %>
-					<a class="actionIcon" href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+					<a class="actionIcon" href="<%=uicomponent.event("UnWatch", uiformId, topic.getPath())%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 					<% } else { %>
-					<a class="actionIcon" href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+					<a class="actionIcon" href="<%=uicomponent.event("AddWatching", uiformId, topic.getPath())%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 					<% } %>
 				</li>
 				
@@ -210,9 +210,9 @@
 						<ul class="dropdown-menu pull-right">
               <li class="visible-phone visible-tablet">
                 <% if(uicomponent.isWatching(topic.getPath())){ %>
-                <a href="<%=uicomponent.event("UnWatch")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+                <a href="<%=uicomponent.event("UnWatch", uiformId, topic.getPath())%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
                 <% } else { %>
-                <a href="<%=uicomponent.event("AddWatching")%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+                <a href="<%=uicomponent.event("AddWatching", uiformId, topic.getPath())%>"><i class="uiIconWatch uiIconLightGray"></i> <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
                 <% } %>
               </li>
 							<%
@@ -241,7 +241,7 @@
 									if (action.equals("AddPoll") && topic.getIsPoll()) {
 										continue;
 									}
-									link = uicomponent.event(action, uiformId, uiformId);
+									link = uicomponent.event(action, uiformId, topic.getPath());
 									itemLabel = _ctx.appRes("UITopicDetail.action." + action);
 									
 									boolean isModerateTopic = forum.getIsModerateTopic();

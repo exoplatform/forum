@@ -920,13 +920,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       try {
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+        Forum forum = topicDetail.getForumService().getForum(topic.getCategoryId(),topic.getForumId());
         UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 545);
-        topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum);
-        topicForm.setUpdateTopic(topicDetail.getTopic(), true);
-        topicForm.setMod(topicDetail.isMod);
+        topicForm.setTopicIds(topic.getCategoryId(), topic.getForumId(), forum);
+        topicForm.setUpdateTopic(topic, true);
+        topicForm.setMod(topic.getIsModeratePost());
         String spaceGroupId = forumPortlet.getSpaceGroupId();
-        if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(topicDetail.categoryId) && CommonUtils.isEmpty(spaceGroupId)) {
-          spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + topicDetail.forumId.replace(Utils.FORUM_SPACE_ID_PREFIX, "");
+        if(Utils.CATEGORY_SPACE_ID_PREFIX.equals(topic.getCategoryId()) && CommonUtils.isEmpty(spaceGroupId)) {
+          spaceGroupId = SpaceUtils.SPACE_GROUP + "/" + topic.getForumId().replace(Utils.FORUM_SPACE_ID_PREFIX, "");
         }
         topicForm.setSpaceGroupId(spaceGroupId);
         topicForm.setIsDetail(true);
@@ -948,7 +950,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class AddPollActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         UIPollForm pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455);
         pollForm.setTopicPath(topic.getPath());
       } catch (Exception e) {
@@ -963,7 +965,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (topic.getIsClosed()) {
           topic.setIsClosed(false);
           List<Topic> topics = new ArrayList<Topic>();
@@ -986,7 +988,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (!topic.getIsClosed()) {
           topic.setIsClosed(true);
           List<Topic> topics = new ArrayList<Topic>();
@@ -1009,7 +1011,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (!topic.getIsLock()) {
           topic.setIsLock(true);
           List<Topic> topics = new ArrayList<Topic>();
@@ -1032,7 +1034,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (topic.getIsLock()) {
           topic.setIsLock(false);
           List<Topic> topics = new ArrayList<Topic>();
@@ -1054,11 +1056,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class SetMoveTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         List<Topic> topics = new ArrayList<Topic>();
-        topics.add(topicDetail.topic);
+        topics.add(topic);
         topicDetail.isEditTopic = true;
         UIMoveTopicForm moveTopicForm = topicDetail.openPopup(UIMoveTopicForm.class, 400, 420);
-        moveTopicForm.updateTopic(topicDetail.forumId, topics, true);
+        moveTopicForm.updateTopic(topic.getForumId(), topics, true);
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
@@ -1070,7 +1073,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (!topic.getIsSticky()) {
           topic.setIsSticky(true);
           List<Topic> topics = new ArrayList<Topic>();
@@ -1092,7 +1095,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (topic.getIsSticky()) {
           topic.setIsSticky(false);
           List<Topic> topics = new ArrayList<Topic>();
@@ -1113,11 +1116,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class SplitTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(topicDetail.categoryId + ForumUtils.SLASH + topicDetail.forumId + ForumUtils.SLASH + topicDetail.topicId);
+        JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(objectId);
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         if (pageList.getAvailable() > 0) {
           UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, 700, 400);
           splitTopicForm.setPageListPost(pageList);
-          splitTopicForm.setTopic(topicDetail.topic);
+          splitTopicForm.setTopic(topic);
         } else {
           warning("UITopicContainer.sms.NotSplit");
         }
@@ -1132,7 +1136,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class SetApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         topic.setIsApproved(true);
         topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
@@ -1150,7 +1154,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class SetUnApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        Topic topic = topicDetail.topic;
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
         topic.setIsApproved(false);
         topic.setLink(ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId(), false));
         List<Topic> topics = new ArrayList<Topic>();
@@ -1168,13 +1172,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class SetDeleteTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        Topic topic = topicDetail.topic;
-        topicDetail.getForumService().removeTopic(topicDetail.categoryId, topicDetail.forumId, topic.getId());
+        Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+        Forum forum = topicDetail.getForumService().getForum(topic.getCategoryId(),topic.getForumId());
+        topicDetail.getForumService().removeTopic(topic.getCategoryId(), topic.getForumId(), topic.getId());
         UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
         UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
         uiForumContainer.setIsRenderChild(true);
         UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class);
-        topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum, 0);
+        topicContainer.setUpdateForum(topic.getCategoryId(), forum, 0);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer);
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
@@ -1562,7 +1567,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       topicDetail.isEditTopic = true;
-      Topic topic = topicDetail.getTopic();
+      Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
       UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365);
       watchToolsForm.setPath(topic.getPath());
       watchToolsForm.setEmails(topic.getEmailNotification());
@@ -1626,9 +1631,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class AddWatchingActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      if (topicDetail.getTopic() != null) {
-        StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append(ForumUtils.SLASH)
-                              .append(topicDetail.forumId).append(ForumUtils.SLASH).append(topicDetail.topicId);
+      Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+      if (topic != null) {
+        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(ForumUtils.SLASH)
+                              .append(topic.getForumId()).append(ForumUtils.SLASH).append(topic.getId());
         if(topicDetail.addWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
@@ -1642,10 +1648,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class UnWatchActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      if (topicDetail.getTopic() != null) {
+      Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
+      if (topic != null) {
         topicDetail.isEditTopic = true;
-        StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append(ForumUtils.SLASH)
-                              .append(topicDetail.forumId).append(ForumUtils.SLASH).append(topicDetail.topicId);
+        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(ForumUtils.SLASH)
+                              .append(topic.getForumId()).append(ForumUtils.SLASH).append(topic.getId());
         if(topicDetail.unWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
