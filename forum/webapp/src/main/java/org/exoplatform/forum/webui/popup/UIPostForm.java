@@ -399,7 +399,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               userPrivate = new String[] { userName, uiForm.post_.getOwner() };
               hasTopicMod = false;
             }
-            if(isPP && !isNew){
+            if(isPP && !isNew && !uiForm.isQuote){
               userPrivate = post.getUserPrivate();
             }
             post.setUserPrivate(userPrivate);

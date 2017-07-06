@@ -892,7 +892,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       if (post != null) {
         UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 850, 520);
         postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic);
-        postForm.updatePost(postId, true, false, post);
+        postForm.updatePost(postId, true, (post.getUserPrivate() != null && post.getUserPrivate().length > 1), post);
         postForm.setMod(topicDetail.isMod);
       } else {
         throwWarning("UIPostForm.msg.isParentDelete");
