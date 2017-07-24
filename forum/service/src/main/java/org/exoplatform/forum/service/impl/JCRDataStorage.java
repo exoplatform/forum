@@ -3892,7 +3892,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (!CommonUtils.isEmpty(post.getUserPrivate()) && post.getUserPrivate().length > 1) {
           userPrivates.addAll(Arrays.asList(post.getUserPrivate()));
         }
-        
+
         PropertyReader catReader = new PropertyReader(categoryNode);
         PropertyReader forumReader = new PropertyReader(forumNode);
         PropertyReader topicReader = new PropertyReader(topicNode);
@@ -3909,7 +3909,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         int i = 0;
         List<String> removeEmail = new ArrayList<String>();
         for (String user : userListCategory) {
-          if(!canReceiveNotification(topicNode, user, post.getOwner())) {
+          if(!canReceiveNotification(topicNode, user, post.getOwner())  || (userPrivates.size() > 1 && !userPrivates.contains(user))) {
             removeEmail.add(emailListCategory.get(i));
           }
           ++i;
@@ -3919,7 +3919,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         // Watched on forum
         i = 0;
         for (String user : userListForum) {
-          if(userListCategory.contains(user)
+          if(userListCategory.contains(user) || (userPrivates.size() > 1 && !userPrivates.contains(user))
               || !canReceiveNotification(topicNode, user, post.getOwner())) {
             removeEmail.add(emailListForum.get(i));
           }
@@ -3931,7 +3931,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         i = 0;
         for (String user : userListTopic) {
           if(userListCategory.contains(user)
-              || userListForum.contains(user)
+              || userListForum.contains(user)  || (userPrivates.size() > 1 && !userPrivates.contains(user))
               || !canReceiveNotification(topicNode, user, post.getOwner())) {
             removeEmail.add(emailListTopic.get(i));
           }
@@ -3939,7 +3939,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
         emailListTopic.removeAll(removeEmail);
         // Owner Notify
-        if (isApprovePost) {
+        if (isApprovePost && post.getUserPrivate() != null && post.getUserPrivate().length == 1) {
           String owner = topicReader.string(EXO_OWNER);
           String ownerTopicEmail = topicReader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, StringUtils.EMPTY);
           if (!CommonUtils.isEmpty(ownerTopicEmail)) {
@@ -3963,6 +3963,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
         //
         emailListForum.addAll(forumReader.list(EXO_NOTIFY_WHEN_ADD_POST, new ArrayList<String>()));
+
         //
         String fullName = getScreenName(sProvider, post.getOwner());
         messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(fullName));

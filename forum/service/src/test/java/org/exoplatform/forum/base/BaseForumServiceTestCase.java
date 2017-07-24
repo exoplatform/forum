@@ -70,6 +70,20 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
 
   public static final String         USER_JOHN         = "john";
 
+  public static final String         USER_MARY         = "mary";
+
+  public static final String         USER_PAUL         = "paul";
+
+  public static final String         USER_ROOT_EMAIL         = "root@mail.com";
+
+  public static final String         USER_DEMO_EMAIL         = "demo@mail.com";
+
+  public static final String         USER_JOHN_EMAIL         = "john@mail.com";
+
+  public static final String         USER_MARY_EMAIL         = "mary@mail.com";
+
+  public static final String         USER_PAUL_EMAIL         = "paul@mail.com";
+
   public Collection<MembershipEntry> membershipEntries = new ArrayList<MembershipEntry>();
 
   public ForumService                forumService_;
@@ -190,6 +204,24 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
     post.setIsActiveByTopic(true);
     post.setIsHidden(false);
     post.setIsWaiting(false);
+    return post;
+  }
+
+  public Post createPrivatePost(String[] privatePostReceivers){
+    Post post = new Post();
+    post.setOwner(USER_ROOT);
+    post.setCreatedDate(new Date());
+    post.setModifiedBy(USER_ROOT);
+    post.setModifiedDate(new Date());
+    post.setName("SubJect");
+    post.setMessage("content description");
+    post.setRemoteAddr("192.168.1.11");
+    post.setIcon("classNameIcon");
+    post.setIsApproved(true);
+    post.setIsActiveByTopic(true);
+    post.setIsHidden(false);
+    post.setIsWaiting(false);
+    post.setUserPrivate(privatePostReceivers);
     return post;
   }
 
