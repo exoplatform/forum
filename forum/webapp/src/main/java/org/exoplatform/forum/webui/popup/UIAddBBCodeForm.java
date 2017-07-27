@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.commons.utils.HTMLSanitizer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.api.BBCode;
@@ -170,6 +171,8 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       }
       try {
         List<BBCode> bbcodes = new ArrayList<BBCode>();
+        //--- Sanitize replacement field
+        uiForm.bbcode.setReplacement(HTMLSanitizer.sanitize(uiForm.bbcode.getReplacement()));
         bbcodes.add(uiForm.bbcode);
         uiForm.bbCodeService.save(bbcodes);
       } catch (Exception e) {

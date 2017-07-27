@@ -927,22 +927,22 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     spaceForum.setViewer(new String[] { spaceTest.getId() });
     forumService_.saveForum(spaceCat.getId(), spaceForum, true);
     // demo watch forum of space
-    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId(), Arrays.asList(USER_DEMO + "@mail.com"), USER_DEMO);
+    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId(), Arrays.asList(USER_DEMO_EMAIL), USER_DEMO);
     // root watch category of space
-    forumService_.addWatch(1, spaceCat.getId(), Arrays.asList(USER_ROOT + "@mail.com"), USER_ROOT);
+    forumService_.addWatch(1, spaceCat.getId(), Arrays.asList(USER_ROOT_EMAIL), USER_ROOT);
     // Add topic
     Topic topic = createdTopic(USER_JOHN);
     forumService_.saveTopic(spaceCat.getId(), spaceForum.getId(), topic, true, false, messageBuilder);
     //
     sendNotificationManager.doneSignal().await();
-    List<?> messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    List<SendMessageInfo> messages = IteratorUtils.toList(forumService_.getPendingMessages());
     // have one type of watched
     assertEquals(1, messages.size());
     // only one email sent to user Demo
     assertEquals(1, ((SendMessageInfo) messages.get(0)).getEmailAddresses().size());
     assertTrue(((SendMessageInfo) messages.get(0)).getEmailAddresses().get(0).contains(USER_DEMO));
     // Mary watch on topic of space
-    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId() + "/" + topic.getId(), Arrays.asList("mary@mail.com"), "mary");
+    forumService_.addWatch(1, spaceCat.getId() + "/" + spaceForum.getId() + "/" + topic.getId(), Arrays.asList(USER_MARY_EMAIL), USER_MARY);
     // Add post
     Post post = createdPost();
     post.setOwner(USER_JOHN);
@@ -957,6 +957,20 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // have one email sent to Mary
     messageInfo = (SendMessageInfo) messages.get(1);
     assertEquals(1, messageInfo.getEmailAddresses().size());
+
+    // test Private Post
+    String []  userPrivate = {USER_JOHN,USER_DEMO};
+    Post privatePost = createPrivatePost(userPrivate);
+    forumService_.savePost(spaceCat.getId(), spaceForum.getId(), topic.getId(), privatePost, true, messageBuilder);
+    messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    List<String> emailAddresses = new ArrayList<>();
+    for(SendMessageInfo message : messages){
+      emailAddresses.addAll(message.getEmailAddresses());
+    }
+    assertTrue(emailAddresses.contains(USER_DEMO_EMAIL));  // demo is a watcher and is a private post viewer -> will receive watch email
+    assertFalse(emailAddresses.contains(USER_JOHN_EMAIL)); // john is not a watcher and is a private post viewer -> will not receive watch email
+    assertFalse(emailAddresses.contains(USER_ROOT_EMAIL)); // root is a category watcher and is not a private post viewer -> will not receive watch email
+    assertFalse(emailAddresses.contains(USER_MARY_EMAIL)); // mary is a topic watcher and is not a private post viewer -> will not receive watch email
   }
 
   public void testEmailPermissionOnIntranet() throws Exception {
@@ -978,17 +992,17 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.saveForum(normalCat.getId(), forum, true);
     forum = forumService_.getForum(normalCat.getId(), forum.getId());
     // Root watch category
-    forumService_.addWatch(1, normalCat.getId(), Arrays.asList(USER_ROOT + "@mail.com"), USER_ROOT);
+    forumService_.addWatch(1, normalCat.getId(), Arrays.asList(USER_ROOT_EMAIL), USER_ROOT);
     // Demo watch forum
-    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList(USER_DEMO + "@mail.com"), USER_DEMO);
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList(USER_DEMO_EMAIL), USER_DEMO);
     // Mary watch forum
-    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList("mary@mail.com"), "mary");
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId(), Arrays.asList(USER_MARY_EMAIL), USER_MARY);
     //
     Topic topic = createdTopic(USER_JOHN);
     forumService_.saveTopic(normalCat.getId(), forum.getId(), topic, true, false, messageBuilder);
     //
     sendNotificationManager.doneSignal().await();
-    List<?> messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    List<SendMessageInfo> messages = IteratorUtils.toList(forumService_.getPendingMessages());
     // 1 email sent for Root (administrator) watched on category
     SendMessageInfo messageInfo = (SendMessageInfo) messages.get(0);
     assertEquals(1, messageInfo.getEmailAddresses().size());
@@ -997,10 +1011,10 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     messageInfo = (SendMessageInfo) messages.get(1);
     assertEquals(2, messageInfo.getEmailAddresses().size());
     //
-    topic.setCanView(new String[] { "paul" });
+    topic.setCanView(new String[] { USER_PAUL });
     forumService_.saveTopic(normalCat.getId(), forum.getId(), topic, false, false, messageBuilder);
     // Paul watch space forum (Paul has permission to view topics)
-    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId() + "/" + topic.getId(), Arrays.asList("paul@mail.com"), "paul");
+    forumService_.addWatch(1, normalCat.getId() + "/" + forum.getId() + "/" + topic.getId(), Arrays.asList(USER_PAUL_EMAIL), USER_PAUL);
     //
     Post post = createdPost();
     post.setOwner(USER_JOHN);
@@ -1019,6 +1033,19 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // one email for Paul
     messageInfo = (SendMessageInfo) messages.get(2);
     assertEquals(1, messageInfo.getEmailAddresses().size());
+    // test Private Post
+    String []  userPrivate = {USER_JOHN,USER_DEMO};
+    Post privatePost = createPrivatePost(userPrivate);
+    forumService_.savePost(normalCat.getId(), forum.getId(), topic.getId(), privatePost, true, messageBuilder);
+    messages = IteratorUtils.toList(forumService_.getPendingMessages());
+    List<String> emailAddresses = new ArrayList<>();
+    for(SendMessageInfo message : messages){
+      emailAddresses.addAll(message.getEmailAddresses());
+    }
+    assertTrue(emailAddresses.contains(USER_DEMO_EMAIL));  // demo is a watcher and is a private post viewer -> will receive watch email
+    assertFalse(emailAddresses.contains(USER_JOHN_EMAIL)); // john is not a watcher and is a private post viewer -> will not receive watch email
+    assertFalse(emailAddresses.contains(USER_MARY_EMAIL)); // mary is a watcher and is not a private post viewer -> will not receive watch email
+    assertFalse(emailAddresses.contains(USER_PAUL_EMAIL)); // paul is a watcher and is not a private post viewer -> will not receive watch email
   }
   
   private Group createGroup(Group parent, String groupName) throws Exception {
