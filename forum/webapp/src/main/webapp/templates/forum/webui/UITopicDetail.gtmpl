@@ -641,8 +641,9 @@
 											String title = _ctx.appRes("UITopicDetail.title." + action);
 											String label = _ctx.appRes("UITopicDetail.action." + action);
 											String confirm = (action.equals("Delete") == true) ? "btn confirm" : "btn";
+											String buttonId = action + idMessage;
 								%>
-								<a onclick="$actionLink" class="$confirm" rel="tooltip" data-placement="bottom" title="$title">$label</a>
+								<a onclick="$actionLink" class="$confirm" rel="tooltip" id="$buttonId" data-placement="bottom" title="$title">$label</a>
 								<%} %>
 							</div>
 						</div>
