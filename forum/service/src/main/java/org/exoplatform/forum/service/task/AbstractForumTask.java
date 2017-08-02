@@ -42,11 +42,6 @@ public abstract class AbstractForumTask {
     return CommonsUtils.getService(JCRDataStorage.class);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-
   public abstract void process() throws Exception;
 
   /**
@@ -81,6 +76,11 @@ public abstract class AbstractForumTask {
         return true;
       }
       return false;
+    }
+
+    @Override
+    public int hashCode() {
+      return forumPath != null ? forumPath.hashCode() : 0;
     }
   }
   
@@ -137,6 +137,15 @@ public abstract class AbstractForumTask {
         return true;
       }
       return false;
+    }
+
+    @Override
+    public int hashCode() {
+      int result = topic != null ? topic.hashCode() : 0;
+      result = 31 * result + (post != null ? post.hashCode() : 0);
+      result = 31 * result + (nodePath != null ? nodePath.hashCode() : 0);
+      result = 31 * result + (isApprovePost ? 1 : 0);
+      return result;
     }
   }
 }

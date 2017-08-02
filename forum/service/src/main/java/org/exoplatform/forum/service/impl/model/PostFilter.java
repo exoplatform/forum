@@ -37,7 +37,8 @@ public class PostFilter implements Serializable {
   private boolean isAdmin = false;
   private boolean isSplit = false;
 
-  public PostFilter(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String isWaiting, String userLogin) {
+  public PostFilter(String categoryId, String forumId, String topicId, String isApproved, String isHidden,
+                    String isWaiting, String userLogin) {
     this.categoryId = categoryId;
     this.forumId = forumId;
     this.topicId = topicId;
@@ -170,6 +171,25 @@ public class PostFilter implements Serializable {
 
     return true;
   }
+
+  @Override
+  public int hashCode() {
+    int result = categoryId != null ? categoryId.hashCode() : 0;
+    result = 31 * result + (forumId != null ? forumId.hashCode() : 0);
+    result = 31 * result + (topicId != null ? topicId.hashCode() : 0);
+    result = 31 * result + (isApproved != null ? isApproved.hashCode() : 0);
+    result = 31 * result + (isWaiting != null ? isWaiting.hashCode() : 0);
+    result = 31 * result + (isHidden != null ? isHidden.hashCode() : 0);
+    result = 31 * result + (userLogin != null ? userLogin.hashCode() : 0);
+    result = 31 * result + (topicPath != null ? topicPath.hashCode() : 0);
+    result = 31 * result + (ip != null ? ip.hashCode() : 0);
+    result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
+    result = 31 * result + (userName != null ? userName.hashCode() : 0);
+    result = 31 * result + (isAdmin ? 1 : 0);
+    result = 31 * result + (isSplit ? 1 : 0);
+    return result;
+  }
+
   @Override
   public String toString() {
     return new StringBuilder("PostFilter{")

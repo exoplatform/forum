@@ -98,9 +98,4 @@ public class BBCode {
   public String toString() {
     return getTagName() + (isOption ? "(option)" : "");
   }
-
-  public int hashCode() {
-    return super.hashCode();
-  }
-
 }

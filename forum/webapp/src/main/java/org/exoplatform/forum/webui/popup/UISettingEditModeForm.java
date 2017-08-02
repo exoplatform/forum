@@ -122,8 +122,8 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
 
     ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
     UIForumPortlet  forumPortlet = getParent();
-    listCategoryinv = forumPortlet.getInvisibleCategories();
-    listforuminv = forumPortlet.getInvisibleForums();
+    listCategoryinv.addAll(forumPortlet.getInvisibleCategories());
+    listforuminv.addAll(forumPortlet.getInvisibleForums());
   }
 
   protected boolean tabIsSelected(int tabId) {

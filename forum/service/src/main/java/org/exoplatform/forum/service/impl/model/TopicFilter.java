@@ -173,6 +173,19 @@ public class TopicFilter implements Serializable {
   }
 
   @Override
+  public int hashCode() {
+    int result = forumId != null ? forumId.hashCode() : 0;
+    result = 31 * result + (userLogin != null ? userLogin.hashCode() : 0);
+    result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
+    result = 31 * result + (isApproved ? 1 : 0);
+    result = 31 * result + (isAdmin ? 1 : 0);
+    result = 31 * result + (int) (date ^ (date >>> 32));
+    result = 31 * result + (forumPath != null ? forumPath.hashCode() : 0);
+    result = 31 * result + (userName != null ? userName.hashCode() : 0);
+    return result;
+  }
+
+  @Override
   public String toString() {
     return new StringBuilder("PostFilter{")
         .append("categoryId='").append(categoryId).append("'")

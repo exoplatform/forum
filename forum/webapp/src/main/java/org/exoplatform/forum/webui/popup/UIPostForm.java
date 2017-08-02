@@ -72,7 +72,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   public static final String    FIELD_THREADCONTEN_TAB = "ThreadContent";
 
-  public static String          STR_RE                 = "";
+  public String                 strRe                  = "";
 
   private int                   tabId                  = 0;
 
@@ -233,13 +233,13 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
   }
 
   private String getTitle(String title) {
-    if (ForumUtils.isEmpty(STR_RE)) {
-      STR_RE = getLabel(FIELD_LABEL_QUOTE) + ": ";
+    if (ForumUtils.isEmpty(strRe)) {
+      strRe = getLabel(FIELD_LABEL_QUOTE) + ": ";
     }
-    while (title.indexOf(STR_RE.trim()) == 0) {
-      title = title.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
+    while (title.indexOf(strRe.trim()) == 0) {
+      title = title.replaceFirst(strRe.trim(), ForumUtils.EMPTY_STR).trim();
     }
-    return STR_RE + title;
+    return strRe + title;
   }
 
   public void activate() {
@@ -320,8 +320,9 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           boolean isAddRe = false;
           int maxText = ForumUtils.MAXTITLE;
           if (!ForumUtils.isEmpty(postTitle)) {
+            String strRe = getLabel(FIELD_LABEL_QUOTE) + ": ";
             while (postTitle.indexOf(uiForm.getTitle("").trim()) == 0) {
-              postTitle = postTitle.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
+              postTitle = postTitle.replaceFirst(strRe.trim(), ForumUtils.EMPTY_STR).trim();
               isAddRe = true;
             }
             if (postTitle.length() > maxText) {
@@ -333,7 +334,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           }
           String message = threadContent.getChild(UIFormRichtextInput.class).getValue();
           String checksms = TransformHTML.cleanHtmlCode(message,
-                                                        new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+                  new ArrayList<>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
           if (ForumUtils.isEmpty(postTitle)) {

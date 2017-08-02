@@ -216,4 +216,9 @@ public class Category {
 
     return super.equals(o);
   }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
+  }
 }

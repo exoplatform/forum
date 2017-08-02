@@ -50,7 +50,12 @@ public class UserProfileFilter {
 
     return true;
   }
-  
+
+  @Override
+  public int hashCode() {
+    return searchKey != null ? searchKey.hashCode() : 0;
+  }
+
   @Override
   public String toString() {
     return new StringBuilder("UserProfileFilter{")
