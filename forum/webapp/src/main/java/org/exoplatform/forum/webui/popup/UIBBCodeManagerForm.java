@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.commons.utils.HTMLSanitizer;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.bbcode.api.BBCodeService;
 import org.exoplatform.forum.common.webui.BaseEventListener;
@@ -115,6 +116,7 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       BBCode bbCode = uiForm.getBBCode(bbcodeId);
       UIAddBBCodeForm bbcForm = uiForm.openPopup(popupContainer, UIAddBBCodeForm.class, "EditBBCodeForm", 670, 400);
+      bbCode.setExample(HTMLSanitizer.sanitize(bbCode.getExample()));
       bbcForm.setEditBBcode(bbCode);
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
       popupWindow.setWindowSize(650, 400);

@@ -128,7 +128,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     }
     String replacement = getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
     String description = getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
-    String example = getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
+    String example = HTMLSanitizer.sanitize(getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue());
     boolean isOption = (Boolean) getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
     if (ForumUtils.isEmpty(description))
       description = " ";
@@ -212,7 +212,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIAddBBCodeForm> event) throws Exception {
       UIAddBBCodeForm uiForm = event.getSource();
       String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
-      uiForm.example = example;
+      uiForm.example = HTMLSanitizer.sanitize(example);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
