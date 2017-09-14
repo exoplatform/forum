@@ -63,6 +63,8 @@ public class Post {
 
   private List<ForumAttachment> attachments     = null;
 
+  private String       quotedPostId    = null;
+
   public Post() {
     userPrivate = new String[] { ForumNodeTypes.EXO_USER_PRI };
   }
@@ -267,5 +269,13 @@ public class Post {
 
   public void setLink(String link) {
     this.link = link;
+  }
+
+  public String getQuotedPostId() {
+    return quotedPostId;
+  }
+
+  public void setQuotedPostId(String quotedPostId) {
+    this.quotedPostId = quotedPostId;
   }
 }

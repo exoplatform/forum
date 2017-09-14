@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.commons.utils.HTMLSanitizer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
@@ -387,6 +389,9 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               post.setOwner(userName);
               post.setCreatedDate(currentDate);
               isNew = true;
+            }
+            if (uiForm.isQuote && StringUtils.isNoneBlank(uiForm.postId)) {
+              post.setQuotedPostId(uiForm.postId);
             }
             post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
             message = HTMLSanitizer.sanitize(message);
