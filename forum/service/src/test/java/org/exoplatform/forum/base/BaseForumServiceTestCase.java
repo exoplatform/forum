@@ -142,16 +142,16 @@ public abstract class BaseForumServiceTestCase extends BaseExoTestCase {
   }
 
   public void removeAllData() throws Exception {
+    List<UserProfile> profiles = storage.searchUserProfileByFilter(new UserProfileFilter(""), 0, 10);
+    for (UserProfile p : profiles) {
+      storage.deleteUserProfile(p.getUserId());
+    }
+
     List<Category> cats = getService(JCRDataStorage.class).getCategories();
     if (cats.size() > 0) {
       for (Category category : cats) {
         forumService_.removeCategory(category.getId());
       }
-    }
-    
-    List<UserProfile> profiles = storage.searchUserProfileByFilter(new UserProfileFilter(""), 0, 10);
-    for (UserProfile p : profiles) {
-      storage.deleteUserProfile(p.getUserId());
     }
   }
   
