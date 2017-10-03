@@ -51,7 +51,6 @@
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
     <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
-    <org.hsqldb.version>2.3.4</org.hsqldb.version>
     <argLine>-Xmx1024m</argLine>
   </properties>
   <dependencyManagement>
@@ -298,13 +297,6 @@
         <groupId>org.exoplatform.doc</groupId>
         <artifactId>doc-style</artifactId>
         <version>${org.exoplatform.doc.doc-style.version}</version>
-      </dependency>
-      <!-- Workaround for hsqldb bug using version 2.3.3 -->
-      <dependency>
-        <groupId>org.hsqldb</groupId>
-        <artifactId>hsqldb</artifactId>
-        <version>${org.hsqldb.version}</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
