@@ -26,8 +26,6 @@ import java.util.Map;
 import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hmef.Attachment;
-import org.eclipse.jetty.util.StringUtil;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadResource;
