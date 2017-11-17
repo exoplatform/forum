@@ -1203,18 +1203,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class DownloadAttachActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       UITopicDetail uiTopicDetail = event.getSource();
-      String attId = event.getRequestContext().getRequestParameter(OBJECTID).split("-")[0];
-      String postId = event.getRequestContext().getRequestParameter(OBJECTID).split("-")[1];
-      ForumAttachment attach = uiTopicDetail.getForumAttachmentById(uiTopicDetail.getPost(postId).getAttachments(), attId);
-      if (attach != null) {
-        String mimeType = attach.getMimeType().substring(attach.getMimeType().indexOf("/") + 1);
-        DownloadResource dresource = new InputStreamDownloadResource(attach.getInputStream(), mimeType);
-        DownloadService dservice = (DownloadService) PortalContainer.getInstance().getComponentInstanceOfType(DownloadService.class);
-        dresource.setDownloadName(attach.getName());
-        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicDetail);
+      String object =event.getRequestContext().getRequestParameter(OBJECTID);
+
+      if (StringUtils.isNotBlank(object) && object.split("-").length == 2 ){
+        String attId = object.split("-")[0];
+        String postId = object.split("-")[1];
+        ForumAttachment attach = uiTopicDetail.getForumAttachmentById(uiTopicDetail.getPost(postId).getAttachments(), attId);
+        if (attach != null && attach.getMimeType() != null ) {
+          String mimeType = attach.getMimeType().substring(attach.getMimeType().indexOf("/") + 1);
+          DownloadResource dresource = new InputStreamDownloadResource(attach.getInputStream(), mimeType);
+          DownloadService dservice = (DownloadService) PortalContainer.getInstance().getComponentInstanceOfType(DownloadService.class);
+          dresource.setDownloadName(attach.getName());
+          String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+          event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicDetail);
       }
+      } else {
+      topicDetail.log.warn("ObjectID does not have correct form, expected \"topicId-postId\", got: " + object);
+    }
     }
   }
 
