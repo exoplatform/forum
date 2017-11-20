@@ -1212,14 +1212,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         if (attach != null && attach.getMimeType() != null ) {
           String mimeType = attach.getMimeType().substring(attach.getMimeType().indexOf("/") + 1);
           DownloadResource dresource = new InputStreamDownloadResource(attach.getInputStream(), mimeType);
-          DownloadService dservice = (DownloadService) PortalContainer.getInstance().getComponentInstanceOfType(DownloadService.class);
+          DownloadService dservice = (DownloadService) uiTopicDetail.getApplicationComponent(DownloadService.class);
           dresource.setDownloadName(attach.getName());
           String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
           event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
           event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicDetail);
       }
       } else {
-      topicDetail.log.warn("ObjectID does not have correct form, expected \"topicId-postId\", got: " + object);
+        LOG.warn("ObjectID does not have correct form, expected \"topicId-postId\", got: " + object);
     }
     }
   }
