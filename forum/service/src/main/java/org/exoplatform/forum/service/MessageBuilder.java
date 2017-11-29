@@ -266,7 +266,7 @@ public class MessageBuilder {
     formatter = new SimpleDateFormat(dateFormat);
     content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
     content_ = StringUtils.replace(content_, "$POSTER", owner);
-    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link + SLASH + id);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link);
     content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", privateLink);
     content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", privateLink + "/true");
 

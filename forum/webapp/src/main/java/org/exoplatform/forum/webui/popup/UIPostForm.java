@@ -52,6 +52,8 @@ import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
+import static org.exoplatform.forum.ForumUtils.SLASH;
+
 @ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/forum/webui/popup/UIPostForm.gtmpl", events = {
     @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class, phase = Phase.DECODE),
     @EventConfig(listeners = UIPostForm.SubmitPostActionListener.class, phase = Phase.DECODE),
@@ -379,8 +381,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               uiForm.isDoubleClickSubmit = false;
               return;
             }
-            // set link
-            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId, false);
+
             //
             Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
             boolean isNew = false;
@@ -399,6 +400,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             post.setIcon("uiIconForumTopic uiIconForumLightGray");
             post.setAttachments(uiForm.getAttachFileList());
             post.setIsWaiting(isOffend);
+            // set link
+            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId, false) + SLASH + post.getId();
             post.setLink(link);
             String[] userPrivate = new String[] { "exoUserPri" };
             if (uiForm.isMP) {
@@ -464,7 +467,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 if (userProfile.getIsAutoWatchTopicIPost()) {
                   List<String> values = new ArrayList<String>();
                   values.add(userProfile.getEmail());
-                  String path = uiForm.categoryId + ForumUtils.SLASH + uiForm.forumId + ForumUtils.SLASH + uiForm.topicId;
+                  String path = uiForm.categoryId + SLASH + uiForm.forumId + SLASH + uiForm.topicId;
                   uiForm.getForumService().addWatch(1, path, values, userProfile.getUserId());
                 }
               }

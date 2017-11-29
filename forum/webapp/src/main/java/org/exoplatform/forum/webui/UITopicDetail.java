@@ -85,6 +85,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
+import static org.exoplatform.forum.ForumUtils.SLASH;
+
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
@@ -251,7 +253,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   protected String getRestPath() throws Exception {
     try {
       ExoContainerContext exoContext = (ExoContainerContext) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-      return ForumUtils.SLASH + exoContext.getPortalContainerName() + ForumUtils.SLASH + exoContext.getRestContextName();
+      return SLASH + exoContext.getPortalContainerName() + SLASH + exoContext.getRestContextName();
     } catch (Exception e) {
       log.error("Can not get portal name or rest context name, exception: ", e);
     }
@@ -297,10 +299,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     forumPortlet.updateAccessTopic(topicId);
     userName = getUserProfile().getUserId();
     cleanCheckedList();
-    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId));
+    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + SLASH + forumId + SLASH + topicId));
     this.isUseAjax = forumPortlet.isUseAjax();
     this.topic = getForumService().getTopic(categoryId, forumId, topicId, userName);
-    getForumService().setViewCountTopic((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId), userName);
+    getForumService().setViewCountTopic((categoryId + SLASH + forumId + SLASH + topicId), userName);
     setRenderInfoPorlet();
   }
 
@@ -318,9 +320,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     isShowRule = forumPortlet.isShowRules();
     enableIPLogging = forumPortlet.isEnableIPLogging();
     cleanCheckedList();
-    getForumService().setViewCountTopic((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId), userName);
+    getForumService().setViewCountTopic((categoryId + SLASH + forumId + SLASH + topicId), userName);
     forumPortlet.updateAccessTopic(topicId);
-    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId));
+    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + SLASH + forumId + SLASH + topicId));
     this.isUseAjax = forumPortlet.isUseAjax();
     userName = getUserProfile().getUserId();
     setRenderInfoPorlet();
@@ -561,7 +563,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         if (!ForumUtils.isEmpty(lastPostId)) {
           
-          Long index = getForumService().getLastReadIndex((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId + ForumUtils.SLASH + lastPostId), isApprove, isHidden, userName);
+          Long index = getForumService().getLastReadIndex((categoryId + SLASH + forumId + SLASH + topicId + SLASH + lastPostId), isApprove, isHidden, userName);
           if (index.intValue() <= pageSize)
             pageSelect = 1;
           else {
@@ -601,7 +603,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       
       if (!lastPoistIdSave.equals(IdLastPost)) {
         lastPoistIdSave = IdLastPost;
-        getUserProfile().addLastPostIdReadOfForum(forumId, topicId + ForumUtils.SLASH + IdLastPost);
+        getUserProfile().addLastPostIdReadOfForum(forumId, topicId + SLASH + IdLastPost);
         userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
         if (!UserProfile.USER_GUEST.equals(userName)) {
           getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
@@ -812,7 +814,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         List<ForumSearchResult> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
+        listSearchEvent.setListSearchEvent(text, list, path.substring(path.indexOf(Utils.CATEGORY))+ SLASH+topicDetail.getPageSelect());
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         topicDetail.refreshPortlet();
@@ -1492,9 +1494,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             }
             message = TransformHTML.enCodeHTMLContent(message);
 
-            // set link
-            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId, false);
-            //
+
             String userName = topicDetail.getUserProfile().getUserId();
             Post post = new Post();
             post.setName(topicDetail.getTitle(topic.getTopicName(), event.getRequestContext()));
@@ -1504,6 +1504,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             post.setIcon(topic.getIcon());
             post.setIsWaiting(isOffend);
             post.setIsApproved(!hasTopicMod);
+            // set link
+            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId, false) + SLASH + post.getId();
+            //
             post.setLink(link);
             MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
             messageBuilder.setLink(link);
@@ -1517,7 +1520,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               if (topicDetail.userProfile.getIsAutoWatchTopicIPost()) {
                 List<String> values = new ArrayList<String>();
                 values.add(topicDetail.userProfile.getEmail());
-                String path = topicDetail.categoryId + ForumUtils.SLASH + topicDetail.forumId + ForumUtils.SLASH + topicDetail.topicId;
+                String path = topicDetail.categoryId + SLASH + topicDetail.forumId + SLASH + topicDetail.topicId;
                 topicDetail.getForumService().addWatch(1, path, values, topicDetail.userProfile.getUserId());
               }
             } catch (PathNotFoundException e) {
@@ -1626,7 +1629,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         listIp = new ArrayList<String>();
       listIp.add(ip);
       topicDetail.forum.setBanIP(listIp);
-      if (!topicDetail.getForumService().addBanIPForum(ip, (topicDetail.categoryId + ForumUtils.SLASH + topicDetail.forumId))) {
+      if (!topicDetail.getForumService().addBanIPForum(ip, (topicDetail.categoryId + SLASH + topicDetail.forumId))) {
         warning("UIBanIPForumManagerForm.sms.ipBanFalse", ip);
         return;
       }
@@ -1654,8 +1657,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
       if (topic != null) {
-        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(ForumUtils.SLASH)
-                              .append(topic.getForumId()).append(ForumUtils.SLASH).append(topic.getId());
+        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(SLASH)
+                              .append(topic.getForumId()).append(SLASH).append(topic.getId());
         if(topicDetail.addWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
@@ -1672,8 +1675,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       Topic topic = topicDetail.getForumService().getTopicByPath(objectId,false);
       if (topic != null) {
         topicDetail.isEditTopic = true;
-        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(ForumUtils.SLASH)
-                              .append(topic.getForumId()).append(ForumUtils.SLASH).append(topic.getId());
+        StringBuffer buffer = new StringBuffer().append(topic.getCategoryId()).append(SLASH)
+                              .append(topic.getForumId()).append(SLASH).append(topic.getId());
         if(topicDetail.unWatch(buffer.toString())) {
           topicDetail.isEditTopic = true;
           refresh();
