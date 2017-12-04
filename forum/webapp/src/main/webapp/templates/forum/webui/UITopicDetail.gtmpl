@@ -558,6 +558,7 @@
 									<%
 										for(attachment in attachments) {
 											String urlFile = uicomponent.getFileSource(attachment) ;
+											String attachmentId = attachment.getId() + "-" + post.getId();
 											String titleFile = attachment.getName();
 											String fileName = ForumUtils.getSubString(titleFile, 30);
 											long sizeNumber = attachment.getSize() ;
@@ -565,14 +566,14 @@
 											String typeFile = attachment.mimeType ;
 											String pathAtt = urlFile.replaceAll("&","(omu)");
 									%>
-									
+
 									<%
 											if(typeFile.indexOf("image") >= 0) {
 												if (typeFile.indexOf("xcf") >= 0 || typeFile.indexOf("svg") >= 0 || typeFile.indexOf("tif") >= 0 || titleFile.indexOf(".psd") > 0) {
 													String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
 									%>
 									<div class="otherAttachmentBox">
-										<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+										<a onclick="<%=uicomponent.event("DownloadAttach", attachmentId);%>" href="javaScript: void(0)">
 										<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
 									</div>
 									<%
@@ -583,7 +584,7 @@
 										<a class="imgAttach" rel="tooltip" data-placement="bottom" title="$titleFile"><img src="$attLink" id="imgView${fileName}" alt="$titleFile"/></a>
 										<div class="actionAttachImg">
 											<p><a href="javascript:void(0);" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><i class="uiIconSearch uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.View");%></a></p>
-											<p><a href="javascript:void(0);" onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
+											<p><a href="javascript:void(0);" onclick="<%=uicomponent.event("DownloadAttach", attachmentId);%>"><i class="uiIconDownload uiIconWhite"></i> <%=_ctx.appRes(uiformId + ".action.Download");%></a></p>
 										</div>
 									</div>
 										<% } %>
@@ -599,6 +600,7 @@
 									<%
 										for(attachment in attachments) {
 											String urlFile = uicomponent.getFileSource(attachment) ;
+                                            String attachmentId = attachment.getId() + "-" + post.getId();
 											String titleFile = attachment.getName();
 											String fileName = ForumUtils.getSubString(titleFile, 30);
 											long sizeNumber = attachment.getSize() ;
@@ -610,7 +612,7 @@
 												String typeFileIcon = uicomponent.getCSSByFileType(titleFile, typeFile);
 									%>
 									<div class="otherAttachmentBox">
-										<a onclick="if(eXo.core.Browser.isIE()) {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+										<a onclick="<%=uicomponent.event("DownloadAttach", attachmentId);%>" href="javaScript: void(0)">
 										<i class="$typeFileIcon uiIconLightGray"></i> $fileName</a>(<%=_ctx.appRes(uiformId + ".label.Size");%>: ${size})
 									</div>
 										<%} %>

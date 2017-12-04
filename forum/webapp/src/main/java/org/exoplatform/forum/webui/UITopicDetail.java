@@ -28,6 +28,9 @@ import javax.jcr.PathNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadResource;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
@@ -1194,7 +1197,25 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class DownloadAttachActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      refresh();
+      UITopicDetail uiTopicDetail = event.getSource();
+      String object =event.getRequestContext().getRequestParameter(OBJECTID);
+
+      if (StringUtils.isNotBlank(object) && object.split("-").length == 2 ){
+        String attId = object.split("-")[0];
+        String postId = object.split("-")[1];
+        ForumAttachment attach = uiTopicDetail.getForumAttachmentById(uiTopicDetail.getPost(postId).getAttachments(), attId);
+        if (attach != null && attach.getMimeType() != null ) {
+          String mimeType = attach.getMimeType().substring(attach.getMimeType().indexOf("/") + 1);
+          DownloadResource dresource = new InputStreamDownloadResource(attach.getInputStream(), mimeType);
+          DownloadService dservice = (DownloadService) uiTopicDetail.getApplicationComponent(DownloadService.class);
+          dresource.setDownloadName(attach.getName());
+          String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+          event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicDetail);
+      }
+      } else {
+        LOG.warn("ObjectID does not have correct form, expected \"topicId-postId\", got: " + object);
+    }
     }
   }
 
@@ -1712,4 +1733,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return builder.toString();
   }
 
+  private ForumAttachment getForumAttachmentById(List<ForumAttachment> list, String id){
+    for (ForumAttachment attach : list) {
+      if (attach.getId().equals(id)) {
+        return attach;
+      }
+    }
+    return null;
+  }
 }
