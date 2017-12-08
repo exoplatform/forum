@@ -2,6 +2,7 @@ package org.exoplatform.forum.service.cache.model.data;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Utils;
@@ -85,5 +86,25 @@ public class CategoryData implements CachedData<Category> {
   
   public String getId() {
     return this.id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof CategoryData)) return false;
+
+    CategoryData that = (CategoryData) o;
+
+    return StringUtils.equals(id, that.id) && StringUtils.equals(owner, that.owner) &&
+            StringUtils.equals(path, that.path) && StringUtils.equals(name, that.name);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (owner != null ? owner.hashCode() : 0);
+    result = 31 * result + (path != null ? path.hashCode() : 0);
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
   }
 }

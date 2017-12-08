@@ -3,6 +3,7 @@ package org.exoplatform.forum.service.cache.model.data;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
@@ -94,4 +95,23 @@ public class PostData  implements CachedData<Post> {
 
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof PostData)) return false;
+
+    PostData postData = (PostData) o;
+
+    return StringUtils.equals(id, postData.id) && StringUtils.equals(path, postData.path) &&
+            StringUtils.equals(owner, postData.owner) && StringUtils.equals(name, postData.name);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (path != null ? path.hashCode() : 0);
+    result = 31 * result + (owner != null ? owner.hashCode() : 0);
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
+  }
 }

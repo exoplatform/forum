@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.bbcode.core.cache.data;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.common.cache.model.CachedData;
 
@@ -71,7 +72,21 @@ public class BBCodeCacheData implements CachedData<BBCode> {
   public String getId() {
     return id;
   }
-  
-  
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof BBCodeCacheData)) return false;
+
+    BBCodeCacheData that = (BBCodeCacheData) o;
+
+    return StringUtils.equals(id, that.id) && StringUtils.equals(tagName, that.tagName);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+    return result;
+  }
 }

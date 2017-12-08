@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.cache.model.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.UserProfile;
 
@@ -124,4 +125,18 @@ public class LoginUserProfileData implements CachedData<UserProfile> {
     return userProfile;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof LoginUserProfileData)) return false;
+
+    LoginUserProfileData that = (LoginUserProfileData) o;
+
+    return StringUtils.equals(userId, that.userId);
+  }
+
+  @Override
+  public int hashCode() {
+    return userId != null ? userId.hashCode() : 0;
+  }
 }

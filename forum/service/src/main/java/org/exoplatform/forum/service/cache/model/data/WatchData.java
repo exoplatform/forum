@@ -1,5 +1,6 @@
 package org.exoplatform.forum.service.cache.model.data;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Watch;
 
@@ -36,5 +37,22 @@ public class WatchData implements CachedData<Watch> {
     watch.setIsAddWatchByRSS(this.isRSS);
     watch.setIsAddWatchByEmail(this.isEmail);
     return watch;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof WatchData)) return false;
+
+    WatchData watchData = (WatchData) o;
+
+    return StringUtils.equals(id, watchData.id) && StringUtils.equals(userId, watchData.userId);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (userId != null ? userId.hashCode() : 0);
+    return result;
   }
 }

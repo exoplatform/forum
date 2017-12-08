@@ -51,7 +51,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.BBCodeData.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.BBCodeData.TimeToLive:-1}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.BBCodeData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -73,7 +73,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.BBCodeListData.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.BBCodeListData.TimeToLive:-1}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.BBCodeListData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -96,7 +96,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.CategoryData.Capacity:150}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.CategoryData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.CategoryData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -118,7 +118,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.CategoryList.Capacity:50}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.CategoryList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.CategoryList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -141,7 +141,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.ForumData.Capacity:200}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.ForumData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.ForumData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -163,7 +163,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.ForumList.Capacity:50}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.ForumList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.ForumList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -186,7 +186,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.LinkListData.Capacity:50}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.LinkListData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.LinkListData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -209,7 +209,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.TopicData.Capacity:10000}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.TopicData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.TopicData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -231,7 +231,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.TopicList.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.TopicList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.TopicList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -253,7 +253,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.TopicListCount.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.TopicListCount.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.TopicListCount.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -276,7 +276,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.PostData.Capacity:20000}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.PostData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.PostData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -298,7 +298,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.PostList.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.PostList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.PostList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -310,6 +310,18 @@
             <field name="maxSize"><int>${cache.exo.forum.PostListCount.Capacity:500}</int></field>
             <field name="liveTime"><long>${cache.exo.forum.PostListCount.TimeToLive:-1}</long></field>
             <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
+          </object>
+        </object-param>
+
+        <object-param profiles="cluster">
+          <name>forum.PostListCount</name>
+          <description></description>
+          <object type="org.exoplatform.services.cache.impl.infinispan.generic.GenericExoCacheConfig">
+            <field name="name"><string>forum.PostListCount</string></field>
+            <field name="strategy"><string>LIRS</string></field>
+            <field name="maxEntries"><int>${cache.exo.forum.PostListCount.Capacity:500}</int></field>
+            <field name="lifespan"><long>${cache.exo.forum.PostListCount.TimeToLive:600000}</long> </field>
+            <field name="cacheMode"><string>${exo.cache.forum.PostListCount.cacheMode:local}</string></field>
           </object>
         </object-param>
 
@@ -332,7 +344,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.LoginUserProfile.Capacity:200}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.LoginUserProfile.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.LoginUserProfile.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -344,6 +356,18 @@
             <field name="maxSize"><int>${cache.exo.forum.UserProfile.Capacity:800}</int></field>
             <field name="liveTime"><long>${cache.exo.forum.UserProfile.TimeToLive:-1}</long></field>
             <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
+          </object>
+        </object-param>
+
+        <object-param profiles="cluster">
+          <name>forum.UserProfile</name>
+          <description></description>
+          <object type="org.exoplatform.services.cache.impl.infinispan.generic.GenericExoCacheConfig">
+            <field name="name"><string>forum.UserProfile</string></field>
+            <field name="strategy"><string>LIRS</string></field>
+            <field name="maxEntries"><int>${cache.exo.forum.UserProfile.Capacity:500}</int></field>
+            <field name="lifespan"><long>${cache.exo.forum.UserProfile.TimeToLive:600000}</long></field>
+            <field name="cacheMode"><string>${exo.cache.forum.UserProfile.cacheMode:local}</string></field>
           </object>
         </object-param>
 
@@ -365,7 +389,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.UserProfileList.Capacity:100}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.UserProfileList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.UserProfileList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -387,7 +411,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.UserProfileListCount.Capacity:100}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.UserProfileListCount.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.UserProfileListCount.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -410,7 +434,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.WatchListData.Capacity:5000}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.WatchListData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.WatchListData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -433,7 +457,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.MiscData.Capacity:10000}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.MiscData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.MiscData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -456,7 +480,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.ObjectNameData.Capacity:10000}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.ObjectNameData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.ObjectNameData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -479,7 +503,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.poll.PollData.Capacity:100}</int></field>
             <field name="lifespan"><long>${cache.exo.poll.PollData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.poll.PollData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -501,7 +525,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.poll.PollList.Capacity:50}</int></field>
             <field name="lifespan"><long>${cache.exo.poll.PollList.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.poll.PollList.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -524,7 +548,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.poll.PollSummaryData.Capacity:500}</int></field>
             <field name="lifespan"><long>${cache.exo.poll.PollSummaryData.TimeToLive:600000}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.poll.PollSummaryData.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
@@ -547,7 +571,7 @@
             <field name="strategy"><string>LIRS</string></field>
             <field name="maxEntries"><int>${cache.exo.forum.ForumPermissionsUsers.Capacity:300}</int></field>
             <field name="lifespan"><long>${cache.exo.forum.ForumPermissionsUsers.TimeToLive:-1}</long></field>
-            <field name="replicated"><boolean>true</boolean></field>
+            <field name="cacheMode"><string>${exo.cache.forum.ForumPermissionsUsers.cacheMode:replication}</string></field>
           </object>
         </object-param>
 
