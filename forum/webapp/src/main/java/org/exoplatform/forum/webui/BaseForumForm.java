@@ -182,7 +182,6 @@ public class BaseForumForm extends BaseUIForm {
     UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
     uiUserSelector.setShowSearch(true);
     uiUserSelector.setShowSearchUser(true);
-    uiUserSelector.setShowSearchGroup(false);
     uiUserSelector.setPermisionType(id);
     uiUserSelector.setSpaceGroupId(getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
     uiPopupWindow.setUIComponent(uiUserSelector);
