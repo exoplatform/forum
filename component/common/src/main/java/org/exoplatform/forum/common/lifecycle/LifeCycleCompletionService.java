@@ -27,10 +27,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.picocontainer.Startable;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.InitParamsValue;
 
-public class LifeCycleCompletionService {
+public class LifeCycleCompletionService implements Startable {
   private final String                 THREAD_NUMBER_KEY       = "thread-number";
 
   private final String                 ASYNC_EXECUTION_KEY     = "async-execution";
@@ -121,6 +123,17 @@ public class LifeCycleCompletionService {
         throw new RuntimeException();
 
       runnable.run();
+    }
+  }
+
+  @Override
+  public void start() {
+  }
+
+  @Override
+  public void stop() {
+    if (executor instanceof ExecutorService) {
+      ((ExecutorService) executor).shutdown();
     }
   }
 }

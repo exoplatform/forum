@@ -157,4 +157,8 @@ public abstract class AbstractForumTaskManager<T extends AbstractForumTask> impl
       this.tasks.clear();
     }
   }
+
+  public void stop() {
+    persisterTask.stop();
+  }
 }
