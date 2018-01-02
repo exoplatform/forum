@@ -16,13 +16,18 @@
  */
 package org.exoplatform.forum.service.task;
 
+import org.picocontainer.Startable;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.task.AbstractForumTask.SendNotificationTask;
 
-public class SendNotificationTaskManager extends AbstractForumTaskManager<SendNotificationTask> {
+public class SendNotificationTaskManager extends AbstractForumTaskManager<SendNotificationTask> implements Startable {
 
   public SendNotificationTaskManager(InitParams params) {
     super(params);
   }
 
+  @Override
+  public void start() {
+  }
 }

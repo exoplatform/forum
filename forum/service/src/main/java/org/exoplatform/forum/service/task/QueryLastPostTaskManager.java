@@ -16,13 +16,19 @@
  */
 package org.exoplatform.forum.service.task;
 
+import org.picocontainer.Startable;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.task.AbstractForumTask.QueryLastPostTask;
 
-public class QueryLastPostTaskManager extends AbstractForumTaskManager<QueryLastPostTask> {
+public class QueryLastPostTaskManager extends AbstractForumTaskManager<QueryLastPostTask> implements Startable {
 
   public QueryLastPostTaskManager(InitParams params) {
     super(params);
+  }
+
+  @Override
+  public void start() {
   }
 
 }
