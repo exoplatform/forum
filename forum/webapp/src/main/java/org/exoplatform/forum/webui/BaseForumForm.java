@@ -183,7 +183,6 @@ public class BaseForumForm extends BaseUIForm {
     uiUserSelector.setShowSearch(true);
     uiUserSelector.setShowSearchUser(true);
     uiUserSelector.setPermisionType(id);
-    uiUserSelector.setSpaceGroupId(getAncestorOfType(UIForumPortlet.class).getSpaceGroupId());
     uiPopupWindow.setUIComponent(uiUserSelector);
     uiPopupWindow.setShow(true);
     uiPopupWindow.setWindowSize(740, 400);

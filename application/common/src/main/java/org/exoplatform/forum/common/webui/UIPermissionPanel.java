@@ -184,7 +184,6 @@ public class UIPermissionPanel extends UIContainer implements UISelector {
       UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
       uiUserSelector.setShowSearch(true);
       uiUserSelector.setShowSearchUser(true);
-      uiUserSelector.setSpaceGroupId(permissionPanel.getSpaceGroupId());
       uiPopupWindow.setUIComponent(uiUserSelector);
       uiPopupWindow.setShow(true);
       uiPopupWindow.setWindowSize(740, 400);
