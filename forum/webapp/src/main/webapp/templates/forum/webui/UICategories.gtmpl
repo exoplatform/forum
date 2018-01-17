@@ -73,7 +73,7 @@
 		<table class="uiGrid table no-border-cell rounded-corners-bottom table-hover table-striped">
 			<caption class="rounded-corners-top">
 				<span class="pull-right actionExpandCollapse">
-					<i class="$classCssCollap uiIconLightGray" rel="tooltip" data-placement="bottom" title="$titleCollap" onclick="$actionCollap;"></i>
+					<i class="$classCssCollap uiIconLightGray" rel="tooltip" data-placement="left" title="$titleCollap" onclick="$actionCollap;"></i>
 				</span>
 
 				<div class="textTitleCategories pull-left">
