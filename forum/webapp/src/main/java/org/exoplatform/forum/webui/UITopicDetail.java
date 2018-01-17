@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -612,7 +613,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     } catch (Exception e) {
       log.warn("Failed to load posts page: " + e.getMessage(), e);
     }
-    return Arrays.asList(posts);
+    return posts == null ? Collections.emptyList() : Arrays.asList(posts);
   }
 
   public List<Tag> getTagsByTopic() throws Exception {
