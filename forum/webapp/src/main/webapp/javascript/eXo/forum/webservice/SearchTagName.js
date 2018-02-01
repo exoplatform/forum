@@ -125,17 +125,18 @@
           var restUrl = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword ;
           $.ajax({
             type: "GET",
-            url: restUrl
-          }).complete(function (jqXHR) {
-            if (jqXHR.readyState === 4) {
-              SearchTagName.data = $.parseJSON(jqXHR.responseText);
-              if (SearchTagName.data.jsonList) {
-                SearchTagName.updateTagList();
+            url: restUrl,
+            complete : function (jqXHR) {
+              if (jqXHR.readyState === 4) {
+                SearchTagName.data = $.parseJSON(jqXHR.responseText);
+                if (SearchTagName.data.jsonList) {
+                  SearchTagName.updateTagList();
+                }
               }
             }
           });
-        }
-      } else {
+      }
+      }else {
         SearchTagName.jcontainer.hide();
         SearchTagName.lastkey = '';
       }
