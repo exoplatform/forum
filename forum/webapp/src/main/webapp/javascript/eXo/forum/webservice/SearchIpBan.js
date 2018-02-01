@@ -28,12 +28,13 @@
       SearchIpBan.url_ = restUrl;
       $.ajax({
         type : "GET",
-        url : restUrl
-      }).complete(function(jqXHR) {
-        if (jqXHR.readyState === 4) {
-          SearchIpBan.data = $.parseJSON(jqXHR.responseText);
-          if (SearchIpBan.data.jsonList) {
-            SearchIpBan.updateIpBanList();
+        url : restUrl,
+        complete : function (jqXHR) {
+          if (jqXHR.readyState === 4) {
+            SearchIpBan.data = $.parseJSON(jqXHR.responseText);
+            if (SearchIpBan.data.jsonList) {
+              SearchIpBan.updateIpBanList();
+            }
           }
         }
       });
