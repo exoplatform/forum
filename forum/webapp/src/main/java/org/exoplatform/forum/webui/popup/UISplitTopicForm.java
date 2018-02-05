@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
@@ -117,7 +117,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
       UISplitTopicForm uiForm = event.getSource();
       String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue();
       if (!ForumUtils.isEmpty(newTopicTitle)) {
-        newTopicTitle = CommonUtils.encodeSpecialCharInTitle(newTopicTitle);
+        newTopicTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(newTopicTitle);
         // postIds number/id
         List<String> postIds = uiForm.getIdSelected();
         if (postIds.size() > 0) {

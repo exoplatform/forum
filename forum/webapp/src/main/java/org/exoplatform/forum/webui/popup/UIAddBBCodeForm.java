@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.commons.utils.HTMLSanitizer;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.api.BBCode;
@@ -115,7 +116,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     if (bbcode.getTagName().equalsIgnoreCase("list")) {
       replacement.setReadOnly(true);
     }
-    this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(bbcode.getDescription()));
+    this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(bbcode.getDescription()));
     this.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).setValue(bbcode.getExample());
     this.getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).setChecked(bbcode.isOption());
   }
@@ -132,7 +133,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     boolean isOption = (Boolean) getUICheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
     if (ForumUtils.isEmpty(description))
       description = " ";
-    description = CommonUtils.encodeSpecialCharInTitle(description);
+    description = StringCommonUtils.encodeSpecialCharForSimpleInput(description);
     bbcode.setTagName(tagName.toUpperCase());
     bbcode.setReplacement(replacement);
     bbcode.setDescription(description);

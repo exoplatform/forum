@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.webui.BaseUIForm;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
@@ -96,7 +96,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
       String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue();
       String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue();
       if (!ForumUtils.isEmpty(topicMergeTitle)) {
-        topicMergeTitle = CommonUtils.encodeSpecialCharInTitle(topicMergeTitle);
+        topicMergeTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(topicMergeTitle);
         Topic topicMerge = new Topic();
         for (Topic topic : uiForm.listTopic) {
           if (topicMergeId.equals(topic.getId())) {

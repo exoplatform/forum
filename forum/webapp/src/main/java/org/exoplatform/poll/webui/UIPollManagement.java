@@ -25,7 +25,7 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.ListAccessImpl;
 import org.exoplatform.commons.utils.SerializablePageList;
-import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
@@ -100,7 +100,7 @@ public class UIPollManagement extends BasePollForm {
       else
         poll.setExpire(Utils.getExpire(poll.getTimeOut(), poll.getModifiedDate(), dateUnit));
       list.add(new SelectItemOption<String>(poll.getQuestion(), poll.getId()));
-      String question = CommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion());
+      String question = StringCommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion());
       poll.setQuestion(question);
       mapPoll.put(poll.getId(), poll);
     }

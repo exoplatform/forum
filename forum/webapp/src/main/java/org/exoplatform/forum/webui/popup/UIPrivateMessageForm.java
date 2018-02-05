@@ -22,10 +22,15 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import org.exoplatform.commons.utils.HTMLSanitizer;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.*;
+import org.exoplatform.forum.common.webui.UIGroupSelector;
+import org.exoplatform.forum.common.webui.UIPopupAction;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.UISelector;
+import org.exoplatform.forum.common.webui.UIUserSelect;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -151,7 +156,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     String replyLabel = getLabel(FIELD_REPLY_LABEL) + CommonUtils.COLON;
     String forwardLabel = getLabel(FIELD_FORWARD_LABEL) + CommonUtils.COLON;
 
-    String title = CommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
+    String title = StringCommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
     title = getTitleMessage(getTitleMessage(title, replyLabel), forwardLabel);
 
     if (isReply) {
@@ -232,7 +237,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
             String.valueOf(maxText) });
         return;
       }
-      mailTitle = CommonUtils.encodeSpecialCharInTitle(mailTitle);
+      mailTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(  mailTitle);
       UIFormRichtextInput formWYSIWYGInput = messageTab.getChild(UIFormRichtextInput.class);
       String message = formWYSIWYGInput.getValue();
       message = HTMLSanitizer.sanitize(message);

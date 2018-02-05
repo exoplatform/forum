@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -220,9 +221,9 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     String screenN = userProfileSetting.getScreenName();
     if (ForumUtils.isEmpty(screenN))
       screenN = userProfileSetting.getUserId();
-    screenName.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(screenN));
+    screenName.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(screenN));
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
-    userTitle.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(userProfileSetting.getUserTitle()));
+    userTitle.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(userProfileSetting.getUserTitle()));
     if (this.userProfileSetting.getUserRole() > 0) {
       userTitle.setReadOnly(true);
       userTitle.setDisabled(true);
@@ -231,7 +232,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     String strSignature = this.userProfileSetting.getSignature();
     if (ForumUtils.isEmpty(strSignature))
       strSignature = ForumUtils.EMPTY_STR;
-    signature.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(strSignature));
+    signature.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(strSignature));
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfileSetting.getIsDisplaySignature());
 
@@ -406,12 +407,12 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
-      screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
+      screenName = StringCommonUtils.encodeSpecialCharForSimpleInput(screenName);
       UserProfile userProfileSetting = uiForm.userProfileSetting;
       if (ForumUtils.isEmpty(userTitle)) {
         userTitle = uiForm.permissionUser.get(String.valueOf(userProfileSetting.getUserRole()));
       } else {
-        userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
+        userTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(userTitle);
         boolean newPos = uiForm.permissionUser.values().contains(userTitle);
         if (newPos) {
           userTitle = uiForm.permissionUser.get(String.valueOf(userProfileSetting.getUserRole()));
@@ -426,7 +427,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         return;
       }
 
-      signature = CommonUtils.encodeSpecialCharInTitle(signature);
+      signature = StringCommonUtils.encodeSpecialCharForSimpleInput(signature);
       boolean isDisplaySignature = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
       Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
       boolean isAutoWatchMyTopics = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue();

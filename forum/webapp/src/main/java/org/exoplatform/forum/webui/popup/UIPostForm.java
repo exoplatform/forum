@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import static org.exoplatform.forum.ForumUtils.SLASH;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,7 @@ import javax.jcr.PathNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.commons.utils.HTMLSanitizer;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
@@ -32,7 +35,12 @@ import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
 import org.exoplatform.forum.common.webui.WebUIUtils;
-import org.exoplatform.forum.service.*;
+import org.exoplatform.forum.service.BufferAttachment;
+import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.MessageBuilder;
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -51,8 +59,6 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-
-import static org.exoplatform.forum.ForumUtils.SLASH;
 
 @ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/forum/webui/popup/UIPostForm.gtmpl", events = {
     @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class, phase = Phase.DECODE),
@@ -208,20 +214,20 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
     editReason.setRendered(false);
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
-      String message = CommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
+      String message = StringCommonUtils.decodeSpecialCharToHTMLnumberIgnore(post.getMessage());
       if (isQuote) {// quote
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
-                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
+                     .setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
 
         String value = "[QUOTE=" + getForumService().getScreenName(post.getOwner()) + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormRichtextInput.class).setValue(value);
       } else if (isPP) {
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
-                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
+                     .setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       } else {// edit
         this.attachments_.clear();
         editReason.setRendered(true);
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(post.getName()));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(post.getName()));
         if (post.getAttachments() != null && post.getAttachments().size() > 0) {
           this.attachments_.addAll(post.getAttachments());
           this.refreshUploadFileList();
@@ -231,7 +237,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     } else {
       if (!isQuote) {// reply
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT)
-                     .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
+                     .setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
       }
     }
   }
@@ -276,7 +282,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       }
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         Date currentDate = CommonUtils.getGreenwichMeanTime().getTime();
-        postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
+        postTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(postTitle);
         Post post = uiForm.post_;
         post.setName(postTitle);
         post.setMessage(message);
@@ -353,9 +359,9 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               return;
             }
             String userName = userProfile.getUserId();
-            editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
+            editReason = StringCommonUtils.encodeSpecialCharForSimpleInput(editReason);
             message = TransformHTML.fixAddBBcodeAction(message);
-            postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
+            postTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(postTitle);
             Post post = uiForm.post_;
             boolean isPP = post.getUserPrivate() != null && post.getUserPrivate().length > 1;
             boolean isOffend = false;

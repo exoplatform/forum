@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.common.CommonUtils;
@@ -347,7 +348,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     String screenN = editUserProfile.getScreenName();
     if (ForumUtils.isEmpty(screenN))
       screenN = editUserProfile.getUserId();
-    screenName.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(screenN));
+    screenName.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(screenN));
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
     String title = this.editUserProfile.getUserTitle();
     boolean isAdmin = false;
@@ -361,10 +362,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         title = Utils.ADMIN;
     }
     userRole.setValue(isAdmin);
-    userTitle.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(title));
+    userTitle.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(title));
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-    signature.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(editUserProfile.getSignature()));
+    signature.setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(editUserProfile.getSignature()));
     UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.editUserProfile.getIsDisplaySignature());
 
@@ -641,7 +642,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM);
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
-      screenName = CommonUtils.encodeSpecialCharInTitle(screenName);
+      screenName = StringCommonUtils.encodeSpecialCharForSimpleInput(screenName);
       long userRole = 2;
       boolean isAdmin = inputSetProfile.getUICheckBoxInput(FIELD_USERROLE_CHECKBOX).isChecked();
       if (isAdmin || uiForm.isAdmin(userProfile.getUserId())) {
@@ -656,7 +657,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
           userTitle = userProfile.getUserTitle();
         }
       } else {
-        userTitle = CommonUtils.encodeSpecialCharInTitle(userTitle);
+        userTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(userTitle);
       }
       // -----------------
       List<String> oldModerateForum = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums()));
@@ -739,7 +740,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
-      signature = CommonUtils.encodeSpecialCharInTitle(signature);
+      signature = StringCommonUtils.encodeSpecialCharForSimpleInput(signature);
       boolean isDisplaySignature = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).isChecked();
       Boolean isDisplayAvatar = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).isChecked();
 

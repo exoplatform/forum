@@ -38,11 +38,12 @@ import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.forum.service.BufferAttachment;
@@ -498,7 +499,7 @@ public class ForumUtils {
 
   public static String getTitleInHTMLCode(String s) {
     List<String> supportedBBCodes = new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes());
-    return TransformHTML.getTitleInHTMLCode(CommonUtils.decodeSpecialCharToHTMLnumber(s), supportedBBCodes);
+    return TransformHTML.getTitleInHTMLCode(StringCommonUtils.decodeSpecialCharToHTMLnumber(s), supportedBBCodes);
   }
 
   public static List<String> addArrayToList(List<String> list, String[] array) {

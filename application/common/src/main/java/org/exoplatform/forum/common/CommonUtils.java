@@ -21,17 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
@@ -43,8 +37,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.lang.StringUtils;
-import org.exoplatform.commons.utils.HTMLEntityEncoder;
+import org.quartz.JobExecutionContext;
+import org.w3c.dom.Document;
+
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -56,8 +52,6 @@ import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobExecutionContext;
-import org.w3c.dom.Document;
 
 
 /**
@@ -104,21 +98,7 @@ public class CommonUtils {
   
   private static final String        SPECIAL_CHARACTOR_REGEX = "[^\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]\\ %0-9]";
   
-  private static List<String>        tokens     = new ArrayList<String>();
-
-  private static Map<String, String> charcodes  = new HashMap<String, String>();
-
-  private static List<String> ignoreLessThanAndGreaterThan = Arrays.asList(LESS_THAN, GREATER_THAN, AMP);
-  
   private static final Pattern EXCEPT_PATTERN = Pattern.compile("~(([1|0]\\.[0-9])|1)+");
-  
-  /*
-   *  The distance code number content special character.
-   *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
-   *  See: http://www.ascii.cl/htmlcodes.htm
-  */
-  private static int[] CHAR_CODES = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
-  
   
   /**
    * Generates checksum for files, and get a file ending in .sha1 
@@ -340,7 +320,7 @@ public class CommonUtils {
     for (String s : tab){
       if (isEmpty(s)) continue;
       String searchTerm = s.split("~")[0];
-      searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+      searchTerm = StringCommonUtils.encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
       builder.append(searchTerm).append(" ");
     }
     return builder.toString().trim();
@@ -357,10 +337,10 @@ public class CommonUtils {
       if (s.indexOf("~") > -1) {
         String searchTerm = s.split("~")[0];
         String similarity = s.split("~")[1];
-        searchTerm = encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+        searchTerm = StringCommonUtils.encodeSpecialCharToHTMLnumber(searchTerm.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
         builder.append(searchTerm).append("~").append(similarity).append(" ");
       } else {
-        String searchTerm = encodeSpecialCharToHTMLnumber(s.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
+        String searchTerm = StringCommonUtils.encodeSpecialCharToHTMLnumber(s.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, ""), "~", true);
         builder.append(searchTerm).append(" ");
       }
     }
@@ -383,7 +363,7 @@ public class CommonUtils {
     StringTokenizer tokenizer = new StringTokenizer(keySearch, SPACE);
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
-      token = encodeSpecialCharToHTMLnumber(token.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, EMPTY_STR), "~", true);
+      token = StringCommonUtils.encodeSpecialCharToHTMLnumber(token.replaceAll(SPECIAL_CHARACTOR_FOR_UNIFIED_SERACH_REGEX, EMPTY_STR), "~", true);
       if (token.length() > 0) {
         builder.append(wildcardCharacters).append(token).append(wildcardCharacters).append((tokenizer.hasMoreTokens()) ? SPACE : EMPTY_STR);
       }
@@ -511,177 +491,6 @@ public class CommonUtils {
       return ret;
   }
   
-  /**
-   * Encode special character, use for input search
-   * @param s the string input
-   * @return String 
-   */
-  public static String encodeSpecialCharInSearchTerm(String s) {
-    /*
-     * + When all characters in param s is special characters has in charIgnore, we must encode all characters.
-     * + If all characters in param s is not special characters, we can ignore some special characters [!#:?=.,+;~`_]
-    */
-    String charIgnore = "&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_";
-    if (!isEmpty(s)) {
-      int i = 0;
-      while (charIgnore.indexOf(String.valueOf(s.charAt(i))) >= 0) {
-        ++i;
-        if (i == s.length()) {
-          charIgnore = EMPTY_STR;
-          break;
-        }
-      }
-    }
-    if (!isEmpty(charIgnore)) charIgnore = "&</>!#:?=.,+;~`_";
-    return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
-  }
-  
-  /**
-   * Encode special character, use for input title or name of the object.
-   * @param s the string input
-   * @return String 
-   */
-  public static String encodeSpecialCharInTitle(String s) {
-    /*
-     * remove double space 
-    */
-    if(!isEmpty(s)) {
-      while (s.indexOf("  ") >= 0) {
-        s = StringUtils.replace(s, "  ", SPACE).trim();
-      }
-    }
-    /*
-     * charIgnore: Some special characters we ignore
-    */
-    String charIgnore = "!#:?=.,+;~`_";
-    return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
-  }
-
-  /**
-   * Encode special character, use for input content of object (only apply for input by FCKEditer).
-   * @param s the string input
-   * @return String 
-   */
-  public static String encodeSpecialCharInContent(String s) {
-    /*
-     * charIgnore: Some special characters we ignore
-    */
-    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
-    return encodeSpecialCharToHTMLnumber(s, charIgnore, false);
-  }
-  
-  public static boolean isContainSpecialCharacter(String s) {
-    if (isEmpty(s)) {
-      return false;
-    }
-    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
-    int i = 0;
-    while (i < s.length()) {
-      char c = s.charAt(i);
-      if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
-        return true;
-      }
-      i++;
-    }
-    return false;
-  }
-
-  /**
-   * Encode special character to html number. Ex: '/' is encoded to &#47;
-   * @param s the string input
-   * @param charIgnore the string content ignore some special character can not encode.
-   * @param isTitle the boolean for check convert is title or not.
-   * @return String 
-   */
-  public static String encodeSpecialCharToHTMLnumber(String s, String charIgnore, boolean isTitle) {
-    if (isEmpty(s)) {
-      return EMPTY_STR;
-    }
-    int i = 0;
-    StringBuilder builder = new StringBuilder();
-    while (i < s.length()) {
-      char c = s.charAt(i);
-      if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
-        builder.append(c);
-      } else {
-        int t = s.codePointAt(i);
-        if (t < CHAR_CODES[0] && t > CHAR_CODES[1] || t < CHAR_CODES[2] && t > CHAR_CODES[3] ||
-            t < CHAR_CODES[4] && t > CHAR_CODES[5] || t < CHAR_CODES[6] && t > CHAR_CODES[7]) {
-          if (isTitle && (t == 60 || t == 62)) {
-            if (t == 60) {
-              builder.append(LESS_THAN);
-            } else if (t == 62) {
-              builder.append(GREATER_THAN);
-            }
-          } else {
-            builder.append(AMP_NUMBER).append(t).append(SEMICOLON);
-          }
-        } else {
-          builder.append(c);
-        }
-      }
-      ++i;
-    }
-    return builder.toString();
-  }
-
-  public static String decodeSpecialCharToHTMLnumber(String s, List<String> lIgnore) {
-    if (isEmpty(s)){
-      return s;
-    }
-    for (String token : tokens) {
-      if (lIgnore.contains(token)){
-        continue;
-      }
-      while (token != null && s.indexOf(token) >= 0) {
-        s = StringUtils.replace(s, token, charcodes.get(token));
-      }
-    }
-    return s;
-  }
-  
-  static {
-    if(tokens.isEmpty()) {
-      String token;
-      // Tokens by HTML(Decimal) code.
-      for (int t = Character.MIN_CODE_POINT; t < Character.MAX_CODE_POINT; t++) {
-        if (t < CHAR_CODES[0] && t > CHAR_CODES[1] || t < CHAR_CODES[2] && t > CHAR_CODES[3] || 
-            t < CHAR_CODES[4] && t > CHAR_CODES[5] || t < CHAR_CODES[6] && t > CHAR_CODES[7]) {
-          token = new StringBuilder(AMP_NUMBER).append(t).append(SEMICOLON).toString();
-          tokens.add(token);
-          charcodes.put(token, String.valueOf(Character.toChars(t)[0]));
-        }
-      }
-      // Tokens by Entity code.
-      tokens.add(LESS_THAN);
-      charcodes.put(LESS_THAN, "<");
-      tokens.add(GREATER_THAN);
-      charcodes.put(GREATER_THAN, ">");
-      tokens.add(QUOT);
-      charcodes.put(QUOT, "\"");
-      tokens.add(AMP_SPACE);
-      charcodes.put(AMP_SPACE, SPACE);
-      tokens.add(AMP_HEX);
-      charcodes.put(AMP_HEX, "&");
-      tokens.add(AMP);
-      charcodes.put(AMP, "&");
-    }
-  }
-
-  public static String decodeSpecialCharToHTMLnumber(String s) {
-    return decodeSpecialCharToHTMLnumber(s, new ArrayList<String>());
-  }
-  
-  /**
-   *  Decode special chars to HTML number ignore char {@literal Less than '<' and Greater than '>'}
-   * 
-   * @param str
-   * @return
-   */
-  public static String decodeSpecialCharToHTMLnumberIgnore(String str) {
-    return decodeSpecialCharToHTMLnumber(str, ignoreLessThanAndGreaterThan);
-  }
-
   /**
    * Get current time GMT/Zulu or UTC,(zone time is 0+GMT)
    * @return Calendar 
