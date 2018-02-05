@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIFormMultiValueInputSet;
@@ -136,7 +136,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
   public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.poll = poll;
-      getUIStringInput(FIELD_QUESTION_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion()));
+      getUIStringInput(FIELD_QUESTION_INPUT).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion()));
       getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut()));
       getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UICheckBoxInput multiVoteCheckInput = getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
@@ -161,7 +161,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     List<String> list = new ArrayList<String>();
     if (isUpdate) {
       for (String string : this.poll.getOption()) {
-        list.add(CommonUtils.decodeSpecialCharToHTMLnumber(string));
+        list.add(StringCommonUtils.decodeSpecialCharToHTMLnumber(string));
       }
     } else {
       list.add("");
@@ -185,7 +185,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     public void execute(Event<UIPollForm> event) throws Exception {
       UIPollForm uiForm = event.getSource();
       String question = uiForm.getUIStringInput(FIELD_QUESTION_INPUT).getValue();
-      question = CommonUtils.encodeSpecialCharInTitle(question);
+      question = StringCommonUtils.encodeSpecialCharForSimpleInput(question);
       String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue();
       timeOutStr = Utils.removeZeroFirstNumber(timeOutStr);
       long timeOut = 0;
@@ -215,7 +215,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
             uiForm.warning("NameValidator.msg.warning-long-text", args, false);
             return;
           }
-          values_.add(CommonUtils.encodeSpecialCharInTitle(value));
+          values_.add(StringCommonUtils.encodeSpecialCharForSimpleInput(value));
         }
         ++i;
       }

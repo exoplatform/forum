@@ -19,9 +19,9 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -58,7 +58,7 @@ public class UIQuickSearchForm extends BaseForumForm {
       UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE);
       String text = formStringInput.getValue();
       if (!ForumUtils.isEmpty(text)) {
-        text = CommonUtils.encodeSpecialCharInSearchTerm(text);
+        text = StringCommonUtils.encodeSpecialCharInSearchTerm(text);
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
         UserProfile userProfile = forumPortlet.getUserProfile();

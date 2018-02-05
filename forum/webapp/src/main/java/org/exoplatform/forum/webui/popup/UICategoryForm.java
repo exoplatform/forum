@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
 import org.exoplatform.forum.common.webui.UIGroupSelector;
@@ -173,9 +173,9 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
   public void setCategoryValue(Category category, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.categoryId = category.getId();
-      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(category.getCategoryName()));
+      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(category.getCategoryName()));
       getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder()));
-      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(CommonUtils.decodeSpecialCharToHTMLnumber(category.getDescription()));
+      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(category.getDescription()));
       String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
       getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(userPrivate);
       
@@ -203,13 +203,13 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) });
         return;
       }
-      categoryTitle = CommonUtils.encodeSpecialCharInTitle(categoryTitle);
+      categoryTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(categoryTitle);
       String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
       if (!ForumUtils.isEmpty(description) && description.length() > maxText) {
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) });
         return;
       }
-      description = CommonUtils.encodeSpecialCharInTitle(description);
+      description = StringCommonUtils.encodeSpecialCharForSimpleInput(description);
       String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(categoryOrder))
         categoryOrder = "0";

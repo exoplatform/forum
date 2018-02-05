@@ -16,7 +16,7 @@
  */
 package org.exoplatform.forum.common.user;
 
-import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 
 public class CommonContact {
   private String emailAddress = "";
@@ -66,7 +66,7 @@ public class CommonContact {
     return birthday;
   }
   public void setBirthday(String birthday) {
-    this.birthday = CommonUtils.encodeSpecialCharInTitle(birthday);
+    this.birthday = StringCommonUtils.encodeSpecialCharForSimpleInput(birthday);
   }
   public String getGender() {
     return gender;

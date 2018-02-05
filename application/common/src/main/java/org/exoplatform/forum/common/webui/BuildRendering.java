@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.exoplatform.forum.common.CommonUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
 import org.exoplatform.forum.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.services.log.ExoLogger;
@@ -82,7 +82,7 @@ public class BuildRendering {
   
   public static abstract class AbstractRenderDelegate<T> implements MarkupRenderDelegate<T> {
     public String getMarkup(T target) {
-      return processCodeHighlighter(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(getMessage(target)));
+      return processCodeHighlighter(StringCommonUtils.decodeSpecialCharToHTMLnumberIgnore(getMessage(target)));
     }
     public String getSyntax(T target) {
       return SupportedSyntaxes.bbcode.name();

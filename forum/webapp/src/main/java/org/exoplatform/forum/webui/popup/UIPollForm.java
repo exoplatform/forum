@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIFormMultiValueInputSet;
 import org.exoplatform.forum.common.webui.WebUIUtils;
@@ -154,7 +154,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
   public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.poll = poll;
-      getUIStringInput(FIELD_QUESTION_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion()));
+      getUIStringInput(FIELD_QUESTION_INPUT).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion()));
       getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut()));
       getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UICheckBoxInput multiVoteCheckInput = getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
@@ -169,7 +169,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     List<String> list = new ArrayList<String>();
     if (isUpdate) {
       for (String string : this.poll.getOption()) {
-        list.add(CommonUtils.decodeSpecialCharToHTMLnumber(string));
+        list.add(StringCommonUtils.decodeSpecialCharToHTMLnumber(string));
       }
     } else {
       list.add(ForumUtils.EMPTY_STR);
@@ -190,7 +190,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
       UIPollForm uiForm = event.getSource();
       UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT);
       String question = questionInput.getValue();
-      question = CommonUtils.encodeSpecialCharInTitle(question);
+      question = StringCommonUtils.encodeSpecialCharForSimpleInput(question);
       String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue();
       timeOutStr = ForumUtils.removeZeroFirstNumber(timeOutStr);
       long timeOut = 0;
@@ -213,7 +213,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             uiForm.warning("NameValidator.msg.warning-long-text", args);
             return;
           }
-          values_.add(CommonUtils.encodeSpecialCharInTitle(value));
+          values_.add(StringCommonUtils.encodeSpecialCharForSimpleInput(value));
         }
         ++i;
       }

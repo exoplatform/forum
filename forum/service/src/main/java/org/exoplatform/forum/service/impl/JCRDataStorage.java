@@ -63,9 +63,22 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.quartz.JobDataMap;
+import org.w3c.dom.Document;
+
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedOutput;
+
 import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.commons.utils.XPathUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -154,17 +167,6 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
-import org.quartz.JobDataMap;
-import org.w3c.dom.Document;
-
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * JCR implementation of Forum Data Storage
@@ -2984,7 +2986,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     messageBuilder.setCatName(categoryName);
     messageBuilder.setForumName(forumName);
     messageBuilder.setTopicName(CommonUtils.EMPTY_STR);   
-    messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, owner)));
+    messageBuilder.setOwner(StringCommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, owner)));
     messageBuilder.setAddType(forumName);
     messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
     // ----------------------- finish ----------------------
@@ -3863,7 +3865,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         messageBuilder.setAddName(topic.getTopicName());
         messageBuilder.setMessage(topic.getDescription());
         messageBuilder.setCreatedDate(topic.getCreatedDate());
-        messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(owner));
+        messageBuilder.setOwner(StringCommonUtils.decodeSpecialCharToHTMLnumber(owner));
         if(Utils.isEmpty(messageBuilder.getLink())) {
           messageBuilder.setLink(topic.getLink());
         }
@@ -3966,7 +3968,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
         //
         String fullName = getScreenName(sProvider, post.getOwner());
-        messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(fullName));
+        messageBuilder.setOwner(StringCommonUtils.decodeSpecialCharToHTMLnumber(fullName));
         messageBuilder.setId(post.getId());
         messageBuilder.setAddType(Utils.POST);
         messageBuilder.setAddName(post.getName());
@@ -4297,7 +4299,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     messageBuilder.setCatName(categoryName);
     messageBuilder.setForumName(forumName);
     messageBuilder.setTopicName(CommonUtils.EMPTY_STR);
-    messageBuilder.setOwner(CommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, ownerTopic)));
+    messageBuilder.setOwner(StringCommonUtils.decodeSpecialCharToHTMLnumber(getScreenName(sProvider, ownerTopic)));
     messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topicName);
     messageBuilder.setAddType(topicName);
     link = link.replaceFirst("pathId", destTopicNode.getName());
@@ -7925,7 +7927,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
   
   private String getTitleRSS(String title) {
-    title = CommonUtils.decodeSpecialCharToHTMLnumber(TransformHTML.getPlainText(title));
+    title = StringCommonUtils.decodeSpecialCharToHTMLnumber(TransformHTML.getPlainText(title));
     return new StringBuilder("ST[CDATA[").append(StringEscapeUtils.unescapeHtml(TransformHTML.getTitleInHTMLCode(title,null)))
                                          .append("END]]")
                                          .toString();

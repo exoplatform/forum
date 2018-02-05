@@ -16,8 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.service.Category;
@@ -49,13 +56,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @ComponentConfigs({
     @ComponentConfig(lifecycle = UIFormLifecycle.class, 
@@ -233,7 +233,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       forumId = forum_.getId();
       forum = getForumService().getForum(categoryId, forumId);
       UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
-      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(forum.getForumName()));
+      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(forum.getForumName()));
       newForum.getUIStringInput(FIELD_FORUMORDER_INPUT).setValue(String.valueOf(forum.getForumOrder()));
       String stat = "open";
       if (forum.getIsClosed())
@@ -244,7 +244,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       else
         stat = "unlock";
       newForum.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).setValue(stat);
-      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(CommonUtils.decodeSpecialCharToHTMLnumber(forum.getDescription()));
+      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(forum.getDescription()));
 
       UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = forum.getIsAutoAddEmailNotify();
@@ -325,7 +325,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
         uiForm.isDoubleClickSubmit = false;
         return;
       }
-      forumTitle = CommonUtils.encodeSpecialCharInTitle(forumTitle);
+      forumTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(forumTitle);
       String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(forumOrder))
         forumOrder = "0";
@@ -338,7 +338,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent {
       String forumState = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX).getValue();
       String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
       String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
-      description = CommonUtils.encodeSpecialCharInTitle(description);
+      description = StringCommonUtils.encodeSpecialCharForSimpleInput(description);
       
       UIPermissionPanel permissionTab = uiForm.getChildById(PERMISSION_TAB);
       String moderators = permissionTab.getOwnersByPermission(MODERATOR);

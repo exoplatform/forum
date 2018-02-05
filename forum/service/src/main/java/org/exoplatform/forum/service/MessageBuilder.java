@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
@@ -255,7 +256,7 @@ public class MessageBuilder {
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
-    message.setSubject(CommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
+    message.setSubject(StringCommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
     String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
     content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", types.get(watchType));
     content_ = StringUtils.replace(content_, "$ADD_TYPE", types.get(addType));
@@ -293,7 +294,7 @@ public class MessageBuilder {
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
-    message.setSubject(CommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
+    message.setSubject(StringCommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
 
     String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);

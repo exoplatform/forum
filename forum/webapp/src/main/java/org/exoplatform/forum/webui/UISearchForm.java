@@ -21,8 +21,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
@@ -314,7 +314,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       UISearchForm uiForm = event.getSource();
       Log log = ExoLogger.getLogger(SearchActionListener.class);
       String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue();
-      keyValue = CommonUtils.encodeSpecialCharInSearchTerm(keyValue);
+      keyValue = StringCommonUtils.encodeSpecialCharInSearchTerm(keyValue);
       String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue();
 
       String valueIn = uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).getValue();

@@ -23,14 +23,33 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.commons.utils.HTMLSanitizer;
+import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
-import org.exoplatform.forum.common.webui.*;
-import org.exoplatform.forum.service.*;
-import org.exoplatform.forum.webui.*;
+import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
+import org.exoplatform.forum.common.webui.UIPermissionPanel;
+import org.exoplatform.forum.common.webui.UIPopupContainer;
+import org.exoplatform.forum.common.webui.WebUIUtils;
+import org.exoplatform.forum.service.BufferAttachment;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.MessageBuilder;
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIBreadcumbs;
+import org.exoplatform.forum.webui.UICategories;
+import org.exoplatform.forum.webui.UICategoryContainer;
+import org.exoplatform.forum.webui.UIForumContainer;
+import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -269,9 +288,9 @@ public class UITopicForm extends BaseForumForm {
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT)
-                   .setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
+                   .setValue(StringCommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
       threadContent.getChild(UIFormRichtextInput.class)
-                   .setValue(CommonUtils.decodeSpecialCharToHTMLnumberIgnore(topic.getDescription()));
+                   .setValue(StringCommonUtils.decodeSpecialCharToHTMLnumberIgnore(topic.getDescription()));
 
       getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).setValue(topic.getIsClosed());
 
@@ -310,7 +329,7 @@ public class UITopicForm extends BaseForumForm {
       }
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         String userName = uiForm.getUserProfile().getUserId();
-        topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
+        topicTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(topicTitle);
         Post postNew = new Post();
         postNew.setName(topicTitle);
         if (CommonUtils.isEmpty(uiForm.topicId)) {
@@ -404,8 +423,8 @@ public class UITopicForm extends BaseForumForm {
               if (uiForm.forum != null)
                 hasForumMod = uiForm.forum.getIsModerateTopic();
             }
-            topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
-            editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
+            topicTitle = StringCommonUtils.encodeSpecialCharForSimpleInput(topicTitle);
+            editReason = StringCommonUtils.encodeSpecialCharForSimpleInput(editReason);
 
             boolean topicState = uiForm.getUIForumCheckBoxInput(FIELD_TOPICSTATE_SELECTBOX).isChecked();
             boolean topicStatus = uiForm.getUIForumCheckBoxInput(FIELD_TOPICSTATUS_SELECTBOX).isChecked();
