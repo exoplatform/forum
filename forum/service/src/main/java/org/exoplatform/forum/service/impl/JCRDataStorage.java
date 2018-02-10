@@ -5278,8 +5278,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
     userProfile.setLastLoginDate(reader.date(EXO_LAST_LOGIN_DATE));
     userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE, false));
-    if (userProfile.getIsDisplaySignature())
-      userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
+    userProfile.setSignature(reader.string(EXO_SIGNATURE, ""));
     
     return userProfile;
   }
