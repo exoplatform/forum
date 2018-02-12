@@ -459,10 +459,15 @@
 							<div class="postViewHeader clearfix">
 							
 							  <div id="profileWrapper" href="<%=LinkProvider.getUserProfileUri(userForumId);%>">
-						
-								<a class="avatarXSmall pull-left">
-									<img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
-								</a> 
+                                <%
+                                  if(userInfo.getIsDisplayAvatar()) {
+                                %>
+                                <a class="avatarXSmall pull-left">
+                                  <img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
+                                </a>
+								<%
+								  }
+								%>
 								<span id="fullNameTopic" class="dropdown">
 								  <a href="javascript:void(0)" class="textTitleProfile">
 								    <i class="$userSmile uiIconForumLightGray" rel="tooltip" data-placement="bottom" title="$titleSmile"></i> $viewScreenName
