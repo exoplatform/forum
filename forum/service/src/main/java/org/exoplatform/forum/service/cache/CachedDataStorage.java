@@ -13,6 +13,7 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.cache.ServiceContext;
 import org.exoplatform.forum.common.cache.model.CacheType;
 import org.exoplatform.forum.common.cache.model.CachedData;
@@ -324,6 +325,7 @@ public class CachedDataStorage implements DataStorage, Startable {
   public void refreshUserProfile(UserProfile profile) throws Exception {
     UserProfileKey key = new UserProfileKey(profile.getUserId());
     userProfileData.put(key, new UserProfileData(profile));
+    loginUserProfile.put(key, new LoginUserProfileData(profile));
   }
   
   private void clearWatchingItemCache(String watchingItemPath) throws Exception {
@@ -1657,12 +1659,24 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void updateTopicAccess(String userId, String topicId) {
     storage.updateTopicAccess(userId, topicId);
-    clearUserProfile(userId);
+    try {
+      UserProfile userProfile = getDefaultUserProfile(userId, null);
+      userProfile.setLastTimeAccessTopic(topicId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
+      refreshUserProfile(userProfile);
+    } catch (Exception e) {
+      LOG.warn("Can't update last access for user profile '" + userId + "' on topic '" + topicId + "'", e);
+    }
   }
 
   public void updateForumAccess(String userId, String forumId) {
     storage.updateForumAccess(userId, forumId);
-    clearUserProfile(userId);
+    try {
+      UserProfile userProfile = getDefaultUserProfile(userId, null);
+      userProfile.setLastTimeAccessForum(forumId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
+      refreshUserProfile(userProfile);
+    } catch (Exception e) {
+      LOG.warn("Can't update last access for user profile '" + userId + "' on forum '" + forumId + "'", e);
+    }
   }
 
   public void writeReads() {
