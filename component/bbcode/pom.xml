@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-component</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>5.0.x-SNAPSHOT</version>
+    <version>5.0.0-RC11</version>
   </parent>
   <artifactId>forum-component-bbcode</artifactId>
   <name>eXo PLF:: Forum BBCode processing</name>
