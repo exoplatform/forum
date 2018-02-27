@@ -519,10 +519,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     }
   }
 
-  protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) {
-    List<String> actions = new ArrayList<String>();
+  protected List<String> getActionsEachPost(UserProfile owner, boolean isFirstPost) throws Exception {
+    List<String> actions = new ArrayList<>();
     if(getUserProfile().getUserRole() < 3 ) {
-      actions.add("Quote");
+      Forum forum = getForum();
+      Topic topic = getTopic();
+      if(forum != null && !forum.getIsLock() && !forum.getIsClosed()
+              && topic != null && !topic.getIsLock() && !topic.getIsClosed()) {
+        actions.add("Quote");
+      }
       if(!owner.isDisabled()){
         actions.add("PrivatePost");
       }
