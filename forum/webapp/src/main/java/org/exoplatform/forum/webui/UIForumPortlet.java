@@ -223,7 +223,7 @@ public class UIForumPortlet extends UIPortletApplication {
            ((url.contains(ForumUtils.SLASH+Utils.TOPIC)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.TOPIC)+1) :
            ((url.contains(ForumUtils.SLASH+Utils.FORUM)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.FORUM)+1) : url)));
     } else {
-      if (portalName.startsWith(SpaceUtils.SPACE_GROUP)) {
+      if (portalName.startsWith(SpaceUtils.SPACE_GROUP) && pageNodeSelected.equals(portalName.replace(SpaceUtils.SPACE_GROUP,"")+ForumUtils.SLASH+Utils.FORUM)) {
         url = getForumIdOfSpace();
       }
     }
