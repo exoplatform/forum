@@ -58,6 +58,15 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     cat.setCategoryName("social");
     cat.setDescription("about your team");
     forumService_.saveCategory(cat, true);
+    //Sub create a category
+    Category subCat = new Category();
+    subCat.setOwner("root");
+    subCat.setCategoryName("spaces");
+    subCat.setDescription("spaces category");
+    subCat.setViewer(new String [] {"/platform/users"});
+    subCat.setUserPrivate(new String [] {"/platform/users","/platform/administrators"});
+    forumService_.saveCategory(subCat, true);
+
     //Root create a forum
     Forum forum = new Forum();
     forum.setOwner("root");
@@ -76,7 +85,7 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     Post post = new Post();
     post.setOwner("root");
     post.setName("new post");
-    post.setMessage("go to the hell");
+    post.setMessage("New message for new post");
     forumService_.savePost(cat.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
     
     //John post a message
@@ -90,7 +99,7 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     Topic topicMary = new Topic();
     topicMary.setOwner("mary");
     topicMary.setTopicName("what do you do?");
-    topicMary.setDescription("kill you");
+    topicMary.setDescription("Watching TV");
     forumService_.saveTopic(cat.getId(), forum.getId(), topicMary, true, false, new MessageBuilder());
  
     //set topic closed
@@ -105,6 +114,24 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     forumNew.setDescription("new description");
     forumNew.setIsLock(true);
     forumService_.saveForum(cat.getId(), forumNew, true);
+
+    //Create a new private forum
+    Forum privateForum = new Forum();
+    privateForum.setOwner("root");
+    privateForum.setViewer(new String [] {"root"});
+    privateForum.setModerators(new String [] {"root"});
+    privateForum.setCreateTopicRole(new String [] {"root"});
+    privateForum.setPoster(new String [] {"root"});
+    privateForum.setForumName("private forum");
+    privateForum.setDescription("new description");
+    forumService_.saveForum(subCat.getId(), privateForum, true);
+
+    // Create a new topic that contains the word John
+    Topic privateTopic = new Topic();
+    privateTopic.setOwner("root");
+    privateTopic.setTopicName("Is this private?");
+    privateTopic.setDescription("yes it is private !");
+    forumService_.saveTopic(subCat.getId(), privateForum.getId(), privateTopic, true, false, new MessageBuilder());
   }
 
   public void testQuickSearch() throws Exception {
@@ -121,17 +148,32 @@ public class SearchTestCase extends BaseForumServiceTestCase {
     List<ForumSearchResult> forumSearchs = 
         forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); 
     //here we found 3 elements : the post of john, the topic contains his post and the forum moderated by john
-    assertEquals(forumSearchs.size(),3);
+    assertEquals(3, forumSearchs.size());
+
+    //Search all with user John (category,forum,topic,post) concerns the value of textQuery : owner, message, description, name ...
+    String textQueryPrivate = "private";
+    String typeNotAdmin = "false,all";
+
+    List<ForumSearchResult> forumSearchPrivate =
+        forumService_.getQuickSearch(textQueryPrivate, typeNotAdmin, pathQuery, "mary", null, null, new ArrayList<>());
+    //here we found 3 elements : the post of john, the topic contains his post and the forum moderated by john
+    assertEquals(0, forumSearchPrivate.size());
+    //Search all with user root (category,forum,topic,post) concerns the value of textQuery : owner, message, description, name ...
+    String typeAdmin = "true,all";
+    List<ForumSearchResult> forumSearchPrivateByRoot =
+        forumService_.getQuickSearch(textQueryPrivate, typeAdmin, pathQuery, "root", null, null, new ArrayList<>());
+    //here we found 3 elements : the post of john, the topic contains his post and the forum moderated by john
+    assertEquals(2, forumSearchPrivateByRoot.size());
     
     textQuery = "root"; 
     forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); 
     //here we found 5 elements
-    assertEquals(forumSearchs.size(),5);
+    assertEquals(7,forumSearchs.size());
     
     textQuery = "mary"; 
     forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); 
     //here we found 2 elements : mary's topic and the post of john that contains "mary"
-    assertEquals(forumSearchs.size(),2);
+    assertEquals(2,forumSearchs.size());
   }
   
 public void testAdvancedSearch() throws Exception {
@@ -163,13 +205,13 @@ public void testAdvancedSearch() throws Exception {
     //Test search "root" in all category
     List<ForumSearchResult> forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); 
     assertNotNull(forumSearchs);
-    assertEquals(forumSearchs.size(),1);
+    assertEquals(forumSearchs.size(),2);
     assertEquals(forumSearchs.get(0).getName(),"social");
     
     //Test search "root" in all forum
     eventQuery.setType(Utils.FORUM) ;
     forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null);
-    assertEquals(forumSearchs.size(),2);
+    assertEquals(3,forumSearchs.size());
     assertEquals(forumSearchs.get(0).getName(),"general question");
     assertEquals(forumSearchs.get(1).getName(),"new forum");
     
@@ -177,7 +219,7 @@ public void testAdvancedSearch() throws Exception {
     eventQuery.setKeyValue("mary");
     eventQuery.setType(Utils.TOPIC) ;
     forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null);
-    assertEquals(forumSearchs.size(),1);
+    assertEquals(1,forumSearchs.size());
     assertEquals(forumSearchs.get(0).getName(),"what do you do?");
     
     //Test search "mary" in all post
@@ -232,7 +274,7 @@ public void testAdvancedSearch() throws Exception {
     eventQuery.setIsLock("");
     eventQuery.setTopicCountMin("1");
     forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null);
-    assertEquals(forumSearchs.size(),1);
+    assertEquals(2,forumSearchs.size());
     assertEquals(forumSearchs.get(0).getName(),"general question");
     
     //Test search all forum that have number of topic min = 3
