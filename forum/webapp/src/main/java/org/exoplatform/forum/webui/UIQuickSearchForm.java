@@ -22,9 +22,11 @@ import java.util.List;
 import org.exoplatform.commons.utils.StringCommonUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearchResult;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -78,7 +80,12 @@ public class UIQuickSearchForm extends BaseForumForm {
         }
         List<ForumSearchResult> list = null;
         try {
-          list = forumService.getQuickSearch(text, type, ForumUtils.EMPTY_STR, userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
+          String path = ForumUtils.EMPTY_STR;
+          Forum spaceForum = forumService.getForum(Utils.CATEGORY_SPACE_ID_PREFIX, forumPortlet.getForumIdOfSpace());
+          if(spaceForum != null) {
+            path = spaceForum.getPath();
+          }
+          list = forumService.getQuickSearch(text, type, path, userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
         } catch (Exception e) {
           uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
           uiForm.warning("UIQuickSearchForm.msg.failure");
