@@ -35,6 +35,7 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.cssfile.CssClassUtils;
 import org.exoplatform.webui.event.Event;
@@ -592,6 +593,10 @@ public class UITopicForm extends BaseForumForm {
         }
       }
       uiTopicForm.refreshUploadFileList();
+      UIComponent threadContent = uiTopicForm.findComponentById(FIELD_THREADCONTEN_TAB);
+      if (threadContent != null) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(threadContent);
+      }
     }
   }
 
