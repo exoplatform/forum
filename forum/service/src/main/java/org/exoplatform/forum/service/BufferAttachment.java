@@ -16,14 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.services.jcr.RepositoryService;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class BufferAttachment extends ForumAttachment {
 
@@ -55,5 +56,19 @@ public class BufferAttachment extends ForumAttachment {
       input.read(bytes);
     } else
       bytes = null;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    BufferAttachment that = (BufferAttachment) o;
+    return Arrays.equals(bytes, that.bytes);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), bytes);
   }
 }

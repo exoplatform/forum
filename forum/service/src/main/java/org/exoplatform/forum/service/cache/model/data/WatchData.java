@@ -1,8 +1,9 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Watch;
+
+import java.util.Objects;
 
 public class WatchData implements CachedData<Watch> {
 
@@ -42,17 +43,20 @@ public class WatchData implements CachedData<Watch> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof WatchData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     WatchData watchData = (WatchData) o;
-
-    return StringUtils.equals(id, watchData.id) && StringUtils.equals(userId, watchData.userId);
+    return isRSS == watchData.isRSS &&
+            isEmail == watchData.isEmail &&
+            Objects.equals(id, watchData.id) &&
+            Objects.equals(userId, watchData.userId) &&
+            Objects.equals(email, watchData.email) &&
+            Objects.equals(nodePath, watchData.nodePath) &&
+            Objects.equals(path, watchData.path) &&
+            Objects.equals(typeNode, watchData.typeNode);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (userId != null ? userId.hashCode() : 0);
-    return result;
+    return Objects.hash(id, userId, email, nodePath, path, typeNode, isRSS, isEmail);
   }
 }

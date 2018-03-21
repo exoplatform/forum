@@ -1,8 +1,9 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumLinkData;
+
+import java.util.Objects;
 
 public class LinkData implements CachedData<ForumLinkData> {
 
@@ -38,17 +39,18 @@ public class LinkData implements CachedData<ForumLinkData> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof LinkData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     LinkData linkData = (LinkData) o;
-
-    return StringUtils.equals(id, linkData.id) && StringUtils.equals(name, linkData.name);
+    return isClosed == linkData.isClosed &&
+            isLock == linkData.isLock &&
+            Objects.equals(id, linkData.id) &&
+            Objects.equals(name, linkData.name) &&
+            Objects.equals(path, linkData.path) &&
+            Objects.equals(type, linkData.type);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    return result;
+    return Objects.hash(id, name, path, type, isClosed, isLock);
   }
 }
