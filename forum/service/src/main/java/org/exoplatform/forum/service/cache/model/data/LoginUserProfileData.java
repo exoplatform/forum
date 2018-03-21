@@ -16,12 +16,13 @@
  */
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.UserProfile;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginUserProfileData implements CachedData<UserProfile> {
   private static final long serialVersionUID = 1L;
@@ -128,15 +129,37 @@ public class LoginUserProfileData implements CachedData<UserProfile> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof LoginUserProfileData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     LoginUserProfileData that = (LoginUserProfileData) o;
-
-    return StringUtils.equals(userId, that.userId);
+    return userRole == that.userRole &&
+            isBanned == that.isBanned &&
+            banUntil == that.banUntil &&
+            maxTopic == that.maxTopic &&
+            maxPost == that.maxPost &&
+            isAutoWatchMyTopics == that.isAutoWatchMyTopics &&
+            isAutoWatchTopicIPost == that.isAutoWatchTopicIPost &&
+            newMessage == that.newMessage &&
+            Objects.equals(userId, that.userId) &&
+            Objects.equals(screenName, that.screenName) &&
+            Objects.equals(email, that.email) &&
+            Objects.equals(timeFormat, that.timeFormat) &&
+            Objects.equals(timeZone, that.timeZone) &&
+            Objects.equals(shortDateformat, that.shortDateformat) &&
+            Objects.equals(longDateformat, that.longDateformat) &&
+            Arrays.equals(lastReadPostOfTopic, that.lastReadPostOfTopic) &&
+            Arrays.equals(lastReadPostOfForum, that.lastReadPostOfForum) &&
+            Arrays.equals(collapCategories, that.collapCategories) &&
+            Arrays.equals(moderateForums, that.moderateForums) &&
+            Arrays.equals(moderateCategory, that.moderateCategory) &&
+            Objects.equals(lastAccessTopics, that.lastAccessTopics) &&
+            Objects.equals(lastAccessForums, that.lastAccessForums);
   }
 
   @Override
   public int hashCode() {
-    return userId != null ? userId.hashCode() : 0;
+    return Objects.hash(userId, screenName, userRole, isBanned, banUntil, email,
+            timeFormat, timeZone, shortDateformat, longDateformat, maxTopic, maxPost, isAutoWatchMyTopics,
+            isAutoWatchTopicIPost, lastReadPostOfTopic, lastReadPostOfForum, collapCategories, moderateForums,
+            moderateCategory, newMessage, lastAccessTopics, lastAccessForums);
   }
 }

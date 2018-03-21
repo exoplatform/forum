@@ -1,11 +1,12 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Utils;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 public class CategoryData implements CachedData<Category> {
 
@@ -91,20 +92,29 @@ public class CategoryData implements CachedData<Category> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof CategoryData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     CategoryData that = (CategoryData) o;
-
-    return StringUtils.equals(id, that.id) && StringUtils.equals(owner, that.owner) &&
-            StringUtils.equals(path, that.path) && StringUtils.equals(name, that.name);
+    return categoryOrder == that.categoryOrder &&
+            forumCount == that.forumCount &&
+            Objects.equals(id, that.id) &&
+            Objects.equals(owner, that.owner) &&
+            Objects.equals(path, that.path) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(modifiedBy, that.modifiedBy) &&
+            Objects.equals(modifiedDate, that.modifiedDate) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(description, that.description) &&
+            Arrays.equals(moderators, that.moderators) &&
+            Arrays.equals(userPrivate, that.userPrivate) &&
+            Arrays.equals(createTopicRole, that.createTopicRole) &&
+            Arrays.equals(viewer, that.viewer) &&
+            Arrays.equals(poster, that.poster) &&
+            Arrays.equals(emailNotification, that.emailNotification);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (owner != null ? owner.hashCode() : 0);
-    result = 31 * result + (path != null ? path.hashCode() : 0);
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    return result;
+    return Objects.hash(id, owner, path, categoryOrder, createdDate, modifiedBy, modifiedDate, name,
+            description, moderators, userPrivate, createTopicRole, viewer, poster, forumCount, emailNotification);
   }
 }

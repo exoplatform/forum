@@ -16,9 +16,10 @@
  */
 package org.exoplatform.forum.bbcode.core.cache.data;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.common.cache.model.CachedData;
+
+import java.util.Objects;
 
 public class BBCodeCacheData implements CachedData<BBCode> {
   private static final long serialVersionUID = 1L;
@@ -76,17 +77,19 @@ public class BBCodeCacheData implements CachedData<BBCode> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof BBCodeCacheData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     BBCodeCacheData that = (BBCodeCacheData) o;
-
-    return StringUtils.equals(id, that.id) && StringUtils.equals(tagName, that.tagName);
+    return isActive == that.isActive &&
+            isOption == that.isOption &&
+            Objects.equals(id, that.id) &&
+            Objects.equals(tagName, that.tagName) &&
+            Objects.equals(replacement, that.replacement) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(example, that.example);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
-    return result;
+    return Objects.hash(id, tagName, replacement, description, example, isActive, isOption);
   }
 }

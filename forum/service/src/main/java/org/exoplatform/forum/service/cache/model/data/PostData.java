@@ -1,12 +1,12 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.Arrays;
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 public class PostData  implements CachedData<Post> {
   private static final long serialVersionUID = 1L;
@@ -98,20 +98,34 @@ public class PostData  implements CachedData<Post> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof PostData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     PostData postData = (PostData) o;
-
-    return StringUtils.equals(id, postData.id) && StringUtils.equals(path, postData.path) &&
-            StringUtils.equals(owner, postData.owner) && StringUtils.equals(name, postData.name);
+    return isApproved == postData.isApproved &&
+            isFirstPost == postData.isFirstPost &&
+            isHidden == postData.isHidden &&
+            isWaiting == postData.isWaiting &&
+            isActiveByTopic == postData.isActiveByTopic &&
+            numberAttach == postData.numberAttach &&
+            Objects.equals(id, postData.id) &&
+            Objects.equals(path, postData.path) &&
+            Objects.equals(owner, postData.owner) &&
+            Objects.equals(createdDate, postData.createdDate) &&
+            Objects.equals(modifiedBy, postData.modifiedBy) &&
+            Objects.equals(modifiedDate, postData.modifiedDate) &&
+            Objects.equals(editReason, postData.editReason) &&
+            Objects.equals(name, postData.name) &&
+            Objects.equals(message, postData.message) &&
+            Objects.equals(remoteAddr, postData.remoteAddr) &&
+            Objects.equals(icon, postData.icon) &&
+            Objects.equals(link, postData.link) &&
+            Arrays.equals(userPrivate, postData.userPrivate) &&
+            Arrays.equals(attachments, postData.attachments);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (path != null ? path.hashCode() : 0);
-    result = 31 * result + (owner != null ? owner.hashCode() : 0);
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    return result;
+    return Objects.hash(id, path, owner, createdDate, modifiedBy, modifiedDate, editReason,
+            name, message, remoteAddr, icon, link, isApproved, isFirstPost, isHidden, isWaiting,
+            isActiveByTopic, userPrivate, numberAttach, attachments);
   }
 }

@@ -3,6 +3,9 @@ package org.exoplatform.forum.service.cache.model.data;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Tag;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class TagData implements CachedData<Tag> {
 
   private final String id;
@@ -26,5 +29,21 @@ public class TagData implements CachedData<Tag> {
     tag.setUseCount(this.useCount);
 
     return tag;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TagData tagData = (TagData) o;
+    return useCount == tagData.useCount &&
+            Objects.equals(id, tagData.id) &&
+            Objects.equals(name, tagData.name) &&
+            Arrays.equals(userTag, tagData.userTag);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, userTag, useCount);
   }
 }

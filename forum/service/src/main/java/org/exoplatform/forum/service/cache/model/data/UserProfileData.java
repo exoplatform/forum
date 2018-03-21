@@ -16,10 +16,12 @@
  */
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.Date;
-
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.UserProfile;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 public class UserProfileData implements CachedData<UserProfile> {
   private static final long serialVersionUID = 1L;
@@ -133,4 +135,43 @@ public class UserProfileData implements CachedData<UserProfile> {
     return userProfile;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    UserProfileData that = (UserProfileData) o;
+    return userRole == that.userRole &&
+            isDisplaySignature == that.isDisplaySignature &&
+            isDisplayAvatar == that.isDisplayAvatar &&
+            isBanned == that.isBanned &&
+            isDisabled == that.isDisabled &&
+            banUntil == that.banUntil &&
+            banCounter == that.banCounter &&
+            maxTopic == that.maxTopic &&
+            maxPost == that.maxPost &&
+            totalPost == that.totalPost &&
+            Objects.equals(userId, that.userId) &&
+            Objects.equals(screenName, that.screenName) &&
+            Objects.equals(userTitle, that.userTitle) &&
+            Objects.equals(signature, that.signature) &&
+            Objects.equals(joinedDate, that.joinedDate) &&
+            Objects.equals(lastLoginDate, that.lastLoginDate) &&
+            Objects.equals(lastPostDate, that.lastPostDate) &&
+            Objects.equals(banReason, that.banReason) &&
+            Arrays.equals(banReasonSummary, that.banReasonSummary) &&
+            Objects.equals(createdDateBan, that.createdDateBan) &&
+            Objects.equals(timeZone, that.timeZone) &&
+            Objects.equals(shortDateformat, that.shortDateformat) &&
+            Objects.equals(longDateformat, that.longDateformat) &&
+            Arrays.equals(moderateForums, that.moderateForums) &&
+            Arrays.equals(moderateCategory, that.moderateCategory);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userId, screenName, userTitle, userRole, signature, joinedDate, lastLoginDate,
+            lastPostDate, isDisplaySignature, isDisplayAvatar, isBanned, isDisabled, banUntil, banReason,
+            banCounter, banReasonSummary, createdDateBan, timeZone, shortDateformat, longDateformat, maxTopic, maxPost,
+            totalPost, moderateForums, moderateCategory);
+  }
 }

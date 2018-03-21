@@ -1,11 +1,11 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.Arrays;
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.Forum;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 public class ForumData implements CachedData<Forum> {
 
@@ -116,20 +116,39 @@ public class ForumData implements CachedData<Forum> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof ForumData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     ForumData forumData = (ForumData) o;
-
-    return StringUtils.equals(id, forumData.id) && StringUtils.equals(owner, forumData.owner)
-            && StringUtils.equals(path, forumData.path) && StringUtils.equals(name, forumData.name);
+    return forumOrder == forumData.forumOrder &&
+            postCount == forumData.postCount &&
+            topicCount == forumData.topicCount &&
+            isAutoAddEmailNotify == forumData.isAutoAddEmailNotify &&
+            isModerateTopic == forumData.isModerateTopic &&
+            isModeratePost == forumData.isModeratePost &&
+            isClosed == forumData.isClosed &&
+            isLock == forumData.isLock &&
+            Objects.equals(id, forumData.id) &&
+            Objects.equals(owner, forumData.owner) &&
+            Objects.equals(path, forumData.path) &&
+            Objects.equals(createdDate, forumData.createdDate) &&
+            Objects.equals(modifiedBy, forumData.modifiedBy) &&
+            Objects.equals(modifiedDate, forumData.modifiedDate) &&
+            Objects.equals(lastTopicPath, forumData.lastTopicPath) &&
+            Objects.equals(name, forumData.name) &&
+            Objects.equals(description, forumData.description) &&
+            Arrays.equals(notifyWhenAddTopic, forumData.notifyWhenAddTopic) &&
+            Arrays.equals(notifyWhenAddPost, forumData.notifyWhenAddPost) &&
+            Arrays.equals(moderators, forumData.moderators) &&
+            Arrays.equals(createTopicRole, forumData.createTopicRole) &&
+            Arrays.equals(viewer, forumData.viewer) &&
+            Arrays.equals(poster, forumData.poster) &&
+            Arrays.equals(emailNotification, forumData.emailNotification) &&
+            Arrays.equals(banIPs, forumData.banIPs);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (owner != null ? owner.hashCode() : 0);
-    result = 31 * result + (path != null ? path.hashCode() : 0);
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    return result;
+    return Objects.hash(id, owner, path, forumOrder, createdDate, modifiedBy, modifiedDate, lastTopicPath,
+            name, description, postCount, topicCount, notifyWhenAddTopic, notifyWhenAddPost, isAutoAddEmailNotify,
+            isModerateTopic, isModeratePost, isClosed, isLock, moderators, createTopicRole, viewer, poster, emailNotification, banIPs);
   }
 }

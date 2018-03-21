@@ -1,12 +1,12 @@
 package org.exoplatform.forum.service.cache.model.data;
 
-import java.util.Arrays;
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.common.cache.model.CachedData;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Topic;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 public class TopicData implements CachedData<Topic> {
 
@@ -141,20 +141,50 @@ public class TopicData implements CachedData<Topic> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof TopicData)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     TopicData topicData = (TopicData) o;
-
-    return StringUtils.equals(id, topicData.id) && StringUtils.equals(owner, topicData.owner)
-            && StringUtils.equals(path, topicData.path) && StringUtils.equals(name, topicData.name);
+    return postCount == topicData.postCount &&
+            viewCount == topicData.viewCount &&
+            numberAttachments == topicData.numberAttachments &&
+            isModeratePost == topicData.isModeratePost &&
+            isClosed == topicData.isClosed &&
+            isLock == topicData.isLock &&
+            isApproved == topicData.isApproved &&
+            isSticky == topicData.isSticky &&
+            isPoll == topicData.isPoll &&
+            isWaiting == topicData.isWaiting &&
+            isActive == topicData.isActive &&
+            isActiveByForum == topicData.isActiveByForum &&
+            Objects.equals(id, topicData.id) &&
+            Objects.equals(owner, topicData.owner) &&
+            Objects.equals(path, topicData.path) &&
+            Objects.equals(createdDate, topicData.createdDate) &&
+            Objects.equals(modifiedBy, topicData.modifiedBy) &&
+            Objects.equals(modifiedDate, topicData.modifiedDate) &&
+            Objects.equals(editReason, topicData.editReason) &&
+            Objects.equals(lastPostBy, topicData.lastPostBy) &&
+            Objects.equals(lastPostDate, topicData.lastPostDate) &&
+            Objects.equals(name, topicData.name) &&
+            Objects.equals(description, topicData.description) &&
+            Objects.equals(icon, topicData.icon) &&
+            Objects.equals(link, topicData.link) &&
+            Objects.equals(remoteAddr, topicData.remoteAddr) &&
+            Objects.equals(topicType, topicData.topicType) &&
+            Objects.equals(isNotifyWhenAddPost, topicData.isNotifyWhenAddPost) &&
+            Arrays.equals(canView, topicData.canView) &&
+            Arrays.equals(canPost, topicData.canPost) &&
+            Arrays.equals(userVoteRating, topicData.userVoteRating) &&
+            Arrays.equals(tagId, topicData.tagId) &&
+            Arrays.equals(emailNotification, topicData.emailNotification) &&
+            Objects.equals(voteRating, topicData.voteRating) &&
+            Arrays.equals(attachments, topicData.attachments);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (owner != null ? owner.hashCode() : 0);
-    result = 31 * result + (path != null ? path.hashCode() : 0);
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    return result;
+    return Objects.hash(id, owner, path, createdDate, modifiedBy, modifiedDate, editReason, lastPostBy,
+            lastPostDate, name, description, postCount, viewCount, icon, link, remoteAddr, topicType,
+            numberAttachments, isModeratePost, isNotifyWhenAddPost, isClosed, isLock, isApproved, isSticky, isPoll,
+            isWaiting, isActive, isActiveByForum, canView, canPost, userVoteRating, tagId, emailNotification, voteRating, attachments);
   }
 }

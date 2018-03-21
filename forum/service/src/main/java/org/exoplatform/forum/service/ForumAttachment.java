@@ -16,10 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import org.exoplatform.services.jcr.util.IdGenerator;
+
 import java.io.InputStream;
 import java.io.Serializable;
-
-import org.exoplatform.services.jcr.util.IdGenerator;
+import java.util.Objects;
 
 abstract public class ForumAttachment implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -103,5 +104,24 @@ abstract public class ForumAttachment implements Serializable {
 
   public String toString() {
     return id + "[" + mimeType + "," + size + "]";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ForumAttachment that = (ForumAttachment) o;
+    return size == that.size &&
+            Objects.equals(id, that.id) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(mimeType, that.mimeType) &&
+            Objects.equals(pathNode, that.pathNode) &&
+            Objects.equals(path, that.path) &&
+            Objects.equals(workspace, that.workspace);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, mimeType, pathNode, path, size, workspace);
   }
 }
