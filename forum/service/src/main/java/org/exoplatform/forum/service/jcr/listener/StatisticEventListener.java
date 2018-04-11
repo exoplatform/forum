@@ -16,6 +16,9 @@
  */
 package org.exoplatform.forum.service.jcr.listener;
 
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -62,43 +65,55 @@ public class StatisticEventListener implements EventListener {
   private Log LOG = ExoLogger.getLogger(StatisticEventListener.class);
 
   public void onEvent(EventIterator evIter) {
-    try {
-      JCRDataStorage dataStorage = CommonsUtils.getService(JCRDataStorage.class);
-      long topicCount = 0;
-      long postCount = 0;
-      while (evIter.hasNext()) {
+    final Map<String, Integer> eventTypesPerPath = new HashMap<>();
+    while (evIter.hasNext()) {
+      try {
         Event ev = evIter.nextEvent();
         String path = ev.getPath();
-        
-        if (path.indexOf(Utils.TOPIC) > 0) {
-          if (ev.getType() == Event.NODE_ADDED) {
-            String owner = dataStorage.getOwner(path);
-            if (Utils.isEmpty(owner)) {
-              continue;
-            }
-            if (path.indexOf(Utils.POST) > 0) {
-              postCount = postCount + 1;
-              dataStorage.updateProfileAddPost(owner, path);
-              dataStorage.updatePostCount(path, owner);
-            } else if (path.indexOf(Utils.TOPIC) > 0) {
-              topicCount = topicCount + 1;
-              dataStorage.updateProfileAddTopic(owner);
-            }
-          } else if (ev.getType() == Event.NODE_REMOVED) {
-            if (path.indexOf(Utils.POST) > 0) {
-              postCount = postCount - 1;
-            } else if (path.indexOf(Utils.TOPIC) > 0) {
-              topicCount = topicCount - 1;
+        int type = ev.getType();
+        eventTypesPerPath.put(path, type);
+      } catch (Exception e) {
+        LOG.error("An error occurred while getting JCR events", e);
+      }
+    }
+    CompletableFuture.runAsync(() -> {
+      try {
+        JCRDataStorage dataStorage = CommonsUtils.getService(JCRDataStorage.class);
+        long topicCount = 0;
+        long postCount = 0;
+        Set<String> jcrPaths = eventTypesPerPath.keySet();
+        for (String jcrPath : jcrPaths) {
+          int eventType = eventTypesPerPath.get(jcrPath);
+          if (jcrPath.indexOf(Utils.TOPIC) > 0) {
+            if (eventType == Event.NODE_ADDED) {
+              String owner = dataStorage.getOwner(jcrPath);
+              if (Utils.isEmpty(owner)) {
+                continue;
+              }
+              if (jcrPath.indexOf(Utils.POST) > 0) {
+                postCount = postCount + 1;
+                dataStorage.updateProfileAddPost(owner, jcrPath);
+                dataStorage.updatePostCount(jcrPath, owner);
+              } else if (jcrPath.indexOf(Utils.TOPIC) > 0) {
+                topicCount = topicCount + 1;
+                dataStorage.updateProfileAddTopic(owner);
+              }
+            } else if (eventType == Event.NODE_REMOVED) {
+              if (jcrPath.indexOf(Utils.POST) > 0) {
+                postCount = postCount - 1;
+              } else if (jcrPath.indexOf(Utils.TOPIC) > 0) {
+                topicCount = topicCount - 1;
+              }
             }
           }
         }
+        if (topicCount != 0 || postCount != 0) {
+          dataStorage.updateStatisticCounts(topicCount, postCount);
+        }
+      } catch (Exception e) {
+        LOG.error("\nThe StatisEvent could not listen: ", e);
       }
-      if (topicCount != 0 || postCount != 0) {
-        dataStorage.updateStatisticCounts(topicCount, postCount);
-      }
-    } catch (Exception e) {
-      LOG.error("\nThe StatisEvent could not listen: ", e);
-    }
+    });
   }
 
 }

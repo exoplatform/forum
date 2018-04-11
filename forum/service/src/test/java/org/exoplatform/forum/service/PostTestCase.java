@@ -256,6 +256,8 @@ public class PostTestCase extends BaseForumServiceTestCase {
     post = createdPost();
     forumService_.savePost(cateSpaceId, forumSpaceId, topicSpace.getId(), post, true, new MessageBuilder());
     topicSpace = forumService_.getTopic(cateSpaceId, forumSpaceId, topicSpace.getId(), "");
+    // wait until async updates are made
+    Thread.sleep(2000);
     assertEquals(2, topicSpace.getPostCount());
   }
   

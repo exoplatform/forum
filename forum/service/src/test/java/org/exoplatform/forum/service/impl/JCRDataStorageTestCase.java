@@ -295,6 +295,8 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     // Test auto update by JCR listener
     Topic topic = createdTopic(USER_DEMO);
     storage.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    // wait until async updates are made
+    Thread.sleep(2000);
     assertEquals(2, storage.getForum(categoryId, forumId).getPostCount());
     assertEquals(1, storage.getUserInfo(USER_ROOT).getTotalPost());
     
@@ -303,6 +305,8 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     storage.savePost(categoryId, forumId, topic.getId(), createdPost(), true, new MessageBuilder());
     storage.savePost(categoryId, forumId, topic.getId(), createdPost(), true, new MessageBuilder());
     //
+    // wait until async updates are made
+    Thread.sleep(2000);
     assertEquals(5, storage.getForum(categoryId, forumId).getPostCount());
     assertEquals(3, storage.getTopic(categoryId, forumId, topic.getId(), "").getPostCount());
     assertEquals(4, storage.getUserInfo(USER_ROOT).getTotalPost());
@@ -311,6 +315,8 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     // save new post on default topic
     Post p = createdPost();
     storage.savePost(categoryId, forumId, topicId, p, true, new MessageBuilder());
+    // wait until async updates are made
+    Thread.sleep(2000);
     assertEquals(6, storage.getForum(categoryId, forumId).getPostCount());
     assertEquals(1, storage.getTopic(categoryId, forumId, topicId, "").getPostCount());
     assertEquals(5, storage.getUserInfo(USER_ROOT).getTotalPost());
@@ -318,6 +324,8 @@ public class JCRDataStorageTestCase extends AbstractJCRTestCase {
     for (int i = 0; i < 3; i++) {
       storage.updatePostCount(p.getPath(), USER_ROOT);
     }
+    // wait until async updates are made
+    Thread.sleep(2000);
     assertEquals(9, storage.getForum(categoryId, forumId).getPostCount());
     assertEquals(4, storage.getTopic(categoryId, forumId, topicId, "").getPostCount());
     // method JCRDataStorage#updatePostCount() can not update user profile
