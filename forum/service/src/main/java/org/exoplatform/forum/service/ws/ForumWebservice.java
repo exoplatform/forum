@@ -328,6 +328,7 @@ public class ForumWebservice implements ResourceContainer {
     if (list != null) {
       for (Post post : list) {
         post.setLink(post.getLink() + "/" + post.getId());
+        post.setAttachments(new ArrayList<>());
       }
     }
     MessageBean data = new MessageBean();
