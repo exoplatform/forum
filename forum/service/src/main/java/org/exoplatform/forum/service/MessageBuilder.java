@@ -32,6 +32,8 @@ public class MessageBuilder {
   public final static String  CONTEN_EMAIL = Utils.DEFAULT_EMAIL_CONTENT;
 
   public final static String  SLASH        = "/".intern();
+  public final static String  TOPIC_DELIMITER        = "/topic/".intern();
+  public final static String  EMPTY_STRING        = "".intern();
 
   private String              id;
 
@@ -243,7 +245,11 @@ public class MessageBuilder {
         }
         String subLink = CommonUtils.getURI(link);
         String ptContainer = subLink.substring(1, subLink.indexOf(SLASH, 2));
-        privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?initialURI=").append(subLink).append(SLASH).append(id).toString();
+        String topicId = link.substring(link.lastIndexOf(TOPIC_DELIMITER)).replace(TOPIC_DELIMITER,EMPTY_STRING).replaceAll(SLASH,EMPTY_STRING);
+        if(topicId.replaceFirst(Utils.TOPIC,Utils.POST).equals(id)){
+          subLink = subLink + SLASH + id;
+        }
+        privateLink = host + SLASH + ptContainer + SLASH + "login?initialURI=" + subLink;
       }
     } catch (Exception e) {
       privateLink = link;
