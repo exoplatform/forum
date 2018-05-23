@@ -16,69 +16,36 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.forum.common.conf.RoleRulesPlugin;
-import org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.DataStorage;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
-import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumEventLifeCycle;
-import org.exoplatform.forum.service.ForumEventListener;
-import org.exoplatform.forum.service.ForumEventQuery;
-import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSearchResult;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.forum.service.ForumStatisticsService;
-import org.exoplatform.forum.service.ForumSubscription;
-import org.exoplatform.forum.service.InitializeForumPlugin;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.LazyPageList;
-import org.exoplatform.forum.service.MessageBuilder;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.PruneSetting;
-import org.exoplatform.forum.service.SendMessageInfo;
-import org.exoplatform.forum.service.Tag;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserLoginLogEntry;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.filter.model.CategoryFilter;
-import org.exoplatform.forum.service.filter.model.ForumFilter;
-import org.exoplatform.forum.service.impl.model.PostFilter;
-import org.exoplatform.forum.service.impl.model.PostListAccess;
-import org.exoplatform.forum.service.impl.model.TopicFilter;
-import org.exoplatform.forum.service.impl.model.TopicListAccess;
-import org.exoplatform.forum.service.impl.model.UserProfileFilter;
-import org.exoplatform.forum.service.impl.model.UserProfileListAccess;
-import org.exoplatform.management.annotations.ManagedBy;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.User;
-import org.exoplatform.services.scheduler.JobSchedulerService;
-import org.exoplatform.services.user.UserStateModel;
-import org.exoplatform.services.user.UserStateService;
+import java.io.*;
+import java.util.*;
+
+import javax.jcr.NodeIterator;
+
+import org.apache.commons.lang3.StringUtils;
 import org.picocontainer.Startable;
 import org.quartz.JobDetail;
 
-import javax.jcr.NodeIterator;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.exoplatform.commons.utils.*;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.PropertiesParam;
+import org.exoplatform.forum.common.conf.RoleRulesPlugin;
+import org.exoplatform.forum.common.lifecycle.LifeCycleCompletionService;
+import org.exoplatform.forum.service.*;
+import org.exoplatform.forum.service.LazyPageList;
+import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.filter.model.CategoryFilter;
+import org.exoplatform.forum.service.filter.model.ForumFilter;
+import org.exoplatform.forum.service.impl.model.*;
+import org.exoplatform.forum.service.impl.model.TopicListAccess;
+import org.exoplatform.management.annotations.ManagedBy;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.*;
+import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.exoplatform.services.user.UserStateModel;
+import org.exoplatform.services.user.UserStateService;
 
 @ManagedBy(ForumServiceManaged.class)
 public class ForumServiceImpl implements ForumService, Startable {
@@ -101,6 +68,8 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   protected List<ForumEventListener> listeners_      = new ArrayList<ForumEventListener>(3);
 
+  private UserProfile profileTemplate;
+
   public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService staticsService,
                           JobSchedulerService jobService, UserStateService userStateService, LifeCycleCompletionService completionService) {
     this.storage = dataStorage;
@@ -108,6 +77,45 @@ public class ForumServiceImpl implements ForumService, Startable {
     this.jobSchedulerService = jobService;
     this.userStateService = userStateService;
     this.completionService = completionService;
+
+    if (params != null) {
+      PropertiesParam propsParams = params.getPropertiesParam("user.profile.setting");
+      ExoProperties props = propsParams.getProperties();
+      profileTemplate = new UserProfile();
+
+      String timeZoneNumber = props.getProperty("timeZone") != null ? props.getProperty("timeZone") : "GMT";
+      double timeZone = 0.0;
+      timeZone = -TimeZone.getTimeZone(timeZoneNumber).getRawOffset() * 1.0 / 3600000;
+      profileTemplate.setTimeZone(timeZone);
+
+      String shortDateFormat = props.getProperty("shortDateFormat") != null ? props.getProperty("shortDateFormat") : "MM/dd/yyyy";
+      profileTemplate.setShortDateFormat(shortDateFormat);
+
+      String longDateFormat = props.getProperty("longDateFormat") != null ? props.getProperty("longDateFormat") : "DDD, MMM dd, yyyy";
+
+      profileTemplate.setLongDateFormat(longDateFormat);
+      String timeFormat = (props.getProperty("timeFormat") != null) ? props.getProperty("timeFormat") : "hh:mm a";
+
+      profileTemplate.setTimeFormat(timeFormat);
+
+      String strMaxTopic = props.getProperty("maxTopic");
+      int maxTopic = 10;
+      try {
+        maxTopic = Integer.parseInt(strMaxTopic);
+      } catch (NumberFormatException nfe) {
+        log.warn("maxTopic is not in format", nfe);
+      }
+      profileTemplate.setMaxTopicInPage(maxTopic);
+
+      String strMaxPost = props.getProperty("maxPost");
+      int maxPost = 10;
+      try {
+        maxPost = Integer.parseInt(strMaxPost);
+      } catch (NumberFormatException nfe) {
+        log.warn("maxPost is not in format", nfe);
+      }
+      profileTemplate.setMaxPostInPage(maxPost);
+    }
   }
 
   /**
@@ -1005,6 +1013,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getUserInfo(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.getUserInfo(userName);
   }
 
@@ -1012,6 +1021,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
+    initUserProfile(userName);
     return storage.getUserModerator(userName, isModeCate);
   }
 
@@ -1019,6 +1029,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getUserProfileManagement(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.getUserProfileManagement(userName);
   }
 
@@ -1226,6 +1237,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public int getJobWattingForModeratorByUser(String userId) throws Exception {
+    initUserProfile(userId);
     return storage.getJobWattingForModeratorByUser(userId);
   }
 
@@ -1284,6 +1296,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   public void userLogin(String repoName, String userId) throws Exception {
+    initUserProfile(userId);
     //
     if (userStateService.isOnline(userId)) {
       return;
@@ -1316,6 +1329,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public boolean isOnline(String userId) throws Exception {
+    initUserProfile(userId);
     return userStateService.isOnline(userId);
   }
 
@@ -1366,6 +1380,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public boolean isAdminRole(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.isAdminRole(userName);
   }
   
@@ -1373,6 +1388,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public boolean isAdminRoleConfig(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.isAdminRoleConfig(userName);
   }
 
@@ -1387,6 +1403,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public List<Post> getRecentPostsForUser(String userName, int number) throws Exception {
+    initUserProfile(userName);
     return storage.getRecentPostsForUser(userName, number);
   }
 
@@ -1433,6 +1450,11 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception {
+    if (userList != null && !userList.isEmpty()) {
+      for (String username : userList) {
+        initUserProfile(username);
+      }
+    }
     return storage.getQuickProfiles(userList);
   }
 
@@ -1440,6 +1462,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getQuickProfile(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.getQuickProfile(userName);
   }
 
@@ -1447,6 +1470,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public String getScreenName(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.getScreenName(userName);
   }
 
@@ -1454,6 +1478,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
+    initUserProfile(userProfile.getUserId());
     return storage.getUserInformations(userProfile);
   }
 
@@ -1461,6 +1486,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
+    initUserProfile(userName);
     UserProfile userProfile = storage.getDefaultUserProfile(userName, null);
     if (!userProfile.getIsBanned() && ip != null) {
       userProfile.setIsBanned(storage.isBanIp(ip));
@@ -1486,6 +1512,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public UserProfile getUserSettingProfile(String userName) throws Exception {
+    initUserProfile(userName);
     return storage.getUserSettingProfile(userName);
   }
 
@@ -1493,6 +1520,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
+    initUserProfile(userProfile.getUserId());
     storage.saveUserSettingProfile(userProfile);
   }
 
@@ -1733,6 +1761,35 @@ public class ForumServiceImpl implements ForumService, Startable {
   @Override
   public ListAccess<UserProfile> searchUserProfileByFilter(UserProfileFilter userProfileFilter) throws Exception {
     return new UserProfileListAccess(storage, userProfileFilter);
+  }
+
+  /**
+   * Initializes user form profile when it doesn't exist on store.
+   * The user form profile isn't created when the user is created,
+   * thus this is called to initialize user profile only when requested
+   * 
+   * @param username
+   * @throws Exception
+   */
+  public void initUserProfile(String username) throws Exception {
+    if (StringUtils.isBlank(username)) {
+      return;
+    }
+    OrganizationService orgSrv = CommonsUtils.getService(OrganizationService.class);
+    User user = orgSrv.getUserHandler().findUserByName(username, UserStatus.ANY);
+    if (user == null) {
+      return;
+    }
+
+    UserProfile userSettingProfile = storage.getUserSettingProfile(username);
+    if (userSettingProfile == null) {
+      try {
+        addMember(user, profileTemplate);
+      } catch (Exception e) {
+        log.warn("Error while adding new forum member: ", e);
+      }
+      ForumServiceUtils.clearCache();
+    }
   }
 
 }

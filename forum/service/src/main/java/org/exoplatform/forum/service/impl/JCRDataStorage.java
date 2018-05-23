@@ -4805,8 +4805,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
     UserProfile userProfile = new UserProfile();
-    if (userName == null || userName.length() <= 0)
-      return userProfile;
+    if (StringUtils.isBlank(userName))
+      return null;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node profileNode = getUserProfileNode(sProvider, userName);
@@ -4932,11 +4932,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public UserProfile getUserSettingProfile(String userName) throws Exception {
     UserProfile userProfile = new UserProfile();
-    if (userName == null || userName.length() <= 0)
-      return userProfile;
+    if (StringUtils.isBlank(userName))
+      return null;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Session session = sessionManager.getSession(sProvider);
     try {
+      if (!session.getRootNode().hasNode(dataLocator.getUserProfilesLocation() + "/" + userName)) {
+        return null;
+      }
       userProfile = getCachedDataStorage().getQuickProfile(userName);
       Node profileNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation() + "/" + userName);
       PropertyReader reader = new PropertyReader(profileNode);
@@ -5078,13 +5081,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public UserProfile getUserInfo(String userName) throws Exception {
     UserProfile userProfile = new UserProfile();
-    if (userName == null || userName.length() <= 0)
-      return userProfile;
+    if (StringUtils.isBlank(userName))
+      return null;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Node userProfileNode = getUserProfileHome(sProvider);
     Node newProfileNode;
     try {
       newProfileNode = getUserProfileNode(userProfileNode, userName);
+      if (newProfileNode == null) {
+        return null;
+      }
       PropertyReader reader = new PropertyReader(newProfileNode);
       userProfile.setUserId(userName);
       userProfile.setScreenName(getScreenName(userName, newProfileNode));
@@ -5110,19 +5116,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       userProfile.setIsDisplaySignature(reader.bool(EXO_IS_DISPLAY_SIGNATURE));
       userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR));
       userProfile.setDisabled(reader.bool(EXO_IS_DISABLED, false));
-
+      return userProfile;
     } catch (PathNotFoundException e) {
-      userProfile.setUserId(userName);
-      userProfile.setUserTitle(Utils.USER);
-      userProfile.setUserRole((long) 2);
-      // default Administration
-      if (isAdminRole(userName)) {
-        userProfile.setUserRole((long) 0);
-        userProfile.setUserTitle(Utils.ADMIN);
-        saveUserProfile(userProfile, false, false);
-      }
+      return null;
     }
-    return userProfile;
   }
 
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception {
@@ -5139,6 +5136,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public UserProfile getQuickProfile(String userName) throws Exception {
+    if (StringUtils.isBlank(userName)) {
+      return null;
+    }
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     Node userProfileHome = getUserProfileHome(sProvider);
     //
@@ -5244,6 +5244,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private UserProfile getUserProfile(Node userProfileNode) throws Exception {
+    if (userProfileNode == null) {
+      return null;
+    }
     UserProfile userProfile = new UserProfile();
     String userName = userProfileNode.getName();
     PropertyReader reader = new PropertyReader(userProfileNode);

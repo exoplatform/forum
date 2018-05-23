@@ -100,6 +100,8 @@ import org.exoplatform.services.cache.future.FutureExoCache;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
+
+import org.apache.commons.lang3.StringUtils;
 import org.picocontainer.Startable;
 
 public class CachedDataStorage implements DataStorage, Startable {
@@ -1355,7 +1357,6 @@ public class CachedDataStorage implements DataStorage, Startable {
   }
 
   public UserProfile getQuickProfile(final String userName) throws Exception {
-    
     UserProfileKey key = new UserProfileKey(userName);
 
     return userProfileDataFuture.get(
@@ -1363,6 +1364,9 @@ public class CachedDataStorage implements DataStorage, Startable {
           public UserProfileData execute() {
             try {
               UserProfile got = storage.getQuickProfile(userName);
+              if (got == null) {
+                return null;
+              }
               return new UserProfileData(got);
             } catch (Exception e) {
               throw new RuntimeException(e);
@@ -1457,6 +1461,7 @@ public class CachedDataStorage implements DataStorage, Startable {
 
   public void saveForumStatistic(ForumStatistic forumStatistic) throws Exception {
     storage.saveForumStatistic(forumStatistic);
+    statistic = null;
   }
 
   public Object getObjectNameByPath(final String path) throws Exception {

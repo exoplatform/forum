@@ -16,26 +16,19 @@
  */
 package org.exoplatform.forum.service;
 
+import java.io.*;
+import java.util.*;
+
+import javax.jcr.ImportUUIDBehavior;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.FileUtils;
+
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.base.BaseForumServiceTestCase;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
-import org.exoplatform.services.organization.Group;
-import org.exoplatform.services.organization.GroupHandler;
-import org.exoplatform.services.organization.MembershipType;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.UserStatus;
-
-import javax.jcr.ImportUUIDBehavior;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.exoplatform.services.organization.*;
 
 public class ForumServiceTestCase extends BaseForumServiceTestCase {
   @Override
@@ -127,12 +120,19 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
   public void testForumStatic() throws Exception {
     //
+    ListAccess<User> allUsers = UserHelper.getUserHandler().findAllUsers();
+    User[] users = allUsers.load(0, allUsers.getSize());
+    for (User user : users) {
+      // initialize user profile
+      forumService_.getUserSettingProfile(user.getUserName());
+    }
+
     resetAllUserProfile();
-    
+
     ForumStatistic forumStatistic = forumService_.getForumStatistic();
     assertNotNull(forumStatistic);
-    assertEquals(8, forumStatistic.getMembersCount());
-    
+    assertEquals(2, forumStatistic.getMembersCount());
+
     forumStatistic.setPostCount(20);
     forumStatistic.setTopicCount(10);
     forumService_.saveForumStatistic(forumStatistic);

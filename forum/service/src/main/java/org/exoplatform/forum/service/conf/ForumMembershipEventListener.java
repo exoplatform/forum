@@ -21,7 +21,6 @@ import javax.jcr.Node;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
 import org.exoplatform.forum.service.ForumNodeTypes;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -50,9 +49,11 @@ public class ForumMembershipEventListener extends MembershipEventListener {
       try {
         KSDataLocation dataLocation = CommonsUtils.getService(KSDataLocation.class);
         Node rootNode = dataLocation.getSessionManager().openSession().getRootNode();
-        Node userProfileNode = rootNode.getNode(dataLocation.getUserProfilesLocation()).getNode(m.getUserName());
-        userProfileNode.setProperty(ForumNodeTypes.EXO_USER_ROLE, 0);
-        userProfileNode.save();
+        if (rootNode.hasNode(dataLocation.getUserProfilesLocation() + "/" + m.getUserName())) {
+          Node userProfileNode = rootNode.getNode(dataLocation.getUserProfilesLocation()).getNode(m.getUserName());
+          userProfileNode.setProperty(ForumNodeTypes.EXO_USER_ROLE, 0);
+          userProfileNode.save();
+        }
       } catch (Exception e) {
         LOG.error("Failed to update user role : " + e.getMessage(), e);
       }

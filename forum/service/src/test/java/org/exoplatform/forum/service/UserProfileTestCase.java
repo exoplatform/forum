@@ -240,6 +240,7 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
       user.isEnabled();
       //
       userHandler.createUser(user, true);
+      forumService_.getUserSettingProfile(user.getUserName());
       userHandler.setEnabled(user.getUserName(), true, true);
     }
 
