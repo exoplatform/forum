@@ -122,7 +122,7 @@
 								boolean isView = false ;
 								String link , itemLabel, classIcon, classDisable="", confirm;
 								String[] actionMenuForum = uicomponent.getActionMenuForum() ;
-								String [] classIcons = ["uiIconEdit uiIconLightGray", "uiIconUnlockMedium uiIconLightGray", "uiIconLockMedium uiIconLightGray", "uiIconOpen uiIconLightGray", "uiIconMinus uiIconLightGray", "uiIconMove uiIconLightGray", "uiIconDelete uiIconLightGray", "uiIconExport uiIconLightGray", "uiIconWatch uiIconLightGray", "uiIconForumBanIp uiIconLightGray"];
+								String [] classIcons = ["uiIconEdit uiIconLightGray", "uiIconUnlockMedium uiIconLightGray", "uiIconLockMedium uiIconLightGray", "uiIconOpen uiIconLightGray", "uiIconMinus uiIconLightGray", "uiIconMove uiIconLightGray", "uiIconWatch uiIconLightGray", "uiIconExport uiIconLightGray", "uiIconDelete uiIconLightGray", "uiIconForumBanIp uiIconLightGray"];
 								int id = 0;
 								for(action in actionMenuForum) {
 									link = uicomponent.event(action,uicomponent.getName(),"topic") ;
