@@ -23,13 +23,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.*;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -104,6 +98,7 @@ public class UIPageListTopicByUser extends UIContainer {
       forumPageIterator.initPage(pageList.getPageSize(), pageList.getCurrentPage(), 
                                  pageList.getAvailable(), pageList.getAvailablePage());
       topics = pageList.getPage(forumPageIterator.getPageSelected());
+      topics = filterVisibleTopics(topics, getUserProfile().getUserId());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
       log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
@@ -122,6 +117,20 @@ public class UIPageListTopicByUser extends UIContainer {
   protected String[] getStarNumber(Topic topic) throws Exception {
     double voteRating = topic.getVoteRating();
     return ForumUtils.getStarNumber(voteRating);
+  }
+
+  private List<Topic> filterVisibleTopics(List<Topic> topics, String userId) throws Exception {
+    List<Topic> result = new ArrayList<>(topics);
+    for (Topic topic : topics) {
+      Category category = forumService.getCategory(topic.getCategoryId());
+      Forum forum = forumService.getForum(topic.getCategoryId(), topic.getForumId());
+      if (!ForumServiceUtils.hasPermission(topic.getCanView(), userId)
+          || !ForumServiceUtils.hasPermission(category.getViewer(), userId)
+          || !ForumServiceUtils.hasPermission(forum.getViewer(), userId)) {
+        result.remove(topic);
+      }
+    }
+    return result;
   }
 
   static public class DeleteTopicActionListener extends EventListener<UIPageListTopicByUser> {

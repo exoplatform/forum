@@ -74,6 +74,9 @@ public class LoginUserProfileData implements CachedData<UserProfile> {
   private Map<String, Long>   lastAccessForums       = new HashMap<String, Long>();
 
   public LoginUserProfileData(UserProfile profile) {
+    if (profile == null) {
+      return;
+    }
     this.userId = profile.getUserId();
     this.screenName = profile.getScreenName();
     this.userRole = profile.getUserRole();

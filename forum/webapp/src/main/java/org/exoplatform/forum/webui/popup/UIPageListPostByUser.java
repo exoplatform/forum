@@ -23,14 +23,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.common.webui.UIPopupAction;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.*;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -104,6 +97,7 @@ public class UIPageListPostByUser extends UIContainer {
         pageList.setPageSize(10);
       }
       posts = pageList.getPage(forumPageIterator.getPageSelected());
+      posts = filterVisiblePosts(posts, getUserProfile().getUserId());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
       log.trace("\nThe post must exist: " + e.getMessage() + "\n" + e.getCause());
@@ -113,6 +107,27 @@ public class UIPageListPostByUser extends UIContainer {
     }
     this.posts = posts;
     return posts;
+  }
+
+  private List<Post> filterVisiblePosts(List<Post> posts, String userId) throws Exception {
+    List<Post> result = new ArrayList<>(posts);
+    for (Post post : posts) {
+      String categoryId = post.getCategoryId();
+      Category category = forumService.getCategory(categoryId);
+      String forumId = post.getForumId();
+      String topicId = post.getTopicId();
+      Forum forum = forumService.getForum(categoryId, forumId);
+      Topic topic = forumService.getTopic(categoryId, forumId, topicId, userId);
+      boolean isPrivatePost = post.getUserPrivate() != null && post.getUserPrivate().length > 0
+          && !"exoUserPri".equals(post.getUserPrivate()[0]);
+
+      if (!ForumServiceUtils.hasPermission(topic.getCanView(), userId)
+          || !ForumServiceUtils.hasPermission(category.getViewer(), userId)
+          || !ForumServiceUtils.hasPermission(forum.getViewer(), userId) || isPrivatePost) {
+        result.remove(post);
+      }
+    }
+    return result;
   }
 
   private Post getPostById(String postId) throws Exception {
