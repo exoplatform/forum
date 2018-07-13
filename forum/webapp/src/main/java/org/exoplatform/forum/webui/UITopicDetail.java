@@ -1723,6 +1723,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       long setTime = (long) (userProfile.getTimeZone() * 3600000);
       String editDate = TimeConvertUtils.convertXTimeAgo(modifiedDate, longDateFormat, setTime);
       String editByLabel = WebUIUtils.getLabel(getId(), "LastEditedOnDate");
+      // if format of last edition date is X time ago
+      long day = 24 * 60 * 60 * 1000;
+      if ((TimeConvertUtils.getGreenwichMeanTime().getTimeInMillis() - modifiedDate.getTime()) < (31l * day)) {
+        editByLabel = WebUIUtils.getLabel(getId(), "LastEditedDateAgo");
+      }
       return editByLabel.replace("{0}", builder.toString()).replace("{1}", editDate);
     }
     //
