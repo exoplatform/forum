@@ -36,18 +36,18 @@
     <!-- **************************************** -->
     <!-- Dependencies versions -->
     <!-- **************************************** -->
-    <org.exoplatform.depmgt.version>14-SNAPSHOT</org.exoplatform.depmgt.version>
+    <org.exoplatform.depmgt.version>14-RC13</org.exoplatform.depmgt.version>
     <!-- JCR Project Dependencies -->
-    <org.exoplatform.kernel.version>5.1.x-SNAPSHOT</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>5.1.x-SNAPSHOT</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>5.1.x-SNAPSHOT</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>5.1.x-SNAPSHOT</org.exoplatform.jcr.version>
-    <org.exoplatform.gatein.wci.version>5.1.x-SNAPSHOT</org.exoplatform.gatein.wci.version>
-    <org.exoplatform.gatein.portal.version>5.1.x-SNAPSHOT</org.exoplatform.gatein.portal.version>
-    <org.exoplatform.commons.version>5.1.x-SNAPSHOT</org.exoplatform.commons.version>
-    <org.exoplatform.social.version>5.1.x-SNAPSHOT</org.exoplatform.social.version>
-    <org.exoplatform.wiki.version>5.1.x-SNAPSHOT</org.exoplatform.wiki.version>
-    <org.exoplatform.doc.doc-style.version>5.1.x-SNAPSHOT</org.exoplatform.doc.doc-style.version>
+    <org.exoplatform.kernel.version>5.1.0-RC13</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>5.1.0-RC13</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>5.1.0-RC13</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>5.1.0-RC13</org.exoplatform.jcr.version>
+    <org.exoplatform.gatein.wci.version>5.1.0-RC13</org.exoplatform.gatein.wci.version>
+    <org.exoplatform.gatein.portal.version>5.1.0-RC13</org.exoplatform.gatein.portal.version>
+    <org.exoplatform.commons.version>5.1.0-RC13</org.exoplatform.commons.version>
+    <org.exoplatform.social.version>5.1.0-RC13</org.exoplatform.social.version>
+    <org.exoplatform.wiki.version>5.1.0-RC13</org.exoplatform.wiki.version>
+    <org.exoplatform.doc.doc-style.version>5.1.0-RC13</org.exoplatform.doc.doc-style.version>
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
     <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
