@@ -9,6 +9,9 @@
   <artifactId>forum-forum-webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo PLF:: Forum Forum application</name>
+  <properties>
+    <exo.test.coverage.ratio>0.02</exo.test.coverage.ratio>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

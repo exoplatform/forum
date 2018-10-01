@@ -8,6 +8,9 @@
   </parent>
   <artifactId>forum-component-bbcode</artifactId>
   <name>eXo PLF:: Forum BBCode processing</name>
+  <properties>
+    <exo.test.coverage.ratio>0.73</exo.test.coverage.ratio>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

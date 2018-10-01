@@ -9,6 +9,9 @@
   <artifactId>forum-forum-service</artifactId>
   <packaging>jar</packaging>
   <name>eXo PLF:: Forum Forum service</name>
+  <properties>
+    <exo.test.coverage.ratio>0.60</exo.test.coverage.ratio>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

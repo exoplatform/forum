@@ -9,6 +9,9 @@
   <artifactId>forum-application-common</artifactId>
   <packaging>jar</packaging>
   <name>eXo PLF:: Forum Applications commons</name>
+  <properties>
+    <exo.test.coverage.ratio>0.07</exo.test.coverage.ratio>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>

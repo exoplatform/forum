@@ -8,6 +8,9 @@
   </parent>
   <artifactId>forum-component-common</artifactId>
   <name>eXo PLF:: Forum Common components</name>
+  <properties>
+    <exo.test.coverage.ratio>0.51</exo.test.coverage.ratio>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
