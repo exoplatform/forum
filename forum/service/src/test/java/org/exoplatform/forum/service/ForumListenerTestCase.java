@@ -94,4 +94,25 @@ public class ForumListenerTestCase extends BaseForumServiceTestCase {
     assertEquals(STATUS.UPDATE_POST, resultListener.getStatus());
   }
 
+  @Test
+  public void testUpdateTopicAccess() throws Exception {
+    // create one category, forum and one topic
+    initDefaultData();
+    // create a topic.
+    Topic topic = createdTopic("root");
+    forumService_.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    //
+    waitForThreadDone(200);
+    assertEquals(STATUS.ADD_TOPIC, resultListener.getStatus());
+    assertEquals(2, resultListener.getTopicCount());
+    //
+    topic = forumService_.getTopic(categoryId, forumId, topicId, null);
+    topic.setTopicName("Edit topic");
+    topic.setModifiedBy(USER_JOHN);
+    topic.setModifiedDate(Calendar.getInstance().getTime());
+    forumService_.updateTopicAccess(USER_JOHN,topic.getId());
+    // check if the listener is called as  expected
+    assertEquals(STATUS.OPEN_TOPIC, resultListener.getStatus());
+  }
+
 }

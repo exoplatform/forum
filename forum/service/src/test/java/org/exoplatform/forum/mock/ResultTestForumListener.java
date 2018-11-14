@@ -22,7 +22,7 @@ import java.util.Date;
 public class ResultTestForumListener {
 
   public enum STATUS {
-    ADD_TOPIC, UPDATE_TOPIC, ADD_POST, UPDATE_POST
+    ADD_TOPIC, UPDATE_TOPIC, ADD_POST, UPDATE_POST, OPEN_TOPIC
   }
   private int topicCount = 0;
   private int postCount = 0;

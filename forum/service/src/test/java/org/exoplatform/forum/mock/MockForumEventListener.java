@@ -97,4 +97,13 @@ public class MockForumEventListener extends ForumEventListener {
   @Override
   public void saveForum(Forum forum) {
   }
+
+  @Override
+  public void openTopic(String userId, String topicId) {
+
+    resultListener.setStatus(STATUS.OPEN_TOPIC);
+
+  }
+
+
 }

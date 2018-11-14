@@ -156,4 +156,16 @@ public interface ForumEventLifeCycle {
    * @since 4.0
    */
   public void removeComment(String activityId, String commentId);
+
+  /**
+   * This will be call after topics opened.
+   *
+   * @param userId - the user Id.
+   * @param topicId - the topic Id will be opened
+   * @since 5.2
+   */
+  public default void openTopic(String userId, String topicId){
+  }
+
+
 }

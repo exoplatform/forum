@@ -1423,6 +1423,13 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void updateTopicAccess(String userId, String topicId) {
     storage.updateTopicAccess(userId, topicId);
+    for (ForumEventLifeCycle listener : listeners_) {
+      try {
+        listener.openTopic(userId, topicId);
+      } catch (Exception e) {
+        log.error("service=forum operation=open-topic-listener parameters=\"userid:{},topicid:{}\" error_msg=\"error to fire opentopic event\"",userId, topicId, e);
+      }
+    }
   }
 
   /**

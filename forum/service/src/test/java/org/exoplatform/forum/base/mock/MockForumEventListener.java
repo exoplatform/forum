@@ -108,4 +108,8 @@ public class MockForumEventListener extends ForumEventListener {
 
   }
 
+  @Override
+  public void openTopic(String userId, String topicId) {
+
+  }
 }
