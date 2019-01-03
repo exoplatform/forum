@@ -79,7 +79,7 @@ public class UIForumActionBar extends UIContainer {
   private static final String RELOAD = "RELOAD".intern();
 
   public UIForumActionBar() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    forumService = ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   private UserProfile getUserProfile() {
@@ -184,13 +184,19 @@ public class UIForumActionBar extends UIContainer {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
       UIForumPortlet forumPortlet = uiActionBar.getParent();
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UICategoryForm categoryForm = popupContainer.addChild(UICategoryForm.class, null, null);
-      categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
-      popupContainer.setId("AddCategoryForm");
-      popupAction.activate(popupContainer, 665, 380);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        UICategoryForm categoryForm = popupContainer.addChild(UICategoryForm.class, null, null);
+        categoryForm.setSpaceGroupId(forumPortlet.getSpaceGroupId());
+        popupContainer.setId("AddCategoryForm");
+        popupAction.activate(popupContainer, 665, 380);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+        return;
+      }
     }
   }
 
@@ -198,12 +204,17 @@ public class UIForumActionBar extends UIContainer {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
       UIForumPortlet forumPortlet = uiActionBar.getParent();
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UIImportForm.class, null, null);
-      popupContainer.setId("FORUMImportCategoryForm");
-      popupAction.activate(popupContainer, 500, 160);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        popupContainer.addChild(UIImportForm.class, null, null);
+        popupContainer.setId("FORUMImportCategoryForm");
+        popupAction.activate(popupContainer, 500, 160);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
@@ -211,13 +222,18 @@ public class UIForumActionBar extends UIContainer {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
       UIForumPortlet forumPortlet = uiActionBar.getParent();
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null);
-      exportForm.setObjectId(null);
-      popupContainer.setId("FORUMExportCategoryForm");
-      popupAction.activate(popupContainer, 500, 400);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null);
+        exportForm.setObjectId(null);
+        popupContainer.setId("FORUMExportCategoryForm");
+        popupAction.activate(popupContainer, 500, 400);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
@@ -226,22 +242,27 @@ public class UIForumActionBar extends UIContainer {
       UIForumActionBar uiActionBar = event.getSource();
       if (uiActionBar.forumService.getCategories(false).size() > 0) {
         UIForumPortlet forumPortlet = uiActionBar.getParent();
-        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-        UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null);
-        forumForm.setMode(false);
-        forumForm.initForm(forumPortlet.getSpaceGroupId());
-        UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
-        if (category != null && category.isRendered()) {
-          forumForm.setCategoryValue(category.getCategoryId(), true);
+        if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+          UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
+          UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+          UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null);
+          forumForm.setMode(false);
+          forumForm.initForm(forumPortlet.getSpaceGroupId());
+          UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
+          if (category != null && category.isRendered()) {
+            forumForm.setCategoryValue(category.getCategoryId(), true);
+          } else {
+            forumForm.setCategoryValue(ForumUtils.EMPTY_STR, true);
+          }
+          forumForm.setForumUpdate(false);
+          forumForm.setActionBar(true);
+          popupContainer.setId("AddNewForumForm");
+          popupAction.activate(popupContainer, 650, 480);
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
         } else {
-          forumForm.setCategoryValue(ForumUtils.EMPTY_STR, true);
+          event.getRequestContext().getUIApplication()
+                  .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
         }
-        forumForm.setForumUpdate(false);
-        forumForm.setActionBar(true);
-        popupContainer.setId("AddNewForumForm");
-        popupAction.activate(popupContainer, 650, 480);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } else {
         event.getRequestContext().getUIApplication()
              .addMessage(new ApplicationMessage("UIForumActionBar.msg.notCategory", null, ApplicationMessage.WARNING));        
@@ -254,13 +275,17 @@ public class UIForumActionBar extends UIContainer {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
       UIForumPortlet forumPortlet = uiActionBar.getParent();
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UIModeratorManagementForm managementForm = popupContainer.addChild(UIModeratorManagementForm.class, null, null);
-      popupContainer.setId("UIModeratorManagement");
-      popupAction.activate(popupContainer, 760, 350);
-//      managementForm.initialForm();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        popupContainer.addChild(UIModeratorManagementForm.class, null, null);
+        popupContainer.setId("UIModeratorManagement");
+        popupAction.activate(popupContainer, 760, 350);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
@@ -292,70 +317,106 @@ public class UIForumActionBar extends UIContainer {
   static public class SortSettingActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UISortSettingForm sortSettingForm = popupAction.createUIComponent(UISortSettingForm.class, null, null);
-      sortSettingForm.setInitForm();
-      popupAction.activate(sortSettingForm, 520, 220);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UISortSettingForm sortSettingForm = popupAction.createUIComponent(UISortSettingForm.class, null, null);
+        sortSettingForm.setInitForm();
+        popupAction.activate(sortSettingForm, 520, 220);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
   static public class CensorKeywordActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UICensorKeywordForm censorKeywordForm = popupAction.createUIComponent(UICensorKeywordForm.class, null, null);
-      censorKeywordForm.setInitForm();
-      popupAction.activate(censorKeywordForm, 520, 220);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UICensorKeywordForm censorKeywordForm = popupAction.createUIComponent(UICensorKeywordForm.class, null, null);
+        censorKeywordForm.setInitForm();
+        popupAction.activate(censorKeywordForm, 520, 220);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
   static public class NotificationActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UINotificationForm notificationForm = popupAction.createUIComponent(UINotificationForm.class, null, null);
-      notificationForm.setInitForm();
-      popupAction.activate(notificationForm, 720, 450);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UINotificationForm notificationForm = popupAction.createUIComponent(UINotificationForm.class, null, null);
+        notificationForm.setInitForm();
+        popupAction.activate(notificationForm, 720, 450);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
   static public class BBCodeManagerActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UIBBCodeManagerForm codeManagerForm = popupContainer.addChild(UIBBCodeManagerForm.class, null, null);
-      codeManagerForm.loadBBCodes(true);
-      popupContainer.setId("BBCodeManagerForm");
-      popupAction.activate(popupContainer, 650, 400);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        UIBBCodeManagerForm codeManagerForm = popupContainer.addChild(UIBBCodeManagerForm.class, null, null);
+        codeManagerForm.loadBBCodes(true);
+        popupContainer.setId("BBCodeManagerForm");
+        popupAction.activate(popupContainer, 650, 400);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
   static public class AutoPruneActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UIAutoPruneForm.class, null, null);
-      popupContainer.setId("AutoPruneForm");
-      popupAction.activate(popupContainer, 750, 400);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        popupContainer.addChild(UIAutoPruneForm.class, null, null);
+        popupContainer.setId("AutoPruneForm");
+        popupAction.activate(popupContainer, 750, 400);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
   static public class OpenIPBanActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      popupContainer.addChild(UIBanIPForumManagerForm.class, null, null);
-      popupContainer.setId("BanIPForumManagerForm");
-      popupAction.activate(popupContainer, 430, 500);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIForumPortlet forumPortlet = uiActionBar.getParent();
+      if(forumPortlet.getUserProfile() != null && forumPortlet.getUserProfile().getUserRole() == UserProfile.ADMIN) {
+        UIPopupAction popupAction = ((UIForumPortlet) uiActionBar.getParent()).getChild(UIPopupAction.class);
+        UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+        popupContainer.addChild(UIBanIPForumManagerForm.class, null, null);
+        popupContainer.setId("BanIPForumManagerForm");
+        popupAction.activate(popupContainer, 430, 500);
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        event.getRequestContext().getUIApplication()
+                .addMessage(new ApplicationMessage("UIForumActionBar.msg.permissionDenied", null, ApplicationMessage.WARNING));
+      }
     }
   }
 
