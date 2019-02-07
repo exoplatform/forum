@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-component</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>5.2.x-SNAPSHOT</version>
+    <version>5.2.0-RC03</version>
   </parent>
   <artifactId>forum-component-common</artifactId>
   <name>eXo PLF:: Forum Common components</name>
