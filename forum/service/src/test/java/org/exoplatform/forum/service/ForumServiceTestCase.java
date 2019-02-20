@@ -120,18 +120,11 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
   public void testForumStatic() throws Exception {
     //
-    ListAccess<User> allUsers = UserHelper.getUserHandler().findAllUsers();
-    User[] users = allUsers.load(0, allUsers.getSize());
-    for (User user : users) {
-      // initialize user profile
-      forumService_.getUserSettingProfile(user.getUserName());
-    }
-
     resetAllUserProfile();
 
     ForumStatistic forumStatistic = forumService_.getForumStatistic();
     assertNotNull(forumStatistic);
-    assertEquals(2, forumStatistic.getMembersCount());
+    assertEquals(8, forumStatistic.getMembersCount());
 
     forumStatistic.setPostCount(20);
     forumStatistic.setTopicCount(10);

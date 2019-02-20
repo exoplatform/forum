@@ -20,18 +20,6 @@
   <component>
     <key>org.exoplatform.forum.service.ForumService</key>
     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
-    <init-params>
-      <properties-param>
-        <name>user.profile.setting</name>
-        <description>set default user profile</description>
-        <property name="timeZone" value="GMT"/>
-        <property name="shortDateFormat" value="MM/dd/yyyy"/>
-        <property name="longDateFormat" value="DDD,MMM dd,yyyy"/>
-        <property name="timeFormat" value="hh:mm a"/>
-        <property name="maxTopic" value="10"/>
-        <property name="maxPost" value="10"/>
-      </properties-param>
-    </init-params>
   </component>
   
    <component>
