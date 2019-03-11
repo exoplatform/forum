@@ -10,10 +10,8 @@
     "    .on('click',\n" +
     "        function() {\n" +
     "          var input = jq('input#${uicomponent.PERMISSION_INPUT}');\n" +
-    "          var eventURL = '" + eventURL + "&objectId=' + encodeURIComponent(input.val());\n" +
+    "          var eventURL = jq(this).data('link') + '&objectId=' + encodeURIComponent(input.val());\n" +
     "          input.val('');\n" +
-    "          var error = new Error();\n" +
-    "          console.log(error.stack);\n" +
     "          processInput(input);\n" +
     "          window.ajaxGet(eventURL);\n" +
     "        });\n" +
@@ -58,6 +56,6 @@
 		<a class="actionIcon" href="javascript:void(0);" onclick="<%= uicomponent.event("OpenRoleAndGroupPopup", "2")%>" rel="tooltip" data-placement="bottom" title="<%=_ctx.appRes("UIPermissionPopupWindow.title.UIGroupSelector");%>">
 			<i class="uiIconGroup uiIconLightGray"></i>
 		</a>
-		<button class="btn addButton" type="button"><%=_ctx.appRes("UIPermissionPanel.label.add")%></button>
+		<button class="btn addButton" type="button" data-link="<%=eventURL%>"><%=_ctx.appRes("UIPermissionPanel.label.add")%></button>
   </div>
 </div>
