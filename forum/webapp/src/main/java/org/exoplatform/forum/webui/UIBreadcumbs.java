@@ -60,7 +60,7 @@ public class UIBreadcumbs extends UIContainer {
 
   private List<String>       path_         = new ArrayList<String>();
 
-  private String             QUICK_SEARCH  = "QuickSearchForm";
+  private String             QUICK_SEARCH  = "UIQuickSearchForm";
 
   public static final String FORUM_SERVICE = Utils.FORUM_SERVICE;
 
