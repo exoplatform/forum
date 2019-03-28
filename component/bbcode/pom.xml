@@ -51,12 +51,6 @@
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <exclusions>
-      	<exclusion>
-          <groupId>javax.activation</groupId>
-          <artifactId>activation</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
@@ -199,14 +193,6 @@
       		<groupId>log4j</groupId>
       		<artifactId>log4j</artifactId>
       	</exclusion>
-      	<exclusion>
-          <groupId>javax.activation</groupId>
-          <artifactId>activation</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -222,10 +208,6 @@
       	<exclusion>
           <groupId>javax.xml.stream</groupId>
           <artifactId>stax-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
