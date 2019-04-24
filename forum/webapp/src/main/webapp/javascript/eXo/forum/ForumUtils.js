@@ -1,7 +1,6 @@
 (function (gj) {
   var ForumUtils = {
     onResizeCallback : {},
-    hideElementList : new Array(),
     currWidth : 0,
     cancelEvent : function(evt) {
       var event = evt || window.event;

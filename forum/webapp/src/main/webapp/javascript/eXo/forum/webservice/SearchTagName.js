@@ -8,7 +8,6 @@
       BACK : 8
     },
     jInputSearch : null,
-    data : null,
     jparent : null,
     jcontainer : null,
     request : null,
