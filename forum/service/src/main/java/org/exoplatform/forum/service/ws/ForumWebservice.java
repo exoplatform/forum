@@ -1,7 +1,6 @@
 package org.exoplatform.forum.service.ws;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -339,24 +338,9 @@ public class ForumWebservice implements ResourceContainer {
   private String getUserId(SecurityContext sc, UriInfo uriInfo) {
     try {
       return sc.getUserPrincipal().getName();
-    } catch (NullPointerException e) {
-      return getViewerId(uriInfo);
     } catch (Exception e) {
       log.debug("Failed to get user id", e);
       return null;
     }
-  }
-  
-  private String getViewerId(UriInfo uriInfo) {
-    URI uri = uriInfo.getRequestUri();
-    String requestString = uri.getQuery();
-    if (requestString == null) return null;
-    String[] queryParts = requestString.split("&");
-    for (String queryPart : queryParts) {
-      if (queryPart.startsWith("opensocial_viewer_id")) {
-        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
-      }
-    }
-    return null;
   }
 }
