@@ -189,21 +189,6 @@
   </module>
 
   <module>
-    <name>ForumMaskLayer</name>
-    <script>
-      <path>/javascript/eXo/forum/MaskLayerControl.js</path>
-    </script>
-    <depends>
-      <module>ForumUtils</module>
-      <as>utils</as>
-    </depends>
-    <depends>
-      <module>jquery</module>
-      <as>gj</as>
-    </depends>
-  </module>
-
-  <module>
     <name>UISliderControl</name>
     <script>
       <path>/javascript/eXo/forum/UISliderControl.js</path>
@@ -247,7 +232,7 @@
       <module>uiForm</module>
     </depends>
     <depends>
-      <module>ForumMaskLayer</module>
+      <module>mask-layer</module>
       <as>forumMaskLayer</as>
     </depends>
     <depends>

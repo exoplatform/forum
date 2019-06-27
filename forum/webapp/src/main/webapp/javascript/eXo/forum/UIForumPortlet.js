@@ -546,7 +546,7 @@
     },
 
     showPicture : function(src) {
-      maskLayer.showPicture(src);
+      eXo.commons.MaskLayerControl.showPicture(src);
     },
 
     getImageSize : function(imageNode) {
