@@ -17,8 +17,8 @@
 package org.exoplatform.forum.common.webui;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.common.CommonUtils;
@@ -116,10 +116,6 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     }
   }
 
-  public List<Group> getChildGroup() throws Exception {
-    return UserHelper.findGroups(getCurrentGroup());
-  }
-
   public boolean isSelectGroup() {
     return TYPE_GROUP.equals(type_);
   }
@@ -134,7 +130,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 
   @SuppressWarnings("unchecked")
   public List<String> getList() throws Exception {
-    List<String> children = new ArrayList<String>();
+    List<String> children = new ArrayList<>();
     if (isSelectUser()) {
       ListAccess<User> userPageList = service.getUserHandler().findUsersByGroupId(getCurrentGroup().getId());
       User users[] = userPageList.load(0, userPageList.getSize());
@@ -150,12 +146,8 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
         Group group = service.getGroupHandler().findGroupById(spaceGroupId);
         children.add(group.getGroupName());
       } else {
-        Collection<Group> groups = service.getGroupHandler().findGroups(getCurrentGroup());
-        if (groups.size() > 0) {
-          for (Group child : groups) {
-            children.add(child.getGroupName());
-          }
-        } else {
+        children = getChildrenGroups(getCurrentGroup()).stream().map(group -> group.getGroupName()).collect(Collectors.toList());
+        if (children.isEmpty()) {
           children.add(WebUIUtils.getLabel(getId(), "selectThisGroup"));
         }
       }
