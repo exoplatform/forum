@@ -17,9 +17,11 @@
 package org.exoplatform.forum.service.conf;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.SessionManager;
 import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.services.log.ExoLogger;
@@ -46,9 +48,12 @@ public class ForumMembershipEventListener extends MembershipEventListener {
   @Override
   public void postSave(Membership m, boolean isNew) throws Exception {
     if (PLATFORM_ADMIN_GROUP.equals(m.getGroupId())) {
+      Session session = null;
       try {
         KSDataLocation dataLocation = CommonsUtils.getService(KSDataLocation.class);
-        Node rootNode = dataLocation.getSessionManager().openSession().getRootNode();
+        SessionManager sessionManager = dataLocation.getSessionManager();
+        session = sessionManager.openSession();
+        Node rootNode = session.getRootNode();
         if (rootNode.hasNode(dataLocation.getUserProfilesLocation() + "/" + m.getUserName())) {
           Node userProfileNode = rootNode.getNode(dataLocation.getUserProfilesLocation()).getNode(m.getUserName());
           userProfileNode.setProperty(ForumNodeTypes.EXO_USER_ROLE, 0);
@@ -56,8 +61,11 @@ public class ForumMembershipEventListener extends MembershipEventListener {
         }
       } catch (Exception e) {
         LOG.error("Failed to update user role : " + e.getMessage(), e);
+      } finally {
+        if (session != null) {
+          session.logout();
+        }
       }
     }
   }
-  
 }
