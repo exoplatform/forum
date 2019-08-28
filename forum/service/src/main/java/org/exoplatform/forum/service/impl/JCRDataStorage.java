@@ -479,7 +479,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public boolean isAdminRole(String userName) throws Exception {
-    return isAdminRole(CommonUtils.createSystemProvider(), userName);
+    SessionProvider sProvider = null;
+    try {
+      sProvider = SessionProvider.createSystemProvider();
+      return isAdminRole(sProvider, userName);
+    } finally {
+      if (sProvider != null) {
+        sProvider.close();
+      }
+    }
   }
 
   private boolean isAdminRole(SessionProvider sProvider, String userName) throws Exception {
@@ -4934,7 +4942,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     UserProfile userProfile = new UserProfile();
     if (StringUtils.isBlank(userName))
       return null;
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     Session session = sessionManager.getSession(sProvider);
     try {
       if (!session.getRootNode().hasNode(dataLocator.getUserProfilesLocation() + "/" + userName)) {
@@ -4968,6 +4976,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile.setUserRole((long) 0);
         userProfile.setUserTitle(Utils.ADMIN);
         saveUserProfile(userProfile, false, false);
+      }
+    } finally {
+      if (session != null) {
+        sProvider.close();
       }
     }
     return userProfile;
@@ -5139,10 +5151,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (StringUtils.isBlank(userName)) {
       return null;
     }
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    Node userProfileHome = getUserProfileHome(sProvider);
-    //
-    return getUserProfile(getUserProfileNode(userProfileHome, userName));
+    SessionProvider sProvider = null;
+    try {
+      sProvider = SessionProvider.createSystemProvider();
+      Node userProfileHome = getUserProfileHome(sProvider);
+      //
+      return getUserProfile(getUserProfileNode(userProfileHome, userName));
+    } finally {
+      if (sProvider != null) {
+        sProvider.close();
+      }
+    }
   }
 
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
@@ -8634,7 +8653,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   @Override
   public void saveActivityIdForOwner(String ownerPath, String activityId) {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     final ReentrantLock localLock = lock;
     try {
       localLock.lock();
@@ -8647,6 +8666,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       logDebug(String.format("Failed to save attach activityId %s for node %s ", activityId, ownerPath), e);
     } finally {
       localLock.unlock();
+      if (sProvider != null){
+        sProvider.close();
+      }
     }
   }
 
