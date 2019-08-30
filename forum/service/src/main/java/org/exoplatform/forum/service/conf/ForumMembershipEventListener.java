@@ -48,10 +48,11 @@ public class ForumMembershipEventListener extends MembershipEventListener {
   @Override
   public void postSave(Membership m, boolean isNew) throws Exception {
     if (PLATFORM_ADMIN_GROUP.equals(m.getGroupId())) {
+      SessionManager sessionManager = null;
       Session session = null;
       try {
         KSDataLocation dataLocation = CommonsUtils.getService(KSDataLocation.class);
-        SessionManager sessionManager = dataLocation.getSessionManager();
+        sessionManager = dataLocation.getSessionManager();
         session = sessionManager.openSession();
         Node rootNode = session.getRootNode();
         if (rootNode.hasNode(dataLocation.getUserProfilesLocation() + "/" + m.getUserName())) {
@@ -63,7 +64,7 @@ public class ForumMembershipEventListener extends MembershipEventListener {
         LOG.error("Failed to update user role : " + e.getMessage(), e);
       } finally {
         if (session != null) {
-          session.logout();
+          sessionManager.closeSession(true);
         }
       }
     }
