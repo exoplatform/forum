@@ -124,7 +124,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
     ForumStatistic forumStatistic = forumService_.getForumStatistic();
     assertNotNull(forumStatistic);
-    assertEquals(6, forumStatistic.getMembersCount());
+    assertEquals(8, forumStatistic.getMembersCount());
 
     forumStatistic.setPostCount(20);
     forumStatistic.setTopicCount(10);
