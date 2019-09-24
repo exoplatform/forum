@@ -1,6 +1,5 @@
 package org.exoplatform.poll.service.ws;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -189,23 +188,8 @@ public class PollWebservice implements ResourceContainer {
     }
     if (sc != null && sc.getUserPrincipal() != null) {
       return sc.getUserPrincipal().getName();
-    } else if (uriInfo != null) {
-      return getViewerId(uriInfo);
     }
     return StringUtils.EMPTY;
-  }
-  
-  private String getViewerId(UriInfo uriInfo) {
-    URI uri = uriInfo.getRequestUri();
-    String requestString = uri.getQuery();
-    if (requestString == null) return null;
-    String[] queryParts = requestString.split("&");
-    for (String queryPart : queryParts) {
-      if (queryPart.startsWith("opensocial_viewer_id")) {
-        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
-      }
-    }
-    return null;
   }
   
   private boolean validateIndexVote(String indexVote, int max) {
