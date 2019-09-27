@@ -309,14 +309,50 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   public String[] getActionMenuForum() throws Exception {
-    String[] actions = new String[] { "EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", 
-                                      "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools" };
+    String[] actions = new String[] {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum",
+                                      "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools"};
     if (userProfile.getUserRole() > 0 || (userProfile.getUserRole() == 0 && 
         (!ForumUtils.isEmpty(getAncestorOfType(UIForumPortlet.class).getForumIdOfSpace())))) {
       actions = (String[]) ArrayUtils.removeElement(actions, "RemoveForum");
       actions = (String[]) ArrayUtils.removeElement(actions, "MoveForum");
     }
     return actions;
+  }
+
+  public String getIconClassSwitchActionType(String action) throws Exception {
+    String icon;
+    switch (action) {
+    case "EditForum":
+      icon = "uiIconEdit uiIconLightGray";
+      break;
+    case "SetUnLockForum":
+      icon = "uiIconUnlockMedium uiIconLightGray";
+      break;
+    case "SetLockedForum":
+      icon = "uiIconLockMedium uiIconLightGray";
+      break;
+    case "SetOpenForum":
+      icon = "uiIconOpen uiIconLightGray";
+      break;
+    case "SetCloseForum":
+      icon = "uiIconMinus uiIconLightGray";
+      break;
+    case "MoveForum":
+      icon = "uiIconMove uiIconLightGray";
+      break;
+    case "RemoveForum":
+      icon = "uiIconDelete uiIconLightGray";
+      break;
+    case "ExportForum":
+      icon = "uiIconExport uiIconLightGray";
+      break;
+    case "WatchOption":
+      icon = "uiIconWatch uiIconLightGray";
+      break;
+    default:
+      icon = "uiIconForumBanIp uiIconLightGray";
+    }
+    return icon;
   }
 
   protected String getConfirm(String action) {
