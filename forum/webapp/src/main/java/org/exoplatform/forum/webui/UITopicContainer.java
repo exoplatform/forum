@@ -61,13 +61,13 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/forum/webui/UITopicContainer.gtmpl", 
   events = {
-    @EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),  
-    @EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),  
-    @EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),  
-    @EventConfig(listeners = UITopicContainer.AddPollActionListener.class ),  
-    @EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
+    @EventConfig(listeners = UITopicContainer.SearchFormActionListener.class, csrfCheck = false ),  
+    @EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class, csrfCheck = false ),  
+    @EventConfig(listeners = UITopicContainer.AddTopicActionListener.class, csrfCheck = false ),  
+    @EventConfig(listeners = UITopicContainer.AddPollActionListener.class, csrfCheck = false ),  
+    @EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class, csrfCheck = false ),
                                                                                   // Forum
-    @EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.EditForumActionListener.class, csrfCheck = false ),  
     @EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
     @EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
     @EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
@@ -77,7 +77,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
                                                                                                                               // Topic
     @EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
     
-    @EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.EditTopicActionListener.class, csrfCheck = false),
     @EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
     @EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
     @EventConfig(listeners = UITopicContainer.SetLockedTopicActionListener.class),
@@ -98,8 +98,8 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     @EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
     @EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
     @EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class),
-    @EventConfig(listeners = UITopicContainer.RSSActionListener.class),
-    @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+    @EventConfig(listeners = UITopicContainer.RSSActionListener.class, csrfCheck = false),
+    @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class, csrfCheck = false)
   }
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {
