@@ -16,59 +16,53 @@
  **/
 package org.exoplatform.forum.service.conf;
 
+import org.quartz.*;
+
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
-import org.quartz.JobExecutionContext;
 
-public class UpdateUserProfileJob extends MultiTenancyJob {
-  private static Log LOG = ExoLogger.getLogger(UpdateUserProfileJob.class);
+@DisallowConcurrentExecution
+public class UpdateUserProfileJob implements Job {
+  private static final Log LOG = ExoLogger.getLogger(UpdateUserProfileJob.class);
 
-  public UpdateUserProfileJob() throws Exception {
-  }
-  
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return UpdateUserProfileTask.class;
-  }
-  
-  public class UpdateUserProfileTask extends MultiTenancyTask {
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-    public UpdateUserProfileTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-    
-    @Override
-    public void run() {
-      super.run();
-      ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-      try {
-        ExoContainer exoContainer = CommonUtils.getExoContainer(context);
-        ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
-        ExoContainerContext.setCurrentContainer(exoContainer);
-        String name = context.getJobDetail().getKey().getName();
-        JobSchedulerService schedulerService = (JobSchedulerService) exoContainer.getComponentInstanceOfType(JobSchedulerService.class);
-        JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
-        RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-        repositoryService.setCurrentRepositoryName(context.getJobDetail().getJobDataMap().getString(Utils.CACHE_REPO_NAME));
-        forumService.updateUserProfileInfo(name);
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("\n\nNumber of deleted posts, topics updated to Forum statistics and user's profile");
-        }
-        schedulerService.removeJob(info);
-      } catch (Exception e) {
-        LOG.trace("User profile could not updated: " + "\n" + e.getCause());
-      } finally {
-        ExoContainerContext.setCurrentContainer(oldContainer);
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
+      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+      ExoContainerContext.setCurrentContainer(exoContainer);
+      String name = context.getJobDetail().getKey().getName();
+      JobSchedulerService schedulerService =
+                                           (JobSchedulerService) exoContainer.getComponentInstanceOfType(JobSchedulerService.class);
+      JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
+      RepositoryService repositoryService =
+                                          (RepositoryService) ExoContainerContext.getCurrentContainer()
+                                                                                 .getComponentInstanceOfType(RepositoryService.class);
+      repositoryService.setCurrentRepositoryName(context.getJobDetail().getJobDataMap().getString(Utils.CACHE_REPO_NAME));
+      forumService.updateUserProfileInfo(name);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("\n\nNumber of deleted posts, topics updated to Forum statistics and user's profile");
       }
+      schedulerService.removeJob(info);
+    } catch (Exception e) {
+      LOG.trace("User profile could not updated: " + "\n" + e.getCause());
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

@@ -16,36 +16,16 @@
  */
 package org.exoplatform.poll.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
+import javax.jcr.*;
+import javax.jcr.query.*;
 
-import org.exoplatform.commons.utils.ActivityTypeUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.jcr.KSDataLocation;
-import org.exoplatform.forum.common.jcr.PropertyReader;
-import org.exoplatform.forum.common.jcr.SessionManager;
-import org.exoplatform.poll.service.DataStorage;
-import org.exoplatform.poll.service.InitialDefaultDataPlugin;
-import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.PollData;
-import org.exoplatform.poll.service.PollInitialData;
-import org.exoplatform.poll.service.PollNodeTypes;
-import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.poll.service.Utils;
+import org.exoplatform.forum.common.jcr.*;
+import org.exoplatform.forum.common.utils.ActivityTypeUtils;
+import org.exoplatform.poll.service.*;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;

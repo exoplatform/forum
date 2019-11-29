@@ -16,56 +16,44 @@
  **/
 package org.exoplatform.forum.service.user;
 
+import org.quartz.*;
+
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobExecutionContext;
 
-public class AutoPruneJob extends MultiTenancyJob {
-  private static Log LOG = ExoLogger.getLogger(AutoPruneJob.class);
-
-  public AutoPruneJob() throws Exception {
-  }
+@DisallowConcurrentExecution
+public class AutoPruneJob implements Job {
+  private static final Log LOG = ExoLogger.getLogger(AutoPruneJob.class);
 
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return AutoPruneTask.class;
-  }
-  
-  public class AutoPruneTask extends MultiTenancyTask {
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-    public AutoPruneTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-    
-    @Override
-    public void run() {
-      super.run();
-      ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-      try {
-        ExoContainer container = CommonUtils.getExoContainer(context);
-        String desc = context.getJobDetail().getDescription();
-        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        ExoContainerContext.setCurrentContainer(container);
-        RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-        repositoryService.setCurrentRepositoryName(context.getJobDetail().getJobDataMap().getString(Utils.CACHE_REPO_NAME));
-        forumService.runPrune(desc);
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("\n\nAuto prune has worked on " + desc + " forum");
-        }
-      } catch (Exception e) {
-        LOG.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
-      } finally {
-        ExoContainerContext.setCurrentContainer(oldContainer);
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      String desc = context.getJobDetail().getDescription();
+      ForumService forumService = container.getComponentInstanceOfType(ForumService.class);
+      RepositoryService repositoryService = container.getComponentInstanceOfType(RepositoryService.class);
+      repositoryService.setCurrentRepositoryName(context.getJobDetail().getJobDataMap().getString(Utils.CACHE_REPO_NAME));
+      forumService.runPrune(desc);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("\n\nAuto prune has worked on " + desc + " forum");
       }
+    } catch (Exception e) {
+      LOG.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
-    
   }
-  
+
 }

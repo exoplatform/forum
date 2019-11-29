@@ -17,47 +17,30 @@
 package org.exoplatform.forum.service.impl;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.EventListenerIterator;
-import javax.jcr.observation.ObservationManager;
+import javax.jcr.*;
+import javax.jcr.observation.*;
+
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
 import org.exoplatform.commons.testing.AssertUtils;
 import org.exoplatform.commons.testing.KernelUtils;
-import org.exoplatform.commons.testing.mock.JCRMockUtils;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
-import org.exoplatform.forum.common.jcr.JCRSessionManager;
-import org.exoplatform.forum.common.jcr.JCRTask;
-import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.*;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.forum.membership.AbstractJCRTestCase;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.EmailNotifyPlugin;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
-import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.MessageBuilder;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.*;
+import org.exoplatform.services.jcr.util.JCRMockUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 
 
 /**

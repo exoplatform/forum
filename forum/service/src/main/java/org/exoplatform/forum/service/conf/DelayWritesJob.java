@@ -16,41 +16,40 @@
  */
 package org.exoplatform.forum.service.conf;
 
+import org.quartz.*;
+
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobExecutionContext;
 
-public class DelayWritesJob extends MultiTenancyJob {
+@DisallowConcurrentExecution
+public class DelayWritesJob implements Job {
 
-  private static Log log_ = ExoLogger.getLogger(DelayWritesJob.class);
-  
+  private static final Log LOG = ExoLogger.getLogger(DelayWritesJob.class);
+
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return UpdateViewTask.class;
-  }
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-  public class UpdateViewTask extends MultiTenancyTask {
-
-    public UpdateViewTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-
-    @Override
-    public void run() {
-      super.run();
-      try {
-        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        forumService.writeViews();
-        forumService.writeReads();
-      } catch (Exception e) {
-        log_.warn("Update view can not execute ...");
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      ForumService forumService = container.getComponentInstanceOfType(ForumService.class);
+      forumService.writeViews();
+      forumService.writeReads();
+      if (LOG.isDebugEnabled()) {
+        LOG.info("\n\nUpdate view has been updated by a period login job");
       }
-      if (log_.isDebugEnabled()) {
-        log_.info("\n\nUpdate view has been updated by a period login job");
-      }
+    } catch (Exception e) {
+      LOG.warn("Update view can not execute ...", e);
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
-  
 }

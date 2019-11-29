@@ -17,68 +17,64 @@
 package org.exoplatform.forum.service.conf;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+
+import org.quartz.*;
 
 import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.job.MultiTenancyJob;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
 
-public class RecountActiveUserJob extends MultiTenancyJob {
-  private static Log log_ = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
+@DisallowConcurrentExecution
+public class RecountActiveUserJob implements Job {
+  private static final Log LOG = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
 
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return RecountActiveUserTask.class;
-  }
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-  public class RecountActiveUserTask extends MultiTenancyTask {
-
-    public RecountActiveUserTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-
-    @Override
-    public void run() {
-      super.run();
-      try {
-        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        if (forumService != null) {
-          JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-          String lastPost = jdatamap.getString("lastPost");
-          if (lastPost != null && lastPost.length() > 0) {
-            int days = Integer.parseInt(lastPost);
-            if (days > 0) {
-              long oneDay = 86400000; // milliseconds of one day
-              Calendar calendar = GregorianCalendar.getInstance();
-              long currentDay = calendar.getTimeInMillis();
-              currentDay = currentDay - (days * oneDay);
-              calendar.setTimeInMillis(currentDay);
-              StringBuilder stringBuilder = new StringBuilder();
-              stringBuilder.append("//element(*,")
-                           .append(Utils.USER_PROFILES_TYPE)
-                           .append(")[")
-                           .append("@exo:lastPostDate >= xs:dateTime('")
-                           .append(ISO8601.format(calendar))
-                           .append("')]");
-              forumService.evaluateActiveUsers(stringBuilder.toString());
-              if (log_.isDebugEnabled()) {
-                log_.debug("\n\n The RecoundActiveUserJob have been done");
-              }
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      ForumService forumService = container.getComponentInstanceOfType(ForumService.class);
+      if (forumService != null) {
+        JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+        String lastPost = jdatamap.getString("lastPost");
+        if (lastPost != null && lastPost.length() > 0) {
+          int days = Integer.parseInt(lastPost);
+          if (days > 0) {
+            long oneDay = 86400000; // milliseconds of one day
+            Calendar calendar = Calendar.getInstance();
+            long currentDay = calendar.getTimeInMillis();
+            currentDay = currentDay - (days * oneDay);
+            calendar.setTimeInMillis(currentDay);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("//element(*,")
+                         .append(Utils.USER_PROFILES_TYPE)
+                         .append(")[")
+                         .append("@exo:lastPostDate >= xs:dateTime('")
+                         .append(ISO8601.format(calendar))
+                         .append("')]");
+            forumService.evaluateActiveUsers(stringBuilder.toString());
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("\n\n The RecoundActiveUserJob have been done");
             }
           }
         }
-      } catch (NumberFormatException nfe) {
-        log_.debug("Value of days is not Integer number.", nfe);
-      } catch (Exception e) {
-        if (log_.isDebugEnabled()) {
-          log_.debug("\n\n The have exception " + e.getMessage());
-        }
       }
+    } catch (NumberFormatException e) {
+      LOG.warn("Value of days is not Integer number.", e);
+    } catch (Exception e) {
+      LOG.warn("An error occurred when recounting active users", e);
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

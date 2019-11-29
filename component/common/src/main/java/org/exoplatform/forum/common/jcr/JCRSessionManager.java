@@ -19,6 +19,7 @@ package org.exoplatform.forum.common.jcr;
 import javax.jcr.Session;
 
 import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 public class JCRSessionManager implements SessionManager {
@@ -65,7 +66,7 @@ public class JCRSessionManager implements SessionManager {
   public Session getSession(SessionProvider sessionProvider) {
     Session session = null;
     try {
-      session = sessionProvider.getSession(workspaceName, CommonsUtils.getRepository());
+      session = sessionProvider.getSession(workspaceName, SessionProviderService.getRepository());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -105,7 +106,7 @@ public class JCRSessionManager implements SessionManager {
   public Session createSession() {
     Session session = null;
     try {
-      session = CommonsUtils.getRepository().getSystemSession(workspaceName);
+      session = SessionProviderService.getRepository().getSystemSession(workspaceName);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
