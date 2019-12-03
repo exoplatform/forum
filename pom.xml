@@ -17,6 +17,8 @@
     <module>component</module>
     <module>application</module>
     <module>forum</module>
+    <module>forum-social-integration</module>
+    <module>forum-packaging</module>
   </modules>
   <scm>
     <connection>scm:git:git://github.com/exoplatform/forum.git</connection>
@@ -46,7 +48,6 @@
     <org.exoplatform.gatein.portal.version>6.0.x-SNAPSHOT</org.exoplatform.gatein.portal.version>
     <org.exoplatform.commons.version>6.0.x-SNAPSHOT</org.exoplatform.commons.version>
     <org.exoplatform.social.version>6.0.x-SNAPSHOT</org.exoplatform.social.version>
-    <org.exoplatform.wiki.version>6.0.x-SNAPSHOT</org.exoplatform.wiki.version>
     <org.exoplatform.doc.doc-style.version>6.0.x-SNAPSHOT</org.exoplatform.doc.doc-style.version>
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
@@ -75,24 +76,6 @@
         <version>${project.version}</version>
         <classifier>source-release</classifier>
         <type>zip</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-answer-service</artifactId>
-        <version>${project.version}</version>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-answer-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.forum</groupId>
-        <artifactId>forum-answer-webapp</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -126,6 +109,12 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-social-integration</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forum-service</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
@@ -142,19 +131,17 @@
         <version>${project.version}</version>
         <type>pom</type>
       </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-packaging</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+      </dependency>
       <!-- Import versions from social project -->
       <dependency>
         <groupId>org.exoplatform.social</groupId>
         <artifactId>social</artifactId>
         <version>${org.exoplatform.social.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!-- Import versions from wiki project -->
-      <dependency>
-        <groupId>org.exoplatform.wiki</groupId>
-        <artifactId>wiki</artifactId>
-        <version>${org.exoplatform.wiki.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
