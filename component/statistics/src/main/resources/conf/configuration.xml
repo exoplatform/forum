@@ -11,7 +11,6 @@
         <value>org.exoplatform.faq.service.FAQService</value>
         <value>org.exoplatform.forum.service.ForumService</value>
         <value>org.exoplatform.poll.service.PollService</value>
-        <value>org.exoplatform.wiki.service.WikiService</value>
         <!--value>org.exoplatform.faq.service.DataStorage</value-->
         <value>org.exoplatform.faq.service.ws.FAQWebservice</value>
         <!--value>org.exoplatform.forum.service.DataStorage</value-->
@@ -23,13 +22,6 @@
         <value>org.exoplatform.forum.rendering.MarkupRenderingService</value>
         <value>org.exoplatform.poll.service.DataStorage</value>
         <value>org.exoplatform.poll.service.ws.PollWebservice</value>
-        <value>org.exoplatform.wiki.mow.core.api.MOWService</value>
-        <value>org.exoplatform.wiki.rendering.RenderingService</value>
-        <value>org.exoplatform.wiki.resolver.PageResolver</value>
-        <value>org.exoplatform.wiki.service.DataStorage</value>
-        <value>org.exoplatform.wiki.service.diff.DiffService</value>
-        <!--value>org.exoplatform.wiki.service.webdav.WebDavService</value-->
-        <value>org.exoplatform.wiki.service.WikiRestService</value>
       </values-param>
     </init-params>
   </component>

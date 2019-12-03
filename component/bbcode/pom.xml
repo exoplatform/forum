@@ -10,20 +10,7 @@
   <name>eXo PLF:: Forum BBCode processing</name>
   <properties>
     <exo.test.coverage.ratio>0.73</exo.test.coverage.ratio>
-    <org.exoplatform.wiki.version>6.0.x-lightweight-SNAPSHOT</org.exoplatform.wiki.version>
   </properties>
-  <!-- FIXME: Delete wiki dependency -->
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.exoplatform.wiki</groupId>
-        <artifactId>wiki</artifactId>
-        <version>${org.exoplatform.wiki.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -76,20 +63,6 @@
       	<exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>javax.servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.wiki</groupId>
-      <artifactId>wiki-renderer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-api</artifactId>
-      <exclusions>
-       <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -288,25 +261,6 @@
               <includeArtifactIds>doc-style</includeArtifactIds>
               <excludes>META-INF/**</excludes>
               <outputDirectory>${project.build.directory}/templates</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <!-- Additional configuration to generate wiki pages from wikbook annotations-->
-            <configuration>
-              <compilerArguments>
-                <sourcepath>${project.build.directory}/templates</sourcepath>
-              </compilerArguments>
             </configuration>
           </execution>
         </executions>

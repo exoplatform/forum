@@ -16,25 +16,17 @@
  */
 package org.exoplatform.forum.bbcode.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainerContext;
+
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.bbcode.spi.BBCodeData;
 import org.exoplatform.forum.bbcode.spi.BBCodeProvider;
-import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.rendering.api.Renderer;
 import org.exoplatform.forum.rendering.core.SupportedSyntaxes;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.wiki.rendering.RenderingService;
-import org.xwiki.rendering.syntax.Syntax;
-import org.xwiki.rendering.syntax.SyntaxType;
 
 /**
  * Renderer for BBCode markup. 
@@ -103,19 +95,7 @@ public class BBCodeRenderer implements Renderer {
       try {
         clsIndex = s.indexOf(end, tagIndex);
         str = s.substring(tagIndex + start.length(), clsIndex);
-        if ("WIKI".equals(bbc)) {
-          String sourceSyntax = Syntax.CONFLUENCE_1_0.toIdString();
-          RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
-          param = TransformHTML.getPlainText(str);
-          try {
-            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
-          } catch (Exception e) {
-            continue;
-          }
-        } else {
-          param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
-        }
+        param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
         s = StringUtils.replace(s, start + str + end, param);
       } catch (Exception e) {
         continue;
@@ -158,28 +138,8 @@ public class BBCodeRenderer implements Renderer {
           param = StringUtils.replace(param, "<p>", "");
           param = StringUtils.replace(param, "</p>", "\n");
         }
-        if ("WIKI".equals(bbc)) {
-          String sourceSyntax = Syntax.CONFLUENCE_1_0.toIdString();
-          option = option.toLowerCase();
-          if (SyntaxType.XWIKI.getId().equals(option)) {
-            sourceSyntax = Syntax.XWIKI_2_0.toIdString();
-          } else if (SyntaxType.CREOLE.getId().equals(option)) {
-            sourceSyntax = Syntax.CREOLE_1_0.toIdString();
-          } else if (SyntaxType.MEDIAWIKI.getId().equals(option)) {
-            sourceSyntax = Syntax.MEDIAWIKI_1_0.toIdString();
-          }
-          RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
-          param = TransformHTML.getPlainText(param);
-          try {
-            param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-            param = new StringBuffer("<div class=\"uiWikiPortlet\">").append(param).append("</div>").toString();
-          } catch (Exception e) {
-            continue;
-          }
-        } else {
-          param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
-          param = StringUtils.replace(param, "{option}", option);
-        }
+        param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
+        param = StringUtils.replace(param, "{option}", option);
         markup = StringUtils.replace(markup, start + str + end, param);
       } catch (Exception e) {
         continue;

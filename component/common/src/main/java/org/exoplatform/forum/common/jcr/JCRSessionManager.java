@@ -27,7 +27,7 @@ public class JCRSessionManager implements SessionManager {
   /** . */
   private static final ThreadLocal<Session> currentSession = new ThreadLocal<Session>();
 
-  String                                    workspaceName  = "portal-system";
+  String                                    workspaceName  = "knowledge";
 
   /**
    * Constructor

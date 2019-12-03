@@ -342,6 +342,4 @@
 		</component-plugin>
 	</external-component-plugins>
 
-  <import>jar:/conf/exo.portal.component.test.jcr-configuration.xml</import>
-
 </configuration>
