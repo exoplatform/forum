@@ -42,12 +42,6 @@
       <artifactId>log4j</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- doc-style is required by wikbook to compile but we don't want to propagate it -->
-    <dependency>
-      <groupId>org.exoplatform.doc</groupId>
-      <artifactId>doc-style</artifactId>
-      <optional>true</optional>
-    </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
@@ -108,41 +102,6 @@
       <scope>test</scope>
     </dependency>
     <!-- test -->
-    <!-- Chromattic -->
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.apt</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.ext</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.spi</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.common</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.metamodel</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-testing</artifactId>
@@ -245,26 +204,6 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <!-- Extract templates used by wikbook -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack-templates</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>unpack-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeGroupIds>org.exoplatform.doc</includeGroupIds>
-              <includeArtifactIds>doc-style</includeArtifactIds>
-              <excludes>META-INF/**</excludes>
-              <outputDirectory>${project.build.directory}/templates</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>

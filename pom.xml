@@ -48,7 +48,6 @@
     <org.exoplatform.gatein.portal.version>6.0.x-SNAPSHOT</org.exoplatform.gatein.portal.version>
     <org.exoplatform.commons.version>6.0.x-SNAPSHOT</org.exoplatform.commons.version>
     <org.exoplatform.social.version>6.0.x-SNAPSHOT</org.exoplatform.social.version>
-    <org.exoplatform.doc.doc-style.version>6.0.x-SNAPSHOT</org.exoplatform.doc.doc-style.version>
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
     <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
@@ -278,12 +277,6 @@
         <version>${org.exoplatform.kernel.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <!-- Use to generate some documentation -->
-      <dependency>
-        <groupId>org.exoplatform.doc</groupId>
-        <artifactId>doc-style</artifactId>
-        <version>${org.exoplatform.doc.doc-style.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

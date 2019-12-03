@@ -26,7 +26,7 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
-    <!-- Calendar wars -->
+    <!-- Wars -->
     <dependencySet>
       <outputDirectory>/webapps</outputDirectory>
       <includes>
@@ -36,7 +36,7 @@
       <outputFileNameMapping>${artifact.build.finalName}.${artifact.extension}</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
     </dependencySet>
-    <!-- Calendar libs and its dependencies -->
+    <!-- Libs and its dependencies -->
     <dependencySet>
       <outputDirectory>/lib</outputDirectory>
       <includes>
