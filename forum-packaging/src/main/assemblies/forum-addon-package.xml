@@ -110,7 +110,14 @@
         <!-- Avoid any direct addon inclusion on the distribution packages -->
         <exclude>org.exoplatform.addons.*:*</exclude>
         <!-- Avoid any direct inclusion of social or lower modules -->
-        <exclude>org.exoplatform.*:*</exclude>
+        <exclude>org.exoplatform.kernel:*</exclude>
+        <exclude>org.exoplatform.ws:*</exclude>
+        <exclude>org.exoplatform.core:*</exclude>
+        <exclude>org.exoplatform.jcr:*</exclude>
+        <exclude>org.exoplatform.commons:*</exclude>
+        <exclude>org.exoplatform.platform-ui:*</exclude>
+        <exclude>org.exoplatform.social:*</exclude>
+        <exclude>org.exoplatform.gatein.*:*</exclude>
         <!-- Avoid any direct inclusion of gatein artifacts  -->
         <exclude>org.gatein.*:*</exclude>
       </excludes>
