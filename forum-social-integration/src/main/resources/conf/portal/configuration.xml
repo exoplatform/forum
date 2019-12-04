@@ -25,6 +25,34 @@
   </component>
 
   <external-component-plugins>
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>unifiedsearch.listeners.forum</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.forum.indexing.listener.UnifiedSearchForumListener</type>
+      <description>Forum listener for Unified Search</description>
+    </component-plugin>
+  </external-component-plugins>
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.commons.api.search.SearchService</target-component>
+    <component-plugin profiles="all">
+      <name>DiscussionSearchConnector</name>
+      <set-method>addConnector</set-method>
+      <type>org.exoplatform.forum.service.search.DiscussionSearchConnector</type>
+      <description>eXo Forum Posts</description>
+      <init-params>
+        <properties-param>
+           <name>constructor.params</name>
+           <property name="searchType" value="post"/>
+           <property name="displayName" value="Discussions"/>
+           <property name="enable" value="${exo.unified-search.connector.post.enable:true}"/>
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+
+  <external-component-plugins>
     <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
     <component-plugin>
       <name>add.nodeType</name>
