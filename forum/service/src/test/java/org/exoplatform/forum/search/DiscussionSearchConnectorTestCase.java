@@ -362,6 +362,50 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     
     forumService_.removeCategory(cateId);
   }
+
+  public void testSearchDataWithDoubleQuotes() throws Exception {
+    String cateId = getId(Utils.CATEGORY);
+    Category cat = createCategory(cateId);
+    cat.setCategoryName("My Topic Category");
+    forumService_.saveCategory(cat, true);
+
+    Forum forum = createdForum();
+    forum.setForumName("forum1");
+    forumService_.saveForum(cateId, forum, true);
+
+    Topic topic1 = createdTopic(USER_ROOT);
+    topic1.setTopicName("My Topic Abc");
+    topic1.setDescription("My Topic Abc Description");
+    forumService_.saveTopic(cateId, forum.getId(), topic1, true, false, new MessageBuilder());
+
+    Topic topic2 = createdTopic(USER_ROOT);
+    topic2.setTopicName("My Topic Second Abc");
+    topic2.setDescription("My Topic Second Abc Description");
+    forumService_.saveTopic(cateId, forum.getId(), topic2, true, false, new MessageBuilder());
+
+    Post post1 = createdPost();
+    post1.setName("Reply A1");
+    post1.setMessage("My Reply Abc");
+    forumService_.savePost(cateId, forum.getId(), topic1.getId(), post1, true, new MessageBuilder());
+    
+    Post post2 = createdPost();
+    post2.setName("Reply A2");
+    post2.setMessage("Second My Reply Abc");
+    forumService_.savePost(cateId, forum.getId(), topic2.getId(), post2, true, new MessageBuilder());
+    // Test without double quotes
+    assertEquals(0, discussionSearchConnector.search(context, null, Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(0, discussionSearchConnector.search(context, "", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "My Topic Abc", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "My Reply Abc", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    // Test with double quotes for topic
+    assertEquals(2, discussionSearchConnector.search(context, "\"My Topic\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(1, discussionSearchConnector.search(context, "\"My Topic Second\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    // Test with double quotes for reply
+    assertEquals(2, discussionSearchConnector.search(context, "\"My Reply Abc\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(1, discussionSearchConnector.search(context, "\"Second My\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+
+    forumService_.removeCategory(cateId);
+  }
   
   public void testSpecialCaseComplex() throws Exception {
     String cateId = getId(Utils.CATEGORY);
