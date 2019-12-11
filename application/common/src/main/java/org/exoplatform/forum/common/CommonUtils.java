@@ -327,12 +327,12 @@ public class CommonUtils {
   }
   
   public static String processUnifiedSearchSearchCondition(String input) {
-    if (isEmpty(input) || input.indexOf("~") < 0 || input.indexOf("\\~") > 0) {
+    if (isEmpty(input) || (input.startsWith("\"") && input.endsWith("\"")) || input.indexOf("~") < 0 || input.indexOf("\\~") > 0) {
       return input;
     }
     StringBuilder builder = new StringBuilder();
     String[] tab = input.split(" ");
-    for (String s : tab){
+    for (String s : tab) {
       if (isEmpty(s)) continue;
       if (s.indexOf("~") > -1) {
         String searchTerm = s.split("~")[0];
@@ -354,7 +354,7 @@ public class CommonUtils {
    * @return 
    */
   public static String normalizeUnifiedSearchInput(String input) {
-    if (isEmpty(input)) {
+    if (isEmpty(input) || input.startsWith("\"") && input.endsWith("\"")) {
       return input;
     }
     StringBuilder builder = new StringBuilder();

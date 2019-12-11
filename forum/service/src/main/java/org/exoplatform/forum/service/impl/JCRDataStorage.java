@@ -6017,6 +6017,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       //String rootPath = categoryHome.getPath();
 
       //process query for asterisk
+      textQuery = textQuery.trim();
       textQuery = CommonUtils.processUnifiedSearchSearchCondition(textQuery);
       String asteriskQuery = CommonUtils.normalizeUnifiedSearchInput(textQuery);
       
