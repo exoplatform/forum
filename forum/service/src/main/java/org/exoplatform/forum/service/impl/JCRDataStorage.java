@@ -1567,6 +1567,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         pruneSetting.setForumPath(forum.getPath());
         savePruneSetting(pruneSetting);
       } else {
+        forum.setCreatedDate(reader.date(EXO_CREATED_DATE, new Date()));
         id.append(forum.getCreatedDate().getTime());
         if (isModerateTopic != isNewModerateTopic) {
           //

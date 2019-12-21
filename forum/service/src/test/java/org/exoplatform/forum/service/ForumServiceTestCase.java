@@ -705,7 +705,23 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     // list has size is 5 (2 categories and 2 normal forums and 1 forum in category space)
     assertEquals("The size of list forumLinks not equals 5.", forumLinks.size(), 5);
   }
-  
+
+  public void testRenameForum() throws Exception {
+    Category cat1 = createCategory(new Category().getId());
+    forumService_.saveCategory(cat1, true);
+    Forum forum = createdForum();
+    forumService_.saveForum(cat1.getId(), forum, true);
+    forum = forumService_.getForum(cat1.getId(), forum.getId());
+    assertNotNull(forum);
+
+    String newForumName = "renamedForum";
+    forum.setForumName(newForumName);
+    forumService_.saveForum(cat1.getId(), forum, false);
+    forum = forumService_.getForum(cat1.getId(), forum.getId());
+    assertNotNull(forum);
+    assertEquals(newForumName, forum.getForumName());
+  }
+
   public void testMoveForum() throws Exception {
     Category cat1 = createCategory(new Category().getId());
     forumService_.saveCategory(cat1, true);
