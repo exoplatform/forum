@@ -4997,8 +4997,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
         Node deletedHome = profileHome.getNode(Utils.USER_PROFILE_DELETED);
         return deletedHome.getNode(userName);
+      } else {
+        return addNodeUserProfile(CommonUtils.createSystemProvider(), userName);
       }
-      throw e;
     }
   }
 
@@ -7348,7 +7349,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void updateForumAccess(String userId, String forumId){
     SessionProvider sysSession = CommonUtils.createSystemProvider();
     try {
-      Node profile = getUserProfileHome(sysSession).getNode(userId);
+      Node userProfileHome = getUserProfileHome(sysSession);
+      Node profile = getUserProfileNode(userProfileHome, userId);
       List<String> values = new ArrayList<String>();
       if (profile.hasProperty(EXO_READ_FORUM)) {
         values = Utils.valuesToList(profile.getProperty(EXO_READ_FORUM).getValues());
