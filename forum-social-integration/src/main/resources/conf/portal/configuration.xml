@@ -1,5 +1,7 @@
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
-  xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+<configuration
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+        xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
   <component>
     <key>org.exoplatform.forum.ext.activity.ForumTaskManager</key>
@@ -370,4 +372,109 @@
 		</component-plugin>
 	</external-component-plugins>
 
+  <external-component-plugins profiles="gamification">
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>GamificationForumTracker</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.forum.integration.gamification.GamificationForumListener</type>
+    </component-plugin>
+  </external-component-plugins>
+
+  <external-component-plugins profiles="gamification">
+    <target-component>org.exoplatform.addons.gamification.service.setting.rule.RuleRegistry</target-component>
+    <component-plugin>
+      <name>rule.AddForumPost</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.addons.gamification.service.setting.rule.model.RuleConfig</type>
+      <init-params>
+        <value-param>
+          <name>rule-title</name>
+          <value>addForumPost</value>
+        </value-param>
+        <value-param>
+          <name>rule-description</name>
+          <value>You replied in the forum</value>
+        </value-param>
+        <value-param>
+          <name>rule-event</name>
+          <value>addForumPost</value>
+        </value-param>
+        <value-param>
+          <name>rule-score</name>
+          <value>5</value>
+        </value-param>
+        <value-param>
+          <name>rule-zone</name>
+          <value>Knowledge</value>
+        </value-param>
+        <value-param>
+          <name>rule-enable</name>
+          <value>true</value>
+        </value-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>rule.AddForumTopic</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.addons.gamification.service.setting.rule.model.RuleConfig</type>
+      <init-params>
+        <value-param>
+          <name>rule-title</name>
+          <value>addForumTopic</value>
+        </value-param>
+        <value-param>
+          <name>rule-description</name>
+          <value>You started a new topic in the forum</value>
+        </value-param>
+        <value-param>
+          <name>rule-event</name>
+          <value>addForumTopic</value>
+        </value-param>
+        <value-param>
+          <name>rule-score</name>
+          <value>15</value>
+        </value-param>
+        <value-param>
+          <name>rule-zone</name>
+          <value>Knowledge</value>
+        </value-param>
+        <value-param>
+          <name>rule-enable</name>
+          <value>true</value>
+        </value-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>rule.VoteForumTopic</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.addons.gamification.service.setting.rule.model.RuleConfig</type>
+      <init-params>
+        <value-param>
+          <name>rule-title</name>
+          <value>voteForumTopic</value>
+        </value-param>
+        <value-param>
+          <name>rule-description</name>
+          <value>You rated a forum topic</value>
+        </value-param>
+        <value-param>
+          <name>rule-event</name>
+          <value>voteForumTopic</value>
+        </value-param>
+        <value-param>
+          <name>rule-score</name>
+          <value>2</value>
+        </value-param>
+        <value-param>
+          <name>rule-zone</name>
+          <value>Knowledge</value>
+        </value-param>
+        <value-param>
+          <name>rule-enable</name>
+          <value>true</value>
+        </value-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
 </configuration>
