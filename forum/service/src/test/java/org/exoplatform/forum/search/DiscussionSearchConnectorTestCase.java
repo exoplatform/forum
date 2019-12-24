@@ -390,7 +390,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     
     Post post2 = createdPost();
     post2.setName("Reply A2");
-    post2.setMessage("Second My Reply Abc");
+    post2.setMessage("My Reply Abc second");
     forumService_.savePost(cateId, forum.getId(), topic2.getId(), post2, true, new MessageBuilder());
     // Test without double quotes
     assertEquals(0, discussionSearchConnector.search(context, null, Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
@@ -398,11 +398,12 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     assertEquals(2, discussionSearchConnector.search(context, "My Topic Abc", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
     assertEquals(2, discussionSearchConnector.search(context, "My Reply Abc", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
     // Test with double quotes for topic
-    assertEquals(2, discussionSearchConnector.search(context, "\"My Topic\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
-    assertEquals(1, discussionSearchConnector.search(context, "\"My Topic Second\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "\\\"My Topic\\\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(1, discussionSearchConnector.search(context, "\\\"My Topic Second\\\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
     // Test with double quotes for reply
-    assertEquals(2, discussionSearchConnector.search(context, "\"My Reply Abc\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
-    assertEquals(1, discussionSearchConnector.search(context, "\"Second My\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "\\\"My Reply Abc\\\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(2, discussionSearchConnector.search(context, "\\\"Second\\\"", Collections.<String>emptyList(), 0, 5, "relevancy", "ASC").size());
+    assertEquals(0, discussionSearchConnector.search(context, "\\\"My Abc\\\"", Collections.<String>emptyList(), 0, 5,"relevancy", "ASC").size());
 
     forumService_.removeCategory(cateId);
   }

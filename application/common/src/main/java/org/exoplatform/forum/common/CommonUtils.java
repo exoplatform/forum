@@ -327,7 +327,7 @@ public class CommonUtils {
   }
   
   public static String processUnifiedSearchSearchCondition(String input) {
-    if (isEmpty(input) || (input.startsWith("\"") && input.endsWith("\"")) || input.indexOf("~") < 0 || input.indexOf("\\~") > 0) {
+    if (isEmpty(input) || input.indexOf("~") < 0 || input.indexOf("\\~") > 0) {
       return input;
     }
     StringBuilder builder = new StringBuilder();
@@ -354,8 +354,15 @@ public class CommonUtils {
    * @return 
    */
   public static String normalizeUnifiedSearchInput(String input) {
-    if (isEmpty(input) || input.startsWith("\"") && input.endsWith("\"")) {
+    if (isEmpty(input)) {
       return input;
+    }
+    // When searching for exact matching the input comes with (\") but for exact
+    // matching search in JCR queries, the searched word must be set between two
+    // double quote only, so when it is the case of exact matching search we remove
+    // all occurrences of '\'
+    if (input.startsWith("\\\"") && input.endsWith("\\\"")) {
+      return input.replaceAll("\\\\", "");
     }
     StringBuilder builder = new StringBuilder();
     String keySearch = removeExceptPattern(input);
