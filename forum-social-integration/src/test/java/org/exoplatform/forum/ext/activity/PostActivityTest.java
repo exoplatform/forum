@@ -33,16 +33,6 @@ import static org.exoplatform.forum.ext.activity.ForumActivityBuilder.POST_LINK_
 @FixMethodOrder(MethodSorters.JVM)
 public class PostActivityTest extends AbstractActivityTypeTest {
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-  
-  @Override
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-  
   public void testAddTopic() throws Exception {
     Topic topic = createdTopic("demo");
     Post post = createdPost(topic);

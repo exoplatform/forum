@@ -18,23 +18,11 @@ package org.exoplatform.forum.common.cache.model;
 
 import java.io.Serializable;
 
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.services.jcr.RepositoryService;
-
 public class ScopeCacheKey implements Serializable {
-  private static final long serialVersionUID = 1L;
 
-  public final static ScopeCacheKey NULL = new ScopeCacheKey();
-  
-  private final String scope;
+  private static final long         serialVersionUID = 7971477302470374193L;
 
-  public ScopeCacheKey() {
-    scope = getCurrentRepositoryName();
-  }
-
-  public String getScope() {
-    return scope;
-  }
+  public static final ScopeCacheKey NULL             = new ScopeCacheKey();
 
   @Override
   public boolean equals(final Object o) {
@@ -45,25 +33,11 @@ public class ScopeCacheKey implements Serializable {
       return false;
     }
 
-    ScopeCacheKey that = (ScopeCacheKey) o;
-
-    if (scope != null ? !scope.equals(that.scope) : that.scope != null) {
-      return false;
-    }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return scope != null ? scope.hashCode() : 0;
-  }
-
-  public static String getCurrentRepositoryName() {
-    try {
-      return CommonsUtils.getService(RepositoryService.class).getCurrentRepository().getConfiguration().getName();
-    } catch (Exception e) {
-      return "repository";
-    }
+    return 0;
   }
 }

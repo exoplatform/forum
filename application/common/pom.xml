@@ -269,12 +269,19 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.test.core</artifactId>
+      <artifactId>exo.portal.component.application-registry</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.test.jcr</artifactId>
+      <artifactId>exo.portal.component.test.core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -288,4 +295,20 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

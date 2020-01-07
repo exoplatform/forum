@@ -80,12 +80,7 @@ import org.exoplatform.forum.service.cache.model.key.TopicListKey;
 import org.exoplatform.forum.service.cache.model.key.UserProfileKey;
 import org.exoplatform.forum.service.cache.model.key.UserProfileListCountKey;
 import org.exoplatform.forum.service.cache.model.key.UserProfileListKey;
-import org.exoplatform.forum.service.cache.model.selector.CategoryIdSelector;
-import org.exoplatform.forum.service.cache.model.selector.ForumPathSelector;
-import org.exoplatform.forum.service.cache.model.selector.MiscDataSelector;
-import org.exoplatform.forum.service.cache.model.selector.PostListCountSelector;
-import org.exoplatform.forum.service.cache.model.selector.TopicListCountSelector;
-import org.exoplatform.forum.service.cache.model.selector.TopicListSelector;
+import org.exoplatform.forum.service.cache.model.selector.*;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
 import org.exoplatform.forum.service.impl.JCRDataStorage;
@@ -223,7 +218,11 @@ public class CachedDataStorage implements DataStorage, Startable {
   private void clearTopicListCache(String forumId) throws Exception {
     topicList.select(new TopicListSelector(forumId));
   }
-  
+
+  private void clearTopicsCache(String forumId) throws Exception {
+    topicData.select(new TopicSelector(forumId));
+  }
+
   private void clearTopicListCountCache(String forumId) throws Exception {   
     topicListCount.select(new TopicListCountSelector(forumId));
   }
@@ -756,6 +755,7 @@ public class CachedDataStorage implements DataStorage, Startable {
     storage.modifyForum(forum, type);
     clearForumCache(forum, true);
     clearForumListCache();
+    clearTopicsCache(forum.getId());
     clearObjectCache(forum, true);
     //
     clearMiscDataCache(FORUM_CAN_VIEW_KEY);

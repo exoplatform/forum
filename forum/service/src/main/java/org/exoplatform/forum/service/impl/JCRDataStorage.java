@@ -50,7 +50,6 @@ import org.exoplatform.forum.common.*;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
 import org.exoplatform.forum.common.jcr.*;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.forum.common.utils.ActivityTypeUtils;
 import org.exoplatform.forum.service.*;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.LazyPageList;
@@ -76,6 +75,7 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
+import org.exoplatform.services.jcr.ext.ActivityTypeUtils;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
@@ -1904,12 +1904,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private void setActiveTopicByForum(SessionProvider sProvider, Node forumNode, boolean isClosed) throws Exception {
     NodeIterator iter = forumNode.getNodes();
     Node topicNode = null;
-    isClosed = !isClosed;
     while (iter.hasNext()) {
       topicNode = iter.nextNode();
       if (topicNode.isNodeType(EXO_TOPIC)) {
-        topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, isClosed);
-        setActivePostByTopic(sProvider, topicNode, isClosed);
+        topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, !isClosed);
+        setActivePostByTopic(sProvider, topicNode, !isClosed);
       }
     }
     if (forumNode.isNew()) {
@@ -2526,6 +2525,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
       Set<String> userIdsp = new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>()));
+      DataStorage cachedDataStorage = getCachedDataStorage();
       for (Topic topic : topics) {
         try {
           String topicPath = topic.getPath();
@@ -2597,6 +2597,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               || (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) || Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
             //
             addQueryLastPostTask(forumNode.getPath());
+          }
+          if (cachedDataStorage instanceof CachedDataStorage) {
+            ((CachedDataStorage) cachedDataStorage).clearTopicCache(topic);
           }
         } catch (PathNotFoundException e) {
           if (LOG.isDebugEnabled()) {
@@ -8585,7 +8588,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         return ActivityTypeUtils.getActivityId(ownerNode);
       }
     } catch (Exception e) {
-      LOG.error(String.format("Failed to get attach activityId for %s: %s ", type, ownerId), e);
+      LOG.error("Failed to get activityId for {}: {}", type, ownerId, e);
     }
     return null;
   }

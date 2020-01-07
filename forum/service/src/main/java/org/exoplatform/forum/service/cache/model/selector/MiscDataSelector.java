@@ -16,9 +16,12 @@
  */
 package org.exoplatform.forum.service.cache.model.selector;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 import org.exoplatform.forum.common.cache.model.key.SimpleCacheKey;
 import org.exoplatform.forum.common.cache.model.selector.ScopeCacheSelector;
+import org.exoplatform.forum.service.cache.model.key.TopicListCountKey;
 import org.exoplatform.services.cache.ObjectCacheInfo;
 
 public class MiscDataSelector extends ScopeCacheSelector<ScopeCacheKey, Object> {
@@ -36,11 +39,7 @@ public class MiscDataSelector extends ScopeCacheSelector<ScopeCacheKey, Object> 
     if (!super.select(key, ocinfo) || key instanceof SimpleCacheKey == false) {
       return false;
     }
-    
-    String type = ((SimpleCacheKey)key).getType();
-    if(type.equals(this.type)) {
-      return true;
-    }
-    return false;
+
+    return StringUtils.equals(this.type, ((SimpleCacheKey) key).getType());
   }
 }

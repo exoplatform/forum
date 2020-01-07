@@ -38,7 +38,6 @@ import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvide
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
 
-@FixMethodOrder(MethodSorters.JVM)
 public class ForumActivityTestCase extends BaseForumActivityTestCase {
   
   public void setUp() throws Exception {
@@ -394,6 +393,7 @@ public class ForumActivityTestCase extends BaseForumActivityTestCase {
    
     String activityId1 = forumService.getActivityIdForOwnerPath(topic1.getPath());
     ExoSocialActivity activity1 = getActivityManager().getActivity(activityId1);
+    assertNotNull(activity1);
     List<ExoSocialActivity> comments = getActivityManager().getCommentsWithListAccess(activity1).loadAsList(0, 10);
     assertEquals(0, comments.size());
     

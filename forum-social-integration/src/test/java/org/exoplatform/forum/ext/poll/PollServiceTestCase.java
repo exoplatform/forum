@@ -27,15 +27,14 @@ import org.exoplatform.social.core.storage.api.IdentityStorage;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ext.impl.PollSpaceActivityPublisher;
 import org.exoplatform.poll.service.Poll;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.JVM)
 public class PollServiceTestCase extends BaseTestCase {
   
   private List<Poll> tearDownPollList;
-  
-  PollSpaceActivityPublisher   listener = new PollSpaceActivityPublisher();
   
   private IdentityStorage identityStorage;
   private Identity rootIdentity;
@@ -49,7 +48,6 @@ public class PollServiceTestCase extends BaseTestCase {
     johnIdentity = new Identity(OrganizationIdentityProvider.NAME, "john");
     identityStorage.saveIdentity(rootIdentity);
     identityStorage.saveIdentity(johnIdentity);
-    pollService.addListenerPlugin(listener);
     tearDownPollList = new ArrayList<>();
   }
 
@@ -58,7 +56,6 @@ public class PollServiceTestCase extends BaseTestCase {
     for (Poll poll : tearDownPollList) {
       pollService.removePoll(poll.getId());
     }
-    pollService.removeListenerPlugin(listener);
     identityStorage.deleteIdentity(rootIdentity);
     identityStorage.deleteIdentity(johnIdentity);
     super.tearDown();
@@ -83,12 +80,12 @@ public class PollServiceTestCase extends BaseTestCase {
     assertNotNull(activityId);
     ExoSocialActivity activity = getManager().getActivity(activityId);
     assertNotNull(activity);
-    assertEquals("&-*()", activity.getTitle());
+    assertEquals("&-*()", StringEscapeUtils.unescapeHtml(activity.getTitle()));
     
     pollTopic.setQuestion("&-*() / --- == coucou #@");
     pollService.savePoll(pollTopic, false, false);
     activity = getManager().getActivity(activityId);
-    assertEquals("&-*() / --- == coucou #@", activity.getTitle());
+    assertEquals("&-*() / --- == coucou #@", StringEscapeUtils.unescapeHtml(activity.getTitle()));
     
     // remove poll will remove activity
     pollService.removePoll(pollTopic.getId());

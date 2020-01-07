@@ -57,6 +57,14 @@
       <groupId>org.exoplatform.forum</groupId>
       <artifactId>forum-component-common</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-component-bbcode</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-core</artifactId>
+    </dependency>
     <!-- Log4J is required by wikbook to compile but we don't want to propagate it -->
     <dependency>
       <groupId>log4j</groupId>
@@ -85,6 +93,10 @@
           <artifactId>ow2-jta-1.1-spec</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform</groupId>
+      <artifactId>exo-jcr-services</artifactId>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
@@ -233,14 +245,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-testing</artifactId>
-      <type>jar</type>
+      <groupId>org.exoplatform.gatein.portal</groupId>
+      <artifactId>exo.portal.component.portal</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
+      <artifactId>exo.portal.component.application-registry</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -250,8 +262,21 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.test.jcr</artifactId>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-testing</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -291,6 +316,18 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <!-- Extract templates used by wikbook -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

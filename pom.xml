@@ -99,6 +99,12 @@
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-component-bbcode</artifactId>
+        <type>test-jar</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-component-bbcode</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
       </dependency>
@@ -107,6 +113,12 @@
         <artifactId>forum-component-common</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-application-common</artifactId>
+        <type>test-jar</type>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
@@ -123,6 +135,18 @@
       <dependency>
         <groupId>org.exoplatform.forum</groupId>
         <artifactId>forum-forum-service</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-forum-service</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.forum</groupId>
+        <artifactId>forum-component-statistics</artifactId>
         <version>${project.version}</version>
         <type>jar</type>
       </dependency>
