@@ -27,8 +27,12 @@ import org.exoplatform.forum.common.UserHelper.UserFilter;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.UserImpl;
-@ConfiguredBy({ @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/configuration.xml"),
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/test-configuration.xml") })
+@ConfiguredBy({
+  @ConfigurationUnit(scope = ContainerScope.ROOT, path = "conf/configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.application-common.portal-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.application-common.portal-dependencies-configuration.xml"),
+})
 public class TestUserHelper extends BaseCommonsTestCase {
   @Override
   public void setUp() throws Exception {
@@ -88,7 +92,7 @@ public class TestUserHelper extends BaseCommonsTestCase {
     owner = "user";
     assertEquals("", UserHelper.getDisplayNameOfOwner(owner));
     owner = "demo";
-    assertEquals("Demo gtn", UserHelper.getDisplayNameOfOwner(owner));
+    assertEquals("Demo exo", UserHelper.getDisplayNameOfOwner(owner));
     owner = "/platform/test";
     assertEquals("", UserHelper.getDisplayNameOfOwner(owner));
     owner = "/platform/users";

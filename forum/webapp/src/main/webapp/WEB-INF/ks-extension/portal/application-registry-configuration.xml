@@ -11,37 +11,54 @@
 	      <type>org.exoplatform.application.registry.ApplicationCategoriesPlugins</type>
 	      <description>this listener init the portlets are registered in PortletRegister</description>
 	      <init-params>
-	        <object-param>
-	          <name>KnowledgeSuite</name>
-	          <description>description</description>
-	          <object type="org.exoplatform.application.registry.ApplicationCategory">
-	            <field  name="name"><string>KnowledgeSuite</string></field>
-	            <field  name="displayName"><string>KnowledgeSuite</string></field> 
-	            <field  name="description"><string>KS Portlets</string></field> 
-	            <field  name="applications">
-		            <collection type="java.util.ArrayList">
-					        <value>                 
-		                <object type="org.exoplatform.application.registry.Application">                     
-		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
-		                  <field name="applicationName"><string>ForumPortlet</string></field>
-						          <field name="displayName"><string>Forum Portlet</string></field>
-		                  <field name="applicationType"><string>portlet</string></field>
-		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
-		                </object>
-	                </value>
-	                <value>                 
-		                <object type="org.exoplatform.application.registry.Application">                     
-		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
-		                  <field name="applicationName"><string>PollPortlet</string></field>
-						          <field name="displayName"><string>Poll Portlet</string></field>
-		                  <field name="applicationType"><string>portlet</string></field>
-		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
-		                </object>
-	                </value>
-		            </collection>                               
-	            </field> 
-	          </object>        
-	        </object-param> 
+          <object-param>
+            <name>collaboration</name>
+            <description>description</description>
+            <object type="org.exoplatform.application.registry.ApplicationCategory">
+              <field name="name"><string>Collaboration</string></field>
+              <field name="displayName"><string>Collaboration</string></field>
+              <field name="description"><string>Applications for collaboration</string></field>
+              <field name="accessPermissions">
+                <collection type="java.util.ArrayList" item-type="java.lang.String">
+                  <value><string>*:/platform/users</string></value>
+                </collection>
+              </field>
+              <field name="applications">
+                <collection type="java.util.ArrayList">
+                  <value>
+                    <object type="org.exoplatform.application.registry.Application">
+                      <field name="applicationName"><string>ForumPortlet</string></field>
+                      <field name="categoryName"><string>collaboration</string></field>
+                      <field name="displayName"><string>Forum</string></field>
+                      <field name="description"><string>Forum Portlet</string></field>
+                      <field name="type"><string>portlet</string></field>
+                      <field name="contentId"><string>forum/ForumPortlet</string></field>
+                      <field name="accessPermissions">
+                        <collection type="java.util.ArrayList" item-type="java.lang.String">
+                          <value><string>*:/platform/users</string></value>
+                        </collection>
+                      </field>
+                    </object>
+                  </value>
+                  <value>
+                    <object type="org.exoplatform.application.registry.Application">
+                      <field name="applicationName"><string>PollPortlet</string></field>
+                      <field name="categoryName"><string>collaboration</string></field>
+                      <field name="displayName"><string>Polls</string></field>
+                      <field name="description"><string>Polls Portlet</string></field>
+                      <field name="type"><string>portlet</string></field>
+                      <field name="contentId"><string>poll/PollPortlet</string></field>
+                      <field name="accessPermissions">
+                        <collection type="java.util.ArrayList" item-type="java.lang.String">
+                          <value><string>*:/platform/administrators</string></value>
+                        </collection>
+                      </field>
+                    </object>
+                  </value>
+                </collection>
+              </field>
+            </object>
+          </object-param>
 	      </init-params>
 	    </component-plugin>   
   </external-component-plugins>

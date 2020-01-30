@@ -22,79 +22,77 @@ import java.util.GregorianCalendar;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
+import org.quartz.*;
+
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
 
-
-public class DeactiveJob extends MultiTenancyJob {
-  private static Log log_ = ExoLogger.getLogger("job.forum.DesactiveJob");
+@DisallowConcurrentExecution
+public class DeactiveJob implements Job {
+  private static final Log LOG = ExoLogger.getLogger("job.forum.DesactiveJob");
 
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return DeactiveTask.class;
-  }
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-  public class DeactiveTask extends MultiTenancyTask {
-
-    public DeactiveTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-
-    @Override
-    public void run() {
-      super.run();
-      try {
-        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        if (forumService != null) {
-          JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-          String inactiveDays = jdatamap.getString("inactiveDays");
-          String forumName = jdatamap.getString("forumName");
-          if (inactiveDays != null && inactiveDays.length() > 0) {
-            int days = Integer.parseInt(inactiveDays);
-            if (days > 0) {
-              long oneDay = 86400000; // milliseconds of one day
-              Calendar calendar = GregorianCalendar.getInstance();
-              long currentDay = calendar.getTimeInMillis();
-              currentDay = currentDay - (days * oneDay);
-              calendar.setTimeInMillis(currentDay);
-              String path = forumService.getForumHomePath();
-              StringBuilder stringBuffer = new StringBuilder();
-              stringBuffer.append("/jcr:root/").append(path).append("//element(*,exo:topic)[");
-              stringBuffer.append("@exo:lastPostDate <= xs:dateTime('" + ISO8601.format(calendar)
-                  + "') and @exo:isActive = 'true']");
-              NodeIterator iter = forumService.search(stringBuffer.toString());
-              if (iter != null) {
-                while (iter.hasNext()) {
-                  Node topic = iter.nextNode();
-                  if (forumName != null && forumName.length() > 0) {
-                    if (forumName.equals(topic.getParent().getProperty("exo:name").getString())) {
-                      topic.setProperty("exo:isActive", false);
-                      topic.save();
-                    }
-                  } else {
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      ForumService forumService = container.getComponentInstanceOfType(ForumService.class);
+      if (forumService != null) {
+        JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+        String inactiveDays = jdatamap.getString("inactiveDays");
+        String forumName = jdatamap.getString("forumName");
+        if (inactiveDays != null && inactiveDays.length() > 0) {
+          int days = Integer.parseInt(inactiveDays);
+          if (days > 0) {
+            long oneDay = 86400000; // milliseconds of one day
+            Calendar calendar = GregorianCalendar.getInstance();
+            long currentDay = calendar.getTimeInMillis();
+            currentDay = currentDay - (days * oneDay);
+            calendar.setTimeInMillis(currentDay);
+            String path = forumService.getForumHomePath();
+            StringBuilder stringBuffer = new StringBuilder();
+            stringBuffer.append("/jcr:root/").append(path).append("//element(*,exo:topic)[");
+            stringBuffer.append("@exo:lastPostDate <= xs:dateTime('" + ISO8601.format(calendar)
+                + "') and @exo:isActive = 'true']");
+            NodeIterator iter = forumService.search(stringBuffer.toString());
+            if (iter != null) {
+              while (iter.hasNext()) {
+                Node topic = iter.nextNode();
+                if (forumName != null && forumName.length() > 0) {
+                  if (forumName.equals(topic.getParent().getProperty("exo:name").getString())) {
                     topic.setProperty("exo:isActive", false);
                     topic.save();
                   }
-                  if (log_.isDebugEnabled()) {
-                    log_.debug("\n\n The DeactiveJob have been running: The topic '" + topic.getProperty("exo:name").getString()
-                        + "' deactived");
-                  }
+                } else {
+                  topic.setProperty("exo:isActive", false);
+                  topic.save();
+                }
+                if (LOG.isDebugEnabled()) {
+                  LOG.debug("\n\n The DeactiveJob have been running: The topic '" + topic.getProperty("exo:name").getString()
+                      + "' deactived");
                 }
               }
             }
           }
         }
-      } catch (NumberFormatException nfe) {
-        log_.trace("\nThe DeactiveJob can not run, a number is not format: " + nfe.getMessage() + "\n" + nfe.getCause());
-      } catch (Exception e) {
-        if (log_.isDebugEnabled())
-          log_.debug(e.getMessage());
       }
+    } catch (NumberFormatException nfe) {
+      LOG.trace("\nThe DeactiveJob can not run, a number is not format: " + nfe.getMessage() + "\n" + nfe.getCause());
+    } catch (Exception e) {
+      if (LOG.isDebugEnabled())
+        LOG.debug(e.getMessage());
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

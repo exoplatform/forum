@@ -33,31 +33,13 @@
           <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig">
             <field name="workspaces">
               <collection type="java.util.ArrayList">
-                <value><string>knowledge</string></value>                              
+                <value>
+                  <string>knowledge</string>
+                </value>                              
               </collection>               
             </field>
             <field  name="jcrPaths">
               <collection type="java.util.ArrayList">
-                <value>               
-                  <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$JcrPath">                 
-                    <field  name="alias"><string>eXoApplications</string></field>
-                    <field  name="path"><string>/exo:applications</string></field>                                          
-                    <field name="permissions">
-                      <collection type="java.util.ArrayList">               
-                        <value>                            
-                          <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$Permission">             
-                              <field name="identity"><string>*:/platform/administrators</string></field>
-                              <field name="read"><string>true</string></field>                
-                              <field name="addNode"><string>true</string></field>                
-                              <field name="setProperty"><string>true</string></field>                
-                              <field name="remove"><string>true</string></field>                
-                            </object>  
-                        </value>                        
-                      </collection>
-                    </field>                       
-                  </object>
-                </value>
-
                 <value>               
                   <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$JcrPath">                 
                     <field  name="alias"><string>ksUserAvatar</string></field>
@@ -375,7 +357,50 @@
                     </field>                       
                   </object>
                 </value>
-                
+              </collection>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>addPaths</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.services.jcr.ext.hierarchy.impl.AddPathPlugin</type>
+      <init-params>
+        <object-param>
+          <name>ks.storage</name>
+          <description>ks data storage tree</description>
+          <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig">
+            <field name="workspaces">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <string>collaboration</string>
+                </value>
+              </collection>
+            </field>
+            <field  name="jcrPaths">
+              <collection type="java.util.ArrayList">
+                <value>               
+                  <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$JcrPath">                 
+                    <field  name="alias"><string>eXoApplications</string></field>
+                    <field  name="path"><string>/exo:applications</string></field>                                          
+                    <field name="permissions">
+                      <collection type="java.util.ArrayList">               
+                        <value>                            
+                          <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$Permission">             
+                              <field name="identity"><string>*:/platform/administrators</string></field>
+                              <field name="read"><string>true</string></field>                
+                              <field name="addNode"><string>true</string></field>                
+                              <field name="setProperty"><string>true</string></field>                
+                              <field name="remove"><string>true</string></field>                
+                            </object>  
+                        </value>                        
+                      </collection>
+                    </field>                       
+                  </object>
+                </value>
+
                 <value>
                   <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$JcrPath">
                     <field name="alias"><string>eXoServices</string></field>
@@ -424,7 +449,7 @@
 			              </field>   			               
 	              	</object>
               	</value>
-                                           
+
               </collection>                               
             </field>
           </object>

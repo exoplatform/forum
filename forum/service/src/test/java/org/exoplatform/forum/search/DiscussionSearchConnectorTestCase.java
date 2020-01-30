@@ -45,18 +45,8 @@ import org.exoplatform.web.controller.router.RouterConfigException;
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.identity-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/test-portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.component.core.test.configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/exo.forum.test.portal-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rest/exo.forum.component.service.test.configuration.xml")
-})
 public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase {
-  private final static String CONTROLLER_PATH = "conf/standalone/controller.xml";
+  private final static String CONTROLLER_PATH = "conf/controller/test-controller.xml";
 
   private DiscussionSearchConnector discussionSearchConnector;
   private Post postA;
@@ -221,7 +211,7 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
       router = new Router(routerDesc);
       context = new SearchContext(router, "");
     } catch (RouterConfigException e) {
-      log.info(e.getMessage());
+      log.warn(e);
     } finally {
       in.close();
     }
@@ -288,7 +278,6 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
         previous = null;
       }
     }
-
   }
 
   public void testSiteData() throws Exception {

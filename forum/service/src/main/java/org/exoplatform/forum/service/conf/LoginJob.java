@@ -16,46 +16,47 @@
  **/
 package org.exoplatform.forum.service.conf;
 
+import org.quartz.*;
+
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.job.MultiTenancyJob;
-import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.JobExecutionContext;
 
-public class LoginJob extends MultiTenancyJob {
-  private static Log log_ = ExoLogger.getLogger(LoginJob.class);
+@DisallowConcurrentExecution
+public class LoginJob implements Job {
+  private static final Log LOG = ExoLogger.getLogger(LoginJob.class);
 
   @Override
-  public Class<? extends MultiTenancyTask> getTask() {
-    return LoginTask.class;
-  }
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = CommonUtils.getExoContainer(context);
 
-  public class LoginTask extends MultiTenancyTask {
-
-    public LoginTask(JobExecutionContext context, String repoName) {
-      super(context, repoName);
-    }
-
-    @Override
-    public void run() {
-      super.run();
-      try {
-        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
-        String masterHost = System.getProperty("tenant.masterhost");
-        if (masterHost == null) {
-          forumService.updateLoggedinUsers();
-        } else {
-          String currentLoginRepo = ((RepositoryService) container.getComponentInstanceOfType(RepositoryService.class))
-                                                                  .getCurrentRepository().getConfiguration().getName();
-          forumService.updateLoggedinUsers(currentLoginRepo);
-        }
-      } catch (Exception e) {
-        log_.warn("Period login job can not execute ...");
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+    try {
+      ForumService forumService = container.getComponentInstanceOfType(ForumService.class);
+      String masterHost = System.getProperty("tenant.masterhost");
+      if (masterHost == null) {
+        forumService.updateLoggedinUsers();
+      } else {
+        ManageableRepository repository = SessionProviderService.getRepository();
+        String currentLoginRepo = repository.getConfiguration().getName();
+        forumService.updateLoggedinUsers(currentLoginRepo);
       }
-      if (log_.isDebugEnabled()) {
-        log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
+      if (LOG.isDebugEnabled()) {
+        LOG.info("\n\nForum Statistic has been updated for logged in user by a period login job");
       }
+    } catch (Exception e) {
+      LOG.warn("Period login job can not execute ...", e);
+    } finally {
+      RequestLifeCycle.end();
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

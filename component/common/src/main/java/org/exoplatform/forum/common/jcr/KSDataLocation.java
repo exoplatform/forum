@@ -54,7 +54,7 @@ public class KSDataLocation {
   /**
    * Default workspace name used if none is specified
    */
-  public static final String   DEFAULT_WORKSPACE_NAME  = "portal-system";
+  public static final String   DEFAULT_WORKSPACE_NAME  = "knowledge";
 
   private String               forumHomeLocation;
 

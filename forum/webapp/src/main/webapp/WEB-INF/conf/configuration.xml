@@ -2,6 +2,8 @@
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
 	xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+  <!-- JCR Repository Service and 'system' workspace -->
+  <import>jar:/conf/portal/jcr-ext-configuration.xml</import> 
 
   <!-- knowledge workspace and load nodetypes -->
   <import>war:/ks-extension/jcr/jcr-configuration.xml</import> 
@@ -10,8 +12,7 @@
   <import>war:/ks-extension/jcr/storage-configuration.xml</import> 
   
   <!-- new apps in registry  -->
-  <!-- FIXME : needs to be upgraded for Gatein beta3 -->
-  <!-- import>war:/ks-extension/portal/application-registry-configuration.xml</import-->  
+  <import>war:/ks-extension/portal/application-registry-configuration.xml</import>
   
   <!-- main KS configuration  -->
   <import>war:/ks-extension/ks/ks-configuration.xml</import>

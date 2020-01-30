@@ -16,27 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -44,103 +26,42 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.*;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.ObservationManager;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
+import javax.jcr.query.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.*;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.feed.synd.*;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 
-import org.exoplatform.commons.utils.ActivityTypeUtils;
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.commons.utils.StringCommonUtils;
-import org.exoplatform.commons.utils.XPathUtils;
+import org.exoplatform.commons.utils.*;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.forum.common.CommonUtils;
-import org.exoplatform.forum.common.TransformHTML;
-import org.exoplatform.forum.common.UserHelper;
+import org.exoplatform.forum.common.*;
 import org.exoplatform.forum.common.conf.RoleRulesPlugin;
-import org.exoplatform.forum.common.jcr.JCRQueryUtils;
-import org.exoplatform.forum.common.jcr.JCRSessionManager;
-import org.exoplatform.forum.common.jcr.JCRTask;
-import org.exoplatform.forum.common.jcr.KSDataLocation;
+import org.exoplatform.forum.common.jcr.*;
 import org.exoplatform.forum.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.forum.common.jcr.PropertyReader;
-import org.exoplatform.forum.common.jcr.SessionManager;
-import org.exoplatform.forum.service.BufferAttachment;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.DataStorage;
+import org.exoplatform.forum.service.*;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
-import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumEventQuery;
-import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.ForumNodeTypes;
-import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSearchResult;
-import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.forum.service.ForumSubscription;
-import org.exoplatform.forum.service.InitializeForumPlugin;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
-import org.exoplatform.forum.service.MessageBuilder;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.PruneSetting;
-import org.exoplatform.forum.service.SendMessageInfo;
-import org.exoplatform.forum.service.SortSettings;
 import org.exoplatform.forum.service.SortSettings.Direction;
 import org.exoplatform.forum.service.SortSettings.SortField;
-import org.exoplatform.forum.service.Tag;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.cache.CachedDataStorage;
-import org.exoplatform.forum.service.conf.CategoryData;
-import org.exoplatform.forum.service.conf.ForumData;
-import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
-import org.exoplatform.forum.service.conf.PostData;
-import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.forum.service.conf.UpdateUserProfileJob;
+import org.exoplatform.forum.service.conf.*;
 import org.exoplatform.forum.service.filter.model.CategoryFilter;
 import org.exoplatform.forum.service.filter.model.ForumFilter;
-import org.exoplatform.forum.service.impl.model.PostFilter;
-import org.exoplatform.forum.service.impl.model.TopicFilter;
-import org.exoplatform.forum.service.impl.model.UserProfileFilter;
-import org.exoplatform.forum.service.jcr.listener.CalculateModeratorEventListener;
-import org.exoplatform.forum.service.jcr.listener.DeletedUserCalculateEventListener;
-import org.exoplatform.forum.service.jcr.listener.StatisticEventListener;
+import org.exoplatform.forum.service.impl.model.*;
+import org.exoplatform.forum.service.jcr.listener.*;
 import org.exoplatform.forum.service.search.UnifiedSearchOrder;
 import org.exoplatform.forum.service.task.AbstractForumTask.QueryLastPostTask;
 import org.exoplatform.forum.service.task.AbstractForumTask.SendNotificationTask;
@@ -154,16 +75,17 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.RepositoryEntry;
+import org.exoplatform.services.jcr.ext.ActivityTypeUtils;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
+import org.exoplatform.services.jcr.impl.util.XPathUtils;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.scheduler.JobInfo;
-import org.exoplatform.services.scheduler.JobSchedulerService;
-import org.exoplatform.services.scheduler.PeriodInfo;
+import org.exoplatform.services.scheduler.*;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
@@ -1645,6 +1567,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         pruneSetting.setForumPath(forum.getPath());
         savePruneSetting(pruneSetting);
       } else {
+        forum.setCreatedDate(reader.date(EXO_CREATED_DATE, new Date()));
         id.append(forum.getCreatedDate().getTime());
         if (isModerateTopic != isNewModerateTopic) {
           //
@@ -1981,12 +1904,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private void setActiveTopicByForum(SessionProvider sProvider, Node forumNode, boolean isClosed) throws Exception {
     NodeIterator iter = forumNode.getNodes();
     Node topicNode = null;
-    isClosed = !isClosed;
     while (iter.hasNext()) {
       topicNode = iter.nextNode();
       if (topicNode.isNodeType(EXO_TOPIC)) {
-        topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, isClosed);
-        setActivePostByTopic(sProvider, topicNode, isClosed);
+        topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, !isClosed);
+        setActivePostByTopic(sProvider, topicNode, !isClosed);
       }
     }
     if (forumNode.isNew()) {
@@ -2603,6 +2525,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
       Set<String> userIdsp = new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>()));
+      DataStorage cachedDataStorage = getCachedDataStorage();
       for (Topic topic : topics) {
         try {
           String topicPath = topic.getPath();
@@ -2674,6 +2597,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               || (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) || Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
             //
             addQueryLastPostTask(forumNode.getPath());
+          }
+          if (cachedDataStorage instanceof CachedDataStorage) {
+            ((CachedDataStorage) cachedDataStorage).clearTopicCache(topic);
           }
         } catch (PathNotFoundException e) {
           if (LOG.isDebugEnabled()) {
@@ -2912,7 +2838,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String name = String.valueOf(cal.getTime().getTime());
       JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, UpdateUserProfileJob.class);
       JobSchedulerService schedulerService = CommonsUtils.getService(JobSchedulerService.class);
-      String repoName = CommonsUtils.getRepository().getConfiguration().getName();
+      String repoName = SessionProviderService.getRepository().getConfiguration().getName();
       JobDataMap jdatamap = new JobDataMap();
       jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       infoMap.put(name, userPostMap);
@@ -5074,8 +5000,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
         Node deletedHome = profileHome.getNode(Utils.USER_PROFILE_DELETED);
         return deletedHome.getNode(userName);
+      } else {
+        return addNodeUserProfile(CommonUtils.createSystemProvider(), userName);
       }
-      throw e;
     }
   }
 
@@ -7425,7 +7352,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void updateForumAccess(String userId, String forumId){
     SessionProvider sysSession = CommonUtils.createSystemProvider();
     try {
-      Node profile = getUserProfileHome(sysSession).getNode(userId);
+      Node userProfileHome = getUserProfileHome(sysSession);
+      Node profile = getUserProfileNode(userProfileHome, userId);
       List<String> values = new ArrayList<String>();
       if (profile.hasProperty(EXO_READ_FORUM)) {
         values = Utils.valuesToList(profile.getProperty(EXO_READ_FORUM).getValues());
@@ -8660,7 +8588,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         return ActivityTypeUtils.getActivityId(ownerNode);
       }
     } catch (Exception e) {
-      LOG.error(String.format("Failed to get attach activityId for %s: %s ", type, ownerId), e);
+      LOG.error("Failed to get activityId for {}: {}", type, ownerId, e);
     }
     return null;
   }

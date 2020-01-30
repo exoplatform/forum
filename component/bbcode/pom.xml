@@ -42,12 +42,6 @@
       <artifactId>log4j</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- doc-style is required by wikbook to compile but we don't want to propagate it -->
-    <dependency>
-      <groupId>org.exoplatform.doc</groupId>
-      <artifactId>doc-style</artifactId>
-      <optional>true</optional>
-    </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
@@ -63,20 +57,6 @@
       	<exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>javax.servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.wiki</groupId>
-      <artifactId>wiki-renderer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-api</artifactId>
-      <exclusions>
-      	<exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -122,41 +102,6 @@
       <scope>test</scope>
     </dependency>
     <!-- test -->
-    <!-- Chromattic -->
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.apt</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.ext</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.spi</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.common</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.metamodel</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-testing</artifactId>
@@ -187,29 +132,14 @@
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
       <artifactId>exo.portal.component.portal</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
-      <exclusions>
-      	<exclusion>
-      		<groupId>log4j</groupId>
-      		<artifactId>log4j</artifactId>
-      	</exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.portal</artifactId>
+      <artifactId>exo.portal.component.application-registry</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
-      <exclusions>
-      	<exclusion>
-      		<groupId>log4j</groupId>
-      		<artifactId>log4j</artifactId>
-      	</exclusion>
-      	<exclusion>
-          <groupId>javax.xml.stream</groupId>
-          <artifactId>stax-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.gatein.portal</groupId>
@@ -217,8 +147,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.gatein.portal</groupId>
-      <artifactId>exo.portal.component.test.jcr</artifactId>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.forum</groupId>
+      <artifactId>forum-application-common</artifactId>
+      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -259,42 +196,15 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <!-- Extract templates used by wikbook -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
+        <artifactId>maven-jar-plugin</artifactId>
         <executions>
           <execution>
-            <id>unpack-templates</id>
-            <phase>generate-sources</phase>
+            <phase>package</phase>
             <goals>
-              <goal>unpack-dependencies</goal>
+              <goal>test-jar</goal>
             </goals>
-            <configuration>
-              <includeGroupIds>org.exoplatform.doc</includeGroupIds>
-              <includeArtifactIds>doc-style</includeArtifactIds>
-              <excludes>META-INF/**</excludes>
-              <outputDirectory>${project.build.directory}/templates</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <!-- Additional configuration to generate wiki pages from wikbook annotations-->
-            <configuration>
-              <compilerArguments>
-                <sourcepath>${project.build.directory}/templates</sourcepath>
-              </compilerArguments>
-            </configuration>
           </execution>
         </executions>
       </plugin>

@@ -16,8 +16,11 @@
  */
 package org.exoplatform.forum.service.cache.model.selector;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 import org.exoplatform.forum.common.cache.model.selector.ScopeCacheSelector;
+import org.exoplatform.forum.service.cache.model.key.PostListCountKey;
 import org.exoplatform.forum.service.cache.model.key.TopicListKey;
 import org.exoplatform.services.cache.ObjectCacheInfo;
 
@@ -48,7 +51,7 @@ public class TopicListSelector extends ScopeCacheSelector<ScopeCacheKey, Object>
     }
     
     if (key instanceof TopicListKey) {
-      return this.forumId.equals(((TopicListKey)key).getForumId());
+      return StringUtils.equals(this.forumId, ((TopicListKey)key).getForumId());
     }
     
     return false;

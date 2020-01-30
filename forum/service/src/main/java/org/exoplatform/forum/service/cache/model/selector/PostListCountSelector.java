@@ -16,6 +16,8 @@
  */
 package org.exoplatform.forum.service.cache.model.selector;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.forum.common.cache.model.ScopeCacheKey;
 import org.exoplatform.forum.common.cache.model.selector.ScopeCacheSelector;
 import org.exoplatform.forum.service.cache.model.key.PostListCountKey;
@@ -48,7 +50,7 @@ public class PostListCountSelector extends ScopeCacheSelector<ScopeCacheKey, Obj
     }
 
     if (key instanceof PostListCountKey) {
-      return ((PostListCountKey)key).getTopicId().equals(this.topicId);
+      return StringUtils.equals(this.topicId, ((PostListCountKey) key).getTopicId());
     }
     
     return false;
