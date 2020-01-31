@@ -40,7 +40,7 @@
     <!-- **************************************** -->
     <org.exoplatform.social.version>6.0.x-SNAPSHOT</org.exoplatform.social.version>
     <org.exoplatform.jcr.version>6.0.x-SNAPSHOT</org.exoplatform.jcr.version>
-    <org.exoplatform.gamification.version>2.0.x-SNAPSHOT</org.exoplatform.gamification.version>
+    <addon.exo.gamification.version>2.0.x-SNAPSHOT</addon.exo.gamification.version>
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
     <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
@@ -72,7 +72,7 @@
       <dependency>
         <groupId>org.exoplatform.addons.gamification</groupId>
         <artifactId>gamification</artifactId>
-        <version>${org.exoplatform.gamification.version}</version>
+        <version>${addon.exo.gamification.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
