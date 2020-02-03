@@ -38,7 +38,8 @@
   
   <!-- Poll core services -->
   <import>war:/ks-extension/ks/poll/poll-configuration.xml</import>
-  
-  
+
+    <!-- Space templates extensions -->
+  <import>war:/ks-extension/ks/spaces-templates-configuration.xml</import>
   
 </configuration>
