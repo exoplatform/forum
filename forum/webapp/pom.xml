@@ -257,8 +257,81 @@
       <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.platform-ui</groupId>
+      <artifactId>platform-ui-skin</artifactId>
+      <classifier>sources</classifier>
+    </dependency>
   </dependencies>
   <build>
     <finalName>forum</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>less-copy-resources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/src/main/webapp/skin/less</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/webapp/skin/less</directory>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>       
+          <execution>
+            <id>platform-ui-src</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeArtifactIds>platform-ui-skin</includeArtifactIds>
+              <outputDirectory>${project.build.directory}/src/main/webapp</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.lesscss</groupId>
+        <artifactId>lesscss-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>core</id>
+            <configuration>
+              <sourceDirectory>${project.build.directory}/src/main/webapp/skin/less</sourceDirectory>
+              <outputDirectory>${project.build.directory}/${project.build.finalName}/skin/css</outputDirectory>
+              <compress>false</compress>
+              <includes>
+                <include>forum/skin/forum-resources.less</include>
+                <include>forum/portlets/forum/forum.less</include>
+                <include>forum/portlets/poll/pollPortlet.less</include>
+              </includes>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <packagingExcludes>**/less/**,WEB-INF/lib/**</packagingExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
  </project>
