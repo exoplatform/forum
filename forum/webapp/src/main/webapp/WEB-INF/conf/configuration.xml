@@ -13,7 +13,10 @@
   
   <!-- new apps in registry  -->
   <import>war:/ks-extension/portal/application-registry-configuration.xml</import>
-  
+
+  <!-- System forum page  -->
+  <import>war:/ks-extension/portal/portal-configuration.xml</import>
+
   <!-- main KS configuration  -->
   <import>war:/ks-extension/ks/ks-configuration.xml</import>
 
