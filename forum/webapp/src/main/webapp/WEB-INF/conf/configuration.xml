@@ -44,5 +44,8 @@
 
     <!-- Space templates extensions -->
   <import>war:/ks-extension/ks/spaces-templates-configuration.xml</import>
-  
+
+  <import>war:/ks-extension/app-center-configuration.xml</import>
+  <import>war:/ks-extension/dynamic-container-configuration.xml</import>
+
 </configuration>

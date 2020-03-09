@@ -26,16 +26,20 @@
     <title>Forum</title>
     <access-permissions>*:/platform/users</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
-    <portlet-application>
-      <portlet>
-        <application-ref>forum</application-ref>
-        <portlet-ref>ForumPortlet</portlet-ref>
-      </portlet>
-      <title>Forum Portlet</title>
-      <access-permissions>Everyone</access-permissions>
-      <show-info-bar>false</show-info-bar>
-      <show-application-state>false</show-application-state>
-      <show-application-mode>false</show-application-mode>
-    </portlet-application>
+    <container id="top-forum-container" template="system:/groovy/portal/webui/container/UIAddOnContainer.gtmpl">
+      <name>top-forum-container</name>
+      <access-permissions>*:/platform/users</access-permissions>
+      <factory-id>addonContainer</factory-id>
+    </container>
+    <container id="forum-container" template="system:/groovy/portal/webui/container/UIAddOnContainer.gtmpl">
+      <name>forum-container</name>
+      <access-permissions>*:/platform/users</access-permissions>
+      <factory-id>addonContainer</factory-id>
+    </container>
+    <container id="bottom-forum-container" template="system:/groovy/portal/webui/container/UIAddOnContainer.gtmpl">
+      <name>bottom-forum-container</name>
+      <access-permissions>*:/platform/users</access-permissions>
+      <factory-id>addonContainer</factory-id>
+    </container>
   </page>
 </page-set>
