@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>5.3.2</version>
+    <version>5.3.2-spaces-groups-binding-SNAPSHOT</version>
   </parent>
   <artifactId>forum-forum</artifactId>
   <packaging>pom</packaging>
