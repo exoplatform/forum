@@ -5,7 +5,7 @@
   <portlet>
     <description xml:lang="EN">Forum Portlet</description>
     <portlet-name>ForumPortlet</portlet-name>
-    <display-name xml:lang="EN">Forum Portlet</display-name>
+    <display-name xml:lang="EN">Forum</display-name>
     <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
     
     <init-param>
