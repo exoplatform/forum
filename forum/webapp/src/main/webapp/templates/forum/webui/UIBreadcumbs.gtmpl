@@ -73,6 +73,7 @@
 	  <%String toolTip = uicomponent.getToolTip();
 		if(checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) == false && toolTip.equals(ForumUtils.TAG) == false){
 			toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
+		link = ForumUtils.createdForumLink(uicomponent.getType(id), id, uicomponent.checkLinkPrivate(id));
 	  %>
 		<div class="pull-right permaLink">
 			<a class="actionIcon" onclick="window.open('$link'); return false;" href="$link" data-placement="bottom" rel="tooltip" title="$toolTip"><i class="uiIconPermalink uiIconLightGray"></i></a>
