@@ -27,7 +27,6 @@
 					"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 					"eXo.forum.UIForumPortlet.goLastPost('top');",
 					"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
-					"eXo.forum.UIForumPortlet.controlLeftNavigation();",
 					"forumCheckBox.init('"+uicomponent.id+"');"
 						];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);

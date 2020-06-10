@@ -49,7 +49,6 @@
 							"eXo.forum.UIForumPortlet.initContextMenu('"+uicomponent.id+"') ;",
 							"eXo.forum.UIForumPortlet.goLastPost('top');",
 							"eXo.forum.UIForumPortlet.submitOnKey('searchAdvance');",
-							"eXo.forum.UIForumPortlet.controlLeftNavigation();",
 							"forumCheckBox.init('"+uicomponent.id+"');"
 							];
 	ForumUtils.addScripts("ForumCheckBox", "forumCheckBox", scripts);

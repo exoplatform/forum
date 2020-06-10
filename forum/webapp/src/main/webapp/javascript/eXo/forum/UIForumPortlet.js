@@ -1,4 +1,4 @@
-(function(maskLayer, contextMenu, utils, forumLeftNavigation, $, window, document) {
+(function(maskLayer, contextMenu, utils, $, window, document) {
   var UIForumPortlet = {
     obj : null,
     event : null,
@@ -78,14 +78,6 @@
         }
         thizz.confirmation(settings);
       });
-    },
-
-    controlLeftNavigation : function() {
-      var leftNav = $('.LeftNavigationTDContainer:first');
-      if(leftNav.exists()) {
-        leftNav.css('height', 'auto');
-        setTimeout(forumLeftNavigation.resize, 1000);
-      }
     },
 
     selectItem : function(obj) {
@@ -963,4 +955,4 @@
   window.eXo.forum = window.eXo.forum || {};
   window.eXo.forum.UIForumPortlet = UIForumPortlet;
   return UIForumPortlet;
-})(forumMaskLayer, forumContextMenu, forumUtils, platformLeftNavigation, gj, window, document);
+})(forumMaskLayer, forumContextMenu, forumUtils, gj, window, document);

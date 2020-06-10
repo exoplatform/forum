@@ -278,10 +278,6 @@
       <as>forumUtils</as>
     </depends>
     <depends>
-      <module>platform-left-navigation</module>
-      <as>platformLeftNavigation</as>
-    </depends>
-    <depends>
       <module>popupCategory</module>
     </depends>
     <depends>

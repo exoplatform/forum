@@ -15,8 +15,7 @@
 				"eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;",
 				"eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');",
 				"eXo.forum.UIForumPortlet.initTooltip('"+uicomponent.id+"') ;",
-				"eXo.forum.UIForumPortlet.initShowUserInfo('"+uicomponent.id+"') ;",
-				"eXo.forum.UIForumPortlet.controlLeftNavigation();"
+				"eXo.forum.UIForumPortlet.initShowUserInfo('"+uicomponent.id+"') ;"
 				];
 	
 	UserProfile userProfile = uicomponent.getUserProfile();

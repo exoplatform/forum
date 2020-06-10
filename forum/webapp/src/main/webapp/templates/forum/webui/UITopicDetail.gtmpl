@@ -83,8 +83,7 @@
 			"forumPortlet.ReloadImage();",
 			"forumPortlet.initShowUserInfo('" + uicomponent.id + "');",
 			"forumPortlet.disableOnClickMenu('SearchForm');",
-			"forumPortlet.disableOnClickMenu('AddTag');",
-			"forumPortlet.controlLeftNavigation();"
+			"forumPortlet.disableOnClickMenu('AddTag');"
 		];
 		
 		WebUIUtils.addScripts("UIForumPortlet", "forumPortlet", scripts);
