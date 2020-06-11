@@ -48,16 +48,11 @@
   def jsManager = pcontext.getJavascriptManager().require("SHARED/uiForm");
 
   def labelComment = _ctx.appRes("UIActivity.label.Comment");
-  def labelComments= _ctx.appRes("UIActivity.comment.commentsLabel");
-  def labelLikesActivity = _ctx.appRes("UIActivity.label.likesLabel");
   def labelCancel = _ctx.appRes("UIActivity.label.Cancel");
-  def labelLike = _ctx.appRes("UIActivity.label.Like");
   def labelUpdate = _ctx.appRes("UIActivity.label.Update");
   def labelEdit = _ctx.appRes("UIActivity.label.Edit");
   def labelDelete = _ctx.appRes("UIActivity.label.Delete");
-  def labelUnlike = _ctx.appRes("UIActivity.label.Unlike");
   def labelViewAllReplies = _ctx.appRes("UIActivity.label.ViewAllReplies");
-  def labelSource = _ctx.appRes("UIActivity.label.Source");
   def inputWriteAComment = _ctx.appRes("UIActivity.input.Add_your_comment").replace("'", "\\'");
   def labelShowAllComments = _ctx.appRes("UIActivity.label.Show_All_Comments");
   def labelHideAllComments = _ctx.appRes("UIActivity.label.Hide_All_Comments");
@@ -121,58 +116,12 @@
 
   //make sures commentFormFocused is set to false to prevent any refresh to focus, only focus after post a comment
   uicomponent.setCommentFormFocused(false);
-  def ownerName, ownerUri = "#", ownerAvatar, activityPostedTime;
+  def activityPostedTime;
 
   activityPostedTime = uicomponent.getRelativeTimeLabel(_ctx, activity.postedTime);
   def ownerIdentity = uicomponent.ownerIdentity;
   def profile = ownerIdentity.profile;
-  if (uicomponent.isUserActivity()) {
-    ownerUri = LinkProvider.getUserProfileUri(ownerIdentity.getRemoteId());
-    ownerAvatar = profile.avatarUrl;
-    ownerName = StringEscapeUtils.escapeHtml(profile.fullName);
-    if (!ownerAvatar) ownerAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
-    if (spaceGroupId.length() > 0) {
-      Space space = Utils.getSpaceService().getSpaceByGroupId(spaceGroupId);
-      def spaceAvatar;
-      if (space != null) {
-        spaceAvatar = space.avatarUrl;
-      }
-      if (!spaceAvatar) spaceAvatar = LinkProvider.SPACE_DEFAULT_AVATAR_URL;
-    }
-  } else if(uicomponent.isSpaceActivity()){
-    Space space = Utils.getSpaceService().getSpaceByPrettyName(ownerIdentity.remoteId);
-    ownerUri = Utils.getSpaceHomeURL(space);
-    ownerAvatar = space.avatarUrl;
-    ownerName = space.displayName;
-    ownerDescription = space.description;
-    ownerMembers = space.members;
-    if (!ownerAvatar) ownerAvatar = LinkProvider.SPACE_DEFAULT_AVATAR_URL;
-  } else {
-    ownerUri = profile.url;
-    ownerAvatar = profile.avatarUrl;
-    ownerName = StringEscapeUtils.escapeHtml(profile.fullName);
-  }
-  def currentTime = System.currentTimeMillis();
 
-    def spaceSourceURI, spaceName, spaceImageSource, spaceID;
-    if (uicomponent.isUserActivity() && uicomponent.isSpaceStreamOwner() && !uicomponent.isUISpaceActivitiesDisplay()) {
-
-        Space spaceSource = Utils.getSpaceService().getSpaceByPrettyName(streamOwner);
-        spaceID = spaceSource.getId();
-        if (spaceSource != null) {
-            spaceSourceURI = LinkProvider.getSpaceUri(spaceSource.url);
-            spaceName = spaceSource.displayName;
-            spaceImageSource = spaceSource.getAvatarUrl();
-            if (spaceImageSource == null) {
-                spaceImageSource = LinkProvider.SPACE_DEFAULT_AVATAR_URL;
-            }
-        } else {
-            spaceSourceURI = LinkProvider.getActivityUriForSpace(streamOwner, streamOwner);
-            spaceName = StringEscapeUtils.escapeHtml(Utils.getSpaceIdentity(streamOwner, false).profile.fullName);
-            spaceImageSource = LinkProvider.SPACE_DEFAULT_AVATAR_URL;
-        }
-    }
-  def viewerId = Utils.getViewerIdentity().getId();
   if (!uicomponent.isDeletedSpace(streamOwner)){
     def votes = uicomponent.getVotes();
     def numberOfVoters = uicomponent.getTotalOfVoters();
@@ -186,31 +135,7 @@
 		  <div class="heading">
 				<span class="arrowLeft"></span>
         <div class="activityHeader">
-          <div class="activityAvatar avatarCircle">
-            <a title="$ownerName" href="$ownerUri">
-            <img alt="$ownerName" src="$ownerAvatar"/>
-            </a>
-          </div>
-          <div class="activityAuthorAndDate">
-            <div class="author">
-              <% if (uicomponent.isUserActivity() && uicomponent.isSpaceStreamOwner() && !uicomponent.isUISpaceActivitiesDisplay()) {
-              %>
-              <div class="ownerName">
-              <a title="$ownerName" href="$ownerUri">$ownerName</a>
-                        </div>
-              <a class="space-avatar spaceName" href="$spaceSourceURI" space-data="$spaceID"><span class="uiIconArrowRightMini uiIconLightGray"></span>
-                        <img  class="avatarMini" alt="$spaceName" src="$spaceImageSource"/>&nbsp;$spaceName
-              </a>
-                    <%} else{%>
-                                  <div class="owner">
-                          <a title="$ownerName" href="$ownerUri">$ownerName</a>
-              </div>
-                    <%}%>
-                  </div>
-            <div class="dataInfor">
-              <span class="dateTime"><i class="uiIconClock  uiIconLightGray"></i>&nbsp;<a id="EditActivityTime${activity.id}" rel="tooltip" data-placement="bottom" href="<%=uicomponent.getActivityPermalink(activity.id)%>">$activityPostedTime</a></span>
-           </div>
-          </div><!--end activityAuthorAndDate-->
+          <% _ctx.includeTemplates("UIActivityHeading") %>
           <!-- three dots activity menu -->
                     <div id="dropDownEditActivity${activity.id}" class="btn-group uiDropdownWithIcon actLink">
                         <div class="dropdown-toggle" data-toggle="dropdown">
@@ -286,7 +211,7 @@
                 </div>
             </div>
       <% _ctx.includeTemplates("UIActivityActionBar-actions-mobile") %>
-       <div class="statusAction">
+       <div class="statusAction uiActivityActions">
          <a href="${uicomponent.getLink()}">
            <i class="uiIconSocVote uiIconSocLightGray"></i>&nbsp;<%=_ctx.appRes("PollUIActivity.action.vote");%>
           </a>
@@ -296,24 +221,6 @@
       <% _ctx.includeTemplates("UIActivityActionBar-actions") %>
     </div>
 			<div id="CommentBlockBound${activity.id}" class="commentBox ">
-			  <% if (uicomponent.commentListToggleable()) {
-			  def showAllCommentsAction = uicomponent.event("SetCommentListStatus", "all");
-			  def hideAllCommentsAction = uicomponent.event("SetCommentListStatus", "none");
-			  def loadPreviousCommentsAction = uicomponent.event("SetCommentListStatus", "all");
-			  %>
-			  <div class="commentListInfo clearfix">
-				<div class="pull-right numberComment">$commentsHidden/$totalComments</div>
-				<% if (commentListStatus.getStatus().equals("latest") || commentListStatus.getStatus().equals("none")) { %>
-				  <a onclick="$showAllCommentsAction" href="javascript:void(0);">$labelShowAllComments</a>
-				<% } else if (commentListStatus.getStatus().equals("all")) { %>
-				      <% if (commentsHidden > 0) { %>
-                <a onclick="$loadPreviousCommentsAction" href="javascript:void(0);">$labelShowPreviousComments</a>
-              <% } else { %>
-                <a onclick="$hideAllCommentsAction" href="javascript:void(0);">$labelHideAllComments</a>
-              <% } %>
-			  <% } %>
-			  </div>
-			<% } %>
 			<div class="commentList">
 			<%
 			def commenterFullName, commenterProfileUri, commentMessage, commentPostedTime, commenterAvatarImgSrc, commentAbsolutePostedTime;
@@ -385,8 +292,7 @@
               <div id="CommentBlock${it.id}" class="commentItem">
 			  <% }  %>
 				<div class="commmentLeft">
-					<a href="$commenterProfileUri" title="$commenterFullName" class="avatarXSmall">
-					  <img alt="$commenterFullName" src="$commenterAvatarImgSrc" />
+					<a href="$commenterProfileUri" title="$commenterFullName" class="avatarXSmall commenterAvatar" style="background-image:url('$commenterAvatarImgSrc');">
 					</a>
 				</div><!--end commentLeft-->
 				<div class="commentRight">
@@ -467,8 +373,7 @@
 			  <div class="commentItem commentFormBox" id="CommentFormBlock${activity.id}">
 			<% } %>
 					<div class="commmentLeft">
-						<a title="$currentCommenterName" href="$currentCommenterUri" class="avatarXSmall">
-						   <img alt="$currentCommenterName" src="$currentCommenterAvatar"/>        
+						<a title="$currentCommenterName"  style="background-image:url('$currentCommenterAvatar');" href="$currentCommenterUri" class="avatarXSmall commenterAvatar">
 						</a>
 					</div><!--end commentLeft--> 
 					<div class="commentRight">
@@ -480,8 +385,26 @@
 					</div><!--end commentRight-->
                     <div class="clearfix"></div>
 				</div> <!--end commentItem-->				
-			  </div><!--end commentlist-->			  
-			</div><!--end commentBox-->	
+			  </div><!--end commentlist-->
+        <% if (uicomponent.commentListToggleable()) {
+          def showAllCommentsAction = uicomponent.event("SetCommentListStatus", "all");
+          def hideAllCommentsAction = uicomponent.event("SetCommentListStatus", "none");
+          def loadPreviousCommentsAction = uicomponent.event("SetCommentListStatus", "all");
+        %>
+        <div class="commentListInfo clearfix">
+          <div class="pull-right numberComment">$commentsHidden/$totalComments</div>
+              <% if (commentListStatus.getStatus().equals("latest") || commentListStatus.getStatus().equals("none")) { %>
+                <a onclick="$showAllCommentsAction" href="javascript:void(0);">$labelShowAllComments</a>
+              <% } else if (commentListStatus.getStatus().equals("all")) { %>
+                  <% if (commentsHidden > 0) { %>
+                  <a onclick="$loadPreviousCommentsAction" href="javascript:void(0);">$labelShowPreviousComments</a>
+                            <% } else { %>
+                              <a onclick="$hideAllCommentsAction" href="javascript:void(0);">$labelHideAllComments</a>
+                  <% } %>
+          <% } %>
+        </div>
+          <% } %>
+			</div><!--end commentBox-->
 		</div><!--end #ActivityContextBox${activity.id}-->
 	</div> <!--end ContextBox${activity.id}-->	
   </div> <!-- #boxContainer-->	  
