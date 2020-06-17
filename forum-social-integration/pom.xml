@@ -168,11 +168,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.social</groupId>
-      <artifactId>social-search-service</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform</groupId>
       <artifactId>exo-jcr-services</artifactId>
       <scope>test</scope>
