@@ -211,7 +211,6 @@
 	                    </div>
 	                </div>
             </div>
-            <% _ctx.includeTemplates("UIActivityActionBar-actions-mobile") %>
 
   					<div class="forumActions clearfix">
               <ul class="statusAction uiActivityActions">

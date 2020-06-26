@@ -210,7 +210,6 @@
                     </div>
                 </div>
             </div>
-      <% _ctx.includeTemplates("UIActivityActionBar-actions-mobile") %>
        <div class="statusAction uiActivityActions">
          <a href="${uicomponent.getLink()}">
            <i class="uiIconSocVote uiIconSocLightGray"></i>&nbsp;<%=_ctx.appRes("PollUIActivity.action.vote");%>
