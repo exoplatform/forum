@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-application</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>5.3.2-spaces-groups-binding-SNAPSHOT</version>
+    <version>5.3.2-spaces-groups-binding-02</version>
   </parent>
   <artifactId>forum-application-create</artifactId>
   <name>eXo PLF:: Forum create</name>
