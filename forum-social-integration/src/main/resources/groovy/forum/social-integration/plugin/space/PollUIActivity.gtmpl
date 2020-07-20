@@ -142,15 +142,27 @@
                             <i class="uiIconActivityAction uiIconLightGray">
                             </i>
                         </div>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                        <li>
-                        <a id="Permalink${activity.id}" rel="tooltip" data-placement="bottom" title="$viewActivityTip" href="<%=uicomponent.getActivityPermalink(activity.id)%>">$viewActivityTip</a>
-                                            </li>
+                        <ul class="dropdown-menu actLink-items pull-right" role="menu">
+                            <li class="actLink-item">
+                                <a id="Permalink${activity.id}" rel="tooltip" data-placement="bottom" title="$viewActivityTip" href="<%=uicomponent.getActivityPermalink(activity.id)%>">
+                                    <i class="uiIcon uiIconOpenActivity actLink-icon"></i>
+                                    <span class="actLink-label">$viewActivityTip</span>
+                                </a>
+                             </li>
+                            <li class="actLink-item">
+                                <a href="${uicomponent.getLink()}">
+                                    <i class="uiIcon uiIconSocVote actLink-icon"></i>&nbsp;
+                                    <span class="actLink-label"><%=_ctx.appRes("PollUIActivity.action.vote");%></span>
+                                </a>
+                            </li>
                             <%
-							          if (activityDeletable) {
+						if (activityDeletable) {
                             %>
-                            <li>
-                                <a href="javascript:void(0)" data-confirm="$labelToDeleteThisActivity" data-caption="$captionConfirmation" data-close="$labelClosebutton" data-ok="$labelConfirmbutton"  data-delete="<%=uicomponent.event("DeleteActivity", uicomponent.getId(), "");%>" class="controllDelete" id="DeleteActivityButton${activity.id}">${labelDelete}</a>
+                            <li class="actLink-item">
+                                <a href="javascript:void(0)" data-confirm="$labelToDeleteThisActivity" data-caption="$captionConfirmation" data-close="$labelClosebutton" data-ok="$labelConfirmbutton"  data-delete="<%=uicomponent.event("DeleteActivity", uicomponent.getId(), "");%>" class="controllDelete" id="DeleteActivityButton${activity.id}">
+                                    <i class="uiIcon uiIconTrashActivity actLink-icon"></i>
+                                    <span class="actLink-label">${labelDelete}</span>
+                                </a>
                             </li>
                             <%}%>
                         </ul>
@@ -210,11 +222,6 @@
                     </div>
                 </div>
             </div>
-       <div class="statusAction uiActivityActions">
-         <a href="${uicomponent.getLink()}">
-           <i class="uiIconSocVote uiIconSocLightGray"></i>&nbsp;<%=_ctx.appRes("PollUIActivity.action.vote");%>
-          </a>
-      </div>
       <div class="actionsDetailsWrapper">
       <% _ctx.includeTemplates("UIActivityListLiked") %>
       <% _ctx.includeTemplates("UIActivityActionBar-actions") %>
