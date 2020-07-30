@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>6.0.x-SNAPSHOT</version>
+    <version>6.0.0-RC05</version>
   </parent>
   <artifactId>forum-forum</artifactId>
   <packaging>pom</packaging>
