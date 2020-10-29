@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-application</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>6.1.x-SNAPSHOT</version>
+    <version>6.1.0-M09</version>
   </parent>
   <artifactId>forum-application-create</artifactId>
   <name>eXo PLF:: Forum create</name>
