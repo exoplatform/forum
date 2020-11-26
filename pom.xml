@@ -38,10 +38,10 @@
     <!-- **************************************** -->
     <!-- Dependencies versions -->
     <!-- **************************************** -->
-    <org.exoplatform.social.version>6.1.x-SNAPSHOT</org.exoplatform.social.version>
-    <addon.exo.jcr.version>6.1.x-SNAPSHOT</addon.exo.jcr.version>
-    <org.exoplatform.platform-ui.version>6.1.x-SNAPSHOT</org.exoplatform.platform-ui.version>
-    <addon.exo.gamification.version>2.1.x-SNAPSHOT</addon.exo.gamification.version>
+    <org.exoplatform.social.version>6.1.0-M14</org.exoplatform.social.version>
+    <addon.exo.jcr.version>6.1.0-M14</addon.exo.jcr.version>
+    <org.exoplatform.platform-ui.version>6.1.0-M14</org.exoplatform.platform-ui.version>
+    <addon.exo.gamification.version>2.1.0-M14</addon.exo.gamification.version>
 
     <!-- For surefire and failsafe to be compatible with jacoco -->
     <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
