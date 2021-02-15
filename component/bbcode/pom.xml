@@ -65,27 +65,12 @@
       <artifactId>picocontainer</artifactId>
       <exclusions>
         <exclusion>
-          <artifactId>xstream</artifactId>
-          <groupId>xstream</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>jmock</artifactId>
           <groupId>jmock</groupId>
         </exclusion>
       </exclusions>
     </dependency>
     <!-- To upgrade the version required by picocontainer -->
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-      	<exclusion>
-          <groupId>xpp3</groupId>
-          <artifactId>xpp3_min</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
