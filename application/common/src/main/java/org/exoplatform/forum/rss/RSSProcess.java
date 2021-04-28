@@ -37,8 +37,8 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.*;
 
 public abstract class RSSProcess {
 
