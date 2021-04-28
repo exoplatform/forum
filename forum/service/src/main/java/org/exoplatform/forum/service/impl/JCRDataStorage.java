@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -38,9 +39,8 @@ import org.apache.commons.lang.*;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
-import com.sun.syndication.feed.synd.*;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedOutput;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.*;
 
 import org.exoplatform.commons.utils.*;
 import org.exoplatform.container.ExoContainer;
@@ -7873,7 +7873,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     entry.setUri(uri);
     entry.setTitle(getTitleRSS(title)); 
     entry.setLink(link);
-    entry.setContributors(listContent);
+    List<SyndPerson> contributors = listContent.stream().map(s -> {
+      SyndPerson person = new SyndPersonImpl();
+      person.setName(s);
+      return person;
+    }).collect(Collectors.toList());
+    entry.setContributors(contributors);
     entry.setDescription(description);
     entry.setPublishedDate(pubDate);
     entry.setAuthor(author);
