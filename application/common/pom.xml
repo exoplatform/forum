@@ -226,10 +226,8 @@
     </dependency>
     <!-- added by us -->
     <dependency>
-      <groupId>com.rometools</groupId>
+      <groupId>rome</groupId>
       <artifactId>rome</artifactId>
-      <version>1.15.0</version>
-      <scope>provided</scope>
         <exclusions>
             <exclusion>
                 <artifactId>jdom</artifactId>

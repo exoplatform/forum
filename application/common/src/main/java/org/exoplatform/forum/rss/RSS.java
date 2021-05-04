@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -32,8 +31,13 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.w3c.dom.Document;
 
-import com.rometools.rome.feed.synd.*;
-import com.rometools.rome.io.*;
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.SyndFeedOutput;
 
 public class RSS {
   private static final Log LOG = ExoLogger.getLogger(RSS.class);
@@ -217,12 +221,7 @@ public class RSS {
     entry.setUri(uri);
     entry.setTitle(title);
     entry.setLink(link + uri);
-    List<SyndPerson> contributors = listContent.stream().map(s -> {
-      SyndPerson person = new SyndPersonImpl();
-      person.setName(s);
-      return person;
-    }).collect(Collectors.toList());
-    entry.setContributors(contributors);
+    entry.setContributors(listContent);
     entry.setDescription(description);
     entry.setPublishedDate(pubDate);
     entry.setAuthor(author);
