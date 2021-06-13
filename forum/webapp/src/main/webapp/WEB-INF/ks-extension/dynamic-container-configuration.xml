@@ -30,6 +30,53 @@
       <init-params>
         <value-param>
           <name>priority</name>
+          <value>5</value>
+        </value-param>
+        <value-param>
+          <name>containerName</name>
+          <value>bottom-all-container</value>
+        </value-param>
+        <object-param>
+          <name>news-extensions-portlet</name>
+          <description></description>
+          <object type="org.exoplatform.commons.addons.PortletModel">
+            <field name="contentId">
+              <string>forum/ForumExtensions</string>
+            </field>
+            <field name="permissions">
+              <collection type="java.util.ArrayList">
+                <value>
+                <string>*:/platform/users</string>
+                </value>
+                <value>
+                  <string>*:/platform/externals</string>
+                </value>
+              </collection>
+            </field>
+            <field name="title">
+              <string>>Forum Extensions Portlet</string>
+            </field>
+            <field name="showInfoBar">
+              <boolean>false</boolean>
+            </field>
+            <field name="showApplicationState">
+              <boolean>false</boolean>
+            </field>
+            <field name="showApplicationMode">
+              <boolean>false</boolean>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>addPlugin</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.commons.addons.AddOnPluginImpl</type>
+      <description></description>
+      <init-params>
+        <value-param>
+          <name>priority</name>
           <value>1</value>
         </value-param>
         <value-param>

@@ -47,6 +47,27 @@
     <css-priority>1</css-priority>
   </portlet-skin>
 
+  <portlet>
+    <name>ForumExtensions</name>
+    <module>
+      <script>
+        <path>/javascript/eXo/forum/ForumExtensions.js</path>
+      </script>
+      <depends>
+        <module>extensionRegistry</module>
+      </depends>
+      <depends>
+        <module>eXoVueI18n</module>
+      </depends>
+      <depends>
+        <module>vue</module>
+      </depends>
+      <depends>
+        <module>commonVueComponents</module>
+      </depends>
+    </module>
+  </portlet>
+
   <module>
     <name>ForumUtils</name>
     <script>
