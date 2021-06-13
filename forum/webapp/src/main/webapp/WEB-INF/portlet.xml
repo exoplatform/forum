@@ -146,8 +146,29 @@
         <value></value> <!-- PollId -->
         <read-only>false</read-only>
       </preference>
-    </portlet-preferences>
-    
+    </portlet-preferences>    
   </portlet>
-  
+
+  <portlet>
+    <description xml:lang="EN">Forum Extensions</description>
+    <portlet-name>ForumExtensions</portlet-name>
+    <display-name xml:lang="EN">Forum Extensions</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/templates/forum/extensions.html</value>
+    </init-param>
+    <expiration-cache>-1</expiration-cache>
+    <cache-scope>PUBLIC</cache-scope>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <portlet-info>
+      <title>Forum Extensions Portlet</title>
+      <short-title>Forum Extensions</short-title>
+      <keywords>forum</keywords>
+    </portlet-info>
+  </portlet>
+
 </portlet-app>
