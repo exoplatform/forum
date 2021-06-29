@@ -12,12 +12,14 @@
             width: '90px',
             noBorder: true,
           },
-          getThumbnail: () => '/forum/images/forumActivity.png',
-          getTitle: activity => activity && activity.title || '',
-          getSummary: activity => activity && activity.body && Vue.prototype.$utils.htmlToText(activity.body) || '',
-          getSourceLink: (activity) => activity.templateParams
-                                        && activity.templateParams.TopicId
-                                        && `${eXo.env.portal.context}/${eXo.env.portal.portalName}/forum/topic/${activity.templateParams.TopicId}`,
+          getThumbnail: activityOrComment => !activityOrComment.activityId && '/forum/images/forumActivity.png' || '',
+          getTitle: activityOrComment => !activityOrComment.activityId && activityOrComment.title || '',
+          getSummary: activityOrComment => !activityOrComment.activityId && activityOrComment.body || '',
+          getBody: activityOrComment => activityOrComment.activityId && activityOrComment.body || '',
+          getSourceLink: activityOrComment => !activityOrComment.activityId
+                                          && activityOrComment.templateParams
+                                          &&  activityOrComment.templateParams.TopicId
+                                          &&  `${eXo.env.portal.context}/${eXo.env.portal.portalName}/forum/topic/${activityOrComment.templateParams.TopicId}`,
         },
       });
     },
