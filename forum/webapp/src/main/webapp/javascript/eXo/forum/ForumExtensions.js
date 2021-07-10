@@ -5,6 +5,7 @@
         type: 'ks-forum:spaces',
         options: {
           canEdit: () => false,
+          canShare: () => true,
           supportsThumbnail: true,
           useSameViewForMobile: true,
           thumbnailProperties: {
