@@ -26,136 +26,6 @@
     </init-params>
   </component>
 
-  <external-component-plugins>
-    <target-component>org.exoplatform.forum.service.ForumService</target-component>
-    <component-plugin>
-      <name>unifiedsearch.listeners.forum</name>
-      <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.forum.indexing.listener.UnifiedSearchForumListener</type>
-      <description>Forum listener for Unified Search</description>
-    </component-plugin>
-  </external-component-plugins>
-
-  <external-component-plugins>
-    <target-component>org.exoplatform.commons.api.search.SearchService</target-component>
-    <component-plugin profiles="all">
-      <name>DiscussionSearchConnector</name>
-      <set-method>addConnector</set-method>
-      <type>org.exoplatform.forum.service.search.DiscussionSearchConnector</type>
-      <description>eXo Forum Posts</description>
-      <init-params>
-        <properties-param>
-           <name>constructor.params</name>
-           <property name="searchType" value="post"/>
-           <property name="displayName" value="Discussions"/>
-           <property name="enable" value="${exo.unified-search.connector.post.enable:true}"/>
-        </properties-param>
-      </init-params>
-    </component-plugin>
-  </external-component-plugins>
-
-  <external-component-plugins>
-   <target-component>org.exoplatform.social.core.processor.I18NActivityProcessor</target-component>
-   <component-plugin>
-     <name>poll:spaces</name> <!-- activity type -->
-     <set-method>addActivityResourceBundlePlugin</set-method>
-     <type>org.exoplatform.social.core.processor.ActivityResourceBundlePlugin</type>
-     <init-params>
-       <object-param>
-         <name>locale.forum.integration.integration</name> <!-- resource bundle key file -->
-         <description>activity key type resource bundle mapping for poll:activity</description>
-         <object type="org.exoplatform.social.core.processor.ActivityResourceBundlePlugin">
-           <field name="activityKeyTypeMapping">
-             <map type="java.util.HashMap">
-               <entry>
-                 <key><string>update_poll</string></key>
-                 <value><string>PollUIActivity.label.update_poll</string></value>
-               </entry>
-             </map>
-           </field>
-         </object>
-       </object-param>
-     </init-params>
-   </component-plugin>
-   <component-plugin>
-     <name>ks-forum:spaces</name> <!-- activity type -->
-     <set-method>addActivityResourceBundlePlugin</set-method>
-     <type>org.exoplatform.social.core.processor.ActivityResourceBundlePlugin</type>
-     <init-params>
-       <object-param>
-         <name>locale.forum.integration.integration</name> <!-- resource bundle key file -->
-         <description>activity key type resource bundle mapping for exosocial:spaces</description>
-         <object type="org.exoplatform.social.core.processor.ActivityResourceBundlePlugin">
-           <field name="activityKeyTypeMapping">
-             <map type="java.util.HashMap">
-               <entry>
-                 <key><string>forum.update-topic-title</string></key>
-                 <value><string>ForumUIActivity.forum.update-topic-title</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.update-topic-content</string></key>
-                 <value><string>ForumUIActivity.forum.update-topic-content</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.update-topic-rate</string></key>
-                 <value><string>ForumUIActivity.forum.update-topic-rate</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.closed-topic</string></key>
-                 <value><string>ForumUIActivity.forum.closed-topic</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.opened-topic</string></key>
-                 <value><string>ForumUIActivity.forum.opened-topic</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.locked-topic</string></key>
-                 <value><string>ForumUIActivity.forum.locked-topic</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.unlocked-topic</string></key>
-                 <value><string>ForumUIActivity.forum.unlocked-topic</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.approved-topic</string></key>
-                 <value><string>ForumUIActivity.forum.approved-topic</string></value>
-               </entry>
-                <entry>
-                 <key><string>forum.unapproved-topic</string></key>
-                 <value><string>ForumUIActivity.forum.unapproved-topic</string></value>
-               </entry>
-                <entry>
-                 <key><string>forum.move-topic</string></key>
-                 <value><string>ForumUIActivity.forum.move-topic</string></value>
-               </entry>
-                <entry>
-                 <key><string>forum.update-post</string></key>
-                 <value><string>ForumUIActivity.forum.update-post</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.add-poll</string></key>
-                 <value><string>ForumUIActivity.forum.add-poll</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.update-poll</string></key>
-                 <value><string>ForumUIActivity.forum.update-poll</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.close-poll</string></key>
-                 <value><string>ForumUIActivity.forum.close-poll</string></value>
-               </entry>
-               <entry>
-                 <key><string>forum.remove-poll</string></key>
-                 <value><string>ForumUIActivity.forum.remove-poll</string></value>
-               </entry>
-             </map>
-           </field>
-         </object>
-       </object-param>
-     </init-params>
-   </component-plugin>
-  </external-component-plugins>
-
  <!-- Social integration -->
    <external-component-plugins>
     <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
@@ -218,42 +88,6 @@
     </component-plugin>
   </external-component-plugins>
 	
-	<!-- configure activies plugin -->
-	<external-component-plugins>
-    <target-component>org.exoplatform.webui.ext.UIExtensionManager</target-component>
-    <component-plugin>
-      <name>add.forum.activity.plugin</name>
-      <set-method>registerUIExtensionPlugin</set-method>
-      <type>org.exoplatform.webui.ext.UIExtensionPlugin</type>
-      <init-params>
-        <object-param>
-          <name>Forum Space Activity</name>
-          <object type="org.exoplatform.social.webui.activity.UIActivityExtension">
-            <field name="type"><string>org.exoplatform.social.webui.activity.BaseUIActivity</string></field>
-            <field name="name"><string>ks-forum:spaces</string></field>
-            <field name="component"><string>org.exoplatform.forum.ext.impl.ForumUIActivity</string></field>
-            <field name="activityBuiderClass"><string>org.exoplatform.forum.ext.impl.ForumSpaceUIActivityBuilder</string></field>
-          </object>
-        </object-param>
-      </init-params>
-    </component-plugin>
-    <component-plugin>
-      <name>add.poll.activity.plugin</name>
-      <set-method>registerUIExtensionPlugin</set-method>
-      <type>org.exoplatform.webui.ext.UIExtensionPlugin</type>
-      <init-params>
-        <object-param>
-          <name>Poll Space Activity</name>
-          <object type="org.exoplatform.social.webui.activity.UIActivityExtension">
-            <field name="type"><string>org.exoplatform.social.webui.activity.BaseUIActivity</string></field>
-            <field name="name"><string>ks-poll:spaces</string></field>
-            <field name="component"><string>org.exoplatform.forum.ext.impl.PollUIActivity</string></field>
-            <field name="activityBuiderClass"><string>org.exoplatform.forum.ext.impl.PollSpaceUIActivityBuilder</string></field>
-          </object>
-        </object-param>
-      </init-params>
-    </component-plugin>
-  </external-component-plugins>
   <!-- End social intergration -->
 
 	<external-component-plugins>
@@ -337,24 +171,6 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>
-
-	<external-component-plugins>
-		<target-component>org.exoplatform.commons.api.event.EventManager</target-component>
-		<component-plugin profiles="all">
-			<name>SOC_ACTIVITY_MIGRATION</name>
-			<set-method>addEventListener</set-method>
-			<type>org.exoplatform.forum.addons.rdbms.listener.ForumActivityUpdaterListener</type>
-		</component-plugin>
-	</external-component-plugins>
-	
-	<external-component-plugins>
-		<target-component>org.exoplatform.commons.api.event.EventManager</target-component>
-		<component-plugin profiles="all">
-			<name>SOC_ACTIVITY_MIGRATION</name>
-			<set-method>addEventListener</set-method>
-			<type>org.exoplatform.forum.addons.rdbms.listener.PollActivityUpdaterListener</type>
-		</component-plugin>
-	</external-component-plugins>
 
   <external-component-plugins profiles="gamification">
     <target-component>org.exoplatform.forum.service.ForumService</target-component>
