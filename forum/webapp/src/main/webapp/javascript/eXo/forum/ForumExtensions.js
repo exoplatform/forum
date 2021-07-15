@@ -19,8 +19,7 @@
           getBody: activityOrComment => activityOrComment.activityId && activityOrComment.body || '',
           getSourceLink: activityOrComment => !activityOrComment.activityId
                                           && activityOrComment.templateParams
-                                          &&  activityOrComment.templateParams.TopicId
-                                          &&  `${eXo.env.portal.context}/${eXo.env.portal.portalName}/forum/topic/${activityOrComment.templateParams.TopicId}`,
+                                          && activityOrComment.templateParams.TopicLink,
         },
       });
     },
