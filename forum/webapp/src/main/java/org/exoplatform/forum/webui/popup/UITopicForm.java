@@ -30,6 +30,7 @@ import org.exoplatform.forum.common.CommonUtils;
 import org.exoplatform.forum.common.TransformHTML;
 import org.exoplatform.forum.common.UserHelper;
 import org.exoplatform.forum.common.webui.BaseEventListener;
+import org.exoplatform.forum.common.webui.UIFormRichtextInput;
 import org.exoplatform.forum.common.webui.UIForumCheckBoxInput;
 import org.exoplatform.forum.common.webui.UIPermissionPanel;
 import org.exoplatform.forum.common.webui.UIPopupContainer;
@@ -61,7 +62,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputInfo;
-import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 

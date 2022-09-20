@@ -30,7 +30,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormRichtextInput;
 
 
 /**

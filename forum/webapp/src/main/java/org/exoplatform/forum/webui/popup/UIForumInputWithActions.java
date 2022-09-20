@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.common.webui.UIFormRichtextInput;
 import org.exoplatform.forum.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -35,7 +36,6 @@ import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormInputSet;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
-import org.exoplatform.webui.form.UIFormRichtextInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 public class UIForumInputWithActions extends UIFormInputSet {
