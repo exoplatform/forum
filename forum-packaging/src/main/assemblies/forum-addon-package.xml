@@ -41,7 +41,6 @@
       <outputDirectory>/lib</outputDirectory>
       <includes>
         <include>org.exoplatform.forum:*:jar</include>
-        <include>com.rometools:rome:jar</include>
       </includes>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
