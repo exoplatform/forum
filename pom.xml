@@ -38,11 +38,11 @@
     <!-- **************************************** -->
     <!-- Dependencies versions -->
     <!-- **************************************** -->
-    <org.exoplatform.social.version>6.5.x-exo-SNAPSHOT</org.exoplatform.social.version>
-    <addon.exo.ecms.version>6.5.x-SNAPSHOT</addon.exo.ecms.version>
-    <addon.exo.jcr.version>6.5.x-SNAPSHOT</addon.exo.jcr.version>
-    <org.exoplatform.platform-ui.version>6.5.x-exo-SNAPSHOT</org.exoplatform.platform-ui.version>
-    <addon.exo.gamification.version>2.5.x-exo-SNAPSHOT</addon.exo.gamification.version>
+    <org.exoplatform.social.version>6.5.0-exo-M01</org.exoplatform.social.version>
+    <addon.exo.ecms.version>6.5.0-M01</addon.exo.ecms.version>
+    <addon.exo.jcr.version>6.5.0-M01</addon.exo.jcr.version>
+    <org.exoplatform.platform-ui.version>6.5.0-exo-M01</org.exoplatform.platform-ui.version>
+    <addon.exo.gamification.version>2.5.0-exo-M01</addon.exo.gamification.version>
 
     <argLine>-Xmx1024m</argLine>
   </properties>
