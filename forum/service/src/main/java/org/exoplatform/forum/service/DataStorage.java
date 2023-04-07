@@ -36,7 +36,6 @@ import org.exoplatform.forum.service.impl.model.UserProfileFilter;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.webui.organization.UIAccountForm.SearchUserActionListener;
 
 public interface DataStorage {
 

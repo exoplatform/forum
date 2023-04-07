@@ -3,6 +3,7 @@ package org.exoplatform.forum.integration.gamification;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
+import org.exoplatform.addons.gamification.GamificationConstant;
 import org.exoplatform.addons.gamification.service.configuration.RuleService;
 import org.exoplatform.addons.gamification.service.effective.GamificationService;
 import org.exoplatform.forum.service.*;
@@ -66,7 +67,8 @@ public class GamificationForumListener extends ForumEventListener {
     gamificationService.createHistory(GAMIFICATION_FORUM_ADD_POST,
                                       actorId,
                                       actorId,
-                                      ForumUtils.createdSubForumLink(post.toString(), post.getTopicId(), true));
+                                      ForumUtils.createdSubForumLink(post.toString(), post.getTopicId(), true),
+                                      GamificationConstant.IDENTITY_OBJECT_TYPE);
 
   }
 
@@ -86,7 +88,8 @@ public class GamificationForumListener extends ForumEventListener {
     gamificationService.createHistory(GAMIFICATION_FORUM_ADD_TOPIC,
                                       actorId,
                                       actorId,
-                                      ForumUtils.createdSubForumLink(topic.toString(), topic.getId(), true));
+                                      ForumUtils.createdSubForumLink(topic.toString(), topic.getId(), true),
+                                      GamificationConstant.IDENTITY_OBJECT_TYPE);
 
   }
 
@@ -149,7 +152,8 @@ public class GamificationForumListener extends ForumEventListener {
       gamificationService.createHistory(GAMIFICATION_FORUM_VOTE_TOPIC,
                                         actorId,
                                         actorId,
-                                        ForumUtils.createdSubForumLink(topic.toString(), topic.getId(), true));
+                                        ForumUtils.createdSubForumLink(topic.toString(), topic.getId(), true),
+                                        GamificationConstant.IDENTITY_OBJECT_TYPE);
     }
 
   }

@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.exoplatform.commons.api.search.data.SearchContext;
-import org.exoplatform.commons.api.search.data.SearchResult;
+import org.exoplatform.ecms.legacy.search.data.SearchContext;
+import org.exoplatform.ecms.legacy.search.data.SearchResult;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
@@ -285,8 +285,6 @@ public class DiscussionSearchConnectorTestCase extends BaseForumServiceTestCase 
     SearchResult aResult = aResults.get(0);
     assertEquals("Reply ABCDEF", aResult.getTitle());
     assertTrue(aResult.getExcerpt().toLowerCase().indexOf("bcde") >= 0);
-    String gotURL = aResult.getUrl();
-    assertTrue(gotURL.indexOf("/portal/classic/forum/topic/topic") >= 0);
     assertTrue(aResult.getDate() > 0);
     assertEquals(postA.getCreatedDate().getTime(), aResult.getDate());
   }

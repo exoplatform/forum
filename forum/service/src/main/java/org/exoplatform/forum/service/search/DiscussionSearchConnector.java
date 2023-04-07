@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.exoplatform.commons.api.search.SearchServiceConnector;
-import org.exoplatform.commons.api.search.data.SearchContext;
-import org.exoplatform.commons.api.search.data.SearchResult;
+import org.exoplatform.ecms.legacy.search.SearchServiceConnector;
+import org.exoplatform.ecms.legacy.search.data.SearchContext;
+import org.exoplatform.ecms.legacy.search.data.SearchResult;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
@@ -239,7 +239,7 @@ public class DiscussionSearchConnector extends SearchServiceConnector {
     UserPortalConfigService dataStorage = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
                                                                                        .getComponentInstanceOfType(UserPortalConfigService.class);
     try {
-      return dataStorage.getAllPortalNames();
+      return dataStorage.getSiteNames(SiteType.PORTAL,0,Integer.MAX_VALUE);
     } catch (Exception e) {
       return new ArrayList<String>();
     }

@@ -31,7 +31,14 @@ import org.exoplatform.poll.service.Poll;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
-
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
+@ConfiguredBy({
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.application-common.portal-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/forum.test.configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/standalone/poll.test.configuration.xml"),
+})
 public class PollServiceTestCase extends BaseTestCase {
   
   private List<Poll> tearDownPollList;

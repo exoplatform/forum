@@ -35,7 +35,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   public void setUp() throws Exception {
     super.setUp();
     //
-    for (String userId : Arrays.asList(USER_DEMO, USER_JOHN, USER_ROOT, "mary", "ghost", "paul")) {
+    for (String userId : Arrays.asList(USER_DEMO, USER_JOHN, USER_ROOT, "mary","marry","raul","jame", "ghost", "paul")) {
       UserProfile profile = createdUserProfile(userId);
       profile.setUserRole(2l);
       forumService_.saveUserProfile(profile, true, true);
@@ -124,7 +124,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
 
     ForumStatistic forumStatistic = forumService_.getForumStatistic();
     assertNotNull(forumStatistic);
-    assertEquals(6, forumStatistic.getMembersCount());
+    assertEquals(9, forumStatistic.getMembersCount());
 
     forumStatistic.setPostCount(20);
     forumStatistic.setTopicCount(10);
@@ -1059,7 +1059,7 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
   
   private Group createGroup(Group parent, String groupName) throws Exception {
     GroupHandler groupHandler = UserHelper.getGroupHandler();
-    String parentId = (parent == null) ? "" : parent.getId() + "/";
+    String parentId = (parent == null) ? "/" : parent.getId() + "/";
     if(groupHandler.findGroupById(parentId + groupName) == null) {
       Group group = groupHandler.createGroupInstance();
       group.setGroupName(groupName);

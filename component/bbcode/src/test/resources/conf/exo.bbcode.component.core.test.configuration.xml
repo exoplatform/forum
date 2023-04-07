@@ -27,11 +27,6 @@
     <type>org.exoplatform.forum.bbcode.core.BBCodeServiceImpl</type>
   </component>
 
-  <component>
-    <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
-    <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
-  </component>
-  
  
   <component>
     <key>org.exoplatform.services.jdbc.DataSourceProvider</key>

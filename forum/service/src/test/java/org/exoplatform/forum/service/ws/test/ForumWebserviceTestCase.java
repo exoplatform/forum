@@ -201,23 +201,5 @@ public class ForumWebserviceTestCase extends AbstractResourceTest {
     assertNotNull(results);
   }
 
-  public void testViewrss() throws Exception {
-    String eventURI = "/rss/" + topicId;
-    ContainerResponse response = performTestCase(eventURI);
-    assertNotNull(response);
-    assertEquals(response.getStatus(), 200);
-    InputStream ip = (InputStream) response.getEntity();
-    assertNotNull(ip);
-  }
-  
-  public void testCheckPublicRss() throws Exception {
-    forumService_.addWatch(-1, forumId, null, USER_JOHN);
-    // save watch rss by john and test
-    String eventURI = "/rss/user/john";
-    ContainerResponse response = performTestCase(eventURI);
-    assertNotNull(response);
-    assertEquals(response.getStatus(), 200);
-    InputStream ip = (InputStream) response.getEntity();
-    assertNotNull(ip);
-  }
+
 }

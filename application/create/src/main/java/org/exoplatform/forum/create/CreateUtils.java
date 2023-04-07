@@ -59,7 +59,7 @@ public class CreateUtils {
     UserPortalConfigService dataStorage = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
                                                                                        .getComponentInstanceOfType(UserPortalConfigService.class);
     try {
-      return dataStorage.getAllPortalNames();
+      return dataStorage.getSiteNames(SiteType.PORTAL,0,Integer.MAX_VALUE);
     } catch (Exception e) {
       return new ArrayList<String>();
     }

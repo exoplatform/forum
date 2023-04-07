@@ -1,6 +1,6 @@
 package org.exoplatform.forum.service.search;
 
-import org.exoplatform.commons.api.search.data.SearchResult;
+import org.exoplatform.ecms.legacy.search.data.SearchResult;
 
 
 public class UnifiedSearchResult extends SearchResult {
