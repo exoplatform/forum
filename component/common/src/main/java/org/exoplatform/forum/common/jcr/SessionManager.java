@@ -28,7 +28,7 @@ public interface SessionManager {
 
   /**
    * <p>Open and returns a session to the model. When the current thread is already associated with a previously
-   * opened session the method will throw an <tt>IllegalStateException</tt>.</p>
+   * opened session the method will throw an {@link IllegalStateException}.</p>
    *
    * @return a session to the model.
    */
