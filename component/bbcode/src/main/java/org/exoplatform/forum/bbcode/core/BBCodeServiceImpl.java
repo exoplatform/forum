@@ -302,14 +302,14 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
       Query query = qm.createQuery(buildQueryBBCodeActive(bbCodeHome), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
-      
-      bbcodes = new ArrayList<BBCode>((int)iter.getSize());
+
+      bbcodes = new ArrayList<BBCode>((int) iter.getSize());
 
       while (iter.hasNext()) {
         try {
           Node bbcNode = iter.nextNode();
           bbcodes.add(nodeToBBCode(bbcNode));
-          
+
         } catch (Exception e) {
           log.error("Error loading BBCodes", e);
         }

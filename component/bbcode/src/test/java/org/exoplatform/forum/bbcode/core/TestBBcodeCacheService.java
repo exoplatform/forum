@@ -22,11 +22,19 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.forum.bbcode.api.BBCode;
 import org.exoplatform.forum.bbcode.base.BaseBBcodeTestCase;
 import org.exoplatform.forum.bbcode.core.cache.CachedBBCodeService;
 import org.exoplatform.services.cache.CacheService;
 import org.junit.Test;
+@ConfiguredBy({ @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/test-portal-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.application-common.portal-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.bbcode.component.core.test.configuration.xml"),
+
+})
 
 public class TestBBcodeCacheService extends BaseBBcodeTestCase {
 

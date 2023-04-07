@@ -4,12 +4,12 @@
   <parent>
     <artifactId>maven-parent-pom</artifactId>
     <groupId>org.exoplatform</groupId>
-    <version>22</version>
+    <version>26-exo-M01</version>
     <relativePath />
   </parent>
   <groupId>org.exoplatform.forum</groupId>
   <artifactId>forum</artifactId>
-  <version>6.1.x-SNAPSHOT</version>
+  <version>6.5.x-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo PLF:: Forum</name>
   <description>eXo Forum manages forum, answer and poll.</description>
@@ -38,13 +38,12 @@
     <!-- **************************************** -->
     <!-- Dependencies versions -->
     <!-- **************************************** -->
-    <org.exoplatform.social.version>6.1.1</org.exoplatform.social.version>
-    <addon.exo.jcr.version>6.1.1</addon.exo.jcr.version>
-    <org.exoplatform.platform-ui.version>6.1.1</org.exoplatform.platform-ui.version>
-    <addon.exo.gamification.version>2.1.1</addon.exo.gamification.version>
+    <org.exoplatform.social.version>6.5.x-exo-SNAPSHOT</org.exoplatform.social.version>
+    <org.exoplatform.ecms.version>6.5.x-SNAPSHOT</org.exoplatform.ecms.version>
+    <addon.exo.jcr.version>6.5.x-SNAPSHOT</addon.exo.jcr.version>
+    <org.exoplatform.platform-ui.version>6.5.x-exo-SNAPSHOT</org.exoplatform.platform-ui.version>
+    <addon.exo.gamification.version>2.5.x-exo-SNAPSHOT</addon.exo.gamification.version>
 
-    <!-- For surefire and failsafe to be compatible with jacoco -->
-    <org.gatein.common.version>2.2.2.Final</org.gatein.common.version>
     <argLine>-Xmx1024m</argLine>
   </properties>
   <dependencyManagement>
@@ -81,6 +80,14 @@
         <groupId>org.exoplatform.platform-ui</groupId>
         <artifactId>platform-ui</artifactId>
         <version>${org.exoplatform.platform-ui.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.exoplatform.ecms</groupId>
+        <artifactId>ecms</artifactId>
+        <version>${org.exoplatform.ecms.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

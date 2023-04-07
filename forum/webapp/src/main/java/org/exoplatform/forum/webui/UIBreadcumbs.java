@@ -27,7 +27,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.portal.account.UIAccountSetting;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
@@ -43,9 +42,7 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
     template = "app:/templates/forum/webui/UIBreadcumbs.gtmpl" ,
     events = {
-        @EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
-        @EventConfig(listeners = UIBreadcumbs.AccountSettingsActionListener.class),
-        @EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
+        @EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class)
     }
 )
 public class UIBreadcumbs extends UIContainer {
@@ -276,30 +273,6 @@ public class UIBreadcumbs extends UIContainer {
       } else {
         breadcums.isOpen = true;
       }
-    }
-  }
-
-  static public class RssActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
-      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-      UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-      categoryContainer.updateIsRender(true);
-      forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-      event.getSource().setUpdataPath(FORUM_SERVICE);
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-    }
-  }
-
-  static public class AccountSettingsActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
-      UIPortal uiPortal = Util.getUIPortal();
-      UIPortalApplication uiApp = uiPortal.getAncestorOfType(UIPortalApplication.class);
-      UIMaskWorkspace uiMaskWS = uiApp.getChildById(UIPortalApplication.UI_MASK_WS_ID);
-
-      UIAccountSetting uiAccountForm = uiMaskWS.createUIComponent(UIAccountSetting.class, null, null);
-      uiMaskWS.setUIComponent(uiAccountForm);
-      uiMaskWS.setShow(true);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS);
     }
   }
 }

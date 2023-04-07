@@ -79,7 +79,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.cssfile.CssClassUtils;
+import org.exoplatform.ecms.css.CssClassUtils;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormStringInput;

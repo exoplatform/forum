@@ -4,7 +4,7 @@
   <parent>
     <artifactId>forum-component</artifactId>
     <groupId>org.exoplatform.forum</groupId>
-    <version>6.1.x-SNAPSHOT</version>
+    <version>6.5.x-SNAPSHOT</version>
   </parent>
   <artifactId>forum-component-rendering</artifactId>
   <name>eXo PLF:: Forum Rendering</name>
@@ -33,30 +33,9 @@
     </dependency>
     <!-- This dependency is used for tests compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-testing</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- Log4J is required by wikbook to compile but we don't want to propagate it -->
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

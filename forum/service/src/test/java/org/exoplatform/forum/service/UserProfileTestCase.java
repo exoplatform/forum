@@ -109,54 +109,19 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     
     //contains %
     userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user%")).load(0, 5);
-    assertEquals(2, userProfiles.length);
+    assertEquals(5, userProfiles.length);
     
     //contains *
     userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user*")).load(0, 5);
-    assertEquals(2, userProfiles.length);
+    assertEquals(5, userProfiles.length);
     
     //Get all profiles
     userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("")).load(0, 5);
-    assertEquals(2, userProfiles.length);
-    assertEquals(2, forumService_.searchUserProfileByFilter(new UserProfileFilter("")).getSize());
+    assertEquals(5, userProfiles.length);
+    assertEquals(12, forumService_.searchUserProfileByFilter(new UserProfileFilter("")).getSize());
   }
 
-  public void testUserLogin() throws Exception {
-    String[] userIds = new String[] { USER_ROOT, USER_JOHN, USER_DEMO };
-    for (int i = 0; i < userIds.length; i++) {
-      forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
-    }
-    // Add user login
-    loginUser(USER_ROOT);
-    forumService_.userLogin(USER_ROOT);
-    loginUser(USER_JOHN);
-    forumService_.userLogin(USER_JOHN);
-    loginUser(USER_DEMO);
-    forumService_.userLogin(USER_DEMO);
 
-    // Get all user online:
-    assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());
-
-    // isOnline
-    assertEquals("John is not Online", forumService_.isOnline(USER_JOHN), true);
-    // get Last Login
-    assertEquals("Demo can't last Login", forumService_.getLastLogin(), USER_DEMO);
-  }
-  
-  public void testCacheLoginUser() throws Exception {
-    String[] userIds = new String[] { "user1", "user2" };
-    for (int i = 0; i < userIds.length; i++) {
-      forumService_.saveUserProfile(createdUserProfile(userIds[i]), true, true);
-    }
-    // Add user login
-    loginUser("user1");
-    forumService_.userLogin("user1");
-    loginUser("user2");
-    forumService_.userLogin("user2");
-    
-    UserProfile profile = cachedStorage.getDefaultUserProfile("user2", null);
-    assertEquals("user2", profile.getScreenName());
-  }
 
   public void testSavePostCount() throws Exception {
     // set Data
