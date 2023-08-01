@@ -36,12 +36,6 @@
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>xpp3</groupId>
-          <artifactId>xpp3_min</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- This dependency is used for main classes compilation but is erroneously reported as useless by mvn dependency:analyze -->
     <dependency>
@@ -226,11 +220,6 @@
     <dependency>
       <groupId>org.exoplatform.gatein.wci</groupId>
       <artifactId>wci-wci</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>xpp3</groupId>
-      <artifactId>xpp3</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
