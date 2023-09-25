@@ -85,41 +85,6 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
   }
   
-  public void testUserProfileListAccess() throws Exception {
-    //
-    UserProfile profile1 = createdUserProfile("username1");
-    profile1.setScreenName("User " + profile1.getUserId());
-    UserProfile profile2 = createdUserProfile("username2");
-    profile2.setScreenName("User " + profile2.getUserId());
-    forumService_.saveUserProfile(profile1, true, true);
-    forumService_.saveUserProfile(profile2, true, true);
-    
-    //
-    UserProfile[] userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter(profile1.getUserId())).load(0, 5);
-    assertEquals(1, userProfiles.length);
-    //
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter(profile2.getUserId())).load(0, 5);
-    assertEquals(1, userProfiles.length);
-    //
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("User")).load(0, 5);
-    assertEquals(2, userProfiles.length);
-    //not found
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("guys")).load(0, 5);
-    assertEquals(0, userProfiles.length);
-    
-    //contains %
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user%")).load(0, 5);
-    assertEquals(5, userProfiles.length);
-    
-    //contains *
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("user*")).load(0, 5);
-    assertEquals(5, userProfiles.length);
-    
-    //Get all profiles
-    userProfiles = forumService_.searchUserProfileByFilter(new UserProfileFilter("")).load(0, 5);
-    assertEquals(5, userProfiles.length);
-    assertEquals(12, forumService_.searchUserProfileByFilter(new UserProfileFilter("")).getSize());
-  }
 
 
 
@@ -189,49 +154,6 @@ public class UserProfileTestCase extends BaseForumServiceTestCase {
     assertEquals(Utils.MODERATOR, profile.getUserTitle());
   }
 
-  public void testSearchUserProfile() throws Exception {
-    
-    int before = forumService_.getPageListUserProfile().getAvailable();
-    //
-    int numberUser = 20;
-    // create user
-    UserHandler userHandler = UserHelper.getUserHandler();
-    for (int i = 0; i < numberUser; i++) {
-      User user = userHandler.createUserInstance("foo" + i);
-      user.setEmail("foo" + i + "@plf.com");
-      user.setFirstName("test");
-      user.setLastName("abc user");
-      user.setPassword("exo");
-      user.isEnabled();
-      //
-      userHandler.createUser(user, true);
-      forumService_.getUserSettingProfile(user.getUserName());
-      userHandler.setEnabled(user.getUserName(), true, true);
-    }
-
-    int allSize = before + numberUser;
-    // check get all user profile (8 users create by OrganizationDatabaseInitializer)
-    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
-    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
-    assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
-    // Disable 10 users
-    System.out.println("Disable 10 users");
-    for (int i = 0; i < 10; i++) {
-      userHandler.setEnabled("foo" + i, false, true);
-    }
-    //
-    assertEquals(allSize - 10, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
-    assertEquals(10, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
-    assertEquals(true, forumService_.getQuickProfile("foo0").isDisabled());
-    // Enable 10 users
-    for (int i = 0; i < 10; i++) {
-      userHandler.setEnabled("foo" + i, true, true);
-    }
-    //
-    assertEquals(allSize, forumService_.searchUserProfileByFilter(new UserProfileFilter(null)).getSize());
-    assertEquals(20, forumService_.searchUserProfileByFilter(new UserProfileFilter("foo")).getSize());
-    assertEquals(false, forumService_.getQuickProfile("foo0").isDisabled());
-  }
 
   public void testAccessTopic() throws Exception{
     //

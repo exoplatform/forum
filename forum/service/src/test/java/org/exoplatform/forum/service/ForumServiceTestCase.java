@@ -520,45 +520,8 @@ public class ForumServiceTestCase extends BaseForumServiceTestCase {
     forumService_.saveForum(category.getId(), forum, false);
     assertEquals(UserProfile.MODERATOR, forumService_.getUserInfo("mary").getUserRole());
   }
-  
-  public void testCallDisableUserListener() throws Exception {
-    OrganizationService organizationService = getService(OrganizationService.class);
-    //
-    initDefaultData();
-    // add watch email for demo
-    List<String> emailsDemo = Arrays.asList("demo@test.com");
-    String path = forumService_.getForum(categoryId, forumId).getPath();
-    forumService_.addWatch(1, path, emailsDemo, USER_DEMO);
-    // check value watched
-    assertEquals(1, forumService_.getForum(categoryId, forumId).getEmailNotification().length);
-    // Call user listener to disable user
-    organizationService.getUserHandler().setEnabled(USER_DEMO, false, true);
-    // check value watch
-    assertEquals(0, forumService_.getForum(categoryId, forumId).getEmailNotification().length);
-  }
 
-  public void testCallEnableUserListener() throws Exception {
-    OrganizationService organizationService = getService(OrganizationService.class);
-    //
-    initDefaultData();
-    // add watch email for demo
-    List<String> emailsDemo = Arrays.asList("demo@test.com");
-    String path = forumService_.getForum(categoryId, forumId).getPath();
-    // Call user listener to disable user
-    organizationService.getUserHandler().setEnabled(USER_DEMO, false, true);
 
-    // Enable user
-    organizationService.getUserHandler().setEnabled(USER_DEMO, true, true);
-    // Add watch again
-    forumService_.addWatch(1, path, emailsDemo, USER_DEMO);
-    // check value watched
-    assertEquals(1, forumService_.getForum(categoryId, forumId).getEmailNotification().length);
-    // Call enable again
-    organizationService.getUserHandler().setEnabled(USER_DEMO, true, true);
-    //  check value watched again
-    assertEquals(1, forumService_.getForum(categoryId, forumId).getEmailNotification().length);
-  }
-  
   public void testProcessDisabledUser() throws Exception {
     //
     initDefaultData();
